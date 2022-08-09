@@ -1,0 +1,12 @@
+D:\Work\MealPlanner\RecipeBook.Shared\bin\Debug\net6.0\RecipeBook.Shared.deps.json
+D:\Work\MealPlanner\RecipeBook.Shared\bin\Debug\net6.0\RecipeBook.Shared.dll
+D:\Work\MealPlanner\RecipeBook.Shared\bin\Debug\net6.0\RecipeBook.Shared.pdb
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.csproj.AssemblyReference.cache
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.AssemblyInfoInputs.cache
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.AssemblyInfo.cs
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.csproj.CoreCompileInputs.cache
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.dll
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\refint\RecipeBook.Shared.dll
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\RecipeBook.Shared.pdb
+D:\Work\MealPlanner\RecipeBook.Shared\obj\Debug\net6.0\ref\RecipeBook.Shared.dll

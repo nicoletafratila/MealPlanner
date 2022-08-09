@@ -1,0 +1,56 @@
+﻿@page "/recipeedit"
+@page "/recipeedit/{Id}"
+
+@*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
+{*@
+<section class="employee-edit">
+    <h1 class="page-title">Details for @Model.Name</h1>
+    <EditForm Model="@Model" OnValidSubmit="@Save">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group row">
+            <label for="name" class="col-sm-3">Recipe name: </label>
+            <InputText id="name" class="form-control col-sm-8" @bind-Value="@Model.Name" placeholder="Enter recipe name"></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="image" class="col-sm-3">Select image: </label>
+            <InputFile class="custom-file-input" OnChange="OnInputFileChange" multiple accept="image/png, image/jpeg, image/gif" id="inputFile" />
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (@Model.Ingredients == null)
+                {
+                    <p><em>Loading...</em></p>
+                }
+                else
+                {
+                    @foreach (var item in @Model.Ingredients)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Quantity</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary edit-btn">Save</button>
+    </EditForm>
+</section>
+@*}
+else
+{
+    <div class="alert @StatusClass">@Message</div>
+}*@
