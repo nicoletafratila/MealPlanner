@@ -15,6 +15,6 @@ namespace RecipeBook.Shared.Models
 
         public string? ImageUrl { get; set; }
 
-        public ICollection<IngredientModel> Ingredients { get; set; }
+        public ICollection<IngredientModel>? Ingredients { get; set; }
     }
 }

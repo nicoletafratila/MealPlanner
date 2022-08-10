@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Data;
 using RecipeBook.Api.Data.Entities;
+using RecipeBook.Api.Data.Repositories;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -46,7 +46,7 @@ namespace RecipeBook.Api.Controllers
         {
             try
             {
-                var result = await _repository.GetAsync(id);
+                var result = await _repository.GetByIdAsyncIncludeIngredients(id);
 
                 if (result == null) return NotFound();
 
@@ -80,19 +80,13 @@ namespace RecipeBook.Api.Controllers
                 }
 
                 var result = _mapper.Map<Recipe>(model);
-                _repository.Add(result);
-
-                if (await _repository.SaveChangesAsync())
-                {
-                    return Created(location, _mapper.Map<RecipeModel>(result));
-                }
+                await _repository.AddAsync(result);
+                return Created(location, _mapper.Map<RecipeModel>(result));
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
-
-            return BadRequest();
         }
 
         [HttpPut]
@@ -103,25 +97,20 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                var oldModel = await _repository.GetAsync(model.Id);
+                var oldModel = await _repository.GetByIdAsync(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");
                 }
 
                 _mapper.Map(model, oldModel);
-
-                if (await _repository.SaveChangesAsync())
-                {
-                    return _mapper.Map<RecipeModel>(oldModel);
-                }
+                await _repository.UpdateAsync(oldModel);
+                return _mapper.Map<RecipeModel>(oldModel);
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
-
-            return BadRequest();
         }
     }
 }

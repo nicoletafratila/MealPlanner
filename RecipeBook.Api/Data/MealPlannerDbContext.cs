@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecipeBook.Api.Data.Entities;
+using System.Reflection;
 
 namespace RecipeBook.Api.Data
 {
-    public class AppDbContext : DbContext
+    public class MealPlannerDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : base(options)
         {
 
         }
@@ -21,8 +22,7 @@ namespace RecipeBook.Api.Data
             //seed units of measurements
             //modelBuilder.Entity<Unit>().HasData(new Country { CountryId = 1, Name = "Belgium" });
 
-            modelBuilder.Entity<RecipeIngredient>()
-             .HasKey(t => new { t.RecipeId, t.IngredientId });
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

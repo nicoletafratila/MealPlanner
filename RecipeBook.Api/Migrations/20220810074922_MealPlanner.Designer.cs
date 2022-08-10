@@ -11,7 +11,7 @@ using RecipeBook.Api.Data;
 
 namespace RecipeBook.Api.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(MealPlannerDbContext))]
     [Migration("20220810074922_MealPlanner")]
     partial class MealPlanner
     {

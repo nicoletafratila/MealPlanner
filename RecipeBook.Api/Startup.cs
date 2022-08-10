@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecipeBook.Api.Data;
+using RecipeBook.Api.Data.Repositories;
 using System.Reflection;
 
 namespace RecipeBook.Api
@@ -16,11 +17,16 @@ namespace RecipeBook.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MealPlanner")));
+            services.AddDbContext<MealPlannerDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"));
+                options.EnableSensitiveDataLogging();
+            });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+            services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddScoped<IRecipeRepository, RecipeRepository>();
 
             services.AddCors(options =>

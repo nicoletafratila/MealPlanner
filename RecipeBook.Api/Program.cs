@@ -10,7 +10,7 @@ namespace RecipeBook.Api
 
             using (var scope = host.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetService<AppDbContext>();
+                var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
                 if (context != null)
                     context.Database.EnsureCreated();
             }

@@ -12,7 +12,8 @@ namespace RecipeBook.Api.Data.Profiles
                 .ForMember(model => model.ImageContent, opt => opt.Ignore())
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
                 .ForMember(model => model.Ingredients, opt => opt.MapFrom(data => data.RecipeIngredients.Select(item => item.ToIngredientModel())))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(model => model.RecipeIngredients, opt => opt.Ignore());
         }
     }
 }
