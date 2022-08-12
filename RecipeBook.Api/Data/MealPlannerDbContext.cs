@@ -11,9 +11,11 @@ namespace RecipeBook.Api.Data
 
         }
 
+        public DbSet<MealPlan> MealPlans { get; set; }
+        public DbSet<MealPlanRecipe> MealPlanRecipes { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

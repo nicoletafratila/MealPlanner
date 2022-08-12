@@ -5,8 +5,8 @@ namespace MealPlanner.App.Services
     public interface IRecipeService
     {
         Task<IEnumerable<RecipeModel>> GetAll();
-        Task<RecipeModel> Get(int id);
-        Task<RecipeModel> Add(RecipeModel model);
-        Task Update(RecipeModel model);
+        Task<EditRecipeModel> Get(int id);
+        Task<EditRecipeModel> Add(EditRecipeModel model);
+        Task Update(EditRecipeModel model);
     }
 }

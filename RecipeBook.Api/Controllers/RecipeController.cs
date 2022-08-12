@@ -42,7 +42,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeModel>> Get(int id)
+        public async Task<ActionResult<EditRecipeModel>> Get(int id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace RecipeBook.Api.Controllers
 
                 if (result == null) return NotFound();
 
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<RecipeModel>(result));
+                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditRecipeModel>(result));
             }
             catch (Exception)
             {
@@ -59,7 +59,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<RecipeModel>> Post(RecipeModel model)
+        public async Task<ActionResult<EditRecipeModel>> Post(EditRecipeModel model)
         {
             if (model == null)
                 return BadRequest();
@@ -81,7 +81,7 @@ namespace RecipeBook.Api.Controllers
 
                 var result = _mapper.Map<Recipe>(model);
                 await _repository.AddAsync(result);
-                return Created(location, _mapper.Map<RecipeModel>(result));
+                return Created(location, _mapper.Map<EditRecipeModel>(result));
             }
             catch (Exception)
             {
@@ -90,7 +90,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<RecipeModel>> Put(RecipeModel model)
+        public async Task<ActionResult<EditRecipeModel>> Put(EditRecipeModel model)
         {
             if (model == null)
                 return BadRequest();
@@ -105,7 +105,7 @@ namespace RecipeBook.Api.Controllers
 
                 _mapper.Map(model, oldModel);
                 await _repository.UpdateAsync(oldModel);
-                return _mapper.Map<RecipeModel>(oldModel);
+                return _mapper.Map<EditRecipeModel>(oldModel);
             }
             catch (Exception)
             {

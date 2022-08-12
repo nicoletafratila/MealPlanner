@@ -29,6 +29,25 @@ builder.Services.AddHttpClient<IRecipeService, RecipeService>()
             UseDefaultCredentials = true,
         });
 
+builder.Services.AddHttpClient<IMealPlanService, MealPlanService>()
+    .ConfigureHttpClient((serviceProvider, httpClient) =>
+    {
+        var clientConfig = serviceProvider.GetRequiredService<IRecipeBookApiConfig>();
+        httpClient.BaseAddress = clientConfig.BaseUrl;
+        httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "BlahAgent");
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+    })
+    .SetHandlerLifetime(TimeSpan.FromMinutes(5))    // Default is 2 mins
+    .ConfigurePrimaryHttpMessageHandler(x =>
+        new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            UseCookies = false,
+            AllowAutoRedirect = false,
+            UseDefaultCredentials = true,
+        });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -8,12 +8,12 @@ namespace MealPlanner.App.Pages
     public partial class RecipeEdit
     {
         [Inject]
-        public IRecipeService RecipeDataService { get; set; }
+        public IRecipeService RecipeService { get; set; }
 
         [Parameter]
         public string Id { get; set; }
 
-        public RecipeModel Model { get; set; } = new RecipeModel();
+        public EditRecipeModel Model { get; set; } = new EditRecipeModel();
 
         protected bool Saved;
         private IReadOnlyList<IBrowserFile> _selectedFiles;
@@ -25,11 +25,11 @@ namespace MealPlanner.App.Pages
 
             if (id == 0)
             {
-                Model = new RecipeModel();
+                Model = new EditRecipeModel();
             }
             else
             {
-                Model = await RecipeDataService.Get(int.Parse(Id));
+                Model = await RecipeService.Get(int.Parse(Id));
             }
         }
 
@@ -49,7 +49,7 @@ namespace MealPlanner.App.Pages
 
             if (Model.Id == 0)
             {
-                var addedEntity = await RecipeDataService.Add(Model);
+                var addedEntity = await RecipeService.Add(Model);
                 if (addedEntity != null)
                 {
                     Saved = true;
@@ -61,7 +61,7 @@ namespace MealPlanner.App.Pages
             }
             else
             {
-                await RecipeDataService.Update(Model);
+                await RecipeService.Update(Model);
                 Saved = true;
             }
         }

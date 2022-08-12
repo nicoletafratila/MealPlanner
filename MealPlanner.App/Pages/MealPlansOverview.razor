@@ -1,0 +1,38 @@
+﻿@page "/mealplansoverview"
+
+<PageTitle>Meal plans</PageTitle>
+
+<h1>Meal plans</h1>
+
+@if (MealPlans == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in MealPlans)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <a href="@($"mealplanedit/{item.Id}")" class="btn btn-primary table-btn">
+                            <i class="fas fa-edit">Edit</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="@($"mealplaneedit")" class="btn btn-primary table-btn">
+        <i class="fas fa-new">New</i>
+    </a>
+}

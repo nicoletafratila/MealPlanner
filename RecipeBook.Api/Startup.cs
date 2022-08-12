@@ -28,6 +28,7 @@ namespace RecipeBook.Api
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IMealPlanRepository, MealPlanRepository>();
 
             services.AddCors(options =>
             {

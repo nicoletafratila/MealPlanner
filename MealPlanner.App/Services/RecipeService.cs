@@ -19,26 +19,26 @@ namespace MealPlanner.App.Services
                     (await _httpClient.GetStreamAsync($"api/recipe"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<RecipeModel> Get(int id)
+        public async Task<EditRecipeModel> Get(int id)
         {
-            return await JsonSerializer.DeserializeAsync<RecipeModel>
+            return await JsonSerializer.DeserializeAsync<EditRecipeModel>
                     (await _httpClient.GetStreamAsync($"api/recipe/{id}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<RecipeModel> Add(RecipeModel model)
+        public async Task<EditRecipeModel> Add(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync("api/recipe", modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                return await JsonSerializer.DeserializeAsync<RecipeModel>(await response.Content.ReadAsStreamAsync());
+                return await JsonSerializer.DeserializeAsync<EditRecipeModel>(await response.Content.ReadAsStreamAsync());
             }
 
             return null;
         }
 
-        public async Task Update(RecipeModel model)
+        public async Task Update(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync("api/recipe", modelJson);
