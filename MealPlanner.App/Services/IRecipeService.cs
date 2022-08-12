@@ -2,7 +2,7 @@
 
 namespace MealPlanner.App.Services
 {
-    public interface IRecipeDataService
+    public interface IRecipeService
     {
         Task<IEnumerable<RecipeModel>> GetAll();
         Task<RecipeModel> Get(int id);

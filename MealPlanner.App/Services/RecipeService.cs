@@ -4,11 +4,11 @@ using System.Text.Json;
 
 namespace MealPlanner.App.Services
 {
-    public class RecipeDataService : IRecipeDataService
+    public class RecipeService : IRecipeService
     {
         private readonly HttpClient _httpClient;
 
-        public RecipeDataService(HttpClient httpClient)
+        public RecipeService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
