@@ -15,7 +15,8 @@ namespace RecipeBook.Api.Data.Repositories
                     .Include(x => x.MealPlanRecipes)
                     .ThenInclude(x => x.Recipe)
                     .ThenInclude(x => x.RecipeIngredients)
-                    .ThenInclude(x => x.Ingredient).FirstOrDefaultAsync(item => item.Id == id);
+                    .ThenInclude(x => x.Ingredient)
+                    .FirstOrDefaultAsync(item => item.Id == id);
         }
     }
 }

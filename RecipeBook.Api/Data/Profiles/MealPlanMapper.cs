@@ -6,15 +6,10 @@ namespace RecipeBook.Api.Data.Profiles
 {
     public class MealPlanMapper : Profile
     {
-        //private readonly IMapper _mapper;
-
-        //public MealPlanMapper(IMapper mapper)
         public MealPlanMapper()
         {
-            //_mapper = mapper;
-
             CreateMap<MealPlan, EditMealPlanModel>()
-               //.ForMember(model => model.Recipes, opt => opt.MapFrom(data => data.MealPlanRecipes.Select(item => _mapper.Map<EditRecipeModel>(item.Recipe))))
+               .ForMember(model => model.Recipes, opt => opt.MapFrom(data => data.MealPlanRecipes.Select(item => item.Recipe.ToEditRecipeModel())))
                .ReverseMap()
                .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
 
