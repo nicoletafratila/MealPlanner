@@ -10,7 +10,7 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSingleton<IRecipeBookApiConfig, RecipeBookApiConfig>();
 
-builder.Services.AddHttpClient<IRecipeDataService, RecipeDataService>()
+builder.Services.AddHttpClient<IRecipeService, RecipeService>()
     .ConfigureHttpClient((serviceProvider, httpClient) =>
     {
         var clientConfig = serviceProvider.GetRequiredService<IRecipeBookApiConfig>();

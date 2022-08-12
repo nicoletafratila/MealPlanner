@@ -8,7 +8,7 @@ namespace MealPlanner.App.Pages
     public partial class RecipeEdit
     {
         [Inject]
-        public IRecipeDataService RecipeDataService { get; set; }
+        public IRecipeService RecipeDataService { get; set; }
 
         [Parameter]
         public string Id { get; set; }
