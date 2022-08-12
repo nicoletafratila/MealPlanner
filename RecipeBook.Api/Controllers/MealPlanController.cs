@@ -41,7 +41,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MealPlanModel>> Get(int id)
+        public async Task<ActionResult<EditMealPlanModel>> Get(int id)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Controllers
 
                 if (result == null) return NotFound();
 
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<MealPlanModel>(result));
+                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
             }
             catch (Exception)
             {

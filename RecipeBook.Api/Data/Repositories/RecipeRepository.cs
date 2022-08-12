@@ -11,7 +11,10 @@ namespace RecipeBook.Api.Data.Repositories
 
         public async Task<Recipe> GetByIdAsyncIncludeIngredients(int id)
         {
-            return await DbContext.Recipes.Include(x => x.RecipeIngredients).ThenInclude(x => x.Ingredient).FirstOrDefaultAsync(item => item.Id == id);
+            return await DbContext.Recipes
+                    .Include(x => x.RecipeIngredients)
+                    .ThenInclude(x => x.Ingredient)
+                    .FirstOrDefaultAsync(item => item.Id == id);
         }
     }
 }

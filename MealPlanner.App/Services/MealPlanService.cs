@@ -18,9 +18,9 @@ namespace MealPlanner.App.Services
                     (await _httpClient.GetStreamAsync($"api/mealplan"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<MealPlanModel> Get(int id)
+        public async Task<EditMealPlanModel> Get(int id)
         {
-            return await JsonSerializer.DeserializeAsync<MealPlanModel>
+            return await JsonSerializer.DeserializeAsync<EditMealPlanModel>
                     (await _httpClient.GetStreamAsync($"api/mealplan/{id}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
     }

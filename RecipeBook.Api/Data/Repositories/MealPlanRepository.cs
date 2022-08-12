@@ -11,8 +11,11 @@ namespace RecipeBook.Api.Data.Repositories
 
         public async Task<MealPlan> GetByIdAsyncIncludeRecipes(int id)
         {
-            //return await DbContext.MealPlans.Include(x => x.Recipes).ThenInclude(x => x.MealPlan).FirstOrDefaultAsync(item => item.Id == id);
-            return await DbContext.MealPlans.FirstOrDefaultAsync(item => item.Id == id);
+            return await DbContext.MealPlans
+                    .Include(x => x.MealPlanRecipes)
+                    .ThenInclude(x => x.Recipe)
+                    .ThenInclude(x => x.RecipeIngredients)
+                    .ThenInclude(x => x.Ingredient).FirstOrDefaultAsync(item => item.Id == id);
         }
     }
 }

@@ -5,6 +5,6 @@ namespace MealPlanner.App.Services
     public interface IMealPlanService
     {
         Task<IEnumerable<MealPlanModel>> GetAll();
-        Task<MealPlanModel> Get(int id);
+        Task<EditMealPlanModel> Get(int id);
     }
 }

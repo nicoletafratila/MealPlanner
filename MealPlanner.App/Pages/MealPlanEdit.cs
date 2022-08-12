@@ -12,7 +12,7 @@ namespace MealPlanner.App.Pages
         [Parameter]
         public string Id { get; set; }
 
-        public MealPlanModel Model { get; set; } = new MealPlanModel();
+        public EditMealPlanModel Model { get; set; } = new EditMealPlanModel();
 
         protected bool Saved;
 
@@ -23,7 +23,7 @@ namespace MealPlanner.App.Pages
 
             if (id == 0)
             {
-                Model = new MealPlanModel();
+                Model = new EditMealPlanModel();
             }
             else
             {

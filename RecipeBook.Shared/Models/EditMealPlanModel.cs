@@ -2,7 +2,7 @@
 
 namespace RecipeBook.Shared.Models
 {
-    public class MealPlanModel
+    public class EditMealPlanModel
     {
         [Required]
         public int Id { get; set; }
@@ -10,5 +10,7 @@ namespace RecipeBook.Shared.Models
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
+
+        public ICollection<EditRecipeModel>? Recipes { get; set; }
     }
 }

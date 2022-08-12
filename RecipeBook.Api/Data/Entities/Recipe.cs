@@ -5,6 +5,6 @@
         public string Name { get; set; }
         public byte[]? ImageContent { get; set; }
         public List<RecipeIngredient>? RecipeIngredients { get; set; }
-        public List<MealPlanRecipe>? MealPlans { get; set; }
+        public List<MealPlanRecipe>? MealPlanRecipes { get; set; }
     }
 }

@@ -14,13 +14,13 @@ namespace RecipeBook.Api.Data.Profiles
                 .ForMember(model => model.Ingredients, opt => opt.MapFrom(data => data.RecipeIngredients.Select(item => item.ToIngredientModel())))
                 .ReverseMap()
                 .ForMember(model => model.RecipeIngredients, opt => opt.Ignore())
-                //.ForMember(model => model.MealPlans, opt => opt.Ignore())
-                ;
+                .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
 
             CreateMap<Recipe, RecipeModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
                 .ReverseMap()
-                .ForMember(model => model.RecipeIngredients, opt => opt.Ignore());
+                .ForMember(model => model.RecipeIngredients, opt => opt.Ignore())
+                .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
         }
     }
 }

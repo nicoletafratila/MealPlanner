@@ -1,9 +1,10 @@
-﻿using RecipeBook.Api.Data.Entities;
+﻿using AutoMapper;
+using RecipeBook.Api.Data.Entities;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Data.Profiles
 {
-    public static class IngredientMapper
+    public static class RecipeIngredientToIngredientMapper
     {
         public static IngredientModel ToIngredientModel(this RecipeIngredient item)
         {
