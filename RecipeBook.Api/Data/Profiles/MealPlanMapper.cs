@@ -8,14 +8,19 @@ namespace RecipeBook.Api.Data.Profiles
     {
         public MealPlanMapper()
         {
-            CreateMap<MealPlan, EditMealPlanModel>()
-               .ForMember(model => model.Recipes, opt => opt.MapFrom(data => data.MealPlanRecipes.Select(item => item.Recipe.ToEditRecipeModel())))
-               .ReverseMap()
-               .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
-
             CreateMap<MealPlan, MealPlanModel>()
                 .ReverseMap()
                 .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
+            
+            CreateMap<MealPlan, EditMealPlanModel>()
+               .ForMember(model => model.Recipes, opt => opt.MapFrom(data => data.MealPlanRecipes.Select(item => item.Recipe.ToRecipeModel())))
+               .ReverseMap()
+               .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
+
+            CreateMap<MealPlan, ShoppingListModel>()
+                 .ForMember(model => model.Ingredients, opt => opt.MapFrom(data => data.MealPlanRecipes.ToListIngredientModel()))
+                 .ReverseMap()
+                 .ForMember(model => model.MealPlanRecipes, opt => opt.Ignore());
         }
     }
 }

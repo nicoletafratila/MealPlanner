@@ -1,0 +1,34 @@
+﻿@page "/shoppinglist"
+@page "/shoppinglist/{id}"
+
+<PageTitle>Shopping list</PageTitle>
+
+<h1 class="page-title">Shopping list details for @Model.Name</h1>
+
+@if (Model.Ingredients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Ingredients)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Unit</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

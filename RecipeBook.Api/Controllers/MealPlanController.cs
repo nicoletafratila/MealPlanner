@@ -45,7 +45,7 @@ namespace RecipeBook.Api.Controllers
         {
             try
             {
-                var result = await _repository.GetByIdAsyncIncludeRecipes(id);
+                var result = await _repository.GetByIdAsync(id);
 
                 if (result == null) return NotFound();
 
@@ -56,5 +56,22 @@ namespace RecipeBook.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
+
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<EditMealPlanModel>> GetIncludeRecipes(int id)
+        //{
+        //    try
+        //    {
+        //        var result = await _repository.GetByIdAsyncIncludeRecipes(id);
+
+        //        if (result == null) return NotFound();
+
+        //        return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+        //    }
+        //}
     }
 }
