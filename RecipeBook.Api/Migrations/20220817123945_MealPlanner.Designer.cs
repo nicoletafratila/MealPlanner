@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecipeBook.Api.Data;
 
@@ -11,9 +12,10 @@ using RecipeBook.Api.Data;
 namespace RecipeBook.Api.Migrations
 {
     [DbContext(typeof(MealPlannerDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220817123945_MealPlanner")]
+    partial class MealPlanner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,6 +43,38 @@ namespace RecipeBook.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("RecipeBook.Api.Data.Entities.MealPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MealPlans");
+                });
+
+            modelBuilder.Entity("RecipeBook.Api.Data.Entities.MealPlanRecipe", b =>
+                {
+                    b.Property<int>("MealPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MealPlanId", "RecipeId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("MealPlanRecipes");
                 });
 
             modelBuilder.Entity("RecipeBook.Api.Data.Entities.Recipe", b =>
@@ -81,6 +115,25 @@ namespace RecipeBook.Api.Migrations
                     b.ToTable("RecipeIngredients");
                 });
 
+            modelBuilder.Entity("RecipeBook.Api.Data.Entities.MealPlanRecipe", b =>
+                {
+                    b.HasOne("RecipeBook.Api.Data.Entities.MealPlan", "MealPlan")
+                        .WithMany("MealPlanRecipes")
+                        .HasForeignKey("MealPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RecipeBook.Api.Data.Entities.Recipe", "Recipe")
+                        .WithMany("MealPlanRecipes")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MealPlan");
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("RecipeBook.Api.Data.Entities.RecipeIngredient", b =>
                 {
                     b.HasOne("RecipeBook.Api.Data.Entities.Ingredient", "Ingredient")
@@ -105,8 +158,15 @@ namespace RecipeBook.Api.Migrations
                     b.Navigation("RecipeIngredients");
                 });
 
+            modelBuilder.Entity("RecipeBook.Api.Data.Entities.MealPlan", b =>
+                {
+                    b.Navigation("MealPlanRecipes");
+                });
+
             modelBuilder.Entity("RecipeBook.Api.Data.Entities.Recipe", b =>
                 {
+                    b.Navigation("MealPlanRecipes");
+
                     b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618

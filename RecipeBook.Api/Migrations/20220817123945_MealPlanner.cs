@@ -24,6 +24,19 @@ namespace RecipeBook.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MealPlans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MealPlans", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
@@ -35,6 +48,30 @@ namespace RecipeBook.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MealPlanRecipes",
+                columns: table => new
+                {
+                    MealPlanId = table.Column<int>(type: "int", nullable: false),
+                    RecipeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MealPlanRecipes", x => new { x.MealPlanId, x.RecipeId });
+                    table.ForeignKey(
+                        name: "FK_MealPlanRecipes_MealPlans_MealPlanId",
+                        column: x => x.MealPlanId,
+                        principalTable: "MealPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MealPlanRecipes_Recipes_RecipeId",
+                        column: x => x.RecipeId,
+                        principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -63,6 +100,11 @@ namespace RecipeBook.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_MealPlanRecipes_RecipeId",
+                table: "MealPlanRecipes",
+                column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RecipeIngredients_IngredientId",
                 table: "RecipeIngredients",
                 column: "IngredientId");
@@ -71,7 +113,13 @@ namespace RecipeBook.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "MealPlanRecipes");
+
+            migrationBuilder.DropTable(
                 name: "RecipeIngredients");
+
+            migrationBuilder.DropTable(
+                name: "MealPlans");
 
             migrationBuilder.DropTable(
                 name: "Ingredients");
