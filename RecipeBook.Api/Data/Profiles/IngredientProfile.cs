@@ -4,9 +4,9 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Data.Profiles
 {
-    public class IngredientMapper : Profile
+    public class IngredientProfile : Profile
     {
-        public IngredientMapper()
+        public IngredientProfile()
         {
             CreateMap<Ingredient, IngredientModel>()
                .ReverseMap();
