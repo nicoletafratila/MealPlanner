@@ -104,7 +104,7 @@ namespace RecipeBook.Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("RecipeId", "IngredientId");
 

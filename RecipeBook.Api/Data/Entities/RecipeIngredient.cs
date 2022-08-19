@@ -6,7 +6,7 @@ namespace RecipeBook.Api.Data.Entities
     {
         public int RecipeId { get; set; }
         public int IngredientId { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         
         [ForeignKey("RecipeId")]
         public Recipe Recipe { get; private set; }
