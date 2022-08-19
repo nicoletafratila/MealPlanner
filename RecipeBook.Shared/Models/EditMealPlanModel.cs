@@ -11,6 +11,6 @@ namespace RecipeBook.Shared.Models
         [StringLength(100)]
         public string Name { get; set; }
 
-        public ICollection<RecipeModel>? Recipes { get; set; }
+        public IEnumerable<RecipeModel>? Recipes { get; set; }
     }
 }
