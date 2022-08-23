@@ -15,7 +15,6 @@ namespace RecipeBook.Api.Data.Profiles
                 {
                     var model = context.Mapper.Map<IngredientModel>(item.Ingredient);
                     model.RecipeId = item.RecipeId;
-                    model.IngredientId = item.IngredientId;
                     model.Quantity = item.Quantity;
                     result.Add(model);
                 }
