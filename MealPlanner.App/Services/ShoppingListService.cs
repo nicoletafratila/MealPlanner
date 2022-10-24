@@ -1,5 +1,4 @@
 ﻿using RecipeBook.Shared.Models;
-using System.Text.Json;
 
 namespace MealPlanner.App.Services
 {
@@ -16,8 +15,7 @@ namespace MealPlanner.App.Services
 
         public async Task<ShoppingListModel> Get(int id)
         {
-            var result = await JsonSerializer.DeserializeAsync<ShoppingListModel>
-                    (await _httpClient.GetStreamAsync($"api/shoppinglist/{id}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            var result = await _httpClient.GetFromJsonAsync<ShoppingListModel>($"api/shoppinglist/{id}");
             result.Ingredients = _quantityCalculator.CalculateQuantities(result.Ingredients);
             return result;
         }

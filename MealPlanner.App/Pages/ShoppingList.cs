@@ -6,8 +6,11 @@ namespace MealPlanner.App.Pages
 {
     public partial class ShoppingList
     {
-         [Inject]
+        [Inject]
         public IShoppingListService ShoppingListService { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
 
         [Parameter]
         public string Id { get; set; }
@@ -34,6 +37,11 @@ namespace MealPlanner.App.Pages
         protected async Task Save()
         {
             Saved = false;
+        }
+
+        protected void NavigateToOverview()
+        {
+            NavigationManager.NavigateTo($"/mealplanedit/{Id}");
         }
     }
 }

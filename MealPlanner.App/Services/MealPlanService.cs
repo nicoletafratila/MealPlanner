@@ -1,5 +1,4 @@
 ﻿using RecipeBook.Shared.Models;
-using System.Text.Json;
 
 namespace MealPlanner.App.Services
 {
@@ -14,14 +13,12 @@ namespace MealPlanner.App.Services
 
         public async Task<IEnumerable<MealPlanModel>> GetAll()
         {
-            return await JsonSerializer.DeserializeAsync<IEnumerable<MealPlanModel>>
-                    (await _httpClient.GetStreamAsync($"api/mealplan"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await _httpClient.GetFromJsonAsync<IEnumerable<MealPlanModel>>($"api/mealplan");
         }
 
         public async Task<EditMealPlanModel> Get(int id)
         {
-            return await JsonSerializer.DeserializeAsync<EditMealPlanModel>
-                    (await _httpClient.GetStreamAsync($"api/mealplan/{id}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"api/mealplan/{id}");
         }
     }
 }

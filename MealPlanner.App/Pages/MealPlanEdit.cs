@@ -9,6 +9,9 @@ namespace MealPlanner.App.Pages
         [Inject]
         public IMealPlanService MealPlanService { get; set; }
 
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
         [Parameter]
         public string Id { get; set; }
 
@@ -34,6 +37,11 @@ namespace MealPlanner.App.Pages
         protected async Task Save()
         {
             Saved = false;
+        }
+
+        protected void NavigateToOverview()
+        {
+            NavigationManager.NavigateTo("/mealplansoverview");
         }
     }
 }

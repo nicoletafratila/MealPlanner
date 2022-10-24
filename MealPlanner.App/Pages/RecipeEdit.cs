@@ -10,6 +10,9 @@ namespace MealPlanner.App.Pages
         [Inject]
         public IRecipeService RecipeService { get; set; }
 
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
         [Parameter]
         public string Id { get; set; }
 
@@ -70,6 +73,11 @@ namespace MealPlanner.App.Pages
         {
             _selectedFiles = e.GetMultipleFiles();
             StateHasChanged();
+        }
+
+        protected void NavigateToOverview()
+        {
+            NavigationManager.NavigateTo("/recipesoverview");
         }
     }
 }

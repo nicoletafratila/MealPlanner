@@ -15,14 +15,12 @@ namespace MealPlanner.App.Services
 
         public async Task<IEnumerable<RecipeModel>> GetAll()
         {
-            return await JsonSerializer.DeserializeAsync<IEnumerable<RecipeModel>>
-                    (await _httpClient.GetStreamAsync($"api/recipe"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RecipeModel>>($"api/recipe");
         }
 
         public async Task<EditRecipeModel> Get(int id)
         {
-            return await JsonSerializer.DeserializeAsync<EditRecipeModel>
-                    (await _httpClient.GetStreamAsync($"api/recipe/{id}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"api/recipe/{id}");
         }
 
         public async Task<EditRecipeModel> Add(EditRecipeModel model)
