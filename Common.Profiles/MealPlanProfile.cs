@@ -2,7 +2,7 @@
 using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 
-namespace MealPlanner.Api.Data.Profiles
+namespace Common.Profiles
 {
     public class MealPlanProfile : Profile
     {

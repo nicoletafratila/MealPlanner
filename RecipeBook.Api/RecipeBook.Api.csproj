@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\MealPlannerDbContext.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -27,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Data\Common.Data.csproj" />
+    <ProjectReference Include="..\Common.Profiles\Common.Profiles.csproj" />
     <ProjectReference Include="..\Common.Repository\Common.Repository.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>

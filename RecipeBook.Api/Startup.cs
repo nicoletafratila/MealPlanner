@@ -1,8 +1,9 @@
-﻿using Common.Data.DataContext;
+﻿using AutoMapper;
+using Common.Data.DataContext;
+using Common.Profiles;
 using Common.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Api.Data.Repositories;
-using System.Reflection;
 
 namespace RecipeBook.Api
 {
@@ -25,7 +26,13 @@ namespace RecipeBook.Api
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+             var config = new MapperConfiguration(c =>
+            {
+                c.AddProfile<IngredientProfile>();
+                c.AddProfile<MealPlanProfile>();
+                c.AddProfile<RecipeProfile>();
+            });
+            services.AddSingleton<IMapper>(s => config.CreateMapper());
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddScoped<IRecipeRepository, RecipeRepository>();

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Data\Common.Data.csproj" />
+    <ProjectReference Include="..\Common.Profiles\Common.Profiles.csproj" />
     <ProjectReference Include="..\Common.Repository\Common.Repository.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
   </ItemGroup>

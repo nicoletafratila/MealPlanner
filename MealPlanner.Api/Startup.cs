@@ -1,4 +1,6 @@
-﻿using Common.Data.DataContext;
+﻿using AutoMapper;
+using Common.Data.DataContext;
+using Common.Profiles;
 using Common.Repository.Repositories;
 using MealPlanner.Api.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +27,13 @@ namespace MealPlanner.Api
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            var config = new MapperConfiguration(c =>
+            {
+                c.AddProfile<IngredientProfile>();
+                c.AddProfile<MealPlanProfile>();
+                c.AddProfile<RecipeProfile>();
+            });
+            services.AddSingleton<IMapper>(s => config.CreateMapper());
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddScoped<IMealPlanRepository, MealPlanRepository>();
