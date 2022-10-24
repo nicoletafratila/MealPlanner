@@ -1,4 +1,6 @@
-﻿namespace RecipeBook.Api.Data.Entities
+﻿using Common.Data.Data.Entities;
+
+namespace RecipeBook.Api.Data.Entities
 {
     public class Recipe : Entity<int>
     {
