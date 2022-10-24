@@ -1,4 +1,4 @@
-﻿using RecipeBook.Shared.Models;
+﻿using MealPlanner.Shared.Models;
 
 namespace MealPlanner.App.Services
 {

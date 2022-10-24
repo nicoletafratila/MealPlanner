@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Data.Repositories;
-using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
 {

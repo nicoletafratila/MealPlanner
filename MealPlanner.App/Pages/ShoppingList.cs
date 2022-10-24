@@ -1,6 +1,6 @@
 ﻿using MealPlanner.App.Services;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.App.Pages
 {

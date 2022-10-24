@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 

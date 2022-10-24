@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RecipeBook.Shared.Models
+namespace MealPlanner.Shared.Models
 {
     public class MealPlanModel
     {

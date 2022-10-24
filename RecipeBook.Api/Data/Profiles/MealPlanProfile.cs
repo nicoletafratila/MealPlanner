@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using MealPlanner.Shared.Models;
 using RecipeBook.Api.Data.Entities;
-using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Data.Profiles
 {

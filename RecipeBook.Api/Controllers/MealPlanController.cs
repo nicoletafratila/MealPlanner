@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Data.Repositories;
-using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
 {
@@ -56,22 +56,5 @@ namespace RecipeBook.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<EditMealPlanModel>> GetIncludeRecipes(int id)
-        //{
-        //    try
-        //    {
-        //        var result = await _repository.GetByIdAsyncIncludeRecipes(id);
-
-        //        if (result == null) return NotFound();
-
-        //        return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-        //    }
-        //}
     }
 }

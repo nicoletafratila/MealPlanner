@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace RecipeBook.Shared.Models
+namespace MealPlanner.Shared.Models
 {
     public class EditMealPlanModel
     {
