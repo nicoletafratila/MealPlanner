@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Data", "Common.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Repository", "Common.Repository\Common.Repository.csproj", "{D8CEF05D-5DCC-4D22-A6ED-B4135EFB12D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealPlanner.Api", "MealPlanner.Api\MealPlanner.Api.csproj", "{021FD7A8-9480-4D45-B1BD-8CA55489E6B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{D8CEF05D-5DCC-4D22-A6ED-B4135EFB12D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8CEF05D-5DCC-4D22-A6ED-B4135EFB12D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8CEF05D-5DCC-4D22-A6ED-B4135EFB12D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{021FD7A8-9480-4D45-B1BD-8CA55489E6B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{021FD7A8-9480-4D45-B1BD-8CA55489E6B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{021FD7A8-9480-4D45-B1BD-8CA55489E6B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{021FD7A8-9480-4D45-B1BD-8CA55489E6B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

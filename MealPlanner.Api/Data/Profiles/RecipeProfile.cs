@@ -2,7 +2,7 @@
 using Common.Data.Entities;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Data.Profiles
+namespace MealPlanner.Api.Data.Profiles
 {
     public class RecipeProfile : Profile
     {

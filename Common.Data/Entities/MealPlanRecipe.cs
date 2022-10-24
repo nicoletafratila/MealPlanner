@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RecipeBook.Api.Data.Entities
+namespace Common.Data.Entities
 {
     public class MealPlanRecipe
     {

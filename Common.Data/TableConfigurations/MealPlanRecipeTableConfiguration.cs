@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Common.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using RecipeBook.Api.Data.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace RecipeBook.Api.Data.TableConfigurations
+namespace Common.Data.TableConfigurations
 {
     public class MealPlanRecipeTableConfiguration : IEntityTypeConfiguration<MealPlanRecipe>
     {

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using MealPlanner.Api.Data.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Data.Repositories;
 
-namespace RecipeBook.Api.Controllers
+namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

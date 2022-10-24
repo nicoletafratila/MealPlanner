@@ -1,7 +1,7 @@
-﻿using Common.Repository.Repositories;
-using RecipeBook.Api.Data.Entities;
+﻿using Common.Data.Entities;
+using Common.Repository.Repositories;
 
-namespace RecipeBook.Api.Data.Repositories
+namespace MealPlanner.Api.Data.Repositories
 {
     public interface IMealPlanRepository : IAsyncRepository<MealPlan, int>
     {

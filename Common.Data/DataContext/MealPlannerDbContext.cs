@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RecipeBook.Api.Data.Entities;
+﻿using Common.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace RecipeBook.Api.Data
+namespace Common.Data.DataContext
 {
     public class MealPlannerDbContext : DbContext
     {

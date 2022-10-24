@@ -1,4 +1,5 @@
-﻿using MealPlanner.App.Services;
+﻿using MealPlanner.App.Configs;
+using MealPlanner.App.Services;
 
 namespace MealPlanner.App
 {
@@ -6,40 +7,18 @@ namespace MealPlanner.App
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<CampContext>();
-            //services.AddScoped<ICampRepository, CampRepository>();
-
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            //services.AddApiVersioning(opt =>
-            //{
-            //    opt.AssumeDefaultVersionWhenUnspecified = true;
-            //    opt.DefaultApiVersion = new ApiVersion(1, 1);
-            //    opt.ReportApiVersions = true;
-            //    opt.ApiVersionReader = ApiVersionReader.Combine(
-            //        new HeaderApiVersionReader("X-Version"),
-            //        new QueryStringApiVersionReader("ver", "version"));
-
-            //    //opt.ApiVersionReader = new UrlSegmentApiVersionReader();
-
-            //    opt.Conventions.Controller<TalksController>()
-            //        .HasApiVersions(new List<ApiVersion>() { new ApiVersion(1, 0), new ApiVersion(1, 1) })
-            //            .Action(c => c.Delete(default(string), default(int)))
-            //            .MapToApiVersion(1, 1);
-            //});
-
-            //services.AddControllers();
-
             // Add services to the container.
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddSingleton<IRecipeBookApiConfig, RecipeBookApiConfig>();
+            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
+            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
             services.AddSingleton<IQuantityCalculator, QuantityCalculator>();
 
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
-                    var clientConfig = serviceProvider.GetRequiredService<IRecipeBookApiConfig>();
+                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == "RecipeBook").Single();
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
@@ -47,7 +26,7 @@ namespace MealPlanner.App
             services.AddHttpClient<IMealPlanService, MealPlanService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
-                    var clientConfig = serviceProvider.GetRequiredService<IRecipeBookApiConfig>();
+                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == "MealPlanner").Single();
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
@@ -55,7 +34,7 @@ namespace MealPlanner.App
             services.AddHttpClient<IShoppingListService, ShoppingListService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
-                    var clientConfig = serviceProvider.GetRequiredService<IRecipeBookApiConfig>();
+                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == "MealPlanner").Single();
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });

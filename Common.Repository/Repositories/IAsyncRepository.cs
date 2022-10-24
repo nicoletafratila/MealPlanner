@@ -1,4 +1,4 @@
-﻿using Common.Data.Data.Entities;
+﻿using Common.Data.Entities;
 
 namespace Common.Repository.Repositories
 {

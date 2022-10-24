@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Common.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Data.Entities;
 using RecipeBook.Api.Data.Repositories;
 using RecipeBook.Shared.Models;
 

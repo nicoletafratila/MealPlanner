@@ -1,4 +1,4 @@
-﻿namespace Common.Data.Data.Entities
+﻿namespace Common.Data.Entities
 {
     public abstract class Entity<T>
     {

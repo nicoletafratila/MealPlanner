@@ -1,6 +1,6 @@
 using Common.Data.DataContext;
 
-namespace RecipeBook.Api
+namespace MealPlanner.Api
 {
     public class Program
     {

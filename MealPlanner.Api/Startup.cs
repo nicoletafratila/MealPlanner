@@ -1,10 +1,10 @@
 ﻿using Common.Data.DataContext;
 using Common.Repository.Repositories;
+using MealPlanner.Api.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
-using RecipeBook.Api.Data.Repositories;
 using System.Reflection;
 
-namespace RecipeBook.Api
+namespace MealPlanner.Api
 {
     public class Startup
     {
@@ -28,7 +28,7 @@ namespace RecipeBook.Api
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IMealPlanRepository, MealPlanRepository>();
 
             services.AddCors(options =>
             {

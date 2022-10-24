@@ -1,14 +1,20 @@
-﻿namespace MealPlanner.App.Services
+﻿namespace MealPlanner.App.Configs
 {
-    public class RecipeBookApiConfig : IRecipeBookApiConfig
+    public class RecipeBookApiConfig : IApiConfig
     {
+        private const string NAME = "RecipeBook";
+
         public Uri BaseUrl { get; set; }
         public int Timeout { get; set; }
-        
+        public string Name
+        {
+            get { return NAME; }
+        }
+
         public RecipeBookApiConfig(IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            configuration.Bind("RecipeBook", this);
+            configuration.Bind(NAME, this);
         }
     }
 }
