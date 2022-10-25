@@ -3,7 +3,7 @@ using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 using RecipeBook.Shared.Models;
 
-namespace Common.Data.Profiles
+namespace Common.Data.Profiles.Resolvers
 {
     public class MealPlanRecipeCustomResolver : IMemberValueResolver<MealPlan, EditMealPlanModel, IEnumerable<MealPlanRecipe>, IEnumerable<RecipeModel>>
     {

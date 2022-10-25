@@ -2,7 +2,7 @@
 using Common.Data.Entities;
 using RecipeBook.Shared.Models;
 
-namespace Common.Data.Profiles
+namespace Common.Data.Profiles.Resolvers
 {
     public class RecipeIngredientCustomResolver : IMemberValueResolver<Recipe, EditRecipeModel, IEnumerable<RecipeIngredient>, IEnumerable<IngredientModel>>
     {

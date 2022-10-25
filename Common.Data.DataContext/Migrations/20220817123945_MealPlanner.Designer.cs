@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace RecipeBook.Api.Migrations
+namespace Common.Data.DataContext.Migrations
 {
     [DbContext(typeof(MealPlannerDbContext))]
     [Migration("20220817123945_MealPlanner")]

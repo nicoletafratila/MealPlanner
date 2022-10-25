@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace RecipeBook.Api.Migrations
+namespace Common.Data.DataContext.Migrations
 {
     public partial class MealPlanner : Migration
     {
