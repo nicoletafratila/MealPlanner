@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Common.Data.TableConfigurations
+namespace Common.Data.DataContext.TableConfigurations
 {
     public class MealPlanRecipeTableConfiguration : IEntityTypeConfiguration<MealPlanRecipe>
     {

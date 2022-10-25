@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataContext\**" />
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="TableConfigurations\**" />
+    <EmbeddedResource Remove="DataContext\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="TableConfigurations\**" />
+    <None Remove="DataContext\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="TableConfigurations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
   </ItemGroup>
 

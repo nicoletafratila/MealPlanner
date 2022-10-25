@@ -9,12 +9,12 @@ namespace RecipeBook.Api
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -26,13 +26,13 @@ namespace RecipeBook.Api
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-             var config = new MapperConfiguration(c =>
+            var config = new MapperConfiguration(c =>
             {
                 c.AddProfile<IngredientProfile>();
                 c.AddProfile<MealPlanProfile>();
                 c.AddProfile<RecipeProfile>();
             });
-            services.AddSingleton<IMapper>(s => config.CreateMapper());
+            services.AddSingleton(s => config.CreateMapper());
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddScoped<IRecipeRepository, RecipeRepository>();
