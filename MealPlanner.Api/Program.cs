@@ -1,20 +1,11 @@
-using Common.Data.DataContext;
-
 namespace MealPlanner.Api
 {
-    public class Program
+    public class Program 
     {
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
-                if (context != null)
-                    context.Database.EnsureCreated();
-            }
-
+            Common.Api.Program.CreateScope(host);
             host.Run();
         }
 
