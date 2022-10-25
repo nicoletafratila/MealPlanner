@@ -14,7 +14,6 @@ namespace MealPlanner.UI.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add services to the container.
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
@@ -47,27 +46,26 @@ namespace MealPlanner.UI.Web
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
-
-            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.MapBlazorHub();
+            app.MapFallbackToPage("/_Host");
 
-            app.UseCors("Open");
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.Run();
         }
     }
 }
