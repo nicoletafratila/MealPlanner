@@ -1,5 +1,5 @@
 ﻿using Common.Data.Entities;
-using Common.Repository.Repositories;
+using Common.Data.Repository;
 
 namespace RecipeBook.Api.Data.Repositories
 {

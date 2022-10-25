@@ -1,6 +1,6 @@
 ﻿using Common.Data.DataContext;
 using Common.Data.Entities;
-using Common.Repository.Repositories;
+using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api.Data.Repositories

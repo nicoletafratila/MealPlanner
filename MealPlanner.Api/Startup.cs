@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Common.Data.DataContext;
-using Common.Profiles;
-using Common.Repository.Repositories;
+using Common.Data.Profiles;
+using Common.Data.Repository;
 using MealPlanner.Api.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
