@@ -1,4 +1,5 @@
-﻿using MealPlanner.Shared.Models;
+﻿using Common.Constants;
+using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
@@ -13,12 +14,12 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IEnumerable<MealPlanModel>> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<MealPlanModel>>($"api/mealplan");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<MealPlanModel>>(ApiNames.MealPlanApi);
         }
 
         public async Task<EditMealPlanModel> Get(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"api/mealplan/{id}");
+            return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"{ApiNames.MealPlanApi}{id}");
         }
     }
 }

@@ -1,20 +1,17 @@
-﻿namespace MealPlanner.UI.Web.Configs
+﻿using Common.Constants;
+
+namespace MealPlanner.UI.Web.Configs
 {
     public class RecipeBookApiConfig : IApiConfig
     {
-        private const string NAME = "RecipeBook";
-
         public Uri BaseUrl { get; set; }
         public int Timeout { get; set; }
-        public string Name
-        {
-            get { return NAME; }
-        }
+        public string Name => ApiConfig.RecipeBook;
 
         public RecipeBookApiConfig(IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            configuration.Bind(NAME, this);
+            configuration.Bind(Name, this);
         }
     }
 }

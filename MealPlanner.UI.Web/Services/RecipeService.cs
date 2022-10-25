@@ -1,4 +1,5 @@
-﻿using RecipeBook.Shared.Models;
+﻿using Common.Constants;
+using RecipeBook.Shared.Models;
 using System.Text;
 using System.Text.Json;
 
@@ -15,18 +16,18 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IEnumerable<RecipeModel>> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<RecipeModel>>($"api/recipe");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RecipeModel>>($"{ApiNames.RecipeApi}");
         }
 
         public async Task<EditRecipeModel> Get(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"api/recipe/{id}");
+            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}{id}");
         }
 
         public async Task<EditRecipeModel> Add(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("api/recipe", modelJson);
+            var response = await _httpClient.PostAsync(ApiNames.RecipeApi, modelJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -39,7 +40,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task Update(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync("api/recipe", modelJson);
+            await _httpClient.PutAsync(ApiNames.RecipeApi, modelJson);
         }
     }
 }

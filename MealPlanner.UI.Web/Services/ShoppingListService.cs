@@ -1,4 +1,5 @@
-﻿using MealPlanner.Shared.Models;
+﻿using Common.Constants;
+using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
@@ -15,7 +16,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<ShoppingListModel> Get(int id)
         {
-            var result = await _httpClient.GetFromJsonAsync<ShoppingListModel>($"api/shoppinglist/{id}");
+            var result = await _httpClient.GetFromJsonAsync<ShoppingListModel>($"{ApiNames.ShoppingListApi}{id}");
             result.Ingredients = _quantityCalculator.CalculateQuantities(result.Ingredients);
             return result;
         }
