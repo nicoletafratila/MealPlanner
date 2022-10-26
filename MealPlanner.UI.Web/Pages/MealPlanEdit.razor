@@ -37,35 +37,6 @@
                                 <img src="@item.ImageUrl" width="100" height="80" />
                             </td>
                         </tr>
-
-                        @*<tr>
-                            <table class="table1">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Quantity</th>
-                                        <th>Unit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (@item.Ingredients == null)
-                                    {
-                                        <p><em>Loading...</em></p>
-                                    }
-                                    else
-                                    {
-                                        @foreach (var item1 in @item.Ingredients)
-                                        {
-                                            <tr>
-                                                <td>@item1.Name</td>
-                                                <td>@item1.Quantity</td>
-                                                <td>@item1.Unit</td>
-                                            </tr>
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-                        </tr>*@
                     }
                 }
             </tbody>
