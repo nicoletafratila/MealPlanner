@@ -1,6 +1,7 @@
-﻿using RecipeBook.Shared.Models;
+﻿using MealPlanner.Api.Services;
+using RecipeBook.Shared.Models;
 
-namespace MealPlanner.UI.Web.Services
+namespace MealPlanner.Api.Services
 {
     public class QuantityCalculator : IQuantityCalculator
     {

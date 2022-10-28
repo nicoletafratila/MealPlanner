@@ -1,6 +1,6 @@
 ﻿using RecipeBook.Shared.Models;
 
-namespace MealPlanner.UI.Web.Services
+namespace MealPlanner.Api.Services
 {
     public interface IQuantityCalculator
     {

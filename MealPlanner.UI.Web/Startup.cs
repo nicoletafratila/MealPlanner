@@ -20,7 +20,6 @@ namespace MealPlanner.UI.Web
 
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
-            services.AddSingleton<IQuantityCalculator, QuantityCalculator>();
 
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>

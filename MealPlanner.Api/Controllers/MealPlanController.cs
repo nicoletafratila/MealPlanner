@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MealPlanner.Api.Data.Repositories;
+using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 

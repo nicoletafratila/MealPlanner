@@ -3,7 +3,7 @@ using Common.Data.Entities;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace MealPlanner.Api.Data.Repositories
+namespace MealPlanner.Api.Repositories
 {
     public class MealPlanRepository : BaseAsyncRepository<MealPlan, int>, IMealPlanRepository
     {
