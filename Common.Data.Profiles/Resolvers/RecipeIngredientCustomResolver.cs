@@ -16,10 +16,12 @@ namespace Common.Data.Profiles.Resolvers
                     var model = context.Mapper.Map<IngredientModel>(item.Ingredient);
                     model.RecipeId = item.RecipeId;
                     model.Quantity = item.Quantity;
+                    model.Category = item.Ingredient.Category.Name;
+                    model.DisplaySequence = item.Ingredient.Category.DisplaySequence;
                     result.Add(model);
                 }
             }
-            return result;
+            return result.OrderBy(item => item.DisplaySequence);
         }
     }
 }

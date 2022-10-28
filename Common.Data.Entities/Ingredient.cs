@@ -5,5 +5,6 @@
         public string Name { get; set; }
         public string Unit { get; set; }
         public IEnumerable<RecipeIngredient> RecipeIngredients { get; set; }
+        public IngredientCategory Category { get; set; }
     }
 }

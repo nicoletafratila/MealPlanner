@@ -15,7 +15,9 @@ namespace MealPlanner.UI.Web.Services
                      Name = cl.First().Name,
                      Unit = cl.First().Unit,
                      Quantity = cl.Sum(q => q.Quantity),
-                 }).ToList();
+                     Category = cl.First().Category,
+                     DisplaySequence = cl.First().DisplaySequence,
+                 }).OrderBy(item => item.DisplaySequence).ToList();
         }
     }
 }

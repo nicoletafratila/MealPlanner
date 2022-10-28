@@ -16,6 +16,7 @@ namespace RecipeBook.Api.Data.Repositories
             return await (DbContext as MealPlannerDbContext).Recipes
                     .Include(x => x.RecipeIngredients)
                     .ThenInclude(x => x.Ingredient)
+                    .ThenInclude(x => x.Category)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
     }
