@@ -4,7 +4,11 @@
 @*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
 {*@
 <section>
-    <h1 class="page-title">Details for @Model.Name</h1>
+    <div class="header">
+        <h1 class="page-title">@Model.Name</h1>
+        <img class="imgProfile" src="@Model.ImageUrl" />
+    </div>
+
     <EditForm Model="@Model" OnValidSubmit="@Save">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -18,10 +22,6 @@
         <div class="form-group row">
             <label for="image" class="col-sm-3">Select image: </label>
             <InputFile class="custom-file-input" OnChange="OnInputFileChange" multiple accept="image/png, image/jpeg, image/gif" id="inputFile" />
-        </div>
-
-        <div>
-            <img src="@Model.ImageUrl" width="100" height="80" />
         </div>
 
         <table class="table">
