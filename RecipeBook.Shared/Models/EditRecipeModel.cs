@@ -17,5 +17,7 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
 
         public IEnumerable<IngredientModel>? Ingredients { get; set; }
+
+         public int CategoryId { get; set; }
     }
 }

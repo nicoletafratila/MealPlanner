@@ -32,8 +32,8 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var results = await _repository.GetAllAsync();
-
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<IEnumerable<RecipeModel>>(results));
+                var mappedResults = _mapper.Map<IEnumerable<RecipeModel>>(results).OrderBy(r => r.DisplaySequence);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
             {

@@ -17,6 +17,7 @@ namespace Common.Data.DataContext
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<IngredientCategory> IngredientCategories { get; set; }
+        public DbSet<RecipeCategory> RecipeCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

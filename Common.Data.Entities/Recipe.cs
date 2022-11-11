@@ -6,5 +6,6 @@
         public byte[]? ImageContent { get; set; }
         public IEnumerable<RecipeIngredient>? RecipeIngredients { get; set; }
         public IEnumerable<MealPlanRecipe>? MealPlanRecipes { get; set; }
+        public RecipeCategory Category { get; set; }
     }
 }
