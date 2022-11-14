@@ -18,6 +18,16 @@
             <InputText id="name" class="form-control col-sm-8" @bind-Value="@Model.Name" placeholder="Enter recipe name"></InputText>
             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
         </div>
+        
+        <div class="form-group row">
+            <label for="recipecategory" class="col-sm-3">Recipe category: </label>
+            <InputSelect id="recipecategory" class="form-control col-sm-8" @bind-Value="@CategoryId">
+                @foreach (var category in Categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </InputSelect>
+        </div>
 
         <div class="form-group row">
             <label for="image" class="col-sm-3">Select image: </label>

@@ -11,19 +11,24 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeService RecipeService { get; set; }
 
         [Inject]
+        public IRecipeCategoryService CategoryService { get; set; }
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; }
 
         [Parameter]
         public string Id { get; set; }
+        protected string CategoryId = string.Empty;
 
         public EditRecipeModel Model { get; set; } = new EditRecipeModel();
-
-        protected bool Saved;
+        public List<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
         private IReadOnlyList<IBrowserFile> _selectedFiles;
+        protected bool Saved;
 
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
+            Categories = (await CategoryService.GetAll()).ToList();
             Saved = false;
 
             if (id == 0)
@@ -34,12 +39,14 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Model = await RecipeService.Get(int.Parse(Id));
             }
+
+            CategoryId = Model.CategoryId.ToString();
         }
 
         protected async Task Save()
         {
             Saved = false;
-
+            Model.CategoryId = int.Parse(CategoryId);
             if (_selectedFiles != null)
             {
                 var file = _selectedFiles[0];

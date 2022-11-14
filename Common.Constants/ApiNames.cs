@@ -4,6 +4,7 @@
     {
         public const string ShoppingListApi = "api/shoppinglist/";
         public const string RecipeApi = "api/recipe/";
+        public const string RecipeCategoryApi = "api/recipecategory/";
         public const string MealPlanApi = "api/mealplan/";
     }
 }

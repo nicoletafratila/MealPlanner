@@ -1,4 +1,6 @@
-﻿namespace Common.Data.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Common.Data.Entities
 {
     public class Recipe : Entity<int>
     {

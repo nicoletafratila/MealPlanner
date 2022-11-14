@@ -3,7 +3,7 @@ using Common.Data.Entities;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace RecipeBook.Api.Data.Repositories
+namespace RecipeBook.Api.Repositories
 {
     public class RecipeRepository : BaseAsyncRepository<Recipe, int>, IRecipeRepository
     {
@@ -15,6 +15,13 @@ namespace RecipeBook.Api.Data.Repositories
         {
             return (DbContext as MealPlannerDbContext).Recipes
                     .Include(x => x.Category).ToList();
+        }
+
+        public override async Task<Recipe> GetByIdAsync(int id)
+        {
+            return await (DbContext as MealPlannerDbContext).Recipes
+                    .Include(x => x.Category)
+                    .FirstOrDefaultAsync(item => item.Id == id);
         }
 
         public async Task<Recipe> GetByIdAsyncIncludeIngredients(int id)

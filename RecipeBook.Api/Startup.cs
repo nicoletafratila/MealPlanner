@@ -1,4 +1,4 @@
-﻿using RecipeBook.Api.Data.Repositories;
+﻿using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api
 {
@@ -12,6 +12,7 @@ namespace RecipeBook.Api
         {
             base.RegisterRepositories(services);
             services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IRecipeCategoryRepository, RecipeCategoryRepository>();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Data.Repositories;
+using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -13,17 +13,12 @@ namespace RecipeBook.Api.Controllers
         private readonly IRecipeRepository _repository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RecipeController(IRecipeRepository repository, IMapper mapper, LinkGenerator linkGenerator,
-            IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
+        public RecipeController(IRecipeRepository repository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _repository = repository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
-            _webHostEnvironment = webHostEnvironment;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
