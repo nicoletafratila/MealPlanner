@@ -4,7 +4,7 @@ namespace MealPlanner.Api.Services
 {
     public class QuantityCalculator : IQuantityCalculator
     {
-        public IEnumerable<IngredientModel> CalculateQuantities(IEnumerable<IngredientModel> ingredients)
+        public IEnumerable<RecipeIngredientModel> CalculateQuantities(IEnumerable<RecipeIngredientModel> ingredients)
         {
             foreach (var item in ingredients)
             {

@@ -4,6 +4,6 @@ namespace MealPlanner.Api.Services
 {
     public interface IQuantityCalculator
     {
-        public IEnumerable<IngredientModel> CalculateQuantities(IEnumerable<IngredientModel> ingredients);
+        public IEnumerable<RecipeIngredientModel> CalculateQuantities(IEnumerable<RecipeIngredientModel> ingredients);
     }
 }

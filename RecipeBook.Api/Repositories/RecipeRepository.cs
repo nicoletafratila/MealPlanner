@@ -30,7 +30,7 @@ namespace RecipeBook.Api.Repositories
                     .Include(x => x.RecipeCategory)
                     .Include(x => x.RecipeIngredients)
                     .ThenInclude(x => x.Ingredient)
-                    .ThenInclude(x => x.Category)
+                    .ThenInclude(x => x.IngredientCategory)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
     }

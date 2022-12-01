@@ -31,6 +31,7 @@ namespace Common.Api
             var config = new MapperConfiguration(c =>
             {
                 c.AddProfile<IngredientProfile>();
+                c.AddProfile<IngredientCategoryProfile>();
                 c.AddProfile<MealPlanProfile>();
                 c.AddProfile<RecipeProfile>();
                 c.AddProfile<RecipeCategoryProfile>();

@@ -13,6 +13,8 @@ namespace RecipeBook.Api
             base.RegisterRepositories(services);
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeCategoryRepository, RecipeCategoryRepository>();
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IIngredientCategoryRepository, IngredientCategoryRepository>();
         }
     }
 }

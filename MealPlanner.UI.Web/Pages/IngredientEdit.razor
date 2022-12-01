@@ -1,0 +1,44 @@
+﻿@page "/ingredientedit"
+@page "/ingredientedit/{id}"
+
+@*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
+{*@
+<section>
+    <div class="header">
+        <h1 class="page-title">@Model.Name</h1>
+    </div>
+
+    <EditForm Model="@Model" OnValidSubmit="@Save">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group row">
+            <label for="name" class="col-sm-3">Ingredient name: </label>
+            <InputText id="name" class="form-control col-sm-8" @bind-Value="@Model.Name" placeholder="Enter ingredient name"></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
+        </div>
+        
+        <div class="form-group row">
+            <label for="ingredientcategory" class="col-sm-3">Ingredient category: </label>
+            <InputSelect id="ingredientcategory" class="form-control col-sm-8" @bind-Value="@IngredientCategoryId">
+                @foreach (var category in Categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group row">
+            <label for="image" class="col-sm-3">Unit of measurement: </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary edit-btn">Save</button>
+
+        <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
+    </EditForm>
+</section>
+@*}
+else
+{
+    <div class="alert @StatusClass">@Message</div>
+}*@

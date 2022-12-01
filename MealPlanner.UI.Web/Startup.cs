@@ -21,6 +21,20 @@ namespace MealPlanner.UI.Web
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
 
+            services.AddHttpClient<IIngredientService, IngredientService>()
+               .ConfigureHttpClient((serviceProvider, httpClient) =>
+               {
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == ApiConfig.RecipeBook).Single();
+                   httpClient.BaseAddress = clientConfig.BaseUrl;
+                   httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+               });
+            services.AddHttpClient<IIngredientCategoryService, IngredientCategoryService>()
+               .ConfigureHttpClient((serviceProvider, httpClient) =>
+               {
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == ApiConfig.RecipeBook).Single();
+                   httpClient.BaseAddress = clientConfig.BaseUrl;
+                   httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+               });
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {

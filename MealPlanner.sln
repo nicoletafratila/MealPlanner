@@ -28,9 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{8DB5CD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealPlanner.UI.Web", "MealPlanner.UI.Web\MealPlanner.UI.Web.csproj", "{E37FE5F3-CA39-47FF-9D2D-9F5577A6BB7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Api", "Common.Api\Common.Api.csproj", "{DA21F630-A2FA-4B68-9CB7-6A1451B261BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Api", "Common.Api\Common.Api.csproj", "{DA21F630-A2FA-4B68-9CB7-6A1451B261BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Constants", "Common.Constants\Common.Constants.csproj", "{B4EDBFD2-C4C0-4407-BDE8-FC85440880B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Constants", "Common.Constants\Common.Constants.csproj", "{B4EDBFD2-C4C0-4407-BDE8-FC85440880B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

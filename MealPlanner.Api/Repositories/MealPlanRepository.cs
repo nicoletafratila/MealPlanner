@@ -27,7 +27,7 @@ namespace MealPlanner.Api.Repositories
                     .ThenInclude(x => x.Recipe)
                     .ThenInclude(x => x.RecipeIngredients)
                     .ThenInclude(x => x.Ingredient)
-                    .ThenInclude(x => x.Category)
+                    .ThenInclude(x => x.IngredientCategory)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
     }

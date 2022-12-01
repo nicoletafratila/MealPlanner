@@ -12,6 +12,6 @@ namespace MealPlanner.Shared.Models
         [StringLength(100)]
         public string Name { get; set; }
 
-        public IEnumerable<IngredientModel>? Ingredients { get; set; }
+        public IEnumerable<RecipeIngredientModel>? Ingredients { get; set; }
     }
 }
