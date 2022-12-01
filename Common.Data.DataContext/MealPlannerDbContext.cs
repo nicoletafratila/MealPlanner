@@ -11,13 +11,13 @@ namespace Common.Data.DataContext
 
         }
 
-        public DbSet<MealPlan> MealPlans { get; set; }
-        public DbSet<MealPlanRecipe> MealPlanRecipes { get; set; }
-        public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<IngredientCategory> IngredientCategories { get; set; }
-        public DbSet<RecipeCategory> RecipeCategories { get; set; }
+        public DbSet<MealPlan> MealPlans => Set<MealPlan>();
+        public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
+        public DbSet<Recipe> Recipes => Set<Recipe>();
+        public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
+        public DbSet<Ingredient> Ingredients => Set<Ingredient>();
+        public DbSet<IngredientCategory> IngredientCategories => Set<IngredientCategory>();
+        public DbSet<RecipeCategory> RecipeCategories => Set<RecipeCategory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -21,7 +21,7 @@
         
         <div class="form-group row">
             <label for="recipecategory" class="col-sm-3">Recipe category: </label>
-            <InputSelect id="recipecategory" class="form-control col-sm-8" @bind-Value="@CategoryId">
+            <InputSelect id="recipecategory" class="form-control col-sm-8" @bind-Value="@RecipeCategoryId">
                 @foreach (var category in Categories)
                 {
                     <option value="@category.Id">@category.Name</option>

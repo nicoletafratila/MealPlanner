@@ -9,7 +9,7 @@ namespace Common.Data.Profiles.Resolvers
         public IEnumerable<IngredientModel> Resolve(Recipe source, EditRecipeModel destination, IEnumerable<RecipeIngredient> sourceValue, IEnumerable<IngredientModel> destValue, ResolutionContext context)
         {
             var result = new List<IngredientModel>();
-            if (source.RecipeIngredients.Any())
+            if (source.RecipeIngredients != null && source.RecipeIngredients.Any())
             {
                 foreach (var item in source.RecipeIngredients)
                 {
@@ -21,7 +21,7 @@ namespace Common.Data.Profiles.Resolvers
                     result.Add(model);
                 }
             }
-            return result.OrderBy(item => item.DisplaySequence);
+            return result.OrderBy(item => item.DisplaySequence).ThenBy(item => item.Name);
         }
     }
 }

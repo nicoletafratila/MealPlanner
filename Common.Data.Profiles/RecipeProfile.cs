@@ -10,22 +10,15 @@ namespace Common.Data.Profiles
         public RecipeProfile()
         {
             CreateMap<Recipe, EditRecipeModel>()
-                //.ForMember(model => model.ImageContent, opt => opt.Ignore())
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
                 .ForMember(model => model.Ingredients, opt => opt.MapFrom<RecipeIngredientCustomResolver, IEnumerable<RecipeIngredient>>(data => data.RecipeIngredients))
-                .ForMember(model => model.CategoryId, opt => opt.MapFrom(data => data.Category.Id))
                 .ReverseMap();
-                //.ForPath(model => model.Category.Id, opt => opt.MapFrom(model => model.CategoryId));
-                //.ForMember(data => data.RecipeIngredients, opt => opt.Ignore())
-                //.ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
 
             CreateMap<Recipe, RecipeModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
-                .ForMember(model => model.Category, opt => opt.MapFrom(data => data.Category.Name))
-                .ForMember(model => model.DisplaySequence, opt => opt.MapFrom(data => data.Category.DisplaySequence))
+                .ForMember(model => model.CategoryName, opt => opt.MapFrom(data => data.RecipeCategory.Name))
+                .ForMember(model => model.DisplaySequence, opt => opt.MapFrom(data => data.RecipeCategory.DisplaySequence))
                 .ReverseMap();
-                //.ForMember(data => data.RecipeIngredients, opt => opt.Ignore())
-                //.ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
         }
     }
 }

@@ -6,18 +6,14 @@ namespace RecipeBook.Shared.Models
     {
         [Required]
         public int Id { get; set; }
-
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
-
         [MaxLength(512000)]
-        public byte[]? ImageContent { get; set; }
-
+        public byte[] ImageContent { get; set; }
         public string? ImageUrl { get; set; }
-
         public IEnumerable<IngredientModel>? Ingredients { get; set; }
-
-         public int CategoryId { get; set; }
+        [Required]
+        public int RecipeCategoryId { get; set; }
     }
 }
