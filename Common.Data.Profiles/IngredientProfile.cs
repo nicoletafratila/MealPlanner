@@ -17,8 +17,7 @@ namespace Common.Data.Profiles
                 .ReverseMap();
 
             CreateMap<Ingredient, RecipeIngredientModel>()
-               .ForMember(model => model.Category, opt => opt.MapFrom(data => data.IngredientCategory.Name))
-               .ForMember(model => model.DisplaySequence, opt => opt.MapFrom(data => data.IngredientCategory.DisplaySequence))
+               .ForMember(model => model.Ingredient, opt => opt.MapFrom(data => data))
                .ReverseMap();
         }
     }

@@ -7,5 +7,6 @@
         public string Unit { get; set; }
         public string Category { get; set; }
         public int DisplaySequence { get; set; }
+        //public IngredientCategoryModel Category { get; set; }
     }
 }

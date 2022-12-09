@@ -24,10 +24,10 @@ else
             @foreach (var item in Model.Ingredients)
             {
                 <tr>
-                    <td>@item.Name</td>
+                    <td>@item.Ingredient.Name</td>
                     <td>@item.Quantity</td>
-                    <td>@item.Unit</td>
-                    <td>@item.Category</td>
+                    <td>@item.Ingredient.Unit</td>
+                    <td>@item.Ingredient.Category</td>
                 </tr>
             }
         </tbody>

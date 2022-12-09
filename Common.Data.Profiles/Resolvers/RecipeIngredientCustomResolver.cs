@@ -13,15 +13,10 @@ namespace Common.Data.Profiles.Resolvers
             {
                 foreach (var item in source.RecipeIngredients)
                 {
-                    var model = context.Mapper.Map<RecipeIngredientModel>(item.Ingredient);
-                    model.RecipeId = item.RecipeId;
-                    model.Quantity = item.Quantity;
-                    model.Category = item.Ingredient.IngredientCategory.Name;
-                    model.DisplaySequence = item.Ingredient.IngredientCategory.DisplaySequence;
-                    result.Add(model);
+                    result.Add(context.Mapper.Map<RecipeIngredientModel>(item.Ingredient));
                 }
             }
-            return result.OrderBy(item => item.DisplaySequence).ThenBy(item => item.Name);
+            return result.OrderBy(item => item.Ingredient.DisplaySequence).ThenBy(item => item.Ingredient.Name);
         }
     }
 }
