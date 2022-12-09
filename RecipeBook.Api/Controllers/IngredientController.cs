@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IEnumerable<IngredientModel>>(results).OrderBy(item => item.DisplaySequence).ThenBy(item => item.Name);
+                var mappedResults = _mapper.Map<IEnumerable<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)

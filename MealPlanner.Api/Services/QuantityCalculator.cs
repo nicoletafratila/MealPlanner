@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Services
             {
                 item.Quantity = ingredients.Where(i => i.Ingredient.Id == item.Ingredient.Id).Sum(i => i.Quantity);
             }
-            return ingredients.DistinctBy(i => i.Ingredient.Id).OrderBy(i => i.Ingredient.DisplaySequence);
+            return ingredients.DistinctBy(i => i.Ingredient.Id).OrderBy(i => i.Ingredient.IngredientCategory.DisplaySequence);
         }
     }
 }

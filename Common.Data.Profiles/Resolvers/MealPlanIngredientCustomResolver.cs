@@ -14,7 +14,7 @@ namespace Common.Data.Profiles.Resolvers
             {
                 result.AddRange(context.Mapper.Map<EditRecipeModel>(item.Recipe).Ingredients);
             }
-            return result.OrderBy(item => item.Ingredient.DisplaySequence).ThenBy(item => item.Ingredient.Name);
+            return result.OrderBy(item => item.Ingredient.IngredientCategory.DisplaySequence).ThenBy(item => item.Ingredient.Name);
         }
     }
 }

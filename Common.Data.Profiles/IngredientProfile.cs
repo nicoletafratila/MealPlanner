@@ -9,8 +9,6 @@ namespace Common.Data.Profiles
         public IngredientProfile()
         {
             CreateMap<Ingredient, IngredientModel>()
-               .ForMember(model => model.Category, opt => opt.MapFrom(data => data.IngredientCategory.Name))
-               .ForMember(model => model.DisplaySequence, opt => opt.MapFrom(data => data.IngredientCategory.DisplaySequence))
                .ReverseMap();
 
             CreateMap<Ingredient, EditIngredientModel>()
