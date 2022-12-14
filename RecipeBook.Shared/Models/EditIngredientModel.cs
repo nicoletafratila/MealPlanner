@@ -10,7 +10,7 @@ namespace RecipeBook.Shared.Models
         [StringLength(100)]
         public string Name { get; set; }
         [Required] 
-        public string Unit { get; set; }
+        public int UnitId { get; set; }
         [Required]
         public int IngredientCategoryId { get; set; }
     }

@@ -15,6 +15,7 @@ namespace RecipeBook.Api
             services.AddScoped<IRecipeCategoryRepository, RecipeCategoryRepository>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientCategoryRepository, IngredientCategoryRepository>();
+            services.AddScoped<IUnitRepository, UnitRepository>();
         }
     }
 }

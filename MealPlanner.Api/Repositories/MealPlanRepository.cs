@@ -15,8 +15,8 @@ namespace MealPlanner.Api.Repositories
         {
             return await (DbContext as MealPlannerDbContext).MealPlans
                     .Include(x => x.MealPlanRecipes)
-                    .ThenInclude(x => x.Recipe)
-                    .ThenInclude(x => x.RecipeCategory)
+                        .ThenInclude(x => x.Recipe)
+                            .ThenInclude(x => x.RecipeCategory)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
 
@@ -24,10 +24,15 @@ namespace MealPlanner.Api.Repositories
         {
             return await (DbContext as MealPlannerDbContext).MealPlans
                     .Include(x => x.MealPlanRecipes)
-                    .ThenInclude(x => x.Recipe)
-                    .ThenInclude(x => x.RecipeIngredients)
-                    .ThenInclude(x => x.Ingredient)
-                    .ThenInclude(x => x.IngredientCategory)
+                        .ThenInclude(x => x.Recipe)
+                            .ThenInclude(x => x.RecipeIngredients)
+                                .ThenInclude(x => x.Ingredient)
+                                    .ThenInclude(x => x.IngredientCategory)
+                    .Include(x => x.MealPlanRecipes)
+                        .ThenInclude(x => x.Recipe)
+                            .ThenInclude(x => x.RecipeIngredients)
+                                .ThenInclude(x => x.Ingredient)
+                                    .ThenInclude(x => x.Unit)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
     }

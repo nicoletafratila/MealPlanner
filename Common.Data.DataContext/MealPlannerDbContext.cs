@@ -8,7 +8,6 @@ namespace Common.Data.DataContext
     {
         public MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : base(options)
         {
-
         }
 
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
@@ -18,14 +17,11 @@ namespace Common.Data.DataContext
         public DbSet<Ingredient> Ingredients => Set<Ingredient>();
         public DbSet<IngredientCategory> IngredientCategories => Set<IngredientCategory>();
         public DbSet<RecipeCategory> RecipeCategories => Set<RecipeCategory>();
+        public DbSet<Unit> Units => Set<Unit>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //seed units of measurements
-            //modelBuilder.Entity<Unit>().HasData(new Country { CountryId = 1, Name = "Belgium" });
-
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

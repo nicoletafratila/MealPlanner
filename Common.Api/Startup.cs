@@ -35,6 +35,7 @@ namespace Common.Api
                 c.AddProfile<MealPlanProfile>();
                 c.AddProfile<RecipeProfile>();
                 c.AddProfile<RecipeCategoryProfile>();
+                c.AddProfile<UnitProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
 
