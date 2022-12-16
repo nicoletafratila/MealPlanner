@@ -14,8 +14,7 @@ namespace Common.Data.Profiles
             CreateMap<Ingredient, EditIngredientModel>()
                 .ReverseMap();
 
-            CreateMap<Ingredient, RecipeIngredientModel>()
-               .ForMember(model => model.Ingredient, opt => opt.MapFrom(data => data))
+            CreateMap<RecipeIngredient, RecipeIngredientModel>()
                .ReverseMap();
         }
     }
