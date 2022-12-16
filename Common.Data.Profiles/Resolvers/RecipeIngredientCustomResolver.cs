@@ -13,7 +13,9 @@ namespace Common.Data.Profiles.Resolvers
             {
                 foreach (var item in source.RecipeIngredients)
                 {
-                    result.Add(context.Mapper.Map<RecipeIngredientModel>(item.Ingredient));
+                    var model = context.Mapper.Map<RecipeIngredientModel>(item.Ingredient);
+                    model.Quantity = item.Quantity;
+                    result.Add(model);
                 }
             }
             return result.OrderBy(item => item.Ingredient.IngredientCategory.DisplaySequence).ThenBy(item => item.Ingredient.Name);

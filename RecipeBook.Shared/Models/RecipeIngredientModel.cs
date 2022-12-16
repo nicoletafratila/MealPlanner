@@ -8,7 +8,7 @@
 
         public RecipeIngredientModel()
         {
-            Ingredient= new IngredientModel();
+            Ingredient = new IngredientModel();
         }
     }
 }
