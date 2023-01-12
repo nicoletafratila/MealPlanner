@@ -1,17 +1,14 @@
-﻿using Common.Constants;
+﻿using Common.Api;
+using Common.Constants;
 
 namespace MealPlanner.UI.Web.Configs
 {
-    public class MealPlannerApiConfig : IApiConfig
+    public class MealPlannerApiConfig : Common.Api.ApiConfig
     {
-        public Uri BaseUrl { get; set; }
-        public int Timeout { get; set; }
-        public string Name => ApiConfig.MealPlanner;
+        public override string Name => Common.Constants.ApiConfig.MealPlanner;
 
-        public MealPlannerApiConfig(IConfiguration configuration)
+        public MealPlannerApiConfig(IConfiguration configuration) : base(configuration)
         {
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            configuration.Bind(Name, this);
         }
     }
 }

@@ -18,12 +18,12 @@ namespace Common.Api
         protected virtual void RegisterServices(IServiceCollection services) { }
 
         protected virtual void RegisterRepositories(IServiceCollection services) { }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MealPlannerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"));
+                options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("Common.Data.DataContext"));
                 options.EnableSensitiveDataLogging();
             });
 

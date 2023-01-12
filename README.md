@@ -1,6 +1,5 @@
 # MealPlanner
 
 #Package Manager Console
-Select RecipeBook.Api
-Update-Database
-dotnet ef database update
+cd D:\Work\MealPlanner\common.data.datacontext
+dotnet ef --startup-project ../Common.Api/ migrations add Initial

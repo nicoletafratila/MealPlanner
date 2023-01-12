@@ -19,7 +19,6 @@ namespace MealPlanner.Api
         {
             base.RegisterServices(services);
             services.AddSingleton<IQuantityCalculator, QuantityCalculator>();
-
         }
     }
 }

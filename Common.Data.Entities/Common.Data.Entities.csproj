@@ -23,10 +23,10 @@
       <HintPath>C:\Users\nicoleta.fratila\AppData\Roaming\ThirdParty\NuGet\automapper\11.0.0\lib\netstandard2.1\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>C:\Users\nicoleta.fratila\AppData\Roaming\ThirdParty\NuGet\microsoft.entityframeworkcore\6.0.6\lib\net6.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <HintPath>C:\Users\nicoleta.fratila\AppData\Roaming\ThirdParty\NuGet\microsoft.entityframeworkcore\6.0.4\lib\net6.0\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.Relational">
-      <HintPath>C:\Users\nicoleta.fratila\AppData\Roaming\ThirdParty\NuGet\microsoft.entityframeworkcore.relational\6.0.6\lib\net6.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+      <HintPath>C:\Users\nicoleta.fratila\AppData\Roaming\ThirdParty\NuGet\microsoft.entityframeworkcore.relational\6.0.4\lib\net6.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
   </ItemGroup>
 
