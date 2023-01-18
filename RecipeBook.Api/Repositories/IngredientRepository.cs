@@ -18,6 +18,14 @@ namespace RecipeBook.Api.Repositories
                     .Include(x => x.Unit).ToList();
         }
 
+        public async Task<IReadOnlyList<Ingredient>> SearchAsync(int categoryId)
+        {
+            return (DbContext as MealPlannerDbContext).Ingredients
+                    .Include(x => x.IngredientCategory)
+                    .Include(x => x.Unit)
+                    .Where(x=>x.IngredientCategoryId == categoryId).ToList();
+        }
+
         public override async Task<Ingredient> GetByIdAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext).Ingredients

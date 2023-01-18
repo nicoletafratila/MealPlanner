@@ -11,23 +11,39 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeService RecipeService { get; set; }
 
         [Inject]
-        public IRecipeCategoryService CategoryService { get; set; }
+        public IRecipeCategoryService RecipeCategoryService { get; set; }
+
+        [Inject]
+        public IIngredientCategoryService IngredientCategoryService { get; set; }
+
+        [Inject]
+        public IIngredientService IngredientService { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
         [Parameter]
-        public string Id { get; set; }
-        protected string RecipeCategoryId = string.Empty;
+        public EventCallback<string> OnSelectionChanged { get; set; }
 
+        [Parameter]
+        public string Id { get; set; }
+
+        protected string RecipeCategoryId = string.Empty;
+        protected string IngredientId = string.Empty;
+        protected string IngredientCategoryId = string.Empty;
+        protected string Quantity = string.Empty;
         public EditRecipeModel Model { get; set; } = new EditRecipeModel();
-        public List<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
         private IReadOnlyList<IBrowserFile> _selectedFiles;
+
+        public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
+        public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
+        public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
 
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            Categories = (await CategoryService.GetAll()).ToList();
+            RecipeCategories = (await RecipeCategoryService.GetAll()).ToList();
+            IngredientCategories = (await IngredientCategoryService.GetAll()).ToList();
 
             if (id == 0)
             {
@@ -41,7 +57,7 @@ namespace MealPlanner.UI.Web.Pages
             RecipeCategoryId = Model.RecipeCategoryId.ToString();
         }
 
-        protected async Task Save()
+        protected async Task HandleValidSubmit()
         {
             Model.RecipeCategoryId = int.Parse(RecipeCategoryId);
             if (_selectedFiles != null)
@@ -69,15 +85,32 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        protected void NavigateToOverview()
+        {
+            NavigationManager.NavigateTo("/recipesoverview");
+        }
+
+        protected void AddIngredient()
+        {
+            RecipeIngredientModel item = new RecipeIngredientModel();
+            item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+            item.RecipeId = Model.Id;
+            item.Quantity = decimal.Parse(Quantity);
+            Model.Ingredients.Add(item);
+            StateHasChanged();
+        }
+
+        private async void References(string value)
+        {
+            IngredientCategoryId = value;
+            Ingredients = (await IngredientService.Search(int.Parse(IngredientCategoryId))).ToList();
+            StateHasChanged();
+        }
+
         private void OnInputFileChange(InputFileChangeEventArgs e)
         {
             _selectedFiles = e.GetMultipleFiles();
             StateHasChanged();
-        }
-
-        protected void NavigateToOverview()
-        {
-            NavigationManager.NavigateTo("/recipesoverview");
         }
     }
 }

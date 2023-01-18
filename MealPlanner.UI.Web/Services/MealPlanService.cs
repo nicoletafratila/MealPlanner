@@ -12,9 +12,9 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<MealPlanModel>> GetAll()
+        public async Task<IList<MealPlanModel>> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<MealPlanModel>>(ApiNames.MealPlanApi);
+            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>(ApiNames.MealPlanApi);
         }
 
         public async Task<EditMealPlanModel> Get(int id)

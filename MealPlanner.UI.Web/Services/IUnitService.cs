@@ -4,6 +4,6 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IUnitService
     {
-        Task<IEnumerable<UnitModel>> GetAll();
+        Task<IList<UnitModel>> GetAll();
     }
 }

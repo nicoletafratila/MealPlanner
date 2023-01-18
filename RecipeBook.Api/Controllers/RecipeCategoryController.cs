@@ -19,12 +19,12 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeCategoryModel>>> Get()
+        public async Task<ActionResult<IList<RecipeCategoryModel>>> Get()
         {
             try
             {
                 var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IEnumerable<RecipeCategoryModel>>(results).OrderBy(r => r.DisplaySequence);
+                var mappedResults = _mapper.Map<IList<RecipeCategoryModel>>(results).OrderBy(r => r.DisplaySequence);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)

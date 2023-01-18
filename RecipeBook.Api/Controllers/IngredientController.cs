@@ -22,12 +22,12 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IngredientModel>>> Get()
+        public async Task<ActionResult<IList<IngredientModel>>> Get()
         {
             try
             {
                 var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IEnumerable<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
+                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
@@ -36,7 +36,22 @@ namespace RecipeBook.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("category/{categoryid:int}")]
+        public async Task<ActionResult<IList<IngredientModel>>> Search(int categoryId)
+        {
+            try
+            {
+                var results = await _repository.SearchAsync(categoryId);
+                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<EditIngredientModel>> Get(int id)
         {
             try

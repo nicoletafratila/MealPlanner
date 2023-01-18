@@ -9,7 +9,7 @@
         <img class="imgProfile" src="@Model.ImageUrl" />
     </div>
 
-    <EditForm Model="@Model" OnValidSubmit="@Save">
+    <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
@@ -18,13 +18,13 @@
             <InputText id="name" class="form-control col-sm-8" @bind-Value="@Model.Name" placeholder="Enter recipe name"></InputText>
             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
         </div>
-        
+
         <div class="form-group row">
             <label for="recipecategory" class="col-sm-3">Recipe category: </label>
             <InputSelect id="recipecategory" class="form-control col-sm-8" @bind-Value="@RecipeCategoryId">
-                @foreach (var category in Categories)
+                @foreach (var item in RecipeCategories)
                 {
-                    <option value="@category.Id">@category.Name</option>
+                    <option value="@item.Id">@item.Name</option>
                 }
             </InputSelect>
         </div>
@@ -34,8 +34,39 @@
             <InputFile class="custom-file-input" OnChange="OnInputFileChange" multiple accept="image/png, image/jpeg, image/gif" id="inputFile" />
         </div>
 
+        <div class="form-group row">
+            <label for="ingredientcategory" class="col-sm-3">Ingredient category: </label>
+            <InputSelect id="ingredientcategory" class="form-control col-sm-8" ValueChanged="@((string value) => References(value))"
+                         Value="IngredientCategoryId" ValueExpression="@(() => IngredientCategoryId)">
+                <option selected>Select a value</option>
+                @foreach (var item in IngredientCategories)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </InputSelect>
+        </div>
 
-        <br/>
+        <div class="form-group row">
+            <label for="ingredient" class="col-sm-3">Ingredient: </label>
+            <InputSelect id="ingredient" class="form-control col-sm-8" @bind-Value="@IngredientId">
+                <option selected>Select a value</option>
+                @foreach (var item in Ingredients)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group row">
+            <label for="quantity" class="col-sm-3">Quantity: </label>
+            <InputText id="quantity" class="form-control col-sm-8" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Quantity)" />
+        </div>
+
+        <button class="btn btn-primary table-btn" @onclick="@AddIngredient">Add</button>
+
+
+        <br />
 
         <table class="table">
             <thead>

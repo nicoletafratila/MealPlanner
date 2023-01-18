@@ -14,9 +14,9 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<RecipeModel>> GetAll()
+        public async Task<IList<RecipeModel>> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<RecipeModel>>($"{ApiNames.RecipeApi}");
+            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>>($"{ApiNames.RecipeApi}");
         }
 
         public async Task<EditRecipeModel> Get(int id)

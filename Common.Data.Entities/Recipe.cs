@@ -11,6 +11,6 @@ namespace Common.Data.Entities
         public RecipeCategory RecipeCategory { get; private set; }
         public int RecipeCategoryId { get; set; }
 
-        public IEnumerable<RecipeIngredient>? RecipeIngredients { get; set; }
+        public IList<RecipeIngredient>? RecipeIngredients { get; set; }
     }
 }

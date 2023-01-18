@@ -6,7 +6,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class IngredientsOverview
     {
-        public IEnumerable<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
+        public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
 
         [Inject]
         public IIngredientService IngredientService { get; set; }

@@ -26,13 +26,13 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MealPlanModel>>> Get()
+        public async Task<ActionResult<IList<MealPlanModel>>> Get()
         {
             try
             {
                 var results = await _repository.GetAllAsync();
 
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<IEnumerable<MealPlanModel>>(results));
+                return StatusCode(StatusCodes.Status200OK, _mapper.Map<IList<MealPlanModel>>(results));
             }
             catch (Exception)
             {

@@ -5,11 +5,11 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class MealPlanRecipeCustomResolver : IMemberValueResolver<MealPlan, EditMealPlanModel, IEnumerable<MealPlanRecipe>, IEnumerable<RecipeModel>>
+    public class MealPlanRecipeCustomResolver : IMemberValueResolver<MealPlan, EditMealPlanModel, IList<MealPlanRecipe>, IList<RecipeModel>>
     {
-        public IEnumerable<RecipeModel> Resolve(MealPlan source, EditMealPlanModel destination, IEnumerable<MealPlanRecipe> sourceValue, IEnumerable<RecipeModel> destValue, ResolutionContext context)
+        public IList<RecipeModel> Resolve(MealPlan source, EditMealPlanModel destination, IList<MealPlanRecipe> sourceValue, IList<RecipeModel> destValue, ResolutionContext context)
         {
-            return source.MealPlanRecipes.Select(item => context.Mapper.Map<RecipeModel>(item.Recipe)).OrderBy(item => item.RecipeCategory.DisplaySequence).ThenBy(item => item.Name);
+            return source.MealPlanRecipes.Select(item => context.Mapper.Map<RecipeModel>(item.Recipe)).OrderBy(item => item.RecipeCategory.DisplaySequence).ThenBy(item => item.Name).ToList();
         }
     }
 }
