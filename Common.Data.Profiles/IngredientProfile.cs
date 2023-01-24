@@ -15,7 +15,9 @@ namespace Common.Data.Profiles
                 .ReverseMap();
 
             CreateMap<RecipeIngredient, RecipeIngredientModel>()
-               .ReverseMap();
+               .ReverseMap()
+               .ForMember(data => data.Recipe, opt => opt.Ignore())
+               .ForMember(data => data.Ingredient, opt => opt.Ignore());
         }
     }
 }

@@ -5,7 +5,7 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class MealPlanRecipeCustomResolver : IMemberValueResolver<MealPlan, EditMealPlanModel, IList<MealPlanRecipe>, IList<RecipeModel>>
+    public class MealPlanToEditMealPlanModelResolver : IMemberValueResolver<MealPlan, EditMealPlanModel, IList<MealPlanRecipe>, IList<RecipeModel>>
     {
         public IList<RecipeModel> Resolve(MealPlan source, EditMealPlanModel destination, IList<MealPlanRecipe> sourceValue, IList<RecipeModel> destValue, ResolutionContext context)
         {

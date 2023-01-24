@@ -14,12 +14,12 @@ namespace Common.Data.Profiles
                 .ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
 
             CreateMap<MealPlan, EditMealPlanModel>()
-               .ForMember(model => model.Recipes, opt => opt.MapFrom<MealPlanRecipeCustomResolver, IList<MealPlanRecipe>>(data => data.MealPlanRecipes))
+               .ForMember(model => model.Recipes, opt => opt.MapFrom<MealPlanToEditMealPlanModelResolver, IList<MealPlanRecipe>>(data => data.MealPlanRecipes))
                .ReverseMap()
                .ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
 
             CreateMap<MealPlan, ShoppingListModel>()
-               .ForMember(model => model.Ingredients, opt => opt.MapFrom<MealPlanIngredientCustomResolver, IList<MealPlanRecipe>>(data => data.MealPlanRecipes))
+               .ForMember(model => model.Ingredients, opt => opt.MapFrom<MealPlanToShoppingListModelResolver, IList<MealPlanRecipe>>(data => data.MealPlanRecipes))
                .ReverseMap()
                .ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
         }

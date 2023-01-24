@@ -4,7 +4,7 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class RecipeIngredientCustomResolver : IMemberValueResolver<Recipe, EditRecipeModel, IList<RecipeIngredient>, IList<RecipeIngredientModel>>
+    public class RecipeToEditRecipeModelResolver : IMemberValueResolver<Recipe, EditRecipeModel, IList<RecipeIngredient>, IList<RecipeIngredientModel>>
     {
         public IList<RecipeIngredientModel> Resolve(Recipe source, EditRecipeModel destination, IList<RecipeIngredient> sourceValue, IList<RecipeIngredientModel> destValue, ResolutionContext context)
         {

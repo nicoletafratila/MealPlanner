@@ -23,9 +23,6 @@ namespace MealPlanner.UI.Web.Pages
         public NavigationManager NavigationManager { get; set; }
 
         [Parameter]
-        public EventCallback<string> OnSelectionChanged { get; set; }
-
-        [Parameter]
         public string Id { get; set; }
 
         protected string RecipeCategoryId = string.Empty;
@@ -85,25 +82,30 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        protected void AddIngredient()
+        {
+            RecipeIngredientModel item = new RecipeIngredientModel();
+            if (IngredientId != "0")
+            {
+                item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                item.RecipeId = Model.Id;
+                item.Quantity = decimal.Parse(Quantity);
+                Model.Ingredients.Add(item);
+            }
+        }
+
         protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo("/recipesoverview");
         }
 
-        protected void AddIngredient()
-        {
-            RecipeIngredientModel item = new RecipeIngredientModel();
-            item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
-            item.RecipeId = Model.Id;
-            item.Quantity = decimal.Parse(Quantity);
-            Model.Ingredients.Add(item);
-            StateHasChanged();
-        }
-
-        private async void References(string value)
+        private async void OnSelectionChanged(string value)
         {
             IngredientCategoryId = value;
-            Ingredients = (await IngredientService.Search(int.Parse(IngredientCategoryId))).ToList();
+            if (IngredientCategoryId != "0")
+            {
+                Ingredients = (await IngredientService.Search(int.Parse(IngredientCategoryId))).ToList();
+            }
             StateHasChanged();
         }
 

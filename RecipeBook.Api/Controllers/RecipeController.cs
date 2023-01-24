@@ -85,14 +85,14 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<EditRecipeModel>> Put(EditRecipeModel model)
+        public async Task<ActionResult> Put(EditRecipeModel model)
         {
             if (model == null)
                 return BadRequest();
 
             try
             {
-                var oldModel = await _repository.GetByIdAsync(model.Id);
+                var oldModel = await _repository.GetByIdAsyncIncludeIngredients(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");
@@ -100,7 +100,7 @@ namespace RecipeBook.Api.Controllers
 
                 _mapper.Map(model, oldModel);
                 await _repository.UpdateAsync(oldModel);
-                return _mapper.Map<EditRecipeModel>(oldModel);
+                return NoContent();
             }
             catch (Exception)
             {

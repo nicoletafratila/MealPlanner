@@ -36,9 +36,9 @@
 
         <div class="form-group row">
             <label for="ingredientcategory" class="col-sm-3">Ingredient category: </label>
-            <InputSelect id="ingredientcategory" class="form-control col-sm-8" ValueChanged="@((string value) => References(value))"
+            <InputSelect id="ingredientcategory" class="form-control col-sm-8" ValueChanged="@((string value) => OnSelectionChanged(value))"
                          Value="IngredientCategoryId" ValueExpression="@(() => IngredientCategoryId)">
-                <option selected>Select a value</option>
+                <option selected value="0">Select a value</option>
                 @foreach (var item in IngredientCategories)
                 {
                     <option value="@item.Id">@item.Name</option>
@@ -49,10 +49,10 @@
         <div class="form-group row">
             <label for="ingredient" class="col-sm-3">Ingredient: </label>
             <InputSelect id="ingredient" class="form-control col-sm-8" @bind-Value="@IngredientId">
-                <option selected>Select a value</option>
+                <option selected value="0">Select a value</option>
                 @foreach (var item in Ingredients)
                 {
-                    <option value="@item.Id">@item.Name</option>
+                    <option value="@item.Id">@item.Name (@item.Unit.Name)</option>
                 }
             </InputSelect>
         </div>
@@ -63,7 +63,7 @@
             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Quantity)" />
         </div>
 
-        <button class="btn btn-primary table-btn" @onclick="@AddIngredient">Add</button>
+        <button type="button" @onclick="@AddIngredient">Add</button>
 
 
         <br />
