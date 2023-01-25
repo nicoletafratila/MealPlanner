@@ -84,13 +84,21 @@ namespace MealPlanner.UI.Web.Pages
 
         protected void AddIngredient()
         {
-            RecipeIngredientModel item = new RecipeIngredientModel();
             if (IngredientId != "0")
             {
-                item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
-                item.RecipeId = Model.Id;
-                item.Quantity = decimal.Parse(Quantity);
-                Model.Ingredients.Add(item);
+                RecipeIngredientModel item = Model.Ingredients.FirstOrDefault(i => i.Ingredient.Id == int.Parse(IngredientId));
+                if (item != null)
+                {
+                    item.Quantity += decimal.Parse(Quantity);
+                }
+                else
+                {
+                    item = new RecipeIngredientModel();
+                    item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                    item.RecipeId = Model.Id;
+                    item.Quantity = decimal.Parse(Quantity);
+                    Model.Ingredients.Add(item);
+                }
             }
         }
 

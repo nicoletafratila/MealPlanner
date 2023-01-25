@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<EditMealPlanModel> Get(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"{ApiNames.MealPlanApi}{id}");
+            return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"{ApiNames.MealPlanApi}/{id}");
         }
     }
 }

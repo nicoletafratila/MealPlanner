@@ -21,12 +21,12 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<IngredientModel>> Search(int categoryId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<IngredientModel>>($"{ApiNames.IngredientApi}category/{categoryId}");
+            return await _httpClient.GetFromJsonAsync<IList<IngredientModel>>($"{ApiNames.IngredientApi}/category/{categoryId}");
         }
 
         public async Task<EditIngredientModel> Get(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditIngredientModel>($"{ApiNames.IngredientApi}{id}");
+            return await _httpClient.GetFromJsonAsync<EditIngredientModel>($"{ApiNames.IngredientApi}/{id}");
         }
 
         public async Task<EditIngredientModel> Add(EditIngredientModel model)

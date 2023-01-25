@@ -21,7 +21,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<EditRecipeModel> Get(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}{id}");
+            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}/{id}");
         }
 
         public async Task<EditRecipeModel> Add(EditRecipeModel model)
