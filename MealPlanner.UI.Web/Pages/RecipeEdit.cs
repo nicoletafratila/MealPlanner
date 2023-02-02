@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Pages
             RecipeCategoryId = Model.RecipeCategoryId.ToString();
         }
 
-        protected async Task HandleValidSubmit()
+        protected async Task Save()
         {
             Model.RecipeCategoryId = int.Parse(RecipeCategoryId);
             if (_selectedFiles != null)

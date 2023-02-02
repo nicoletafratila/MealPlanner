@@ -3,47 +3,56 @@
 
 @*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
 {*@
-<section>
-    <div class="header">
-        <h1 class="page-title">@Model.Name</h1>
+
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <h2>@Model.Name</h2>
+        </div>
+
+        <div class="card-body">
+            <EditForm Model="@Model" OnValidSubmit="@Save">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="name" class="col-sm-3">Ingredient name: </label>
+                    <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Enter ingredient name"></InputText>
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
+                    <InputSelect id="ingredientCategory" class="form-select" @bind-Value="@IngredientCategoryId">
+                        <option selected value="0">Choose...</option>
+                        @foreach (var category in Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Model.IngredientCategoryId)" />
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="unit" class="col-sm-3">Unit of measurement: </label>
+                    <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
+                        <option selected value="0">Choose...</option>
+                        @foreach (var unit in Units)
+                        {
+                            <option value="@unit.Id">@unit.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Model.UnitId)" />
+                </div>
+
+                <br />
+                <button type="submit" class="btn btn-primary edit-btn">Save</button>
+
+                <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
+            </EditForm>
+        </div>
     </div>
-
-    <EditForm Model="@Model" OnValidSubmit="@Save">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group row">
-            <label for="name" class="col-sm-3">Ingredient name: </label>
-            <InputText id="name" class="form-control col-sm-8" @bind-Value="@Model.Name" placeholder="Enter ingredient name"></InputText>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
-        </div>
-        
-        <div class="form-group row">
-            <label for="ingredientcategory" class="col-sm-3">Ingredient category: </label>
-            <InputSelect id="ingredientcategory" class="form-control col-sm-8" @bind-Value="@IngredientCategoryId">
-                @foreach (var category in Categories)
-                {
-                    <option value="@category.Id">@category.Name</option>
-                }
-            </InputSelect>
-        </div>
-
-        <div class="form-group row">
-            <label for="unit" class="col-sm-3">Unit of measurement: </label>
-            <InputSelect id="unit" class="form-control col-sm-8" @bind-Value="@UnitId">
-                @foreach (var unit in Units)
-                {
-                    <option value="@unit.Id">@unit.Name</option>
-                }
-            </InputSelect>
-        </div>
-
-        <br/>
-        <button type="submit" class="btn btn-primary edit-btn">Save</button>
-
-        <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
-    </EditForm>
-</section>
+</div>
 @*}
 else
 {

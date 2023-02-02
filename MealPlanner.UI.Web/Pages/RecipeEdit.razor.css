@@ -1,4 +1,4 @@
-﻿.header {
+﻿/*.header {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -6,7 +6,6 @@
 }
 
 .imgProfile {
-    padding: 20px;
-    width: 140px;
-    height: 120px;
-}
+    width: 180px;
+    height: 140px;
+}*/

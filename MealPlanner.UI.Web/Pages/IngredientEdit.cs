@@ -6,6 +6,45 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class IngredientEdit
     {
+        [Parameter]
+        public string Id { get; set; }
+
+        private string _ingredientCategoryId;
+        public string IngredientCategoryId
+        {
+            get {
+                return _ingredientCategoryId;
+            }
+            set { 
+                if (_ingredientCategoryId!= value)
+                {
+                    _ingredientCategoryId = value;
+                    Model.IngredientCategoryId = int.Parse(_ingredientCategoryId);
+                }
+            }
+        }
+
+        private string _unitId;
+        public string UnitId
+        {
+            get
+            {
+                return _unitId;
+            }
+            set
+            {
+                if (_unitId != value)
+                {
+                    _unitId = value;
+                    Model.UnitId = int.Parse(_unitId);
+                }
+            }
+        }
+
+        public EditIngredientModel Model { get; set; } = new EditIngredientModel();
+        public List<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
+        public List<UnitModel> Units { get; set; } = new List<UnitModel>();
+
         [Inject]
         public IIngredientService IngredientService { get; set; }
 
@@ -17,15 +56,6 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-
-        [Parameter]
-        public string Id { get; set; }
-        protected string IngredientCategoryId = string.Empty;
-        protected string UnitId = string.Empty;
-
-        public EditIngredientModel Model { get; set; } = new EditIngredientModel();
-        public List<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
-        public List<UnitModel> Units { get; set; } = new List<UnitModel>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,9 +78,6 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task Save()
         {
-            Model.IngredientCategoryId = int.Parse(IngredientCategoryId);
-            Model.UnitId = int.Parse(UnitId);
-
             if (Model.Id == 0)
             {
                 var addedEntity = await IngredientService.Add(Model);

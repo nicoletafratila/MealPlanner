@@ -3,105 +3,121 @@
 
 @*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
 {*@
-<section>
-    <div class="header">
-        <h1 class="page-title">@Model.Name</h1>
-        <img class="imgProfile" src="@Model.ImageUrl" />
-    </div>
 
-    <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group row">
-            <label for="name" class="col-sm-3">Recipe name: </label>
-            <InputText id="name" class="form-control col-sm-8" @bind-Value="@Model.Name" placeholder="Enter recipe name"></InputText>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-8">
+                    <h2>@Model.Name</h2>
+                </div>
+                <div class="col-md-4 align-self-center">
+                    <img class="img-fluid" src="@Model.ImageUrl" />
+                </div>
+            </div>
         </div>
 
-        <div class="form-group row">
-            <label for="recipecategory" class="col-sm-3">Recipe category: </label>
-            <InputSelect id="recipecategory" class="form-control col-sm-8" @bind-Value="@RecipeCategoryId">
-                @foreach (var item in RecipeCategories)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            </InputSelect>
-        </div>
+        <div class="card-body">
+            <EditForm Model="@Model" OnValidSubmit="@Save">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-        <div class="form-group row">
-            <label for="image" class="col-sm-3">Select image: </label>
-            <InputFile class="custom-file-input" OnChange="OnInputFileChange" multiple accept="image/png, image/jpeg, image/gif" id="inputFile" />
-        </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-3">Recipe name: </label>
+                    <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Enter recipe name"></InputText>
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
 
-        <div class="form-group row">
-            <label for="ingredientcategory" class="col-sm-3">Ingredient category: </label>
-            <InputSelect id="ingredientcategory" class="form-control col-sm-8" ValueChanged="@((string value) => OnSelectionChanged(value))"
-                         Value="IngredientCategoryId" ValueExpression="@(() => IngredientCategoryId)">
-                <option selected value="0">Select a value</option>
-                @foreach (var item in IngredientCategories)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            </InputSelect>
-        </div>
+                <div class="form-group mt-3">
+                    <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
+                    <InputSelect id="recipeCategory" class="form-select" @bind-Value="@RecipeCategoryId">
+                        <option selected value="0">Choose...</option>
+                        @foreach (var item in RecipeCategories)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Model.RecipeCategoryId)" />
+                </div>
 
-        <div class="form-group row">
-            <label for="ingredient" class="col-sm-3">Ingredient: </label>
-            <InputSelect id="ingredient" class="form-control col-sm-8" @bind-Value="@IngredientId">
-                <option selected value="0">Select a value</option>
-                @foreach (var item in Ingredients)
-                {
-                    <option value="@item.Id">@item.Name (@item.Unit.Name)</option>
-                }
-            </InputSelect>
-        </div>
+                <div class="form-group mt-3">
+                    <label for="image" class="col-sm-3">Select image: </label>
+                    <InputFile id="image" class="form-control" OnChange="OnInputFileChange" multiple accept="image/png, image/jpeg, image/gif" />
+                    <ValidationMessage For="@(() => Model.ImageContent)" />
+                </div>
 
-        <div class="form-group row">
-            <label for="quantity" class="col-sm-3">Quantity: </label>
-            <InputText id="quantity" class="form-control col-sm-8" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Quantity)" />
-        </div>
+                <div class="form-group mt-3">
+                    <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
+                    <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnSelectionChanged(value))"
+                                  ValueExpression="@(() => IngredientCategoryId)">
+                        <option selected value="0">Choose...</option>
+                        @foreach (var item in IngredientCategories)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </InputSelect>
+                </div>
 
-        <button type="button" @onclick="@AddIngredient">Add</button>
+                <div class="form-group mt-3">
+                    <label for="ingredient" class="col-sm-3">Ingredient: </label>
+                    <InputSelect id="ingredient" class="form-select" @bind-Value="@IngredientId">
+                        <option selected value="0">Choose...</option>
+                        @foreach (var item in Ingredients)
+                        {
+                            <option value="@item.Id">@item.Name (@item.Unit.Name)</option>
+                        }
+                    </InputSelect>
+                </div>
 
+                <div class="input-group mt-3">
+                    <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
+                    <ValidationMessage For="@(() => Quantity)" />
+                    <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>
+                </div>
 
-        <br />
+                <br />
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>Category</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (@Model.Ingredients == null)
-                {
-                    <p><em>Loading...</em></p>
-                }
-                else
-                {
-                    @foreach (var item in @Model.Ingredients)
-                    {
+                <table class="table table-striped table-hover table-sm caption-top">
+                    <caption>List of ingredients:</caption>
+                    <thead>
                         <tr>
-                            <td>@item.Ingredient.Name</td>
-                            <td>@item.Quantity</td>
-                            <td>@item.Ingredient.Unit.Name</td>
-                            <td>@item.Ingredient.IngredientCategory.Name</td>
+                            <th scope="col">#</th>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Category</th>
                         </tr>
-                    }
-                }
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        @if (@Model.Ingredients == null)
+                        {
+                            <p><em>Loading...</em></p>
+                        }
+                        else
+                        {
+                            var index = 1;
+                            @foreach (var item in @Model.Ingredients)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.Ingredient.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Ingredient.Unit.Name</td>
+                                    <td>@item.Ingredient.IngredientCategory.Name</td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
 
-        <button type="submit" class="btn btn-primary edit-btn">Save</button>
+                <button type="submit" class="btn btn-primary edit-btn">Save</button>
 
-        <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
-    </EditForm>
-</section>
+                <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
+            </EditForm>
+        </div>
+    </div>
+</div>
 @*}
 else
 {
