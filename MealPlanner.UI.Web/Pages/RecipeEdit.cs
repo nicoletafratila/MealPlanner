@@ -1,12 +1,90 @@
 ﻿using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeEdit
     {
+        [Parameter]
+        public string Id { get; set; }
+        private IReadOnlyList<IBrowserFile> _selectedFiles;
+
+        private string _recipeCategoryId;
+        public string RecipeCategoryId
+        {
+            get
+            {
+                return _recipeCategoryId;
+            }
+            set
+            {
+                if (_recipeCategoryId != value)
+                {
+                    _recipeCategoryId = value;
+                    Model.RecipeCategoryId = int.Parse(_recipeCategoryId);
+                }
+            }
+        }
+
+        private string _ingredientCategoryId;
+        public string IngredientCategoryId
+        {
+            get
+            {
+                return _ingredientCategoryId;
+            }
+            set
+            {
+                if (_ingredientCategoryId != value)
+                {
+                    _ingredientCategoryId = value;
+                    OnSelectionChanged(_ingredientCategoryId);
+                }
+            }
+        }
+
+        private string _ingredientId;
+        public string IngredientId
+        {
+            get
+            {
+                return _ingredientId;
+            }
+            set
+            {
+                if (_ingredientId != value)
+                {
+                    _ingredientId = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private string _quantity;
+        public string Quantity
+        {
+            get
+            {
+                return _quantity;
+            }
+            set
+            {
+                if (_quantity != value)
+                {
+                    _quantity = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        public EditRecipeModel Model { get; set; } = new EditRecipeModel();
+        public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
+        public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
+        public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
+
         [Inject]
         public IRecipeService RecipeService { get; set; }
 
@@ -21,20 +99,6 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-
-        [Parameter]
-        public string Id { get; set; }
-
-        protected string RecipeCategoryId = string.Empty;
-        protected string IngredientId = string.Empty;
-        protected string IngredientCategoryId = string.Empty;
-        protected string Quantity = string.Empty;
-        public EditRecipeModel Model { get; set; } = new EditRecipeModel();
-        private IReadOnlyList<IBrowserFile> _selectedFiles;
-
-        public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
-        public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
-        public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -56,7 +120,6 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task Save()
         {
-            Model.RecipeCategoryId = int.Parse(RecipeCategoryId);
             if (_selectedFiles != null)
             {
                 var file = _selectedFiles[0];
@@ -82,9 +145,20 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        protected bool CanAddIngredient
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(IngredientId) &&
+                       IngredientId != "0" &&
+                       !string.IsNullOrWhiteSpace(Quantity) &&
+                       decimal.Parse(Quantity) > 0;
+            }
+        }
+
         protected void AddIngredient()
         {
-            if (IngredientId != "0")
+            if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
             {
                 RecipeIngredientModel item = Model.Ingredients.FirstOrDefault(i => i.Ingredient.Id == int.Parse(IngredientId));
                 if (item != null)
@@ -102,6 +176,17 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        protected async Task DeleteIngredient(IngredientModel item)
+        {
+            //if (!await JSRuntime.InvokeAsync<bool>("confirm", new object[] { $"Are you sure you want to delete the ingredient '{item.Name}'?" }))
+            //    return;
+
+            RecipeIngredientModel itemToDelete = Model.Ingredients.FirstOrDefault(i => i.Ingredient.Id == item.Id);
+            if (itemToDelete!=null) {
+                Model.Ingredients.Remove(itemToDelete);
+            }
+        }
+
         protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo("/recipesoverview");
@@ -110,10 +195,8 @@ namespace MealPlanner.UI.Web.Pages
         private async void OnSelectionChanged(string value)
         {
             IngredientCategoryId = value;
-            if (IngredientCategoryId != "0")
-            {
+            if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
                 Ingredients = (await IngredientService.Search(int.Parse(IngredientCategoryId))).ToList();
-            }
             StateHasChanged();
         }
 

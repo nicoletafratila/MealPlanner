@@ -12,11 +12,11 @@ namespace RecipeBook.Shared.Models
         public string Name { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public int UnitId { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the ingredient")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the ingredient.")]
         public int IngredientCategoryId { get; set; }
     }
 }

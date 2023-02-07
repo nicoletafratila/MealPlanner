@@ -49,7 +49,7 @@
                 <div class="form-group mt-3">
                     <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
                     <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnSelectionChanged(value))"
-                                  ValueExpression="@(() => IngredientCategoryId)">
+                                 Value="IngredientCategoryId" ValueExpression="@(() => IngredientCategoryId)">
                         <option selected value="0">Choose...</option>
                         @foreach (var item in IngredientCategories)
                         {
@@ -71,13 +71,19 @@
 
                 <div class="input-group mt-3">
                     <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
-                    <ValidationMessage For="@(() => Quantity)" />
-                    <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>
+                    @if (CanAddIngredient == true)
+                    {
+                        <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" type="button" disabled @onclick="@AddIngredient">Add</button>
+                    }
                 </div>
 
                 <br />
 
-                <table class="table table-striped table-hover table-sm caption-top">
+                <table class="table table-sm table-striped table-hover caption-top">
                     <caption>List of ingredients:</caption>
                     <thead>
                         <tr>
@@ -86,6 +92,7 @@
                             <th>Quantity</th>
                             <th>Unit</th>
                             <th>Category</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,11 +106,12 @@
                             @foreach (var item in @Model.Ingredients)
                             {
                                 <tr>
-                                    <td>@index</td>
+                                    <th>@index</th>
                                     <td>@item.Ingredient.Name</td>
                                     <td>@item.Quantity</td>
                                     <td>@item.Ingredient.Unit.Name</td>
                                     <td>@item.Ingredient.IngredientCategory.Name</td>
+                                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(item.Ingredient)"></button></td>
                                 </tr>
                                 index++;
                             }
