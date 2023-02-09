@@ -5,7 +5,9 @@ namespace MealPlanner.UI.Web.Services
     public interface IRecipeService
     {
         Task<IList<RecipeModel>> GetAll();
-        Task<EditRecipeModel> Get(int id);
+        Task<RecipeModel> Get(int id);
+        Task<EditRecipeModel> GetEdit(int id);
+        Task<IList<RecipeModel>> Search(int categoryId);
         Task<EditRecipeModel> Add(EditRecipeModel model);
         Task Update(EditRecipeModel model);
     }

@@ -19,7 +19,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<UnitModel>>> Get()
+        public async Task<ActionResult<IList<UnitModel>>> GetAll()
         {
             try
             {

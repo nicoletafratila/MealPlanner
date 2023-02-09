@@ -13,5 +13,10 @@ namespace MealPlanner.Shared.Models
         public string Name { get; set; }
 
         public IList<RecipeModel>? Recipes { get; set; }
+
+        public EditMealPlanModel()
+        {
+            Recipes = new List<RecipeModel>();
+        }
     }
 }

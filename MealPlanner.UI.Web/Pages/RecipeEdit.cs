@@ -113,7 +113,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Model = await RecipeService.Get(int.Parse(Id));
+                Model = await RecipeService.GetEdit(int.Parse(Id));
             }
 
             RecipeCategoryId = Model.RecipeCategoryId.ToString();
@@ -157,7 +157,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void AddIngredient()
+        protected async Task AddIngredient()
         {
             if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
             {

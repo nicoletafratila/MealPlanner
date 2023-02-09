@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<RecipeModel>>> Get()
+        public async Task<ActionResult<IList<RecipeModel>>> GetAll()
         {
             try
             {
@@ -46,6 +46,21 @@ namespace RecipeBook.Api.Controllers
                 if (result == null) return NotFound();
 
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditRecipeModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpGet("category/{categoryid:int}")]
+        public async Task<ActionResult<IList<RecipeModel>>> Search(int categoryId)
+        {
+            try
+            {
+                var results = await _repository.SearchAsync(categoryId);
+                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory.DisplaySequence).ThenBy(item => item.Name);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
             {

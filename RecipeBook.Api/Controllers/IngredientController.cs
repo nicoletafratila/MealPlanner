@@ -22,26 +22,11 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<IngredientModel>>> Get()
+        public async Task<ActionResult<IList<IngredientModel>>> GetAll()
         {
             try
             {
                 var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
-        }
-
-        [HttpGet("category/{categoryid:int}")]
-        public async Task<ActionResult<IList<IngredientModel>>> Search(int categoryId)
-        {
-            try
-            {
-                var results = await _repository.SearchAsync(categoryId);
                 var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
@@ -61,6 +46,21 @@ namespace RecipeBook.Api.Controllers
                 if (result == null) return NotFound();
 
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditIngredientModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+        
+        [HttpGet("category/{categoryid:int}")]
+        public async Task<ActionResult<IList<IngredientModel>>> Search(int categoryId)
+        {
+            try
+            {
+                var results = await _repository.SearchAsync(categoryId);
+                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
             {

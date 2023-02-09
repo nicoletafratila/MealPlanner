@@ -24,6 +24,13 @@ namespace RecipeBook.Api.Repositories
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
 
+        public async Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId)
+        {
+            return (DbContext as MealPlannerDbContext).Recipes
+                    .Include(x => x.RecipeCategory)
+                    .Where(x => x.RecipeCategoryId == categoryId).ToList();
+        }
+
         public async Task<Recipe> GetByIdAsyncIncludeIngredients(int id)
         {
             return await (DbContext as MealPlannerDbContext).Recipes

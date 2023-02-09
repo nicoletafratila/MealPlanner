@@ -19,7 +19,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<IngredientCategoryModel>>> Get()
+        public async Task<ActionResult<IList<IngredientCategoryModel>>> GetAll()
         {
             try
             {
