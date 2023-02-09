@@ -48,7 +48,7 @@
 
                 <div class="form-group mt-3">
                     <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
-                    <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnSelectionChanged(value))"
+                    <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnIngredientCategoryChanged(value))"
                                  Value="IngredientCategoryId" ValueExpression="@(() => IngredientCategoryId)">
                         <option selected value="0">Choose...</option>
                         @foreach (var item in IngredientCategories)
@@ -60,7 +60,8 @@
 
                 <div class="form-group mt-3">
                     <label for="ingredient" class="col-sm-3">Ingredient: </label>
-                    <InputSelect id="ingredient" class="form-select" @bind-Value="@IngredientId">
+                    <InputSelect id="ingredient" class="form-select" ValueChanged="@((string value) => OnIngredientChanged(value))"
+                                 Value="IngredientId" ValueExpression="@(() => IngredientId)">
                         <option selected value="0">Choose...</option>
                         @foreach (var item in Ingredients)
                         {
@@ -69,59 +70,43 @@
                     </InputSelect>
                 </div>
 
-                <div class="input-group mt-3">
-                    <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
-                    @if (CanAddIngredient == true)
-                    {
-                        <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-primary" type="button" disabled @onclick="@AddIngredient">Add</button>
-                    }
+                <div class="form-group mt-3">
+                    <label for="quantity" class="col-sm-3">Quantity: </label>
+                    <div class="input-group">
+                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
+                        @if (CanAddIngredient == true)
+                        {
+                            <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary" type="button" disabled @onclick="@AddIngredient">Add</button>
+                        }
+                    </div>
                 </div>
 
                 <br />
 
-                <table class="table table-sm table-striped table-hover caption-top">
-                    <caption>List of ingredients:</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                            <th>Unit</th>
-                            <th>Category</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (@Model.Ingredients == null)
-                        {
-                            <p><em>Loading...</em></p>
-                        }
-                        else
-                        {
-                            var index = 1;
-                            @foreach (var item in @Model.Ingredients)
-                            {
-                                <tr>
-                                    <th>@index</th>
-                                    <td>@item.Ingredient.Name</td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.Ingredient.Unit.Name</td>
-                                    <td>@item.Ingredient.IngredientCategory.Name</td>
-                                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(item.Ingredient)"></button></td>
-                                </tr>
-                                index++;
-                            }
-                        }
-                    </tbody>
-                </table>
+                <TableTemplate Items="@Model.Ingredients" ShowIndex="true">
+                    <TableCaption>List of ingredients:</TableCaption>
+                    <TableHeader>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Category</th>
+                        <th scope="col"></th>
+                    </TableHeader>
+                    <RowTemplate Context="CurrentIngredientModel">
+                        <td>@CurrentIngredientModel.Ingredient.Name</td>
+                        <td>@CurrentIngredientModel.Quantity</td>
+                        <td>@CurrentIngredientModel.Ingredient.Unit.Name</td>
+                        <td>@CurrentIngredientModel.Ingredient.IngredientCategory.Name</td>
+                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(CurrentIngredientModel.Ingredient)"></button></td>
+                    </RowTemplate>
+                </TableTemplate>
 
-                <button type="submit" class="btn btn-primary edit-btn">Save</button>
-
-                <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
+                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
             </EditForm>
         </div>
     </div>

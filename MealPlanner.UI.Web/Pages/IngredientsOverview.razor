@@ -4,39 +4,20 @@
 
 <h1>Ingredients</h1>
 
-@if (Ingredients == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Name</th>
-                <th>Unit</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Ingredients)
-            {
-                <tr>
-                    <td>@item.IngredientCategory.Name</td>
-                    <td>@item.Name</td>
-                    <td>@item.Unit.Name</td>
-                    <td>
-                        <a href="@($"ingredientedit/{item.Id}")" class="btn btn-primary table-btn">
-                            <i class="fas fa-edit">Edit</i>
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<TableTemplate Items="@Ingredients">
+    <TableCaption>List of ingredients:</TableCaption>
+    <TableHeader>
+        <th>Category</th>
+        <th>Name</th>
+        <th>Unit</th>
+        <th></th>
+    </TableHeader>
+    <RowTemplate Context="CurrentIngredientModel">
+        <td>@CurrentIngredientModel.IngredientCategory.Name</td>
+        <td>@CurrentIngredientModel.Name</td>
+        <td>@CurrentIngredientModel.Unit.Name</td>
+        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditIngredient(CurrentIngredientModel)">Edit</button></td>
+    </RowTemplate>
+</TableTemplate>
 
-    <a href="@($"ingredientedit")" class="btn btn-primary table-btn">
-        <i class="fas fa-new">New</i>
-    </a>
-}
+<button class="btn btn-primary btn-sm" type="button" @onclick="() => NewIngredient()">New</button>

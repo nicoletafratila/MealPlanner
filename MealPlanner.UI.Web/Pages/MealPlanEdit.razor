@@ -15,42 +15,27 @@
             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Model.Name)" />
         </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (@Model.Recipes == null)
-                {
-                    <p><em>Loading...</em></p>
-                }
-                else
-                {
-                    @foreach (var item in @Model.Recipes)
-                    {
-                        <tr>
-                            <td>@item.RecipeCategory.Name</td>
-                            <td>@item.Name</td>
-                            <td>
-                                <img src="@item.ImageUrl" width="100" height="80" />
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
+        <TableTemplate Items="@Model.Recipes">
+            <TableCaption>List of recipes:</TableCaption>
+            <TableHeader>
+                <th>Category</th>
+                <th>Name</th>
+                <th></th>
+                <th></th>
+            </TableHeader>
+            <RowTemplate Context="CurrentRecipeModel">
+                <td>@CurrentRecipeModel.RecipeCategory.Name</td>
+                <td>@CurrentRecipeModel.Name</td>
+                <td>
+                    <img src="@CurrentRecipeModel.ImageUrl" width="100" height="80" />
+                </td>
+                <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(CurrentRecipeModel)">Edit</button></td>
+            </RowTemplate>
+        </TableTemplate>
 
-        <button type="submit" class="btn btn-primary edit-btn">Save</button>
-
-        <a href="@($"shoppinglist/{Model.Id}")" class="btn btn-primary table-btn">
-            <i class="fas fa-edit">Shopping list</i>
-        </a>
-
-        <a class="btn btn-primary table-btn" @onclick="@NavigateToOverview">Back to overview</a>
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        <button class="btn btn-primary btn-sm" type="button" @onclick="@ShowShoppingList">Shopping list</button>
+        <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
     </EditForm>
 </section>
 @*}

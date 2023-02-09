@@ -41,7 +41,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_ingredientCategoryId != value)
                 {
                     _ingredientCategoryId = value;
-                    OnSelectionChanged(_ingredientCategoryId);
+                    OnIngredientCategoryChanged(_ingredientCategoryId);
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_ingredientId != value)
                 {
                     _ingredientId = value;
-                    StateHasChanged();
+                    OnIngredientChanged(_ingredientId);
                 }
             }
         }
@@ -81,6 +81,7 @@ namespace MealPlanner.UI.Web.Pages
         }
 
         public EditRecipeModel Model { get; set; } = new EditRecipeModel();
+        public RecipeIngredientModel CurrentIngredientModel { get; set; } = new RecipeIngredientModel();
         public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
         public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
         public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
@@ -182,21 +183,31 @@ namespace MealPlanner.UI.Web.Pages
             //    return;
 
             RecipeIngredientModel itemToDelete = Model.Ingredients.FirstOrDefault(i => i.Ingredient.Id == item.Id);
-            if (itemToDelete!=null) {
+            if (itemToDelete != null)
+            {
                 Model.Ingredients.Remove(itemToDelete);
             }
         }
 
-        protected void NavigateToOverview()
+        protected async Task NavigateToOverview()
         {
             NavigationManager.NavigateTo("/recipesoverview");
         }
 
-        private async void OnSelectionChanged(string value)
+        private async void OnIngredientCategoryChanged(string value)
         {
             IngredientCategoryId = value;
+            IngredientId = string.Empty;
+            Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
                 Ingredients = (await IngredientService.Search(int.Parse(IngredientCategoryId))).ToList();
+            StateHasChanged();
+        }
+
+        private async void OnIngredientChanged(string value)
+        {
+            IngredientId = value;
+            Quantity = string.Empty;
             StateHasChanged();
         }
 

@@ -4,41 +4,22 @@
 
 <h1>Recipes</h1>
 
-@if (Recipes == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Name</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Recipes)
-            {
-                <tr>
-                    <td>@item.RecipeCategory.Name</td>
-                    <td>@item.Name</td>
-                    <td>
-                        <img src="@item.ImageUrl" width="100" height="80" />
-                    </td>
-                    <td>
-                        <a href="@($"recipeedit/{item.Id}")" class="btn btn-primary table-btn">
-                            <i class="fas fa-edit">Edit</i>
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<TableTemplate Items="@Recipes">
+    <TableCaption>List of recipes:</TableCaption>
+    <TableHeader>
+        <th>Category</th>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+    </TableHeader>
+    <RowTemplate Context="CurrentRecipeModel">
+        <td>@CurrentRecipeModel.RecipeCategory.Name</td>
+        <td>@CurrentRecipeModel.Name</td>
+        <td>
+            <img src="@CurrentRecipeModel.ImageUrl" class="img-fluid" width="100" height="80" />
+        </td>
+        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(CurrentRecipeModel)">Edit</button></td>
+    </RowTemplate>
+</TableTemplate>
 
-    <a href="@($"recipeedit")" class="btn btn-primary table-btn">
-        <i class="fas fa-new">New</i>
-    </a>
-}
+<button class="btn btn-primary btn-sm" type="button" @onclick="() => NewRecipe()">New</button>

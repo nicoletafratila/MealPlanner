@@ -11,7 +11,7 @@ namespace RecipeBook.Shared.Models
         [StringLength(100)]
         public string Name { get; set; }
 
-        [Required]
+        //[Required]
         [MaxLength(512000)]
         public byte[] ImageContent { get; set; }
         public string? ImageUrl { get; set; }

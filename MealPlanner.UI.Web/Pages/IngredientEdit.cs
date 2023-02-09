@@ -93,7 +93,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void NavigateToOverview()
+        protected async Task NavigateToOverview()
         {
             NavigationManager.NavigateTo("/ingredientsoverview");
         }
