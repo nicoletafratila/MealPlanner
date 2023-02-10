@@ -12,11 +12,13 @@ namespace MealPlanner.UI.Web.Pages
         private string _ingredientCategoryId;
         public string IngredientCategoryId
         {
-            get {
+            get
+            {
                 return _ingredientCategoryId;
             }
-            set { 
-                if (_ingredientCategoryId!= value)
+            set
+            {
+                if (_ingredientCategoryId != value)
                 {
                     _ingredientCategoryId = value;
                     Model.IngredientCategoryId = int.Parse(_ingredientCategoryId);
@@ -83,13 +85,13 @@ namespace MealPlanner.UI.Web.Pages
                 var addedEntity = await IngredientService.Add(Model);
                 if (addedEntity != null)
                 {
-                    NavigationManager.NavigateTo("/ingredientsoverview");
+                    NavigateToOverview();
                 }
             }
             else
             {
                 await IngredientService.Update(Model);
-                NavigationManager.NavigateTo("/ingredientsoverview");
+                NavigateToOverview();
             }
         }
 

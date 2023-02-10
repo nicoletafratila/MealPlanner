@@ -6,5 +6,7 @@ namespace MealPlanner.UI.Web.Services
     {
         Task<IList<MealPlanModel>> GetAll();
         Task<EditMealPlanModel> Get(int id);
+        Task<EditMealPlanModel> Add(EditMealPlanModel model);
+        Task Update(EditMealPlanModel model);
     }
 }

@@ -136,13 +136,13 @@ namespace MealPlanner.UI.Web.Pages
                 var addedEntity = await RecipeService.Add(Model);
                 if (addedEntity != null)
                 {
-                    NavigationManager.NavigateTo("/recipesoverview");
+                    NavigateToOverview();
                 }
             }
             else
             {
                 await RecipeService.Update(Model);
-                NavigationManager.NavigateTo("/recipesoverview");
+                NavigateToOverview();
             }
         }
 
@@ -157,7 +157,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task AddIngredient()
+        protected void AddIngredient()
         {
             if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
             {
@@ -177,7 +177,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteIngredient(IngredientModel item)
+        protected void DeleteIngredient(IngredientModel item)
         {
             //if (!await JSRuntime.InvokeAsync<bool>("confirm", new object[] { $"Are you sure you want to delete the ingredient '{item.Name}'?" }))
             //    return;
@@ -189,7 +189,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task NavigateToOverview()
+        protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo("/recipesoverview");
         }
@@ -204,7 +204,7 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async void OnIngredientChanged(string value)
+        private void OnIngredientChanged(string value)
         {
             IngredientId = value;
             Quantity = string.Empty;

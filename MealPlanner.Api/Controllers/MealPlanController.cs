@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Controllers
 {
@@ -50,6 +52,61 @@ namespace MealPlanner.Api.Controllers
                 if (result == null) return NotFound();
 
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<EditMealPlanModel>> Post(EditMealPlanModel model)
+        {
+            if (model == null)
+                return BadRequest();
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                {
+                    ModelState.AddModelError("Name", "The name shouldn't be empty");
+                }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                string location = _linkGenerator.GetPathByAction("Get", "MealPlan", new { id = model.Id });
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    return BadRequest("Could not use current id");
+                }
+
+                var result = _mapper.Map<MealPlan>(model);
+                await _repository.AddAsync(result);
+                return Created(location, _mapper.Map<EditMealPlanModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put(EditMealPlanModel model)
+        {
+            if (model == null)
+                return BadRequest();
+
+            try
+            {
+                var oldModel = await _repository.GetByIdAsync(model.Id);
+                if (oldModel == null)
+                {
+                    return NotFound($"Could not find with id {model.Id}");
+                }
+
+                _mapper.Map(model, oldModel);
+                await _repository.UpdateAsync(oldModel);
+                return NoContent();
             }
             catch (Exception)
             {

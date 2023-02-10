@@ -37,7 +37,24 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EditRecipeModel>> Get(int id)
+        public async Task<ActionResult<RecipeModel>> Get(int id)
+        {
+            try
+            {
+                var result = await _repository.GetByIdAsync(id);
+
+                if (result == null) return NotFound();
+
+                return StatusCode(StatusCodes.Status200OK, _mapper.Map<RecipeModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpGet("edit/{id}")]
+        public async Task<ActionResult<EditRecipeModel>> GetEdit(int id)
         {
             try
             {

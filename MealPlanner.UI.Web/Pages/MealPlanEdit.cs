@@ -79,21 +79,29 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task Save()
         {
+            if (Model.Id == 0)
+            {
+                var addedEntity = await MealPlanService.Add(Model);
+                if (addedEntity != null)
+                {
+                    NavigateToOverview();
+                }
+            }
+            else
+            {
+                await MealPlanService.Update(Model);
+                NavigateToOverview();
+            }
         }
 
-        protected async Task NavigateToOverview()
+        protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo("/mealplansoverview");
         }
 
-        protected async Task ShowShoppingList()
+        protected void ShowShoppingList()
         {
             NavigationManager.NavigateTo($"shoppinglist/{Model.Id}");
-        }
-
-        protected async Task EditRecipe(RecipeModel item)
-        {
-            NavigationManager.NavigateTo($"recipeedit/{item.Id}");
         }
 
         private async void OnRecipeCategoryChanged(string value)
@@ -105,7 +113,7 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async void OnRecipeChanged(string value)
+        private void OnRecipeChanged(string value)
         {
             RecipeId = value;
             StateHasChanged();
@@ -128,10 +136,14 @@ namespace MealPlanner.UI.Web.Pages
                 if (item == null)
                 {
                     item = await RecipeService.Get(int.Parse(RecipeId));
-                    item.RecipeCategory = Categories.FirstOrDefault(i => i.Id == int.Parse(RecipeCategoryId));
                     Model.Recipes.Add(item);
                 }
             }
+        }
+
+        protected void EditRecipe(RecipeModel item)
+        {
+            NavigationManager.NavigateTo($"recipeedit/{item.Id}");
         }
     }
 }

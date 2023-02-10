@@ -19,14 +19,14 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<IList<RecipeModel>>($"{ApiNames.RecipeApi}");
         }
 
-        public async Task<EditRecipeModel> GetEdit(int id)
-        {
-            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}/{id}");
-        }
-
         public async Task<RecipeModel> Get(int id)
         {
             return await _httpClient.GetFromJsonAsync<RecipeModel>($"{ApiNames.RecipeApi}/{id}");
+        }
+
+        public async Task<EditRecipeModel> GetEdit(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}/edit/{id}");
         }
 
         public async Task<IList<RecipeModel>> Search(int categoryId)
