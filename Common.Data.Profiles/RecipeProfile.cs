@@ -16,6 +16,7 @@ namespace Common.Data.Profiles
                 .ForMember(data => data.RecipeIngredients, opt => opt.MapFrom<EditRecipeModelToRecipeResolver, IList<RecipeIngredientModel>>(model => model.Ingredients));
 
             CreateMap<Recipe, RecipeModel>()
+                .ForMember(model => model.RecipeCategory, opt => opt.MapFrom(data => data.RecipeCategory))
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
                 .ReverseMap();
         }

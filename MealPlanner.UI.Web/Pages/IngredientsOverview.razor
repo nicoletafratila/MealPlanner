@@ -10,14 +10,16 @@
         <th>Category</th>
         <th>Name</th>
         <th>Unit</th>
-        <th></th>
+        <th style="width: 30px"></th>
+        <th style="width: 30px"></th>
     </TableHeader>
-    <RowTemplate Context="CurrentIngredientModel">
-        <td>@CurrentIngredientModel.IngredientCategory.Name</td>
-        <td>@CurrentIngredientModel.Name</td>
-        <td>@CurrentIngredientModel.Unit.Name</td>
-        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditIngredient(CurrentIngredientModel)">Edit</button></td>
+    <RowTemplate Context="Ingredient">
+        <td>@Ingredient.IngredientCategory.Name</td>
+        <td>@Ingredient.Name</td>
+        <td>@Ingredient.Unit.Name</td>
+        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Ingredient)">Edit</button></td>
+        <td><button class="btn-close btn-sm" type="button" @onclick="() => Delete(Ingredient)"></button></td>
     </RowTemplate>
 </TableTemplate>
 
-<button class="btn btn-primary btn-sm" type="button" @onclick="() => NewIngredient()">New</button>
+<button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>

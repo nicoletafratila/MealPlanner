@@ -14,22 +14,22 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IList<IngredientModel>> GetAll()
+        public async Task<IList<IngredientModel>> GetAllAsync()
         {
             return await _httpClient.GetFromJsonAsync<IList<IngredientModel>>($"{ApiNames.IngredientApi}");
         }
 
-        public async Task<IList<IngredientModel>> Search(int categoryId)
-        {
-            return await _httpClient.GetFromJsonAsync<IList<IngredientModel>>($"{ApiNames.IngredientApi}/category/{categoryId}");
-        }
-
-        public async Task<EditIngredientModel> Get(int id)
+        public async Task<EditIngredientModel> GetAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EditIngredientModel>($"{ApiNames.IngredientApi}/{id}");
         }
 
-        public async Task<EditIngredientModel> Add(EditIngredientModel model)
+        public async Task<IList<IngredientModel>> SearchAsync(int categoryId)
+        {
+            return await _httpClient.GetFromJsonAsync<IList<IngredientModel>>($"{ApiNames.IngredientApi}/category/{categoryId}");
+        }
+
+        public async Task<EditIngredientModel> AddAsync(EditIngredientModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.IngredientApi, modelJson);
@@ -42,10 +42,15 @@ namespace MealPlanner.UI.Web.Services
             return null;
         }
 
-        public async Task Update(EditIngredientModel model)
+        public async Task UpdateAsync(EditIngredientModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync(ApiNames.IngredientApi, modelJson);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"{ApiNames.IngredientApi}/{id}");
         }
     }
 }

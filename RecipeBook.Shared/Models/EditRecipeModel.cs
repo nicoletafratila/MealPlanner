@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Common.Validators;
+using System.ComponentModel.DataAnnotations;
 
 namespace RecipeBook.Shared.Models
 {
@@ -11,7 +12,7 @@ namespace RecipeBook.Shared.Models
         [StringLength(100)]
         public string Name { get; set; }
 
-        //[Required]
+        [Required]
         [MaxLength(512000)]
         public byte[] ImageContent { get; set; }
         public string? ImageUrl { get; set; }
@@ -21,7 +22,7 @@ namespace RecipeBook.Shared.Models
         public int RecipeCategoryId { get; set; }
 
         [Required]
-        //At leas one element
+        [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one ingredient.")]
         public IList<RecipeIngredientModel> Ingredients { get; set; }
 
         public EditRecipeModel()

@@ -42,7 +42,7 @@
 
                 <div class="form-group mt-3">
                     <label for="image" class="col-sm-3">Select image: </label>
-                    <InputFile id="image" class="form-control" OnChange="OnInputFileChange" multiple accept="image/png, image/jpeg, image/gif" />
+                    <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" multiple accept="image/png, image/jpeg, image/gif" />
                     <ValidationMessage For="@(() => Model.ImageContent)" />
                 </div>
 
@@ -83,27 +83,31 @@
                             <button class="btn btn-primary" type="button" disabled @onclick="@AddIngredient">Add</button>
                         }
                     </div>
+                    <ValidationMessage For="@(() => Quantity)" />
                 </div>
 
                 <br />
 
-                <TableTemplate Items="@Model.Ingredients" ShowIndex="true">
-                    <TableCaption>List of ingredients:</TableCaption>
-                    <TableHeader>
-                        <th>Name</th>
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                        <th>Category</th>
-                        <th scope="col"></th>
-                    </TableHeader>
-                    <RowTemplate Context="CurrentIngredientModel">
-                        <td>@CurrentIngredientModel.Ingredient.Name</td>
-                        <td>@CurrentIngredientModel.Quantity</td>
-                        <td>@CurrentIngredientModel.Ingredient.Unit.Name</td>
-                        <td>@CurrentIngredientModel.Ingredient.IngredientCategory.Name</td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(CurrentIngredientModel.Ingredient)"></button></td>
-                    </RowTemplate>
-                </TableTemplate>
+                <div class="col">
+                    <ValidationMessage For="@(() => Model.Ingredients)" />
+                    <TableTemplate Items="@Model.Ingredients" ShowIndex="true">
+                        <TableCaption>List of ingredients:</TableCaption>
+                        <TableHeader>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Category</th>
+                            <th scope="col"></th>
+                        </TableHeader>
+                        <RowTemplate Context="CurrentIngredientModel">
+                            <td>@CurrentIngredientModel.Ingredient.Name</td>
+                            <td>@CurrentIngredientModel.Quantity</td>
+                            <td>@CurrentIngredientModel.Ingredient.Unit.Name</td>
+                            <td>@CurrentIngredientModel.Ingredient.IngredientCategory.Name</td>
+                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(CurrentIngredientModel.Ingredient)"></button></td>
+                        </RowTemplate>
+                    </TableTemplate>
+                </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>

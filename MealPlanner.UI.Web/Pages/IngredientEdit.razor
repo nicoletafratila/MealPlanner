@@ -1,24 +1,21 @@
 ﻿@page "/ingredientedit"
 @page "/ingredientedit/{id}"
 
-@*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
-{*@
-
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
-            <h2>@Model.Name</h2>
+            <h2>@Ingredient.Name</h2>
         </div>
 
         <div class="card-body">
-            <EditForm Model="@Model" OnValidSubmit="@Save">
+            <EditForm Model="@Ingredient" OnValidSubmit="@Save">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">Ingredient name: </label>
-                    <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Enter ingredient name"></InputText>
-                    <ValidationMessage For="@(() => Model.Name)" />
+                    <InputText id="name" class="form-control" @bind-Value="@Ingredient.Name" placeholder="Enter ingredient name"></InputText>
+                    <ValidationMessage For="@(() => Ingredient.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
@@ -30,7 +27,7 @@
                             <option value="@category.Id">@category.Name</option>
                         }
                     </InputSelect>
-                    <ValidationMessage For="@(() => Model.IngredientCategoryId)" />
+                    <ValidationMessage For="@(() => Ingredient.IngredientCategoryId)" />
                 </div>
 
                 <div class="form-group mt-3">
@@ -42,19 +39,15 @@
                             <option value="@unit.Id">@unit.Name</option>
                         }
                     </InputSelect>
-                    <ValidationMessage For="@(() => Model.UnitId)" />
+                    <ValidationMessage For="@(() => Ingredient.UnitId)" />
                 </div>
 
                 <br />
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <button class="btn btn-danger btn-sm" type="button" @onclick="@Delete">Delete</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
             </EditForm>
         </div>
     </div>
 </div>
-@*}
-else
-{
-    <div class="alert @StatusClass">@Message</div>
-}*@

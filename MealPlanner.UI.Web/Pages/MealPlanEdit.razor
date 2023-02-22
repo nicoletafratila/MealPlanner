@@ -34,41 +34,46 @@
 
                 <div class="form-group mt-3">
                     <label for="recipe" class="col-sm-3">Recipe: </label>
-                    <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
-                                 Value="RecipeId" ValueExpression="@(() => RecipeId)">
-                        <option selected value="0">Choose...</option>
-                        @foreach (var item in Recipes)
-                        {
+                    <div class="input-group">
+                        <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
+                                     Value="RecipeId" ValueExpression="@(() => RecipeId)">
+                            <option selected value="0">Choose...</option>
+                            @foreach (var item in Recipes)
+                            {
                                 <option value="@item.Id">@item.Name</option>
+                            }
+                        </InputSelect>
+                        @if (CanAddRecipe == true)
+                        {
+                            <button class="btn btn-primary" type="button" @onclick="@AddRecipe">Add</button>
                         }
-                    </InputSelect>
-                    @if (CanAddRecipe == true)
-                    {
-                        <button class="btn btn-primary" type="button" @onclick="@AddRecipe">Add</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipe">Add</button>
-                    }
+                        else
+                        {
+                            <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipe">Add</button>
+                        }
+                    </div>
                 </div>
 
-                <TableTemplate Items="@Model.Recipes">
-                    <TableCaption>List of recipes:</TableCaption>
-                    <TableHeader>
-                        <th>Category</th>
-                        <th>Name</th>
-                        <th></th>
-                        <th></th>
-                    </TableHeader>
-                    <RowTemplate Context="CurrentRecipeModel">
-                        <td>@CurrentRecipeModel.RecipeCategory.Name</td>
-                        <td>@CurrentRecipeModel.Name</td>
-                        <td>
-                            <img src="@CurrentRecipeModel.ImageUrl" width="100" height="80" />
-                        </td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(CurrentRecipeModel)">Edit</button></td>
-                    </RowTemplate>
-                </TableTemplate>
+                <div class="col">
+                    <ValidationMessage For="@(() => Model.Recipes)" />
+                    <TableTemplate Items="@Model.Recipes">
+                        <TableCaption>List of recipes:</TableCaption>
+                        <TableHeader>
+                            <th>Category</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                        </TableHeader>
+                        <RowTemplate Context="CurrentRecipeModel">
+                            <td>@CurrentRecipeModel.RecipeCategory.Name</td>
+                            <td>@CurrentRecipeModel.Name</td>
+                            <td>
+                                <img src="@CurrentRecipeModel.ImageUrl" class="img-fluid" width="100" height="80" />
+                            </td>
+                            <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(CurrentRecipeModel)">Edit</button></td>
+                        </RowTemplate>
+                    </TableTemplate>
+                </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@ShowShoppingList">Shopping list</button>

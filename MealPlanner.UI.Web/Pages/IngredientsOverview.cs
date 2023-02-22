@@ -1,5 +1,7 @@
-﻿using MealPlanner.UI.Web.Services;
+﻿using Common.Api;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -7,7 +9,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class IngredientsOverview
     {
         public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
-        public IngredientModel CurrentIngredientModel { get; set; } = new IngredientModel();
+        public IngredientModel Ingredient { get; set; } = new IngredientModel();
 
         [Inject]
         public IIngredientService IngredientService { get; set; }
@@ -15,19 +17,39 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            Ingredients = await IngredientService.GetAll();
+            await Refresh();
         }
 
-        protected void EditIngredient(IngredientModel item)
+        protected void New()
+        {
+            NavigationManager.NavigateTo($"ingredientedit/");
+        }
+
+        protected void Update(IngredientModel item)
         {
             NavigationManager.NavigateTo($"ingredientedit/{item.Id}");
         }
 
-        protected void NewIngredient()
+        protected async Task Delete(IngredientModel item)
         {
-            NavigationManager.NavigateTo($"ingredientedit/");
+            if (item != null)
+            {
+                if (!await JSRuntime.Confirm($"Are you sure you want to delete the ingredient: '{item.Name}'?"))
+                    return;
+
+                await IngredientService.DeleteAsync(item.Id);
+                await Refresh();
+            }
+        }
+
+        protected async Task Refresh()
+        {
+            Ingredients = await IngredientService.GetAllAsync();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace RecipeBook.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
-        
+
         [HttpGet("category/{categoryid:int}")]
         public async Task<ActionResult<IList<IngredientModel>>> Search(int categoryId)
         {
@@ -120,6 +120,16 @@ namespace RecipeBook.Api.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            var itemToDelete = await _repository.GetByIdAsync(id);
+            if (itemToDelete != null)
+            {
+                await _repository.DeleteAsync(itemToDelete);
             }
         }
     }

@@ -1,5 +1,7 @@
-﻿using MealPlanner.UI.Web.Services;
+﻿using Common.Api;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -21,7 +23,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_ingredientCategoryId != value)
                 {
                     _ingredientCategoryId = value;
-                    Model.IngredientCategoryId = int.Parse(_ingredientCategoryId);
+                    Ingredient.IngredientCategoryId = int.Parse(_ingredientCategoryId);
                 }
             }
         }
@@ -38,12 +40,12 @@ namespace MealPlanner.UI.Web.Pages
                 if (_unitId != value)
                 {
                     _unitId = value;
-                    Model.UnitId = int.Parse(_unitId);
+                    Ingredient.UnitId = int.Parse(_unitId);
                 }
             }
         }
 
-        public EditIngredientModel Model { get; set; } = new EditIngredientModel();
+        public EditIngredientModel Ingredient { get; set; } = new EditIngredientModel();
         public List<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
         public List<UnitModel> Units { get; set; } = new List<UnitModel>();
 
@@ -59,6 +61,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
@@ -67,22 +72,22 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                Model = new EditIngredientModel();
+                Ingredient = new EditIngredientModel();
             }
             else
             {
-                Model = await IngredientService.Get(int.Parse(Id));
+                Ingredient = await IngredientService.GetAsync(int.Parse(Id));
             }
 
-            IngredientCategoryId = Model.IngredientCategoryId.ToString();
-            UnitId = Model.UnitId.ToString();
+            IngredientCategoryId = Ingredient.IngredientCategoryId.ToString();
+            UnitId = Ingredient.UnitId.ToString();
         }
 
         protected async Task Save()
         {
-            if (Model.Id == 0)
+            if (Ingredient.Id == 0)
             {
-                var addedEntity = await IngredientService.Add(Model);
+                var addedEntity = await IngredientService.AddAsync(Ingredient);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -90,8 +95,20 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await IngredientService.Update(Model);
+                await IngredientService.UpdateAsync(Ingredient);
                 NavigateToOverview();
+            }
+        }
+
+        protected async Task Delete()
+        {
+            if (Ingredient.Id != 0)
+            {
+                if (!await JSRuntime.Confirm($"Are you sure you want to delete the ingredient: '{Ingredient.Name}'?"))
+                    return;
+
+                await IngredientService.DeleteAsync(Ingredient.Id);
+                await NavigateToOverview();
             }
         }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -64,6 +65,7 @@ namespace MealPlanner.UI.Web.Pages
         }
 
         private string _quantity;
+        [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
         public string Quantity
         {
             get
@@ -121,16 +123,6 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task Save()
         {
-            if (_selectedFiles != null)
-            {
-                var file = _selectedFiles[0];
-                Stream stream = file.OpenReadStream();
-                MemoryStream ms = new MemoryStream();
-                await stream.CopyToAsync(ms);
-                stream.Close();
-                Model.ImageContent = ms.ToArray();
-            }
-
             if (Model.Id == 0)
             {
                 var addedEntity = await RecipeService.Add(Model);
@@ -173,6 +165,8 @@ namespace MealPlanner.UI.Web.Pages
                     item.RecipeId = Model.Id;
                     item.Quantity = decimal.Parse(Quantity);
                     Model.Ingredients.Add(item);
+
+                    ClearForm();
                 }
             }
         }
@@ -200,7 +194,7 @@ namespace MealPlanner.UI.Web.Pages
             IngredientId = string.Empty;
             Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
-                Ingredients = (await IngredientService.Search(int.Parse(IngredientCategoryId))).ToList();
+                Ingredients = (await IngredientService.SearchAsync(int.Parse(IngredientCategoryId))).ToList();
             StateHasChanged();
         }
 
@@ -211,10 +205,24 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private void OnInputFileChange(InputFileChangeEventArgs e)
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             _selectedFiles = e.GetMultipleFiles();
+            if (_selectedFiles != null)
+            {
+                var file = _selectedFiles[0];
+                Stream stream = file.OpenReadStream();
+                MemoryStream ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                stream.Close();
+                Model.ImageContent = ms.ToArray();
+            }
             StateHasChanged();
+        }
+
+        private void ClearForm()
+        {
+            Quantity = string.Empty;
         }
     }
 }

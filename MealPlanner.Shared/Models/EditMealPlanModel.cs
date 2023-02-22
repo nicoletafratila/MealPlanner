@@ -1,4 +1,5 @@
-﻿using RecipeBook.Shared.Models;
+﻿using Common.Validators;
+using RecipeBook.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.Shared.Models
@@ -12,7 +13,9 @@ namespace MealPlanner.Shared.Models
         [StringLength(100)]
         public string Name { get; set; }
 
-        public IList<RecipeModel>? Recipes { get; set; }
+        [Required]
+        [MinimumCountCollection(1, ErrorMessage = "The meal plan requires at least one recipe.")]
+        public IList<RecipeModel> Recipes { get; set; }
 
         public EditMealPlanModel()
         {

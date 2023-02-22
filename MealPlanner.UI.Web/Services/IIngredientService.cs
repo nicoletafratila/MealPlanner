@@ -4,10 +4,11 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IIngredientService
     {
-        Task<IList<IngredientModel>> GetAll();
-        Task<IList<IngredientModel>> Search(int categoryId);
-        Task<EditIngredientModel> Get(int id);
-        Task<EditIngredientModel> Add(EditIngredientModel model);
-        Task Update(EditIngredientModel model);
+        Task<IList<IngredientModel>> GetAllAsync();
+        Task<EditIngredientModel> GetAsync(int id);
+        Task<IList<IngredientModel>> SearchAsync(int categoryId);
+        Task<EditIngredientModel> AddAsync(EditIngredientModel model);
+        Task UpdateAsync(EditIngredientModel model);
+        Task DeleteAsync(int id);
     }
 }
