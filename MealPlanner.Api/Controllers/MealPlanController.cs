@@ -113,5 +113,18 @@ namespace MealPlanner.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            var itemToDelete = await _repository.GetByIdAsync(id);
+            if (itemToDelete == null)
+            {
+                NotFound($"Could not find with id {id}");
+                return;
+            }
+
+            await _repository.DeleteAsync(itemToDelete);
+        }
     }
 }

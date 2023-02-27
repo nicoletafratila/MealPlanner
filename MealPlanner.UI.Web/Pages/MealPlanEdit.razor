@@ -1,23 +1,21 @@
 ﻿@page "/mealplanedit"
 @page "/mealplanedit/{Id}"
 
-@*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
-{*@
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
-            <h2>Details for @Model.Name</h2>
+            <h2>Details for @MealPlan.Name</h2>
         </div>
 
         <div class="card-body">
-            <EditForm Model="@Model" OnValidSubmit="@Save">
+            <EditForm Model="@MealPlan" OnValidSubmit="@Save">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">Meal plan name: </label>
-                    <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Enter meal plan name"></InputText>
-                    <ValidationMessage For="@(() => Model.Name)" />
+                    <InputText id="name" class="form-control" @bind-Value="@MealPlan.Name" placeholder="Enter meal plan name"></InputText>
+                    <ValidationMessage For="@(() => MealPlan.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
@@ -55,35 +53,33 @@
                 </div>
 
                 <div class="col">
-                    <ValidationMessage For="@(() => Model.Recipes)" />
-                    <TableTemplate Items="@Model.Recipes">
+                    <ValidationMessage For="@(() => MealPlan.Recipes)" />
+                    <TableTemplate Items="@MealPlan.Recipes">
                         <TableCaption>List of recipes:</TableCaption>
                         <TableHeader>
                             <th>Category</th>
                             <th>Name</th>
                             <th></th>
                             <th></th>
+                            <th scope="col"></th>
                         </TableHeader>
-                        <RowTemplate Context="CurrentRecipeModel">
-                            <td>@CurrentRecipeModel.RecipeCategory.Name</td>
-                            <td>@CurrentRecipeModel.Name</td>
+                        <RowTemplate Context="Recipe">
+                            <td>@Recipe.RecipeCategory.Name</td>
+                            <td>@Recipe.Name</td>
                             <td>
-                                <img src="@CurrentRecipeModel.ImageUrl" class="img-fluid" width="100" height="80" />
+                                <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
                             </td>
-                            <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(CurrentRecipeModel)">Edit</button></td>
+                            <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(Recipe)">Edit</button></td>
+                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteRecipe(Recipe)"></button></td>
                         </RowTemplate>
                     </TableTemplate>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <button class="btn btn-danger btn-sm" type="button" @onclick="@Delete">Delete</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@ShowShoppingList">Shopping list</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
             </EditForm>
         </div>
     </div>
 </div>
-@*}
-else
-{
-    <div class="alert @StatusClass">@Message</div>
-}*@

@@ -127,10 +127,13 @@ namespace RecipeBook.Api.Controllers
         public async Task Delete(int id)
         {
             var itemToDelete = await _repository.GetByIdAsync(id);
-            if (itemToDelete != null)
+            if (itemToDelete == null)
             {
-                await _repository.DeleteAsync(itemToDelete);
+                NotFound($"Could not find with id {id}");
+                return;
             }
+
+            await _repository.DeleteAsync(itemToDelete);
         }
     }
 }

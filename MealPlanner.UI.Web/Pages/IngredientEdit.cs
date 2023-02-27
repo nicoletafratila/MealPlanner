@@ -108,11 +108,11 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 await IngredientService.DeleteAsync(Ingredient.Id);
-                await NavigateToOverview();
+                NavigateToOverview();
             }
         }
 
-        protected async Task NavigateToOverview()
+        protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo("/ingredientsoverview");
         }

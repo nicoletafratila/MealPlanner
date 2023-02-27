@@ -52,5 +52,10 @@ namespace MealPlanner.UI.Web.Services
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync(ApiNames.RecipeApi, modelJson);
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"{ApiNames.RecipeApi}/{id}");
+        }
     }
 }

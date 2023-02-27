@@ -8,5 +8,6 @@ namespace MealPlanner.UI.Web.Services
         Task<EditMealPlanModel> Get(int id);
         Task<EditMealPlanModel> Add(EditMealPlanModel model);
         Task Update(EditMealPlanModel model);
+        Task DeleteAsync(int id);
     }
 }

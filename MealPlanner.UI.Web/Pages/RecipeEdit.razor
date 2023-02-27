@@ -1,31 +1,28 @@
 ﻿@page "/recipeedit"
 @page "/recipeedit/{id}"
 
-@*@if (!Saved)OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
-{*@
-
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
             <div class="row g-0">
                 <div class="col-md-8">
-                    <h2>@Model.Name</h2>
+                    <h2>@Recipe.Name</h2>
                 </div>
                 <div class="col-md-4 align-self-center">
-                    <img class="img-fluid" src="@Model.ImageUrl" />
+                    <img class="img-fluid" src="@Recipe.ImageUrl" />
                 </div>
             </div>
         </div>
 
         <div class="card-body">
-            <EditForm Model="@Model" OnValidSubmit="@Save">
+            <EditForm Model="@Recipe" OnValidSubmit="@Save">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">Recipe name: </label>
-                    <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Enter recipe name"></InputText>
-                    <ValidationMessage For="@(() => Model.Name)" />
+                    <InputText id="name" class="form-control" @bind-Value="@Recipe.Name" placeholder="Enter recipe name"></InputText>
+                    <ValidationMessage For="@(() => Recipe.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
@@ -37,13 +34,13 @@
                             <option value="@item.Id">@item.Name</option>
                         }
                     </InputSelect>
-                    <ValidationMessage For="@(() => Model.RecipeCategoryId)" />
+                    <ValidationMessage For="@(() => Recipe.RecipeCategoryId)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="image" class="col-sm-3">Select image: </label>
                     <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" multiple accept="image/png, image/jpeg, image/gif" />
-                    <ValidationMessage For="@(() => Model.ImageContent)" />
+                    <ValidationMessage For="@(() => Recipe.ImageContent)" />
                 </div>
 
                 <div class="form-group mt-3">
@@ -89,8 +86,8 @@
                 <br />
 
                 <div class="col">
-                    <ValidationMessage For="@(() => Model.Ingredients)" />
-                    <TableTemplate Items="@Model.Ingredients" ShowIndex="true">
+                    <ValidationMessage For="@(() => Recipe.Ingredients)" />
+                    <TableTemplate Items="@Recipe.Ingredients" ShowIndex="true">
                         <TableCaption>List of ingredients:</TableCaption>
                         <TableHeader>
                             <th>Name</th>
@@ -110,13 +107,9 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                <button class="btn btn-danger btn-sm" type="button" @onclick="@Delete">Delete</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
             </EditForm>
         </div>
     </div>
 </div>
-@*}
-else
-{
-    <div class="alert @StatusClass">@Message</div>
-}*@

@@ -1,7 +1,9 @@
-﻿using Common.Data.Entities;
+﻿using Common.Api;
+using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -45,10 +47,10 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        public EditMealPlanModel Model { get; set; } = new EditMealPlanModel();
-        public RecipeModel CurrentRecipeModel { get; set; } = new RecipeModel();
-        public List<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
+        public EditMealPlanModel MealPlan { get; set; } = new EditMealPlanModel();
+        public RecipeModel Recipe { get; set; } = new RecipeModel();
         public List<RecipeModel> Recipes { get; set; } = new List<RecipeModel>();
+        public List<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
 
         [Inject]
         public IMealPlanService MealPlanService { get; set; }
@@ -62,6 +64,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             Categories = (await RecipeCategoryService.GetAll()).ToList();
@@ -69,19 +74,19 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                Model = new EditMealPlanModel();
+                MealPlan = new EditMealPlanModel();
             }
             else
             {
-                Model = await MealPlanService.Get(int.Parse(Id));
+                MealPlan = await MealPlanService.Get(int.Parse(Id));
             }
         }
 
         protected async Task Save()
         {
-            if (Model.Id == 0)
+            if (MealPlan.Id == 0)
             {
-                var addedEntity = await MealPlanService.Add(Model);
+                var addedEntity = await MealPlanService.Add(MealPlan);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -89,34 +94,21 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await MealPlanService.Update(Model);
+                await MealPlanService.Update(MealPlan);
                 NavigateToOverview();
             }
         }
 
-        protected void NavigateToOverview()
+        protected async Task Delete()
         {
-            NavigationManager.NavigateTo("/mealplansoverview");
-        }
+            if (MealPlan.Id != 0)
+            {
+                if (!await JSRuntime.Confirm($"Are you sure you want to delete the meal plan: '{MealPlan.Name}'?"))
+                    return;
 
-        protected void ShowShoppingList()
-        {
-            NavigationManager.NavigateTo($"shoppinglist/{Model.Id}");
-        }
-
-        private async void OnRecipeCategoryChanged(string value)
-        {
-            RecipeCategoryId = value;
-            RecipeId = string.Empty;
-            if (!string.IsNullOrWhiteSpace(RecipeCategoryId) && RecipeCategoryId != "0")
-                Recipes = (await RecipeService.Search(int.Parse(RecipeCategoryId))).ToList();
-            StateHasChanged();
-        }
-
-        private void OnRecipeChanged(string value)
-        {
-            RecipeId = value;
-            StateHasChanged();
+                await MealPlanService.DeleteAsync(MealPlan.Id);
+                NavigateToOverview();
+            }
         }
 
         protected bool CanAddRecipe
@@ -132,11 +124,11 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
             {
-                RecipeModel item = Model.Recipes.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
+                RecipeModel item = MealPlan.Recipes.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
                 if (item == null)
                 {
                     item = await RecipeService.Get(int.Parse(RecipeId));
-                    Model.Recipes.Add(item);
+                    MealPlan.Recipes.Add(item);
                 }
             }
         }
@@ -144,6 +136,43 @@ namespace MealPlanner.UI.Web.Pages
         protected void EditRecipe(RecipeModel item)
         {
             NavigationManager.NavigateTo($"recipeedit/{item.Id}");
+        }
+
+        protected async Task DeleteRecipe(RecipeModel item)
+        {
+            RecipeModel itemToDelete = Recipes.FirstOrDefault(i => i.Id == item.Id);
+            if (itemToDelete != null)
+            {
+                if (!await JSRuntime.Confirm($"Are you sure you want to delete the recipe '{itemToDelete.Name}'?"))
+                    return;
+
+                Recipes.Remove(itemToDelete);
+            }
+        }
+
+        protected void NavigateToOverview()
+        {
+            NavigationManager.NavigateTo("/mealplansoverview");
+        }
+
+        protected void ShowShoppingList()
+        {
+            NavigationManager.NavigateTo($"shoppinglist/{MealPlan.Id}");
+        }
+
+        private async void OnRecipeCategoryChanged(string value)
+        {
+            RecipeCategoryId = value;
+            RecipeId = string.Empty;
+            if (!string.IsNullOrWhiteSpace(RecipeCategoryId) && RecipeCategoryId != "0")
+                Recipes = (await RecipeService.Search(int.Parse(RecipeCategoryId))).ToList();
+            StateHasChanged();
+        }
+
+        private void OnRecipeChanged(string value)
+        {
+            RecipeId = value;
+            StateHasChanged();
         }
     }
 }

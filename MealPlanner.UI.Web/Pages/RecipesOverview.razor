@@ -10,16 +10,18 @@
         <th>Category</th>
         <th>Name</th>
         <th></th>
-        <th></th>
+        <th style="width: 30px"></th>
+        <th style="width: 30px"></th>
     </TableHeader>
-    <RowTemplate Context="CurrentRecipeModel">
-        <td>@CurrentRecipeModel.RecipeCategory.Name</td>
-        <td>@CurrentRecipeModel.Name</td>
+    <RowTemplate Context="Recipe">
+        <td>@Recipe.RecipeCategory.Name</td>
+        <td>@Recipe.Name</td>
         <td>
-            <img src="@CurrentRecipeModel.ImageUrl" class="img-fluid" width="100" height="80" />
+            <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
         </td>
-        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(CurrentRecipeModel)">Edit</button></td>
+        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Recipe)">Edit</button></td>
+        <td><button class="btn-close btn-sm" type="button" @onclick="() => Delete(Recipe)"></button></td>
     </RowTemplate>
 </TableTemplate>
 
-<button class="btn btn-primary btn-sm" type="button" @onclick="() => NewRecipe()">New</button>
+<button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>

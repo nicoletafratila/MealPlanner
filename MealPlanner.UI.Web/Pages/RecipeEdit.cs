@@ -1,4 +1,5 @@
-﻿using MealPlanner.UI.Web.Services;
+﻿using Common.Api;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
@@ -11,7 +12,6 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string Id { get; set; }
-        private IReadOnlyList<IBrowserFile> _selectedFiles;
 
         private string _recipeCategoryId;
         public string RecipeCategoryId
@@ -25,7 +25,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    Model.RecipeCategoryId = int.Parse(_recipeCategoryId);
+                    Recipe.RecipeCategoryId = int.Parse(_recipeCategoryId);
                 }
             }
         }
@@ -82,11 +82,11 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        public EditRecipeModel Model { get; set; } = new EditRecipeModel();
-        public RecipeIngredientModel CurrentIngredientModel { get; set; } = new RecipeIngredientModel();
+        public EditRecipeModel Recipe { get; set; } = new EditRecipeModel();
+        public RecipeIngredientModel Ingredient { get; set; } = new RecipeIngredientModel();
+        public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
         public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
         public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
-        public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
 
         [Inject]
         public IRecipeService RecipeService { get; set; }
@@ -103,6 +103,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
@@ -111,21 +114,21 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                Model = new EditRecipeModel();
+                Recipe = new EditRecipeModel();
             }
             else
             {
-                Model = await RecipeService.GetEdit(int.Parse(Id));
+                Recipe = await RecipeService.GetEdit(int.Parse(Id));
             }
 
-            RecipeCategoryId = Model.RecipeCategoryId.ToString();
+            RecipeCategoryId = Recipe.RecipeCategoryId.ToString();
         }
 
         protected async Task Save()
         {
-            if (Model.Id == 0)
+            if (Recipe.Id == 0)
             {
-                var addedEntity = await RecipeService.Add(Model);
+                var addedEntity = await RecipeService.Add(Recipe);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -133,7 +136,19 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await RecipeService.Update(Model);
+                await RecipeService.Update(Recipe);
+                NavigateToOverview();
+            }
+        }
+
+        protected async Task Delete()
+        {
+            if (Recipe.Id != 0)
+            {
+                if (!await JSRuntime.Confirm($"Are you sure you want to delete the recipe: '{Recipe.Name}'?"))
+                    return;
+
+                await RecipeService.DeleteAsync(Recipe.Id);
                 NavigateToOverview();
             }
         }
@@ -153,7 +168,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
             {
-                RecipeIngredientModel item = Model.Ingredients.FirstOrDefault(i => i.Ingredient.Id == int.Parse(IngredientId));
+                RecipeIngredientModel item = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient.Id == int.Parse(IngredientId));
                 if (item != null)
                 {
                     item.Quantity += decimal.Parse(Quantity);
@@ -162,24 +177,24 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     item = new RecipeIngredientModel();
                     item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
-                    item.RecipeId = Model.Id;
+                    item.RecipeId = Recipe.Id;
                     item.Quantity = decimal.Parse(Quantity);
-                    Model.Ingredients.Add(item);
+                    Recipe.Ingredients.Add(item);
 
                     ClearForm();
                 }
             }
         }
 
-        protected void DeleteIngredient(IngredientModel item)
+        protected async Task DeleteIngredient(IngredientModel item)
         {
-            //if (!await JSRuntime.InvokeAsync<bool>("confirm", new object[] { $"Are you sure you want to delete the ingredient '{item.Name}'?" }))
-            //    return;
-
-            RecipeIngredientModel itemToDelete = Model.Ingredients.FirstOrDefault(i => i.Ingredient.Id == item.Id);
+            RecipeIngredientModel itemToDelete = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient.Id == item.Id);
             if (itemToDelete != null)
             {
-                Model.Ingredients.Remove(itemToDelete);
+                if (!await JSRuntime.Confirm($"Are you sure you want to delete the ingredient '{item.Name}'?"))
+                    return;
+
+                Recipe.Ingredients.Remove(itemToDelete);
             }
         }
 
@@ -207,7 +222,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
-            _selectedFiles = e.GetMultipleFiles();
+            var _selectedFiles = e.GetMultipleFiles();
             if (_selectedFiles != null)
             {
                 var file = _selectedFiles[0];
@@ -215,7 +230,7 @@ namespace MealPlanner.UI.Web.Pages
                 MemoryStream ms = new MemoryStream();
                 await stream.CopyToAsync(ms);
                 stream.Close();
-                Model.ImageContent = ms.ToArray();
+                Recipe.ImageContent = ms.ToArray();
             }
             StateHasChanged();
         }
