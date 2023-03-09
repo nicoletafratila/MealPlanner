@@ -9,10 +9,5 @@ namespace RecipeBook.Api.Repositories
         public UnitRepository(MealPlannerDbContext dbContext) : base(dbContext)
         {
         }
-
-        public override async Task<IReadOnlyList<Unit>> GetAllAsync()
-        {
-            return (DbContext as MealPlannerDbContext).Units.ToList();
-        }
     }
 }

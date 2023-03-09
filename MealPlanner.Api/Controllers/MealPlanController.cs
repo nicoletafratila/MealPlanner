@@ -3,7 +3,6 @@ using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Controllers
 {
@@ -14,27 +13,22 @@ namespace MealPlanner.Api.Controllers
         private readonly IMealPlanRepository _repository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MealPlanController(IMealPlanRepository repository, IMapper mapper, LinkGenerator linkGenerator,
-            IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
+        public MealPlanController(IMealPlanRepository repository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _repository = repository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
-            _webHostEnvironment = webHostEnvironment;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<MealPlanModel>>> Get()
+        public async Task<ActionResult<IList<MealPlanModel>>> GetAll()
         {
             try
             {
-                var results = await _repository.GetAllAsync();
-
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<IList<MealPlanModel>>(results));
+                var result = await _repository.GetAllAsync();
+                var mappedResults = _mapper.Map<IList<MealPlanModel>>(result).OrderBy(r => r.Name);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
             {
@@ -43,14 +37,15 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EditMealPlanModel>> Get(int id)
+        public async Task<ActionResult<EditMealPlanModel>> GetById(int id)
         {
+            if (id <= 0)
+                return BadRequest();
+
             try
             {
                 var result = await _repository.GetByIdAsync(id);
-
                 if (result == null) return NotFound();
-
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
             }
             catch (Exception)
@@ -67,22 +62,15 @@ namespace MealPlanner.Api.Controllers
 
             try
             {
-                if (string.IsNullOrWhiteSpace(model.Name))
-                {
-                    ModelState.AddModelError("Name", "The name shouldn't be empty");
-                }
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                string location = _linkGenerator.GetPathByAction("Get", "MealPlan", new { id = model.Id });
+                var result = _mapper.Map<MealPlan>(model);
+                await _repository.AddAsync(result);
+                
+                result = await _repository.GetByIdAsyncIncludeRecipesAsync(result.Id);
+                string location = _linkGenerator.GetPathByAction("Get", "MealPlan", new { id = result.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");
                 }
-
-                var result = _mapper.Map<MealPlan>(model);
-                await _repository.AddAsync(result);
-                result = await _repository.GetByIdAsyncIncludeRecipes(result.Id);
                 return Created(location, _mapper.Map<EditMealPlanModel>(result));
             }
             catch (Exception)

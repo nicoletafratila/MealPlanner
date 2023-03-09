@@ -26,9 +26,9 @@ namespace RecipeBook.Api.Controllers
         {
             try
             {
-                var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
+                var result = await _repository.GetAllAsync();
+                var mappedResult = _mapper.Map<IList<IngredientModel>>(result).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
+                return StatusCode(StatusCodes.Status200OK, mappedResult);
             }
             catch (Exception)
             {
@@ -37,14 +37,15 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<EditIngredientModel>> Get(int id)
+        public async Task<ActionResult<EditIngredientModel>> GetById(int id)
         {
+            if (id <= 0)
+                return BadRequest();
+
             try
             {
                 var result = await _repository.GetByIdAsync(id);
-
                 if (result == null) return NotFound();
-
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditIngredientModel>(result));
             }
             catch (Exception)
@@ -56,6 +57,9 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("category/{categoryid:int}")]
         public async Task<ActionResult<IList<IngredientModel>>> Search(int categoryId)
         {
+            if (categoryId <= 0)
+                return BadRequest();
+
             try
             {
                 var results = await _repository.SearchAsync(categoryId);
@@ -76,21 +80,14 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                if (string.IsNullOrWhiteSpace(model.Name))
-                {
-                    ModelState.AddModelError("Name", "The name shouldn't be empty");
-                }
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                var result = _mapper.Map<Ingredient>(model);
+                await _repository.AddAsync(result);
 
                 string location = _linkGenerator.GetPathByAction("Get", "Recipe", new { id = model.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");
                 }
-
-                var result = _mapper.Map<Ingredient>(model);
-                await _repository.AddAsync(result);
                 return Created(location, _mapper.Map<EditIngredientModel>(result));
             }
             catch (Exception)

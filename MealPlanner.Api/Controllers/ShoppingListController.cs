@@ -12,20 +12,13 @@ namespace MealPlanner.Api.Controllers
     {
         private readonly IMealPlanRepository _repository;
         private readonly IMapper _mapper;
-        private readonly LinkGenerator _linkGenerator;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private IQuantityCalculator _quantityCalculator;
 
-        public ShoppingListController(IMealPlanRepository repository, IMapper mapper, IQuantityCalculator quantityCalculator, LinkGenerator linkGenerator,
-            IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
+        public ShoppingListController(IMealPlanRepository repository, IMapper mapper, IQuantityCalculator quantityCalculator)
         {
             _repository = repository;
             _mapper = mapper;
             _quantityCalculator = quantityCalculator;
-            _linkGenerator = linkGenerator;
-            _webHostEnvironment = webHostEnvironment;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet("{id}")]
@@ -33,10 +26,10 @@ namespace MealPlanner.Api.Controllers
         {
             try
             {
-                var mealPlan = await _repository.GetByIdAsyncIncludeRecipes(id);
-                var result = _mapper.Map<ShoppingListModel>(mealPlan);
-                result.Ingredients = _quantityCalculator.CalculateQuantities(result.Ingredients);
-                return StatusCode(StatusCodes.Status200OK, result);
+                var result = await _repository.GetByIdAsyncIncludeRecipesAsync(id);
+                var mappedResults = _mapper.Map<ShoppingListModel>(result);
+                mappedResults.Ingredients = _quantityCalculator.CalculateQuantities(mappedResults.Ingredients);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
             {

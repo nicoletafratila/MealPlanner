@@ -37,14 +37,12 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeModel>> Get(int id)
+        public async Task<ActionResult<RecipeModel>> GetById(int id)
         {
             try
             {
                 var result = await _repository.GetByIdAsync(id);
-
                 if (result == null) return NotFound();
-
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<RecipeModel>(result));
             }
             catch (Exception)
@@ -59,9 +57,7 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var result = await _repository.GetByIdIncludeIngredientsAsync(id);
-
                 if (result == null) return NotFound();
-
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditRecipeModel>(result));
             }
             catch (Exception)
@@ -73,6 +69,9 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("category/{categoryid:int}")]
         public async Task<ActionResult<IList<RecipeModel>>> Search(int categoryId)
         {
+            if (categoryId <= 0)
+                return BadRequest();
+
             try
             {
                 var results = await _repository.SearchAsync(categoryId);
@@ -93,22 +92,15 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                if (string.IsNullOrWhiteSpace(model.Name))
-                {
-                    ModelState.AddModelError("Name", "The name shouldn't be empty");
-                }
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
+                var result = _mapper.Map<Recipe>(model);
+                await _repository.AddAsync(result);
+                
+                result = await _repository.GetByIdIncludeIngredientsAsync(result.Id);
                 string location = _linkGenerator.GetPathByAction("Get", "Recipe", new { id = model.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");
                 }
-
-                var result = _mapper.Map<Recipe>(model);
-                await _repository.AddAsync(result);
-                result = await _repository.GetByIdIncludeIngredientsAsync(result.Id);
                 return Created(location, _mapper.Map<EditRecipeModel>(result));
             }
             catch (Exception)

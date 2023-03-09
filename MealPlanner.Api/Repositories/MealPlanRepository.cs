@@ -20,7 +20,7 @@ namespace MealPlanner.Api.Repositories
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
 
-        public async Task<MealPlan> GetByIdAsyncIncludeRecipes(int id)
+        public async Task<MealPlan> GetByIdAsyncIncludeRecipesAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext).MealPlans
               .Include(x => x.MealPlanRecipes)
