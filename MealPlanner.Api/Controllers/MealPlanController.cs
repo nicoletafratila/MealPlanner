@@ -82,6 +82,7 @@ namespace MealPlanner.Api.Controllers
 
                 var result = _mapper.Map<MealPlan>(model);
                 await _repository.AddAsync(result);
+                result = await _repository.GetByIdAsyncIncludeRecipes(result.Id);
                 return Created(location, _mapper.Map<EditMealPlanModel>(result));
             }
             catch (Exception)

@@ -1,5 +1,4 @@
 ﻿using Common.Api;
-using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -140,13 +139,13 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task DeleteRecipe(RecipeModel item)
         {
-            RecipeModel itemToDelete = Recipes.FirstOrDefault(i => i.Id == item.Id);
+            RecipeModel itemToDelete = MealPlan.Recipes.FirstOrDefault(i => i.Id == item.Id);
             if (itemToDelete != null)
             {
                 if (!await JSRuntime.Confirm($"Are you sure you want to delete the recipe '{itemToDelete.Name}'?"))
                     return;
 
-                Recipes.Remove(itemToDelete);
+                MealPlan.Recipes.Remove(itemToDelete);
             }
         }
 

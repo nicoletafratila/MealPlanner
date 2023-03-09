@@ -25,9 +25,7 @@ namespace MealPlanner.Api.Repositories
             return await (DbContext as MealPlannerDbContext).MealPlans
                     .Include(x => x.MealPlanRecipes)
                         .ThenInclude(x => x.Recipe)
-                            .ThenInclude(x => x.RecipeIngredients)
-                                .ThenInclude(x => x.Ingredient)
-                                    .ThenInclude(x => x.IngredientCategory)
+                            .ThenInclude(x => x.RecipeCategory)
                     .Include(x => x.MealPlanRecipes)
                         .ThenInclude(x => x.Recipe)
                             .ThenInclude(x => x.RecipeIngredients)

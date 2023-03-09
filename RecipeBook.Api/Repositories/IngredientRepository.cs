@@ -23,7 +23,7 @@ namespace RecipeBook.Api.Repositories
             return (DbContext as MealPlannerDbContext).Ingredients
                     .Include(x => x.IngredientCategory)
                     .Include(x => x.Unit)
-                    .Where(x=>x.IngredientCategoryId == categoryId).ToList();
+                    .Where(x => x.IngredientCategoryId == categoryId).ToList();
         }
 
         public override async Task<Ingredient> GetByIdAsync(int id)

@@ -83,7 +83,7 @@ namespace MealPlanner.UI.Web.Pages
         }
 
         public EditRecipeModel Recipe { get; set; } = new EditRecipeModel();
-        public RecipeIngredientModel Ingredient { get; set; } = new RecipeIngredientModel();
+        public RecipeIngredientModel RecipeIngredient { get; set; } = new RecipeIngredientModel();
         public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
         public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
         public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();

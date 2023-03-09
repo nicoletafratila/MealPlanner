@@ -58,7 +58,7 @@ namespace RecipeBook.Api.Controllers
         {
             try
             {
-                var result = await _repository.GetByIdAsyncIncludeIngredients(id);
+                var result = await _repository.GetByIdIncludeIngredientsAsync(id);
 
                 if (result == null) return NotFound();
 
@@ -108,6 +108,7 @@ namespace RecipeBook.Api.Controllers
 
                 var result = _mapper.Map<Recipe>(model);
                 await _repository.AddAsync(result);
+                result = await _repository.GetByIdIncludeIngredientsAsync(result.Id);
                 return Created(location, _mapper.Map<EditRecipeModel>(result));
             }
             catch (Exception)
@@ -124,7 +125,7 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                var oldModel = await _repository.GetByIdAsyncIncludeIngredients(model.Id);
+                var oldModel = await _repository.GetByIdIncludeIngredientsAsync(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");

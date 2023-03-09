@@ -9,8 +9,9 @@ namespace Common.Data.Profiles.Resolvers
     {
         public IList<RecipeModel> Resolve(MealPlan source, EditMealPlanModel destination, IList<MealPlanRecipe> sourceValue, IList<RecipeModel> destValue, ResolutionContext context)
         {
-            return source.MealPlanRecipes.Select(item => context.Mapper.Map<RecipeModel>(item.Recipe)).ToList();
-            //.OrderBy(item => item.RecipeCategory.DisplaySequence).ThenBy(item => item.Name).ToList();
+            return source.MealPlanRecipes.Select(item => context.Mapper.Map<RecipeModel>(item.Recipe))
+                                         .OrderBy(item => item.RecipeCategory.DisplaySequence)
+                                         .ThenBy(item => item.Name).ToList();
         }
     }
 }

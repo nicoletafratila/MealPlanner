@@ -31,16 +31,16 @@ namespace RecipeBook.Api.Repositories
                     .Where(x => x.RecipeCategoryId == categoryId).ToList();
         }
 
-        public async Task<Recipe> GetByIdAsyncIncludeIngredients(int id)
+        public async Task<Recipe> GetByIdIncludeIngredientsAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext).Recipes
                     .Include(x => x.RecipeCategory)
                     .Include(x => x.RecipeIngredients)
                         .ThenInclude(x => x.Ingredient)
-                           .ThenInclude(x => x.IngredientCategory)
+                            .ThenInclude(x => x.IngredientCategory)
                     .Include(x => x.RecipeIngredients)
                         .ThenInclude(x => x.Ingredient)
-                           .ThenInclude(x => x.Unit)
+                            .ThenInclude(x => x.Unit)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
     }

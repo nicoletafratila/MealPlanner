@@ -9,16 +9,16 @@ namespace Common.Data.Profiles
     {
         public RecipeProfile()
         {
+            CreateMap<Recipe, RecipeModel>()
+                .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
+                .ReverseMap();
+
             CreateMap<Recipe, EditRecipeModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
                 .ForMember(model => model.Ingredients, opt => opt.MapFrom<RecipeToEditRecipeModelResolver, IList<RecipeIngredient>>(data => data.RecipeIngredients))
                 .ReverseMap()
+                .ForMember(data => data.RecipeCategory, opt => opt.Ignore())
                 .ForMember(data => data.RecipeIngredients, opt => opt.MapFrom<EditRecipeModelToRecipeResolver, IList<RecipeIngredientModel>>(model => model.Ingredients));
-
-            CreateMap<Recipe, RecipeModel>()
-                .ForMember(model => model.RecipeCategory, opt => opt.MapFrom(data => data.RecipeCategory))
-                .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent))))
-                .ReverseMap();
         }
     }
 }

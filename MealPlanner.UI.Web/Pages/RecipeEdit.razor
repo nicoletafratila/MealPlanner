@@ -96,12 +96,12 @@
                             <th>Category</th>
                             <th scope="col"></th>
                         </TableHeader>
-                        <RowTemplate Context="CurrentIngredientModel">
-                            <td>@CurrentIngredientModel.Ingredient.Name</td>
-                            <td>@CurrentIngredientModel.Quantity</td>
-                            <td>@CurrentIngredientModel.Ingredient.Unit.Name</td>
-                            <td>@CurrentIngredientModel.Ingredient.IngredientCategory.Name</td>
-                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(CurrentIngredientModel.Ingredient)"></button></td>
+                        <RowTemplate Context="RecipeIngredient">
+                            <td>@RecipeIngredient.Ingredient.Name</td>
+                            <td>@RecipeIngredient.Quantity</td>
+                            <td>@RecipeIngredient.Ingredient.Unit.Name</td>
+                            <td>@RecipeIngredient.Ingredient.IngredientCategory.Name</td>
+                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(RecipeIngredient.Ingredient)"></button></td>
                         </RowTemplate>
                     </TableTemplate>
                 </div>

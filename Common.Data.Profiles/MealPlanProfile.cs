@@ -11,8 +11,7 @@ namespace Common.Data.Profiles
         public MealPlanProfile()
         {
             CreateMap<MealPlan, MealPlanModel>()
-                .ReverseMap()
-                .ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
+                .ReverseMap();
 
             CreateMap<MealPlan, EditMealPlanModel>()
                .ForMember(model => model.Recipes, opt => opt.MapFrom<MealPlanToEditMealPlanModelResolver, IList<MealPlanRecipe>>(data => data.MealPlanRecipes))
@@ -21,8 +20,7 @@ namespace Common.Data.Profiles
 
             CreateMap<MealPlan, ShoppingListModel>()
                .ForMember(model => model.Ingredients, opt => opt.MapFrom<MealPlanToShoppingListModelResolver, IList<MealPlanRecipe>>(data => data.MealPlanRecipes))
-               .ReverseMap()
-               .ForMember(data => data.MealPlanRecipes, opt => opt.Ignore());
+               .ReverseMap();
         }
     }
 }
