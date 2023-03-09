@@ -109,8 +109,8 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            RecipeCategories = (await RecipeCategoryService.GetAll()).ToList();
-            IngredientCategories = (await IngredientCategoryService.GetAll()).ToList();
+            RecipeCategories = (await RecipeCategoryService.GetAllAsync()).ToList();
+            IngredientCategories = (await IngredientCategoryService.GetAllAsync()).ToList();
 
             if (id == 0)
             {
@@ -118,17 +118,17 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Recipe = await RecipeService.GetEdit(int.Parse(Id));
+                Recipe = await RecipeService.GetEditAsync(int.Parse(Id));
             }
 
             RecipeCategoryId = Recipe.RecipeCategoryId.ToString();
         }
 
-        protected async Task Save()
+        protected async Task SaveAsync()
         {
             if (Recipe.Id == 0)
             {
-                var addedEntity = await RecipeService.Add(Recipe);
+                var addedEntity = await RecipeService.AddAsync(Recipe);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -136,12 +136,12 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await RecipeService.Update(Recipe);
+                await RecipeService.UpdateAsync(Recipe);
                 NavigateToOverview();
             }
         }
 
-        protected async Task Delete()
+        protected async Task DeleteAsync()
         {
             if (Recipe.Id != 0)
             {
@@ -186,7 +186,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteIngredient(IngredientModel item)
+        protected async Task DeleteIngredientAsync(IngredientModel item)
         {
             RecipeIngredientModel itemToDelete = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient.Id == item.Id);
             if (itemToDelete != null)

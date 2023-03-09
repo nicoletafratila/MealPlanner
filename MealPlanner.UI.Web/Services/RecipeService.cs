@@ -14,27 +14,27 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IList<RecipeModel>> GetAll()
+        public async Task<IList<RecipeModel>> GetAllAsync()
         {
             return await _httpClient.GetFromJsonAsync<IList<RecipeModel>>($"{ApiNames.RecipeApi}");
         }
 
-        public async Task<RecipeModel> Get(int id)
+        public async Task<RecipeModel> GetByIdAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<RecipeModel>($"{ApiNames.RecipeApi}/{id}");
         }
 
-        public async Task<EditRecipeModel> GetEdit(int id)
+        public async Task<EditRecipeModel> GetEditAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}/edit/{id}");
         }
 
-        public async Task<IList<RecipeModel>> Search(int categoryId)
+        public async Task<IList<RecipeModel>> SearchAsync(int categoryId)
         {
             return await _httpClient.GetFromJsonAsync<IList<RecipeModel>>($"{ApiNames.RecipeApi}/category/{categoryId}");
         }
 
-        public async Task<EditRecipeModel> Add(EditRecipeModel model)
+        public async Task<EditRecipeModel> AddAsync(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.RecipeApi, modelJson);
@@ -47,7 +47,7 @@ namespace MealPlanner.UI.Web.Services
             return null;
         }
 
-        public async Task Update(EditRecipeModel model)
+        public async Task UpdateAsync(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync(ApiNames.RecipeApi, modelJson);

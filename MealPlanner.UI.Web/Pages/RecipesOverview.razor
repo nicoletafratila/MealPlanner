@@ -20,7 +20,7 @@
             <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
         </td>
         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Recipe)">Edit</button></td>
-        <td><button class="btn-close btn-sm" type="button" @onclick="() => Delete(Recipe)"></button></td>
+        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Recipe)"></button></td>
     </RowTemplate>
 </TableTemplate>
 

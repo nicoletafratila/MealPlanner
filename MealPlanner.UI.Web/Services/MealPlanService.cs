@@ -14,17 +14,17 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IList<MealPlanModel>> GetAll()
+        public async Task<IList<MealPlanModel>> GetAllAsync()
         {
             return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>(ApiNames.MealPlanApi);
         }
 
-        public async Task<EditMealPlanModel> Get(int id)
+        public async Task<EditMealPlanModel> GetByIdAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"{ApiNames.MealPlanApi}/{id}");
         }
 
-        public async Task<EditMealPlanModel> Add(EditMealPlanModel model)
+        public async Task<EditMealPlanModel> AddAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.MealPlanApi, modelJson);
@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Web.Services
             return null;
         }
 
-        public async Task Update(EditMealPlanModel model)
+        public async Task UpdateAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync(ApiNames.MealPlanApi, modelJson);

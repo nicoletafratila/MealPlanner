@@ -8,7 +8,7 @@
         </div>
 
         <div class="card-body">
-            <EditForm Model="@MealPlan" OnValidSubmit="@Save">
+            <EditForm Model="@MealPlan" OnValidSubmit="@SaveAsync">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
@@ -43,11 +43,11 @@
                         </InputSelect>
                         @if (CanAddRecipe == true)
                         {
-                            <button class="btn btn-primary" type="button" @onclick="@AddRecipe">Add</button>
+                            <button class="btn btn-primary" type="button" @onclick="@AddRecipeAsync">Add</button>
                         }
                         else
                         {
-                            <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipe">Add</button>
+                            <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipeAsync">Add</button>
                         }
                     </div>
                 </div>
@@ -70,13 +70,13 @@
                                 <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
                             </td>
                             <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(Recipe)">Edit</button></td>
-                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteRecipe(Recipe)"></button></td>
+                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteRecipeAsync(Recipe)"></button></td>
                         </RowTemplate>
                     </TableTemplate>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                <button class="btn btn-danger btn-sm" type="button" @onclick="@Delete">Delete</button>
+                <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@ShowShoppingList">Shopping list</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
             </EditForm>

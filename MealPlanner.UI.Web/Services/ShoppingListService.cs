@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ShoppingListModel> Get(int id)
+        public async Task<ShoppingListModel> GetByIdAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<ShoppingListModel>($"{ApiNames.ShoppingListApi}/{id}");
         }

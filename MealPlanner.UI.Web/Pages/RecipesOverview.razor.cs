@@ -22,7 +22,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await Refresh();
+            await RefreshAsync();
         }
 
         protected void New()
@@ -35,7 +35,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager.NavigateTo($"recipeedit/{item.Id}");
         }
 
-        protected async Task Delete(RecipeModel item)
+        protected async Task DeleteAsync(RecipeModel item)
         {
             if (item != null)
             {
@@ -43,13 +43,13 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 await RecipeService.DeleteAsync(item.Id);
-                await Refresh();
+                await RefreshAsync();
             }
         }
 
-        protected async Task Refresh()
+        protected async Task RefreshAsync()
         {
-            Recipes = await RecipeService.GetAll();
+            Recipes = await RecipeService.GetAllAsync();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IList<RecipeCategoryModel>> GetAll()
+        public async Task<IList<RecipeCategoryModel>> GetAllAsync()
         {
             return await _httpClient.GetFromJsonAsync<IList<RecipeCategoryModel>>($"{ApiNames.RecipeCategoryApi}");
         }

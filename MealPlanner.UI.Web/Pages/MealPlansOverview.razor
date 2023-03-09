@@ -14,7 +14,7 @@
     <RowTemplate Context="MealPlan">
         <td>@MealPlan.Name</td>
         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(MealPlan)">Edit</button></td>
-        <td><button class="btn-close btn-sm" type="button" @onclick="() => Delete(MealPlan)"></button></td>
+        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(MealPlan)"></button></td>
     </RowTemplate>
 </TableTemplate>
 

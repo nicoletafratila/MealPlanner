@@ -4,12 +4,12 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IRecipeService
     {
-        Task<IList<RecipeModel>> GetAll();
-        Task<RecipeModel> Get(int id);
-        Task<EditRecipeModel> GetEdit(int id);
-        Task<IList<RecipeModel>> Search(int categoryId);
-        Task<EditRecipeModel> Add(EditRecipeModel model);
-        Task Update(EditRecipeModel model);
+        Task<IList<RecipeModel>> GetAllAsync();
+        Task<RecipeModel> GetByIdAsync(int id);
+        Task<EditRecipeModel> GetEditAsync(int id);
+        Task<IList<RecipeModel>> SearchAsync(int categoryId);
+        Task<EditRecipeModel> AddAsync(EditRecipeModel model);
+        Task UpdateAsync(EditRecipeModel model);
         Task DeleteAsync(int id);
     }
 }

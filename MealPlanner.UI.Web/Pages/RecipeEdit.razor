@@ -15,7 +15,7 @@
         </div>
 
         <div class="card-body">
-            <EditForm Model="@Recipe" OnValidSubmit="@Save">
+            <EditForm Model="@Recipe" OnValidSubmit="@SaveAsync">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
@@ -101,13 +101,13 @@
                             <td>@RecipeIngredient.Quantity</td>
                             <td>@RecipeIngredient.Ingredient.Unit.Name</td>
                             <td>@RecipeIngredient.Ingredient.IngredientCategory.Name</td>
-                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredient(RecipeIngredient.Ingredient)"></button></td>
+                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredientAsync(RecipeIngredient.Ingredient)"></button></td>
                         </RowTemplate>
                     </TableTemplate>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                <button class="btn btn-danger btn-sm" type="button" @onclick="@Delete">Delete</button>
+                <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
                 <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
             </EditForm>
         </div>

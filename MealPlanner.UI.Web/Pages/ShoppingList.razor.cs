@@ -29,11 +29,11 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Model = await ShoppingListService.Get(int.Parse(Id));
+                Model = await ShoppingListService.GetByIdAsync(int.Parse(Id));
             }
         }
 
-        protected async Task NavigateToOverview()
+        protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo($"/mealplanedit/{Id}");
         }

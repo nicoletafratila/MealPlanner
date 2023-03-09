@@ -67,8 +67,8 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            Categories = (await CategoryService.GetAll()).ToList();
-            Units = (await UnitService.GetAll()).ToList();
+            Categories = (await CategoryService.GetAllAsync()).ToList();
+            Units = (await UnitService.GetAllAsync()).ToList();
 
             if (id == 0)
             {
@@ -76,14 +76,14 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Ingredient = await IngredientService.GetAsync(int.Parse(Id));
+                Ingredient = await IngredientService.GetByIdAsync(int.Parse(Id));
             }
 
             IngredientCategoryId = Ingredient.IngredientCategoryId.ToString();
             UnitId = Ingredient.UnitId.ToString();
         }
 
-        protected async Task Save()
+        protected async Task SaveAsync()
         {
             if (Ingredient.Id == 0)
             {
@@ -100,7 +100,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task Delete()
+        protected async Task DeleteAsync()
         {
             if (Ingredient.Id != 0)
             {

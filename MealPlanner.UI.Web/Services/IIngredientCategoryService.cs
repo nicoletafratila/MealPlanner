@@ -4,6 +4,6 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IIngredientCategoryService
     {
-        Task<IList<IngredientCategoryModel>> GetAll();
+        Task<IList<IngredientCategoryModel>> GetAllAsync();
     }
 }
