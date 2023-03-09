@@ -23,15 +23,20 @@ namespace MealPlanner.Api.Repositories
         public async Task<MealPlan> GetByIdAsyncIncludeRecipes(int id)
         {
             return await (DbContext as MealPlannerDbContext).MealPlans
-                    .Include(x => x.MealPlanRecipes)
-                        .ThenInclude(x => x.Recipe)
-                            .ThenInclude(x => x.RecipeCategory)
-                    .Include(x => x.MealPlanRecipes)
-                        .ThenInclude(x => x.Recipe)
-                            .ThenInclude(x => x.RecipeIngredients)
-                                .ThenInclude(x => x.Ingredient)
-                                    .ThenInclude(x => x.Unit)
-                    .FirstOrDefaultAsync(item => item.Id == id);
+              .Include(x => x.MealPlanRecipes)
+                  .ThenInclude(x => x.Recipe)
+                      .ThenInclude(x => x.RecipeCategory)
+             .Include(x => x.MealPlanRecipes)
+                  .ThenInclude(x => x.Recipe)
+                      .ThenInclude(x => x.RecipeIngredients)
+                          .ThenInclude(x => x.Ingredient)
+                             .ThenInclude(x => x.IngredientCategory)
+              .Include(x => x.MealPlanRecipes)
+                  .ThenInclude(x => x.Recipe)
+                      .ThenInclude(x => x.RecipeIngredients)
+                          .ThenInclude(x => x.Ingredient)
+                            .ThenInclude(x => x.Unit)
+              .FirstOrDefaultAsync(item => item.Id == id);
         }
     }
 }
