@@ -24,7 +24,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    OnRecipeCategoryChanged(_recipeCategoryId);
+                    OnRecipeCategoryChangedAsync(_recipeCategoryId);
                 }
             }
         }
@@ -68,8 +68,8 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Categories = (await RecipeCategoryService.GetAllAsync()).ToList();
             int.TryParse(Id, out var id);
+            Categories = (await RecipeCategoryService.GetAllAsync()).ToList();
 
             if (id == 0)
             {
@@ -159,7 +159,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager.NavigateTo($"shoppinglist/{MealPlan.Id}");
         }
 
-        private async void OnRecipeCategoryChanged(string value)
+        private async void OnRecipeCategoryChangedAsync(string value)
         {
             RecipeCategoryId = value;
             RecipeId = string.Empty;

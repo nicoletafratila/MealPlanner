@@ -4,7 +4,11 @@
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
-            <h2>Details for @MealPlan.Name</h2>
+            <div class="row g-0">
+                <div class="col-md-8">
+                    <h2>@MealPlan.Name</h2>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
@@ -20,7 +24,7 @@
 
                 <div class="form-group mt-3">
                     <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
-                    <InputSelect id="recipeCategory" class="form-select" ValueChanged="@((string value) => OnRecipeCategoryChanged(value))"
+                    <InputSelect id="recipeCategory" class="form-select" ValueChanged="@((string value) => OnRecipeCategoryChangedAsync(value))"
                                  Value="RecipeCategoryId" ValueExpression="@(() => RecipeCategoryId)">
                         <option selected value="0">Choose...</option>
                         @foreach (var item in Categories)

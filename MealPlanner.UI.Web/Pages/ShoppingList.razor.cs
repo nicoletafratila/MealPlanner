@@ -11,7 +11,7 @@ namespace MealPlanner.UI.Web.Pages
         public string Id { get; set; }
 
         public ShoppingListModel Model { get; set; } = new ShoppingListModel();
-        public IngredientModel CurrentIngredientModel { get; set; } = new IngredientModel();
+        public IngredientModel IngredientModel { get; set; } = new IngredientModel();
 
         [Inject]
         public IShoppingListService ShoppingListService { get; set; }

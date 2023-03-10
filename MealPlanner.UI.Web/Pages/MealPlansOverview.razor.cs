@@ -3,7 +3,6 @@ using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
