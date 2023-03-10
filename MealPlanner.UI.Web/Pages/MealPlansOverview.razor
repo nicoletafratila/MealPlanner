@@ -8,7 +8,9 @@
     <TableCaption>List of meal plans:</TableCaption>
     <TableHeader>
         <th>Name</th>
-        <th style="width: 30px"></th>
+        <th style="width: 30px">
+            <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+        </th>
         <th style="width: 30px"></th>
     </TableHeader>
     <RowTemplate Context="MealPlan">
@@ -18,4 +20,3 @@
     </RowTemplate>
 </TableTemplate>
 
-<button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>

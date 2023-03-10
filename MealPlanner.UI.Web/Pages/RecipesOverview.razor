@@ -10,7 +10,9 @@
         <th>Category</th>
         <th>Name</th>
         <th></th>
-        <th style="width: 30px"></th>
+        <th style="width: 30px">
+            <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+        </th>
         <th style="width: 30px"></th>
     </TableHeader>
     <RowTemplate Context="Recipe">
@@ -24,4 +26,3 @@
     </RowTemplate>
 </TableTemplate>
 
-<button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>

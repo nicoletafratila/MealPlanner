@@ -83,7 +83,7 @@ namespace RecipeBook.Api.Controllers
                 var result = _mapper.Map<Ingredient>(model);
                 await _repository.AddAsync(result);
 
-                string location = _linkGenerator.GetPathByAction("Get", "Recipe", new { id = model.Id });
+                string location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");

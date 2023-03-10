@@ -4,13 +4,16 @@
 
 <h1>Ingredients</h1>
 
+
 <TableTemplate Items="@Ingredients">
     <TableCaption>List of ingredients:</TableCaption>
     <TableHeader>
         <th>Category</th>
         <th>Name</th>
         <th>Unit</th>
-        <th style="width: 30px"></th>
+        <th style="width: 30px">
+            <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+        </th>
         <th style="width: 30px"></th>
     </TableHeader>
     <RowTemplate Context="Ingredient">
@@ -21,5 +24,3 @@
         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Ingredient)"></button></td>
     </RowTemplate>
 </TableTemplate>
-
-<button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>

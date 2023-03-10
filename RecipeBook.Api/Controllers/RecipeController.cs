@@ -96,7 +96,7 @@ namespace RecipeBook.Api.Controllers
                 await _repository.AddAsync(result);
                 
                 result = await _repository.GetByIdIncludeIngredientsAsync(result.Id);
-                string location = _linkGenerator.GetPathByAction("Get", "Recipe", new { id = model.Id });
+                string location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");
