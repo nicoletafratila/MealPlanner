@@ -2,38 +2,50 @@
 
 <PageTitle>Ingredients</PageTitle>
 
-<h1>Ingredients</h1>
-
-
-<TableTemplate Items="@Ingredients">
-    <TableCaption>List of ingredients:</TableCaption>
-    <TableHeader>
-        <th style="width: 420px">
-            <div class="row">
-                <label for="category" class="col-sm-2 col-form-label">Category</label>
-                <div class="col-sm-10">
-                    <select id="category" class="form-select" style="width:300px" @onchange="@OnCategoryChangedAsync">
-                        <option selected value="0">Choose...</option>
-                        @foreach (var item in Categories)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    </select>
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-11">
+                    <h2>Ingredients</h2>
+                </div>
+                <div class="col-auto align-self-center">
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
                 </div>
             </div>
-        </th>
-        <th>Name</th>
-        <th>Unit</th>
-        <th style="width: 30px">
-            <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
-        </th>
-        <th style="width: 30px"></th>
-    </TableHeader>
-    <RowTemplate Context="Ingredient">
-        <td>@Ingredient.IngredientCategory.Name</td>
-        <td>@Ingredient.Name</td>
-        <td>@Ingredient.Unit.Name</td>
-        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Ingredient)">Edit</button></td>
-        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Ingredient)"></button></td>
-    </RowTemplate>
-</TableTemplate>
+        </div>
+
+        <div class="card-body">
+            <TableTemplate Items="@Ingredients">
+                <TableHeader>
+                    <th style="width: 320px">
+                        <div class="row">
+                            <label for="category" class="col-sm-4 col-form-label">Category</label>
+                            <div class="col">
+                                <select id="category" class="form-select" style="width:200px" @onchange="@OnCategoryChangedAsync">
+                                    <option selected value="0">Choose...</option>
+                                    @foreach (var item in Categories)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </th>
+                    <th>Name</th>
+                    <th>Unit</th>
+                    <th></th>
+                    <th style="width: 30px"></th>
+                </TableHeader>
+                <RowTemplate Context="Ingredient">
+                    <td>@Ingredient.IngredientCategory.Name</td>
+                    <td>@Ingredient.Name</td>
+                    <td>@Ingredient.Unit.Name</td>
+                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Ingredient)">Edit</button></td>
+                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Ingredient)"></button></td>
+                </RowTemplate>
+            </TableTemplate>
+        </div>
+    </div>
+</div>
+

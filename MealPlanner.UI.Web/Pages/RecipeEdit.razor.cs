@@ -10,6 +10,9 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeEdit
     {
+        private EditContext? editContext;
+        private ValidationMessageStore? messageStore;
+
         [Parameter]
         public string Id { get; set; }
 
@@ -122,6 +125,8 @@ namespace MealPlanner.UI.Web.Pages
             }
 
             RecipeCategoryId = Recipe.RecipeCategoryId.ToString();
+            editContext = new EditContext(Recipe);
+            messageStore = new(editContext);
         }
 
         protected async Task SaveAsync()
@@ -222,15 +227,23 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
-            var _selectedFiles = e.GetMultipleFiles();
-            if (_selectedFiles != null)
+            try
             {
-                var file = _selectedFiles[0];
-                Stream stream = file.OpenReadStream();
-                MemoryStream ms = new MemoryStream();
-                await stream.CopyToAsync(ms);
-                stream.Close();
-                Recipe.ImageContent = ms.ToArray();
+                var _selectedFiles = e.GetMultipleFiles();
+                if (_selectedFiles != null)
+                {
+                    var file = _selectedFiles[0];
+                    Stream stream = file.OpenReadStream();
+                    MemoryStream ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    stream.Close();
+                    Recipe.ImageContent = ms.ToArray();
+                }
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+                messageStore.Add(() => Recipe.ImageContent, ex.Message);
             }
             StateHasChanged();
         }

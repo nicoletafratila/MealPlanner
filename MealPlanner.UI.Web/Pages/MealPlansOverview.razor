@@ -2,21 +2,32 @@
 
 <PageTitle>Meal plans</PageTitle>
 
-<h1>Meal plans</h1>
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-11">
+                    <h2>Meal plans</h2>
+                </div>
+                <div class="col-auto align-self-center">
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                </div>
+            </div>
+        </div>
 
-<TableTemplate Items="@MealPlans">
-    <TableCaption>List of meal plans:</TableCaption>
-    <TableHeader>
-        <th>Name</th>
-        <th style="width: 30px">
-            <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
-        </th>
-        <th style="width: 30px"></th>
-    </TableHeader>
-    <RowTemplate Context="MealPlan">
-        <td>@MealPlan.Name</td>
-        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(MealPlan)">Edit</button></td>
-        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(MealPlan)"></button></td>
-    </RowTemplate>
-</TableTemplate>
-
+        <div class="card-body">
+            <TableTemplate Items="@MealPlans">
+                <TableHeader>
+                    <th>Name</th>
+                    <th style="width: 50px"></th>
+                    <th style="width: 30px"></th>
+                </TableHeader>
+                <RowTemplate Context="MealPlan">
+                    <td>@MealPlan.Name</td>
+                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(MealPlan)">Edit</button></td>
+                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(MealPlan)"></button></td>
+                </RowTemplate>
+            </TableTemplate>
+        </div>
+    </div>
+</div>
