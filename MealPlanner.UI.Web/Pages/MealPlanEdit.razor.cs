@@ -48,8 +48,8 @@ namespace MealPlanner.UI.Web.Pages
 
         public EditMealPlanModel MealPlan { get; set; } = new EditMealPlanModel();
         public RecipeModel Recipe { get; set; } = new RecipeModel();
-        public List<RecipeModel> Recipes { get; set; } = new List<RecipeModel>();
-        public List<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
+        public IList<RecipeModel> Recipes { get; set; } = new List<RecipeModel>();
+        public IList<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
 
         [Inject]
         public IMealPlanService MealPlanService { get; set; }
@@ -69,7 +69,7 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            Categories = (await RecipeCategoryService.GetAllAsync()).ToList();
+            Categories = await RecipeCategoryService.GetAllAsync();
 
             if (id == 0)
             {
@@ -164,7 +164,7 @@ namespace MealPlanner.UI.Web.Pages
             RecipeCategoryId = value;
             RecipeId = string.Empty;
             if (!string.IsNullOrWhiteSpace(RecipeCategoryId) && RecipeCategoryId != "0")
-                Recipes = (await RecipeService.SearchAsync(int.Parse(RecipeCategoryId))).ToList();
+                Recipes = await RecipeService.SearchAsync(int.Parse(RecipeCategoryId));
             StateHasChanged();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Common.Api;
+using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -10,9 +11,13 @@ namespace MealPlanner.UI.Web.Pages
     {
         public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
         public IngredientModel Ingredient { get; set; } = new IngredientModel();
+        public IList<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
 
         [Inject]
         public IIngredientService IngredientService { get; set; }
+
+        [Inject]
+        public IIngredientCategoryService CategoryService { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -50,6 +55,17 @@ namespace MealPlanner.UI.Web.Pages
         protected async Task RefreshAsync()
         {
             Ingredients = await IngredientService.GetAllAsync();
+            Categories = await CategoryService.GetAllAsync();
+        }
+
+        private async void OnCategoryChangedAsync(ChangeEventArgs e)
+        {
+            var categoryId = e.Value.ToString();
+            if (!string.IsNullOrWhiteSpace(categoryId) && categoryId != "0")
+                Ingredients = await IngredientService.SearchAsync(int.Parse(categoryId));
+            else
+                Ingredients = await IngredientService.GetAllAsync();
+            StateHasChanged();
         }
     }
 }

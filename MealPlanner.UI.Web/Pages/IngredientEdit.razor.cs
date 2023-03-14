@@ -46,8 +46,8 @@ namespace MealPlanner.UI.Web.Pages
         }
 
         public EditIngredientModel Ingredient { get; set; } = new EditIngredientModel();
-        public List<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
-        public List<UnitModel> Units { get; set; } = new List<UnitModel>();
+        public IList<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
+        public IList<UnitModel> Units { get; set; } = new List<UnitModel>();
 
         [Inject]
         public IIngredientService IngredientService { get; set; }
@@ -67,8 +67,8 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            Categories = (await CategoryService.GetAllAsync()).ToList();
-            Units = (await UnitService.GetAllAsync()).ToList();
+            Categories = await CategoryService.GetAllAsync();
+            Units = await UnitService.GetAllAsync();
 
             if (id == 0)
             {

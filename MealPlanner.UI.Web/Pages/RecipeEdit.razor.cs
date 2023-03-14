@@ -42,7 +42,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_ingredientCategoryId != value)
                 {
                     _ingredientCategoryId = value;
-                    OnIngredientCategoryChanged(_ingredientCategoryId);
+                    OnIngredientCategoryChangedAsync(_ingredientCategoryId);
                 }
             }
         }
@@ -84,9 +84,9 @@ namespace MealPlanner.UI.Web.Pages
 
         public EditRecipeModel Recipe { get; set; } = new EditRecipeModel();
         public RecipeIngredientModel RecipeIngredient { get; set; } = new RecipeIngredientModel();
-        public List<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
-        public List<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
-        public List<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
+        public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
+        public IList<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
+        public IList<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
 
         [Inject]
         public IRecipeService RecipeService { get; set; }
@@ -109,8 +109,8 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            RecipeCategories = (await RecipeCategoryService.GetAllAsync()).ToList();
-            IngredientCategories = (await IngredientCategoryService.GetAllAsync()).ToList();
+            RecipeCategories = await RecipeCategoryService.GetAllAsync();
+            IngredientCategories = await IngredientCategoryService.GetAllAsync();
 
             if (id == 0)
             {
@@ -203,13 +203,13 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager.NavigateTo("/recipesoverview");
         }
 
-        private async void OnIngredientCategoryChanged(string value)
+        private async void OnIngredientCategoryChangedAsync(string value)
         {
             IngredientCategoryId = value;
             IngredientId = string.Empty;
             Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
-                Ingredients = (await IngredientService.SearchAsync(int.Parse(IngredientCategoryId))).ToList();
+                Ingredients = await IngredientService.SearchAsync(int.Parse(IngredientCategoryId));
             StateHasChanged();
         }
 
