@@ -16,20 +16,18 @@
         </div>
 
         <div class="card-body">
-            <TableTemplate Items="@Ingredients">
+            <TableTemplate Items="@Ingredients" ShowIndex="true">
                 <TableHeader>
                     <th style="width: 320px">
-                        <div class="row">
-                            <label for="category" class="col-sm-4 col-form-label">Category</label>
-                            <div class="col">
-                                <select id="category" class="form-select" style="width:200px" @onchange="@OnCategoryChangedAsync">
-                                    <option selected value="0">Choose...</option>
-                                    @foreach (var item in Categories)
-                                    {
-                                        <option value="@item.Id">@item.Name</option>
-                                    }
-                                </select>
-                            </div>
+                        <div>
+                            <label for="category" class="col-sm-4">Category</label>
+                            <select id="category" class="form-select-sm" style="width:200px" @onchange="@OnCategoryChangedAsync">
+                                <option selected value="0">Choose...</option>
+                                @foreach (var item in Categories)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
                         </div>
                     </th>
                     <th>Name</th>

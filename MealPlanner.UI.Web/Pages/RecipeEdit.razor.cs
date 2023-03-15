@@ -10,9 +10,6 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeEdit
     {
-        private EditContext? editContext;
-        private ValidationMessageStore? messageStore;
-
         [Parameter]
         public string Id { get; set; }
 
@@ -125,8 +122,6 @@ namespace MealPlanner.UI.Web.Pages
             }
 
             RecipeCategoryId = Recipe.RecipeCategoryId.ToString();
-            editContext = new EditContext(Recipe);
-            messageStore = new(editContext);
         }
 
         protected async Task SaveAsync()
@@ -243,7 +238,6 @@ namespace MealPlanner.UI.Web.Pages
             }
             catch(Exception ex)
             {
-                messageStore.Add(() => Recipe.ImageContent, ex.Message);
             }
             StateHasChanged();
         }
