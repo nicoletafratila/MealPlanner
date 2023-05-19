@@ -1,4 +1,5 @@
 ﻿using Common.Api;
+using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -87,6 +88,10 @@ namespace MealPlanner.UI.Web.Pages
         public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
         public IList<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
         public IList<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
+
+        public MarkupString AlertMessage = new MarkupString();
+        public string AlertClass = string.Empty;
+        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
         public IRecipeService RecipeService { get; set; }
@@ -224,22 +229,35 @@ namespace MealPlanner.UI.Web.Pages
         {
             try
             {
-                var _selectedFiles = e.GetMultipleFiles();
-                if (_selectedFiles != null)
+                if (e.File != null)
                 {
-                    var file = _selectedFiles[0];
-                    Stream stream = file.OpenReadStream();
+                    Stream stream = e.File.OpenReadStream(maxAllowedSize: 1024 * 300);
                     MemoryStream ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
                     stream.Close();
                     Recipe.ImageContent = ms.ToArray();
+                    SetAlert();
                 }
                 StateHasChanged();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                SetAlert("alert alert-danger", "oi oi-ban", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                return;
             }
-            StateHasChanged();
+        }
+
+        private void SetAlert(string alertClass = "", string iconClass = "", string message = "")
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                AlertMessage = new MarkupString();
+                AlertClass = string.Empty;
+            }
+            {
+                AlertMessage = new MarkupString($"<span class='{iconClass}' aria-hidden='true'></span> {message}");
+                AlertClass = alertClass;
+            }
         }
 
         private void ClearForm()

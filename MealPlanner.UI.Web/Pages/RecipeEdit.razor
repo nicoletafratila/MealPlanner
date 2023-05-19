@@ -14,6 +14,10 @@
             </div>
         </div>
 
+        <div class="@AlertClass" role="alert">
+            @AlertMessage
+        </div>
+
         <div class="card-body">
             <EditForm Model="@Recipe" OnValidSubmit="@SaveAsync">
                 <DataAnnotationsValidator />
@@ -39,7 +43,7 @@
 
                 <div class="form-group mt-3">
                     <label for="image" class="col-sm-3">Select image: </label>
-                    <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" multiple accept="image/png, image/jpeg, image/gif" />
+                    <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" accept="image/png, image/jpeg, image/gif" />
                     <ValidationMessage For="@(() => Recipe.ImageContent)" />
                 </div>
 
