@@ -23,9 +23,12 @@
                             <label for="category" class="col-sm-4">Category</label>
                             <select id="category" class="form-select-sm" style="width:200px" @onchange="@OnCategoryChangedAsync">
                                 <option selected value="0">Choose...</option>
-                                @foreach (var item in Categories)
+                                @if (Categories != null && Categories.Any())
                                 {
-                                    <option value="@item.Id">@item.Name</option>
+                                    @foreach (var item in Categories)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 }
                             </select>
                         </div>
@@ -36,9 +39,9 @@
                     <th style="width: 30px"></th>
                 </TableHeader>
                 <RowTemplate Context="Ingredient">
-                    <td>@Ingredient.IngredientCategory.Name</td>
+                    <td>@Ingredient.IngredientCategory!.Name</td>
                     <td>@Ingredient.Name</td>
-                    <td>@Ingredient.Unit.Name</td>
+                    <td>@Ingredient.Unit!.Name</td>
                     <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Ingredient)">Edit</button></td>
                     <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Ingredient)"></button></td>
                 </RowTemplate>

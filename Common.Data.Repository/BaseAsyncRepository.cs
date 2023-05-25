@@ -12,7 +12,7 @@ namespace Common.Data.Repository
             DbContext = dbContext;
         }
 
-        public virtual async Task<T> GetByIdAsync(TId id)
+        public virtual async Task<T?> GetByIdAsync(TId id)
         {
             return await DbContext.Set<T>().FindAsync(id);
         }

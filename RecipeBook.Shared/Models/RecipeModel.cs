@@ -3,8 +3,8 @@
     public class RecipeModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
-        public RecipeCategoryModel RecipeCategory { get; set; }
+        public string? Name { get; set; }
+        public string? ImageUrl { get; set; }
+        public RecipeCategoryModel? RecipeCategory { get; set; }
     }
 }

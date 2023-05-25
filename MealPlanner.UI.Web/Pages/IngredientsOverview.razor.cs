@@ -9,21 +9,21 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class IngredientsOverview
     {
-        public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
-        public IngredientModel Ingredient { get; set; } = new IngredientModel();
-        public IList<IngredientCategoryModel> Categories { get; set; } = new List<IngredientCategoryModel>();
+        public IList<IngredientModel>? Ingredients { get; set; }
+        public IngredientModel? Ingredient { get; set; }
+        public IList<IngredientCategoryModel>? Categories { get; set; }
 
         [Inject]
-        public IIngredientService IngredientService { get; set; }
+        public IIngredientService? IngredientService { get; set; }
 
         [Inject]
-        public IIngredientCategoryService CategoryService { get; set; }
+        public IIngredientCategoryService? CategoryService { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        public IJSRuntime? JSRuntime { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,39 +32,39 @@ namespace MealPlanner.UI.Web.Pages
 
         protected void New()
         {
-            NavigationManager.NavigateTo($"ingredientedit/");
+            NavigationManager!.NavigateTo($"ingredientedit/");
         }
 
         protected void Update(IngredientModel item)
         {
-            NavigationManager.NavigateTo($"ingredientedit/{item.Id}");
+            NavigationManager!.NavigateTo($"ingredientedit/{item.Id}");
         }
 
         protected async Task DeleteAsync(IngredientModel item)
         {
             if (item != null)
             {
-                if (!await JSRuntime.Confirm($"Are you sure you want to delete the ingredient: '{item.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient: '{item.Name}'?"))
                     return;
 
-                await IngredientService.DeleteAsync(item.Id);
+                await IngredientService!.DeleteAsync(item.Id);
                 await RefreshAsync();
             }
         }
 
         protected async Task RefreshAsync()
         {
-            Ingredients = await IngredientService.GetAllAsync();
-            Categories = await CategoryService.GetAllAsync();
+            Ingredients = await IngredientService!.GetAllAsync();
+            Categories = await CategoryService!.GetAllAsync();
         }
 
         private async void OnCategoryChangedAsync(ChangeEventArgs e)
         {
-            var categoryId = e.Value.ToString();
+            var categoryId = e!.Value!.ToString();
             if (!string.IsNullOrWhiteSpace(categoryId) && categoryId != "0")
-                Ingredients = await IngredientService.SearchAsync(int.Parse(categoryId));
+                Ingredients = await IngredientService!.SearchAsync(int.Parse(categoryId));
             else
-                Ingredients = await IngredientService.GetAllAsync();
+                Ingredients = await IngredientService!.GetAllAsync();
             StateHasChanged();
         }
     }

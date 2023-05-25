@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory.DisplaySequence).ThenBy(item => item.Name);
+                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
@@ -75,7 +75,7 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var results = await _repository.SearchAsync(categoryId);
-                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory.DisplaySequence).ThenBy(item => item.Name);
+                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
@@ -96,7 +96,7 @@ namespace RecipeBook.Api.Controllers
                 await _repository.AddAsync(result);
                 
                 result = await _repository.GetByIdIncludeIngredientsAsync(result.Id);
-                string location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
+                string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");

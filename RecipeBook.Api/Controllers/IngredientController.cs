@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var result = await _repository.GetAllAsync();
-                var mappedResult = _mapper.Map<IList<IngredientModel>>(result).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
+                var mappedResult = _mapper.Map<IList<IngredientModel>>(result).OrderBy(item => item.IngredientCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResult);
             }
             catch (Exception)
@@ -63,7 +63,7 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var results = await _repository.SearchAsync(categoryId);
-                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory.DisplaySequence).ThenBy(item => item.Name);
+                var mappedResults = _mapper.Map<IList<IngredientModel>>(results).OrderBy(item => item.IngredientCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
@@ -83,7 +83,7 @@ namespace RecipeBook.Api.Controllers
                 var result = _mapper.Map<Ingredient>(model);
                 await _repository.AddAsync(result);
 
-                string location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
+                string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");

@@ -13,14 +13,14 @@ namespace RecipeBook.Api.Repositories
 
         public override async Task<IReadOnlyList<Ingredient>> GetAllAsync()
         {
-            return (DbContext as MealPlannerDbContext).Ingredients
-                    .Include(x => x.IngredientCategory)
-                    .Include(x => x.Unit).ToList();
+            return await (DbContext as MealPlannerDbContext)!.Ingredients
+                        .Include(x => x.IngredientCategory)
+                        .Include(x => x.Unit).ToListAsync();
         }
 
-        public override async Task<Ingredient> GetByIdAsync(int id)
+        public override async Task<Ingredient?> GetByIdAsync(int id)
         {
-            return await (DbContext as MealPlannerDbContext).Ingredients
+            return await (DbContext as MealPlannerDbContext)!.Ingredients
                     .Include(x => x.IngredientCategory)
                     .Include(x => x.Unit)
                     .FirstOrDefaultAsync(item => item.Id == id);
@@ -28,10 +28,10 @@ namespace RecipeBook.Api.Repositories
 
         public async Task<IReadOnlyList<Ingredient>> SearchAsync(int categoryId)
         {
-            return (DbContext as MealPlannerDbContext).Ingredients
+            return await (DbContext as MealPlannerDbContext)!.Ingredients
                     .Include(x => x.IngredientCategory)
                     .Include(x => x.Unit)
-                    .Where(x => x.IngredientCategoryId == categoryId).ToList();
+                    .Where(x => x.IngredientCategoryId == categoryId).ToListAsync();
         }
     }
 }

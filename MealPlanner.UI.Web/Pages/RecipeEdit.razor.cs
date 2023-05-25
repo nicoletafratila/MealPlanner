@@ -12,10 +12,10 @@ namespace MealPlanner.UI.Web.Pages
     public partial class RecipeEdit
     {
         [Parameter]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        private string _recipeCategoryId;
-        public string RecipeCategoryId
+        private string? _recipeCategoryId;
+        public string? RecipeCategoryId
         {
             get
             {
@@ -26,13 +26,13 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    Recipe.RecipeCategoryId = int.Parse(_recipeCategoryId);
+                    Recipe!.RecipeCategoryId = int.Parse(_recipeCategoryId!);
                 }
             }
         }
 
-        private string _ingredientCategoryId;
-        public string IngredientCategoryId
+        private string? _ingredientCategoryId;
+        public string? IngredientCategoryId
         {
             get
             {
@@ -43,13 +43,13 @@ namespace MealPlanner.UI.Web.Pages
                 if (_ingredientCategoryId != value)
                 {
                     _ingredientCategoryId = value;
-                    OnIngredientCategoryChangedAsync(_ingredientCategoryId);
+                    OnIngredientCategoryChangedAsync(_ingredientCategoryId!);
                 }
             }
         }
 
-        private string _ingredientId;
-        public string IngredientId
+        private string? _ingredientId;
+        public string? IngredientId
         {
             get
             {
@@ -60,14 +60,14 @@ namespace MealPlanner.UI.Web.Pages
                 if (_ingredientId != value)
                 {
                     _ingredientId = value;
-                    OnIngredientChanged(_ingredientId);
+                    OnIngredientChanged(_ingredientId!);
                 }
             }
         }
 
-        private string _quantity;
+        private string? _quantity;
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
-        public string Quantity
+        public string? Quantity
         {
             get
             {
@@ -83,39 +83,39 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        public EditRecipeModel Recipe { get; set; } = new EditRecipeModel();
-        public RecipeIngredientModel RecipeIngredient { get; set; } = new RecipeIngredientModel();
-        public IList<IngredientModel> Ingredients { get; set; } = new List<IngredientModel>();
-        public IList<RecipeCategoryModel> RecipeCategories { get; set; } = new List<RecipeCategoryModel>();
-        public IList<IngredientCategoryModel> IngredientCategories { get; set; } = new List<IngredientCategoryModel>();
+        public EditRecipeModel? Recipe { get; set; }
+        public RecipeIngredientModel? RecipeIngredient { get; set; }
+        public IList<IngredientModel>? Ingredients { get; set; }
+        public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
+        public IList<IngredientCategoryModel>? IngredientCategories { get; set; }
 
-        public MarkupString AlertMessage = new MarkupString();
-        public string AlertClass = string.Empty;
+        public MarkupString AlertMessage { get; set; }
+        public string? AlertClass { get; set; }
         private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
-        public IRecipeService RecipeService { get; set; }
+        public IRecipeService? RecipeService { get; set; }
 
         [Inject]
-        public IRecipeCategoryService RecipeCategoryService { get; set; }
+        public IRecipeCategoryService? RecipeCategoryService { get; set; }
 
         [Inject]
-        public IIngredientCategoryService IngredientCategoryService { get; set; }
+        public IIngredientCategoryService? IngredientCategoryService { get; set; }
 
         [Inject]
-        public IIngredientService IngredientService { get; set; }
+        public IIngredientService? IngredientService { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        public IJSRuntime? JSRuntime { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            RecipeCategories = await RecipeCategoryService.GetAllAsync();
-            IngredientCategories = await IngredientCategoryService.GetAllAsync();
+            RecipeCategories = await RecipeCategoryService!.GetAllAsync();
+            IngredientCategories = await IngredientCategoryService!.GetAllAsync();
 
             if (id == 0)
             {
@@ -123,17 +123,17 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Recipe = await RecipeService.GetEditAsync(int.Parse(Id));
+                Recipe = await RecipeService!.GetEditAsync(int.Parse(Id!));
             }
 
-            RecipeCategoryId = Recipe.RecipeCategoryId.ToString();
+            RecipeCategoryId = Recipe!.RecipeCategoryId.ToString();
         }
 
         protected async Task SaveAsync()
         {
-            if (Recipe.Id == 0)
+            if (Recipe!.Id == 0)
             {
-                var addedEntity = await RecipeService.AddAsync(Recipe);
+                var addedEntity = await RecipeService!.AddAsync(Recipe);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -141,19 +141,19 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await RecipeService.UpdateAsync(Recipe);
+                await RecipeService!.UpdateAsync(Recipe);
                 NavigateToOverview();
             }
         }
 
         protected async Task DeleteAsync()
         {
-            if (Recipe.Id != 0)
+            if (Recipe!.Id != 0)
             {
-                if (!await JSRuntime.Confirm($"Are you sure you want to delete the recipe: '{Recipe.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the recipe: '{Recipe.Name}'?"))
                     return;
 
-                await RecipeService.DeleteAsync(Recipe.Id);
+                await RecipeService!.DeleteAsync(Recipe.Id);
                 NavigateToOverview();
             }
         }
@@ -173,18 +173,18 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
             {
-                RecipeIngredientModel item = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient.Id == int.Parse(IngredientId));
+                RecipeIngredientModel? item = Recipe!.Ingredients!.FirstOrDefault(i => i.Ingredient!.Id == int.Parse(IngredientId));
                 if (item != null)
                 {
-                    item.Quantity += decimal.Parse(Quantity);
+                    item.Quantity += decimal.Parse(Quantity!);
                 }
                 else
                 {
                     item = new RecipeIngredientModel();
-                    item.Ingredient = Ingredients.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                    item.Ingredient = Ingredients!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
                     item.RecipeId = Recipe.Id;
-                    item.Quantity = decimal.Parse(Quantity);
-                    Recipe.Ingredients.Add(item);
+                    item.Quantity = decimal.Parse(Quantity!);
+                    Recipe.Ingredients!.Add(item);
 
                     ClearForm();
                 }
@@ -193,19 +193,19 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task DeleteIngredientAsync(IngredientModel item)
         {
-            RecipeIngredientModel itemToDelete = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient.Id == item.Id);
+            RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Ingredient!.Id == item.Id);
             if (itemToDelete != null)
             {
-                if (!await JSRuntime.Confirm($"Are you sure you want to delete the ingredient '{item.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient '{item.Name}'?"))
                     return;
 
-                Recipe.Ingredients.Remove(itemToDelete);
+                Recipe.Ingredients!.Remove(itemToDelete);
             }
         }
 
         protected void NavigateToOverview()
         {
-            NavigationManager.NavigateTo("/recipesoverview");
+            NavigationManager!.NavigateTo("/recipesoverview");
         }
 
         private async void OnIngredientCategoryChangedAsync(string value)
@@ -214,7 +214,7 @@ namespace MealPlanner.UI.Web.Pages
             IngredientId = string.Empty;
             Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
-                Ingredients = await IngredientService.SearchAsync(int.Parse(IngredientCategoryId));
+                Ingredients = await IngredientService!.SearchAsync(int.Parse(IngredientCategoryId));
             StateHasChanged();
         }
 
@@ -235,12 +235,12 @@ namespace MealPlanner.UI.Web.Pages
                     MemoryStream ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
                     stream.Close();
-                    Recipe.ImageContent = ms.ToArray();
+                    Recipe!.ImageContent = ms.ToArray();
                     SetAlert();
                 }
                 StateHasChanged();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 SetAlert("alert alert-danger", "oi oi-ban", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;

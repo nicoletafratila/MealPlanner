@@ -2,6 +2,6 @@
 {
     public class Unit : Entity<int>
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

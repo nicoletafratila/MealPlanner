@@ -7,11 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeBook.Api", "RecipeBoo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeBook.Shared", "RecipeBook.Shared\RecipeBook.Shared.csproj", "{8DE5A062-61F6-46DE-817E-C8E3A6D39993}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D1864113-4FCA-4F39-AE1D-6FD5008E9A66}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealPlanner.Shared", "MealPlanner.Shared\MealPlanner.Shared.csproj", "{CB168968-7E95-4467-9EB0-3641375E2E4E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealPlanner.Api", "MealPlanner.Api\MealPlanner.Api.csproj", "{021FD7A8-9480-4D45-B1BD-8CA55489E6B0}"
@@ -36,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{18
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{4509BF02-434F-477A-AC6F-43BC1E84900C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Validators", "Common.Validators\Common.Validators.csproj", "{C11AD72C-D9C6-4493-984B-32EAB9D7F618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Validators", "Common.Validators\Common.Validators.csproj", "{C11AD72C-D9C6-4493-984B-32EAB9D7F618}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

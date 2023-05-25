@@ -8,16 +8,16 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ShoppingList
     {
         [Parameter]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        public ShoppingListModel Model { get; set; } = new ShoppingListModel();
-        public IngredientModel IngredientModel { get; set; } = new IngredientModel();
-
-        [Inject]
-        public IShoppingListService ShoppingListService { get; set; }
+        public ShoppingListModel? Model { get; set; }
+        public IngredientModel? IngredientModel { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public IShoppingListService? ShoppingListService { get; set; }
+
+        [Inject]
+        public NavigationManager? NavigationManager { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -29,13 +29,13 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Model = await ShoppingListService.GetByIdAsync(int.Parse(Id));
+                Model = await ShoppingListService!.GetByIdAsync(int.Parse(Id!));
             }
         }
 
         protected void NavigateToOverview()
         {
-            NavigationManager.NavigateTo($"/mealplanedit/{Id}");
+            NavigationManager!.NavigateTo($"/mealplanedit/{Id}");
         }
     }
 }

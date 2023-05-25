@@ -8,15 +8,15 @@ namespace MealPlanner.UI.Web.Shared
         public bool ShowIndex { get; set; } = false;
 
         [Parameter]
-        public RenderFragment TableHeader { get; set; }
+        public RenderFragment? TableHeader { get; set; }
 
         [Parameter]
-        public RenderFragment TableCaption { get; set; }
+        public RenderFragment? TableCaption { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> RowTemplate { get; set; }
+        public RenderFragment<TItem>? RowTemplate { get; set; }
 
         [Parameter]
-        public IEnumerable<TItem> Items { get; set; }
+        public IEnumerable<TItem>? Items { get; set; }
     }
 }

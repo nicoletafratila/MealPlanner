@@ -15,10 +15,10 @@ namespace Common.Data.Profiles.Resolvers
 
             foreach (var item in source.MealPlanRecipes)
             {
-                result.AddRange(context.Mapper.Map<EditRecipeModel>(item.Recipe).Ingredients);
+                result.AddRange(context.Mapper.Map<EditRecipeModel>(item.Recipe).Ingredients!);
             }
-            return result.OrderBy(item => item.Ingredient.IngredientCategory.DisplaySequence)
-                         .ThenBy(item => item.Ingredient.Name).ToList();
+            return result.OrderBy(item => item.Ingredient!.IngredientCategory!.DisplaySequence)
+                         .ThenBy(item => item.Ingredient!.Name).ToList();
         }
     }
 }

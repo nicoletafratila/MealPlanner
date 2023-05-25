@@ -14,34 +14,34 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IList<RecipeModel>> GetAllAsync()
+        public async Task<IList<RecipeModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>>($"{ApiNames.RecipeApi}");
+            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{ApiNames.RecipeApi}");
         }
 
-        public async Task<RecipeModel> GetByIdAsync(int id)
+        public async Task<RecipeModel?> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<RecipeModel>($"{ApiNames.RecipeApi}/{id}");
+            return await _httpClient.GetFromJsonAsync<RecipeModel?>($"{ApiNames.RecipeApi}/{id}");
         }
 
-        public async Task<EditRecipeModel> GetEditAsync(int id)
+        public async Task<EditRecipeModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditRecipeModel>($"{ApiNames.RecipeApi}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<EditRecipeModel?>($"{ApiNames.RecipeApi}/edit/{id}");
         }
 
-        public async Task<IList<RecipeModel>> SearchAsync(int categoryId)
+        public async Task<IList<RecipeModel>?> SearchAsync(int categoryId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>>($"{ApiNames.RecipeApi}/category/{categoryId}");
+            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{ApiNames.RecipeApi}/category/{categoryId}");
         }
 
-        public async Task<EditRecipeModel> AddAsync(EditRecipeModel model)
+        public async Task<EditRecipeModel?> AddAsync(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.RecipeApi, modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                return await JsonSerializer.DeserializeAsync<EditRecipeModel>(await response.Content.ReadAsStreamAsync());
+                return await JsonSerializer.DeserializeAsync<EditRecipeModel?>(await response.Content.ReadAsStreamAsync());
             }
 
             return null;

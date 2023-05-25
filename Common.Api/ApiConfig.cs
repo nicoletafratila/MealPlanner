@@ -2,9 +2,9 @@
 {
     public class ApiConfig : IApiConfig
     {
-        public Uri BaseUrl { get; set; }
+        public Uri? BaseUrl { get; set; }
         public int Timeout { get; set; }
-        public virtual string Name => string.Empty;
+        public virtual string? Name => string.Empty;
 
         public ApiConfig(IConfiguration configuration)
         {

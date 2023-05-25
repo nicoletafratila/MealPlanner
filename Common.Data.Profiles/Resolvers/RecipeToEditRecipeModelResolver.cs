@@ -16,8 +16,8 @@ namespace Common.Data.Profiles.Resolvers
             {
                 result.Add(context.Mapper.Map<RecipeIngredientModel>(item));
             }
-            return result.OrderBy(item => item.Ingredient.IngredientCategory.DisplaySequence)
-                         .ThenBy(item => item.Ingredient.Name).ToList();
+            return result.OrderBy(item => item.Ingredient!.IngredientCategory!.DisplaySequence)
+                         .ThenBy(item => item.Ingredient!.Name).ToList();
         }
     }
 }

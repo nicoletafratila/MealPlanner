@@ -10,10 +10,10 @@ namespace MealPlanner.UI.Web.Pages
     public partial class MealPlanEdit
     {
         [Parameter]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        private string _recipeCategoryId;
-        public string RecipeCategoryId
+        private string? _recipeCategoryId;
+        public string? RecipeCategoryId
         {
             get
             {
@@ -24,13 +24,13 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    OnRecipeCategoryChangedAsync(_recipeCategoryId);
+                    OnRecipeCategoryChangedAsync(_recipeCategoryId!);
                 }
             }
         }
 
-        private string _recipeId;
-        public string RecipeId
+        private string? _recipeId;
+        public string? RecipeId
         {
             get
             {
@@ -41,35 +41,35 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeId != value)
                 {
                     _recipeId = value;
-                    OnRecipeChanged(_recipeId);
+                    OnRecipeChanged(_recipeId!);
                 }
             }
         }
 
-        public EditMealPlanModel MealPlan { get; set; } = new EditMealPlanModel();
-        public RecipeModel Recipe { get; set; } = new RecipeModel();
-        public IList<RecipeModel> Recipes { get; set; } = new List<RecipeModel>();
-        public IList<RecipeCategoryModel> Categories { get; set; } = new List<RecipeCategoryModel>();
+        public EditMealPlanModel? MealPlan { get; set; }
+        public RecipeModel? Recipe { get; set; }
+        public IList<RecipeModel>? Recipes { get; set; }
+        public IList<RecipeCategoryModel>? Categories { get; set; }
 
         [Inject]
-        public IMealPlanService MealPlanService { get; set; }
+        public IMealPlanService? MealPlanService { get; set; }
 
         [Inject]
-        public IRecipeCategoryService RecipeCategoryService { get; set; }
+        public IRecipeCategoryService? RecipeCategoryService { get; set; }
 
         [Inject]
-        public IRecipeService RecipeService { get; set; }
+        public IRecipeService? RecipeService { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        public IJSRuntime? JSRuntime { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-            Categories = await RecipeCategoryService.GetAllAsync();
+            Categories = await RecipeCategoryService!.GetAllAsync();
 
             if (id == 0)
             {
@@ -77,15 +77,15 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                MealPlan = await MealPlanService.GetByIdAsync(int.Parse(Id));
+                MealPlan = await MealPlanService!.GetByIdAsync(int.Parse(Id!));
             }
         }
 
         protected async Task SaveAsync()
         {
-            if (MealPlan.Id == 0)
+            if (MealPlan!.Id == 0)
             {
-                var addedEntity = await MealPlanService.AddAsync(MealPlan);
+                var addedEntity = await MealPlanService!.AddAsync(MealPlan);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -93,19 +93,19 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await MealPlanService.UpdateAsync(MealPlan);
+                await MealPlanService!.UpdateAsync(MealPlan);
                 NavigateToOverview();
             }
         }
 
         protected async Task DeleteAsync()
         {
-            if (MealPlan.Id != 0)
+            if (MealPlan!.Id != 0)
             {
-                if (!await JSRuntime.Confirm($"Are you sure you want to delete the meal plan: '{MealPlan.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the meal plan: '{MealPlan.Name}'?"))
                     return;
 
-                await MealPlanService.DeleteAsync(MealPlan.Id);
+                await MealPlanService!.DeleteAsync(MealPlan.Id);
                 NavigateToOverview();
             }
         }
@@ -123,40 +123,40 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
             {
-                RecipeModel item = MealPlan.Recipes.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
+                RecipeModel? item = MealPlan!.Recipes!.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
                 if (item == null)
                 {
-                    item = await RecipeService.GetByIdAsync(int.Parse(RecipeId));
-                    MealPlan.Recipes.Add(item);
+                    item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
+                    MealPlan.Recipes!.Add(item!);
                 }
             }
         }
 
         protected void EditRecipe(RecipeModel item)
         {
-            NavigationManager.NavigateTo($"recipeedit/{item.Id}");
+            NavigationManager!.NavigateTo($"recipeedit/{item.Id}");
         }
 
         protected async Task DeleteRecipeAsync(RecipeModel item)
         {
-            RecipeModel itemToDelete = MealPlan.Recipes.FirstOrDefault(i => i.Id == item.Id);
+            RecipeModel? itemToDelete = MealPlan!.Recipes!.FirstOrDefault(i => i.Id == item.Id);
             if (itemToDelete != null)
             {
-                if (!await JSRuntime.Confirm($"Are you sure you want to delete the recipe '{itemToDelete.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the recipe '{itemToDelete.Name}'?"))
                     return;
 
-                MealPlan.Recipes.Remove(itemToDelete);
+                MealPlan.Recipes!.Remove(itemToDelete);
             }
         }
 
         protected void NavigateToOverview()
         {
-            NavigationManager.NavigateTo("/mealplansoverview");
+            NavigationManager!.NavigateTo("/mealplansoverview");
         }
 
         protected void ShowShoppingList()
         {
-            NavigationManager.NavigateTo($"shoppinglist/{MealPlan.Id}");
+            NavigationManager!.NavigateTo($"shoppinglist/{MealPlan!.Id}");
         }
 
         private async void OnRecipeCategoryChangedAsync(string value)
@@ -164,7 +164,7 @@ namespace MealPlanner.UI.Web.Pages
             RecipeCategoryId = value;
             RecipeId = string.Empty;
             if (!string.IsNullOrWhiteSpace(RecipeCategoryId) && RecipeCategoryId != "0")
-                Recipes = await RecipeService.SearchAsync(int.Parse(RecipeCategoryId));
+                Recipes = await RecipeService!.SearchAsync(int.Parse(RecipeCategoryId));
             StateHasChanged();
         }
 

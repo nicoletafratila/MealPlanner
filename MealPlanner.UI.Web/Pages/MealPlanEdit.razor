@@ -1,89 +1,98 @@
 ﻿@page "/mealplanedit"
 @page "/mealplanedit/{Id}"
 
-<div class="col-sm-6">
-    <div class="card">
-        <div class="card-header">
-            <div class="row g-0">
-                <div class="col-md-8">
-                    <h2>@MealPlan.Name</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="card-body">
-            <EditForm Model="@MealPlan" OnValidSubmit="@SaveAsync">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <div class="form-group">
-                    <label for="name" class="col-sm-3">Meal plan name: </label>
-                    <InputText id="name" class="form-control" @bind-Value="@MealPlan.Name" placeholder="Enter meal plan name"></InputText>
-                    <ValidationMessage For="@(() => MealPlan.Name)" />
-                </div>
-
-                <div class="form-group mt-3">
-                    <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
-                    <InputSelect id="recipeCategory" class="form-select" ValueChanged="@((string value) => OnRecipeCategoryChangedAsync(value))"
-                                 Value="RecipeCategoryId" ValueExpression="@(() => RecipeCategoryId)">
-                        <option selected value="0">Choose...</option>
-                        @foreach (var item in Categories)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    </InputSelect>
-                </div>
-
-                <div class="form-group mt-3">
-                    <label for="recipe" class="col-sm-3">Recipe: </label>
-                    <div class="input-group">
-                        <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
-                                     Value="RecipeId" ValueExpression="@(() => RecipeId)">
-                            <option selected value="0">Choose...</option>
-                            @foreach (var item in Recipes)
-                            {
-                                <option value="@item.Id">@item.Name</option>
-                            }
-                        </InputSelect>
-                        @if (CanAddRecipe == true)
-                        {
-                            <button class="btn btn-primary" type="button" @onclick="@AddRecipeAsync">Add</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipeAsync">Add</button>
-                        }
+@if (MealPlan != null)
+{
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row g-0">
+                    <div class="col-md-8">
+                        <h2>@MealPlan.Name</h2>
                     </div>
                 </div>
+            </div>
 
-                <div class="col">
-                    <ValidationMessage For="@(() => MealPlan.Recipes)" />
-                    <TableTemplate Items="@MealPlan.Recipes" ShowIndex="true">
-                        <TableCaption>List of recipes:</TableCaption>
-                        <TableHeader>
-                            <th>Category</th>
-                            <th>Name</th>
-                            <th></th>
-                            <th></th>
-                            <th scope="col"></th>
-                        </TableHeader>
-                        <RowTemplate Context="Recipe">
-                            <td>@Recipe.RecipeCategory.Name</td>
-                            <td>@Recipe.Name</td>
-                            <td>
-                                <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
-                            </td>
-                            <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(Recipe)">Edit</button></td>
-                            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteRecipeAsync(Recipe)"></button></td>
-                        </RowTemplate>
-                    </TableTemplate>
-                </div>
+            <div class="card-body">
+                <EditForm Model="@MealPlan" OnValidSubmit="@SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
 
-                <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
-                <button class="btn btn-primary btn-sm" type="button" @onclick="@ShowShoppingList">Shopping list</button>
-                <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
-            </EditForm>
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3">Meal plan name: </label>
+                        <InputText id="name" class="form-control" @bind-Value="@MealPlan.Name" placeholder="Enter meal plan name"></InputText>
+                        <ValidationMessage For="@(() => MealPlan.Name)" />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
+                        <InputSelect id="recipeCategory" class="form-select" ValueChanged="@((string value) => OnRecipeCategoryChangedAsync(value))"
+                                 Value="RecipeCategoryId" ValueExpression="@(() => RecipeCategoryId)">
+                            <option selected value="0">Choose...</option>
+                            @if (Categories != null && Categories.Any())
+                            {
+                                @foreach (var item in Categories!)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="recipe" class="col-sm-3">Recipe: </label>
+                        <div class="input-group">
+                            <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
+                                     Value="RecipeId" ValueExpression="@(() => RecipeId)">
+                                <option selected value="0">Choose...</option>
+                                @if (Recipes != null && Recipes.Any())
+                                {
+                                    @foreach (var item in Recipes!)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            @if (CanAddRecipe == true)
+                            {
+                                <button class="btn btn-primary" type="button" @onclick="@AddRecipeAsync">Add</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipeAsync">Add</button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <ValidationMessage For="@(() => MealPlan.Recipes)" />
+                        <TableTemplate Items="@MealPlan.Recipes" ShowIndex="true">
+                            <TableCaption>List of recipes:</TableCaption>
+                            <TableHeader>
+                                <th>Category</th>
+                                <th>Name</th>
+                                <th></th>
+                                <th></th>
+                                <th scope="col"></th>
+                            </TableHeader>
+                            <RowTemplate Context="Recipe">
+                                <td>@Recipe.RecipeCategory!.Name</td>
+                                <td>@Recipe.Name</td>
+                                <td>
+                                    <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
+                                </td>
+                                <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(Recipe)">Edit</button></td>
+                                <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteRecipeAsync(Recipe)"></button></td>
+                            </RowTemplate>
+                        </TableTemplate>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="@ShowShoppingList">Shopping list</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                </EditForm>
+            </div>
         </div>
     </div>
-</div>
+}

@@ -7,11 +7,11 @@ namespace Common.Data.Entities
         public decimal Quantity { get; set; }
         
         [ForeignKey("RecipeId")]
-        public Recipe Recipe { get; private set; }
+        public Recipe? Recipe { get; private set; }
         public int RecipeId { get; set; }
 
         [ForeignKey("IngredientId")]
-        public Ingredient Ingredient { get; private set; }
+        public Ingredient? Ingredient { get; private set; }
         public int IngredientId { get; set; }
     }
 }

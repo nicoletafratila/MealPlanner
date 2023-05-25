@@ -13,34 +13,33 @@ namespace RecipeBook.Api.Repositories
 
         public override async Task<IReadOnlyList<Recipe>> GetAllAsync()
         {
-            return (DbContext as MealPlannerDbContext).Recipes
-                    .Include(x => x.RecipeCategory).ToList();
+            return await (DbContext as MealPlannerDbContext)!.Recipes.Include(x => x.RecipeCategory).ToListAsync();
         }
 
-        public override async Task<Recipe> GetByIdAsync(int id)
+        public override async Task<Recipe?> GetByIdAsync(int id)
         {
-            return await (DbContext as MealPlannerDbContext).Recipes
+            return await (DbContext as MealPlannerDbContext)!.Recipes
                     .Include(x => x.RecipeCategory)
-                    .FirstOrDefaultAsync(item => item.Id == id);
+                    .FirstOrDefaultAsync(item => item!.Id == id);
         }
 
         public async Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId)
         {
-            return (DbContext as MealPlannerDbContext).Recipes
-                    .Include(x => x.RecipeCategory)
-                    .Where(x => x.RecipeCategoryId == categoryId).ToList();
+            return await (DbContext as MealPlannerDbContext)!.Recipes
+                        .Include(x => x.RecipeCategory)
+                        .Where(x => x.RecipeCategoryId == categoryId).ToListAsync();
         }
 
-        public async Task<Recipe> GetByIdIncludeIngredientsAsync(int id)
+        public async Task<Recipe?> GetByIdIncludeIngredientsAsync(int id)
         {
-            return await (DbContext as MealPlannerDbContext).Recipes
+            return await (DbContext as MealPlannerDbContext)!.Recipes
                     .Include(x => x.RecipeCategory)
-                    .Include(x => x.RecipeIngredients)
+                    .Include(x => x.RecipeIngredients)!
                         .ThenInclude(x => x.Ingredient)
-                            .ThenInclude(x => x.IngredientCategory)
-                    .Include(x => x.RecipeIngredients)
+                            .ThenInclude(x => x!.IngredientCategory)
+                    .Include(x => x.RecipeIngredients)!
                         .ThenInclude(x => x.Ingredient)
-                            .ThenInclude(x => x.Unit)
+                            .ThenInclude(x => x!.Unit)
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
     }

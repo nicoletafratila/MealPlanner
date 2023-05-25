@@ -28,7 +28,7 @@ namespace MealPlanner.Api.Controllers
             {
                 var result = await _repository.GetByIdAsyncIncludeRecipesAsync(id);
                 var mappedResults = _mapper.Map<ShoppingListModel>(result);
-                mappedResults.Ingredients = _quantityCalculator.CalculateQuantities(mappedResults.Ingredients);
+                mappedResults.Ingredients = _quantityCalculator.CalculateQuantities(mappedResults.Ingredients!);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)

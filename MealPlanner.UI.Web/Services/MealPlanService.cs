@@ -14,24 +14,24 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IList<MealPlanModel>> GetAllAsync()
+        public async Task<IList<MealPlanModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>(ApiNames.MealPlanApi);
+            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>?>(ApiNames.MealPlanApi);
         }
 
-        public async Task<EditMealPlanModel> GetByIdAsync(int id)
+        public async Task<EditMealPlanModel?> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditMealPlanModel>($"{ApiNames.MealPlanApi}/{id}");
+            return await _httpClient.GetFromJsonAsync<EditMealPlanModel?>($"{ApiNames.MealPlanApi}/{id}");
         }
 
-        public async Task<EditMealPlanModel> AddAsync(EditMealPlanModel model)
+        public async Task<EditMealPlanModel?> AddAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.MealPlanApi, modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                return await JsonSerializer.DeserializeAsync<EditMealPlanModel>(await response.Content.ReadAsStreamAsync());
+                return await JsonSerializer.DeserializeAsync<EditMealPlanModel?>(await response.Content.ReadAsStreamAsync());
             }
 
             return null;

@@ -14,7 +14,7 @@
     <tbody>
         @if (@Items == null)
         {
-            <p><em>Loading...</em></p>
+            <tr>Loading...</tr>
         }
         else
         {
@@ -26,7 +26,7 @@
                     {
                         <td>@index</td>
                     }
-                    @RowTemplate(item)
+                    @RowTemplate!(item)
                 </tr>
                 index++;
             }

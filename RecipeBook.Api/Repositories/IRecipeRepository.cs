@@ -6,6 +6,6 @@ namespace RecipeBook.Api.Repositories
     public interface IRecipeRepository : IAsyncRepository<Recipe, int>
     {
         Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId);
-        Task<Recipe> GetByIdIncludeIngredientsAsync(int id);
+        Task<Recipe?> GetByIdIncludeIngredientsAsync(int id);
     }
 }

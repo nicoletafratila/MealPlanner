@@ -11,15 +11,10 @@ namespace MealPlanner.Shared.Models
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The meal plan requires at least one recipe.")]
-        public IList<RecipeModel> Recipes { get; set; }
-
-        public EditMealPlanModel()
-        {
-            Recipes = new List<RecipeModel>();
-        }
+        public IList<RecipeModel>? Recipes { get; set; }
     }
 }
