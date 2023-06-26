@@ -173,20 +173,27 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
             {
-                RecipeIngredientModel? item = Recipe!.Ingredients!.FirstOrDefault(i => i.Ingredient!.Id == int.Parse(IngredientId));
-                if (item != null)
+                if (Recipe != null)
                 {
-                    item.Quantity += decimal.Parse(Quantity!);
-                }
-                else
-                {
-                    item = new RecipeIngredientModel();
-                    item.Ingredient = Ingredients!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
-                    item.RecipeId = Recipe.Id;
-                    item.Quantity = decimal.Parse(Quantity!);
-                    Recipe.Ingredients!.Add(item);
+                    if (Recipe.Ingredients ==null)
+                    {
+                        Recipe.Ingredients = new List<RecipeIngredientModel>();
+                    }
+                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient!.Id == int.Parse(IngredientId));
+                    if (item != null)
+                    {
+                        item.Quantity += decimal.Parse(Quantity!);
+                    }
+                    else
+                    {
+                        item = new RecipeIngredientModel();
+                        item.Ingredient = Ingredients!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                        item.RecipeId = Recipe.Id;
+                        item.Quantity = decimal.Parse(Quantity!);
+                        Recipe.Ingredients!.Add(item);
 
-                    ClearForm();
+                        ClearForm();
+                    }
                 }
             }
         }

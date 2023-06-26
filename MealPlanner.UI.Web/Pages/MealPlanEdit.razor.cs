@@ -123,11 +123,19 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
             {
-                RecipeModel? item = MealPlan!.Recipes!.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
-                if (item == null)
+                RecipeModel? item = null;
+                if (MealPlan != null)
                 {
-                    item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
-                    MealPlan.Recipes!.Add(item!);
+                    if (MealPlan.Recipes == null)
+                    {
+                        MealPlan.Recipes = new List<RecipeModel>();
+                    }
+                    item = MealPlan.Recipes.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
+                    if (item == null)
+                    {
+                        item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
+                        MealPlan.Recipes.Add(item!);
+                    }
                 }
             }
         }

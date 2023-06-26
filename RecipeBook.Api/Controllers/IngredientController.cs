@@ -75,8 +75,12 @@ namespace RecipeBook.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<EditIngredientModel>> Post(EditIngredientModel model)
         {
-            if (model == null)
+            if (model == null || string.IsNullOrWhiteSpace(model.Name))
                 return BadRequest();
+
+            var existingItem = await _repository.SearchAsync(model.Name);
+            if (existingItem != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
 
             try
             {
