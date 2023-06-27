@@ -32,6 +32,7 @@
                         </div>
                     </th>
                     <th>Name</th>
+                    <th></th>
                     <th>Unit</th>
                     <th></th>
                     <th style="width: 30px"></th>
@@ -39,6 +40,9 @@
                 <RowTemplate Context="Ingredient">
                     <td>@Ingredient.IngredientCategory!.Name</td>
                     <td>@Ingredient.Name</td>
+                    <td>
+                        <img src="@Ingredient.ImageUrl" class="img-fluid" width="100" height="80" />
+                    </td>
                     <td>@Ingredient.Unit!.Name</td>
                     <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Ingredient)">Edit</button></td>
                     <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Ingredient)"></button></td>
