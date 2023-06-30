@@ -6,7 +6,18 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <h2>@Ingredient!.Name</h2>
+                <div class="row g-0">
+                    <div class="col-md-8">
+                        <h2>@Ingredient.Name</h2>
+                    </div>
+                    <div class="col-md-4 align-self-center">
+                        <img class="img-fluid" src="@Ingredient.ImageUrl" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="@AlertClass" role="alert">
+                @AlertMessage
             </div>
 
             <div class="card-body">
@@ -18,6 +29,12 @@
                         <label for="name" class="col-sm-3">Ingredient name: </label>
                         <InputText id="name" class="form-control" @bind-Value="@Ingredient.Name" placeholder="Enter ingredient name"></InputText>
                         <ValidationMessage For="@(() => Ingredient.Name)" />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="image" class="col-sm-3">Select image: </label>
+                        <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" accept="image/png, image/jpeg, image/gif" />
+                        <ValidationMessage For="@(() => Ingredient.ImageContent)" />
                     </div>
 
                     <div class="form-group mt-3">

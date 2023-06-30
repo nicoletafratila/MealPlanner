@@ -12,6 +12,11 @@ namespace RecipeBook.Shared.Models
         public string? Name { get; set; }
 
         [Required]
+        [MaxLength(512000, ErrorMessage = "The image provided is too large.")]
+        public byte[]? ImageContent { get; set; }
+        public string? ImageUrl { get; set; }
+
+        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public int UnitId { get; set; }
 

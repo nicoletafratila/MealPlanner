@@ -1,6 +1,8 @@
 ﻿using Common.Api;
+using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
@@ -48,6 +50,10 @@ namespace MealPlanner.UI.Web.Pages
         public EditIngredientModel? Ingredient { get; set; }
         public IList<IngredientCategoryModel>? Categories { get; set; }
         public IList<UnitModel>? Units { get; set; }
+        
+        public MarkupString AlertMessage { get; set; }
+        public string? AlertClass { get; set; }
+        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
         public IIngredientService? IngredientService { get; set; }
@@ -115,6 +121,41 @@ namespace MealPlanner.UI.Web.Pages
         protected void NavigateToOverview()
         {
             NavigationManager!.NavigateTo("/ingredientsoverview");
+        }
+
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                if (e.File != null)
+                {
+                    Stream stream = e.File.OpenReadStream(maxAllowedSize: 1024 * 300);
+                    MemoryStream ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    stream.Close();
+                    Ingredient!.ImageContent = ms.ToArray();
+                    SetAlert();
+                }
+                StateHasChanged();
+            }
+            catch (Exception)
+            {
+                SetAlert("alert alert-danger", "oi oi-ban", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                return;
+            }
+        }
+
+        private void SetAlert(string alertClass = "", string iconClass = "", string message = "")
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                AlertMessage = new MarkupString();
+                AlertClass = string.Empty;
+            }
+            {
+                AlertMessage = new MarkupString($"<span class='{iconClass}' aria-hidden='true'></span> {message}");
+                AlertClass = alertClass;
+            }
         }
     }
 }
