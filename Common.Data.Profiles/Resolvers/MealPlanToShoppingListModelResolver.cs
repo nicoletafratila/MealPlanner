@@ -5,12 +5,12 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class MealPlanToShoppingListModelResolver : IMemberValueResolver<MealPlan, ShoppingListModel, IList<MealPlanRecipe>, IList<ShoppingIngredientModel>>
+    public class MealPlanToShoppingListModelResolver : IMemberValueResolver<MealPlan, ShoppingListModel, IList<MealPlanRecipe>?, IList<ProductModel>?>
     {
-        public IList<ShoppingIngredientModel> Resolve(MealPlan source, ShoppingListModel destination, IList<MealPlanRecipe> sourceValue, IList<ShoppingIngredientModel> destValue, ResolutionContext context)
+        public IList<ProductModel>? Resolve(MealPlan source, ShoppingListModel destination, IList<MealPlanRecipe>? sourceValue, IList<ProductModel>? destValue, ResolutionContext context)
         {
             if (source.MealPlanRecipes is null || !source.MealPlanRecipes.Any())
-                return new List<ShoppingIngredientModel>();
+                return new List<ProductModel>();
 
             var products = new List<RecipeIngredientModel>();
             foreach (var item in source.MealPlanRecipes)
@@ -30,7 +30,7 @@ namespace Common.Data.Profiles.Resolvers
             }
 
             return products.OrderBy(i => i.Ingredient!.IngredientCategory!.DisplaySequence)
-                           .Select(i => context.Mapper.Map<ShoppingIngredientModel>(i))
+                           .Select(i => context.Mapper.Map<ProductModel>(i))
                            .ToList();
         }
     }

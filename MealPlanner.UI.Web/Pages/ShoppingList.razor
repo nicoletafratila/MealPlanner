@@ -14,28 +14,28 @@
             </div>
 
             <div class="card-body">
-                <TableTemplate Items="@Model.Ingredients">
-                    <TableCaption>List of ingredients:</TableCaption>
+                <TableTemplate Items="@Model.Products">
+                    <TableCaption>Products:</TableCaption>
                     <TableHeader>
                         <th></th>
                         <th>Name</th>
                         <th>Quantity</th>
                     </TableHeader>
-                    <RowTemplate Context="IngredientModel">
-                        @if (IngredientModel != null)
+                    <RowTemplate Context="ProductModel">
+                        @if (ProductModel != null)
                         {
                             <td style="vertical-align:middle; text-align: center">
-                                <input type="checkbox" @onchange="eventArgs => { CheckboxChanged(IngredientModel, eventArgs); }" />
+                                <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChanged(ProductModel, eventArgs.Value!); }" />
                             </td>
                             <td style="vertical-align:middle">
                                 <div style="display:flex; align-items: center">
-                                    <img src="@IngredientModel.ImageUrl" class="img-fluid" width="100" height="80" />
+                                    <img src="@ProductModel.ImageUrl" class="img-fluid" width="100" height="80" />
                                     <p>&nbsp;&nbsp;</p>
-                                    <p>@IngredientModel.Name</p>
+                                    <p>@ProductModel.Name</p>
                                 </div>
                             </td>
                             <td style="vertical-align:middle">
-                                @IngredientModel.Quantity
+                                @ProductModel.Quantity
                             </td>
                         }
                     </RowTemplate>

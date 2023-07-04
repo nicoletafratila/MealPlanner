@@ -8,9 +8,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
-
         public ShoppingListModel? Model { get; set; }
-        public ShoppingIngredientModel? IngredientModel { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -37,23 +35,15 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo($"/mealplanedit/{Id}");
         }
 
-        private void CheckboxChanged(ShoppingIngredientModel ingredientModel, ChangeEventArgs e)
+        private void CheckboxChanged(ProductModel productModel, object value)
         {
-            if (ingredientModel != null)
+            if (productModel != null)
             {
-                var item = Model!.Ingredients!.FirstOrDefault(i => i.Id == ingredientModel.Id);
+                var item = Model!.Products!.FirstOrDefault(i => i.Id == productModel.Id);
                 if (item != null)
                 {
-                    item.Collected = (bool)e.Value!;
+                    item.Collected = (bool)value;
                 }
-                Model!.Ingredients = Model!.Ingredients!.Where(i => !i.Collected).ToList();
-                StateHasChanged();
-
-                //if (UserService != null)
-                //{
-                //    await UserService.UpdateAsync(user);
-                //}
-                //await LoadDataAsync();
             }
         }
     }
