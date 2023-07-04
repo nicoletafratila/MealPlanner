@@ -3,27 +3,46 @@
 
 @if (Model != null)
 {
-    <h1 class="page-title">Shopping list details for @Model.Name</h1>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row g-0">
+                    <div class="col-md-8">
+                        <h2>Shopping list details for @Model.Name</h2>
+                    </div>
+                </div>
+            </div>
 
-    <TableTemplate Items="@Model.Ingredients">
-        <TableCaption>List of ingredients:</TableCaption>
-        <TableHeader>
-            <th>Name</th>
-            <th></th>
-            <th>Quantity</th>
-            <th>Unit</th>
-            <th>Category</th>
-        </TableHeader>
-        <RowTemplate Context="CurrentIngredientModel">
-            <td>@CurrentIngredientModel.Ingredient!.Name</td>
-            <td>
-                <img src="@CurrentIngredientModel.Ingredient.ImageUrl" class="img-fluid" width="100" height="80" />
-            </td>
-            <td>@CurrentIngredientModel.Quantity</td>
-            <td>@CurrentIngredientModel.Ingredient.Unit!.Name</td>
-            <td>@CurrentIngredientModel.Ingredient.IngredientCategory!.Name</td>
-        </RowTemplate>
-    </TableTemplate>
+            <div class="card-body">
+                <TableTemplate Items="@Model.Products">
+                    <TableCaption>Products:</TableCaption>
+                    <TableHeader>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                    </TableHeader>
+                    <RowTemplate Context="ProductModel">
+                        @if (ProductModel != null)
+                        {
+                            <td style="vertical-align:middle; text-align: center">
+                                <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChanged(ProductModel, eventArgs.Value!); }" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <div style="display:flex; align-items: center">
+                                    <img src="@ProductModel.ImageUrl" class="img-fluid" width="100" height="80" />
+                                    <p>&nbsp;&nbsp;</p>
+                                    <p>@ProductModel.Name</p>
+                                </div>
+                            </td>
+                            <td style="vertical-align:middle">
+                                @ProductModel.Quantity
+                            </td>
+                        }
+                    </RowTemplate>
+                </TableTemplate>
 
-    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+            </div>
+        </div>
+    </div>
 }
