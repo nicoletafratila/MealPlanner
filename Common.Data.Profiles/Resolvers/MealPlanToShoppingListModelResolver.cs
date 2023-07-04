@@ -5,20 +5,33 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class MealPlanToShoppingListModelResolver : IMemberValueResolver<MealPlan, ShoppingListModel, IList<MealPlanRecipe>, IList<RecipeIngredientModel>>
+    public class MealPlanToShoppingListModelResolver : IMemberValueResolver<MealPlan, ShoppingListModel, IList<MealPlanRecipe>, IList<ShoppingIngredientModel>>
     {
-        public IList<RecipeIngredientModel> Resolve(MealPlan source, ShoppingListModel destination, IList<MealPlanRecipe> sourceValue, IList<RecipeIngredientModel> destValue, ResolutionContext context)
+        public IList<ShoppingIngredientModel> Resolve(MealPlan source, ShoppingListModel destination, IList<MealPlanRecipe> sourceValue, IList<ShoppingIngredientModel> destValue, ResolutionContext context)
         {
-            var result = new List<RecipeIngredientModel>();
             if (source.MealPlanRecipes is null || !source.MealPlanRecipes.Any())
-                return result;
+                return new List<ShoppingIngredientModel>();
 
+            var products = new List<RecipeIngredientModel>();
             foreach (var item in source.MealPlanRecipes)
             {
-                result.AddRange(context.Mapper.Map<EditRecipeModel>(item.Recipe).Ingredients!);
+                var recipeIngredients = context.Mapper.Map<EditRecipeModel>(item.Recipe).Ingredients;
+                if (recipeIngredients != null)
+                {
+                    foreach (var i in recipeIngredients)
+                    {
+                        var existingIngredient = products.FirstOrDefault(x => x.Ingredient!.Id == i.Ingredient!.Id);
+                        if (existingIngredient == null)
+                            products.Add(i);
+                        else
+                            existingIngredient.Quantity += i.Quantity;
+                    }
+                }
             }
-            return result.OrderBy(item => item.Ingredient!.IngredientCategory!.DisplaySequence)
-                         .ThenBy(item => item.Ingredient!.Name).ToList();
+
+            return products.OrderBy(i => i.Ingredient!.IngredientCategory!.DisplaySequence)
+                           .Select(i => context.Mapper.Map<ShoppingIngredientModel>(i))
+                           .ToList();
         }
     }
 }

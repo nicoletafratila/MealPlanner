@@ -1,7 +1,6 @@
-﻿using MealPlanner.UI.Web.Services;
-using MealPlanner.Shared.Models;
+﻿using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -11,7 +10,7 @@ namespace MealPlanner.UI.Web.Pages
         public string? Id { get; set; }
 
         public ShoppingListModel? Model { get; set; }
-        public IngredientModel? IngredientModel { get; set; }
+        public ShoppingIngredientModel? IngredientModel { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -36,6 +35,26 @@ namespace MealPlanner.UI.Web.Pages
         protected void NavigateToOverview()
         {
             NavigationManager!.NavigateTo($"/mealplanedit/{Id}");
+        }
+
+        private void CheckboxChanged(ShoppingIngredientModel ingredientModel, ChangeEventArgs e)
+        {
+            if (ingredientModel != null)
+            {
+                var item = Model!.Ingredients!.FirstOrDefault(i => i.Id == ingredientModel.Id);
+                if (item != null)
+                {
+                    item.Collected = (bool)e.Value!;
+                }
+                Model!.Ingredients = Model!.Ingredients!.Where(i => !i.Collected).ToList();
+                StateHasChanged();
+
+                //if (UserService != null)
+                //{
+                //    await UserService.UpdateAsync(user);
+                //}
+                //await LoadDataAsync();
+            }
         }
     }
 }

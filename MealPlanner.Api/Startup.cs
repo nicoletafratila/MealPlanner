@@ -1,5 +1,4 @@
 ﻿using MealPlanner.Api.Repositories;
-using MealPlanner.Api.Services;
 
 namespace MealPlanner.Api
 {
@@ -13,12 +12,6 @@ namespace MealPlanner.Api
         {
             base.RegisterRepositories(services);
             services.AddScoped<IMealPlanRepository, MealPlanRepository>();
-        }
-
-        protected override void RegisterServices(IServiceCollection services)
-        {
-            base.RegisterServices(services);
-            services.AddSingleton<IQuantityCalculator, QuantityCalculator>();
         }
     }
 }

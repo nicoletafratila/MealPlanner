@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MealPlanner.Api.Repositories;
-using MealPlanner.Api.Services;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +11,11 @@ namespace MealPlanner.Api.Controllers
     {
         private readonly IMealPlanRepository _repository;
         private readonly IMapper _mapper;
-        private IQuantityCalculator _quantityCalculator;
 
-        public ShoppingListController(IMealPlanRepository repository, IMapper mapper, IQuantityCalculator quantityCalculator)
+        public ShoppingListController(IMealPlanRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            _quantityCalculator = quantityCalculator;
         }
 
         [HttpGet("{id}")]
@@ -28,7 +25,6 @@ namespace MealPlanner.Api.Controllers
             {
                 var result = await _repository.GetByIdAsyncIncludeRecipesAsync(id);
                 var mappedResults = _mapper.Map<ShoppingListModel>(result);
-                mappedResults.Ingredients = _quantityCalculator.CalculateQuantities(mappedResults.Ingredients!);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
