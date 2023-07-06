@@ -18,6 +18,8 @@ namespace Common.Data.DataContext
         public DbSet<IngredientCategory> IngredientCategories => Set<IngredientCategory>();
         public DbSet<RecipeCategory> RecipeCategories => Set<RecipeCategory>();
         public DbSet<Unit> Units => Set<Unit>();
+        public DbSet<ShoppingList> ShoppingLists => Set<ShoppingList>();
+        public DbSet<ShoppingListProduct> ShoppingListProducts => Set<ShoppingListProduct>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

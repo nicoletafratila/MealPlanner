@@ -1,21 +1,20 @@
 ﻿using AutoMapper;
-using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class MealPlanToShoppingListModelResolver : IMemberValueResolver<MealPlan, ShoppingListModel, IList<MealPlanRecipe>?, IList<ProductModel>?>
+    public class EditMealPlanModelToShoppingListModelResolver : IMemberValueResolver<EditMealPlanModel, EditShoppingListModel, IList<RecipeModel>?, IList<ShoppingListProductModel>?>
     {
-        public IList<ProductModel>? Resolve(MealPlan source, ShoppingListModel destination, IList<MealPlanRecipe>? sourceValue, IList<ProductModel>? destValue, ResolutionContext context)
+        public IList<ShoppingListProductModel>? Resolve(EditMealPlanModel source, EditShoppingListModel destination, IList<RecipeModel>? sourceValue, IList<ShoppingListProductModel>? destValue, ResolutionContext context)
         {
-            if (source.MealPlanRecipes is null || !source.MealPlanRecipes.Any())
-                return new List<ProductModel>();
+            if (source.Recipes is null || !source.Recipes.Any())
+                return new List<ShoppingListProductModel>();
 
             var products = new List<RecipeIngredientModel>();
-            foreach (var item in source.MealPlanRecipes)
+            foreach (var item in source.Recipes)
             {
-                var recipeIngredients = context.Mapper.Map<EditRecipeModel>(item.Recipe).Ingredients;
+                var recipeIngredients = context.Mapper.Map<EditRecipeModel>(item).Ingredients;
                 if (recipeIngredients != null)
                 {
                     foreach (var i in recipeIngredients)
@@ -30,7 +29,7 @@ namespace Common.Data.Profiles.Resolvers
             }
 
             return products.OrderBy(i => i.Ingredient!.IngredientCategory!.DisplaySequence)
-                           .Select(i => context.Mapper.Map<ProductModel>(i))
+                           .Select(i => context.Mapper.Map<ShoppingListProductModel>(i))
                            .ToList();
         }
     }

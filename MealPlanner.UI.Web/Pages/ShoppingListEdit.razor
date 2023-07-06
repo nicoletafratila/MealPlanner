@@ -25,7 +25,18 @@
                         @if (ProductModel != null)
                         {
                             <td style="vertical-align:middle; text-align: center">
-                                <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChanged(ProductModel, eventArgs.Value!); }" />
+                               @* @if (@ProductModel.Collected)
+                                {
+                                    <div style="filter: blur(3px);">
+                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChanged(ProductModel, eventArgs.Value!); }" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChanged(ProductModel, eventArgs.Value!); }" />
+                                    </div>
+                                }*@
                             </td>
                             <td style="vertical-align:middle">
                                 <div style="display:flex; align-items: center">

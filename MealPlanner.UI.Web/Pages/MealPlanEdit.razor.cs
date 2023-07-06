@@ -1,4 +1,6 @@
-﻿using Common.Api;
+﻿using AutoMapper;
+using Common.Api;
+using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -59,6 +61,12 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
+
+        [Inject]
+        public IShoppingListService? ShoppingListService { get; set; }
+
+        [Inject]
+        public IMapper? ShoppingListMapper { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -162,9 +170,14 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo("/mealplansoverview");
         }
 
-        protected void ShowShoppingList()
+        protected async Task MakeShoppingListAsync()
         {
-            NavigationManager!.NavigateTo($"shoppinglist/{MealPlan!.Id}");
+            var list = ShoppingListMapper!.Map<EditShoppingListModel>(MealPlan);
+            var addedEntity = await ShoppingListService!.AddAsync(list);
+            if (addedEntity != null)
+            {
+                NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
+            }
         }
 
         private async void OnRecipeCategoryChangedAsync(string value)

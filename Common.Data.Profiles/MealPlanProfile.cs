@@ -18,9 +18,13 @@ namespace Common.Data.Profiles
                .ReverseMap()
                .ForMember(data => data.MealPlanRecipes, opt => opt.MapFrom<EditMealPlanModelToMealPlanResolver, IList<RecipeModel>?>(model => model.Recipes));
 
-            CreateMap<MealPlan, ShoppingListModel>()
-               .ForMember(model => model.Products, opt => opt.MapFrom<MealPlanToShoppingListModelResolver, IList<MealPlanRecipe>?>(data => data.MealPlanRecipes))
-               .ReverseMap();
+            //CreateMap<MealPlan, ShoppingListModel>()
+            //   .ForMember(model => model.Products, opt => opt.MapFrom<MealPlanToShoppingListModelResolver, IList<MealPlanRecipe>?>(data => data.MealPlanRecipes))
+            //   .ReverseMap();
+
+            CreateMap<EditMealPlanModel, EditShoppingListModel>()
+                 .ForMember(model => model.Products, opt => opt.MapFrom<EditMealPlanModelToShoppingListModelResolver, IList<RecipeModel>?>(data => data.Recipes!))
+                 .ReverseMap();
         }
     }
 }

@@ -37,6 +37,8 @@ namespace Common.Api
                 c.AddProfile<RecipeProfile>();
                 c.AddProfile<RecipeCategoryProfile>();
                 c.AddProfile<UnitProfile>();
+                c.AddProfile<ShoppingListProfile>();
+                c.AddProfile<ShoppingListProductProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
 
