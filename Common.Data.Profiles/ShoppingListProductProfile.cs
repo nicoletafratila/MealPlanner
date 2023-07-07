@@ -18,7 +18,7 @@ namespace Common.Data.Profiles
                .ForMember(model => model.Id, opt => opt.MapFrom(data => data.Ingredient!.Id))
                .ForMember(model => model.Name, opt => opt.MapFrom(data => data.Ingredient!.Name))
                .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => data.Ingredient!.ImageUrl))
-               .ForMember(model => model.Quantity, opt => opt.MapFrom(data => data.Quantity + "  -  " + data.Ingredient!.Unit!.Name));
+               .ForMember(model => model.Quantity, opt => opt.MapFrom(data => data.Quantity));
         }
     }
 }

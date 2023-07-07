@@ -51,7 +51,7 @@ namespace MealPlanner.Api.Controllers
                 await _repository.AddAsync(result);
 
                 result = await _repository.GetByIdAsyncIncludeProductsAsync(result.Id);
-                string? location = _linkGenerator.GetPathByAction("GetById", "MealPlan", new { id = result!.Id });
+                string? location = _linkGenerator.GetPathByAction("GetById", "ShoppingList", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");

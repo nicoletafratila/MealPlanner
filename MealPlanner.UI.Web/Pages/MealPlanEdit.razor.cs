@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Common.Api;
-using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -70,6 +69,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
+
+        [Inject]
+        public IMapper? Mapper { get; set; }
 
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
@@ -172,7 +174,34 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task MakeShoppingListAsync()
         {
-            var list = ShoppingListMapper!.Map<EditShoppingListModel>(MealPlan);
+            if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
+                return;
+
+            var ingredients = new List<RecipeIngredientModel>();
+            foreach (var item in MealPlan.Recipes)
+            {
+                var recipe = await RecipeService!.GetEditAsync(item.Id);
+                if (recipe != null)
+                {
+                    foreach (var i in recipe.Ingredients!)
+                    {
+                        var existingIngredient = ingredients.FirstOrDefault(x => x.Ingredient!.Id == i.Ingredient!.Id);
+                        if (existingIngredient == null)
+                        {
+                            ingredients.Add(i);
+                        }
+                        else
+                            existingIngredient.Quantity += i.Quantity;
+                    }
+                }
+            }
+
+            var list = new EditShoppingListModel();
+            list.Name = "List for " + MealPlan.Name;
+            list.Products = ingredients.OrderBy(i => i.Ingredient!.IngredientCategory!.DisplaySequence)
+                           .Select(i => Mapper!.Map<ShoppingListProductModel>(i))
+                           .ToList(); ;
+
             var addedEntity = await ShoppingListService!.AddAsync(list);
             if (addedEntity != null)
             {
