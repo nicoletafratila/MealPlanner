@@ -5,6 +5,6 @@ namespace MealPlanner.Api.Repositories
 {
     public interface IShoppingListRepository : IAsyncRepository<ShoppingList, int>
     {
-        Task<ShoppingList?> GetByIdAsyncIncludeProductsAsync(int id);
+        Task<ShoppingList?> GetByIdIncludeProductsAsync(int id);
     }
 }

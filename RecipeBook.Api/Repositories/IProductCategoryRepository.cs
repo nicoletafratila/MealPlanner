@@ -3,7 +3,7 @@ using Common.Data.Repository;
 
 namespace RecipeBook.Api.Repositories
 {
-    public interface IIngredientCategoryRepository : IAsyncRepository<IngredientCategory, int>
+    public interface IProductCategoryRepository : IAsyncRepository<ProductCategory, int>
     {
     }
 }

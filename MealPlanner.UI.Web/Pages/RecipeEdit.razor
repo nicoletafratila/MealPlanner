@@ -72,9 +72,9 @@
                         <InputSelect id="ingredient" class="form-select" ValueChanged="@((string value) => OnIngredientChanged(value))"
                                  Value="IngredientId" ValueExpression="@(() => IngredientId)">
                             <option selected value="0">Choose...</option>
-                            @if (Ingredients != null && Ingredients.Any())
+                            @if (Products != null && Products.Any())
                             {
-                                @foreach (var item in Ingredients!)
+                                @foreach (var item in Products!)
                                 {
                                     <option value="@item.Id">@item.Name (@item.Unit!.Name)</option>
                                 }
@@ -113,14 +113,14 @@
                                 <th scope="col"></th>
                             </TableHeader>
                             <RowTemplate Context="RecipeIngredient">
-                                <td>@RecipeIngredient.Ingredient!.Name</td>
+                                <td>@RecipeIngredient.Product!.Name</td>
                                 <td>
-                                    <img src="@RecipeIngredient.Ingredient.ImageUrl" class="img-fluid" width="100" height="80" />
+                                    <img src="@RecipeIngredient.Product.ImageUrl" class="img-fluid" width="100" height="80" />
                                 </td>
                                 <td>@RecipeIngredient.Quantity</td>
-                                <td>@RecipeIngredient.Ingredient.Unit!.Name</td>
-                                <td>@RecipeIngredient.Ingredient.IngredientCategory!.Name</td>
-                                <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredientAsync(RecipeIngredient.Ingredient)"></button></td>
+                                <td>@RecipeIngredient.Product.Unit!.Name</td>
+                                <td>@RecipeIngredient.Product.ProductCategory!.Name</td>
+                                <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredientAsync(RecipeIngredient.Product)"></button></td>
                             </RowTemplate>
                         </TableTemplate>
                     </div>

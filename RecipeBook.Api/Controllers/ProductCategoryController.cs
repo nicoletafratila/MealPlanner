@@ -7,24 +7,24 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IngredientCategoryController : ControllerBase
+    public class ProductCategoryController : ControllerBase
     {
-        private readonly IIngredientCategoryRepository _repository;
+        private readonly IProductCategoryRepository _repository;
         private readonly IMapper _mapper;
 
-        public IngredientCategoryController(IIngredientCategoryRepository repository, IMapper mapper)
+        public ProductCategoryController(IProductCategoryRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<IngredientCategoryModel>>> GetAll()
+        public async Task<ActionResult<IList<ProductCategoryModel>>> GetAll()
         {
             try
             {
                 var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<IngredientCategoryModel>>(results).OrderBy(r => r.DisplaySequence);
+                var mappedResults = _mapper.Map<IList<ProductCategoryModel>>(results).OrderBy(r => r.DisplaySequence);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)

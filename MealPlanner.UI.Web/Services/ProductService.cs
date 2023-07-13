@@ -5,44 +5,44 @@ using System.Text;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class IngredientService : IIngredientService
+    public class ProductService : IProductService
     {
         private readonly HttpClient _httpClient;
 
-        public IngredientService(HttpClient httpClient)
+        public ProductService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<IList<IngredientModel>?> GetAllAsync()
+        public async Task<IList<ProductModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<IngredientModel>?>($"{ApiNames.IngredientApi}");
+            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{ApiNames.IngredientApi}");
         }
 
-        public async Task<EditIngredientModel?> GetByIdAsync(int id)
+        public async Task<EditProductModel?> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditIngredientModel?>($"{ApiNames.IngredientApi}/{id}");
+            return await _httpClient.GetFromJsonAsync<EditProductModel?>($"{ApiNames.IngredientApi}/{id}");
         }
 
-        public async Task<IList<IngredientModel>?> SearchAsync(int categoryId)
+        public async Task<IList<ProductModel>?> SearchAsync(int categoryId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<IngredientModel>?>($"{ApiNames.IngredientApi}/category/{categoryId}");
+            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{ApiNames.IngredientApi}/category/{categoryId}");
         }
 
-        public async Task<EditIngredientModel?> AddAsync(EditIngredientModel model)
+        public async Task<EditProductModel?> AddAsync(EditProductModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.IngredientApi, modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                return await JsonSerializer.DeserializeAsync<EditIngredientModel?>(await response.Content.ReadAsStreamAsync());
+                return await JsonSerializer.DeserializeAsync<EditProductModel?>(await response.Content.ReadAsStreamAsync());
             }
 
             return null;
         }
 
-        public async Task UpdateAsync(EditIngredientModel model)
+        public async Task UpdateAsync(EditProductModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync(ApiNames.IngredientApi, modelJson);

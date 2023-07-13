@@ -11,11 +11,14 @@ namespace MealPlanner.Api.Repositories
         {
         }
 
-        public async Task<ShoppingList?> GetByIdAsyncIncludeProductsAsync(int id)
+        public async Task<ShoppingList?> GetByIdIncludeProductsAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext)!.ShoppingLists
                  .Include(x => x!.Products)!
-                    .ThenInclude(x => x.Product)
+                    .ThenInclude(x => x!.Product)
+                        .ThenInclude(x => x!.ProductCategory)
+                 .Include(x => x!.Products)!
+                    .ThenInclude(x => x!.Product)
                         .ThenInclude(x => x!.Unit)
                 .FirstOrDefaultAsync(item => item.Id == id);
         }

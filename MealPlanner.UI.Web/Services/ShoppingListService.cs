@@ -1,7 +1,7 @@
 ﻿using Common.Constants;
 using MealPlanner.Shared.Models;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
 
 namespace MealPlanner.UI.Web.Services
 {
@@ -14,9 +14,19 @@ namespace MealPlanner.UI.Web.Services
             _httpClient = httpClient;
         }
 
+        public async Task<IList<ShoppingListModel>?> GetAllAsync()
+        {
+            return await _httpClient.GetFromJsonAsync<IList<ShoppingListModel>?>($"{ApiNames.ShoppingListApi}");
+        }
+
         public async Task<ShoppingListModel?> GetByIdAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<ShoppingListModel?>($"{ApiNames.ShoppingListApi}/{id}");
+        }
+
+        public async Task<EditShoppingListModel?> GetEditAsync(int id)
+        {
+            return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{ApiNames.ShoppingListApi}/edit/{id}");
         }
 
         public async Task<EditShoppingListModel?> AddAsync(EditShoppingListModel model)
@@ -36,6 +46,11 @@ namespace MealPlanner.UI.Web.Services
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             await _httpClient.PutAsync(ApiNames.ShoppingListApi, modelJson);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"{ApiNames.ShoppingListApi}/{id}");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Common.Data.Entities
         public int ShoppingListId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Ingredient? Product { get; private set; }
+        public Product? Product { get; private set; }
         public int ProductId { get; set; }
     }
 }

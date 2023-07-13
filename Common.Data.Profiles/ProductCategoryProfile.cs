@@ -4,11 +4,11 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles
 {
-    public class IngredientCategoryProfile : Profile
+    public class ProductCategoryProfile : Profile
     {
-        public IngredientCategoryProfile()
+        public ProductCategoryProfile()
         {
-            CreateMap<IngredientCategory, IngredientCategoryModel>()
+            CreateMap<ProductCategory, ProductCategoryModel>()
                .ReverseMap();
         }
     }

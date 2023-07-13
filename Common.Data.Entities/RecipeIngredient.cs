@@ -10,8 +10,8 @@ namespace Common.Data.Entities
         public Recipe? Recipe { get; private set; }
         public int RecipeId { get; set; }
 
-        [ForeignKey("IngredientId")]
-        public Ingredient? Ingredient { get; private set; }
-        public int IngredientId { get; set; }
+        [ForeignKey("ProductId")]
+        public Product? Product { get; private set; }
+        public int ProductId { get; set; }
     }
 }

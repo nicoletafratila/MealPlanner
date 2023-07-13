@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (item != null)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient: '{item.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the recipe: '{item.Name}'?"))
                     return;
 
                 await RecipeService!.DeleteAsync(item.Id);

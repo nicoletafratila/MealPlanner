@@ -65,7 +65,7 @@ namespace MealPlanner.Api.Controllers
                 var result = _mapper.Map<MealPlan>(model);
                 await _repository.AddAsync(result);
                 
-                result = await _repository.GetByIdAsyncIncludeRecipesAsync(result.Id);
+                result = await _repository.GetByIdIncludeRecipesAsync(result.Id);
                 string? location = _linkGenerator.GetPathByAction("GetById", "MealPlan", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {

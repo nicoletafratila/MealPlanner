@@ -30,9 +30,9 @@ namespace Common.Api
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var config = new MapperConfiguration(c =>
             {
-                c.AddProfile<IngredientProfile>();
+                c.AddProfile<ProductProfile>();
                 c.AddProfile<RecipeIngredientProfile>();
-                c.AddProfile<IngredientCategoryProfile>();
+                c.AddProfile<ProductCategoryProfile>();
                 c.AddProfile<MealPlanProfile>();
                 c.AddProfile<RecipeProfile>();
                 c.AddProfile<RecipeCategoryProfile>();

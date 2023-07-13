@@ -2,7 +2,7 @@
 
 namespace RecipeBook.Shared.Models
 {
-    public class EditIngredientModel
+    public class EditProductModel
     {
         [Required]
         public int Id { get; set; }
@@ -17,11 +17,11 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the product.")]
         public int UnitId { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the ingredient.")]
-        public int IngredientCategoryId { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the product.")]
+        public int ProductCategoryId { get; set; }
     }
 }

@@ -23,14 +23,14 @@ namespace MealPlanner.UI.Web
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
 
-            services.AddHttpClient<IIngredientService, IngredientService>()
+            services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-            services.AddHttpClient<IIngredientCategoryService, IngredientCategoryService>()
+            services.AddHttpClient<IProductCategoryService, ProductCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
@@ -76,9 +76,9 @@ namespace MealPlanner.UI.Web
 
             var config = new MapperConfiguration(c =>
             {
-                c.AddProfile<IngredientProfile>();
+                c.AddProfile<ProductProfile>();
                 c.AddProfile<RecipeIngredientProfile>();
-                c.AddProfile<IngredientCategoryProfile>();
+                c.AddProfile<ProductCategoryProfile>();
                 c.AddProfile<MealPlanProfile>();
                 c.AddProfile<RecipeProfile>();
                 c.AddProfile<RecipeCategoryProfile>();

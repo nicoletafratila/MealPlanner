@@ -16,9 +16,8 @@ namespace Common.Data.Profiles.Resolvers
             {
                 result.Add(context.Mapper.Map<ShoppingListProductModel>(item));
             }
-            return result;
-            //return result.OrderBy(item => item.Product!.IngredientCategory!.DisplaySequence)
-            //             .ThenBy(item => item.Product!.Name).ToList();
+            return result.OrderBy(item => item.Product!.ProductCategory!.DisplaySequence)
+                         .ThenBy(item => item.Product!.Name).ToList();
         }
     }
 }

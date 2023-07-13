@@ -20,7 +20,7 @@ namespace MealPlanner.Api.Repositories
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
 
-        public async Task<MealPlan?> GetByIdAsyncIncludeRecipesAsync(int id)
+        public async Task<MealPlan?> GetByIdIncludeRecipesAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext)!.MealPlans
               .Include(x => x.MealPlanRecipes)!
@@ -29,12 +29,12 @@ namespace MealPlanner.Api.Repositories
              .Include(x => x.MealPlanRecipes)!
                   .ThenInclude(x => x.Recipe)
                       .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Ingredient)
-                             .ThenInclude(x => x!.IngredientCategory)
+                          .ThenInclude(x => x.Product)
+                             .ThenInclude(x => x!.ProductCategory)
               .Include(x => x.MealPlanRecipes)!
                   .ThenInclude(x => x.Recipe)
                       .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Ingredient)
+                          .ThenInclude(x => x.Product)
                             .ThenInclude(x => x!.Unit)
               .FirstOrDefaultAsync(item => item.Id == id);
         }

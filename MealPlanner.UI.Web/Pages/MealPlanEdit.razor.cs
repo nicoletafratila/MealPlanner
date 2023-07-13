@@ -185,7 +185,7 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     foreach (var i in recipe.Ingredients!)
                     {
-                        var existingIngredient = ingredients.FirstOrDefault(x => x.Ingredient!.Id == i.Ingredient!.Id);
+                        var existingIngredient = ingredients.FirstOrDefault(x => x.Product!.Id == i.Product!.Id);
                         if (existingIngredient == null)
                         {
                             ingredients.Add(i);
@@ -198,7 +198,7 @@ namespace MealPlanner.UI.Web.Pages
 
             var list = new EditShoppingListModel();
             list.Name = "List for " + MealPlan.Name;
-            list.Products = ingredients.OrderBy(i => i.Ingredient!.IngredientCategory!.DisplaySequence)
+            list.Products = ingredients.OrderBy(i => i.Product!.ProductCategory!.DisplaySequence)
                            .Select(i => Mapper!.Map<ShoppingListProductModel>(i))
                            .ToList(); ;
 
