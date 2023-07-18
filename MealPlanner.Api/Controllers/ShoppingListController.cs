@@ -3,7 +3,6 @@ using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Controllers
 {
@@ -11,13 +10,15 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class ShoppingListController : ControllerBase
     {
-        private readonly IShoppingListRepository _repository;
+        private readonly IShoppingListRepository _shoppingListRepository;
+        private readonly IMealPlanRepository _meanPlanRepository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
 
-        public ShoppingListController(IShoppingListRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+        public ShoppingListController(IShoppingListRepository shoppingListRepository, IMealPlanRepository mealPlanRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
-            _repository = repository;
+            _shoppingListRepository = shoppingListRepository;
+            _meanPlanRepository = mealPlanRepository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
         }
@@ -27,7 +28,7 @@ namespace MealPlanner.Api.Controllers
         {
             try
             {
-                var results = await _repository.GetAllAsync();
+                var results = await _shoppingListRepository.GetAllAsync();
                 var mappedResults = _mapper.Map<IList<ShoppingListModel>>(results).OrderBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
@@ -42,7 +43,7 @@ namespace MealPlanner.Api.Controllers
         {
             try
             {
-                var result = await _repository.GetByIdAsync(id);
+                var result = await _shoppingListRepository.GetByIdAsync(id);
                 if (result == null) return NotFound();
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<ShoppingListModel>(result));
             }
@@ -57,9 +58,47 @@ namespace MealPlanner.Api.Controllers
         {
             try
             {
-                var result = await _repository.GetByIdIncludeProductsAsync(id);
+                var result = await _shoppingListRepository.GetByIdIncludeProductsAsync(id);
                 if (result == null) return NotFound();
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditShoppingListModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpGet("shoppinglist/{id}")]
+        public async Task<ActionResult<EditShoppingListModel>> GetShoppingListFromMealPlan(int id)
+        {
+            try
+            {
+                var mealPlan = await _meanPlanRepository.GetByIdIncludeRecipesAsync(id);
+                if (mealPlan == null) return NotFound();
+
+                var products = new List<ShoppingListProductModel>();
+                foreach (var item in mealPlan.MealPlanRecipes!)
+                {
+                    foreach (var i in item.Recipe!.RecipeIngredients!)
+                    {
+                        var existingProduct = products.FirstOrDefault(x => x.Product!.Id == i.ProductId);
+                        if (existingProduct == null)
+                        {
+                            var product = _mapper.Map<ShoppingListProductModel>(i);
+                            product.Collected = false;
+                            products.Add(product);
+                        }
+                        else
+                            existingProduct.Quantity += i.Quantity;
+                    }
+                }
+
+                var list = new EditShoppingListModel();
+                list.Name = "List for " + mealPlan.Name;
+                list.Products = products.OrderBy(i => i.Product!.ProductCategory!.DisplaySequence)
+                               .Select(i => _mapper!.Map<ShoppingListProductModel>(i))
+                               .ToList();
+                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditShoppingListModel>(list));
             }
             catch (Exception)
             {
@@ -76,9 +115,9 @@ namespace MealPlanner.Api.Controllers
             try
             {
                 var result = _mapper.Map<ShoppingList>(model);
-                await _repository.AddAsync(result);
+                await _shoppingListRepository.AddAsync(result);
 
-                result = await _repository.GetByIdIncludeProductsAsync(result.Id);
+                result = await _shoppingListRepository.GetByIdIncludeProductsAsync(result.Id);
                 string? location = _linkGenerator.GetPathByAction("GetById", "ShoppingList", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
@@ -100,14 +139,14 @@ namespace MealPlanner.Api.Controllers
 
             try
             {
-                var oldModel = await _repository.GetByIdAsync(model.Id);
+                var oldModel = await _shoppingListRepository.GetByIdAsync(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");
                 }
 
                 _mapper.Map(model, oldModel);
-                await _repository.UpdateAsync(oldModel);
+                await _shoppingListRepository.UpdateAsync(oldModel);
                 return NoContent();
             }
             catch (Exception)
@@ -119,14 +158,14 @@ namespace MealPlanner.Api.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var itemToDelete = await _repository.GetByIdAsync(id);
+            var itemToDelete = await _shoppingListRepository.GetByIdAsync(id);
             if (itemToDelete == null)
             {
                 NotFound($"Could not find with id {id}");
                 return;
             }
 
-            await _repository.DeleteAsync(itemToDelete);
+            await _shoppingListRepository.DeleteAsync(itemToDelete);
         }
     }
 }

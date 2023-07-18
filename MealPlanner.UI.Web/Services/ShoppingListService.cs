@@ -52,5 +52,10 @@ namespace MealPlanner.UI.Web.Services
         {
             await _httpClient.DeleteAsync($"{ApiNames.ShoppingListApi}/{id}");
         }
+
+        public async Task<EditShoppingListModel?> GetShoppingListFromMealPlanAsync(int mealPlanId)
+        {
+            return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{ApiNames.ShoppingListApi}/shoppinglist/{mealPlanId}");
+        }
     }
 }

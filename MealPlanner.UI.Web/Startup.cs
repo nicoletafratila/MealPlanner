@@ -73,20 +73,6 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
-
-            var config = new MapperConfiguration(c =>
-            {
-                c.AddProfile<ProductProfile>();
-                c.AddProfile<RecipeIngredientProfile>();
-                c.AddProfile<ProductCategoryProfile>();
-                c.AddProfile<MealPlanProfile>();
-                c.AddProfile<RecipeProfile>();
-                c.AddProfile<RecipeCategoryProfile>();
-                c.AddProfile<UnitProfile>();
-                c.AddProfile<ShoppingListProfile>();
-                c.AddProfile<ShoppingListProductProfile>();
-            });
-            services.AddSingleton(s => config.CreateMapper());
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
