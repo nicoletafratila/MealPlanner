@@ -81,7 +81,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Product = await ProductService!.GetByIdAsync(int.Parse(Id!));
+                Product = await ProductService!.GetEditAsync(int.Parse(Id!));
             }
 
             CategoryId = Product!.ProductCategoryId.ToString();

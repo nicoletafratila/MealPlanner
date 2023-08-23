@@ -81,7 +81,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                MealPlan = await MealPlanService!.GetByIdAsync(int.Parse(Id!));
+                MealPlan = await MealPlanService!.GetEditAsync(int.Parse(Id!));
             }
         }
 
@@ -171,11 +171,7 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var list = await ShoppingListService!.GetShoppingListFromMealPlanAsync(MealPlan.Id);
-            if (list == null)
-                return;
-
-            var addedEntity = await ShoppingListService!.AddAsync(list);
+            var addedEntity = await ShoppingListService!.GetShoppingListFromMealPlanAsync(MealPlan.Id);
             if (addedEntity != null)
             {
                 NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");

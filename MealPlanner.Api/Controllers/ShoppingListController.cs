@@ -39,21 +39,6 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ShoppingListModel>> GetById(int id)
-        {
-            try
-            {
-                var result = await _shoppingListRepository.GetByIdAsync(id);
-                if (result == null) return NotFound();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<ShoppingListModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
-        }
-
-        [HttpGet("edit/{id}")]
         public async Task<ActionResult<EditShoppingListModel>> GetEdit(int id)
         {
             try
@@ -68,7 +53,7 @@ namespace MealPlanner.Api.Controllers
             }
         }
 
-        [HttpGet("shoppinglist/{id}")]
+        [HttpGet("makeshoppinglist/{id}")]
         public async Task<ActionResult<EditShoppingListModel>> GetShoppingListFromMealPlan(int id)
         {
             try
@@ -98,38 +83,51 @@ namespace MealPlanner.Api.Controllers
                 list.Products = products.OrderBy(i => i.Product!.ProductCategory!.DisplaySequence)
                                .Select(i => _mapper!.Map<ShoppingListProductModel>(i))
                                .ToList();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditShoppingListModel>(list));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
-        }
 
-        [HttpPost]
-        public async Task<ActionResult<EditShoppingListModel>> Post(EditShoppingListModel model)
-        {
-            if (model == null)
-                return BadRequest();
-
-            try
-            {
-                var result = _mapper.Map<ShoppingList>(model);
+                var result = _mapper.Map<ShoppingList>(list);
                 await _shoppingListRepository.AddAsync(result);
 
                 result = await _shoppingListRepository.GetByIdIncludeProductsAsync(result.Id);
-                string? location = _linkGenerator.GetPathByAction("GetById", "ShoppingList", new { id = result!.Id });
+                string? location = _linkGenerator.GetPathByAction("GetEdit", "ShoppingList", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");
                 }
                 return Created(location, _mapper.Map<EditShoppingListModel>(result));
+
+                //return await Post(list);
+                //return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditShoppingListModel>(list));
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult<EditShoppingListModel>> Post(EditShoppingListModel model)
+        //{
+        //    if (model == null)
+        //        return BadRequest();
+
+        //    try
+        //    {
+        //        var result = _mapper.Map<ShoppingList>(model);
+        //        await _shoppingListRepository.AddAsync(result);
+
+        //        result = await _shoppingListRepository.GetByIdIncludeProductsAsync(result.Id);
+        //        string? location = _linkGenerator.GetPathByAction("GetEdit", "ShoppingList", new { id = result!.Id });
+        //        if (string.IsNullOrWhiteSpace(location))
+        //        {
+        //            return BadRequest("Could not use current id");
+        //        }
+        //        return Created(location, _mapper.Map<EditShoppingListModel>(result));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+        //    }
+        //}
 
         [HttpPut]
         public async Task<ActionResult> Put(EditShoppingListModel model)
