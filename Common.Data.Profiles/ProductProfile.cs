@@ -10,7 +10,10 @@ namespace Common.Data.Profiles
         {
             CreateMap<Product, ProductModel>()
                .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
-               .ReverseMap();
+               .ReverseMap()
+               .ForMember(data => data.ImageContent, opt => opt.Ignore())
+               .ForMember(data => data.ProductCategory, opt => opt.Ignore())
+               .ForMember(data => data.Unit, opt => opt.Ignore());
 
             CreateMap<Product, EditProductModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))

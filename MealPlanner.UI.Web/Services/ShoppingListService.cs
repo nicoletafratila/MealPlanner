@@ -26,13 +26,12 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<EditShoppingListModel?> SaveShoppingListFromMealPlanAsync(int mealPlanId)
         {
-            //return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{ApiNames.ShoppingListApi}/makeshoppinglist/{mealPlanId}");
-            var modelJson = new StringContent(mealPlanId.ToString(), Encoding.UTF8, "application/json");
+            var modelJson = new StringContent(JsonSerializer.Serialize(mealPlanId), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(ApiNames.ShoppingListApi, modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                return await JsonSerializer.DeserializeAsync<EditShoppingListModel?>(await response.Content.ReadAsStreamAsync());
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
             }
 
             return null;
