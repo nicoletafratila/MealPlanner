@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Common.Api;
+﻿using Common.Api;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -69,6 +68,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
+
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -166,15 +168,19 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo("/mealplansoverview");
         }
 
-        protected async Task MakeShoppingListAsync()
+        protected async Task SaveShoppingListAsync()
         {
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var addedEntity = await ShoppingListService!.GetShoppingListFromMealPlanAsync(MealPlan.Id);
-            if (addedEntity != null)
+            var addedEntity = await ShoppingListService!.SaveShoppingListFromMealPlanAsync(MealPlan.Id);
+            if (addedEntity != null && addedEntity!.Id > 0)
             {
                 NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
+            }
+            else
+            {
+                ErrorComponent!.ShowError("Error", "There has been an error when saving the shopping list");
             }
         }
 

@@ -53,81 +53,50 @@ namespace MealPlanner.Api.Controllers
             }
         }
 
-        [HttpGet("makeshoppinglist/{id}")]
-        public async Task<ActionResult<EditShoppingListModel>> GetShoppingListFromMealPlan(int id)
+        [HttpPost]
+        public async Task<ActionResult<EditShoppingListModel>> Post([FromBody] int id)
         {
             try
             {
                 var mealPlan = await _meanPlanRepository.GetByIdIncludeRecipesAsync(id);
-                if (mealPlan == null) return NotFound();
+                if (mealPlan == null)
+                {
+                    return NotFound();
+                }
 
-                var products = new List<ShoppingListProductModel>();
+                var products = new List<ShoppingListProduct>();
                 foreach (var item in mealPlan.MealPlanRecipes!)
                 {
                     foreach (var i in item.Recipe!.RecipeIngredients!)
                     {
-                        var existingProduct = products.FirstOrDefault(x => x.Product!.Id == i.ProductId);
+                        var existingProduct = products.FirstOrDefault(x => x.ProductId == i.ProductId);
                         if (existingProduct == null)
                         {
-                            var product = _mapper.Map<ShoppingListProductModel>(i);
-                            product.Collected = false;
-                            products.Add(product);
+                            products.Add(i.ToShoppingListProduct());
                         }
                         else
                             existingProduct.Quantity += i.Quantity;
                     }
                 }
 
-                var list = new EditShoppingListModel();
-                list.Name = "List for " + mealPlan.Name;
-                list.Products = products.OrderBy(i => i.Product!.ProductCategory!.DisplaySequence)
-                               .Select(i => _mapper!.Map<ShoppingListProductModel>(i))
-                               .ToList();
+                var list = new ShoppingList();
+                list.Name = "Shopping list details for " + mealPlan.Name;
+                list.Products = products;
+                await _shoppingListRepository.AddAsync(list);
 
-                var result = _mapper.Map<ShoppingList>(list);
-                await _shoppingListRepository.AddAsync(result);
-
-                result = await _shoppingListRepository.GetByIdIncludeProductsAsync(result.Id);
-                string? location = _linkGenerator.GetPathByAction("GetEdit", "ShoppingList", new { id = result!.Id });
+                var result = await _shoppingListRepository.GetByIdIncludeProductsAsync(list.Id);
+                string? location = _linkGenerator.GetPathByAction("GetById", "ShoppingList", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Could not use current id");
                 }
                 return Created(location, _mapper.Map<EditShoppingListModel>(result));
-
-                //return await Post(list);
-                //return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditShoppingListModel>(list));
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
-
-        //[HttpPost]
-        //public async Task<ActionResult<EditShoppingListModel>> Post(EditShoppingListModel model)
-        //{
-        //    if (model == null)
-        //        return BadRequest();
-
-        //    try
-        //    {
-        //        var result = _mapper.Map<ShoppingList>(model);
-        //        await _shoppingListRepository.AddAsync(result);
-
-        //        result = await _shoppingListRepository.GetByIdIncludeProductsAsync(result.Id);
-        //        string? location = _linkGenerator.GetPathByAction("GetEdit", "ShoppingList", new { id = result!.Id });
-        //        if (string.IsNullOrWhiteSpace(location))
-        //        {
-        //            return BadRequest("Could not use current id");
-        //        }
-        //        return Created(location, _mapper.Map<EditShoppingListModel>(result));
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-        //    }
-        //}
 
         [HttpPut]
         public async Task<ActionResult> Put(EditShoppingListModel model)

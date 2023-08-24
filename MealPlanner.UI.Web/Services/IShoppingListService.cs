@@ -1,5 +1,4 @@
 ﻿using MealPlanner.Shared.Models;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
@@ -7,7 +6,7 @@ namespace MealPlanner.UI.Web.Services
     {
         Task<IList<ShoppingListModel>?> GetAllAsync();
         Task<EditShoppingListModel?> GetEditAsync(int id);
-        Task<EditShoppingListModel?> GetShoppingListFromMealPlanAsync(int mealPlanId);
+        Task<EditShoppingListModel?> SaveShoppingListFromMealPlanAsync(int mealPlanId);
         Task UpdateAsync(EditShoppingListModel model);
         Task DeleteAsync(int id);
     }
