@@ -19,7 +19,6 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-
             if (id == 0)
             {
                 Model = new EditShoppingListModel();
@@ -35,34 +34,16 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo($"/shoppinglistsoverview");
         }
 
-
-        //protected async Task SaveAsync()
-        //{
-        //    if (Recipe!.Id == 0)
-        //    {
-        //        var addedEntity = await RecipeService!.AddAsync(Recipe);
-        //        if (addedEntity != null)
-        //        {
-        //            NavigateToOverview();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        await RecipeService!.UpdateAsync(Recipe);
-        //        NavigateToOverview();
-        //    }
-        //}
-
-        //private void CheckboxChanged(ProductModel productModel, object value)
-        //{
-        //    if (productModel != null)
-        //    {
-        //        var item = Model!.Products!.FirstOrDefault(i => i.Id == productModel.Id);
-        //        if (item != null)
-        //        {
-        //            item.Collected = (bool)value;
-        //        }
-        //    }
-        //}
+        private async void CheckboxChanged(ShoppingListProductModel model)
+        {
+            var itemToChange = Model!.Products!.FirstOrDefault(item => item.Product!.Id == model!.Product!.Id);
+            if (itemToChange != null)
+            {
+                itemToChange.Collected = !itemToChange.Collected;
+            }
+            await ShoppingListService!.UpdateAsync(Model);
+            await OnInitializedAsync();
+            StateHasChanged();
+        }
     }
 }

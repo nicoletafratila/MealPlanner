@@ -106,7 +106,7 @@ namespace MealPlanner.Api.Controllers
 
             try
             {
-                var oldModel = await _shoppingListRepository.GetByIdAsync(model.Id);
+                var oldModel = await _shoppingListRepository.GetByIdIncludeProductsAsync(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");
