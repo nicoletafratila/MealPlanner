@@ -1,5 +1,4 @@
 ﻿using Common.Api;
-using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -85,9 +84,9 @@ namespace MealPlanner.UI.Web.Pages
 
         public EditRecipeModel? Recipe { get; set; }
         public RecipeIngredientModel? RecipeIngredient { get; set; }
-        public IList<IngredientModel>? Ingredients { get; set; }
+        public IList<ProductModel>? Products { get; set; }
         public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
-        public IList<IngredientCategoryModel>? IngredientCategories { get; set; }
+        public IList<ProductCategoryModel>? IngredientCategories { get; set; }
 
         public MarkupString AlertMessage { get; set; }
         public string? AlertClass { get; set; }
@@ -100,10 +99,10 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeCategoryService? RecipeCategoryService { get; set; }
 
         [Inject]
-        public IIngredientCategoryService? IngredientCategoryService { get; set; }
+        public IProductCategoryService? IngredientCategoryService { get; set; }
 
         [Inject]
-        public IIngredientService? IngredientService { get; set; }
+        public IProductService? ProductService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -179,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         Recipe.Ingredients = new List<RecipeIngredientModel>();
                     }
-                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Ingredient!.Id == int.Parse(IngredientId));
+                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product!.Id == int.Parse(IngredientId));
                     if (item != null)
                     {
                         item.Quantity += decimal.Parse(Quantity!);
@@ -187,7 +186,7 @@ namespace MealPlanner.UI.Web.Pages
                     else
                     {
                         item = new RecipeIngredientModel();
-                        item.Ingredient = Ingredients!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                        item.Product = Products!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
                         item.RecipeId = Recipe.Id;
                         item.Quantity = decimal.Parse(Quantity!);
                         Recipe.Ingredients!.Add(item);
@@ -198,9 +197,9 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteIngredientAsync(IngredientModel item)
+        protected async Task DeleteIngredientAsync(ProductModel item)
         {
-            RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Ingredient!.Id == item.Id);
+            RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)
             {
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient '{item.Name}'?"))
@@ -221,7 +220,7 @@ namespace MealPlanner.UI.Web.Pages
             IngredientId = string.Empty;
             Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
-                Ingredients = await IngredientService!.SearchAsync(int.Parse(IngredientCategoryId));
+                Products = await ProductService!.SearchAsync(int.Parse(IngredientCategoryId));
             StateHasChanged();
         }
 

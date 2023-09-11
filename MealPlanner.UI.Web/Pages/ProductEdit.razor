@@ -1,17 +1,17 @@
-﻿@page "/ingredientedit"
-@page "/ingredientedit/{id}"
+﻿@page "/productedit"
+@page "/productedit/{id}"
 
-@if (Ingredient != null)
+@if (Product != null)
 {
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
                 <div class="row g-0">
                     <div class="col-md-8">
-                        <h2>@Ingredient.Name</h2>
+                        <h2>@Product.Name</h2>
                     </div>
                     <div class="col-md-4 align-self-center">
-                        <img class="img-fluid" src="@Ingredient.ImageUrl" />
+                        <img class="img-fluid" src="@Product.ImageUrl" />
                     </div>
                 </div>
             </div>
@@ -21,25 +21,25 @@
             </div>
 
             <div class="card-body">
-                <EditForm Model="@Ingredient" OnValidSubmit="@SaveAsync">
+                <EditForm Model="@Product" OnValidSubmit="@SaveAsync">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
                     <div class="form-group">
-                        <label for="name" class="col-sm-3">Ingredient name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@Ingredient.Name" placeholder="Enter ingredient name"></InputText>
-                        <ValidationMessage For="@(() => Ingredient.Name)" />
+                        <label for="name" class="col-sm-3">Product name: </label>
+                        <InputText id="name" class="form-control" @bind-Value="@Product.Name" placeholder="Enter product name"></InputText>
+                        <ValidationMessage For="@(() => Product.Name)" />
                     </div>
 
                     <div class="form-group mt-3">
                         <label for="image" class="col-sm-3">Select image: </label>
                         <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" accept="image/png, image/jpeg, image/gif" />
-                        <ValidationMessage For="@(() => Ingredient.ImageContent)" />
+                        <ValidationMessage For="@(() => Product.ImageContent)" />
                     </div>
 
                     <div class="form-group mt-3">
-                        <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
-                        <InputSelect id="ingredientCategory" class="form-select" @bind-Value="@IngredientCategoryId">
+                        <label for="productCategory" class="col-sm-3">Product category: </label>
+                        <InputSelect id="productCategory" class="form-select" @bind-Value="@CategoryId">
                             <option selected value="0">Choose...</option>
                             @if (Categories != null && Categories.Any())
                             {
@@ -49,7 +49,7 @@
                                 }
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(() => Ingredient.IngredientCategoryId)" />
+                        <ValidationMessage For="@(() => Product.ProductCategoryId)" />
                     </div>
 
                     <div class="form-group mt-3">
@@ -64,7 +64,7 @@
                                 }
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(() => Ingredient.UnitId)" />
+                        <ValidationMessage For="@(() => Product.UnitId)" />
                     </div>
 
                     <br />

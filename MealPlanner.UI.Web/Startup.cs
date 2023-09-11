@@ -1,4 +1,6 @@
-﻿using Common.Api;
+﻿using AutoMapper;
+using Common.Api;
+using Common.Data.Profiles;
 using MealPlanner.UI.Web.Configs;
 using MealPlanner.UI.Web.Services;
 
@@ -21,14 +23,14 @@ namespace MealPlanner.UI.Web
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
 
-            services.AddHttpClient<IIngredientService, IngredientService>()
+            services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-            services.AddHttpClient<IIngredientCategoryService, IngredientCategoryService>()
+            services.AddHttpClient<IProductCategoryService, ProductCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();

@@ -1,11 +1,11 @@
-﻿@page "/ingredientsoverview"
+﻿@page "/productsoverview"
 
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
             <div class="row g-0">
                 <div class="col-md-11">
-                    <h2>Ingredients</h2>
+                    <h2>Products</h2>
                 </div>
                 <div class="col-auto align-self-center">
                     <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="card-body">
-            <TableTemplate Items="@Ingredients" ShowIndex="true">
+            <TableTemplate Items="@Products" ShowIndex="true">
                 <TableHeader>
                     <th style="width: 320px">
                         <div>
@@ -37,15 +37,15 @@
                     <th></th>
                     <th style="width: 30px"></th>
                 </TableHeader>
-                <RowTemplate Context="Ingredient">
-                    <td>@Ingredient.IngredientCategory!.Name</td>
-                    <td>@Ingredient.Name</td>
+                <RowTemplate Context="Product">
+                    <td>@Product.ProductCategory!.Name</td>
+                    <td>@Product.Name</td>
                     <td>
-                        <img src="@Ingredient.ImageUrl" class="img-fluid" width="100" height="80" />
+                        <img src="@Product.ImageUrl" class="img-fluid" width="100" height="80" />
                     </td>
-                    <td>@Ingredient.Unit!.Name</td>
-                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Ingredient)">Edit</button></td>
-                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Ingredient)"></button></td>
+                    <td>@Product.Unit!.Name</td>
+                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Product)">Edit</button></td>
+                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Product)"></button></td>
                 </RowTemplate>
             </TableTemplate>
         </div>

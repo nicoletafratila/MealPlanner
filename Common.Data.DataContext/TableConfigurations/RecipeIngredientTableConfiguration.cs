@@ -8,7 +8,7 @@ namespace Common.Data.DataContext.TableConfigurations
     {
         public void Configure(EntityTypeBuilder<RecipeIngredient> modelBuilder)
         {
-            modelBuilder.HasKey(t => new { t.RecipeId, t.IngredientId });
+            modelBuilder.HasKey(t => new { t.RecipeId, t.ProductId });
         }
     }
 }

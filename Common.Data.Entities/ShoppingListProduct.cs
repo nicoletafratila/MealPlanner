@@ -2,13 +2,14 @@
 
 namespace Common.Data.Entities
 {
-    public class RecipeIngredient 
+    public class ShoppingListProduct
     {
         public decimal Quantity { get; set; }
-        
-        [ForeignKey("RecipeId")]
-        public Recipe? Recipe { get; private set; }
-        public int RecipeId { get; set; }
+        public bool Collected { get; set; }
+
+        [ForeignKey("ShoppingListId")]
+        public ShoppingList? ShoppingList { get; private set; }
+        public int ShoppingListId { get; set; }
 
         [ForeignKey("ProductId")]
         public Product? Product { get; private set; }

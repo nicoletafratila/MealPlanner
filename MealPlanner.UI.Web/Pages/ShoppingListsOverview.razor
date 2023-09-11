@@ -1,0 +1,32 @@
+﻿@page "/shoppinglistsoverview"
+
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-11">
+                    <h2>Shopping lists</h2>
+                </div>
+                <div class="col-auto align-self-center">
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <TableTemplate Items="@ShoppingLists" ShowIndex="true">
+                <TableHeader>
+                    <th>Name</th>
+                    <th></th>
+                    <th style="width: 30px"></th>
+                </TableHeader>
+                <RowTemplate Context="ShoppingList">
+                    <td>@ShoppingList.Name</td>
+                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(ShoppingList)">Edit</button></td>
+                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(ShoppingList)"></button></td>
+                </RowTemplate>
+            </TableTemplate>
+        </div>
+    </div>
+</div>
+

@@ -1,6 +1,6 @@
 ﻿namespace RecipeBook.Shared.Models
 {
-    public class IngredientCategoryModel
+    public class ProductCategoryModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }

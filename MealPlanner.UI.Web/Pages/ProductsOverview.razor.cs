@@ -1,5 +1,4 @@
 ﻿using Common.Api;
-using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -7,17 +6,17 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
-    public partial class IngredientsOverview
+    public partial class ProductsOverview
     {
-        public IList<IngredientModel>? Ingredients { get; set; }
-        public IngredientModel? Ingredient { get; set; }
-        public IList<IngredientCategoryModel>? Categories { get; set; }
+        public IList<ProductModel>? Products { get; set; }
+        public ProductModel? Product { get; set; }
+        public IList<ProductCategoryModel>? Categories { get; set; }
 
         [Inject]
-        public IIngredientService? IngredientService { get; set; }
+        public IProductService? ProductService { get; set; }
 
         [Inject]
-        public IIngredientCategoryService? CategoryService { get; set; }
+        public IProductCategoryService? CategoryService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -32,29 +31,29 @@ namespace MealPlanner.UI.Web.Pages
 
         protected void New()
         {
-            NavigationManager!.NavigateTo($"ingredientedit/");
+            NavigationManager!.NavigateTo($"productedit/");
         }
 
-        protected void Update(IngredientModel item)
+        protected void Update(ProductModel item)
         {
-            NavigationManager!.NavigateTo($"ingredientedit/{item.Id}");
+            NavigationManager!.NavigateTo($"productedit/{item.Id}");
         }
 
-        protected async Task DeleteAsync(IngredientModel item)
+        protected async Task DeleteAsync(ProductModel item)
         {
             if (item != null)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient: '{item.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the product: '{item.Name}'?"))
                     return;
 
-                await IngredientService!.DeleteAsync(item.Id);
+                await ProductService!.DeleteAsync(item.Id);
                 await RefreshAsync();
             }
         }
 
         protected async Task RefreshAsync()
         {
-            Ingredients = await IngredientService!.GetAllAsync();
+            Products = await ProductService!.GetAllAsync();
             Categories = await CategoryService!.GetAllAsync();
         }
 
@@ -62,9 +61,9 @@ namespace MealPlanner.UI.Web.Pages
         {
             var categoryId = e!.Value!.ToString();
             if (!string.IsNullOrWhiteSpace(categoryId) && categoryId != "0")
-                Ingredients = await IngredientService!.SearchAsync(int.Parse(categoryId));
+                Products = await ProductService!.SearchAsync(int.Parse(categoryId));
             else
-                Ingredients = await IngredientService!.GetAllAsync();
+                Products = await ProductService!.GetAllAsync();
             StateHasChanged();
         }
     }

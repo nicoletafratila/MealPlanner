@@ -61,10 +61,16 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeService? RecipeService { get; set; }
 
         [Inject]
+        public IShoppingListService? ShoppingListService { get; set; }
+
+        [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
+
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -77,7 +83,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                MealPlan = await MealPlanService!.GetByIdAsync(int.Parse(Id!));
+                MealPlan = await MealPlanService!.GetEditAsync(int.Parse(Id!));
             }
         }
 
@@ -162,9 +168,20 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo("/mealplansoverview");
         }
 
-        protected void ShowShoppingList()
+        protected async Task SaveShoppingListAsync()
         {
-            NavigationManager!.NavigateTo($"shoppinglist/{MealPlan!.Id}");
+            if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
+                return;
+
+            var addedEntity = await ShoppingListService!.SaveShoppingListFromMealPlanAsync(MealPlan.Id);
+            if (addedEntity != null && addedEntity!.Id > 0)
+            {
+                NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
+            }
+            else
+            {
+                ErrorComponent!.ShowError("Error", "There has been an error when saving the shopping list");
+            }
         }
 
         private async void OnRecipeCategoryChangedAsync(string value)

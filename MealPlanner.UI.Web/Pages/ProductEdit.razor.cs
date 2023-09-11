@@ -1,5 +1,4 @@
 ﻿using Common.Api;
-using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -8,24 +7,24 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
-    public partial class IngredientEdit
+    public partial class ProductEdit
     {
         [Parameter]
         public string? Id { get; set; }
 
-        private string? _ingredientCategoryId;
-        public string? IngredientCategoryId
+        private string? _categoryId;
+        public string? CategoryId
         {
             get
             {
-                return _ingredientCategoryId;
+                return _categoryId;
             }
             set
             {
-                if (_ingredientCategoryId != value)
+                if (_categoryId != value)
                 {
-                    _ingredientCategoryId = value;
-                    Ingredient!.IngredientCategoryId = int.Parse(_ingredientCategoryId!);
+                    _categoryId = value;
+                    Product!.ProductCategoryId = int.Parse(_categoryId!);
                 }
             }
         }
@@ -42,13 +41,13 @@ namespace MealPlanner.UI.Web.Pages
                 if (_unitId != value)
                 {
                     _unitId = value;
-                    Ingredient!.UnitId = int.Parse(_unitId!);
+                    Product!.UnitId = int.Parse(_unitId!);
                 }
             }
         }
 
-        public EditIngredientModel? Ingredient { get; set; }
-        public IList<IngredientCategoryModel>? Categories { get; set; }
+        public EditProductModel? Product { get; set; }
+        public IList<ProductCategoryModel>? Categories { get; set; }
         public IList<UnitModel>? Units { get; set; }
         
         public MarkupString AlertMessage { get; set; }
@@ -56,10 +55,10 @@ namespace MealPlanner.UI.Web.Pages
         private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
-        public IIngredientService? IngredientService { get; set; }
+        public IProductService? ProductService { get; set; }
 
         [Inject]
-        public IIngredientCategoryService? CategoryService { get; set; }
+        public IProductCategoryService? CategoryService { get; set; }
 
         [Inject]
         public IUnitService? UnitService { get; set; }
@@ -78,22 +77,22 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                Ingredient = new EditIngredientModel();
+                Product = new EditProductModel();
             }
             else
             {
-                Ingredient = await IngredientService!.GetByIdAsync(int.Parse(Id!));
+                Product = await ProductService!.GetEditAsync(int.Parse(Id!));
             }
 
-            IngredientCategoryId = Ingredient!.IngredientCategoryId.ToString();
-            UnitId = Ingredient.UnitId.ToString();
+            CategoryId = Product!.ProductCategoryId.ToString();
+            UnitId = Product.UnitId.ToString();
         }
 
         protected async Task SaveAsync()
         {
-            if (Ingredient!.Id == 0)
+            if (Product!.Id == 0)
             {
-                var addedEntity = await IngredientService!.AddAsync(Ingredient);
+                var addedEntity = await ProductService!.AddAsync(Product);
                 if (addedEntity != null)
                 {
                     NavigateToOverview();
@@ -101,26 +100,26 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                await IngredientService!.UpdateAsync(Ingredient);
+                await ProductService!.UpdateAsync(Product);
                 NavigateToOverview();
             }
         }
 
         protected async Task DeleteAsync()
         {
-            if (Ingredient!.Id != 0)
+            if (Product!.Id != 0)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient: '{Ingredient.Name}'?"))
+                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the product: '{Product.Name}'?"))
                     return;
 
-                await IngredientService!.DeleteAsync(Ingredient.Id);
+                await ProductService!.DeleteAsync(Product.Id);
                 NavigateToOverview();
             }
         }
 
         protected void NavigateToOverview()
         {
-            NavigationManager!.NavigateTo("/ingredientsoverview");
+            NavigationManager!.NavigateTo("/productsoverview");
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
@@ -133,7 +132,7 @@ namespace MealPlanner.UI.Web.Pages
                     MemoryStream ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
                     stream.Close();
-                    Ingredient!.ImageContent = ms.ToArray();
+                    Product!.ImageContent = ms.ToArray();
                     SetAlert();
                 }
                 StateHasChanged();

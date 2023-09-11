@@ -2,7 +2,7 @@
 
 namespace Common.Data.Entities
 {
-    public class Ingredient : Entity<int>
+    public class Product : Entity<int>
     {
         public string? Name { get; set; }
         public byte[]? ImageContent { get; set; }
@@ -11,8 +11,8 @@ namespace Common.Data.Entities
         public Unit? Unit { get; private set; }
         public int UnitId { get; set; }
 
-        [ForeignKey("IngredientCategoryId")]
-        public IngredientCategory? IngredientCategory { get; private set; }
-        public int IngredientCategoryId { get; set; }
+        [ForeignKey("ProductCategoryId")]
+        public ProductCategory? ProductCategory { get; private set; }
+        public int ProductCategoryId { get; set; }
     }
 }

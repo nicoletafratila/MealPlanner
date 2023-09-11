@@ -4,18 +4,21 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles
 {
-    public class IngredientProfile : Profile
+    public class ProductProfile : Profile
     {
-        public IngredientProfile()
+        public ProductProfile()
         {
-            CreateMap<Ingredient, IngredientModel>()
+            CreateMap<Product, ProductModel>()
                .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
-               .ReverseMap();
+               .ReverseMap()
+               .ForMember(data => data.ImageContent, opt => opt.Ignore())
+               .ForMember(data => data.ProductCategory, opt => opt.Ignore())
+               .ForMember(data => data.Unit, opt => opt.Ignore());
 
-            CreateMap<Ingredient, EditIngredientModel>()
+            CreateMap<Product, EditProductModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
                 .ReverseMap()
-                .ForMember(data => data.IngredientCategory, opt => opt.Ignore())
+                .ForMember(data => data.ProductCategory, opt => opt.Ignore())
                 .ForMember(data => data.Unit, opt => opt.Ignore());
         }
     }

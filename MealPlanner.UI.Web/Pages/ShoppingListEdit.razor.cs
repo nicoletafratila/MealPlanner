@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Pages
 {
-    public partial class ShoppingList
+    public partial class ShoppingListEdit
     {
         [Parameter]
         public string? Id { get; set; }
-        public ShoppingListModel? Model { get; set; }
+        public EditShoppingListModel? Model { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -19,32 +19,31 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
-
             if (id == 0)
             {
-                Model = new ShoppingListModel();
+                Model = new EditShoppingListModel();
             }
             else
             {
-                Model = await ShoppingListService!.GetByIdAsync(int.Parse(Id!));
+                Model = await ShoppingListService!.GetEditAsync(int.Parse(Id!));
             }
         }
 
         protected void NavigateToOverview()
         {
-            NavigationManager!.NavigateTo($"/mealplanedit/{Id}");
+            NavigationManager!.NavigateTo($"/shoppinglistsoverview");
         }
 
-        private void CheckboxChanged(ProductModel productModel, object value)
+        private async void CheckboxChanged(ShoppingListProductModel model)
         {
-            if (productModel != null)
+            var itemToChange = Model!.Products!.FirstOrDefault(item => item.Product!.Id == model!.Product!.Id);
+            if (itemToChange != null)
             {
-                var item = Model!.Products!.FirstOrDefault(i => i.Id == productModel.Id);
-                if (item != null)
-                {
-                    item.Collected = (bool)value;
-                }
+                itemToChange.Collected = !itemToChange.Collected;
             }
+            await ShoppingListService!.UpdateAsync(Model);
+            await OnInitializedAsync();
+            StateHasChanged();
         }
     }
 }

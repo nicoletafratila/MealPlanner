@@ -14,10 +14,12 @@ namespace Common.Data.DataContext
         public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
         public DbSet<Recipe> Recipes => Set<Recipe>();
         public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
-        public DbSet<Ingredient> Ingredients => Set<Ingredient>();
-        public DbSet<IngredientCategory> IngredientCategories => Set<IngredientCategory>();
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
         public DbSet<RecipeCategory> RecipeCategories => Set<RecipeCategory>();
         public DbSet<Unit> Units => Set<Unit>();
+        public DbSet<ShoppingList> ShoppingLists => Set<ShoppingList>();
+        public DbSet<ShoppingListProduct> ShoppingListProducts => Set<ShoppingListProduct>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
