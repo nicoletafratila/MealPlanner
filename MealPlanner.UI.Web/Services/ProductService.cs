@@ -16,23 +16,23 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<ProductModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{ApiNames.IngredientApi}");
+            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{ApiNames.ProductApi}");
         }
 
         public async Task<EditProductModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditProductModel?>($"{ApiNames.IngredientApi}/{id}");
+            return await _httpClient.GetFromJsonAsync<EditProductModel?>($"{ApiNames.ProductApi}/edit/{id}");
         }
 
         public async Task<IList<ProductModel>?> SearchAsync(int categoryId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{ApiNames.IngredientApi}/category/{categoryId}");
+            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{ApiNames.ProductApi}/search/{categoryId}");
         }
 
         public async Task<EditProductModel?> AddAsync(EditProductModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(ApiNames.IngredientApi, modelJson);
+            var response = await _httpClient.PostAsync(ApiNames.ProductApi, modelJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -45,12 +45,17 @@ namespace MealPlanner.UI.Web.Services
         public async Task UpdateAsync(EditProductModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(ApiNames.IngredientApi, modelJson);
+            await _httpClient.PutAsync(ApiNames.ProductApi, modelJson);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<string> DeleteAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{ApiNames.IngredientApi}/{id}");
+            var response = await _httpClient.DeleteAsync($"{ApiNames.ProductApi}/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            return string.Empty;
         }
     }
 }

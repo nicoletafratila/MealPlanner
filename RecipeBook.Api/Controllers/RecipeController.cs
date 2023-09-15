@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Common.Constants;
 using Common.Data.Entities;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
+using System.Net.Http.Headers;
 
 namespace RecipeBook.Api.Controllers
 {
@@ -10,13 +13,13 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeRepository _repository;
+        private readonly IRecipeRepository _recipeRepository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
 
-        public RecipeController(IRecipeRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+        public RecipeController(IRecipeRepository recipeRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
-            _repository = repository;
+            _recipeRepository = recipeRepository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
         }
@@ -26,7 +29,7 @@ namespace RecipeBook.Api.Controllers
         {
             try
             {
-                var results = await _repository.GetAllAsync();
+                var results = await _recipeRepository.GetAllAsync();
                 var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
@@ -36,12 +39,12 @@ namespace RecipeBook.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<RecipeModel>> GetById(int id)
         {
             try
             {
-                var result = await _repository.GetByIdAsync(id);
+                var result = await _recipeRepository.GetByIdAsync(id);
                 if (result == null) return NotFound();
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<RecipeModel>(result));
             }
@@ -51,12 +54,12 @@ namespace RecipeBook.Api.Controllers
             }
         }
 
-        [HttpGet("edit/{id}")]
+        [HttpGet("edit/{id:int}")]
         public async Task<ActionResult<EditRecipeModel>> GetEdit(int id)
         {
             try
             {
-                var result = await _repository.GetByIdIncludeIngredientsAsync(id);
+                var result = await _recipeRepository.GetByIdIncludeIngredientsAsync(id);
                 if (result == null) return NotFound();
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditRecipeModel>(result));
             }
@@ -66,15 +69,15 @@ namespace RecipeBook.Api.Controllers
             }
         }
 
-        [HttpGet("category/{categoryid:int}")]
-        public async Task<ActionResult<IList<RecipeModel>>> Search(int categoryId)
+        [HttpGet("search/{categoryid:int}")]
+        public async Task<ActionResult<IList<RecipeModel>>> SearchByCategoryId(int categoryId)
         {
             if (categoryId <= 0)
                 return BadRequest();
 
             try
             {
-                var results = await _repository.SearchAsync(categoryId);
+                var results = await _recipeRepository.SearchAsync(categoryId);
                 var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
@@ -93,9 +96,9 @@ namespace RecipeBook.Api.Controllers
             try
             {
                 var result = _mapper.Map<Recipe>(model);
-                await _repository.AddAsync(result);
+                await _recipeRepository.AddAsync(result);
                 
-                result = await _repository.GetByIdIncludeIngredientsAsync(result.Id);
+                result = await _recipeRepository.GetByIdIncludeIngredientsAsync(result.Id);
                 string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))
                 {
@@ -117,14 +120,14 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                var oldModel = await _repository.GetByIdIncludeIngredientsAsync(model.Id);
+                var oldModel = await _recipeRepository.GetByIdIncludeIngredientsAsync(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");
                 }
 
                 _mapper.Map(model, oldModel);
-                await _repository.UpdateAsync(oldModel);
+                await _recipeRepository.UpdateAsync(oldModel);
                 return NoContent();
             }
             catch (Exception)
@@ -134,16 +137,28 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var itemToDelete = await _repository.GetByIdAsync(id);
+            var itemToDelete = await _recipeRepository.GetByIdAsync(id);
             if (itemToDelete == null)
             {
-                NotFound($"Could not find with id {id}");
-                return;
+                return NotFound($"Could not find with id {id}");
             }
 
-            await _repository.DeleteAsync(itemToDelete);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7249/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{ApiNames.MealPlanApi}/search/{id}");
+                if (result != null && result.Any())
+                {
+                    return BadRequest($"The recipe you try to delete is used in meal plans and cannot be deleted.");
+                }
+            }
+
+            await _recipeRepository.DeleteAsync(itemToDelete!);
+            return StatusCode(StatusCodes.Status200OK);
         }
     }
 }

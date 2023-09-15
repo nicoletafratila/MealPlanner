@@ -31,7 +31,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<RecipeModel>?> SearchAsync(int categoryId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{ApiNames.RecipeApi}/category/{categoryId}");
+            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{ApiNames.RecipeApi}/search/{categoryId}");
         }
 
         public async Task<EditRecipeModel?> AddAsync(EditRecipeModel model)
@@ -53,9 +53,14 @@ namespace MealPlanner.UI.Web.Services
             await _httpClient.PutAsync(ApiNames.RecipeApi, modelJson);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<string> DeleteAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{ApiNames.RecipeApi}/{id}");
+            var response = await _httpClient.DeleteAsync($"{ApiNames.RecipeApi}/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            return string.Empty;
         }
     }
 }

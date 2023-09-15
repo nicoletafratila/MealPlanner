@@ -10,15 +10,17 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _repository;
+        private readonly IProductRepository _productRepository;
+        private readonly IRecipeIngredientRepository _recipeIngredientRepository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
 
-        public ProductController(IProductRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+        public ProductController(IProductRepository productRepository, IRecipeIngredientRepository recipeIngredientRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
-            _repository = repository;
+            _productRepository = productRepository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
+            _recipeIngredientRepository = recipeIngredientRepository;
         }
 
         [HttpGet]
@@ -26,7 +28,7 @@ namespace RecipeBook.Api.Controllers
         {
             try
             {
-                var result = await _repository.GetAllAsync();
+                var result = await _productRepository.GetAllAsync();
                 var mappedResult = _mapper.Map<IList<ProductModel>>(result).OrderBy(item => item.ProductCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResult);
             }
@@ -36,15 +38,15 @@ namespace RecipeBook.Api.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<EditProductModel>> GetById(int id)
+        [HttpGet("edit/{id:int}")]
+        public async Task<ActionResult<EditProductModel>> GetEdit(int id)
         {
             if (id <= 0)
                 return BadRequest();
 
             try
             {
-                var result = await _repository.GetByIdAsync(id);
+                var result = await _productRepository.GetByIdAsync(id);
                 if (result == null) return NotFound();
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditProductModel>(result));
             }
@@ -54,7 +56,7 @@ namespace RecipeBook.Api.Controllers
             }
         }
 
-        [HttpGet("category/{categoryid:int}")]
+        [HttpGet("search/{categoryid:int}")]
         public async Task<ActionResult<IList<ProductModel>>> Search(int categoryId)
         {
             if (categoryId <= 0)
@@ -62,7 +64,7 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                var results = await _repository.SearchAsync(categoryId);
+                var results = await _productRepository.SearchAsync(categoryId);
                 var mappedResults = _mapper.Map<IList<ProductModel>>(results).OrderBy(item => item.ProductCategory!.DisplaySequence).ThenBy(item => item.Name);
                 return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
@@ -78,14 +80,14 @@ namespace RecipeBook.Api.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Name))
                 return BadRequest();
 
-            var existingItem = await _repository.SearchAsync(model.Name);
+            var existingItem = await _productRepository.SearchAsync(model.Name);
             if (existingItem != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
 
             try
             {
                 var result = _mapper.Map<Product>(model);
-                await _repository.AddAsync(result);
+                await _productRepository.AddAsync(result);
 
                 string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
                 if (string.IsNullOrWhiteSpace(location))
@@ -108,14 +110,14 @@ namespace RecipeBook.Api.Controllers
 
             try
             {
-                var oldModel = await _repository.GetByIdAsync(model.Id);
+                var oldModel = await _productRepository.GetByIdAsync(model.Id);
                 if (oldModel == null)
                 {
                     return NotFound($"Could not find with id {model.Id}");
                 }
 
                 _mapper.Map(model, oldModel);
-                await _repository.UpdateAsync(oldModel);
+                await _productRepository.UpdateAsync(oldModel);
                 return _mapper.Map<EditProductModel>(oldModel);
             }
             catch (Exception)
@@ -125,16 +127,22 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var itemToDelete = await _repository.GetByIdAsync(id);
+            var itemToDelete = await _productRepository.GetByIdAsync(id);
             if (itemToDelete == null)
             {
-                NotFound($"Could not find with id {id}");
-                return;
+                return NotFound($"Could not find with id {id}");
             }
 
-            await _repository.DeleteAsync(itemToDelete);
+            var result = await _recipeIngredientRepository.SearchAsync(id);
+            if (result != null && result.Any())
+            {
+                return BadRequest($"The product you try to delete is used in recipes and cannot be deleted.");
+            }
+
+            await _productRepository.DeleteAsync(itemToDelete!);
+            return StatusCode(StatusCodes.Status200OK);
         }
     }
 }

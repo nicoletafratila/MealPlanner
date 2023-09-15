@@ -38,5 +38,10 @@ namespace MealPlanner.Api.Repositories
                             .ThenInclude(x => x!.Unit)
               .FirstOrDefaultAsync(item => item.Id == id);
         }
+
+        public async Task<IList<MealPlan>> SearchByRecipeAsync(int recipeId)
+        {
+            return await (DbContext as MealPlannerDbContext)!.MealPlans.Where(item => item.MealPlanRecipes!.Any(r => r.RecipeId == recipeId)).ToListAsync();
+        }
     }
 }

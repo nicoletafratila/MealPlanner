@@ -9,6 +9,6 @@ namespace MealPlanner.UI.Web.Services
         Task<IList<ProductModel>?> SearchAsync(int categoryId);
         Task<EditProductModel?> AddAsync(EditProductModel model);
         Task UpdateAsync(EditProductModel model);
-        Task DeleteAsync(int id);
+        Task<string> DeleteAsync(int id);
     }
 }

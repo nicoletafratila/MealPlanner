@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +37,7 @@ namespace MealPlanner.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("edit/{id:int}")]
         public async Task<ActionResult<EditShoppingListModel>> GetEdit(int id)
         {
             try
@@ -64,24 +63,7 @@ namespace MealPlanner.Api.Controllers
                     return NotFound();
                 }
 
-                var products = new List<ShoppingListProduct>();
-                foreach (var item in mealPlan.MealPlanRecipes!)
-                {
-                    foreach (var i in item.Recipe!.RecipeIngredients!)
-                    {
-                        var existingProduct = products.FirstOrDefault(x => x.ProductId == i.ProductId);
-                        if (existingProduct == null)
-                        {
-                            products.Add(i.ToShoppingListProduct());
-                        }
-                        else
-                            existingProduct.Quantity += i.Quantity;
-                    }
-                }
-
-                var list = new ShoppingList();
-                list.Name = "Shopping list details for " + mealPlan.Name;
-                list.Products = products;
+                var list = mealPlan.GetShoppingList();
                 await _shoppingListRepository.AddAsync(list);
 
                 var result = await _shoppingListRepository.GetByIdIncludeProductsAsync(list.Id);

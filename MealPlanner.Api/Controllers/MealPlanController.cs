@@ -36,7 +36,7 @@ namespace MealPlanner.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("edit/{id:int}")]
         public async Task<ActionResult<EditMealPlanModel>> GetEdit(int id)
         {
             if (id <= 0)
@@ -47,6 +47,21 @@ namespace MealPlanner.Api.Controllers
                 var result = await _repository.GetByIdAsync(id);
                 if (result == null) return NotFound();
                 return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpGet("search/{recipeId:int}")]
+        public async Task<ActionResult<IList<MealPlanModel>>> SearchByRecipeId(int recipeId)
+        {
+            try
+            {
+                var result = await _repository.SearchByRecipeAsync(recipeId);
+                var mappedResults = _mapper.Map<IList<MealPlanModel>>(result);
+                return StatusCode(StatusCodes.Status200OK, mappedResults);
             }
             catch (Exception)
             {

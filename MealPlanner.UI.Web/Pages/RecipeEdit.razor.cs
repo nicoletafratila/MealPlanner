@@ -1,4 +1,5 @@
 ﻿using Common.Api;
+using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -87,9 +88,6 @@ namespace MealPlanner.UI.Web.Pages
         public IList<ProductModel>? Products { get; set; }
         public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
         public IList<ProductCategoryModel>? IngredientCategories { get; set; }
-
-        public MarkupString AlertMessage { get; set; }
-        public string? AlertClass { get; set; }
         private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
@@ -109,6 +107,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
+
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -152,8 +153,15 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the recipe: '{Recipe.Name}'?"))
                     return;
 
-                await RecipeService!.DeleteAsync(Recipe.Id);
-                NavigateToOverview();
+                var result = await RecipeService!.DeleteAsync(Recipe.Id);
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    ErrorComponent!.ShowError("Error", result);
+                }
+                else
+                {
+                    NavigateToOverview();
+                }
             }
         }
 
@@ -242,27 +250,13 @@ namespace MealPlanner.UI.Web.Pages
                     await stream.CopyToAsync(ms);
                     stream.Close();
                     Recipe!.ImageContent = ms.ToArray();
-                    SetAlert();
                 }
                 StateHasChanged();
             }
             catch (Exception)
             {
-                SetAlert("alert alert-danger", "oi oi-ban", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                ErrorComponent!.ShowError("Error", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
-            }
-        }
-
-        private void SetAlert(string alertClass = "", string iconClass = "", string message = "")
-        {
-            if (string.IsNullOrEmpty(message))
-            {
-                AlertMessage = new MarkupString();
-                AlertClass = string.Empty;
-            }
-            {
-                AlertMessage = new MarkupString($"<span class='{iconClass}' aria-hidden='true'></span> {message}");
-                AlertClass = alertClass;
             }
         }
 

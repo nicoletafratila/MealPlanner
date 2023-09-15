@@ -21,7 +21,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<EditShoppingListModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{ApiNames.ShoppingListApi}/{id}");
+            return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{ApiNames.ShoppingListApi}/edit/{id}");
         }
 
         public async Task<EditShoppingListModel?> SaveShoppingListFromMealPlanAsync(int mealPlanId)

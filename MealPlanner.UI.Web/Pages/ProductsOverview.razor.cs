@@ -24,6 +24,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             await RefreshAsync();
@@ -46,8 +49,15 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the product: '{item.Name}'?"))
                     return;
 
-                await ProductService!.DeleteAsync(item.Id);
-                await RefreshAsync();
+                var result = await ProductService!.DeleteAsync(item.Id);
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    ErrorComponent!.ShowError("Error", result);
+                }
+                else
+                {
+                    await RefreshAsync();
+                }
             }
         }
 

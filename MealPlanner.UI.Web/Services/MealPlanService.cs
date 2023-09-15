@@ -21,7 +21,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<EditMealPlanModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditMealPlanModel?>($"{ApiNames.MealPlanApi}/{id}");
+            return await _httpClient.GetFromJsonAsync<EditMealPlanModel?>($"{ApiNames.MealPlanApi}/edit/{id}");
         }
 
         public async Task<EditMealPlanModel?> AddAsync(EditMealPlanModel model)
