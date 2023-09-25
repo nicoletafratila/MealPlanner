@@ -1,4 +1,5 @@
-﻿using RecipeBook.Api.Repositories;
+﻿using Common.Api;
+using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api
 {
@@ -6,6 +7,12 @@ namespace RecipeBook.Api
     {
         public Startup(IConfiguration configuration) : base(configuration)
         {
+        }
+
+        protected override void RegisterServices(IServiceCollection services)
+        {
+            base.RegisterServices(services);
+            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
         }
 
         protected override void RegisterRepositories(IServiceCollection services)

@@ -5,6 +5,7 @@
         public Uri? BaseUrl { get; set; }
         public int Timeout { get; set; }
         public virtual string? Name => string.Empty;
+        public Dictionary<string, string> Endpoints { get ; set; }
 
         public ApiConfig(IConfiguration configuration)
         {

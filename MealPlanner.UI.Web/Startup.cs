@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using Common.Api;
-using Common.Data.Profiles;
-using MealPlanner.UI.Web.Configs;
+﻿using Common.Api;
 using MealPlanner.UI.Web.Services;
 
 namespace MealPlanner.UI.Web
@@ -26,50 +23,50 @@ namespace MealPlanner.UI.Web
             services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
-                   var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
             services.AddHttpClient<IProductCategoryService, ProductCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
-                   var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
-                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
+                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
-                   var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
             services.AddHttpClient<IUnitService, UnitService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
-                   var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.RecipeBook).Single();
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               }); 
 
             services.AddHttpClient<IMealPlanService, MealPlanService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
-                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.MealPlanner).Single();
+                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
             services.AddHttpClient<IShoppingListService, ShoppingListService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
-                    var clientConfig = serviceProvider.GetServices<IApiConfig>().Where(item => item.Name == Common.Constants.ApiConfig.MealPlanner).Single();
+                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });

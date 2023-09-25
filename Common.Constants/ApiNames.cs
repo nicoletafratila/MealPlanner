@@ -1,13 +1,14 @@
 ﻿namespace Common.Constants
 {
-    public class ApiNames
+    public class ApiEndPointNames
     {
-        public const string ShoppingListApi = "api/shoppinglist";
-        public const string RecipeApi = "api/recipe";
-        public const string RecipeCategoryApi = "api/recipecategory";
-        public const string ProductApi = "api/product";
-        public const string ProductCategoryApi = "api/productcategory";
-        public const string UnitApi = "api/unit";
-        public const string MealPlanApi = "api/mealplan";
+        public const string ShoppingListApi = "ShoppingListApi";
+        public const string MealPlanApi = "MealPlanApi";
+
+        public const string RecipeApi = "RecipeApi";
+        public const string RecipeCategoryApi = "RecipeCategoryApi";
+        public const string ProductApi = "ProductApi";
+        public const string ProductCategoryApi = "ProductCategoryApi";
+        public const string UnitApi = "UnitApi";
     }
 }

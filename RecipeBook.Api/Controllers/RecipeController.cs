@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Api;
 using Common.Constants;
 using Common.Data.Entities;
 using MealPlanner.Shared.Models;
@@ -16,10 +17,12 @@ namespace RecipeBook.Api.Controllers
         private readonly IRecipeRepository _recipeRepository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
+        private readonly IApiConfig _mealPlannerApiConfig;
 
-        public RecipeController(IRecipeRepository recipeRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public RecipeController(IRecipeRepository recipeRepository, IServiceProvider serviceProvider, IMapper mapper, LinkGenerator linkGenerator)
         {
             _recipeRepository = recipeRepository;
+            _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
             _mapper = mapper;
             _linkGenerator = linkGenerator;
         }
@@ -147,10 +150,10 @@ namespace RecipeBook.Api.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:7249/");
+                client.BaseAddress = new Uri("https://localhost:7249/");//_mealPlannerApiConfig!.BaseUrl;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{ApiNames.MealPlanApi}/search/{id}");
+                var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi]}/search/{id}");
                 if (result != null && result.Any())
                 {
                     return BadRequest($"The recipe you try to delete is used in meal plans and cannot be deleted.");
