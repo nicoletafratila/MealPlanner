@@ -19,18 +19,18 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<MealPlanModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>?>(_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi]);
+            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>?>(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]);
         }
 
         public async Task<EditMealPlanModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditMealPlanModel?>($"{_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<EditMealPlanModel?>($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/edit/{id}");
         }
 
         public async Task<EditMealPlanModel?> AddAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi], modelJson);
+            var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi], modelJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -43,12 +43,12 @@ namespace MealPlanner.UI.Web.Services
         public async Task UpdateAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi], modelJson);
+            await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi], modelJson);
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi]}/{id}");
+            await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/{id}");
         }
     }
 }

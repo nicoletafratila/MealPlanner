@@ -19,18 +19,18 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<ShoppingListModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<ShoppingListModel>?>(_mealPlannerApiConfig.Endpoints[ApiEndPointNames.ShoppingListApi]);
+            return await _httpClient.GetFromJsonAsync<IList<ShoppingListModel>?>(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]);
         }
 
         public async Task<EditShoppingListModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{_mealPlannerApiConfig.Endpoints[ApiEndPointNames.ShoppingListApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/edit/{id}");
         }
 
         public async Task<EditShoppingListModel?> SaveShoppingListFromMealPlanAsync(int mealPlanId)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(mealPlanId), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndPointNames.ShoppingListApi], modelJson);
+            var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -43,12 +43,12 @@ namespace MealPlanner.UI.Web.Services
         public async Task UpdateAsync(EditShoppingListModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndPointNames.ShoppingListApi], modelJson);
+            await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndPointNames.ShoppingListApi]}/{id}");
+            await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/{id}");
         }
     }
 }

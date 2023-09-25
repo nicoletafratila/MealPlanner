@@ -1,6 +1,6 @@
 ﻿namespace Common.Constants
 {
-    public class ApiEndPointNames
+    public class ApiEndpointNames
     {
         public const string ShoppingListApi = "ShoppingListApi";
         public const string MealPlanApi = "MealPlanApi";

@@ -9,8 +9,8 @@ namespace Common.Api
         public MealPlannerApiConfig(IConfiguration configuration) : base(configuration)
         {
             Endpoints = new Dictionary<string, string>();
-            Endpoints[ApiEndPointNames.ShoppingListApi] = "api/shoppinglist";
-            Endpoints[ApiEndPointNames.MealPlanApi] = "api/mealplan";
+            Endpoints[ApiEndpointNames.ShoppingListApi] = "api/shoppinglist";
+            Endpoints[ApiEndpointNames.MealPlanApi] = "api/mealplan";
         }
     }
 }

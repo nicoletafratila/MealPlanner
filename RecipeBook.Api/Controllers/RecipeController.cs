@@ -153,7 +153,7 @@ namespace RecipeBook.Api.Controllers
                 client.BaseAddress = new Uri("https://localhost:7249/");//_mealPlannerApiConfig!.BaseUrl;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig.Endpoints[ApiEndPointNames.MealPlanApi]}/search/{id}");
+                var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/search/{id}");
                 if (result != null && result.Any())
                 {
                     return BadRequest($"The recipe you try to delete is used in meal plans and cannot be deleted.");

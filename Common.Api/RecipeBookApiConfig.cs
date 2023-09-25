@@ -9,11 +9,11 @@ namespace Common.Api
         public RecipeBookApiConfig(IConfiguration configuration) : base(configuration)
         {
             Endpoints = new Dictionary<string, string>();
-            Endpoints[ApiEndPointNames.RecipeApi] = "api/recipe";
-            Endpoints[ApiEndPointNames.RecipeCategoryApi] = "api/recipecategory";
-            Endpoints[ApiEndPointNames.ProductApi] = "api/product";
-            Endpoints[ApiEndPointNames.ProductCategoryApi] = "api/productcategory";
-            Endpoints[ApiEndPointNames.UnitApi] = "api/unit";
+            Endpoints[ApiEndpointNames.RecipeApi] = "api/recipe";
+            Endpoints[ApiEndpointNames.RecipeCategoryApi] = "api/recipecategory";
+            Endpoints[ApiEndpointNames.ProductApi] = "api/product";
+            Endpoints[ApiEndpointNames.ProductCategoryApi] = "api/productcategory";
+            Endpoints[ApiEndpointNames.UnitApi] = "api/unit";
         }
     }
 }

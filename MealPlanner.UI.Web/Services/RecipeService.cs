@@ -19,28 +19,28 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<RecipeModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>(_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi]);
+            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>(_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]);
         }
 
         public async Task<RecipeModel?> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi]}/{id}");
+            return await _httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/{id}");
         }
 
         public async Task<EditRecipeModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditRecipeModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<EditRecipeModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/edit/{id}");
         }
 
         public async Task<IList<RecipeModel>?> SearchAsync(int categoryId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi]}/search/{categoryId}");
+            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/search/{categoryId}");
         }
 
         public async Task<EditRecipeModel?> AddAsync(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi], modelJson);
+            var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi], modelJson);
 
             if (response.IsSuccessStatusCode)
             {
@@ -53,12 +53,12 @@ namespace MealPlanner.UI.Web.Services
         public async Task UpdateAsync(EditRecipeModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi], modelJson);
+            await _httpClient.PutAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi], modelJson);
         }
 
         public async Task<string> DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_recipeBookApiConfig.Endpoints[ApiEndPointNames.RecipeApi]}/{id}");
+            var response = await _httpClient.DeleteAsync($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/{id}");
             if (!response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
