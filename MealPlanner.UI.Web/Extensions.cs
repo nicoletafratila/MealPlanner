@@ -1,8 +1,8 @@
 ﻿using Microsoft.JSInterop;
 
-namespace Common.Api
+namespace MealPlanner.UI.Web
 {
-    public static class ConfirmExtensions
+    public static class Extensions
     {
         public static ValueTask<bool> Confirm(this IJSRuntime jsRuntime, string message)
         {

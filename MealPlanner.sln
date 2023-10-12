@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{4509BF02-434F-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Validators", "Common.Validators\Common.Validators.csproj", "{C11AD72C-D9C6-4493-984B-32EAB9D7F618}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pagination", "Common.Pagination\Common.Pagination.csproj", "{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{C11AD72C-D9C6-4493-984B-32EAB9D7F618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C11AD72C-D9C6-4493-984B-32EAB9D7F618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C11AD72C-D9C6-4493-984B-32EAB9D7F618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{DA21F630-A2FA-4B68-9CB7-6A1451B261BD} = {8DB5CDD6-DE3F-4BC8-A13A-3484F27E9CF5}
 		{B4EDBFD2-C4C0-4407-BDE8-FC85440880B0} = {8DB5CDD6-DE3F-4BC8-A13A-3484F27E9CF5}
 		{C11AD72C-D9C6-4493-984B-32EAB9D7F618} = {8DB5CDD6-DE3F-4BC8-A13A-3484F27E9CF5}
+		{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522} = {8DB5CDD6-DE3F-4BC8-A13A-3484F27E9CF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A96BA33-54B2-46FE-A2F7-DFE62EBD3CBB}
