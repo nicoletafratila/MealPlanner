@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Features.ProductCategory.Queries.GetProductCategory;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -9,28 +9,17 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class ProductCategoryController : ControllerBase
     {
-        private readonly IProductCategoryRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly ISender _mediator;
 
-        public ProductCategoryController(IProductCategoryRepository repository, IMapper mapper)
+        public ProductCategoryController(ISender mediator)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<ProductCategoryModel>>> GetAll()
+        public async Task<IList<ProductCategoryModel>> GetAll()
         {
-            try
-            {
-                var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<ProductCategoryModel>>(results).OrderBy(r => r.DisplaySequence);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(new GetProductCategoryQuery());
         }
     }
 }
