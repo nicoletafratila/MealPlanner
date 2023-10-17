@@ -14,7 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\0hbwyxpz.pdx~" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +28,7 @@
     <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
     <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
+    <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 
