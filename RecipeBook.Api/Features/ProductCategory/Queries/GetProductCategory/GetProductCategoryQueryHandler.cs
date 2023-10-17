@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using RecipeBook.Api.Features.Product.Queries.GetProductCategory;
+using RecipeBook.Api.Features.ProductCategory.Queries.GetProductCategory;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.Product.Queries.GetProducts
+namespace RecipeBook.Api.Features.ProductCategory.Queries.GetProducts
 {
     public class GetProductCategoryQueryHandler : IRequestHandler<GetProductCategoryQuery, IList<ProductCategoryModel>>
     {

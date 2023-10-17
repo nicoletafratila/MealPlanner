@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.Product.Queries.GetProductCategory;
+using RecipeBook.Api.Features.ProductCategory.Queries.GetProductCategory;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers

@@ -1,5 +1,7 @@
 ﻿using Common.Api;
+using MediatR;
 using RecipeBook.Api.Repositories;
+using System.Reflection;
 
 namespace RecipeBook.Api
 {
@@ -12,6 +14,7 @@ namespace RecipeBook.Api
         protected override void RegisterServices(IServiceCollection services)
         {
             base.RegisterServices(services);
+            services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
         }
 

@@ -48,7 +48,6 @@ namespace Common.Api
             RegisterRepositories(services);
             RegisterServices(services);
            
-            services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddCors(options =>
             {
                 options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
