@@ -21,7 +21,6 @@ namespace MealPlanner.Api
         protected override void RegisterRepositories(IServiceCollection services)
         {
             base.RegisterRepositories(services);
-            services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddScoped<IMealPlanRepository, MealPlanRepository>();
             services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
         }
