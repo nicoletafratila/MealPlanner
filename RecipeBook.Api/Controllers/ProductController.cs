@@ -3,7 +3,7 @@ using Common.Data.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Product.Queries.GetEditProduct;
-using RecipeBook.Api.Features.Product.Queries.GetProduct;
+using RecipeBook.Api.Features.Product.Queries.GetProducts;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
@@ -31,7 +31,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet]
         public async Task<IList<ProductModel>> GetAll()
         {
-            return await _mediator.Send(new GetProductQuery());
+            return await _mediator.Send(new GetProductsQuery());
         }
 
         [HttpGet("edit/{id:int}")]

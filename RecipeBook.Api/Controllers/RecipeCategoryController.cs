@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.RecipeCategory.Queries.GetRecipeCategory;
+using RecipeBook.Api.Features.RecipeCategory.Queries.GetRecipeCategories;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -19,7 +19,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet]
         public async Task<IList<RecipeCategoryModel>> GetAll()
         {
-            return await _mediator.Send(new GetRecipeCategoryQuery());
+            return await _mediator.Send(new GetRecipeCategoriesQuery());
         }
     }
 }

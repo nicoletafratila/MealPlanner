@@ -3,7 +3,11 @@ using Common.Api;
 using Common.Constants;
 using Common.Data.Entities;
 using MealPlanner.Shared.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Api.Features.Recipe.Queries.GetEditRecipe;
+using RecipeBook.Api.Features.Recipe.Queries.GetRecipe;
+using RecipeBook.Api.Features.Recipe.Queries.GetRecipes;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 using System.Net.Http.Headers;
@@ -18,58 +22,39 @@ namespace RecipeBook.Api.Controllers
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
         private readonly IApiConfig _mealPlannerApiConfig;
+        private readonly ISender _mediator;
 
-        public RecipeController(IRecipeRepository recipeRepository, IServiceProvider serviceProvider, IMapper mapper, LinkGenerator linkGenerator)
+        public RecipeController(ISender mediator, IRecipeRepository recipeRepository, IServiceProvider serviceProvider, IMapper mapper, LinkGenerator linkGenerator)
         {
             _recipeRepository = recipeRepository;
             _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
             _mapper = mapper;
             _linkGenerator = linkGenerator;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<RecipeModel>>> GetAll()
+        public async Task<IList<RecipeModel>> GetAll()
         {
-            try
-            {
-                var results = await _recipeRepository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory!.DisplaySequence).ThenBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(new GetRecipesQuery());
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<RecipeModel>> GetById(int id)
+        public async Task<RecipeModel> GetById(int id)
         {
-            try
-            {
-                var result = await _recipeRepository.GetByIdAsync(id);
-                if (result == null) return NotFound();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<RecipeModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            var query = new GetRecipeQuery();
+            query.Id = id;
+
+            return await _mediator.Send(query);
         }
 
         [HttpGet("edit/{id:int}")]
         public async Task<ActionResult<EditRecipeModel>> GetEdit(int id)
         {
-            try
-            {
-                var result = await _recipeRepository.GetByIdIncludeIngredientsAsync(id);
-                if (result == null) return NotFound();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditRecipeModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            var query = new GetEditRecipeQuery();
+            query.Id = id;
+
+            return await _mediator.Send(query);
         }
 
         [HttpGet("search/{categoryid:int}")]
