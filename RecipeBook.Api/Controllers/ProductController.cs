@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Api.Features.Product.Queries.GetEditProduct;
+using RecipeBook.Api.Features.Product.Queries.GetProduct;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
@@ -14,46 +17,30 @@ namespace RecipeBook.Api.Controllers
         private readonly IRecipeIngredientRepository _recipeIngredientRepository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
+        private readonly ISender _mediator;
 
-        public ProductController(IProductRepository productRepository, IRecipeIngredientRepository recipeIngredientRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public ProductController(ISender mediator, IProductRepository productRepository, IRecipeIngredientRepository recipeIngredientRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
             _recipeIngredientRepository = recipeIngredientRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<ProductModel>>> GetAll()
+        public async Task<IList<ProductModel>> GetAll()
         {
-            try
-            {
-                var result = await _productRepository.GetAllAsync();
-                var mappedResult = _mapper.Map<IList<ProductModel>>(result).OrderBy(item => item.ProductCategory!.DisplaySequence).ThenBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResult);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(new GetProductQuery());
         }
 
         [HttpGet("edit/{id:int}")]
         public async Task<ActionResult<EditProductModel>> GetEdit(int id)
         {
-            if (id <= 0)
-                return BadRequest();
+            var query = new GetEditProductQuery();
+            query.Id = id;
 
-            try
-            {
-                var result = await _productRepository.GetByIdAsync(id);
-                if (result == null) return NotFound();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditProductModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(query);
         }
 
         [HttpGet("search/{categoryid:int}")]
