@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Features.Unit.Queries.GetUnit;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -9,28 +9,17 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class UnitController : ControllerBase
     {
-        private readonly IUnitRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly ISender _mediator;
 
-        public UnitController(IUnitRepository repository, IMapper mapper)
+        public UnitController(ISender mediator)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<UnitModel>>> GetAll()
+        public async Task<IList<UnitModel>> GetAll()
         {
-            try
-            {
-                var results = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<UnitModel>>(results).OrderBy(r => r.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(new GetUnitQuery());
         }
     }
 }
