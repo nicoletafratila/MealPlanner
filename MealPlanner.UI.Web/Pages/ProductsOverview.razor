@@ -17,7 +17,7 @@
         @if (Products != null)
         {
             <div class="card-body">
-                <TableTemplate Items="@Products.Items" ShowIndex="true">
+                <TableTemplateWithPagination Data="@Products" ShowIndex="true">
                     <TableHeader>
                         <th style="width: 320px">
                             <div>
@@ -50,7 +50,7 @@
                         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Product)">Edit</button></td>
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Product)"></button></td>
                     </RowTemplate>
-                </TableTemplate>
+                </TableTemplateWithPagination>
 
                 @if (Products.Metadata != null)
                 {

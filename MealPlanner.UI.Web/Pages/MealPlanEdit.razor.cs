@@ -1,4 +1,4 @@
-﻿using Common.Api;
+﻿using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -48,7 +48,7 @@ namespace MealPlanner.UI.Web.Pages
 
         public EditMealPlanModel? MealPlan { get; set; }
         public RecipeModel? Recipe { get; set; }
-        public IList<RecipeModel>? Recipes { get; set; }
+        public PagedList<RecipeModel>? Recipes { get; set; }
         public IList<RecipeCategoryModel>? Categories { get; set; }
 
         [Inject]
@@ -184,12 +184,11 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void OnRecipeCategoryChangedAsync(string value)
+        private async void OnRecipeCategoryChangedAsync(string? value)
         {
             RecipeCategoryId = value;
             RecipeId = string.Empty;
-            if (!string.IsNullOrWhiteSpace(RecipeCategoryId) && RecipeCategoryId != "0")
-                Recipes = await RecipeService!.SearchAsync(int.Parse(RecipeCategoryId));
+            Recipes = await RecipeService!.SearchAsync(RecipeCategoryId);
             StateHasChanged();
         }
 

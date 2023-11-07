@@ -12,19 +12,19 @@
         </tr>
     </thead>
     <tbody>
-        @if (@Items == null)
+        @if (@Data == null)
         {
             <tr>Loading...</tr>
         }
         else
         {
-           var index = 1;
-            @foreach (var item in Items!)
+            var index = 1;
+            @foreach (var item in Data.Items!)
             {
                 <tr>
                     @if (ShowIndex)
                     {
-                        <td>@index</td>
+                        <td>@CalculateIndex(index)</td>
                     }
                     @RowTemplate!(item)
                 </tr>

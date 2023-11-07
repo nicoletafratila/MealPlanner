@@ -226,8 +226,7 @@ namespace MealPlanner.UI.Web.Pages
             IngredientCategoryId = value;
             IngredientId = string.Empty;
             Quantity = string.Empty;
-            if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
-                Products = await ProductService!.SearchAsync(IngredientCategoryId);
+            Products = await ProductService!.SearchAsync(IngredientCategoryId);
             StateHasChanged();
         }
 

@@ -13,40 +13,53 @@
             </div>
         </div>
 
-        <div class="card-body">
-            <TableTemplate Items="@Recipes" ShowIndex="true">
-                <TableHeader>
-                    <th style="width: 320px">
-                        <div>
-                            <label for="category" class="col-sm-4">Category</label>
-                            <select id="category" class="form-select-sm" style="width:200px" @onchange="@OnCategoryChangedAsync">
-                                <option selected value="0">Choose...</option>
-                                @if (Categories != null && Categories.Any())
-                                {
-                                    @foreach (var item in Categories)
+        @if (Recipes != null)
+        {
+            <div class="card-body">
+                <TableTemplateWithPagination Data="@Recipes" ShowIndex="true">
+                    <TableHeader>
+                        <th style="width: 320px">
+                            <div>
+                                <label for="category" class="col-sm-4">Category</label>
+                                <select id="category" class="form-select-sm" style="width:200px" @onchange="@OnCategoryChangedAsync">
+                                    <option selected value="0">Choose...</option>
+                                    @if (Categories != null && Categories.Any())
                                     {
-                                        <option value="@item.Id">@item.Name</option>
+                                        @foreach (var item in Categories)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
                                     }
-                                }
-                            </select>
-                        </div>
-                    </th>
-                    <th>Name</th>
-                    <th></th>
-                    <th></th>
-                    <th style="width: 30px"></th>
-                </TableHeader>
-                <RowTemplate Context="Recipe">
-                    <td>@Recipe.RecipeCategory!.Name</td>
-                    <td>@Recipe.Name</td>
-                    <td>
-                        <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
-                    </td>
-                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Recipe)">Edit</button></td>
-                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Recipe)"></button></td>
-                </RowTemplate>
-            </TableTemplate>
-        </div>
+                                </select>
+                            </div>
+                        </th>
+                        <th>Name</th>
+                        <th></th>
+                        <th></th>
+                        <th style="width: 30px"></th>
+                    </TableHeader>
+                    <RowTemplate Context="Recipe">
+                        <td>@Recipe.RecipeCategory!.Name</td>
+                        <td>@Recipe.Name</td>
+                        <td>
+                            <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
+                        </td>
+                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Recipe)">Edit</button></td>
+                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Recipe)"></button></td>
+                    </RowTemplate>
+                </TableTemplateWithPagination>
+
+                @if (Recipes.Metadata != null)
+                {
+                    <Pagination CurrentPage="@Recipes.Metadata.PageNumber"
+                                TotalItems="@Recipes.Metadata.TotalCount"
+                                TotalPages="@Recipes.Metadata.TotalPages"
+                                HasNext="@Recipes.Metadata.HasNext"
+                                HasPrevious="@Recipes.Metadata.HasPrevious"
+                                PageChanged="@OnPageChangedAsync" />
+                }
+            </div>
+        }
     </div>
 </div>
 

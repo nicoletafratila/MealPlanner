@@ -13,7 +13,8 @@ namespace RecipeBook.Api.Repositories
 
         public override async Task<IReadOnlyList<Recipe>> GetAllAsync()
         {
-            return await (DbContext as MealPlannerDbContext)!.Recipes.Include(x => x.RecipeCategory).ToListAsync();
+            return await (DbContext as MealPlannerDbContext)!.Recipes
+                .Include(x => x.RecipeCategory).ToListAsync();
         }
 
         public override async Task<Recipe?> GetByIdAsync(int id)

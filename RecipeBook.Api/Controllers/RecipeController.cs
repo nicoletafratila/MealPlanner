@@ -2,12 +2,13 @@
 using Common.Api;
 using Common.Constants;
 using Common.Data.Entities;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Recipe.Queries.GetEditRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetRecipe;
-using RecipeBook.Api.Features.Recipe.Queries.GetRecipes;
+using RecipeBook.Api.Features.Recipe.Queries.SearchRecipes;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 using System.Net.Http.Headers;
@@ -33,17 +34,13 @@ namespace RecipeBook.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IList<RecipeModel>> GetAll()
-        {
-            return await _mediator.Send(new GetRecipesQuery());
-        }
-
         [HttpGet("{id:int}")]
         public async Task<RecipeModel> GetById(int id)
         {
-            var query = new GetRecipeQuery();
-            query.Id = id;
+            GetRecipeQuery query = new()
+            {
+                Id = id
+            };
 
             return await _mediator.Send(query);
         }
@@ -51,28 +48,23 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<ActionResult<EditRecipeModel>> GetEdit(int id)
         {
-            var query = new GetEditRecipeQuery();
-            query.Id = id;
+            GetEditRecipeQuery query = new()
+            {
+                Id = id
+            };
 
             return await _mediator.Send(query);
         }
 
-        [HttpGet("search/{categoryid:int}")]
-        public async Task<ActionResult<IList<RecipeModel>>> SearchByCategoryId(int categoryId)
+        [HttpGet("search")]
+        public async Task<PagedList<RecipeModel>> Search([FromQuery] string? categoryId, [FromQuery] QueryParameters? queryParameters)
         {
-            if (categoryId <= 0)
-                return BadRequest();
-
-            try
+            SearchRecipesQuery query = new()
             {
-                var results = await _recipeRepository.SearchAsync(categoryId);
-                var mappedResults = _mapper.Map<IList<RecipeModel>>(results).OrderBy(item => item.RecipeCategory!.DisplaySequence).ThenBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                CategoryId = categoryId,
+                QueryParameters = queryParameters
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpPost]
@@ -85,7 +77,7 @@ namespace RecipeBook.Api.Controllers
             {
                 var result = _mapper.Map<Recipe>(model);
                 await _recipeRepository.AddAsync(result);
-                
+
                 result = await _recipeRepository.GetByIdIncludeIngredientsAsync(result.Id);
                 string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result!.Id });
                 if (string.IsNullOrWhiteSpace(location))

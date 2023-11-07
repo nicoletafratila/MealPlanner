@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Common.Pagination;
+using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared
 {
-    public partial class TableTemplate<TItem>
+    public partial class TableTemplateWithPagination<TItem>
     {
         [Parameter]
         public bool ShowIndex { get; set; } = false;
@@ -17,6 +18,11 @@ namespace MealPlanner.UI.Web.Shared
         public RenderFragment<TItem>? RowTemplate { get; set; }
 
         [Parameter]
-        public IEnumerable<TItem>? Items { get; set; }
+        public PagedList<TItem>? Data { get; set; }
+
+        private int CalculateIndex(int indexFromView)
+        {
+            return Data!.Metadata!.PageSize * (Data!.Metadata!.PageNumber - 1) + indexFromView;
+        }
     }
 }

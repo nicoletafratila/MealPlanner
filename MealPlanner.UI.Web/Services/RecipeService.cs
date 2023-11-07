@@ -1,5 +1,7 @@
 ﻿using Common.Api;
 using Common.Constants;
+using Common.Pagination;
+using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 using System.Text;
 using System.Text.Json;
@@ -17,11 +19,6 @@ namespace MealPlanner.UI.Web.Services
             _recipeBookApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
         }
 
-        public async Task<IList<RecipeModel>?> GetAllAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>(_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]);
-        }
-
         public async Task<RecipeModel?> GetByIdAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/{id}");
@@ -32,9 +29,17 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<EditRecipeModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/edit/{id}");
         }
 
-        public async Task<IList<RecipeModel>?> SearchAsync(int categoryId)
+        public async Task<PagedList<RecipeModel>?> SearchAsync(string? categoryId = null, QueryParameters? queryParameters = null)
         {
-            return await _httpClient.GetFromJsonAsync<IList<RecipeModel>?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/search/{categoryId}");
+            var query = new Dictionary<string, string?>
+            {
+                ["CategoryId"] = categoryId,
+                [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
+                [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+            };
+
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.RecipeApi]}/search", query));
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<RecipeModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<EditRecipeModel?> AddAsync(EditRecipeModel model)

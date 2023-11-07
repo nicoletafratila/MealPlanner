@@ -45,9 +45,9 @@
                             <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
                                      Value="RecipeId" ValueExpression="@(() => RecipeId)">
                                 <option selected value="0">Choose...</option>
-                                @if (Recipes != null && Recipes.Any())
+                                @if (Recipes != null && Recipes!.Items!.Any())
                                 {
-                                    @foreach (var item in Recipes!)
+                                    @foreach (var item in Recipes!.Items!)
                                     {
                                         <option value="@item.Id">@item.Name</option>
                                     }
