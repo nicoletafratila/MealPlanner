@@ -13,19 +13,32 @@
             </div>
         </div>
 
-        <div class="card-body">
-            <TableTemplate Items="@MealPlans" ShowIndex="true">
-                <TableHeader>
-                    <th>Name</th>
-                    <th style="width: 50px"></th>
-                    <th style="width: 30px"></th>
-                </TableHeader>
-                <RowTemplate Context="MealPlan">
-                    <td>@MealPlan.Name</td>
-                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(MealPlan)">Edit</button></td>
-                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(MealPlan)"></button></td>
-                </RowTemplate>
-            </TableTemplate>
-        </div>
+        @if (MealPlans != null)
+        {
+            <div class="card-body">
+                <TableTemplateWithPagination Data="@MealPlans" ShowIndex="true">
+                    <TableHeader>
+                        <th>Name</th>
+                        <th style="width: 50px"></th>
+                        <th style="width: 30px"></th>
+                    </TableHeader>
+                    <RowTemplate Context="MealPlan">
+                        <td>@MealPlan.Name</td>
+                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(MealPlan)">Edit</button></td>
+                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(MealPlan)"></button></td>
+                    </RowTemplate>
+                </TableTemplateWithPagination>
+
+                @if (MealPlans.Metadata != null)
+                {
+                    <Pagination CurrentPage="@MealPlans.Metadata.PageNumber"
+                    TotalItems="@MealPlans.Metadata.TotalCount"
+                    TotalPages="@MealPlans.Metadata.TotalPages"
+                    HasNext="@MealPlans.Metadata.HasNext"
+                    HasPrevious="@MealPlans.Metadata.HasPrevious"
+                    PageChanged="@OnPageChangedAsync" />
+                }
+            </div>
+        }
     </div>
 </div>

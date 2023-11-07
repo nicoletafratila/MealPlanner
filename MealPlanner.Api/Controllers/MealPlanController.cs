@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
+using Common.Pagination;
+using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlans;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealPlanner.Api.Controllers
@@ -13,27 +16,14 @@ namespace MealPlanner.Api.Controllers
         private readonly IMealPlanRepository _repository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
+        private readonly ISender _mediator;
 
-        public MealPlanController(IMealPlanRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+        public MealPlanController(ISender mediator, IMealPlanRepository repository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _repository = repository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IList<MealPlanModel>>> GetAll()
-        {
-            try
-            {
-                var result = await _repository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<MealPlanModel>>(result).OrderBy(r => r.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            _mediator = mediator;
         }
 
         [HttpGet("edit/{id:int}")]
@@ -52,6 +42,16 @@ namespace MealPlanner.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
+        }
+
+        [HttpGet("search")]
+        public async Task<PagedList<MealPlanModel>> Search([FromQuery] QueryParameters? queryParameters)
+        {
+            SearchMealPlansQuery query = new()
+            {
+                QueryParameters = queryParameters
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpGet("search/{recipeId:int}")]
