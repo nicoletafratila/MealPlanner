@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
+using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Product.Queries.GetEditProduct;
-using RecipeBook.Api.Features.Product.Queries.GetProducts;
+using RecipeBook.Api.Features.Product.Queries.SearchProducts;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
@@ -28,37 +29,25 @@ namespace RecipeBook.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IList<ProductModel>> GetAll()
-        {
-            return await _mediator.Send(new GetProductsQuery());
-        }
-
         [HttpGet("edit/{id:int}")]
-        public async Task<ActionResult<EditProductModel>> GetEdit(int id)
+        public async Task<EditProductModel> GetEdit(int id)
         {
-            var query = new GetEditProductQuery();
-            query.Id = id;
-
+            var query = new GetEditProductQuery()
+            {
+                Id= id
+            };
             return await _mediator.Send(query);
         }
 
-        [HttpGet("search/{categoryid:int}")]
-        public async Task<ActionResult<IList<ProductModel>>> Search(int categoryId)
+        [HttpGet("search")]
+        public async Task<PagedList<ProductModel>> Search([FromQuery] string? categoryId, [FromQuery] QueryParameters? queryParameters)
         {
-            if (categoryId <= 0)
-                return BadRequest();
-
-            try
+            SearchProductsQuery query = new()
             {
-                var results = await _productRepository.SearchAsync(categoryId);
-                var mappedResults = _mapper.Map<IList<ProductModel>>(results).OrderBy(item => item.ProductCategory!.DisplaySequence).ThenBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                CategoryId = categoryId,
+                QueryParameters = queryParameters
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpPost]

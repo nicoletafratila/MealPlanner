@@ -1,12 +1,12 @@
-﻿using RecipeBook.Shared.Models;
+﻿using Common.Pagination;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
     public interface IProductService
     {
-        Task<IList<ProductModel>?> GetAllAsync();
         Task<EditProductModel?> GetEditAsync(int id);
-        Task<IList<ProductModel>?> SearchAsync(int categoryId);
+        Task<PagedList<ProductModel>?> SearchAsync(string? categoryId = null, QueryParameters? queryParameters = null);
         Task<EditProductModel?> AddAsync(EditProductModel model);
         Task UpdateAsync(EditProductModel model);
         Task<string> DeleteAsync(int id);

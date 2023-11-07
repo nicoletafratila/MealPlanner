@@ -18,13 +18,14 @@
         }
         else
         {
-            var index = 1;
+           var index = 1;
             @foreach (var item in Items)
             {
                 <tr>
                     @if (ShowIndex)
                     {
                         <td>@index</td>
+                        @* <td>@CalculateIndex(index)</td> *@
                     }
                     @RowTemplate!(item)
                 </tr>

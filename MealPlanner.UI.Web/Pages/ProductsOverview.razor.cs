@@ -1,4 +1,4 @@
-﻿using Common.Api;
+﻿using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -8,9 +8,10 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ProductsOverview
     {
-        public IList<ProductModel>? Products { get; set; }
+        public PagedList<ProductModel>? Products { get; set; }
         public ProductModel? Product { get; set; }
         public IList<ProductCategoryModel>? Categories { get; set; }
+        public string? CategoryId { get; set; }
 
         [Inject]
         public IProductService? ProductService { get; set; }
@@ -27,8 +28,12 @@ namespace MealPlanner.UI.Web.Pages
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
 
+        [Parameter]
+        public QueryParameters? QueryParameters { get; set; } = new();
+
         protected override async Task OnInitializedAsync()
         {
+            Categories = await CategoryService!.GetAllAsync();
             await RefreshAsync();
         }
 
@@ -63,18 +68,21 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task RefreshAsync()
         {
-            Products = await ProductService!.GetAllAsync();
-            Categories = await CategoryService!.GetAllAsync();
+            Products = await ProductService!.SearchAsync(CategoryId, QueryParameters!);
+            StateHasChanged();
         }
 
         private async void OnCategoryChangedAsync(ChangeEventArgs e)
         {
-            var categoryId = e!.Value!.ToString();
-            if (!string.IsNullOrWhiteSpace(categoryId) && categoryId != "0")
-                Products = await ProductService!.SearchAsync(int.Parse(categoryId));
-            else
-                Products = await ProductService!.GetAllAsync();
-            StateHasChanged();
+            CategoryId = e!.Value!.ToString();
+            QueryParameters = new();
+            await RefreshAsync();
+        }
+
+        private async Task OnPageChangedAsync(int pageNumber)
+        {
+            QueryParameters!.PageNumber = pageNumber;
+            await RefreshAsync();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Common.Api;
-using Common.Data.Entities;
+﻿using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -85,7 +84,7 @@ namespace MealPlanner.UI.Web.Pages
 
         public EditRecipeModel? Recipe { get; set; }
         public RecipeIngredientModel? RecipeIngredient { get; set; }
-        public IList<ProductModel>? Products { get; set; }
+        public PagedList<ProductModel>? Products { get; set; }
         public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
         public IList<ProductCategoryModel>? IngredientCategories { get; set; }
         private long maxFileSize = 1024L * 1024L * 1024L * 3L;
@@ -194,7 +193,7 @@ namespace MealPlanner.UI.Web.Pages
                     else
                     {
                         item = new RecipeIngredientModel();
-                        item.Product = Products!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                        item.Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
                         item.RecipeId = Recipe.Id;
                         item.Quantity = decimal.Parse(Quantity!);
                         Recipe.Ingredients!.Add(item);
@@ -228,7 +227,7 @@ namespace MealPlanner.UI.Web.Pages
             IngredientId = string.Empty;
             Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(IngredientCategoryId) && IngredientCategoryId != "0")
-                Products = await ProductService!.SearchAsync(int.Parse(IngredientCategoryId));
+                Products = await ProductService!.SearchAsync(IngredientCategoryId);
             StateHasChanged();
         }
 

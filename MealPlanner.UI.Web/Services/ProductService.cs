@@ -1,5 +1,7 @@
 ﻿using Common.Api;
 using Common.Constants;
+using Common.Pagination;
+using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 using System.Text;
 using System.Text.Json;
@@ -17,19 +19,22 @@ namespace MealPlanner.UI.Web.Services
             _recipeBookApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
         }
 
-        public async Task<IList<ProductModel>?> GetAllAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi]);
-        }
-
         public async Task<EditProductModel?> GetEditAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EditProductModel?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi]}/edit/{id}");
         }
 
-        public async Task<IList<ProductModel>?> SearchAsync(int categoryId)
+        public async Task<PagedList<ProductModel>?> SearchAsync(string? categoryId = null, QueryParameters? queryParameters = null)
         {
-            return await _httpClient.GetFromJsonAsync<IList<ProductModel>?>($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi]}/search/{categoryId}");
+            var query = new Dictionary<string, string?>
+            {
+                ["CategoryId"] = categoryId,
+                [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
+                [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+            };
+
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi]}/search", query));
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ProductModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<EditProductModel?> AddAsync(EditProductModel model)

@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{4509BF02-434F-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Validators", "Common.Validators\Common.Validators.csproj", "{C11AD72C-D9C6-4493-984B-32EAB9D7F618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pagination", "Common.Pagination\Common.Pagination.csproj", "{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Pagination", "Common.Pagination\Common.Pagination.csproj", "{21CC01B3-F6BD-43F1-A09B-8BFAEA81F522}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
