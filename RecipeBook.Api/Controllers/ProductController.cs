@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Common.Data.Entities;
 using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Api.Features.Product.Commands.AddProduct;
 using RecipeBook.Api.Features.Product.Queries.GetEditProduct;
 using RecipeBook.Api.Features.Product.Queries.SearchProducts;
 using RecipeBook.Api.Repositories;
@@ -17,14 +17,12 @@ namespace RecipeBook.Api.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IRecipeIngredientRepository _recipeIngredientRepository;
         private readonly IMapper _mapper;
-        private readonly LinkGenerator _linkGenerator;
         private readonly ISender _mediator;
 
-        public ProductController(ISender mediator, IProductRepository productRepository, IRecipeIngredientRepository recipeIngredientRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public ProductController(ISender mediator, IProductRepository productRepository, IRecipeIngredientRepository recipeIngredientRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;
-            _linkGenerator = linkGenerator;
             _recipeIngredientRepository = recipeIngredientRepository;
             _mediator = mediator;
         }
@@ -34,7 +32,7 @@ namespace RecipeBook.Api.Controllers
         {
             GetEditProductQuery query = new()
             {
-                Id= id
+                Id = id
             };
             return await _mediator.Send(query);
         }
@@ -50,32 +48,11 @@ namespace RecipeBook.Api.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<EditProductModel>> Post(EditProductModel model)
+
+        [HttpPost("")]
+        public async Task<AddProductCommandResponse> PostAsync(AddProductCommand addQuestionCommand)
         {
-            if (model == null || string.IsNullOrWhiteSpace(model.Name))
-                return BadRequest();
-
-            var existingItem = await _productRepository.SearchAsync(model.Name);
-            if (existingItem != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-
-            try
-            {
-                var result = _mapper.Map<Product>(model);
-                await _productRepository.AddAsync(result);
-
-                string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result.Id });
-                if (string.IsNullOrWhiteSpace(location))
-                {
-                    return BadRequest("Could not use current id");
-                }
-                return Created(location, _mapper.Map<EditProductModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(addQuestionCommand);
         }
 
         [HttpPut]

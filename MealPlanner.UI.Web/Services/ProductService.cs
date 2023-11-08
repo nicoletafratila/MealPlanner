@@ -37,17 +37,16 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ProductModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<EditProductModel?> AddAsync(EditProductModel model)
+        public async Task<string?> AddAsync(EditProductModel model)
         {
-            var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
+            var modelJson = new StringContent(JsonSerializer.Serialize(new { model.Name, model.ImageContent, model.UnitId, model.ProductCategoryId }), Encoding.UTF8, "application/json");
+            using var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
 
-            if (response.IsSuccessStatusCode)
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
-                return await JsonSerializer.DeserializeAsync<EditProductModel?>(await response.Content.ReadAsStreamAsync());
-            }
-
-            return null;
+                Message = string.Empty
+            });
+            return result!.Message;
         }
 
         public async Task UpdateAsync(EditProductModel model)

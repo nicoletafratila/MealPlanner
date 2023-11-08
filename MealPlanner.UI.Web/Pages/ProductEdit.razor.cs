@@ -92,8 +92,12 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (Product!.Id == 0)
             {
-                var addedEntity = await ProductService!.AddAsync(Product);
-                if (addedEntity != null)
+                var response = await ProductService!.AddAsync(Product);
+                if (!string.IsNullOrWhiteSpace(response))
+                {
+                    ErrorComponent!.ShowError("Add", response);
+                }
+                else
                 {
                     NavigateToOverview();
                 }

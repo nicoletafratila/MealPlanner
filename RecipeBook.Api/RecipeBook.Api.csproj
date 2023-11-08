@@ -34,7 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Product\Commands\" />
+    <Folder Include="Features\Product\Commands\DeleteProduct\" />
+    <Folder Include="Features\Product\Commands\UpdateProduct\" />
     <Folder Include="Features\Recipe\Commands\" />
   </ItemGroup>
 
