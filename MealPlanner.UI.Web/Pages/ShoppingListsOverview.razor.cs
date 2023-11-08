@@ -1,4 +1,4 @@
-﻿using Common.Api;
+﻿using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -8,7 +8,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ShoppingListsOverview
     {
-        public IList<ShoppingListModel>? ShoppingLists { get; set; }
+        public PagedList<ShoppingListModel>? ShoppingLists { get; set; }
         public ShoppingListModel? ShoppingList { get; set; }
 
         [Inject]
@@ -19,6 +19,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
+
+        [Parameter]
+        public QueryParameters? QueryParameters { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -49,7 +52,14 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task RefreshAsync()
         {
-            ShoppingLists = await ShoppingListService!.GetAllAsync();
+            ShoppingLists = await ShoppingListService!.SearchAsync(QueryParameters!);
+            StateHasChanged();
+        }
+
+        private async Task OnPageChangedAsync(int pageNumber)
+        {
+            QueryParameters!.PageNumber = pageNumber;
+            await RefreshAsync();
         }
     }
 }

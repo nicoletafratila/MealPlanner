@@ -1,6 +1,8 @@
 ﻿using Common.Api;
 using Common.Constants;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Json;
 
@@ -17,14 +19,21 @@ namespace MealPlanner.UI.Web.Services
             _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
         }
 
-        public async Task<IList<ShoppingListModel>?> GetAllAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<ShoppingListModel>?>(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]);
-        }
-
         public async Task<EditShoppingListModel?> GetEditAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EditShoppingListModel?>($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/edit/{id}");
+        }
+
+        public async Task<PagedList<ShoppingListModel>?> SearchAsync(QueryParameters? queryParameters = null)
+        {
+            var query = new Dictionary<string, string?>
+            {
+                [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
+                [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+            };
+
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/search", query));
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ShoppingListModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<EditShoppingListModel?> SaveShoppingListFromMealPlanAsync(int mealPlanId)

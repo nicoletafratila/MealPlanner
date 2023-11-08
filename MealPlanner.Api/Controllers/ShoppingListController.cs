@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Common.Pagination;
+using MealPlanner.Api.Features.ShoppingList.Queries.SearchShoppingLists;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealPlanner.Api.Controllers
@@ -13,28 +16,15 @@ namespace MealPlanner.Api.Controllers
         private readonly IMealPlanRepository _meanPlanRepository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
+        private readonly ISender _mediator;
 
-        public ShoppingListController(IShoppingListRepository shoppingListRepository, IMealPlanRepository mealPlanRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public ShoppingListController(ISender mediator, IShoppingListRepository shoppingListRepository, IMealPlanRepository mealPlanRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _shoppingListRepository = shoppingListRepository;
             _meanPlanRepository = mealPlanRepository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IList<ShoppingListModel>>> GetAll()
-        {
-            try
-            {
-                var results = await _shoppingListRepository.GetAllAsync();
-                var mappedResults = _mapper.Map<IList<ShoppingListModel>>(results).OrderBy(item => item.Name);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            _mediator = mediator;
         }
 
         [HttpGet("edit/{id:int}")]
@@ -50,6 +40,16 @@ namespace MealPlanner.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
+        }
+
+        [HttpGet("search")]
+        public async Task<PagedList<ShoppingListModel>> Search([FromQuery] QueryParameters? queryParameters)
+        {
+            SearchShoppingListsQuery query = new()
+            {
+                QueryParameters = queryParameters
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpPost]

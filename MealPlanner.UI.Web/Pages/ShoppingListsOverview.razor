@@ -13,20 +13,33 @@
             </div>
         </div>
 
-        <div class="card-body">
-            <TableTemplate Items="@ShoppingLists" ShowIndex="true">
-                <TableHeader>
-                    <th>Name</th>
-                    <th></th>
-                    <th style="width: 30px"></th>
-                </TableHeader>
-                <RowTemplate Context="ShoppingList">
-                    <td>@ShoppingList.Name</td>
-                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(ShoppingList)">Edit</button></td>
-                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(ShoppingList)"></button></td>
-                </RowTemplate>
-            </TableTemplate>
-        </div>
+        @if (ShoppingLists != null)
+        {
+            <div class="card-body">
+                <TableTemplateWithPagination Data="@ShoppingLists" ShowIndex="true">
+                    <TableHeader>
+                        <th>Name</th>
+                        <th></th>
+                        <th style="width: 30px"></th>
+                    </TableHeader>
+                    <RowTemplate Context="ShoppingList">
+                        <td>@ShoppingList.Name</td>
+                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(ShoppingList)">Edit</button></td>
+                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(ShoppingList)"></button></td>
+                    </RowTemplate>
+                </TableTemplateWithPagination>
+
+                @if (ShoppingLists.Metadata != null)
+                {
+                    <Pagination CurrentPage="@ShoppingLists.Metadata.PageNumber"
+                                TotalItems="@ShoppingLists.Metadata.TotalCount"
+                                TotalPages="@ShoppingLists.Metadata.TotalPages"
+                                HasNext="@ShoppingLists.Metadata.HasNext"
+                                HasPrevious="@ShoppingLists.Metadata.HasPrevious"
+                                PageChanged="@OnPageChangedAsync" />
+                }
+            </div>
+        }
     </div>
 </div>
 
