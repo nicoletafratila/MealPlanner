@@ -32,7 +32,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<EditProductModel> GetEdit(int id)
         {
-            var query = new GetEditProductQuery()
+            GetEditProductQuery query = new()
             {
                 Id= id
             };

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.Pagination;
+using MealPlanner.Api.Features.ShoppingList.Queries.GetEditShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Queries.SearchShoppingLists;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -28,18 +29,13 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("edit/{id:int}")]
-        public async Task<ActionResult<EditShoppingListModel>> GetEdit(int id)
+        public async Task<EditShoppingListModel> GetEdit(int id)
         {
-            try
+            GetEditShoppingListQuery query = new()
             {
-                var result = await _shoppingListRepository.GetByIdIncludeProductsAsync(id);
-                if (result == null) return NotFound();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditShoppingListModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Id = id
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpGet("search")]

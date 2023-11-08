@@ -41,7 +41,6 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-
             return await _mediator.Send(query);
         }
 
@@ -52,7 +51,6 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-
             return await _mediator.Send(query);
         }
 

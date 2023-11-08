@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
 using Common.Pagination;
+using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlan;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlans;
+using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlansByRecipeId;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
@@ -27,21 +29,13 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("edit/{id:int}")]
-        public async Task<ActionResult<EditMealPlanModel>> GetEdit(int id)
+        public async Task<EditMealPlanModel> GetEdit(int id)
         {
-            if (id <= 0)
-                return BadRequest();
-
-            try
+            GetEditMealPlanQuery query = new()
             {
-                var result = await _repository.GetByIdAsync(id);
-                if (result == null) return NotFound();
-                return StatusCode(StatusCodes.Status200OK, _mapper.Map<EditMealPlanModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Id = id
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpGet("search")]
@@ -55,18 +49,13 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search/{recipeId:int}")]
-        public async Task<ActionResult<IList<MealPlanModel>>> SearchByRecipeId(int recipeId)
+        public async Task<IList<MealPlanModel>> SearchByRecipeId(int recipeId)
         {
-            try
+            SearchMealPlansByRecipeIdQuery query = new()
             {
-                var result = await _repository.SearchByRecipeAsync(recipeId);
-                var mappedResults = _mapper.Map<IList<MealPlanModel>>(result);
-                return StatusCode(StatusCodes.Status200OK, mappedResults);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                RecipeId = recipeId
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpPost]
