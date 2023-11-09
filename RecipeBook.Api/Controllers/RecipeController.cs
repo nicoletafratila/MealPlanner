@@ -1,17 +1,13 @@
-﻿using AutoMapper;
-using Common.Api;
-using Common.Constants;
-using Common.Pagination;
-using MealPlanner.Shared.Models;
+﻿using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Recipe.Commands.AddRecipe;
+using RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe;
+using RecipeBook.Api.Features.Recipe.Commands.UpdateRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetEditRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.SearchRecipes;
-using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
-using System.Net.Http.Headers;
 
 namespace RecipeBook.Api.Controllers
 {
@@ -19,16 +15,10 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeRepository _recipeRepository;
-        private readonly IMapper _mapper;
-        private readonly IApiConfig _mealPlannerApiConfig;
         private readonly ISender _mediator;
 
-        public RecipeController(ISender mediator, IRecipeRepository recipeRepository, IServiceProvider serviceProvider, IMapper mapper)
+        public RecipeController(ISender mediator)
         {
-            _recipeRepository = recipeRepository;
-            _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
-            _mapper = mapper;
             _mediator = mediator;
         }
 
@@ -63,30 +53,6 @@ namespace RecipeBook.Api.Controllers
             return await _mediator.Send(query);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<EditRecipeModel>> Post(EditRecipeModel model)
-        //{
-        //    if (model == null)
-        //        return BadRequest();
-
-        //    try
-        //    {
-        //        var result = _mapper.Map<Recipe>(model);
-        //        await _recipeRepository.AddAsync(result);
-
-        //        result = await _recipeRepository.GetByIdIncludeIngredientsAsync(result.Id);
-        //        string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result!.Id });
-        //        if (string.IsNullOrWhiteSpace(location))
-        //        {
-        //            return BadRequest("Could not use current id");
-        //        }
-        //        return Created(location, _mapper.Map<EditRecipeModel>(result));
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-        //    }
-        //}
         [HttpPost]
         public async Task<AddRecipeCommandResponse> PostAsync(EditRecipeModel model)
         {
@@ -98,52 +64,23 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(EditRecipeModel model)
+        public async Task<UpdateRecipeCommandResponse> Put(EditRecipeModel model)
         {
-            if (model == null)
-                return BadRequest();
-
-            try
+            UpdateRecipeCommand command = new()
             {
-                var oldModel = await _recipeRepository.GetByIdIncludeIngredientsAsync(model.Id);
-                if (oldModel == null)
-                {
-                    return NotFound($"Could not find with id {model.Id}");
-                }
-
-                _mapper.Map(model, oldModel);
-                await _recipeRepository.UpdateAsync(oldModel);
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Model = model
+            };
+            return await _mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<DeleteRecipeCommandResponse> Delete(int id)
         {
-            var itemToDelete = await _recipeRepository.GetByIdAsync(id);
-            if (itemToDelete == null)
+            DeleteRecipeCommand command = new()
             {
-                return NotFound($"Could not find with id {id}");
-            }
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:7249/");//_mealPlannerApiConfig!.BaseUrl;
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/search/{id}");
-                if (result != null && result.Any())
-                {
-                    return BadRequest($"The recipe you try to delete is used in meal plans and cannot be deleted.");
-                }
-            }
-
-            await _recipeRepository.DeleteAsync(itemToDelete!);
-            return StatusCode(StatusCodes.Status200OK);
+                Id = id
+            };
+            return await _mediator.Send(command);
         }
     }
 }

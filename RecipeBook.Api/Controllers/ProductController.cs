@@ -42,7 +42,6 @@ namespace RecipeBook.Api.Controllers
             return await _mediator.Send(query);
         }
 
-
         [HttpPost]
         public async Task<AddProductCommandResponse> PostAsync(EditProductModel model)
         {

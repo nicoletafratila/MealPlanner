@@ -8,8 +8,8 @@ namespace MealPlanner.UI.Web.Services
         Task<RecipeModel?> GetByIdAsync(int id);
         Task<EditRecipeModel?> GetEditAsync(int id);
         Task<PagedList<RecipeModel>?> SearchAsync(string? categoryId = null, QueryParameters? queryParameters = null);
-        Task<EditRecipeModel?> AddAsync(EditRecipeModel model);
-        Task UpdateAsync(EditRecipeModel model);
-        Task<string> DeleteAsync(int id);
+        Task<string?> AddAsync(EditRecipeModel model);
+        Task<string?> UpdateAsync(EditRecipeModel model);
+        Task<string?> DeleteAsync(int id);
     }
 }
