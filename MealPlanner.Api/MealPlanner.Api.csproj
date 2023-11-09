@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\MealPlan\Commands\" />
     <Folder Include="Features\ShoppingList\Commands\" />
   </ItemGroup>
 

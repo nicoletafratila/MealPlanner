@@ -24,13 +24,6 @@ namespace RecipeBook.Api.Repositories
                     .FirstOrDefaultAsync(item => item!.Id == id);
         }
 
-        public async Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId)
-        {
-            return await (DbContext as MealPlannerDbContext)!.Recipes
-                        .Include(x => x.RecipeCategory)
-                        .Where(x => x.RecipeCategoryId == categoryId).ToListAsync();
-        }
-
         public async Task<Recipe?> GetByIdIncludeIngredientsAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext)!.Recipes
@@ -42,6 +35,20 @@ namespace RecipeBook.Api.Repositories
                         .ThenInclude(x => x.Product)
                             .ThenInclude(x => x!.Unit)
                     .FirstOrDefaultAsync(item => item.Id == id);
+        }
+
+        public async Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId)
+        {
+            return await (DbContext as MealPlannerDbContext)!.Recipes
+                        .Include(x => x.RecipeCategory)
+                        .Where(x => x.RecipeCategoryId == categoryId).ToListAsync();
+        }
+
+        public async Task<Recipe?> SearchAsync(string name)
+        {
+            return await (DbContext as MealPlannerDbContext)!.Recipes
+                    .Include(x => x.RecipeCategory)
+                    .FirstOrDefaultAsync(x => x.Name!.ToLower() == name.ToLower());
         }
     }
 }

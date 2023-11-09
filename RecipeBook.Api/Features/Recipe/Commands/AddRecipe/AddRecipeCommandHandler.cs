@@ -21,8 +21,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.AddRecipe
         {
             try
             {
-                var existingItems = await _repository.SearchAsync(request.Model!.RecipeCategoryId);
-                var existingItem = existingItems.FirstOrDefault(x => x.Name!.Equals(request.Model.Name));
+                var existingItem = await _repository.SearchAsync(request.Model!.Name!);
                 if (existingItem != null)
                     return new AddRecipeCommandResponse { Id = 0, Message = "This recipe already exists in this category." };
 

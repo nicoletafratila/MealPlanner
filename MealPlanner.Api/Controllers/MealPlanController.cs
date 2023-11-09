@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using Common.Data.Entities;
-using Common.Pagination;
+﻿using Common.Pagination;
+using MealPlanner.Api.Features.MealPlan.Commands.AddMealPlan;
+using MealPlanner.Api.Features.MealPlan.Commands.DeleteMealPlan;
+using MealPlanner.Api.Features.MealPlan.Commands.UpdateMealPlan;
 using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlan;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlans;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlansByRecipeId;
-using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +15,10 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class MealPlanController : ControllerBase
     {
-        private readonly IMealPlanRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly LinkGenerator _linkGenerator;
         private readonly ISender _mediator;
 
-        public MealPlanController(ISender mediator, IMealPlanRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+        public MealPlanController(ISender mediator)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _linkGenerator = linkGenerator;
             _mediator = mediator;
         }
 
@@ -59,65 +53,33 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<EditMealPlanModel>> Post(EditMealPlanModel model)
+        public async Task<AddMealPlanCommandResponse> Post(EditMealPlanModel model)
         {
-            if (model == null)
-                return BadRequest();
-
-            try
+            AddMealPlanCommand command = new()
             {
-                var result = _mapper.Map<MealPlan>(model);
-                await _repository.AddAsync(result);
-                
-                result = await _repository.GetByIdIncludeRecipesAsync(result.Id);
-                string? location = _linkGenerator.GetPathByAction("GetEdit", "MealPlan", new { id = result!.Id });
-                if (string.IsNullOrWhiteSpace(location))
-                {
-                    return BadRequest("Could not use current id");
-                }
-                return Created(location, _mapper.Map<EditMealPlanModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Model = model
+            };
+            return await _mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(EditMealPlanModel model)
+        public async Task<UpdateMealPlanCommandResponse> Put(EditMealPlanModel model)
         {
-            if (model == null)
-                return BadRequest();
-
-            try
+            UpdateMealPlanCommand command = new()
             {
-                var oldModel = await _repository.GetByIdAsync(model.Id);
-                if (oldModel == null)
-                {
-                    return NotFound($"Could not find with id {model.Id}");
-                }
-
-                _mapper.Map(model, oldModel);
-                await _repository.UpdateAsync(oldModel);
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Model = model
+            };
+            return await _mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<DeleteMealPlanCommandResponse> Delete(int id)
         {
-            var itemToDelete = await _repository.GetByIdAsync(id);
-            if (itemToDelete == null)
+            DeleteMealPlanCommand command = new()
             {
-                NotFound($"Could not find with id {id}");
-                return;
-            }
-
-            await _repository.DeleteAsync(itemToDelete);
+                Id = id
+            };
+            return await _mediator.Send(command);
         }
     }
 }

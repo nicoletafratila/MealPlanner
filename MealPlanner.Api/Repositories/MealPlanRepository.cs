@@ -41,7 +41,17 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(int recipeId)
         {
-            return await (DbContext as MealPlannerDbContext)!.MealPlans.Where(item => item.MealPlanRecipes!.Any(r => r.RecipeId == recipeId)).ToListAsync();
+            return await (DbContext as MealPlannerDbContext)!.MealPlans
+                    .Where(item => item.MealPlanRecipes!.Any(r => r.RecipeId == recipeId)).ToListAsync();
+        }
+
+        public async Task<MealPlan?> SearchAsync(string name)
+        {
+            return await (DbContext as MealPlannerDbContext)!.MealPlans
+                   .Include(x => x.MealPlanRecipes)!
+                       .ThenInclude(x => x.Recipe)
+                           .ThenInclude(x => x!.RecipeCategory)
+                   .FirstOrDefaultAsync(item => item.Name!.ToLower() == name.ToLower());
         }
     }
 }
