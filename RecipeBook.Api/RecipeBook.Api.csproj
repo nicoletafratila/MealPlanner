@@ -33,8 +33,4 @@
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Recipe\Commands\" />
-  </ItemGroup>
-
 </Project>

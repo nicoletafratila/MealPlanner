@@ -1,12 +1,10 @@
 ﻿using MediatR;
+using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.Product.Commands.AddProduct
 {
     public class AddProductCommand : IRequest<AddProductCommandResponse>
     {
-        public string? Name { get; set; }
-        public byte[]? ImageContent { get; set; }
-        public int UnitId { get; set; }
-        public int ProductCategoryId { get; set; }
+        public EditProductModel? Model { get; set; }
     }
 }

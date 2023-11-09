@@ -39,7 +39,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<string?> AddAsync(EditProductModel model)
         {
-            var modelJson = new StringContent(JsonSerializer.Serialize(new { model.Name, model.ImageContent, model.UnitId, model.ProductCategoryId }), Encoding.UTF8, "application/json");
+            var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
@@ -50,7 +50,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<string?> UpdateAsync(EditProductModel model)
         {
-            var modelJson = new StringContent(JsonSerializer.Serialize(new { model.Id, model.Name, model.ImageContent, model.UnitId, model.ProductCategoryId }), Encoding.UTF8, "application/json");
+            var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {

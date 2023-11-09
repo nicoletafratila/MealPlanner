@@ -43,15 +43,23 @@ namespace RecipeBook.Api.Controllers
         }
 
 
-        [HttpPost("")]
-        public async Task<AddProductCommandResponse> PostAsync(AddProductCommand command)
+        [HttpPost]
+        public async Task<AddProductCommandResponse> PostAsync(EditProductModel model)
         {
+            AddProductCommand command = new()
+            {
+                Model = model
+            };
             return await _mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<UpdateProductCommandResponse> Put(UpdateProductCommand command)
+        public async Task<UpdateProductCommandResponse> Put(EditProductModel model)
         {
+            UpdateProductCommand command = new()
+            {
+                Model = model
+            };
             return await _mediator.Send(command);
         }
 

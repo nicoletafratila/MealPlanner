@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Common.Api;
 using Common.Constants;
-using Common.Data.Entities;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Api.Features.Recipe.Commands.AddRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetEditRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.SearchRecipes;
@@ -21,16 +21,14 @@ namespace RecipeBook.Api.Controllers
     {
         private readonly IRecipeRepository _recipeRepository;
         private readonly IMapper _mapper;
-        private readonly LinkGenerator _linkGenerator;
         private readonly IApiConfig _mealPlannerApiConfig;
         private readonly ISender _mediator;
 
-        public RecipeController(ISender mediator, IRecipeRepository recipeRepository, IServiceProvider serviceProvider, IMapper mapper, LinkGenerator linkGenerator)
+        public RecipeController(ISender mediator, IRecipeRepository recipeRepository, IServiceProvider serviceProvider, IMapper mapper)
         {
             _recipeRepository = recipeRepository;
             _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
             _mapper = mapper;
-            _linkGenerator = linkGenerator;
             _mediator = mediator;
         }
 
@@ -65,29 +63,38 @@ namespace RecipeBook.Api.Controllers
             return await _mediator.Send(query);
         }
 
+        //[HttpPost]
+        //public async Task<ActionResult<EditRecipeModel>> Post(EditRecipeModel model)
+        //{
+        //    if (model == null)
+        //        return BadRequest();
+
+        //    try
+        //    {
+        //        var result = _mapper.Map<Recipe>(model);
+        //        await _recipeRepository.AddAsync(result);
+
+        //        result = await _recipeRepository.GetByIdIncludeIngredientsAsync(result.Id);
+        //        string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result!.Id });
+        //        if (string.IsNullOrWhiteSpace(location))
+        //        {
+        //            return BadRequest("Could not use current id");
+        //        }
+        //        return Created(location, _mapper.Map<EditRecipeModel>(result));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+        //    }
+        //}
         [HttpPost]
-        public async Task<ActionResult<EditRecipeModel>> Post(EditRecipeModel model)
+        public async Task<AddRecipeCommandResponse> PostAsync(EditRecipeModel model)
         {
-            if (model == null)
-                return BadRequest();
-
-            try
+            AddRecipeCommand command = new()
             {
-                var result = _mapper.Map<Recipe>(model);
-                await _recipeRepository.AddAsync(result);
-
-                result = await _recipeRepository.GetByIdIncludeIngredientsAsync(result.Id);
-                string? location = _linkGenerator.GetPathByAction("GetById", "Recipe", new { id = result!.Id });
-                if (string.IsNullOrWhiteSpace(location))
-                {
-                    return BadRequest("Could not use current id");
-                }
-                return Created(location, _mapper.Map<EditRecipeModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Model = model
+            };
+            return await _mediator.Send(command);
         }
 
         [HttpPut]

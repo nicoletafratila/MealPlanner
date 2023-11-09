@@ -2,9 +2,7 @@
 using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Repository;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Common.Api
 {
@@ -43,11 +41,13 @@ namespace Common.Api
                 c.AddProfile<ShoppingListProductProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             RegisterRepositories(services);
             RegisterServices(services);
-           
+
             services.AddCors(options =>
             {
                 options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
