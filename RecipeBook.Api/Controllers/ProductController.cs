@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using Common.Pagination;
+﻿using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Product.Commands.AddProduct;
+using RecipeBook.Api.Features.Product.Commands.DeleteProduct;
+using RecipeBook.Api.Features.Product.Commands.UpdateProduct;
 using RecipeBook.Api.Features.Product.Queries.GetEditProduct;
 using RecipeBook.Api.Features.Product.Queries.SearchProducts;
-using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -14,16 +14,10 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IRecipeIngredientRepository _recipeIngredientRepository;
-        private readonly IMapper _mapper;
         private readonly ISender _mediator;
 
-        public ProductController(ISender mediator, IProductRepository productRepository, IRecipeIngredientRepository recipeIngredientRepository, IMapper mapper)
+        public ProductController(ISender mediator)
         {
-            _productRepository = productRepository;
-            _mapper = mapper;
-            _recipeIngredientRepository = recipeIngredientRepository;
             _mediator = mediator;
         }
 
@@ -50,52 +44,25 @@ namespace RecipeBook.Api.Controllers
 
 
         [HttpPost("")]
-        public async Task<AddProductCommandResponse> PostAsync(AddProductCommand addQuestionCommand)
+        public async Task<AddProductCommandResponse> PostAsync(AddProductCommand command)
         {
-            return await _mediator.Send(addQuestionCommand);
+            return await _mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<ActionResult<EditProductModel>> Put(EditProductModel model)
+        public async Task<UpdateProductCommandResponse> Put(UpdateProductCommand command)
         {
-            if (model == null)
-                return BadRequest();
-
-            try
-            {
-                var oldModel = await _productRepository.GetByIdAsync(model.Id);
-                if (oldModel == null)
-                {
-                    return NotFound($"Could not find with id {model.Id}");
-                }
-
-                _mapper.Map(model, oldModel);
-                await _productRepository.UpdateAsync(oldModel);
-                return _mapper.Map<EditProductModel>(oldModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+            return await _mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<DeleteProductCommandResponse> Delete(int id)
         {
-            var itemToDelete = await _productRepository.GetByIdAsync(id);
-            if (itemToDelete == null)
+            DeleteProductCommand command = new()
             {
-                return NotFound($"Could not find with id {id}");
-            }
-
-            var result = await _recipeIngredientRepository.SearchAsync(id);
-            if (result != null && result.Any())
-            {
-                return BadRequest($"The product you try to delete is used in recipes and cannot be deleted.");
-            }
-
-            await _productRepository.DeleteAsync(itemToDelete!);
-            return StatusCode(StatusCodes.Status200OK);
+                Id = id
+            };
+            return await _mediator.Send(command);
         }
     }
 }

@@ -40,8 +40,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> AddAsync(EditProductModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(new { model.Name, model.ImageContent, model.UnitId, model.ProductCategoryId }), Encoding.UTF8, "application/json");
-            using var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
-
+            var response = await _httpClient.PostAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -49,20 +48,25 @@ namespace MealPlanner.UI.Web.Services
             return result!.Message;
         }
 
-        public async Task UpdateAsync(EditProductModel model)
+        public async Task<string?> UpdateAsync(EditProductModel model)
         {
-            var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
+            var modelJson = new StringContent(JsonSerializer.Serialize(new { model.Id, model.Name, model.ImageContent, model.UnitId, model.ProductCategoryId }), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi], modelJson);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result!.Message;
         }
 
-        public async Task<string> DeleteAsync(int id)
+        public async Task<string?> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_recipeBookApiConfig.Endpoints[ApiEndpointNames.ProductApi]}/{id}");
-            if (!response.IsSuccessStatusCode)
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
-                return await response.Content.ReadAsStringAsync();
-            }
-            return string.Empty;
+                Message = string.Empty
+            });
+            return result!.Message;
         }
     }
 }

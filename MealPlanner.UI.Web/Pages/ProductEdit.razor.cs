@@ -1,5 +1,4 @@
-﻿using Common.Api;
-using MealPlanner.UI.Web.Services;
+﻿using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
@@ -95,7 +94,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ProductService!.AddAsync(Product);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Add", response);
+                    ErrorComponent!.ShowError("Error", response);
                 }
                 else
                 {
@@ -116,10 +115,10 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the product: '{Product.Name}'?"))
                     return;
 
-                var result = await ProductService!.DeleteAsync(Product.Id);
-                if (!string.IsNullOrWhiteSpace(result))
+                var response = await ProductService!.DeleteAsync(Product.Id);
+                if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", result);
+                    ErrorComponent!.ShowError("Error", response);
                 }
                 else
                 {

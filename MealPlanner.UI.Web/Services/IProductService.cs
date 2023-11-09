@@ -8,7 +8,7 @@ namespace MealPlanner.UI.Web.Services
         Task<EditProductModel?> GetEditAsync(int id);
         Task<PagedList<ProductModel>?> SearchAsync(string? categoryId = null, QueryParameters? queryParameters = null);
         Task<string?> AddAsync(EditProductModel model);
-        Task UpdateAsync(EditProductModel model);
-        Task<string> DeleteAsync(int id);
+        Task<string?> UpdateAsync(EditProductModel model);
+        Task<string?> DeleteAsync(int id);
     }
 }
