@@ -130,17 +130,13 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task SaveAsync()
         {
-            if (Recipe!.Id == 0)
+            var response = Recipe!.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe);
+            if (!string.IsNullOrWhiteSpace(response))
             {
-                var addedEntity = await RecipeService!.AddAsync(Recipe);
-                if (addedEntity != null)
-                {
-                    NavigateToOverview();
-                }
+                ErrorComponent!.ShowError("Error", response);
             }
             else
             {
-                await RecipeService!.UpdateAsync(Recipe);
                 NavigateToOverview();
             }
         }

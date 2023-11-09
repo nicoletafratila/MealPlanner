@@ -36,28 +36,36 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<MealPlanModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<EditMealPlanModel?> AddAsync(EditMealPlanModel model)
+        public async Task<string?> AddAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi], modelJson);
-
-            if (response.IsSuccessStatusCode)
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
-                return await JsonSerializer.DeserializeAsync<EditMealPlanModel?>(await response.Content.ReadAsStreamAsync());
-            }
-
-            return null;
+                Message = string.Empty
+            });
+            return result!.Message;
         }
 
-        public async Task UpdateAsync(EditMealPlanModel model)
+        public async Task<string?> UpdateAsync(EditMealPlanModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi], modelJson);
+            var response = await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi], modelJson);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result!.Message;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<string?> DeleteAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/{id}");
+            var response = await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/{id}");
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result!.Message;
         }
     }
 }

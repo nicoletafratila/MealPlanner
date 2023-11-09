@@ -7,8 +7,8 @@ namespace MealPlanner.UI.Web.Services
     {
         Task<EditMealPlanModel?> GetEditAsync(int id);
         Task<PagedList<MealPlanModel>?> SearchAsync(QueryParameters? queryParameters = null);
-        Task<EditMealPlanModel?> AddAsync(EditMealPlanModel model);
-        Task UpdateAsync(EditMealPlanModel model);
-        Task DeleteAsync(int id);
+        Task<string?> AddAsync(EditMealPlanModel model);
+        Task<string?> UpdateAsync(EditMealPlanModel model);
+        Task<string?> DeleteAsync(int id);
     }
 }

@@ -89,17 +89,13 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task SaveAsync()
         {
-            if (MealPlan!.Id == 0)
+            var response = MealPlan!.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan);
+            if (!string.IsNullOrWhiteSpace(response))
             {
-                var addedEntity = await MealPlanService!.AddAsync(MealPlan);
-                if (addedEntity != null)
-                {
-                    NavigateToOverview();
-                }
+                ErrorComponent!.ShowError("Error", response);
             }
             else
             {
-                await MealPlanService!.UpdateAsync(MealPlan);
                 NavigateToOverview();
             }
         }
@@ -111,8 +107,15 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the meal plan: '{MealPlan.Name}'?"))
                     return;
 
-                await MealPlanService!.DeleteAsync(MealPlan.Id);
-                NavigateToOverview();
+                var result = await RecipeService!.DeleteAsync(MealPlan.Id);
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    ErrorComponent!.ShowError("Error", result);
+                }
+                else
+                {
+                    NavigateToOverview();
+                }
             }
         }
 

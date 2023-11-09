@@ -89,21 +89,13 @@ namespace MealPlanner.UI.Web.Pages
 
         protected async Task SaveAsync()
         {
-            if (Product!.Id == 0)
+            var response = Product!.Id == 0 ? await ProductService!.AddAsync(Product) : await ProductService!.UpdateAsync(Product);
+            if (!string.IsNullOrWhiteSpace(response))
             {
-                var response = await ProductService!.AddAsync(Product);
-                if (!string.IsNullOrWhiteSpace(response))
-                {
-                    ErrorComponent!.ShowError("Error", response);
-                }
-                else
-                {
-                    NavigateToOverview();
-                }
+                ErrorComponent!.ShowError("Error", response);
             }
             else
             {
-                await ProductService!.UpdateAsync(Product);
                 NavigateToOverview();
             }
         }
