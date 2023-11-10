@@ -6,7 +6,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList
     {
         public AddShoppingListCommandValidator()
         {
-            RuleFor(x => x.MealPlanId).NotEmpty().GreaterThan(0);
+            RuleFor(x => x.Model).NotEmpty();
         }
     }
 }

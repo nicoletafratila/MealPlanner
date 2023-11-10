@@ -1,41 +1,38 @@
 ﻿using AutoMapper;
-using MealPlanner.Api.Features.MealPlan.Commands.AddMealPlan;
 using MealPlanner.Api.Repositories;
-using MealPlanner.Shared.Models;
 using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList
 {
-    public class AddShoppingListCommandHandler : IRequestHandler<AddShoppingListCommand, EditShoppingListModel?>
+    public class AddShoppingListCommandHandler : IRequestHandler<AddShoppingListCommand, AddShoppingListCommandResponse>
     {
-        private readonly IShoppingListRepository _shoppingListRepository;
-        private readonly IMealPlanRepository _meanPlanRepository;
-        private readonly IMapper _mapper; 
-        private readonly ILogger<AddMealPlanCommandHandler> _logger;
+        private readonly IShoppingListRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<AddShoppingListCommandHandler> _logger;
 
-        public AddShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IMapper mapper, ILogger<AddMealPlanCommandHandler> logger)
+        public AddShoppingListCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<AddShoppingListCommandHandler> logger)
         {
-            _meanPlanRepository = mealPlanRepository;
-            _shoppingListRepository = shoppingListRepository;
+            _repository = repository;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<EditShoppingListModel?> Handle(AddShoppingListCommand request, CancellationToken cancellationToken)
+        public async Task<AddShoppingListCommandResponse> Handle(AddShoppingListCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var mealPlan = await _meanPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId);
-                if (mealPlan == null)
-                    return null;
+                var existingItem = await _repository.SearchAsync(request.Model!.Name!);
+                if (existingItem != null)
+                    return new AddShoppingListCommandResponse { Id = 0, Message = "This shopping list already exists." };
 
-                var data = await _shoppingListRepository.AddAsync(mealPlan.GetShoppingList());
-                return _mapper.Map<EditShoppingListModel>(await _shoppingListRepository.GetByIdIncludeProductsAsync(data.Id));
+                var mapped = _mapper.Map<Common.Data.Entities.ShoppingList>(request.Model);
+                var newItem = await _repository.AddAsync(mapped);
+                return new AddShoppingListCommandResponse { Id = newItem.Id, Message = string.Empty };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return null;
+                return new AddShoppingListCommandResponse { Message = "An error occured when saving the shopping list." };
             }
         }
     }

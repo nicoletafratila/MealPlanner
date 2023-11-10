@@ -5,7 +5,7 @@
         public string? Name { get; set; }
         public IList<MealPlanRecipe>? MealPlanRecipes { get; set; }
 
-        public ShoppingList GetShoppingList()
+        public ShoppingList MakeShoppingList()
         {
             var list = new ShoppingList();
             list.Name = "Shopping list details for " + Name;

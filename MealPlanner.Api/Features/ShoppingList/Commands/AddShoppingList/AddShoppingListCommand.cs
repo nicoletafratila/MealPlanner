@@ -3,8 +3,8 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList
 {
-    public class AddShoppingListCommand : IRequest<EditShoppingListModel?>
+    public class AddShoppingListCommand : IRequest<AddShoppingListCommandResponse>
     {
-        public int MealPlanId { get; set; }
+        public EditShoppingListModel? Model { get; set; }
     }
 }

@@ -36,16 +36,22 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ShoppingListModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<EditShoppingListModel?> SaveShoppingListFromMealPlanAsync(int mealPlanId)
+        public async Task<EditShoppingListModel?> MakeShoppingListAsync(int mealPlanId)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(mealPlanId), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
+            var response = await _httpClient.PostAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/makeShoppingList", modelJson);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string?> AddAsync(EditShoppingListModel model)
         {
-            return null;
+            var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result!.Message;
         }
 
         public async Task<string?> UpdateAsync(EditShoppingListModel model)
