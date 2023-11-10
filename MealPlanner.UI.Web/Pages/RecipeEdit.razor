@@ -50,12 +50,12 @@
 
                     <div class="form-group mt-3">
                         <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
-                        <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnIngredientCategoryChangedAsync(value))"
-                                 Value="IngredientCategoryId" ValueExpression="@(() => IngredientCategoryId)">
+                        <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnProductCategoryChangedAsync(value))"
+                                 Value="ProductCategoryId" ValueExpression="@(() => ProductCategoryId)">
                             <option selected value="0">Choose...</option>
-                            @if (IngredientCategories != null && IngredientCategories.Any())
+                            @if (ProductCategories != null && ProductCategories.Any())
                             {
-                                @foreach (var item in IngredientCategories)
+                                @foreach (var item in ProductCategories)
                                 {
                                     <option value="@item.Id">@item.Name</option>
                                 }
@@ -65,8 +65,8 @@
 
                     <div class="form-group mt-3">
                         <label for="ingredient" class="col-sm-3">Ingredient: </label>
-                        <InputSelect id="ingredient" class="form-select" ValueChanged="@((string value) => OnIngredientChanged(value))"
-                                 Value="IngredientId" ValueExpression="@(() => IngredientId)">
+                        <InputSelect id="ingredient" class="form-select" ValueChanged="@((string value) => OnProductChanged(value))"
+                                 Value="ProductId" ValueExpression="@(() => ProductId)">
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {

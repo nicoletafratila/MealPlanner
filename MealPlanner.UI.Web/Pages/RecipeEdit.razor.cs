@@ -30,36 +30,36 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private string? _ingredientCategoryId;
-        public string? IngredientCategoryId
+        private string? _productCategoryId;
+        public string? ProductCategoryId
         {
             get
             {
-                return _ingredientCategoryId;
+                return _productCategoryId;
             }
             set
             {
-                if (_ingredientCategoryId != value)
+                if (_productCategoryId != value)
                 {
-                    _ingredientCategoryId = value;
-                    OnIngredientCategoryChangedAsync(_ingredientCategoryId!);
+                    _productCategoryId = value;
+                    OnProductCategoryChangedAsync(_productCategoryId!);
                 }
             }
         }
 
-        private string? _ingredientId;
-        public string? IngredientId
+        private string? _productId;
+        public string? ProductId
         {
             get
             {
-                return _ingredientId;
+                return _productId;
             }
             set
             {
-                if (_ingredientId != value)
+                if (_productId != value)
                 {
-                    _ingredientId = value;
-                    OnIngredientChanged(_ingredientId!);
+                    _productId = value;
+                    OnProductChanged(_productId!);
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Web.Pages
         public RecipeIngredientModel? RecipeIngredient { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
         public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
-        public IList<ProductCategoryModel>? IngredientCategories { get; set; }
+        public IList<ProductCategoryModel>? ProductCategories { get; set; }
         private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
@@ -96,7 +96,7 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeCategoryService? RecipeCategoryService { get; set; }
 
         [Inject]
-        public IProductCategoryService? IngredientCategoryService { get; set; }
+        public IProductCategoryService? ProductCategoryService { get; set; }
 
         [Inject]
         public IProductService? ProductService { get; set; }
@@ -114,7 +114,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             int.TryParse(Id, out var id);
             RecipeCategories = await RecipeCategoryService!.GetAllAsync();
-            IngredientCategories = await IngredientCategoryService!.GetAllAsync();
+            ProductCategories = await ProductCategoryService!.GetAllAsync();
 
             if (id == 0)
             {
@@ -126,6 +126,11 @@ namespace MealPlanner.UI.Web.Pages
             }
 
             RecipeCategoryId = Recipe!.RecipeCategoryId.ToString();
+        }
+
+        protected void NavigateToOverview()
+        {
+            NavigationManager!.NavigateTo("/recipesoverview");
         }
 
         protected async Task SaveAsync()
@@ -164,8 +169,8 @@ namespace MealPlanner.UI.Web.Pages
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(IngredientId) &&
-                       IngredientId != "0" &&
+                return !string.IsNullOrWhiteSpace(ProductId) &&
+                       ProductId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
                        decimal.Parse(Quantity) > 0;
             }
@@ -173,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected void AddIngredient()
         {
-            if (!string.IsNullOrWhiteSpace(IngredientId) && IngredientId != "0")
+            if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
                 if (Recipe != null)
                 {
@@ -181,7 +186,7 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         Recipe.Ingredients = new List<RecipeIngredientModel>();
                     }
-                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product!.Id == int.Parse(IngredientId));
+                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product!.Id == int.Parse(ProductId));
                     if (item != null)
                     {
                         item.Quantity += decimal.Parse(Quantity!);
@@ -189,12 +194,11 @@ namespace MealPlanner.UI.Web.Pages
                     else
                     {
                         item = new RecipeIngredientModel();
-                        item.Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(IngredientId));
+                        item.Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId));
                         item.RecipeId = Recipe.Id;
                         item.Quantity = decimal.Parse(Quantity!);
                         Recipe.Ingredients!.Add(item);
-
-                        ClearForm();
+                        Quantity = string.Empty;
                     }
                 }
             }
@@ -212,23 +216,18 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void NavigateToOverview()
+        private async void OnProductCategoryChangedAsync(string value)
         {
-            NavigationManager!.NavigateTo("/recipesoverview");
-        }
-
-        private async void OnIngredientCategoryChangedAsync(string value)
-        {
-            IngredientCategoryId = value;
-            IngredientId = string.Empty;
+            ProductCategoryId = value;
+            ProductId = string.Empty;
             Quantity = string.Empty;
-            Products = await ProductService!.SearchAsync(IngredientCategoryId);
+            Products = await ProductService!.SearchAsync(ProductCategoryId);
             StateHasChanged();
         }
 
-        private void OnIngredientChanged(string value)
+        private void OnProductChanged(string value)
         {
-            IngredientId = value;
+            ProductId = value;
             Quantity = string.Empty;
             StateHasChanged();
         }
@@ -252,11 +251,6 @@ namespace MealPlanner.UI.Web.Pages
                 ErrorComponent!.ShowError("Error", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
-        }
-
-        private void ClearForm()
-        {
-            Quantity = string.Empty;
         }
     }
 }

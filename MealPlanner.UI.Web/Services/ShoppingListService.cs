@@ -43,6 +43,11 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
         }
 
+        public async Task<string?> AddAsync(EditShoppingListModel model)
+        {
+            return null;
+        }
+
         public async Task<string?> UpdateAsync(EditShoppingListModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
