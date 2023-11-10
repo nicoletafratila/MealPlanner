@@ -20,6 +20,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
+
         [Parameter]
         public QueryParameters? QueryParameters { get; set; } = new();
 
@@ -45,8 +48,15 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the shopping list: '{item.Name}'?"))
                     return;
 
-                await ShoppingListService!.DeleteAsync(item.Id);
-                await RefreshAsync();
+                var response = await ShoppingListService!.DeleteAsync(item.Id);
+                if (!string.IsNullOrWhiteSpace(response))
+                {
+                    ErrorComponent!.ShowError("Error", response);
+                }
+                else
+                {
+                    await RefreshAsync();
+                }
             }
         }
 

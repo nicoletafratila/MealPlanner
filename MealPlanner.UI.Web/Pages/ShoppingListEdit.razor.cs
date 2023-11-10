@@ -16,6 +16,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             int.TryParse(Id, out var id);
@@ -41,9 +44,17 @@ namespace MealPlanner.UI.Web.Pages
             {
                 itemToChange.Collected = !itemToChange.Collected;
             }
-            await ShoppingListService!.UpdateAsync(Model);
-            await OnInitializedAsync();
-            StateHasChanged();
+            var response = await ShoppingListService!.UpdateAsync(Model);
+
+            if (!string.IsNullOrWhiteSpace(response))
+            {
+                ErrorComponent!.ShowError("Error", response);
+            }
+            else
+            {
+                await OnInitializedAsync();
+                StateHasChanged();
+            }
         }
     }
 }

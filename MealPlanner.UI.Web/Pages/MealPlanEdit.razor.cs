@@ -107,10 +107,10 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the meal plan: '{MealPlan.Name}'?"))
                     return;
 
-                var result = await RecipeService!.DeleteAsync(MealPlan.Id);
-                if (!string.IsNullOrWhiteSpace(result))
+                var response = await MealPlanService!.DeleteAsync(MealPlan.Id);
+                if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", result);
+                    ErrorComponent!.ShowError("Error", response);
                 }
                 else
                 {

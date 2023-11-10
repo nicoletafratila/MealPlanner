@@ -22,5 +22,11 @@ namespace MealPlanner.Api.Repositories
                         .ThenInclude(x => x!.Unit)
                 .FirstOrDefaultAsync(item => item.Id == id);
         }
+
+        public async Task<ShoppingList?> SearchAsync(string name)
+        {
+            return await (DbContext as MealPlannerDbContext)!.ShoppingLists
+                   .FirstOrDefaultAsync(item => item.Name!.ToLower() == name.ToLower());
+        }
     }
 }

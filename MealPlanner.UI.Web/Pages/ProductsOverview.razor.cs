@@ -54,10 +54,10 @@ namespace MealPlanner.UI.Web.Pages
                 if (!await JSRuntime!.Confirm($"Are you sure you want to delete the product: '{item.Name}'?"))
                     return;
 
-                var result = await ProductService!.DeleteAsync(item.Id);
-                if (!string.IsNullOrWhiteSpace(result))
+                var response = await ProductService!.DeleteAsync(item.Id);
+                if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", result);
+                    ErrorComponent!.ShowError("Error", response);
                 }
                 else
                 {

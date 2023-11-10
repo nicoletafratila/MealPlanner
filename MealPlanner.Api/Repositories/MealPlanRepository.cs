@@ -48,9 +48,6 @@ namespace MealPlanner.Api.Repositories
         public async Task<MealPlan?> SearchAsync(string name)
         {
             return await (DbContext as MealPlannerDbContext)!.MealPlans
-                   .Include(x => x.MealPlanRecipes)!
-                       .ThenInclude(x => x.Recipe)
-                           .ThenInclude(x => x!.RecipeCategory)
                    .FirstOrDefaultAsync(item => item.Name!.ToLower() == name.ToLower());
         }
     }

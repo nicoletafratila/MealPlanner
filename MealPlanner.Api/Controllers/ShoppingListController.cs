@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using Common.Pagination;
+﻿using Common.Pagination;
+using MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList;
+using MealPlanner.Api.Features.ShoppingList.Commands.DeleteShoppingList;
+using MealPlanner.Api.Features.ShoppingList.Commands.UpdateShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Queries.GetEditShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Queries.SearchShoppingLists;
-using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +14,10 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class ShoppingListController : ControllerBase
     {
-        private readonly IShoppingListRepository _shoppingListRepository;
-        private readonly IMealPlanRepository _meanPlanRepository;
-        private readonly IMapper _mapper;
-        private readonly LinkGenerator _linkGenerator;
         private readonly ISender _mediator;
 
-        public ShoppingListController(ISender mediator, IShoppingListRepository shoppingListRepository, IMealPlanRepository mealPlanRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public ShoppingListController(ISender mediator)
         {
-            _shoppingListRepository = shoppingListRepository;
-            _meanPlanRepository = mealPlanRepository;
-            _mapper = mapper;
-            _linkGenerator = linkGenerator;
             _mediator = mediator;
         }
 
@@ -49,68 +42,33 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<EditShoppingListModel>> Post([FromBody] int id)
+        public async Task<EditShoppingListModel?> Post([FromBody] int id)
         {
-            try
+            AddShoppingListCommand command = new()
             {
-                var mealPlan = await _meanPlanRepository.GetByIdIncludeRecipesAsync(id);
-                if (mealPlan == null)
-                {
-                    return NotFound();
-                }
-
-                var list = mealPlan.GetShoppingList();
-                await _shoppingListRepository.AddAsync(list);
-
-                var result = await _shoppingListRepository.GetByIdIncludeProductsAsync(list.Id);
-                string? location = _linkGenerator.GetPathByAction("GetEdit", "ShoppingList", new { id = result!.Id });
-                if (string.IsNullOrWhiteSpace(location))
-                {
-                    return BadRequest("Could not use current id");
-                }
-                return Created(location, _mapper.Map<EditShoppingListModel>(result));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                MealPlanId = id
+            };
+            return await _mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(EditShoppingListModel model)
+        public async Task<UpdateShoppingListCommandResponse> Put(EditShoppingListModel model)
         {
-            if (model == null)
-                return BadRequest();
-
-            try
+            UpdateShoppingListCommand command = new()
             {
-                var oldModel = await _shoppingListRepository.GetByIdIncludeProductsAsync(model.Id);
-                if (oldModel == null)
-                {
-                    return NotFound($"Could not find with id {model.Id}");
-                }
-
-                _mapper.Map(model, oldModel);
-                await _shoppingListRepository.UpdateAsync(oldModel);
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
-            }
+                Model = model
+            };
+            return await _mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<DeleteShoppingListCommandResponse> Delete(int id)
         {
-            var itemToDelete = await _shoppingListRepository.GetByIdAsync(id);
-            if (itemToDelete == null)
+            DeleteShoppingListCommand command = new()
             {
-                NotFound($"Could not find with id {id}");
-                return;
-            }
-
-            await _shoppingListRepository.DeleteAsync(itemToDelete);
+                Id = id
+            };
+            return await _mediator.Send(command);
         }
     }
 }

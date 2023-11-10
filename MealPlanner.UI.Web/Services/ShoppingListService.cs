@@ -40,24 +40,28 @@ namespace MealPlanner.UI.Web.Services
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(mealPlanId), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
-            }
-
-            return null;
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task UpdateAsync(EditShoppingListModel model)
+        public async Task<string?> UpdateAsync(EditShoppingListModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
+            var response = await _httpClient.PutAsync(_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi], modelJson);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result!.Message;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<string?> DeleteAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/{id}");
+            var response = await _httpClient.DeleteAsync($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.ShoppingListApi]}/{id}");
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result!.Message;
         }
     }
 }
