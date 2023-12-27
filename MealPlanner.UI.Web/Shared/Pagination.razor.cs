@@ -23,6 +23,12 @@ namespace MealPlanner.UI.Web.Shared
         public bool HasPrevious { get; set; }
 
         [Parameter]
+        public bool ShowGoToFirst { get; set; }
+
+        [Parameter]
+        public bool ShowGoToLast { get; set; }
+
+        [Parameter]
         [EditorRequired]
         public EventCallback<int> PageChanged { get; set; }
 

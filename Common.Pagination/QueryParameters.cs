@@ -2,7 +2,7 @@
 {
     public class QueryParameters
     {
-        private const int MaxPageSize = 25;
+        private const int MaxPageSize = int.MaxValue;
         public int PageNumber { get; set; } = 1;
         private int _pageSize = 10;
 
