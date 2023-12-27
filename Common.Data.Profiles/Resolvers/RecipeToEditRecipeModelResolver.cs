@@ -16,7 +16,7 @@ namespace Common.Data.Profiles.Resolvers
             {
                 result.Add(context.Mapper.Map<RecipeIngredientModel>(item));
             }
-            return result.OrderBy(item => item.Product!.ProductCategory!.DisplaySequence)
+            return result.OrderBy(item => item.Product!.ProductCategory!.Name)
                          .ThenBy(item => item.Product!.Name).ToList();
         }
     }

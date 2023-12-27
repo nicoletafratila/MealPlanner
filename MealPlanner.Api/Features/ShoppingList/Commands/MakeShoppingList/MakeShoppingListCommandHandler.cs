@@ -10,13 +10,15 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
     {
         private readonly IShoppingListRepository _shoppingListRepository;
         private readonly IMealPlanRepository _meanPlanRepository;
-        private readonly IMapper _mapper; 
+        private readonly IShopRepository _shopRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<AddMealPlanCommandHandler> _logger;
 
-        public MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IMapper mapper, ILogger<AddMealPlanCommandHandler> logger)
+        public MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<AddMealPlanCommandHandler> logger)
         {
             _meanPlanRepository = mealPlanRepository;
             _shoppingListRepository = shoppingListRepository;
+            _shopRepository = shopRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -29,8 +31,10 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
                 if (mealPlan == null)
                     return null;
 
-                var data = await _shoppingListRepository.AddAsync(mealPlan.MakeShoppingList());
-                return _mapper.Map<EditShoppingListModel>(await _shoppingListRepository.GetByIdIncludeProductsAsync(data.Id));
+                var shop = await _shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId);
+                var data = await _shoppingListRepository.AddAsync(mealPlan.MakeShoppingList(shop!));
+                var list = await _shoppingListRepository.GetByIdIncludeProductsAsync(data.Id);
+                return _mapper.Map<EditShoppingListModel>(list);
             }
             catch (Exception ex)
             {

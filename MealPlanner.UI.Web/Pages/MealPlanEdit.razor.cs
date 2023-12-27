@@ -176,7 +176,7 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var addedEntity = await ShoppingListService!.MakeShoppingListAsync(MealPlan.Id);
+            var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = 2 });
             if (addedEntity != null && addedEntity!.Id > 0)
             {
                 NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");

@@ -5,10 +5,10 @@
         public string? Name { get; set; }
         public IList<MealPlanRecipe>? MealPlanRecipes { get; set; }
 
-        public ShoppingList MakeShoppingList()
+        public ShoppingList MakeShoppingList(Shop shop)
         {
             var list = new ShoppingList();
-            list.Name = "Shopping list details for " + Name;
+            list.Name = $"Shopping list details for {Name} in shop {shop.Name}";
             var products = new List<ShoppingListProduct>();
             foreach (var item in MealPlanRecipes!)
             {
@@ -17,7 +17,9 @@
                     var existingProduct = products.FirstOrDefault(x => x.ProductId == i.ProductId);
                     if (existingProduct == null)
                     {
-                        products.Add(i.ToShoppingListProduct());
+                        var displaySequence = shop!.GetDisplaySequence(i.Product!.ProductCategory!.Id);
+                        var newProduct = i.ToShoppingListProduct(displaySequence.Value);
+                        products.Add(newProduct);
                     }
                     else
                         existingProduct.Quantity += i.Quantity;

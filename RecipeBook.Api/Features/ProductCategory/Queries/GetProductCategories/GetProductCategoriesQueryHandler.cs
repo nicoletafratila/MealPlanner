@@ -19,7 +19,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.GetProductCategories
         public async Task<IList<ProductCategoryModel>> Handle(GetProductCategoriesQuery request, CancellationToken cancellationToken)
         {
             var results = await _repository.GetAllAsync();
-            return _mapper.Map<IList<ProductCategoryModel>>(results).OrderBy(r => r.DisplaySequence).ToList();
+            return _mapper.Map<IList<ProductCategoryModel>>(results).OrderBy(r => r.Name).ToList();
         }
     }
 }
