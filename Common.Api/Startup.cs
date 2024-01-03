@@ -39,6 +39,7 @@ namespace Common.Api
                 c.AddProfile<UnitProfile>();
                 c.AddProfile<ShoppingListProfile>();
                 c.AddProfile<ShoppingListProductProfile>();
+                c.AddProfile<ShopProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
             services.AddSingleton<ILoggerFactory, LoggerFactory>();

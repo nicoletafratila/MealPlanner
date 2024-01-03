@@ -11,6 +11,7 @@ namespace Common.Api
             Endpoints = new Dictionary<string, string>();
             Endpoints[ApiEndpointNames.ShoppingListApi] = "api/shoppinglist";
             Endpoints[ApiEndpointNames.MealPlanApi] = "api/mealplan";
+            Endpoints[ApiEndpointNames.ShopApi] = "api/shop";
         }
     }
 }

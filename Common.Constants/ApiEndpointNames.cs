@@ -3,6 +3,7 @@
     public class ApiEndpointNames
     {
         public const string ShoppingListApi = "ShoppingListApi";
+        public const string ShopApi = "ShopApi"; 
         public const string MealPlanApi = "MealPlanApi";
 
         public const string RecipeApi = "RecipeApi";

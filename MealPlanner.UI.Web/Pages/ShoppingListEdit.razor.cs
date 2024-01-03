@@ -1,10 +1,10 @@
-﻿using Common.Pagination;
+﻿using System.ComponentModel.DataAnnotations;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -15,36 +15,36 @@ namespace MealPlanner.UI.Web.Pages
 
         public EditShoppingListModel? Model { get; set; }
 
-        private string? _ProductCategoryId;
+        private string? _productCategoryId;
         public string? ProductCategoryId
         {
             get
             {
-                return _ProductCategoryId;
+                return _productCategoryId;
             }
             set
             {
-                if (_ProductCategoryId != value)
+                if (_productCategoryId != value)
                 {
-                    _ProductCategoryId = value;
-                    OnProductCategoryChangedAsync(_ProductCategoryId!);
+                    _productCategoryId = value;
+                    OnProductCategoryChangedAsync(_productCategoryId!);
                 }
             }
         }
 
-        private string? _ProductId;
+        private string? _productId;
         public string? ProductId
         {
             get
             {
-                return _ProductId;
+                return _productId;
             }
             set
             {
-                if (_ProductId != value)
+                if (_productId != value)
                 {
-                    _ProductId = value;
-                    OnProductChanged(_ProductId!);
+                    _productId = value;
+                    OnProductChanged(_productId!);
                 }
             }
         }

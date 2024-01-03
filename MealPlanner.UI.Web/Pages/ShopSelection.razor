@@ -1,0 +1,17 @@
+﻿<div class="mt-3 bg-success text-white bg-opacity-75">
+    <InputSelect id="Shop" class="form-select" ValueChanged="@((string value) => OnShopChangedAsync(value))"
+                 Value="ShopId" ValueExpression="@(() => ShopId)">
+        <option selected value="0">Choose...</option>
+        @if (Shops != null && Shops.Any())
+        {
+            @foreach (var item in Shops)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        }
+    </InputSelect>
+
+    <Button class="mt-3" Color="ButtonColor.Success" Type="ButtonType.Button" @onclick="OnClickCallback">
+        Trigger a Parent component method
+    </Button>
+</div>

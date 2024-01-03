@@ -70,6 +70,13 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
+            services.AddHttpClient<IShopService, ShopService>()
+               .ConfigureHttpClient((serviceProvider, httpClient) =>
+               {
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
+                   httpClient.BaseAddress = clientConfig.BaseUrl;
+                   httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+               });
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
