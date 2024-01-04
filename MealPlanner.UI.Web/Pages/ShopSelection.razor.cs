@@ -1,4 +1,5 @@
-﻿using Blazored.Modal;
+﻿using System.ComponentModel.DataAnnotations;
+using Blazored.Modal;
 using Blazored.Modal.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
@@ -8,7 +9,9 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ShopSelection : IComponent
     {
+        [Required]
         public string? ShopId { get; set; }
+
         public IList<ShopModel>? Shops { get; set; }
 
         [Inject]
