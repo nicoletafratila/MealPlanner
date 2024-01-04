@@ -1,33 +1,32 @@
 ﻿@page "/shoppinglistedit"
 @page "/shoppinglistedit/{id}"
 
-@if (Model != null)
+@if (ShoppingList != null)
 {
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
                 <div class="row g-0">
                     <div class="col-md-8">
-                        <h2>@Model.Name</h2>
+                        <h2>@ShoppingList.Name</h2>
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
-                <EditForm Model="@Model" OnValidSubmit="@SaveAsync">
+                <EditForm Model="@ShoppingList" OnValidSubmit="@SaveAsync">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Shopping list name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Enter shopping list name"></InputText>
-                        <ValidationMessage For="@(() => Model.Name)" />
+                        <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name"></InputText>
+                        <ValidationMessage For="@(() => ShoppingList.Name)" />
                     </div>
 
                     <div class="form-group mt-3">
                         <label for="ProductCategory" class="col-sm-3">Product category: </label>
-                        <InputSelect id="ProductCategory" class="form-select" ValueChanged="@((string value) => OnProductCategoryChangedAsync(value))"
-                                     Value="ProductCategoryId" ValueExpression="@(() => ProductCategoryId)">
+                        <InputSelect id="ProductCategory" class="form-select" @bind-Value="@ProductCategoryId">
                             <option selected value="0">Choose...</option>
                             @if (ProductCategories != null && ProductCategories.Any())
                             {
@@ -41,8 +40,7 @@
 
                     <div class="form-group mt-3">
                         <label for="Product" class="col-sm-3">Product: </label>
-                        <InputSelect id="Product" class="form-select" ValueChanged="@((string value) => OnProductChanged(value))"
-                                     Value="ProductId" ValueExpression="@(() => ProductId)">
+                        <InputSelect id="Product" class="form-select" @bind-Value="@ProductId">
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {
@@ -57,7 +55,7 @@
                     <div class="form-group mt-3">
                         <label for="quantity" class="col-sm-3">Quantity: </label>
                         <div class="input-group">
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Enter the quantity for the product"></InputText>
                             @if (CanAddProduct == true)
                             {
                                 <button class="btn btn-primary" type="button" @onclick="@AddProduct">Add</button>
@@ -73,7 +71,7 @@
                     <br />
 
                     <div class="card-body">
-                        <TableTemplate Items="@Model.Products">
+                        <TableTemplate Items="@ShoppingList.Products">
                             <TableCaption>Products:</TableCaption>
                             <TableHeader>
                                 <th></th>

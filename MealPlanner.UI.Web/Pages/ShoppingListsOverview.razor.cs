@@ -8,11 +8,11 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ShoppingListsOverview
     {
-        public PagedList<ShoppingListModel>? ShoppingLists { get; set; }
-        public ShoppingListModel? ShoppingList { get; set; }
-
         [Parameter]
         public QueryParameters? QueryParameters { get; set; } = new();
+
+        public ShoppingListModel? ShoppingList { get; set; }
+        public PagedList<ShoppingListModel>? ShoppingLists { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -23,7 +23,7 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()

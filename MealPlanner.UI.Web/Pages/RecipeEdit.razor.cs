@@ -57,8 +57,6 @@ namespace MealPlanner.UI.Web.Pages
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
         public string? Quantity { get; set; }
 
-        public RecipeIngredientModel? RecipeIngredient { get; set; }
-
         [Inject]
         public IRecipeService? RecipeService { get; set; }
 
