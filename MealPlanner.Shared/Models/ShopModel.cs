@@ -1,6 +1,6 @@
-﻿namespace RecipeBook.Shared.Models
+﻿namespace MealPlanner.Shared.Models
 {
-    public class ProductCategoryModel
+    public class ShopModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }

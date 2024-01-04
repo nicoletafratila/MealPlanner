@@ -8,10 +8,14 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ProductsOverview
     {
-        public PagedList<ProductModel>? Products { get; set; }
+        [Parameter]
+        public QueryParameters? QueryParameters { get; set; } = new();
+        
         public ProductModel? Product { get; set; }
-        public IList<ProductCategoryModel>? Categories { get; set; }
+        public PagedList<ProductModel>? Products { get; set; }
+        
         public string? CategoryId { get; set; }
+        public IList<ProductCategoryModel>? Categories { get; set; }
 
         [Inject]
         public IProductService? ProductService { get; set; }
@@ -25,29 +29,26 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
-
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
+ 
         protected override async Task OnInitializedAsync()
         {
             Categories = await CategoryService!.GetAllAsync();
             await RefreshAsync();
         }
 
-        protected void New()
+        private void New()
         {
             NavigationManager!.NavigateTo($"productedit/");
         }
 
-        protected void Update(ProductModel item)
+        private void Update(ProductModel item)
         {
             NavigationManager!.NavigateTo($"productedit/{item.Id}");
         }
 
-        protected async Task DeleteAsync(ProductModel item)
+        private async Task DeleteAsync(ProductModel item)
         {
             if (item != null)
             {
@@ -66,7 +67,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task RefreshAsync()
+        private async Task RefreshAsync()
         {
             Products = await ProductService!.SearchAsync(CategoryId, QueryParameters!);
             StateHasChanged();

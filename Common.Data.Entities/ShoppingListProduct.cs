@@ -6,6 +6,7 @@ namespace Common.Data.Entities
     {
         public decimal Quantity { get; set; }
         public bool Collected { get; set; }
+        public int DisplaySequence { get; set; }
 
         [ForeignKey("ShoppingListId")]
         public ShoppingList? ShoppingList { get; private set; }

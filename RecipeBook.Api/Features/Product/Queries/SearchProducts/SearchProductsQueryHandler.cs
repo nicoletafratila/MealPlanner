@@ -24,7 +24,7 @@ namespace RecipeBook.Api.Features.Product.Queries.SearchProducts
             {
                 data = await _repository.SearchAsync(int.Parse(request.CategoryId));
             }
-            var results = _mapper.Map<IList<ProductModel>>(data).OrderBy(item => item.ProductCategory!.DisplaySequence).ThenBy(item => item.Name).ToList();
+            var results = _mapper.Map<IList<ProductModel>>(data).OrderBy(item => item.ProductCategory!.Name).ThenBy(item => item.Name).ToList();
             return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
         }
     }

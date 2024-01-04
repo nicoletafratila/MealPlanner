@@ -1,4 +1,5 @@
-﻿using Common.Api;
+﻿using Blazored.Modal;
+using Common.Api;
 using MealPlanner.UI.Web.Services;
 
 namespace MealPlanner.UI.Web
@@ -16,6 +17,7 @@ namespace MealPlanner.UI.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddBlazoredModal();
 
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
@@ -70,6 +72,13 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
+            services.AddHttpClient<IShopService, ShopService>()
+               .ConfigureHttpClient((serviceProvider, httpClient) =>
+               {
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
+                   httpClient.BaseAddress = clientConfig.BaseUrl;
+                   httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+               });
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)

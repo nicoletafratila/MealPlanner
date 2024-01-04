@@ -23,6 +23,7 @@ namespace MealPlanner.Api
             base.RegisterRepositories(services);
             services.AddScoped<IMealPlanRepository, MealPlanRepository>();
             services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
+            services.AddScoped<IShopRepository, ShopRepository>();
         }
     }
 }

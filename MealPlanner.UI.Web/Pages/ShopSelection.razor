@@ -1,0 +1,30 @@
+﻿<div class="modal-body">
+    <div class="modal-title">
+        <h5>Please select the shop for which you would like to have the list:</h5>
+    </div>
+
+    <div class="col">
+        <EditForm Model="@this" OnValidSubmit="@SaveAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mt-3">
+                <InputSelect id="Shop" class="form-select" @bind-Value="@ShopId">
+                    <option selected value="0">Choose...</option>
+                    @if (Shops != null && Shops.Any())
+                    {
+                        @foreach (var item in Shops)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col mt-3">
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                <button class="btn btn-danger btn-sm" @onclick="@Cancel">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

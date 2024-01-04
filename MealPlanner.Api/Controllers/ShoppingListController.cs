@@ -43,11 +43,12 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost("makeShoppingList")]
-        public async Task<EditShoppingListModel?> MakeShoppingList([FromBody] int id)
+        public async Task<EditShoppingListModel?> MakeShoppingList(MakeShoppingListModel model)
         {
             MakeShoppingListCommand command = new()
             {
-                MealPlanId = id
+                MealPlanId = model.MealPlanId,
+                ShopId = model.ShopId
             };
             return await _mediator.Send(command);
         }
