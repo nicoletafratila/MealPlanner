@@ -8,8 +8,11 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class MealPlansOverview
     {
-        public PagedList<MealPlanModel>? MealPlans { get; set; }
+        [Parameter]
+        public QueryParameters? QueryParameters { get; set; } = new();
+
         public MealPlanModel? MealPlan { get; set; }
+        public PagedList<MealPlanModel>? MealPlans { get; set; }
 
         [Inject]
         public IMealPlanService? MealPlanService { get; set; }
@@ -20,10 +23,7 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()

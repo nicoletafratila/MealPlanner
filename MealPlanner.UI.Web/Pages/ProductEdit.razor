@@ -35,7 +35,7 @@
 
                     <div class="form-group mt-3">
                         <label for="productCategory" class="col-sm-3">Product category: </label>
-                        <InputSelect id="productCategory" class="form-select" @bind-Value="@CategoryId">
+                        <InputSelect id="productCategory" class="form-select" @bind-Value="@Product.ProductCategoryId">
                             <option selected value="0">Choose...</option>
                             @if (Categories != null && Categories.Any())
                             {
@@ -50,7 +50,7 @@
 
                     <div class="form-group mt-3">
                         <label for="unit" class="col-sm-3">Unit of measurement: </label>
-                        <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
+                        <InputSelect id="unit" class="form-select" @bind-Value="@Product.UnitId">
                             <option selected value="0">Choose...</option>
                             @if (Units != null && Units.Any())
                             {

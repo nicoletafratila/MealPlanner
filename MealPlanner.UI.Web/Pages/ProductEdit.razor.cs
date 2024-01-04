@@ -8,47 +8,14 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ProductEdit
     {
+        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
+
         [Parameter]
         public string? Id { get; set; }
-
-        private string? _categoryId;
-        public string? CategoryId
-        {
-            get
-            {
-                return _categoryId;
-            }
-            set
-            {
-                if (_categoryId != value)
-                {
-                    _categoryId = value;
-                    Product!.ProductCategoryId = int.Parse(_categoryId!);
-                }
-            }
-        }
-
-        private string? _unitId;
-        public string? UnitId
-        {
-            get
-            {
-                return _unitId;
-            }
-            set
-            {
-                if (_unitId != value)
-                {
-                    _unitId = value;
-                    Product!.UnitId = int.Parse(_unitId!);
-                }
-            }
-        }
-
         public EditProductModel? Product { get; set; }
+
         public IList<ProductCategoryModel>? Categories { get; set; }
         public IList<UnitModel>? Units { get; set; }
-        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Inject]
         public IProductService? ProductService { get; set; }
@@ -65,7 +32,7 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -82,9 +49,6 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Product = await ProductService!.GetEditAsync(int.Parse(Id!));
             }
-
-            CategoryId = Product!.ProductCategoryId.ToString();
-            UnitId = Product.UnitId.ToString();
         }
 
         private async Task SaveAsync()
