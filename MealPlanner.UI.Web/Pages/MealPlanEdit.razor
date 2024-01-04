@@ -27,7 +27,7 @@
                     <div class="form-group mt-3">
                         <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
                         <InputSelect id="recipeCategory" class="form-select" ValueChanged="@((string value) => OnRecipeCategoryChangedAsync(value))"
-                                 Value="RecipeCategoryId" ValueExpression="@(() => RecipeCategoryId)">
+                                     Value="RecipeCategoryId" ValueExpression="@(() => RecipeCategoryId)">
                             <option selected value="0">Choose...</option>
                             @if (Categories != null && Categories.Any())
                             {
@@ -43,7 +43,7 @@
                         <label for="recipe" class="col-sm-3">Recipe: </label>
                         <div class="input-group">
                             <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
-                                     Value="RecipeId" ValueExpression="@(() => RecipeId)">
+                                         Value="RecipeId" ValueExpression="@(() => RecipeId)">
                                 <option selected value="0">Choose...</option>
                                 @if (Recipes != null && Recipes!.Items!.Any())
                                 {
@@ -87,7 +87,7 @@
                         </TableTemplate>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
                     <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="@SaveShoppingListAsync">Make shopping list</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>

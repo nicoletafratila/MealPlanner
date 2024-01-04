@@ -1,4 +1,5 @@
-﻿using Common.Pagination;
+﻿using Blazored.Modal.Services;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -69,6 +70,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
+        [CascadingParameter]
+        public IModalService Modal { get; set; } = default!;
+
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
 
@@ -87,7 +91,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task SaveAsync()
+        private async Task SaveAsync()
         {
             var response = MealPlan!.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan);
             if (!string.IsNullOrWhiteSpace(response))
@@ -100,7 +104,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (MealPlan!.Id != 0)
             {
@@ -119,7 +123,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected bool CanAddRecipe
+        private bool CanAddRecipe
         {
             get
             {
@@ -128,7 +132,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task AddRecipeAsync()
+        private async Task AddRecipeAsync()
         {
             if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
             {
@@ -149,12 +153,12 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void EditRecipe(RecipeModel item)
+        private void EditRecipe(RecipeModel item)
         {
             NavigationManager!.NavigateTo($"recipeedit/{item.Id}");
         }
 
-        protected async Task DeleteRecipeAsync(RecipeModel item)
+        private async Task DeleteRecipeAsync(RecipeModel item)
         {
             RecipeModel? itemToDelete = MealPlan!.Recipes!.FirstOrDefault(i => i.Id == item.Id);
             if (itemToDelete != null)
@@ -166,24 +170,37 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void NavigateToOverview()
+        private void NavigateToOverview()
         {
             NavigationManager!.NavigateTo("/mealplansoverview");
         }
 
-        protected async Task SaveShoppingListAsync()
+        private async Task SaveShoppingListAsync()
         {
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = 2 });
-            if (addedEntity != null && addedEntity!.Id > 0)
+            var shopSelectionModal = Modal.Show<ShopSelection>();
+            var result = await shopSelectionModal.Result;
+
+            if (result.Cancelled)
+                return;
+
+            if (result.Confirmed && result!.Data != null)
             {
-                NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
-            }
-            else
-            {
-                ErrorComponent!.ShowError("Error", "There has been an error when saving the shopping list");
+                var shopId = result.Data.ToString();
+                if (string.IsNullOrWhiteSpace(shopId))
+                    return;
+
+                var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = int.Parse(shopId) });
+                if (addedEntity != null && addedEntity!.Id > 0)
+                {
+                    NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
+                }
+                else
+                {
+                    ErrorComponent!.ShowError("Error", "There has been an error when saving the shopping list");
+                }
             }
         }
 

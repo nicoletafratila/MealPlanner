@@ -1,32 +1,18 @@
-﻿using MealPlanner.Shared.Models;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace MealPlanner.UI.Web.Pages
 {
-    public partial class ShopSelection
+    public partial class ShopSelection : IComponent
     {
+        public string? ShopId { get; set; }
         public IList<ShopModel>? Shops { get; set; }
 
-        private string? _shopId;
-        public string? ShopId
-        {
-            get
-            {
-                return _shopId;
-            }
-            set
-            {
-                if (_shopId != value)
-                {
-                    _shopId = value;
-                    OnShopChangedAsync(_shopId!);
-                }
-            }
-        }
-
-        [Parameter] public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+        [CascadingParameter]
+        BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [Inject]
         public IShopService? ShopService { get; set; }
@@ -34,12 +20,17 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             Shops = await ShopService!.GetAllAsync();
+            BlazoredModal.SetTitle("Select a shop");
         }
 
-        private void OnShopChangedAsync(string value)
+        private async Task SaveAsync()
         {
-            ShopId = value;
-            StateHasChanged();
+            await BlazoredModal.CloseAsync(ModalResult.Ok(ShopId));
+        }
+
+        private async Task Cancel()
+        {
+            await BlazoredModal.CancelAsync();
         }
     }
 }
