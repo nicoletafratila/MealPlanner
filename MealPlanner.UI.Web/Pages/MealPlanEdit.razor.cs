@@ -12,6 +12,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
+        public EditMealPlanModel? MealPlan { get; set; }
 
         private string? _recipeCategoryId;
         public string? RecipeCategoryId
@@ -30,25 +31,9 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private string? _recipeId;
-        public string? RecipeId
-        {
-            get
-            {
-                return _recipeId;
-            }
-            set
-            {
-                if (_recipeId != value)
-                {
-                    _recipeId = value;
-                    OnRecipeChanged(_recipeId!);
-                }
-            }
-        }
-
-        public EditMealPlanModel? MealPlan { get; set; }
+        public string? RecipeId { get; set; }
         public RecipeModel? Recipe { get; set; }
+
         public PagedList<RecipeModel>? Recipes { get; set; }
         public IList<RecipeCategoryModel>? Categories { get; set; }
 
@@ -71,9 +56,9 @@ namespace MealPlanner.UI.Web.Pages
         public IJSRuntime? JSRuntime { get; set; }
 
         [CascadingParameter]
-        protected IModalService Modal { get; set; } = default!;
+        protected IModalService? Modal { get; set; } = default!;
 
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -170,11 +155,6 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private void NavigateToOverview()
-        {
-            NavigationManager!.NavigateTo("/mealplansoverview");
-        }
-
         private async Task SaveShoppingListAsync()
         {
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
@@ -204,17 +184,16 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        private void NavigateToOverview()
+        {
+            NavigationManager!.NavigateTo("/mealplansoverview");
+        }
+
         private async void OnRecipeCategoryChangedAsync(string? value)
         {
             RecipeCategoryId = value;
             RecipeId = string.Empty;
             Recipes = await RecipeService!.SearchAsync(RecipeCategoryId);
-            StateHasChanged();
-        }
-
-        private void OnRecipeChanged(string value)
-        {
-            RecipeId = value;
             StateHasChanged();
         }
     }

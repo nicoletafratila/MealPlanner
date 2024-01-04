@@ -26,8 +26,7 @@
 
                     <div class="form-group mt-3">
                         <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
-                        <InputSelect id="recipeCategory" class="form-select" ValueChanged="@((string value) => OnRecipeCategoryChangedAsync(value))"
-                                     Value="RecipeCategoryId" ValueExpression="@(() => RecipeCategoryId)">
+                        <InputSelect id="recipeCategory" class="form-select" @bind-Value="@RecipeCategoryId">
                             <option selected value="0">Choose...</option>
                             @if (Categories != null && Categories.Any())
                             {
@@ -42,8 +41,7 @@
                     <div class="form-group mt-3">
                         <label for="recipe" class="col-sm-3">Recipe: </label>
                         <div class="input-group">
-                            <InputSelect id="recipe" class="form-select" ValueChanged="@((string value) => OnRecipeChanged(value))"
-                                         Value="RecipeId" ValueExpression="@(() => RecipeId)">
+                            <InputSelect id="recipe" class="form-select" @bind-Value="@RecipeId">
                                 <option selected value="0">Choose...</option>
                                 @if (Recipes != null && Recipes!.Items!.Any())
                                 {
