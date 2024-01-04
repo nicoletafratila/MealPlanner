@@ -29,7 +29,7 @@
 
                     <div class="form-group mt-3">
                         <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
-                        <InputSelect id="recipeCategory" class="form-select" @bind-Value="@RecipeCategoryId">
+                        <InputSelect id="recipeCategory" class="form-select" @bind-Value="@Recipe.RecipeCategoryId">
                             <option selected value="0">Choose...</option>
                             @if (RecipeCategories != null && RecipeCategories.Any())
                             {
@@ -50,8 +50,7 @@
 
                     <div class="form-group mt-3">
                         <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
-                        <InputSelect id="ingredientCategory" class="form-select" ValueChanged="@((string value) => OnProductCategoryChangedAsync(value))"
-                                 Value="ProductCategoryId" ValueExpression="@(() => ProductCategoryId)">
+                        <InputSelect id="ingredientCategory" class="form-select" @bind-Value="@ProductCategoryId">
                             <option selected value="0">Choose...</option>
                             @if (ProductCategories != null && ProductCategories.Any())
                             {
@@ -65,8 +64,7 @@
 
                     <div class="form-group mt-3">
                         <label for="ingredient" class="col-sm-3">Ingredient: </label>
-                        <InputSelect id="ingredient" class="form-select" ValueChanged="@((string value) => OnProductChanged(value))"
-                                 Value="ProductId" ValueExpression="@(() => ProductId)">
+                        <InputSelect id="ingredient" class="form-select" @bind-Value="@ProductId">
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {
@@ -81,7 +79,7 @@
                     <div class="form-group mt-3">
                         <label for="quantity" class="col-sm-3">Quantity: </label>
                         <div class="input-group">
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Quantity"></InputText>
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Enter the quantity for the product"></InputText>
                             @if (CanAddIngredient == true)
                             {
                                 <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>

@@ -8,10 +8,14 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipesOverview
     {
-        public PagedList<RecipeModel>? Recipes { get; set; }
-        public RecipeModel? Recipe { get; set; }
-        public IList<RecipeCategoryModel>? Categories { get; set; }
+        [Parameter]
+        public QueryParameters? QueryParameters { get; set; } = new();
+
         public string? CategoryId { get; set; }
+        public IList<RecipeCategoryModel>? Categories { get; set; }
+
+        public RecipeModel? Recipe { get; set; }
+        public PagedList<RecipeModel>? Recipes { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -25,10 +29,7 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()

@@ -10,25 +10,13 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeEdit
     {
+        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
+
         [Parameter]
         public string? Id { get; set; }
+        public EditRecipeModel? Recipe { get; set; }
 
-        private string? _recipeCategoryId;
-        public string? RecipeCategoryId
-        {
-            get
-            {
-                return _recipeCategoryId;
-            }
-            set
-            {
-                if (_recipeCategoryId != value)
-                {
-                    _recipeCategoryId = value;
-                    Recipe!.RecipeCategoryId = int.Parse(_recipeCategoryId!);
-                }
-            }
-        }
+        public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
 
         private string? _productCategoryId;
         public string? ProductCategoryId
@@ -46,6 +34,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
             }
         }
+        public IList<ProductCategoryModel>? ProductCategories { get; set; }
 
         private string? _productId;
         public string? ProductId
@@ -59,35 +48,16 @@ namespace MealPlanner.UI.Web.Pages
                 if (_productId != value)
                 {
                     _productId = value;
-                    OnProductChanged(_productId!);
+                    Quantity = string.Empty;
                 }
             }
         }
-
-        private string? _quantity;
-        [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
-        public string? Quantity
-        {
-            get
-            {
-                return _quantity;
-            }
-            set
-            {
-                if (_quantity != value)
-                {
-                    _quantity = value;
-                    StateHasChanged();
-                }
-            }
-        }
-
-        public EditRecipeModel? Recipe { get; set; }
-        public RecipeIngredientModel? RecipeIngredient { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
-        public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
-        public IList<ProductCategoryModel>? ProductCategories { get; set; }
-        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
+
+        [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
+        public string? Quantity { get; set; }
+
+        public RecipeIngredientModel? RecipeIngredient { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -107,7 +77,7 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
+        [CascadingParameter]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -124,13 +94,6 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Recipe = await RecipeService!.GetEditAsync(int.Parse(Id!));
             }
-
-            RecipeCategoryId = Recipe!.RecipeCategoryId.ToString();
-        }
-
-        private void NavigateToOverview()
-        {
-            NavigationManager!.NavigateTo("/recipesoverview");
         }
 
         private async Task SaveAsync()
@@ -172,7 +135,7 @@ namespace MealPlanner.UI.Web.Pages
                 return !string.IsNullOrWhiteSpace(ProductId) &&
                        ProductId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
-                       decimal.Parse(Quantity) > 0;
+                       decimal.TryParse(Quantity, out _);
             }
         }
 
@@ -182,7 +145,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 if (Recipe != null)
                 {
-                    if (Recipe.Ingredients ==null)
+                    if (Recipe.Ingredients == null)
                     {
                         Recipe.Ingredients = new List<RecipeIngredientModel>();
                     }
@@ -216,19 +179,17 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        private void NavigateToOverview()
+        {
+            NavigationManager!.NavigateTo("/recipesoverview");
+        }
+
         private async void OnProductCategoryChangedAsync(string value)
         {
             ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
             Products = await ProductService!.SearchAsync(ProductCategoryId);
-            StateHasChanged();
-        }
-
-        private void OnProductChanged(string value)
-        {
-            ProductId = value;
-            Quantity = string.Empty;
             StateHasChanged();
         }
 
