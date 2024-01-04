@@ -11,11 +11,11 @@ namespace MealPlanner.UI.Web.Pages
         public string? ShopId { get; set; }
         public IList<ShopModel>? Shops { get; set; }
 
-        [CascadingParameter]
-        BlazoredModalInstance BlazoredModal { get; set; } = default!;
-
         [Inject]
         public IShopService? ShopService { get; set; }
+
+        [CascadingParameter]
+        protected BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {

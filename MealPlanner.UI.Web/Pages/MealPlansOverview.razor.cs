@@ -20,28 +20,28 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
-
         [Parameter]
         public QueryParameters? QueryParameters { get; set; } = new();
+
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await RefreshAsync();
         }
 
-        protected void New()
+        private void New()
         {
             NavigationManager!.NavigateTo($"mealplanedit/");
         }
 
-        protected void Update(MealPlanModel item)
+        private void Update(MealPlanModel item)
         {
             NavigationManager!.NavigateTo($"mealplanedit/{item.Id}");
         }
 
-        protected async Task DeleteAsync(MealPlanModel item)
+        private async Task DeleteAsync(MealPlanModel item)
         {
             if (item != null)
             {
@@ -60,7 +60,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task RefreshAsync()
+        private async Task RefreshAsync()
         {
             MealPlans = await MealPlanService!.SearchAsync(QueryParameters!);
             StateHasChanged();

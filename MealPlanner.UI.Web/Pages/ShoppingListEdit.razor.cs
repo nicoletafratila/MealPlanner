@@ -103,12 +103,12 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void NavigateToOverview()
+        private void NavigateToOverview()
         {
             NavigationManager!.NavigateTo($"/shoppinglistsoverview");
         }
 
-        protected async Task SaveAsync()
+        private async Task SaveAsync()
         {
             var response = Model!.Id == 0 ? await ShoppingListService!.AddAsync(Model) : await ShoppingListService!.UpdateAsync(Model);
             if (!string.IsNullOrWhiteSpace(response))
@@ -121,7 +121,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (Model!.Id != 0)
             {
@@ -140,7 +140,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected bool CanAddProduct
+        private bool CanAddProduct
         {
             get
             {
@@ -151,7 +151,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void AddProduct()
+        private void AddProduct()
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
@@ -178,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteProductAsync(ProductModel item)
+        private async Task DeleteProductAsync(ProductModel item)
         {
             ShoppingListProductModel? itemToDelete = Model!.Products!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)

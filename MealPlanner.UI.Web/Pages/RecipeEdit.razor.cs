@@ -128,12 +128,12 @@ namespace MealPlanner.UI.Web.Pages
             RecipeCategoryId = Recipe!.RecipeCategoryId.ToString();
         }
 
-        protected void NavigateToOverview()
+        private void NavigateToOverview()
         {
             NavigationManager!.NavigateTo("/recipesoverview");
         }
 
-        protected async Task SaveAsync()
+        private async Task SaveAsync()
         {
             var response = Recipe!.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe);
             if (!string.IsNullOrWhiteSpace(response))
@@ -146,7 +146,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (Recipe!.Id != 0)
             {
@@ -165,7 +165,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected bool CanAddIngredient
+        private bool CanAddIngredient
         {
             get
             {
@@ -176,7 +176,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void AddIngredient()
+        private void AddIngredient()
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
@@ -204,7 +204,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteIngredientAsync(ProductModel item)
+        private async Task DeleteIngredientAsync(ProductModel item)
         {
             RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)

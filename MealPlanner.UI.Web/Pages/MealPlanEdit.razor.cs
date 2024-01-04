@@ -71,7 +71,7 @@ namespace MealPlanner.UI.Web.Pages
         public IJSRuntime? JSRuntime { get; set; }
 
         [CascadingParameter]
-        public IModalService Modal { get; set; } = default!;
+        protected IModalService Modal { get; set; } = default!;
 
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }

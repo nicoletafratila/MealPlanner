@@ -87,7 +87,7 @@ namespace MealPlanner.UI.Web.Pages
             UnitId = Product.UnitId.ToString();
         }
 
-        protected async Task SaveAsync()
+        private async Task SaveAsync()
         {
             var response = Product!.Id == 0 ? await ProductService!.AddAsync(Product) : await ProductService!.UpdateAsync(Product);
             if (!string.IsNullOrWhiteSpace(response))
@@ -100,7 +100,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (Product!.Id != 0)
             {
@@ -119,7 +119,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected void NavigateToOverview()
+        private void NavigateToOverview()
         {
             NavigationManager!.NavigateTo("/productsoverview");
         }

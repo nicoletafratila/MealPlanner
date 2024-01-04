@@ -11,6 +11,9 @@ namespace MealPlanner.UI.Web.Pages
         public PagedList<ShoppingListModel>? ShoppingLists { get; set; }
         public ShoppingListModel? ShoppingList { get; set; }
 
+        [Parameter]
+        public QueryParameters? QueryParameters { get; set; } = new();
+
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
 
@@ -23,25 +26,22 @@ namespace MealPlanner.UI.Web.Pages
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
         protected override async Task OnInitializedAsync()
         {
             await RefreshAsync();
         }
 
-        protected void New()
+        private void New()
         {
             NavigationManager!.NavigateTo($"shoppinglistedit/");
         }
 
-        protected void Update(ShoppingListModel item)
+        private void Update(ShoppingListModel item)
         {
             NavigationManager!.NavigateTo($"shoppinglistedit/{item.Id}");
         }
 
-        protected async Task DeleteAsync(ShoppingListModel item)
+        private async Task DeleteAsync(ShoppingListModel item)
         {
             if (item != null)
             {
@@ -60,7 +60,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task RefreshAsync()
+        private async Task RefreshAsync()
         {
             ShoppingLists = await ShoppingListService!.SearchAsync(QueryParameters!);
             StateHasChanged();

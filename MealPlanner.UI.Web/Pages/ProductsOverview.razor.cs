@@ -25,29 +25,29 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
-
         [Parameter]
         public QueryParameters? QueryParameters { get; set; } = new();
 
+        [CascadingParameter(Name = "ErrorComponent")]
+        protected IErrorComponent? ErrorComponent { get; set; }
+ 
         protected override async Task OnInitializedAsync()
         {
             Categories = await CategoryService!.GetAllAsync();
             await RefreshAsync();
         }
 
-        protected void New()
+        private void New()
         {
             NavigationManager!.NavigateTo($"productedit/");
         }
 
-        protected void Update(ProductModel item)
+        private void Update(ProductModel item)
         {
             NavigationManager!.NavigateTo($"productedit/{item.Id}");
         }
 
-        protected async Task DeleteAsync(ProductModel item)
+        private async Task DeleteAsync(ProductModel item)
         {
             if (item != null)
             {
@@ -66,7 +66,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        protected async Task RefreshAsync()
+        private async Task RefreshAsync()
         {
             Products = await ProductService!.SearchAsync(CategoryId, QueryParameters!);
             StateHasChanged();
