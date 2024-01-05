@@ -12,7 +12,7 @@ namespace Common.Api
         public ApiConfig(IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            configuration.Bind(Name, this);
+            configuration.Bind(Name!, this);
         }
     }
 }
