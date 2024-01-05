@@ -1,3 +1,5 @@
+using Common.Data.DataContext;
+
 namespace RecipeBook.Api
 {
     public class Program
@@ -5,7 +7,7 @@ namespace RecipeBook.Api
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            Common.Api.Program.CreateScope(host);
+            CreateScope(host);
             host.Run();
         }
 
@@ -15,5 +17,15 @@ namespace RecipeBook.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        public static void CreateScope(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
+                if (context != null)
+                    context.Database.EnsureCreated();
+            }
+        }
     }
 }

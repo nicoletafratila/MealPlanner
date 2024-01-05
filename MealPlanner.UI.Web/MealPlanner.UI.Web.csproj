@@ -15,7 +15,9 @@
     <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
+    <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
+    <ProjectReference Include="..\RecipeBook.API\RecipeBook.Api.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 

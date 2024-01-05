@@ -1,9 +1,9 @@
-﻿using Common.Api;
+﻿using System.Net.Http.Headers;
+using Common.Api;
 using Common.Constants;
 using MealPlanner.Shared.Models;
 using MediatR;
 using RecipeBook.Api.Repositories;
-using System.Net.Http.Headers;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe
 {
@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe
                     client.BaseAddress = new Uri("https://localhost:7249/");//_mealPlannerApiConfig!.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig.Endpoints[ApiEndpointNames.MealPlanApi]}/search/{request.Id}");
+                    var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig!.Endpoints![ApiEndpointNames.MealPlanApi]}/search/{request.Id}");
                     if (result != null && result.Any())
                     {
                         return new DeleteRecipeCommandResponse { Message = "The recipe you try to delete is used in meal plans and cannot be deleted." };

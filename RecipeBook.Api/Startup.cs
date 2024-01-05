@@ -1,7 +1,7 @@
-﻿using Common.Api;
+﻿using System.Reflection;
+using Common.Api;
 using MediatR;
 using RecipeBook.Api.Repositories;
-using System.Reflection;
 
 namespace RecipeBook.Api
 {

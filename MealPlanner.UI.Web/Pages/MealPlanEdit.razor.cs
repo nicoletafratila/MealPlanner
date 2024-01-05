@@ -58,7 +58,7 @@ namespace MealPlanner.UI.Web.Pages
         [CascadingParameter]
         protected IModalService? Modal { get; set; } = default!;
 
-        [CascadingParameter]
+        [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -160,7 +160,7 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var shopSelectionModal = Modal.Show<ShopSelection>();
+            var shopSelectionModal = Modal!.Show<ShopSelection>();
             var result = await shopSelectionModal.Result;
 
             if (result.Cancelled)

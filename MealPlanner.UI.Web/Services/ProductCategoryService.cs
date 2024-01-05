@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<ProductCategoryModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<ProductCategoryModel>>($"{_apiConfig.Endpoints[ApiEndpointNames.ProductCategoryApi]}");
+            return await _httpClient.GetFromJsonAsync<IList<ProductCategoryModel>>($"{_apiConfig!.Endpoints![ApiEndpointNames.ProductCategoryApi]}");
         }
     }
 }

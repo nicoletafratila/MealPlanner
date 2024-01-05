@@ -2,7 +2,13 @@
 using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Repository;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Api
 {
@@ -18,7 +24,7 @@ namespace Common.Api
         protected virtual void RegisterServices(IServiceCollection services) { }
 
         protected virtual void RegisterRepositories(IServiceCollection services) { }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MealPlannerDbContext>(options =>
@@ -57,7 +63,7 @@ namespace Common.Api
             services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

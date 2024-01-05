@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
 
-        [CascadingParameter]
+        [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
