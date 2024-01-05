@@ -25,7 +25,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe
 
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://localhost:7249/");//_mealPlannerApiConfig!.BaseUrl;
+                    client.BaseAddress = _mealPlannerApiConfig!.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig!.Endpoints![ApiEndpointNames.MealPlanApi]}/search/{request.Id}", cancellationToken);

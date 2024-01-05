@@ -8,16 +8,10 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class RecipeService : IRecipeService
+    public class RecipeService(HttpClient httpClient, IServiceProvider serviceProvider) : IRecipeService
     {
-        private readonly HttpClient _httpClient;
-        private readonly IApiConfig _apiConfig;
-
-        public RecipeService(HttpClient httpClient, IServiceProvider serviceProvider)
-        {
-            _httpClient = httpClient;
-            _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
-        }
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
 
         public async Task<RecipeModel?> GetByIdAsync(int id)
         {

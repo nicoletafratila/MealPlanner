@@ -4,16 +4,10 @@ using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class ShopService : IShopService
+    public class ShopService(HttpClient httpClient, IServiceProvider serviceProvider) : IShopService
     {
-        private readonly HttpClient _httpClient;
-        private readonly IApiConfig _apiConfig;
-
-        public ShopService(HttpClient httpClient, IServiceProvider serviceProvider)
-        {
-            _httpClient = httpClient;
-            _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
-        }
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
         public async Task<IList<ShopModel>?> GetAllAsync()
         {
