@@ -20,12 +20,9 @@ namespace MealPlanner.Api
 
         public static void CreateScope(IHost host)
         {
-            using (var scope = host.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
-                if (context != null)
-                    context.Database.EnsureCreated();
-            }
+            using var scope = host.Services.CreateScope();
+            var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
+            context?.Database.EnsureCreated();
         }
     }
 }

@@ -2,22 +2,16 @@
 
 namespace Common.Validators
 {
-    public class MinimumCountCollectionAttribute : ValidationAttribute
+    public class MinimumCountCollectionAttribute(int count) : ValidationAttribute
     {
-        readonly int _count;
-
-        public MinimumCountCollectionAttribute(int count)
-        {
-            _count = count;
-        }
+        readonly int _count = count;
 
         public override bool IsValid(object? value)
         {
             if (value == null)
                 return false;
 
-            var collection = value as IEnumerable<object>;
-            if (collection != null && collection.Count() < _count)
+            if (value is IEnumerable<object> collection && collection.Count() < _count)
                 return false;
 
             return true;

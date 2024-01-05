@@ -5,12 +5,8 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api
 {
-    public class Startup : Common.Api.Startup
+    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
-        public Startup(IConfiguration configuration) : base(configuration)
-        {
-        }
-
         protected override void RegisterServices(IServiceCollection services)
         {
             base.RegisterServices(services);

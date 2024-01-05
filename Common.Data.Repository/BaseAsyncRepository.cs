@@ -3,14 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Common.Data.Repository
 {
-    public class BaseAsyncRepository<T, TId> : IAsyncRepository<T, TId> where T : Entity<TId>
+    public class BaseAsyncRepository<T, TId>(DbContext dbContext) : IAsyncRepository<T, TId> where T : Entity<TId>
     {
-        protected readonly DbContext DbContext;
-
-        public BaseAsyncRepository(DbContext dbContext)
-        {
-            DbContext = dbContext;
-        }
+        protected readonly DbContext DbContext = dbContext;
 
         public virtual async Task<T?> GetByIdAsync(TId id)
         {

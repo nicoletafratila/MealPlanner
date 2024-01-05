@@ -4,12 +4,8 @@ using System.Reflection;
 
 namespace Common.Data.DataContext
 {
-    public class MealPlannerDbContext : DbContext
+    public class MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : DbContext(options)
     {
-        public MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
         public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
         public DbSet<Recipe> Recipes => Set<Recipe>();
