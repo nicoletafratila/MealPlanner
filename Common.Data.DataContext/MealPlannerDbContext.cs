@@ -23,6 +23,9 @@ namespace Common.Data.DataContext
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder.Entity<RecipeIngredient>().Property(b => b.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<ShoppingListProduct>().Property(b => b.Quantity).HasPrecision(18, 2);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Common.Api
         {
             services.AddDbContext<MealPlannerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("Common.Data.DataContext"));
+                options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
             });
 
