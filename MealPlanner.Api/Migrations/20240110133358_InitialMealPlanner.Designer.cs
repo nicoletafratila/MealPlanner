@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MealPlanner.Api.Migrations
 {
     [DbContext(typeof(MealPlannerDbContext))]
-    [Migration("20240108133618_InitialMealPlanner")]
+    [Migration("20240110133358_InitialMealPlanner")]
     partial class InitialMealPlanner
     {
         /// <inheritdoc />
@@ -206,6 +206,9 @@ namespace MealPlanner.Api.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShopId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

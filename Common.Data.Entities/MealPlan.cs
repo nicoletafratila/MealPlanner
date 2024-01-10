@@ -18,7 +18,7 @@
                     if (existingProduct == null)
                     {
                         var displaySequence = shop!.GetDisplaySequence(i.Product!.ProductCategory!.Id);
-                        var newProduct = i.ToShoppingListProduct(displaySequence.Value);
+                        var newProduct = i.ToShoppingListProduct(displaySequence!.Value);
                         products.Add(newProduct);
                     }
                     else

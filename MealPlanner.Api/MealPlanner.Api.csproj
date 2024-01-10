@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 </Project>

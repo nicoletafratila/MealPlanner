@@ -204,6 +204,9 @@ namespace MealPlanner.Api.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ShopId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("ShoppingLists");

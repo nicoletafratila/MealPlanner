@@ -36,6 +36,7 @@ GO
 CREATE TABLE [ShoppingLists] (
     [Id] int NOT NULL IDENTITY,
     [Name] nvarchar(max) NULL,
+    [ShopId] int NOT NULL,
     CONSTRAINT [PK_ShoppingLists] PRIMARY KEY ([Id])
 );
 GO
@@ -139,7 +140,7 @@ CREATE INDEX [IX_ShoppingListProducts_ProductId] ON [ShoppingListProducts] ([Pro
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240108133618_InitialMealPlanner', N'8.0.0');
+VALUES (N'20240110133358_InitialMealPlanner', N'8.0.0');
 GO
 
 COMMIT;

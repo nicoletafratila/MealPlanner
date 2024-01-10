@@ -1,13 +1,12 @@
-using Common.Data.DataContext;
-
 namespace RecipeBook.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            CreateScope(host);
+            using var scope = host.Services.CreateScope();
+            await SeedData.EnsureSeedData(scope);
             host.Run();
         }
 
@@ -17,12 +16,5 @@ namespace RecipeBook.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        public static void CreateScope(IHost host)
-        {
-            using var scope = host.Services.CreateScope();
-            var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
-            context?.Database.EnsureCreated();
-        }
     }
 }
