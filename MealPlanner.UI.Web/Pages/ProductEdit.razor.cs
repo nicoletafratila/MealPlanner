@@ -8,7 +8,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ProductEdit
     {
-        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
+        private readonly long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Parameter]
         public string? Id { get; set; }
@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            int.TryParse(Id, out var id);
+            _ = int.TryParse(Id, out var id);
             Categories = await CategoryService!.GetAllAsync();
             Units = await UnitService!.GetAllAsync();
 
@@ -47,11 +47,11 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Product = await ProductService!.GetEditAsync(int.Parse(Id!));
+                Product = await ProductService!.GetEditAsync(id);
             }
         }
 
-        private async Task SaveAsync()
+        private async void SaveAsync()
         {
             var response = Product!.Id == 0 ? await ProductService!.AddAsync(Product) : await ProductService!.UpdateAsync(Product);
             if (!string.IsNullOrWhiteSpace(response))
@@ -64,7 +64,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task DeleteAsync()
+        private async void DeleteAsync()
         {
             if (Product!.Id != 0)
             {
@@ -88,14 +88,14 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo("/productsoverview");
         }
 
-        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        private async void OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             try
             {
                 if (e.File != null)
                 {
                     Stream stream = e.File.OpenReadStream(maxAllowedSize: 1024 * 300);
-                    MemoryStream ms = new MemoryStream();
+                    MemoryStream ms = new();
                     await stream.CopyToAsync(ms);
                     stream.Close();
                     Product!.ImageContent = ms.ToArray();

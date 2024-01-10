@@ -26,12 +26,12 @@ namespace MealPlanner.UI.Web.Pages
             BlazoredModal.SetTitle("Select a shop");
         }
 
-        private async Task SaveAsync()
+        private async void SaveAsync()
         {
             await BlazoredModal.CloseAsync(ModalResult.Ok(ShopId));
         }
 
-        private async Task Cancel()
+        private async void CancelAsync()
         {
             await BlazoredModal.CancelAsync();
         }

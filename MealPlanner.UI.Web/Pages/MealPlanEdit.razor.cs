@@ -76,7 +76,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task SaveAsync()
+        private async void SaveAsync()
         {
             var response = MealPlan!.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan);
             if (!string.IsNullOrWhiteSpace(response))
@@ -89,7 +89,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task DeleteAsync()
+        private async void DeleteAsync()
         {
             if (MealPlan!.Id != 0)
             {
@@ -117,7 +117,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task AddRecipeAsync()
+        private async void AddRecipeAsync()
         {
             if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
             {
@@ -143,7 +143,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo($"recipeedit/{item.Id}");
         }
 
-        private async Task DeleteRecipeAsync(RecipeModel item)
+        private async void DeleteRecipeAsync(RecipeModel item)
         {
             RecipeModel? itemToDelete = MealPlan!.Recipes!.FirstOrDefault(i => i.Id == item.Id);
             if (itemToDelete != null)
@@ -155,7 +155,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task SaveShoppingListAsync()
+        private async void SaveShoppingListAsync()
         {
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;

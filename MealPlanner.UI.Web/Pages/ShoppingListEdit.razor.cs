@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task SaveAsync()
+        private async void SaveAsync()
         {
             var response = ShoppingList!.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList);
             if (!string.IsNullOrWhiteSpace(response))
@@ -110,7 +110,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task DeleteAsync()
+        private async void DeleteAsync()
         {
             if (ShoppingList!.Id != 0)
             {
@@ -140,7 +140,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task AddProductAsync()
+        private async void AddProductAsync()
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
@@ -180,7 +180,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task DeleteProductAsync(ProductModel item)
+        private async void DeleteProductAsync(ProductModel item)
         {
             ShoppingListProductModel? itemToDelete = ShoppingList!.Products!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)

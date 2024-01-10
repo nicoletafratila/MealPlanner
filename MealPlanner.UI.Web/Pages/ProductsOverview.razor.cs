@@ -48,7 +48,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo($"productedit/{item.Id}");
         }
 
-        private async Task DeleteAsync(ProductModel item)
+        private async void DeleteAsync(ProductModel item)
         {
             if (item != null)
             {
@@ -80,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages
             await RefreshAsync();
         }
 
-        private async Task OnPageChangedAsync(int pageNumber)
+        private async void OnPageChangedAsync(int pageNumber)
         {
             QueryParameters!.PageNumber = pageNumber;
             await RefreshAsync();

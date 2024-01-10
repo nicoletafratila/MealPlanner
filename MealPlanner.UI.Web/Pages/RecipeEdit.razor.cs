@@ -10,7 +10,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeEdit
     {
-        private long maxFileSize = 1024L * 1024L * 1024L * 3L;
+        private readonly long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Parameter]
         public string? Id { get; set; }
@@ -80,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            int.TryParse(Id, out var id);
+            _ = int.TryParse(Id, out var id);
             RecipeCategories = await RecipeCategoryService!.GetAllAsync();
             ProductCategories = await ProductCategoryService!.GetAllAsync();
 
@@ -90,11 +90,11 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                Recipe = await RecipeService!.GetEditAsync(int.Parse(Id!));
+                Recipe = await RecipeService!.GetEditAsync(id);
             }
         }
 
-        private async Task SaveAsync()
+        private async void SaveAsync()
         {
             var response = Recipe!.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe);
             if (!string.IsNullOrWhiteSpace(response))
@@ -107,7 +107,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task DeleteAsync()
+        private async void DeleteAsync()
         {
             if (Recipe!.Id != 0)
             {
@@ -154,10 +154,12 @@ namespace MealPlanner.UI.Web.Pages
                     }
                     else
                     {
-                        item = new RecipeIngredientModel();
-                        item.Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId));
-                        item.RecipeId = Recipe.Id;
-                        item.Quantity = decimal.Parse(Quantity!);
+                        item = new RecipeIngredientModel
+                        {
+                            Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
+                            RecipeId = Recipe.Id,
+                            Quantity = decimal.Parse(Quantity!)
+                        };
                         Recipe.Ingredients!.Add(item);
                         Quantity = string.Empty;
                     }
@@ -165,7 +167,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task DeleteIngredientAsync(ProductModel item)
+        private async void DeleteIngredientAsync(ProductModel item)
         {
             RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)
@@ -191,14 +193,14 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        private async void OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             try
             {
                 if (e.File != null)
                 {
                     Stream stream = e.File.OpenReadStream(maxAllowedSize: 1024 * 300);
-                    MemoryStream ms = new MemoryStream();
+                    MemoryStream ms = new();
                     await stream.CopyToAsync(ms);
                     stream.Close();
                     Recipe!.ImageContent = ms.ToArray();

@@ -41,7 +41,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager!.NavigateTo($"shoppinglistedit/{item.Id}");
         }
 
-        private async Task DeleteAsync(ShoppingListModel item)
+        private async void DeleteAsync(ShoppingListModel item)
         {
             if (item != null)
             {
@@ -66,7 +66,7 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async Task OnPageChangedAsync(int pageNumber)
+        private async void OnPageChangedAsync(int pageNumber)
         {
             QueryParameters!.PageNumber = pageNumber;
             await RefreshAsync();
