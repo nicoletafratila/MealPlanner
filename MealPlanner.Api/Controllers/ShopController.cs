@@ -1,4 +1,5 @@
-﻿using MealPlanner.Api.Features.Shop.Queries.GetShops;
+﻿using MealPlanner.Api.Features.Shop.Queries.GetShop;
+using MealPlanner.Api.Features.Shop.Queries.GetShops;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,16 @@ namespace MealPlanner.Api.Controllers
         public ShopController(ISender mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ShopModel> GetById(int id)
+        {
+            GetShopQuery query = new()
+            {
+                Id = id
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpGet]

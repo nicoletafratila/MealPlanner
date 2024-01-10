@@ -7,7 +7,8 @@ namespace MealPlanner.Api
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            CreateScope(host);
+            using var scope = host.Services.CreateScope();
+            SeedData.EnsureSeedData(scope);
             host.Run();
         }
 
@@ -17,12 +18,5 @@ namespace MealPlanner.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        public static void CreateScope(IHost host)
-        {
-            using var scope = host.Services.CreateScope();
-            var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
-            context?.Database.EnsureCreated();
-        }
     }
 }

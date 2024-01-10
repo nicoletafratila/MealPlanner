@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Azure;
+using Blazored.Modal.Services;
+using Common.Data.Entities;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
@@ -53,6 +56,8 @@ namespace MealPlanner.UI.Web.Pages
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
         public string? Quantity { get; set; }
 
+        private ShopModel? _shop;
+
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
 
@@ -63,17 +68,23 @@ namespace MealPlanner.UI.Web.Pages
         public IProductService? ProductService { get; set; }
 
         [Inject]
+        public IShopService? ShopService { get; set; }
+
+        [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
         public IJSRuntime? JSRuntime { get; set; }
+
+        [CascadingParameter]
+        protected IModalService? Modal { get; set; } = default!;
 
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            int.TryParse(Id, out var id);
+            _ = int.TryParse(Id, out int id);
             ProductCategories = await ProductCategoryService!.GetAllAsync();
 
             if (id == 0)
@@ -82,7 +93,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                ShoppingList = await ShoppingListService!.GetEditAsync(int.Parse(Id!));
+                ShoppingList = await ShoppingListService!.GetEditAsync(id);
             }
         }
 
@@ -129,16 +140,24 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private void AddProduct()
+        private async Task AddProductAsync()
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
                 if (ShoppingList != null)
                 {
+                    await SetShopAsync();
+                    if (_shop == null || _shop.Id == 0)
+                    {
+                        ErrorComponent!.ShowError("Error", "You must select a shop for the list.");
+                        return;
+                    }
+
                     if (ShoppingList.Products == null)
                     {
                         ShoppingList.Products = new List<ShoppingListProductModel>();
                     }
+
                     ShoppingListProductModel? item = ShoppingList.Products.FirstOrDefault(i => i.Product!.Id == int.Parse(ProductId));
                     if (item != null)
                     {
@@ -146,9 +165,14 @@ namespace MealPlanner.UI.Web.Pages
                     }
                     else
                     {
-                        item = new ShoppingListProductModel();
-                        item.Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId));
-                        item.Quantity = decimal.Parse(Quantity!);
+                        var product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId));
+                        item = new ShoppingListProductModel
+                        {
+                            Collected = false,
+                            Product = product,
+                            Quantity = decimal.Parse(Quantity!),
+                            DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategoryId == product!.ProductCategory!.Id)!.Value
+                        };
                         ShoppingList.Products!.Add(item);
                         Quantity = string.Empty;
                     }
@@ -168,12 +192,39 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        private async Task SetShopAsync()
+        {
+            int shopId = ShoppingList!.ShopId;
+            if (shopId == 0)
+            {
+                var shopSelectionModal = Modal!.Show<ShopSelection>();
+                var result = await shopSelectionModal.Result;
+
+                if (result.Cancelled)
+                {
+                    ErrorComponent!.ShowError("Error", "You must select a shop for the list.");
+                    return;
+                }
+
+                if (result.Confirmed && result!.Data != null)
+                {
+                    if (!int.TryParse(result.Data.ToString(), out shopId))
+                    {
+                        ErrorComponent!.ShowError("Error", "You must select a shop for the list.");
+                        return;
+                    }
+                }
+            }
+            ShoppingList!.ShopId = shopId;
+            _shop ??= await ShopService!.GetByIdAsync(shopId);
+        }
+
         private void NavigateToOverview()
         {
             NavigationManager!.NavigateTo($"/shoppinglistsoverview");
         }
 
-        private async void CheckboxChanged(ShoppingListProductModel model)
+        private async void CheckboxChangedAsync(ShoppingListProductModel model)
         {
             var itemToChange = ShoppingList!.Products!.FirstOrDefault(item => item.Product!.Id == model!.Product!.Id);
             if (itemToChange != null)

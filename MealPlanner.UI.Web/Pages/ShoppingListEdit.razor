@@ -58,11 +58,11 @@
                             <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Enter the quantity for the product"></InputText>
                             @if (CanAddProduct == true)
                             {
-                                <button class="btn btn-primary" type="button" @onclick="@AddProduct">Add</button>
+                                <button class="btn btn-primary" type="button" @onclick="@AddProductAsync">Add</button>
                             }
                             else
                             {
-                                <button class="btn btn-primary" type="button" disabled @onclick="@AddProduct">Add</button>
+                                <button class="btn btn-primary" type="button" disabled @onclick="@AddProductAsync">Add</button>
                             }
                         </div>
                         <ValidationMessage For="@(() => Quantity)" />
@@ -82,7 +82,7 @@
                                 @if (ProductModel != null && ProductModel.Product != null)
                                 {
                                     <td style="vertical-align:middle; text-align: center">
-                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChanged(ProductModel); }" />
+                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChangedAsync(ProductModel); }" />
                                     </td>
                                     <td style="vertical-align:middle">
                                         <div style="display:flex; align-items: center">

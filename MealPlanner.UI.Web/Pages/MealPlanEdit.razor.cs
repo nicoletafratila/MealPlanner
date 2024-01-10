@@ -63,7 +63,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            int.TryParse(Id, out var id);
+            _ = int.TryParse(Id, out var id);
             Categories = await RecipeCategoryService!.GetAllAsync();
 
             if (id == 0)
@@ -72,7 +72,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             else
             {
-                MealPlan = await MealPlanService!.GetEditAsync(int.Parse(Id!));
+                MealPlan = await MealPlanService!.GetEditAsync(id);
             }
         }
 
@@ -168,11 +168,10 @@ namespace MealPlanner.UI.Web.Pages
 
             if (result.Confirmed && result!.Data != null)
             {
-                var shopId = result.Data.ToString();
-                if (string.IsNullOrWhiteSpace(shopId))
+                if (!int.TryParse(result.Data.ToString(), out int shopId))
                     return;
 
-                var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = int.Parse(shopId) });
+                var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = shopId });
                 if (addedEntity != null && addedEntity!.Id > 0)
                 {
                     NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
