@@ -9,7 +9,85 @@ namespace MealPlanner.Api
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
             context!.Database.EnsureCreated();
+            await SeedProductCategories(context);
+            await SeedRecipesCategories(context);
+            await SeedUnits(context);
             await SeedShops(context);
+        }
+
+        private static async Task SeedProductCategories(MealPlannerDbContext context)
+        {
+            if (context != null && !context.ProductCategories.Any())
+            {
+                context.ProductCategories.Add(new ProductCategory { Name = "Lactate" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Mezeluri" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Legume" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Fructe" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Condimente" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Carne" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Conserve" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Ulei/Otet" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Fructe uscate" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Paste" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Branzeturi" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Fainoase" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Sosuri" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Congelate" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Apa" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Cofetarie/Patiserie" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Brutarie" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Peste" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Produse bucatarie" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Cereale" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Rechizite" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Jucarii" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Detergenti" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Haine" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Alcool" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Produse igena" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Sucuri" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Ceai/Cafea" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Hartie/Servetele" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Snaks" });
+                context.ProductCategories.Add(new ProductCategory { Name = "Dulciuri" });
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private static async Task SeedRecipesCategories(MealPlannerDbContext context)
+        {
+            if (context != null && !context.RecipeCategories.Any())
+            {
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Aperitive/Gustari", DisplaySequence = 1 });
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Supe/Ciorbe", DisplaySequence = 2 });
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Fel principal", DisplaySequence = 3 });
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Garnituri", DisplaySequence = 4 });
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Paste", DisplaySequence = 5 });
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Salate", DisplaySequence = 6 });
+                context.RecipeCategories.Add(new RecipeCategory { Name = "Desert", DisplaySequence = 7 });
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private static async Task SeedUnits(MealPlannerDbContext context)
+        {
+            if (context != null && !context.Units.Any())
+            {
+                context.Units.Add(new Unit { Name = "Baton" });
+                context.Units.Add(new Unit { Name = "Bucata" });
+                context.Units.Add(new Unit { Name = "Caserola" });
+                context.Units.Add(new Unit { Name = "Conserva" });
+                context.Units.Add(new Unit { Name = "Cutie" });
+                context.Units.Add(new Unit { Name = "Fiole" });
+                context.Units.Add(new Unit { Name = "Kilogram" });
+                context.Units.Add(new Unit { Name = "Legatura" });
+                context.Units.Add(new Unit { Name = "Lingurita" });
+                context.Units.Add(new Unit { Name = "Litru" });
+                context.Units.Add(new Unit { Name = "Pachet" });
+                context.Units.Add(new Unit { Name = "Plic" });
+                context.Units.Add(new Unit { Name = "Punga" });
+                await context.SaveChangesAsync();
+            }
         }
 
         private static async Task SeedShops(MealPlannerDbContext context)
@@ -23,6 +101,73 @@ namespace MealPlanner.Api
                     {
                         new() { ProductCategoryId = 1, Value = 10 },
                         new() { ProductCategoryId = 2, Value = 6 },
+                        new() { ProductCategoryId = 3, Value = 3 },
+                        new() { ProductCategoryId = 4, Value = 2 },
+                        new() { ProductCategoryId = 5, Value = 20 },
+                        new() { ProductCategoryId = 6, Value = 5 },
+                        new() { ProductCategoryId = 7, Value = 21 },
+                        new() { ProductCategoryId = 8, Value = 23 },
+                        new() { ProductCategoryId = 9, Value = 12 },
+                        new() { ProductCategoryId = 10, Value = 24 },
+                        new() { ProductCategoryId = 11, Value = 9 },
+                        new() { ProductCategoryId = 12, Value = 19 },
+                        new() { ProductCategoryId = 13, Value = 22 },
+                        new() { ProductCategoryId = 14, Value = 8 },
+                        new() { ProductCategoryId = 15, Value = 14 },
+                        new() { ProductCategoryId = 16, Value = 18 },
+                        new() { ProductCategoryId = 17, Value = 1 },
+                        new() { ProductCategoryId = 18, Value = 7 },
+                        new() { ProductCategoryId = 19, Value = 25 },
+                        new() { ProductCategoryId = 20, Value = 11 },
+                        new() { ProductCategoryId = 21, Value = 26 },
+                        new() { ProductCategoryId = 22, Value = 30 },
+                        new() { ProductCategoryId = 23, Value = 28 },
+                        new() { ProductCategoryId = 24, Value = 31 },
+                        new() { ProductCategoryId = 25, Value = 4 },
+                        new() { ProductCategoryId = 26, Value = 29 },
+                        new() { ProductCategoryId = 27, Value = 13 },
+                        new() { ProductCategoryId = 28, Value = 15 },
+                        new() { ProductCategoryId = 29, Value = 27 },
+                        new() { ProductCategoryId = 30, Value = 16 },
+                        new() { ProductCategoryId = 31, Value = 17 },
+                    }
+                });
+                context.Shops.Add(new Shop
+                {
+                    Name = "Carrefour Calea Bucuresti",
+                    DisplaySequence = new List<ShopDisplaySequence>
+                    {
+                        new() { ProductCategoryId = 1, Value = 29 },
+                        new() { ProductCategoryId = 2, Value = 23 },
+                        new() { ProductCategoryId = 3, Value = 28 },
+                        new() { ProductCategoryId = 4, Value = 27 },
+                        new() { ProductCategoryId = 5, Value = 11 },
+                        new() { ProductCategoryId = 6, Value = 24 },
+                        new() { ProductCategoryId = 7, Value = 12 },
+                        new() { ProductCategoryId = 8, Value = 15 },
+                        new() { ProductCategoryId = 9, Value = 20 },
+                        new() { ProductCategoryId = 10, Value = 16 },
+                        new() { ProductCategoryId = 11, Value = 30 },
+                        new() { ProductCategoryId = 12, Value = 13 },
+                        new() { ProductCategoryId = 13, Value = 14 },
+                        new() { ProductCategoryId = 14, Value = 26 },
+                        new() { ProductCategoryId = 15, Value = 9 },
+                        new() { ProductCategoryId = 16, Value = 17 },
+                        new() { ProductCategoryId = 17, Value = 31 },
+                        new() { ProductCategoryId = 18, Value = 25 },
+                        new() { ProductCategoryId = 19, Value = 3 },
+                        new() { ProductCategoryId = 20, Value = 19 },
+                        new() { ProductCategoryId = 21, Value = 1 },
+                        new() { ProductCategoryId = 22, Value = 2 },
+                        new() { ProductCategoryId = 23, Value = 5 },
+                        new() { ProductCategoryId = 24, Value = 4 },
+                        new() { ProductCategoryId = 25, Value = 10 },
+                        new() { ProductCategoryId = 26, Value = 7 },
+                        new() { ProductCategoryId = 27, Value = 8 },
+                        new() { ProductCategoryId = 28, Value = 18 },
+                        new() { ProductCategoryId = 29, Value = 6 },
+                        new() { ProductCategoryId = 30, Value = 21 },
+                        new() { ProductCategoryId = 31, Value = 22 },
                     }
                 });
                 await context.SaveChangesAsync();
@@ -30,65 +175,3 @@ namespace MealPlanner.Api
         }
     }
 }
-
-
-//1	3	3	Legume
-//1	4	2	Fructe
-//1	5	20	Condimente
-//1	7	5	Carne
-//1	8	21	Conserve
-//1	9	23	Ulei & otet
-//1	10	12	Fructe uscate
-//1	11	24	Paste
-//1	12	9	Branzeturi
-//1	13	19	Fainoase
-//1	14	22	Sosuri
-//1	15	8	Congelate
-//1	16	14	Apa
-//1	18	18	Cofetarie si patiserie
-//1	20	1	Brutarie
-//1	21	7	Peste
-//1	22	25	Produse bucatarie
-//1	23	11	Cereale
-//1	24	26	Rechizite
-//1	25	30	Jucarii
-//1	26	28	Detergenti
-//1	27	31	Haine
-//1	28	4	Alcool
-//1	29	29	Produse igena
-//1	30	13	Sucuri
-//1	31	15	Ceai/Cafea
-//1	32	27	Hartie/Servetele
-//1	33	16	Snaks
-//1	34	17	Dulciuri
-//2	1	29	Lactate
-//2	2	23	Mezeluri
-//2	3	28	Legume
-//2	4	27	Fructe
-//2	5	11	Condimente
-//2	7	24	Carne
-//2	8	12	Conserve
-//2	9	15	Ulei & otet
-//2	10	20	Fructe uscate
-//2	11	16	Paste
-//2	12	30	Branzeturi
-//2	13	13	Fainoase
-//2	14	14	Sosuri
-//2	15	26	Congelate
-//2	16	9	Apa
-//2	18	17	Cofetarie si patiserie
-//2	20	31	Brutarie
-//2	21	25	Peste
-//2	22	3	Produse bucatarie
-//2	23	19	Cereale
-//2	24	1	Rechizite
-//2	25	2	Jucarii
-//2	26	5	Detergenti
-//2	27	4	Haine
-//2	28	10	Alcool
-//2	29	7	Produse igena
-//2	30	8	Sucuri
-//2	31	18	Ceai/Cafea
-//2	32	6	Hartie/Servetele
-//2	33	21	Snaks
-//2	34	22	Dulciuri
