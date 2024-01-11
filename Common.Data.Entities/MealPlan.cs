@@ -7,8 +7,10 @@
 
         public ShoppingList MakeShoppingList(Shop shop)
         {
-            var list = new ShoppingList();
-            list.Name = $"Shopping list details for {Name} in shop {shop.Name}";
+            var list = new ShoppingList
+            {
+                Name = $"Shopping list details for {Name} in shop {shop.Name}"
+            };
             var products = new List<ShoppingListProduct>();
             foreach (var item in MealPlanRecipes!)
             {

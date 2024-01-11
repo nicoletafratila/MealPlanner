@@ -1,6 +1,8 @@
-﻿namespace MealPlanner.UI.Web.Shared
+﻿using MealPlanner.UI.Web.Services;
+
+namespace MealPlanner.UI.Web.Shared
 {
-    public partial class MainLayout
+    public partial class MainLayout : IErrorComponent
     {
         public bool IsErrorActive { get; set; }
         public string? Title { get; set; }

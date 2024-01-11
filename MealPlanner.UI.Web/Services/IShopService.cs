@@ -4,7 +4,10 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IShopService
     {
-        Task<ShopModel?> GetByIdAsync(int id);
+        Task<EditShopModel?> GetEditAsync(int id);
         Task<IList<ShopModel>?> GetAllAsync();
+        Task<string?> AddAsync(EditShopModel model);
+        Task<string?> UpdateAsync(EditShopModel model);
+        Task<string?> DeleteAsync(int id);
     }
 }

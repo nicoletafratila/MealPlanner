@@ -12,14 +12,14 @@
         </tr>
     </thead>
     <tbody>
-        @if (@Items == null)
+        @if (Data == null)
         {
             <tr>Loading...</tr>
         }
         else
         {
            var index = 1;
-            @foreach (var item in Items!)
+            @foreach (var item in Data!)
             {
                 <tr>
                     @if (ShowIndex)

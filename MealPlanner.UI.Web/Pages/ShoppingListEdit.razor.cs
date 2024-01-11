@@ -56,7 +56,7 @@ namespace MealPlanner.UI.Web.Pages
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
         public string? Quantity { get; set; }
 
-        private ShopModel? _shop;
+        private EditShopModel? _shop;
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -216,7 +216,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
             }
             ShoppingList!.ShopId = shopId;
-            _shop ??= await ShopService!.GetByIdAsync(shopId);
+            _shop ??= await ShopService!.GetEditAsync(shopId);
         }
 
         private void NavigateToOverview()

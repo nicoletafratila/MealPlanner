@@ -9,7 +9,11 @@ namespace Common.Data.Profiles
         public ShopProfile()
         {
             CreateMap<Shop, ShopModel>()
-                .ReverseMap();
+               .ReverseMap()
+               .ForMember(data => data.DisplaySequence, opt => opt.Ignore());
+
+            CreateMap<Shop, EditShopModel>()
+               .ReverseMap();
         }
     }
 }

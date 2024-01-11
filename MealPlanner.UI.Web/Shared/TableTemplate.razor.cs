@@ -17,6 +17,6 @@ namespace MealPlanner.UI.Web.Shared
         public RenderFragment<TItem>? RowTemplate { get; set; }
 
         [Parameter]
-        public IEnumerable<TItem>? Items { get; set; }
+        public IEnumerable<TItem>? Data { get; set; }
     }
 }

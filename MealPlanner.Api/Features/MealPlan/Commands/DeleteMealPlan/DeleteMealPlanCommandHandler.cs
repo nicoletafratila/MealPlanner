@@ -3,16 +3,10 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.MealPlan.Commands.DeleteMealPlan
 {
-    public class DeleteMealPlanCommandHandler : IRequestHandler<DeleteMealPlanCommand, DeleteMealPlanCommandResponse>
+    public class DeleteMealPlanCommandHandler(IMealPlanRepository repository, ILogger<DeleteMealPlanCommandHandler> logger) : IRequestHandler<DeleteMealPlanCommand, DeleteMealPlanCommandResponse>
     {
-        private readonly IMealPlanRepository _repository;
-        private readonly ILogger<DeleteMealPlanCommandHandler> _logger;
-
-        public DeleteMealPlanCommandHandler(IMealPlanRepository repository, ILogger<DeleteMealPlanCommandHandler> logger)
-        {
-            _repository = repository;
-            _logger = logger;
-        }
+        private readonly IMealPlanRepository _repository = repository;
+        private readonly ILogger<DeleteMealPlanCommandHandler> _logger = logger;
 
         public async Task<DeleteMealPlanCommandResponse> Handle(DeleteMealPlanCommand request, CancellationToken cancellationToken)
         {

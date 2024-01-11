@@ -5,16 +5,10 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.Shop.Queries.GetShops
 {
-    public class GetShopsQueryHandler : IRequestHandler<GetShopsQuery, IList<ShopModel>>
+    public class GetShopsQueryHandler(IShopRepository repository, IMapper mapper) : IRequestHandler<GetShopsQuery, IList<ShopModel>>
     {
-        private readonly IShopRepository _repository;
-        private readonly IMapper _mapper;
-
-        public GetShopsQueryHandler(IShopRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IShopRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IList<ShopModel>> Handle(GetShopsQuery request, CancellationToken cancellationToken)
         {

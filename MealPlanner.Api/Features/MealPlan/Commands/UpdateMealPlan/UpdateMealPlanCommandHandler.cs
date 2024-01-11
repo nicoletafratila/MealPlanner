@@ -4,18 +4,11 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.MealPlan.Commands.UpdateMealPlan
 {
-    public class UpdateMealPlanCommandHandler : IRequestHandler<UpdateMealPlanCommand, UpdateMealPlanCommandResponse>
+    public class UpdateMealPlanCommandHandler(IMealPlanRepository repository, IMapper mapper, ILogger<UpdateMealPlanCommandHandler> logger) : IRequestHandler<UpdateMealPlanCommand, UpdateMealPlanCommandResponse>
     {
-        private readonly IMealPlanRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<UpdateMealPlanCommandHandler> _logger;
-
-        public UpdateMealPlanCommandHandler(IMealPlanRepository repository, IMapper mapper, ILogger<UpdateMealPlanCommandHandler> logger)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IMealPlanRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<UpdateMealPlanCommandHandler> _logger = logger;
 
         public async Task<UpdateMealPlanCommandResponse> Handle(UpdateMealPlanCommand request, CancellationToken cancellationToken)
         {

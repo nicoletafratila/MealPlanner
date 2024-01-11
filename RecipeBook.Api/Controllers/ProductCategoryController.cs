@@ -7,14 +7,9 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductCategoryController : ControllerBase
+    public class ProductCategoryController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator;
-
-        public ProductCategoryController(ISender mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly ISender _mediator = mediator;
 
         [HttpGet]
         public async Task<IList<ProductCategoryModel>> GetAll()
