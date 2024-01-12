@@ -1,0 +1,51 @@
+﻿@page "/shopedit"
+@page "/shopedit/{Id}"
+
+@if (Shop != null)
+{
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row g-0">
+                    <div class="col-md-8">
+                        <h2>@Shop.Name</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <EditForm Model="@Shop" OnValidSubmit="@SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3">Shop name: </label>
+                        <InputText id="name" class="form-control" @bind-Value="@Shop.Name" placeholder="Enter shop name"></InputText>
+                        <ValidationMessage For="@(() => Shop.Name)" />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="display" class="col-sm-3">Display order: </label>
+                    </div>
+
+                    <div class="col">
+                        <TableTemplate Data="@Shop.DisplaySequence" ShowIndex="true">
+                            <TableHeader>
+                                <th>Name</th>
+                                <th style="width: 50px"></th>
+                                <th style="width: 30px"></th>
+                            </TableHeader>
+                            <RowTemplate Context="DisplaySequence">
+                                <td>@DisplaySequence.ProductCategory!.Name</td>
+                            </RowTemplate>
+                        </TableTemplate>
+                    </div>
+
+                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}

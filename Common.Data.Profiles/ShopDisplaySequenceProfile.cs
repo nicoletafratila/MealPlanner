@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
 using MealPlanner.Shared.Models;
+using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles
 {

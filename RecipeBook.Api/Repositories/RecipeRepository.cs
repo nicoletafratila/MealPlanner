@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RecipeBook.Api.Repositories
 {
-    public class RecipeRepository : BaseAsyncRepository<Recipe, int>, IRecipeRepository
+    public class RecipeRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<Recipe, int>(dbContext), IRecipeRepository
     {
-        public RecipeRepository(MealPlannerDbContext dbContext) : base(dbContext)
-        {
-        }
-
         public override async Task<IReadOnlyList<Recipe>> GetAllAsync()
         {
             return await (DbContext as MealPlannerDbContext)!.Recipes

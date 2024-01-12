@@ -5,16 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api.Repositories
 {
-    public class ShopRepository : BaseAsyncRepository<Shop, int>, IShopRepository
+    public class ShopRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<Shop, int>(dbContext), IShopRepository
     {
-        public ShopRepository(MealPlannerDbContext dbContext) : base(dbContext)
-        {
-        }
-
         public async Task<Shop?> GetByIdIncludeDisplaySequenceAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext)!.Shops
-              .Include(x => x.DisplaySequence)
+              .Include(x => x.DisplaySequence)!
+              .ThenInclude(x => x.ProductCategory)
               .FirstOrDefaultAsync(item => item.Id == id);
         }
     }

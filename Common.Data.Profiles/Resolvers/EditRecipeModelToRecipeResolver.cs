@@ -8,15 +8,7 @@ namespace Common.Data.Profiles.Resolvers
     {
         public IList<RecipeIngredient>? Resolve(EditRecipeModel source, Recipe destination, IList<RecipeIngredientModel>? sourceValue, IList<RecipeIngredient>? destValue, ResolutionContext context)
         {
-            var result = new List<RecipeIngredient>();
-            if (source.Ingredients != null && source.Ingredients.Any())
-            {
-                foreach (var item in source.Ingredients)
-                {
-                    result.Add(context.Mapper.Map<RecipeIngredient>(item));
-                }
-            }
-            return result;
+            return source.Ingredients!.Select(context.Mapper.Map<RecipeIngredient>).ToList();
         }
     }
 }

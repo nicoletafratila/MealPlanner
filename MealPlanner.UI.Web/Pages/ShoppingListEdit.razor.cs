@@ -168,10 +168,11 @@ namespace MealPlanner.UI.Web.Pages
                         var product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId));
                         item = new ShoppingListProductModel
                         {
+                            ShoppingListId = ShoppingList.Id,
                             Collected = false,
                             Product = product,
                             Quantity = decimal.Parse(Quantity!),
-                            DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategoryId == product!.ProductCategory!.Id)!.Value
+                            DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory!.Id == product!.ProductCategory!.Id)!.Value
                         };
                         ShoppingList.Products!.Add(item);
                         Quantity = string.Empty;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
+using Common.Data.Profiles.Resolvers;
 using MealPlanner.Shared.Models;
 
 namespace Common.Data.Profiles
@@ -13,7 +14,9 @@ namespace Common.Data.Profiles
                .ForMember(data => data.DisplaySequence, opt => opt.Ignore());
 
             CreateMap<Shop, EditShopModel>()
-               .ReverseMap();
+               .ForMember(model => model.DisplaySequence, opt => opt.MapFrom<ShopToEditShopModelResolver, IList<ShopDisplaySequence>?>(data => data.DisplaySequence))
+               .ReverseMap()
+               .ForMember(data => data.DisplaySequence, opt => opt.MapFrom<EditShopModelToShopResolver, IList<ShopDisplaySequenceModel>?>(model => model.DisplaySequence));
         }
     }
 }

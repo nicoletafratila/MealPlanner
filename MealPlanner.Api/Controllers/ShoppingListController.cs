@@ -13,14 +13,9 @@ namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShoppingListController : ControllerBase
+    public class ShoppingListController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator;
-
-        public ShoppingListController(ISender mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
         public async Task<EditShoppingListModel> GetEdit(int id)
