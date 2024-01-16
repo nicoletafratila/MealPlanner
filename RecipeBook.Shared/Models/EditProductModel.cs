@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Common.Shared;
 
 namespace RecipeBook.Shared.Models
 {
-    public class EditProductModel
+    public class EditProductModel : BaseModel
     {
         [Required]
         public int Id { get; set; }

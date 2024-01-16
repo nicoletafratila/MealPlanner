@@ -77,6 +77,46 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        private bool CanMoveUp(ShopDisplaySequenceModel item)
+        {
+            return Shop!.DisplaySequence!.IndexOf(item) - 1 >= 0;
+        }
+
+        private void MoveUp(ShopDisplaySequenceModel item)
+        {
+            int index = Shop!.DisplaySequence!.IndexOf(item);
+            Shop.DisplaySequence.RemoveAt(index);
+            if (index - 1 >= 0)
+            {
+                Shop.DisplaySequence.Insert(index - 1, item);
+            }
+            UpdateDisplaySeqenceValues();
+        }
+
+        private bool CanMoveDown(ShopDisplaySequenceModel item)
+        {
+            return Shop!.DisplaySequence!.IndexOf(item) + 2 <= Shop!.DisplaySequence.Count;
+        }
+
+        private void MoveDown(ShopDisplaySequenceModel item)
+        {
+            int index = Shop!.DisplaySequence!.IndexOf(item);
+            Shop.DisplaySequence.RemoveAt(index);
+            if (index + 1 <= Shop!.DisplaySequence.Count)
+            {
+                Shop.DisplaySequence.Insert(index + 1, item);
+            }
+            UpdateDisplaySeqenceValues();
+        }
+
+        private void UpdateDisplaySeqenceValues()
+        {
+            for (int i = 0; i < Shop!.DisplaySequence!.Count; i++)
+            {
+                Shop.DisplaySequence[i].Value = i + 1;
+            }
+        }
+
         private void NavigateToOverview()
         {
             NavigationManager!.NavigateTo("/shopsoverview");

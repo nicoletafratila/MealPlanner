@@ -32,11 +32,33 @@
                         <TableTemplate Data="@Shop.DisplaySequence" ShowIndex="true">
                             <TableHeader>
                                 <th>Name</th>
-                                <th style="width: 50px"></th>
-                                <th style="width: 30px"></th>
+                                <th style="width: 100px"></th>
                             </TableHeader>
                             <RowTemplate Context="DisplaySequence">
-                                <td>@DisplaySequence.ProductCategory!.Name</td>
+                                <td>
+                                    @DisplaySequence.ProductCategory!.Name
+                                </td>
+                                <td>
+                                    @if (DisplaySequence.IsSelected)
+                                    {
+                                        @if (CanMoveUp(DisplaySequence) == true)
+                                        {
+                                            <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(DisplaySequence)">&#9650;</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-primary btn-sm" type="button" disabled @onclick="() => MoveUp(DisplaySequence)">&#9650;</button>
+                                        }
+                                        @if (CanMoveDown(DisplaySequence) == true)
+                                        {
+                                            <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(DisplaySequence)">&#9660;</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" disabled @onclick="() => MoveDown(DisplaySequence)">&#9660;</button>
+                                        }
+                                    }
+                                </td>
                             </RowTemplate>
                         </TableTemplate>
                     </div>

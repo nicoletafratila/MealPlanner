@@ -1,10 +1,11 @@
-﻿using Common.Validators;
+﻿using Common.Shared;
+using Common.Validators;
 using RecipeBook.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.Shared.Models
 {
-    public class EditMealPlanModel
+    public class EditMealPlanModel : BaseModel
     {
         [Required]
         public int Id { get; set; }

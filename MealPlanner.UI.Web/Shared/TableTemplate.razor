@@ -21,7 +21,7 @@
            var index = 1;
             @foreach (var item in Data!)
             {
-                <tr>
+                <tr @onclick="@(() => OnSelectedItemChanged(item))">
                     @if (ShowIndex)
                     {
                         <td>@index</td>

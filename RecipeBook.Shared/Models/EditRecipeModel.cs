@@ -1,9 +1,10 @@
-﻿using Common.Validators;
+﻿using Common.Shared;
+using Common.Validators;
 using System.ComponentModel.DataAnnotations;
 
 namespace RecipeBook.Shared.Models
 {
-    public class EditRecipeModel
+    public class EditRecipeModel : BaseModel
     {
         [Required]
         public int Id { get; set; }

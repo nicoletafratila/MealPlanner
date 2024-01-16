@@ -1,9 +1,10 @@
-﻿using RecipeBook.Shared.Models;
+﻿using Common.Shared;
+using RecipeBook.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.Shared.Models
 {
-    public class ShoppingListProductModel
+    public class ShoppingListProductModel : BaseModel
     {
         public int ShoppingListId { get; set; }
         public bool Collected { get; set; }

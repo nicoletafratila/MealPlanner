@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Common.Shared;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
-    public class ShopDisplaySequenceModel
+    public class ShopDisplaySequenceModel : BaseModel
     {
         public int ShopId { get; set; }
         public ProductCategoryModel? ProductCategory { get; set; }

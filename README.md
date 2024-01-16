@@ -13,3 +13,7 @@ The database for Identity API will be created automatically, but if you want to 
 MealPlanner
 -
 
+card for fas display of recipe
+edit product categorie
+edit recipe categories
+edit units

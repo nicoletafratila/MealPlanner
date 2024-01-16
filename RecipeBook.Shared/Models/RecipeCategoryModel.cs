@@ -1,6 +1,8 @@
-﻿namespace RecipeBook.Shared.Models
+﻿using Common.Shared;
+
+namespace RecipeBook.Shared.Models
 {
-    public class RecipeCategoryModel
+    public class RecipeCategoryModel : BaseModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }

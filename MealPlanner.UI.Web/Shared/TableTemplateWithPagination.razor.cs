@@ -1,9 +1,10 @@
 ﻿using Common.Pagination;
+using Common.Shared;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared
 {
-    public partial class TableTemplateWithPagination<TItem>
+    public partial class TableTemplateWithPagination<TItem> where TItem : BaseModel
     {
         [Parameter]
         public bool ShowIndex { get; set; } = false;

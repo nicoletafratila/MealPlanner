@@ -82,7 +82,7 @@
                                 @if (ProductModel != null && ProductModel.Product != null)
                                 {
                                     <td style="vertical-align:middle; text-align: center">
-                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="eventArgs => { CheckboxChangedAsync(ProductModel); }" />
+                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="() => { CheckboxChangedAsync(ProductModel); }" />
                                     </td>
                                     <td style="vertical-align:middle">
                                         <div style="display:flex; align-items: center">

@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Azure;
 using Blazored.Modal.Services;
-using Common.Data.Entities;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
