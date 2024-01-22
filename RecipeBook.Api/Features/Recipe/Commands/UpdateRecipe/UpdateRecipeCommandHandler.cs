@@ -4,18 +4,11 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.UpdateRecipe
 {
-    public class UpdateRecipeCommandHandler : IRequestHandler<UpdateRecipeCommand, UpdateRecipeCommandResponse>
+    public class UpdateRecipeCommandHandler(IRecipeRepository repository, IMapper mapper, ILogger<UpdateRecipeCommandHandler> logger) : IRequestHandler<UpdateRecipeCommand, UpdateRecipeCommandResponse>
     {
-        private readonly IRecipeRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<UpdateRecipeCommandHandler> _logger;
-
-        public UpdateRecipeCommandHandler(IRecipeRepository repository, IMapper mapper, ILogger<UpdateRecipeCommandHandler> logger)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IRecipeRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<UpdateRecipeCommandHandler> _logger = logger;
 
         public async Task<UpdateRecipeCommandResponse> Handle(UpdateRecipeCommand request, CancellationToken cancellationToken)
         {

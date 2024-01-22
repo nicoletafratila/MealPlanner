@@ -1,8 +1,8 @@
-﻿using Common.Pagination;
+﻿using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -72,11 +72,10 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [Inject]
-        public IJSRuntime? JSRuntime { get; set; }
-
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
+
+        protected ConfirmDialog dialog = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -111,7 +110,20 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (Recipe!.Id != 0)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the recipe: '{Recipe.Name}'?"))
+                var options = new ConfirmDialogOptions
+                {
+                    YesButtonText = "OK",
+                    YesButtonColor = ButtonColor.Success,
+                    NoButtonText = "Cancel",
+                    NoButtonColor = ButtonColor.Danger
+                };
+                var confirmation = await dialog.ShowAsync(
+                        title: "Are you sure you want to delete this?",
+                        message1: "This will delete the record. Once deleted can not be rolled back.",
+                        message2: "Do you want to proceed?",
+                        confirmDialogOptions: options);
+
+                if (!confirmation)
                     return;
 
                 var result = await RecipeService!.DeleteAsync(Recipe.Id);
@@ -172,7 +184,20 @@ namespace MealPlanner.UI.Web.Pages
             RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the ingredient '{item.Name}'?"))
+                var options = new ConfirmDialogOptions
+                {
+                    YesButtonText = "OK",
+                    YesButtonColor = ButtonColor.Success,
+                    NoButtonText = "Cancel",
+                    NoButtonColor = ButtonColor.Danger
+                };
+                var confirmation = await dialog.ShowAsync(
+                        title: "Are you sure you want to delete this?",
+                        message1: "This will delete the record. Once deleted can not be rolled back.",
+                        message2: "Do you want to proceed?",
+                        confirmDialogOptions: options);
+
+                if (!confirmation)
                     return;
 
                 Recipe.Ingredients!.Remove(itemToDelete);

@@ -13,7 +13,14 @@ The database for Identity API will be created automatically, but if you want to 
 MealPlanner
 -
 
+use bootrstap modal
+use bootstrap alert
+use bootstrap pagination
 card for fas display of recipe
+unit conversions
+recipes statistics charts
+navigation, breadcrumps
 edit product categorie
 edit recipe categories
 edit units
+design interfata

@@ -1,4 +1,5 @@
-﻿using Common.Pagination;
+﻿using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -31,6 +32,8 @@ namespace MealPlanner.UI.Web.Pages
 
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
+
+        protected ConfirmDialog dialog = default!;
 
         protected override async Task OnInitializedAsync()
         {

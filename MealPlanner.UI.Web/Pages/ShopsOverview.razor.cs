@@ -1,15 +1,12 @@
-﻿using MealPlanner.Shared.Models;
+﻿using BlazorBootstrap;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace MealPlanner.UI.Web.Pages
 {
     public partial class ShopsOverview
     {
-        //[Parameter]
-        //public QueryParameters? QueryParameters { get; set; } = new();
-
         public EditShopModel? Shop { get; set; }
         public IList<ShopModel>? Shops { get; set; }
 
@@ -19,11 +16,10 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [Inject]
-        public IJSRuntime? JSRuntime { get; set; }
-
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
+
+        protected ConfirmDialog dialog = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -44,7 +40,20 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (item != null)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the meal plan: '{item.Name}'?"))
+                var options = new ConfirmDialogOptions
+                {
+                    YesButtonText = "OK",
+                    YesButtonColor = ButtonColor.Success,
+                    NoButtonText = "Cancel",
+                    NoButtonColor = ButtonColor.Danger
+                };
+                var confirmation = await dialog.ShowAsync(
+                        title: "Are you sure you want to delete this?",
+                        message1: "This will delete the record. Once deleted can not be rolled back.",
+                        message2: "Do you want to proceed?",
+                        confirmDialogOptions: options);
+
+                if (!confirmation)
                     return;
 
                 var response = await ShopService!.DeleteAsync(item.Id);

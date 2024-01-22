@@ -54,7 +54,7 @@
 
                 @if (Products.Metadata != null)
                 {
-                    <Pagination CurrentPage="@Products.Metadata.PageNumber"
+                    <MealPlanner.UI.Web.Shared.Pagination CurrentPage="@Products.Metadata.PageNumber"
                                 TotalItems="@Products.Metadata.TotalCount"
                                 TotalPages="@Products.Metadata.TotalPages"
                                 HasNext="@Products.Metadata.HasNext"
@@ -67,4 +67,6 @@
         }
     </div>
 </div>
+
+<ConfirmDialog @ref="dialog" />
 

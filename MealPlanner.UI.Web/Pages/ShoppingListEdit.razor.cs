@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -71,14 +71,13 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [Inject]
-        public IJSRuntime? JSRuntime { get; set; }
-
         [CascadingParameter]
         protected IModalService? Modal { get; set; } = default!;
 
         [CascadingParameter(Name = "ErrorComponent")]
         protected IErrorComponent? ErrorComponent { get; set; }
+
+        protected ConfirmDialog dialog = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -112,7 +111,20 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (ShoppingList!.Id != 0)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the shopping list: '{ShoppingList.Name}'?"))
+                var options = new ConfirmDialogOptions
+                {
+                    YesButtonText = "OK",
+                    YesButtonColor = ButtonColor.Success,
+                    NoButtonText = "Cancel",
+                    NoButtonColor = ButtonColor.Danger
+                };
+                var confirmation = await dialog.ShowAsync(
+                        title: "Are you sure you want to delete this?",
+                        message1: "This will delete the record. Once deleted can not be rolled back.",
+                        message2: "Do you want to proceed?",
+                        confirmDialogOptions: options);
+
+                if (!confirmation)
                     return;
 
                 var result = await ShoppingListService!.DeleteAsync(ShoppingList.Id);
@@ -184,7 +196,20 @@ namespace MealPlanner.UI.Web.Pages
             ShoppingListProductModel? itemToDelete = ShoppingList!.Products!.FirstOrDefault(i => i.Product!.Id == item.Id);
             if (itemToDelete != null)
             {
-                if (!await JSRuntime!.Confirm($"Are you sure you want to delete the product '{item.Name}'?"))
+                var options = new ConfirmDialogOptions
+                {
+                    YesButtonText = "OK",
+                    YesButtonColor = ButtonColor.Success,
+                    NoButtonText = "Cancel",
+                    NoButtonColor = ButtonColor.Danger
+                };
+                var confirmation = await dialog.ShowAsync(
+                        title: "Are you sure you want to delete this?",
+                        message1: "This will delete the record. Once deleted can not be rolled back.",
+                        message2: "Do you want to proceed?",
+                        confirmDialogOptions: options);
+
+                if (!confirmation)
                     return;
 
                 ShoppingList.Products!.Remove(itemToDelete);
