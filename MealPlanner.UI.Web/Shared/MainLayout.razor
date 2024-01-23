@@ -22,7 +22,16 @@
                     </Alert>
                 </div>
             }
-            <CascadingValue Value="this" Name="ErrorComponent">
+            @if (IsInfoActive)
+            {
+                <div>
+                    <Alert Color="AlertColor.Success" Dismissable="true" OnClose="HideInfo">
+                        <Icon Name="IconName.CheckCircleFill" class="me-2"></Icon>
+                        @Message
+                    </Alert>
+                </div>
+            }
+            <CascadingValue Value="this" Name="MessageComponent">
                 @Body
             </CascadingValue>
         </div>

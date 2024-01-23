@@ -16,8 +16,8 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
 
@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ShopService!.DeleteAsync(item.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError(response);
+                    MessageComponent!.ShowError(response);
                 }
                 else
                 {
@@ -73,11 +73,5 @@ namespace MealPlanner.UI.Web.Pages
             Shops = await ShopService!.GetAllAsync();
             StateHasChanged();
         }
-
-        //private async void OnPageChangedAsync(int pageNumber)
-        //{
-        //    QueryParameters!.PageNumber = pageNumber;
-        //    await RefreshAsync();
-        //}
     }
 }

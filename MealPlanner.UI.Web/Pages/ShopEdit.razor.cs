@@ -20,8 +20,8 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
 
@@ -45,10 +45,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = Shop!.Id == 0 ? await ShopService!.AddAsync(Shop) : await ShopService!.UpdateAsync(Shop);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError(response);
+                MessageComponent!.ShowError(response);
             }
             else
             {
+                MessageComponent!.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -76,10 +77,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ShopService!.DeleteAsync(Shop.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError(response);
+                    MessageComponent!.ShowError(response);
                 }
                 else
                 {
+                    MessageComponent!.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }

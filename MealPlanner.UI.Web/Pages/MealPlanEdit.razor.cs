@@ -55,8 +55,8 @@ namespace MealPlanner.UI.Web.Pages
         [CascadingParameter]
         protected IModalService? Modal { get; set; } = default!;
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
 
@@ -80,10 +80,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = MealPlan!.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError(response);
+                MessageComponent!.ShowError(response);
             }
             else
             {
+                MessageComponent!.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -111,10 +112,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await MealPlanService!.DeleteAsync(MealPlan.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError(response);
+                    MessageComponent!.ShowError(response);
                 }
                 else
                 {
+                    MessageComponent!.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -203,7 +205,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
                 else
                 {
-                    ErrorComponent!.ShowError("There has been an error when saving the shopping list");
+                    MessageComponent!.ShowError("There has been an error when saving the shopping list");
                 }
             }
         }

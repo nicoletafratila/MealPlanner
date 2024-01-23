@@ -74,8 +74,8 @@ namespace MealPlanner.UI.Web.Pages
         [CascadingParameter]
         protected IModalService? Modal { get; set; } = default!;
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
 
@@ -99,10 +99,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = ShoppingList!.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError(response);
+                MessageComponent!.ShowError(response);
             }
             else
             {
+                MessageComponent!.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -130,10 +131,11 @@ namespace MealPlanner.UI.Web.Pages
                 var result = await ShoppingListService!.DeleteAsync(ShoppingList.Id);
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    ErrorComponent!.ShowError(result);
+                    MessageComponent!.ShowError(result);
                 }
                 else
                 {
+                    MessageComponent!.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -159,7 +161,7 @@ namespace MealPlanner.UI.Web.Pages
                     await SetShopAsync();
                     if (_shop == null || _shop.Id == 0)
                     {
-                        ErrorComponent!.ShowError("You must select a shop for the list.");
+                        MessageComponent!.ShowError("You must select a shop for the list.");
                         return;
                     }
 
@@ -226,7 +228,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 if (result.Cancelled)
                 {
-                    ErrorComponent!.ShowError("You must select a shop for the list.");
+                    MessageComponent!.ShowError("You must select a shop for the list.");
                     return;
                 }
 
@@ -234,7 +236,7 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     if (!int.TryParse(result.Data.ToString(), out shopId))
                     {
-                        ErrorComponent!.ShowError("You must select a shop for the list.");
+                        MessageComponent!.ShowError("You must select a shop for the list.");
                         return;
                     }
                 }
@@ -259,7 +261,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError(response);
+                MessageComponent!.ShowError(response);
             }
             else
             {

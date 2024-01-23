@@ -72,8 +72,8 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "ErrorComponent")]
-        protected IErrorComponent? ErrorComponent { get; set; }
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
 
@@ -98,10 +98,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = Recipe!.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError(response);
+                MessageComponent!.ShowError(response);
             }
             else
             {
+                MessageComponent!.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -129,10 +130,11 @@ namespace MealPlanner.UI.Web.Pages
                 var result = await RecipeService!.DeleteAsync(Recipe.Id);
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    ErrorComponent!.ShowError(result);
+                    MessageComponent!.ShowError(result);
                 }
                 else
                 {
+                    MessageComponent!.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -234,7 +236,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             catch (Exception)
             {
-                ErrorComponent!.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                MessageComponent!.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
         }
