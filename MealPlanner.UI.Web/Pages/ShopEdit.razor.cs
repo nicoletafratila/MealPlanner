@@ -45,7 +45,7 @@ namespace MealPlanner.UI.Web.Pages
             var response = Shop!.Id == 0 ? await ShopService!.AddAsync(Shop) : await ShopService!.UpdateAsync(Shop);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError("Error", response);
+                ErrorComponent!.ShowError(response);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ShopService!.DeleteAsync(Shop.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", response);
+                    ErrorComponent!.ShowError(response);
                 }
                 else
                 {

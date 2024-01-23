@@ -55,7 +55,7 @@ namespace MealPlanner.UI.Web.Pages
             var response = Product!.Id == 0 ? await ProductService!.AddAsync(Product) : await ProductService!.UpdateAsync(Product);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError("Error", response);
+                ErrorComponent!.ShowError(response);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ProductService!.DeleteAsync(Product.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", response);
+                    ErrorComponent!.ShowError(response);
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             catch (Exception)
             {
-                ErrorComponent!.ShowError("Error", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                ErrorComponent!.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
         }

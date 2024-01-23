@@ -80,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages
             var response = MealPlan!.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError("Error", response);
+                ErrorComponent!.ShowError(response);
             }
             else
             {
@@ -111,7 +111,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await MealPlanService!.DeleteAsync(MealPlan.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", response);
+                    ErrorComponent!.ShowError(response);
                 }
                 else
                 {
@@ -203,7 +203,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
                 else
                 {
-                    ErrorComponent!.ShowError("Error", "There has been an error when saving the shopping list");
+                    ErrorComponent!.ShowError("There has been an error when saving the shopping list");
                 }
             }
         }

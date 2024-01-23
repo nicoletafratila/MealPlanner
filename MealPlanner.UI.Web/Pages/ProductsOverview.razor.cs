@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ProductService!.DeleteAsync(item.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    ErrorComponent!.ShowError("Error", response);
+                    ErrorComponent!.ShowError(response);
                 }
                 else
                 {

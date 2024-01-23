@@ -14,7 +14,6 @@ MealPlanner
 -
 
 use bootrstap modal
-use bootstrap alert
 use bootstrap pagination
 card for fas display of recipe
 unit conversions

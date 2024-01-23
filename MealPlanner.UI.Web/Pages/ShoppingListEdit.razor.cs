@@ -99,7 +99,7 @@ namespace MealPlanner.UI.Web.Pages
             var response = ShoppingList!.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError("Error", response);
+                ErrorComponent!.ShowError(response);
             }
             else
             {
@@ -130,7 +130,7 @@ namespace MealPlanner.UI.Web.Pages
                 var result = await ShoppingListService!.DeleteAsync(ShoppingList.Id);
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    ErrorComponent!.ShowError("Error", result);
+                    ErrorComponent!.ShowError(result);
                 }
                 else
                 {
@@ -159,7 +159,7 @@ namespace MealPlanner.UI.Web.Pages
                     await SetShopAsync();
                     if (_shop == null || _shop.Id == 0)
                     {
-                        ErrorComponent!.ShowError("Error", "You must select a shop for the list.");
+                        ErrorComponent!.ShowError("You must select a shop for the list.");
                         return;
                     }
 
@@ -226,7 +226,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 if (result.Cancelled)
                 {
-                    ErrorComponent!.ShowError("Error", "You must select a shop for the list.");
+                    ErrorComponent!.ShowError("You must select a shop for the list.");
                     return;
                 }
 
@@ -234,7 +234,7 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     if (!int.TryParse(result.Data.ToString(), out shopId))
                     {
-                        ErrorComponent!.ShowError("Error", "You must select a shop for the list.");
+                        ErrorComponent!.ShowError("You must select a shop for the list.");
                         return;
                     }
                 }
@@ -259,7 +259,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (!string.IsNullOrWhiteSpace(response))
             {
-                ErrorComponent!.ShowError("Error", response);
+                ErrorComponent!.ShowError(response);
             }
             else
             {
