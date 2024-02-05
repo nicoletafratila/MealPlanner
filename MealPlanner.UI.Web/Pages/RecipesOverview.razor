@@ -51,14 +51,15 @@
 
                 @if (Recipes.Metadata != null)
                 {
-                    <MealPlanner.UI.Web.Shared.Pagination CurrentPage="@Recipes.Metadata.PageNumber"
-                                TotalItems="@Recipes.Metadata.TotalCount"
+                    <Pagination ActivePageNumber="@Recipes.Metadata.PageNumber"
                                 TotalPages="@Recipes.Metadata.TotalPages"
-                                HasNext="@Recipes.Metadata.HasNext"
-                                HasPrevious="@Recipes.Metadata.HasPrevious"
-                                ShowGoToFirst="@Recipes.Metadata.ShowGoToFirst"
-                                ShowGoToLast="@Recipes.Metadata.ShowGoToLast"
-                                PageChanged="@OnPageChangedAsync" />
+                                DisplayPages="@Recipes.Metadata.PageSize"
+                                FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                PreviousLinkIcon="IconName.ChevronLeft"
+                                NextLinkIcon="IconName.ChevronRight"
+                                LastLinkIcon="IconName.ChevronDoubleRight"
+                                Alignment="Alignment.Center" 
+                                PageChanged="OnPageChangedAsync" />
                 }
             </div>
         }

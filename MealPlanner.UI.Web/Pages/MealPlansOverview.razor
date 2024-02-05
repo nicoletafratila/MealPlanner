@@ -31,14 +31,15 @@
 
                 @if (MealPlans.Metadata != null)
                 {
-                    <MealPlanner.UI.Web.Shared.Pagination CurrentPage="@MealPlans.Metadata.PageNumber"
-                                TotalItems="@MealPlans.Metadata.TotalCount"
+                    <Pagination ActivePageNumber="@MealPlans.Metadata.PageNumber" 
                                 TotalPages="@MealPlans.Metadata.TotalPages"
-                                HasNext="@MealPlans.Metadata.HasNext"
-                                HasPrevious="@MealPlans.Metadata.HasPrevious"
-                                ShowGoToFirst="@MealPlans.Metadata.ShowGoToFirst"
-                                ShowGoToLast="@MealPlans.Metadata.ShowGoToLast"
-                                PageChanged="@OnPageChangedAsync" />
+                                DisplayPages="@MealPlans.Metadata.PageSize"
+                                FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                PreviousLinkIcon="IconName.ChevronLeft"
+                                NextLinkIcon="IconName.ChevronRight"
+                                LastLinkIcon="IconName.ChevronDoubleRight"
+                                Alignment="Alignment.Center"
+                                PageChanged="OnPageChangedAsync" />
                 }
             </div>
         }

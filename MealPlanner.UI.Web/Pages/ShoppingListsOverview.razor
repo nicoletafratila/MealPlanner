@@ -31,22 +31,15 @@
 
                 @if (ShoppingLists.Metadata != null)
                 {
-                    <MealPlanner.UI.Web.Shared.Pagination CurrentPage="@ShoppingLists.Metadata.PageNumber"
-                                TotalItems="@ShoppingLists.Metadata.TotalCount"
+                   <Pagination ActivePageNumber="@ShoppingLists.Metadata.PageNumber"
                                 TotalPages="@ShoppingLists.Metadata.TotalPages"
-                                HasNext="@ShoppingLists.Metadata.HasNext"
-                                HasPrevious="@ShoppingLists.Metadata.HasPrevious"
-                                ShowGoToFirst="@ShoppingLists.Metadata.ShowGoToFirst"
-                                ShowGoToLast="@ShoppingLists.Metadata.ShowGoToLast"
-                                PageChanged="@OnPageChangedAsync" />
-
-                   @*              <Pagination ActivePageNumber="1"
-                    TotalPages="15"
-                    DisplayPages="5"
-                    FirstLinkIcon="IconName.ChevronDoubleLeft"
-                    PreviousLinkIcon="IconName.ChevronLeft"
-                    NextLinkIcon="IconName.ChevronRight"
-                    LastLinkIcon="IconName.ChevronDoubleRight" /> *@
+                                DisplayPages="@ShoppingLists.Metadata.PageSize"
+                                FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                PreviousLinkIcon="IconName.ChevronLeft"
+                                NextLinkIcon="IconName.ChevronRight"
+                                LastLinkIcon="IconName.ChevronDoubleRight"
+                                Alignment="Alignment.Center" 
+                                PageChanged="OnPageChangedAsync" />
                 }
             </div>
         }

@@ -18,6 +18,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Shared\Pagination.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Shared\Pagination.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\Pagination.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="1.10.5" />
     <PackageReference Include="Blazored.Modal" Version="7.1.0" />
     <PackageReference Include="bootstrap-dialog" Version="3.3.4.1" />

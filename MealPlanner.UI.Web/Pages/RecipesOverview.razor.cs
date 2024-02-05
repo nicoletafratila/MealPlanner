@@ -92,7 +92,7 @@ namespace MealPlanner.UI.Web.Pages
             await RefreshAsync();
         }
 
-        private async void OnPageChangedAsync(int pageNumber)
+        private async Task OnPageChangedAsync(int pageNumber)
         {
             QueryParameters!.PageNumber = pageNumber;
             await RefreshAsync();

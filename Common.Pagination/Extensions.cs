@@ -9,7 +9,6 @@
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalPages = (int)Math.Ceiling(source.Count() / (double)pageSize),
-                TotalCount = source.Count()
             };
             var items = source
                 .Skip((pageNumber - 1) * pageSize)

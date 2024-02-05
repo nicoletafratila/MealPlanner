@@ -1,5 +1,4 @@
 ﻿@page "/productsoverview"
-@using Common.Pagination;
 
 <div class="col-sm-6">
     <div class="card">
@@ -54,14 +53,15 @@
 
                 @if (Products.Metadata != null)
                 {
-                    <MealPlanner.UI.Web.Shared.Pagination CurrentPage="@Products.Metadata.PageNumber"
-                                TotalItems="@Products.Metadata.TotalCount"
+                     <Pagination ActivePageNumber="@Products.Metadata.PageNumber"
                                 TotalPages="@Products.Metadata.TotalPages"
-                                HasNext="@Products.Metadata.HasNext"
-                                HasPrevious="@Products.Metadata.HasPrevious"
-                                ShowGoToFirst="@Products.Metadata.ShowGoToFirst"
-                                ShowGoToLast="@Products.Metadata.ShowGoToLast"
-                                PageChanged="@OnPageChangedAsync" />
+                                DisplayPages="@Products.Metadata.PageSize"
+                                FirstLinkIcon="IconName.ChevronDoubleLeft"
+                                PreviousLinkIcon="IconName.ChevronLeft"
+                                NextLinkIcon="IconName.ChevronRight"
+                                LastLinkIcon="IconName.ChevronDoubleRight"
+                                Alignment="Alignment.Center" 
+                                PageChanged="OnPageChangedAsync" />
                 }
             </div>
         }
