@@ -15,7 +15,7 @@ MealPlanner
 
 use bootrstap modal
 use bootstrap pagination
-card for fas display of recipe
+offcanvas sau card display of recipe
 unit conversions
 recipes statistics charts
 navigation, breadcrumps

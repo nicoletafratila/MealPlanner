@@ -203,6 +203,7 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 Recipe.Ingredients!.Remove(itemToDelete);
+                StateHasChanged();
             }
         }
 

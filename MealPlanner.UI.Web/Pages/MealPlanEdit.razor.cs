@@ -149,6 +149,8 @@ namespace MealPlanner.UI.Web.Pages
                         MealPlan.Recipes.Add(item!);
                     }
                 }
+
+                StateHasChanged();
             }
         }
 
@@ -179,6 +181,7 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 MealPlan.Recipes!.Remove(itemToDelete);
+                StateHasChanged();
             }
         }
 

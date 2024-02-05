@@ -8,7 +8,8 @@ namespace Common.Data.Profiles.Resolvers
     {
         public IList<ShoppingListProductModel>? Resolve(ShoppingList source, EditShoppingListModel destination, IList<ShoppingListProduct>? sourceValue, IList<ShoppingListProductModel>? destValue, ResolutionContext context)
         {
-            return source.Products!.Select(context.Mapper.Map<ShoppingListProductModel>).OrderBy(item => item.Collected)
+            return source.Products!.Select(context.Mapper.Map<ShoppingListProductModel>)
+                         .OrderBy(item => item.Collected)
                          .ThenBy(item => item.DisplaySequence)
                          .ThenBy(item => item.Product!.Name).ToList();
         }

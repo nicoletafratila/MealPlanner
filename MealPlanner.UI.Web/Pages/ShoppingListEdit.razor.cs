@@ -159,11 +159,6 @@ namespace MealPlanner.UI.Web.Pages
                 if (ShoppingList != null)
                 {
                     await SetShopAsync();
-                    if (_shop == null || _shop.Id == 0)
-                    {
-                        MessageComponent!.ShowError("You must select a shop for the list.");
-                        return;
-                    }
 
                     if (ShoppingList.Products == null)
                     {
@@ -189,6 +184,8 @@ namespace MealPlanner.UI.Web.Pages
                         ShoppingList.Products!.Add(item);
                         Quantity = string.Empty;
                     }
+
+                    StateHasChanged();
                 }
             }
         }
@@ -215,6 +212,7 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 ShoppingList.Products!.Remove(itemToDelete);
+                StateHasChanged();
             }
         }
 
@@ -241,8 +239,8 @@ namespace MealPlanner.UI.Web.Pages
                     }
                 }
             }
-            ShoppingList!.ShopId = shopId;
             _shop ??= await ShopService!.GetEditAsync(shopId);
+            ShoppingList!.ShopId = shopId;
         }
 
         private void NavigateToOverview()

@@ -14,6 +14,7 @@ namespace MealPlanner.Api.Repositories
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext)!.ShoppingLists
+                 .Include(x => x!.Shop)!
                  .Include(x => x!.Products)!
                     .ThenInclude(x => x!.Product)
                         .ThenInclude(x => x!.ProductCategory)

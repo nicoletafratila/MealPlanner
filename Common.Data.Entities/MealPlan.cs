@@ -9,7 +9,8 @@
         {
             var list = new ShoppingList
             {
-                Name = $"Shopping list details for {Name} in shop {shop.Name}"
+                Name = $"Shopping list details for {Name} in shop {shop.Name}",
+                ShopId = shop.Id
             };
             var products = new List<ShoppingListProduct>();
             foreach (var item in MealPlanRecipes!)
