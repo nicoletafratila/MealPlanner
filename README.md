@@ -10,9 +10,9 @@ PM> Script-migration
 MealPlanner
 -
 
+recipes statistics charts
 offcanvas sau card display of recipe
 unit conversions
-recipes statistics charts
 navigation, breadcrumps
 edit product categorie
 edit recipe categories
