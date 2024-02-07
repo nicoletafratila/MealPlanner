@@ -52,7 +52,7 @@ namespace MealPlanner.UI.Web
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               }); 
+               });
 
             services.AddHttpClient<IMealPlanService, MealPlanService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
@@ -69,6 +69,13 @@ namespace MealPlanner.UI.Web
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
             services.AddHttpClient<IShopService, ShopService>()
+               .ConfigureHttpClient((serviceProvider, httpClient) =>
+               {
+                   var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
+                   httpClient.BaseAddress = clientConfig.BaseUrl;
+                   httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+               });
+            services.AddHttpClient<IStatisticsService, StatisticsService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);

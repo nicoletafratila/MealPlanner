@@ -5,6 +5,7 @@
         public const string ShoppingListApi = "ShoppingListApi";
         public const string ShopApi = "ShopApi"; 
         public const string MealPlanApi = "MealPlanApi";
+        public const string StatisticsApi = "StatisticsApi";
 
         public const string RecipeApi = "RecipeApi";
         public const string RecipeCategoryApi = "RecipeCategoryApi";

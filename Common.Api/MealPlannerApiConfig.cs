@@ -13,7 +13,8 @@ namespace Common.Api
             {
                 [ApiEndpointNames.ShoppingListApi] = "api/shoppinglist",
                 [ApiEndpointNames.MealPlanApi] = "api/mealplan",
-                [ApiEndpointNames.ShopApi] = "api/shop"
+                [ApiEndpointNames.ShopApi] = "api/shop",
+                [ApiEndpointNames.StatisticsApi] = "api/statistics"
             };
         }
     }
