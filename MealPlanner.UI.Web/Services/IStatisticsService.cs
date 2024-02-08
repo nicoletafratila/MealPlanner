@@ -4,6 +4,6 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IStatisticsService
     {
-        Task<StatisticModel?> GetFavoriteRecipesAsync(string? categoryId);
+        Task<StatisticModel?> GetFavoriteRecipesAsync(int categoryId);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace MealPlanner.UI.Web
+namespace Common.Constants
 {
-    public static class Extensions
+    public static class Colors
     {
         public static List<string> GetBackgroundColors(int counter)
         {

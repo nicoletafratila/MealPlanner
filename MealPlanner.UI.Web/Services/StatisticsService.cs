@@ -10,14 +10,14 @@ namespace MealPlanner.UI.Web.Services
         private readonly HttpClient _httpClient = httpClient;
         private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
-        public async Task<StatisticModel?> GetFavoriteRecipesAsync(string? categoryId)
+        public async Task<StatisticModel?> GetFavoriteRecipesAsync(int categoryId)
         {
-            var query = new Dictionary<string, string?>
+            var query = new Dictionary<string, string>
             {
-                ["CategoryId"] = categoryId,
+                ["CategoryId"] = categoryId.ToString(),
             };
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig!.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes", query));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig!.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes", query!));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<StatisticModel?>(await response.Content.ReadAsStringAsync());
         }
     }
