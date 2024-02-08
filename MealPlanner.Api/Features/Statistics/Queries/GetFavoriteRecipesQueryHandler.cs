@@ -11,8 +11,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries
         public async Task<StatisticModel?> Handle(GetFavoriteRecipesQuery request, CancellationToken cancellationToken)
         {
             var categoryId = int.Parse(request.CategoryId!);
-
-            var data = new StatisticModel()
+            var model = new StatisticModel()
             {
                 Data = new Dictionary<string, double>()
             };
@@ -22,21 +21,20 @@ namespace MealPlanner.Api.Features.Statistics.Queries
             {
                 foreach (var recipe in mealPlan.MealPlanRecipes!.Where(i => i.Recipe!.RecipeCategoryId == categoryId))
                 {
-                    if (string.IsNullOrWhiteSpace(data.Label))
+                    if (string.IsNullOrWhiteSpace(model.Label))
                     {
-                        data.Title = "Favorite " + recipe.Recipe!.RecipeCategory!.Name;
-                        data.Label = recipe.Recipe!.RecipeCategory!.Name;
+                        model.Title = "Favorite " + recipe.Recipe!.RecipeCategory!.Name;
+                        model.Label = recipe.Recipe!.RecipeCategory!.Name;
                     }
 
-                    if (data.Data.ContainsKey(recipe.Recipe!.Name!))
-                        data.Data[recipe.Recipe!.Name!]++;
+                    if (model.Data.ContainsKey(recipe.Recipe!.Name!))
+                        model.Data[recipe.Recipe!.Name!]++;
                     else
-                        data.Data[recipe.Recipe!.Name!] = 1;
+                        model.Data[recipe.Recipe!.Name!] = 1;
                 }
             }
-
-            data.Data = data.Data.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-            return data;
+            model.Data = model.Data.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+            return model;
         }
     }
 }

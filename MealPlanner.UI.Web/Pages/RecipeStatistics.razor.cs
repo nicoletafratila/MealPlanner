@@ -15,23 +15,20 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IRecipeCategoryService? RecipeCategoryService { get; set; }
 
+        [Inject]
+        protected PreloadService PreloadService { get; set; } = default!;
+
         protected override async Task OnInitializedAsync()
         {
+            PreloadService.Show(SpinnerColor.Primary);
+
             Statistics = new List<StatisticModel>();
             var categories = await RecipeCategoryService!.GetAllAsync();
             foreach (var category in categories!)
             {
                 var favorites = await StatisticsService!.GetFavoriteRecipesAsync(category.Id);
-                if (favorites != null && favorites.Data != null)
-                {
-                    favorites.ChartData = new ChartData { Labels = favorites.GetDataLabels(), Datasets = favorites.GetDataSets(ChartType.Doughnut) };
-                    favorites.ChartOptions = new();
-                    favorites.ChartOptions.Responsive = true;
-                    favorites.ChartOptions.Plugins.Title!.Text = favorites.Title;
-                    favorites.ChartOptions.Plugins.Title.Display = true;
-                    favorites.ChartOptions.Plugins.Legend.Position = "right";
-                    Statistics.Add(favorites);
-                }
+                favorites!.GenerateChartData();
+                Statistics.Add(favorites!);
             }
         }
 
@@ -40,6 +37,11 @@ namespace MealPlanner.UI.Web.Pages
             foreach (var item in Statistics!)
             {
                 await item.Chart!.InitializeAsync(item.ChartData!, item.ChartOptions!);
+            }
+
+            if (Statistics != null && Statistics.Any())
+            {
+                PreloadService.Hide();
             }
             await base.OnAfterRenderAsync(firstRender);
         }
