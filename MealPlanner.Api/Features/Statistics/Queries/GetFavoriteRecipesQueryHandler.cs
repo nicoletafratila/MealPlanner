@@ -1,5 +1,4 @@
-﻿using Common.Data.Entities;
-using Common.Shared;
+﻿using Common.Shared;
 using MealPlanner.Api.Repositories;
 using MediatR;
 
@@ -15,7 +14,6 @@ namespace MealPlanner.Api.Features.Statistics.Queries
 
             var data = new StatisticModel()
             {
-                Title = "Favorite recipes",
                 Data = new Dictionary<string, double>()
             };
 
@@ -25,7 +23,10 @@ namespace MealPlanner.Api.Features.Statistics.Queries
                 foreach (var recipe in mealPlan.MealPlanRecipes!.Where(i => i.Recipe!.RecipeCategoryId == categoryId))
                 {
                     if (string.IsNullOrWhiteSpace(data.Label))
+                    {
+                        data.Title = "Favorite " + recipe.Recipe!.RecipeCategory!.Name;
                         data.Label = recipe.Recipe!.RecipeCategory!.Name;
+                    }
 
                     if (data.Data.ContainsKey(recipe.Recipe!.Name!))
                         data.Data[recipe.Recipe!.Name!]++;

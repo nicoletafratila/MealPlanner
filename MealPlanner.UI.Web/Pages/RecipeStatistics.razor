@@ -1,4 +1,45 @@
 ﻿@page "/recipesstatistics"
 
-<PieChart @ref="pieChart" Width="500" Class="mb-5" />
+<div class="align-left">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-8">
+                    <h2>Statistics</h2>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm">
+                <PieChart @ref="favorites1Chart" Width="500" Class="mb-5" />
+            </div>
+            <div class="col-sm">
+                <PieChart @ref="favorites2Chart" Width="500" Class="mb-5" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <DoughnutChart @ref="favorites3Chart" Width="500" Class="mb-5" />
+            </div>
+            <div class="col-sm">
+                <DoughnutChart @ref="favorites4Chart" Width="500" Class="mb-5" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <PieChart @ref="favorites5Chart" Width="500" Class="mb-5" />
+            </div>
+            <div class="col-sm">
+                <PieChart @ref="favorites6Chart" Width="500" Class="mb-5" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <PieChart @ref="favorites7Chart" Width="500" Class="mb-5" />
+            </div>
+        </div>
+    </div>
+</div>
