@@ -70,14 +70,14 @@
                                 <th>Category</th>
                                 <th>Name</th>
                                 <th></th>
-                                <th></th>
-                                <th scope="col"></th>
+                                <th style="width: 50px"></th>
+                                <th style="width: 30px"></th>
                             </TableHeader>
                             <RowTemplate Context="Recipe">
                                 <td>@Recipe.RecipeCategory!.Name</td>
                                 <td>@Recipe.Name</td>
                                 <td>
-                                    <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
+                                    <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" @onclick="() => ShowRecipeAsync(Recipe)" />
                                 </td>
                                 <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => EditRecipe(Recipe)">Edit</button></td>
                                 <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteRecipeAsync(Recipe)"></button></td>
@@ -96,3 +96,4 @@
 }
 
 <ConfirmDialog @ref="dialog" />
+<Offcanvas @ref="offcanvas" />

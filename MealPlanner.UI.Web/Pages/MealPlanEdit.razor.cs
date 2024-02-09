@@ -59,6 +59,7 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
+        protected Offcanvas offcanvas = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -211,6 +212,15 @@ namespace MealPlanner.UI.Web.Pages
                     MessageComponent!.ShowError("There has been an error when saving the shopping list");
                 }
             }
+        }
+
+        private async Task ShowRecipeAsync(RecipeModel item)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "Id", item.Id }
+            };
+            await offcanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
         }
 
         private void NavigateToOverview()
