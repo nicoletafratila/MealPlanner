@@ -9,7 +9,6 @@ PM> Script-migration
 
 MealPlanner
 -
-offcanvas sau card display of recipe
 unit conversions
 navigation, breadcrumps
 edit product categorie

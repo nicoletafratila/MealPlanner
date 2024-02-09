@@ -216,9 +216,11 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task ShowRecipeAsync(RecipeModel item)
         {
+            var recipe = await RecipeService!.GetEditAsync(item.Id);
             var parameters = new Dictionary<string, object>
             {
-                { "Id", item.Id }
+                { "Recipe", recipe! },
+                { "RecipeCategory", item.RecipeCategory!.Name! },
             };
             await offcanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
         }
