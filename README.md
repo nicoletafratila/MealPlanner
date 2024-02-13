@@ -9,8 +9,9 @@ PM> Script-migration
 
 MealPlanner
 -
-unit conversions
+add meal plan to shopping list
 navigation, breadcrumps
+unit conversions
 edit product categorie
 edit recipe categories
 edit units

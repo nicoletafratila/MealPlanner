@@ -1,5 +1,6 @@
 ﻿using Common.Shared;
-using MealPlanner.Api.Features.Statistics.Queries;
+using MealPlanner.Api.Features.Statistics.Queries.GetFavoriteProducts;
+using MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,19 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("favoriterecipes")]
-        public async Task<StatisticModel?> Search([FromQuery] string? categoryId)
+        public async Task<StatisticModel?> SearchFavoriteRecipes([FromQuery] string? categoryId)
         {
             GetFavoriteRecipesQuery query = new()
+            {
+                CategoryId = categoryId
+            };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("favoriteproducts")]
+        public async Task<StatisticModel?> SearchFavoriteProducts([FromQuery] string? categoryId)
+        {
+            GetFavoriteProductsQuery query = new()
             {
                 CategoryId = categoryId
             };

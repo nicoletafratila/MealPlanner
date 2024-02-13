@@ -1,7 +1,7 @@
 ﻿using Common.Shared;
 using MediatR;
 
-namespace MealPlanner.Api.Features.Statistics.Queries
+namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes
 {
     public class GetFavoriteRecipesQuery : IRequest<StatisticModel>
     {

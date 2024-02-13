@@ -7,7 +7,7 @@
 
         public ShopDisplaySequence GetDisplaySequence(int categoryId)
         {
-            return DisplaySequence!.FirstOrDefault(i => i.ProductCategoryId == categoryId)!;
+            return DisplaySequence?.FirstOrDefault(i => i.ProductCategoryId == categoryId)!;
         }
     }
 }
