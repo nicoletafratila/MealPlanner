@@ -1,40 +1,57 @@
-﻿using Common.Shared;
+﻿using System.Net.Http.Headers;
+using Common.Api;
+using Common.Constants;
+using Common.Shared;
 using MealPlanner.Api.Repositories;
 using MediatR;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes
 {
-    public class GetFavoriteRecipesQueryHandler(IMealPlanRepository mealPlanRepository) : IRequestHandler<GetFavoriteRecipesQuery, StatisticModel?>
+    public class GetFavoriteRecipesQueryHandler(IMealPlanRepository mealPlanRepository, IServiceProvider serviceProvider) : IRequestHandler<GetFavoriteRecipesQuery, IList<StatisticModel>>
     {
         private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository;
+        private readonly IApiConfig _recipeApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
 
-        public async Task<StatisticModel?> Handle(GetFavoriteRecipesQuery request, CancellationToken cancellationToken)
+        public async Task<IList<StatisticModel>> Handle(GetFavoriteRecipesQuery request, CancellationToken cancellationToken)
         {
-            var categoryId = int.Parse(request.CategoryId!);
-            var model = new StatisticModel()
+            IList<RecipeCategoryModel>? categories = new List<RecipeCategoryModel>();
+            using (var client = new HttpClient())
             {
-                Data = new Dictionary<string, double>()
-            };
-
-            var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryId(categoryId);
-            foreach (var mealPlan in mealPlanWithRecipes!)
-            {
-                foreach (var recipe in mealPlan.MealPlanRecipes!.Where(i => i.Recipe!.RecipeCategoryId == categoryId))
-                {
-                    if (string.IsNullOrWhiteSpace(model.Label))
-                    {
-                        model.Title = "Favorite " + recipe.Recipe!.RecipeCategory!.Name;
-                        model.Label = recipe.Recipe!.RecipeCategory!.Name;
-                    }
-
-                    if (model.Data.ContainsKey(recipe.Recipe!.Name!))
-                        model.Data[recipe.Recipe!.Name!]++;
-                    else
-                        model.Data[recipe.Recipe!.Name!] = 1;
-                }
+                client.BaseAddress = _recipeApiConfig!.BaseUrl;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                categories = await client.GetFromJsonAsync<IList<RecipeCategoryModel>>($"{_recipeApiConfig!.Endpoints![ApiEndpointNames.RecipeCategoryApi]}", cancellationToken: cancellationToken);
             }
-            model.Data = model.Data.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-            return model;
+
+            var result = new List<StatisticModel>();
+            foreach (var category in categories!)
+            {
+                var model = new StatisticModel();
+                model.Title = "Favorite " + category!.Name;
+                model.Label = category!.Name;
+
+                var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryId(category.Id);
+                foreach (var mealPlan in mealPlanWithRecipes!)
+                {
+                    foreach (var recipe in mealPlan.MealPlanRecipes!.Where(i => i.Recipe!.RecipeCategoryId == category.Id))
+                    {
+                        if (string.IsNullOrWhiteSpace(model.Label))
+                        {
+
+                        }
+
+                        if (model.Data!.ContainsKey(recipe.Recipe!.Name!))
+                            model.Data[recipe.Recipe!.Name!]++;
+                        else
+                            model.Data[recipe.Recipe!.Name!] = 1;
+                    }
+                }
+                model.Data = model.Data!.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+                result.Add(model);
+            }
+
+            return result;
         }
     }
 }

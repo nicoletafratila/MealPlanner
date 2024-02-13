@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Common.Api;
 using MealPlanner.Api.Repositories;
 using MediatR;
 
@@ -10,6 +11,7 @@ namespace MealPlanner.Api
         {
             base.RegisterServices(services);
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
         }
 
         protected override void RegisterRepositories(IServiceCollection services)

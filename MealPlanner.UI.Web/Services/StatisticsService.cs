@@ -1,7 +1,6 @@
 ﻿using Common.Api;
 using Common.Constants;
 using Common.Shared;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace MealPlanner.UI.Web.Services
 {
@@ -10,26 +9,14 @@ namespace MealPlanner.UI.Web.Services
         private readonly HttpClient _httpClient = httpClient;
         private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
-        public async Task<StatisticModel?> GetFavoriteRecipesAsync(int categoryId)
+        public async Task<IList<StatisticModel>?> GetFavoriteRecipesAsync()
         {
-            var query = new Dictionary<string, string>
-            {
-                ["CategoryId"] = categoryId.ToString(),
-            };
-
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig!.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes", query!));
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<StatisticModel?>(await response.Content.ReadAsStringAsync());
+            return await _httpClient.GetFromJsonAsync<IList<StatisticModel>?>($"{_apiConfig!.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes");
         }
 
-        public async Task<StatisticModel?> GetFavoriteProductsAsync(int categoryId)
+        public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync()
         {
-            var query = new Dictionary<string, string>
-            {
-                ["CategoryId"] = categoryId.ToString(),
-            };
-
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig!.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriteproducts", query!));
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<StatisticModel?>(await response.Content.ReadAsStringAsync());
+            return await _httpClient.GetFromJsonAsync<IList<StatisticModel>?>($"{_apiConfig!.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriteproducts");
         }
     }
 }

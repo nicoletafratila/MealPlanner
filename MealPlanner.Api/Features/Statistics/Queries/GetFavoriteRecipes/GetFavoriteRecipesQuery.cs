@@ -3,8 +3,7 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes
 {
-    public class GetFavoriteRecipesQuery : IRequest<StatisticModel>
+    public class GetFavoriteRecipesQuery : IRequest<IList<StatisticModel>>
     {
-        public string? CategoryId { get; set; }
     }
 }

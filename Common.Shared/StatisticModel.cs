@@ -7,7 +7,7 @@ namespace Common.Shared
     {
         public string? Title { get; set; }
         public string? Label { get; set; }
-        public Dictionary<string, double>? Data { get; set; }
+        public Dictionary<string, double>? Data { get; set; } = new Dictionary<string, double>();
         public DoughnutChart? Chart = new();
         public DoughnutChartOptions? ChartOptions = new();
         public ChartData? ChartData = new();

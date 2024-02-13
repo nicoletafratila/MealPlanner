@@ -18,23 +18,15 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("favoriterecipes")]
-        public async Task<StatisticModel?> SearchFavoriteRecipes([FromQuery] string? categoryId)
+        public async Task<IList<StatisticModel>?> SearchFavoriteRecipes()
         {
-            GetFavoriteRecipesQuery query = new()
-            {
-                CategoryId = categoryId
-            };
-            return await _mediator.Send(query);
+            return await _mediator.Send(new GetFavoriteRecipesQuery());
         }
 
         [HttpGet("favoriteproducts")]
-        public async Task<StatisticModel?> SearchFavoriteProducts([FromQuery] string? categoryId)
+        public async Task<IList<StatisticModel>?> SearchFavoriteProducts()
         {
-            GetFavoriteProductsQuery query = new()
-            {
-                CategoryId = categoryId
-            };
-            return await _mediator.Send(query);
+            return await _mediator.Send(new GetFavoriteProductsQuery());
         }
     }
 }
