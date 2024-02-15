@@ -15,7 +15,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.AddShop
             try
             {
                 var shops = await _repository.GetAllAsync();
-                var existingItem = shops!.FirstOrDefault(i => i.Name == request.Model?.Name!);
+                var existingItem = shops?.FirstOrDefault(i => i.Name == request.Model?.Name!);
                 if (existingItem != null)
                     return new AddShopCommandResponse { Id = 0, Message = "This shop already exists." };
 

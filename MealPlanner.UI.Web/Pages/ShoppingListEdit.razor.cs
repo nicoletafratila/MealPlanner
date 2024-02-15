@@ -211,7 +211,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                ShoppingList!.Products?.Remove(itemToDelete);
+                ShoppingList?.Products?.Remove(itemToDelete);
                 StateHasChanged();
             }
         }

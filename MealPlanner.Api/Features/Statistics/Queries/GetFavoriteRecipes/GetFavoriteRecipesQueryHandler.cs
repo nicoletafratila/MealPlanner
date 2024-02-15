@@ -24,10 +24,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes
                 {
                     if (mealPlan.Recipe?.RecipeCategoryId == category.Id)
                     {
-                        if (model.Data!.ContainsKey(mealPlan.Recipe?.Name!))
-                            model.Data[mealPlan.Recipe?.Name!]++;
-                        else
-                            model.Data[mealPlan.Recipe?.Name!] = 1;
+                        model.Data![mealPlan.Recipe.Name!] = !model.Data.TryGetValue(mealPlan.Recipe.Name!, out double value) ? 1 : ++value;
                     }
                 }
                 model.Data = model.Data?.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
