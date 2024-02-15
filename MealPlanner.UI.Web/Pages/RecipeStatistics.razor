@@ -12,7 +12,7 @@
     </div>
 
     <div class="card-body">
-        <div class="row">
+        <div class="row" style="height: 500px">
             @if (Statistics != null)
             {
                 foreach (var item in Statistics)
@@ -23,5 +23,18 @@
                 }
             }
         </div>
+        
+        @if (Categories != null && Categories.Metadata != null && Categories.Items != null)
+        {
+            <Pagination ActivePageNumber="@Categories.Metadata.PageNumber"
+                        TotalPages="@Categories.Metadata.TotalPages"
+                        DisplayPages="@Categories.Metadata.PageSize"
+                        FirstLinkIcon="IconName.ChevronDoubleLeft"
+                        PreviousLinkIcon="IconName.ChevronLeft"
+                        NextLinkIcon="IconName.ChevronRight"
+                        LastLinkIcon="IconName.ChevronDoubleRight"
+                        Alignment="Alignment.Center"
+                        PageChanged="OnPageChangedAsync" />
+        }
     </div>
 </div>
