@@ -95,21 +95,21 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void SaveAsync()
         {
-            var response = Recipe!.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe);
+            var response = Recipe?.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe!);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                MessageComponent!.ShowError(response);
+                MessageComponent?.ShowError(response);
             }
             else
             {
-                MessageComponent!.ShowInfo("Data has been saved successfully");
+                MessageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
 
         private async void DeleteAsync()
         {
-            if (Recipe!.Id != 0)
+            if (Recipe?.Id != 0)
             {
                 var options = new ConfirmDialogOptions
                 {
@@ -127,14 +127,14 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                var result = await RecipeService!.DeleteAsync(Recipe.Id);
+                var result = await RecipeService!.DeleteAsync(Recipe!.Id);
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    MessageComponent!.ShowError(result);
+                    MessageComponent?.ShowError(result);
                 }
                 else
                 {
-                    MessageComponent!.ShowInfo("Data has been deleted successfully");
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -161,7 +161,7 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         Recipe.Ingredients = new List<RecipeIngredientModel>();
                     }
-                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product!.Id == int.Parse(ProductId));
+                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
                     if (item != null)
                     {
                         item.Quantity += decimal.Parse(Quantity!);
@@ -170,11 +170,11 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         item = new RecipeIngredientModel
                         {
-                            Product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
+                            Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
                             RecipeId = Recipe.Id,
                             Quantity = decimal.Parse(Quantity!)
                         };
-                        Recipe.Ingredients!.Add(item);
+                        Recipe.Ingredients?.Add(item);
                         Quantity = string.Empty;
                     }
                 }
@@ -183,7 +183,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void DeleteIngredientAsync(ProductModel item)
         {
-            RecipeIngredientModel? itemToDelete = Recipe!.Ingredients!.FirstOrDefault(i => i.Product!.Id == item.Id);
+            RecipeIngredientModel? itemToDelete = Recipe?.Ingredients?.FirstOrDefault(i => i.Product?.Id == item.Id);
             if (itemToDelete != null)
             {
                 var options = new ConfirmDialogOptions
@@ -202,14 +202,14 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                Recipe.Ingredients!.Remove(itemToDelete);
+                Recipe?.Ingredients?.Remove(itemToDelete);
                 StateHasChanged();
             }
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager!.NavigateTo("/recipesoverview");
+            NavigationManager?.NavigateTo("/recipesoverview");
         }
 
         private async void OnProductCategoryChangedAsync(string value)
@@ -237,7 +237,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             catch (Exception)
             {
-                MessageComponent!.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
         }

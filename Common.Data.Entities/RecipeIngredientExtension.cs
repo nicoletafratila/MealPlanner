@@ -4,11 +4,13 @@
     {
         public static ShoppingListProduct ToShoppingListProduct(this RecipeIngredient ingredient, int displaySequence)
         {
-            var result = new ShoppingListProduct();
-            result.ProductId = ingredient.ProductId;
-            result.Quantity = ingredient.Quantity;
-            result.Collected = false;
-            result.DisplaySequence = displaySequence;
+            var result = new ShoppingListProduct
+            {
+                ProductId = ingredient.ProductId,
+                Quantity = ingredient.Quantity,
+                Collected = false,
+                DisplaySequence = displaySequence
+            };
             return result;
         }
     }

@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api.Repositories
 {
-    public class ShoppingListRepository : BaseAsyncRepository<ShoppingList, int>, IShoppingListRepository
+    public class ShoppingListRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<ShoppingList, int>(dbContext), IShoppingListRepository
     {
-        public ShoppingListRepository(MealPlannerDbContext dbContext) : base(dbContext)
-        {
-        }
-
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(int id)
         {
             return await (DbContext as MealPlannerDbContext)!.ShoppingLists
@@ -21,13 +17,13 @@ namespace MealPlanner.Api.Repositories
                  .Include(x => x!.Products)!
                     .ThenInclude(x => x!.Product)
                         .ThenInclude(x => x!.Unit)
-                .FirstOrDefaultAsync(item => item.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<ShoppingList?> SearchAsync(string name)
         {
             return await (DbContext as MealPlannerDbContext)!.ShoppingLists
-                   .FirstOrDefaultAsync(item => item.Name!.ToLower() == name.ToLower());
+                   .FirstOrDefaultAsync(x => x!.Name!.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

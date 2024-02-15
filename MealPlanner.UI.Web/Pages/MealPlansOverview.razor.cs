@@ -32,12 +32,12 @@ namespace MealPlanner.UI.Web.Pages
 
         private void New()
         {
-            NavigationManager!.NavigateTo($"mealplanedit/");
+            NavigationManager?.NavigateTo($"mealplanedit/");
         }
 
         private void Update(MealPlanModel item)
         {
-            NavigationManager!.NavigateTo($"mealplanedit/{item.Id}");
+            NavigationManager?.NavigateTo($"mealplanedit/{item.Id}");
         }
 
         private async void DeleteAsync(MealPlanModel item)
@@ -63,7 +63,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await MealPlanService!.DeleteAsync(item.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    MessageComponent!.ShowError(response);
+                    MessageComponent?.ShowError(response);
                 }
                 else
                 {

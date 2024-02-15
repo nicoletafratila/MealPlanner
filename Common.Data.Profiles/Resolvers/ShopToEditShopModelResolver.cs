@@ -8,7 +8,7 @@ namespace Common.Data.Profiles.Resolvers
     {
         public IList<ShopDisplaySequenceModel>? Resolve(Shop source, EditShopModel destination, IList<ShopDisplaySequence>? sourceValue, IList<ShopDisplaySequenceModel>? destValue, ResolutionContext context)
         {
-            return source.DisplaySequence!.Select(context.Mapper.Map<ShopDisplaySequenceModel>).OrderBy(i => i.Value).ToList();
+            return source.DisplaySequence?.Select(context.Mapper.Map<ShopDisplaySequenceModel>).OrderBy(i => i.Value).ToList();
         }
     }
 }

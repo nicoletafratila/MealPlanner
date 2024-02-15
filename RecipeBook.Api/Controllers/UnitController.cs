@@ -7,14 +7,9 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UnitController : ControllerBase
+    public class UnitController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator;
-
-        public UnitController(ISender mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly ISender _mediator = mediator;
 
         [HttpGet]
         public async Task<IList<UnitModel>> GetAll()

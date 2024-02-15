@@ -6,22 +6,13 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
 {
-    public class MakeShoppingListCommandHandler : IRequestHandler<MakeShoppingListCommand, EditShoppingListModel?>
+    public class MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<AddMealPlanCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, EditShoppingListModel?>
     {
-        private readonly IShoppingListRepository _shoppingListRepository;
-        private readonly IMealPlanRepository _meanPlanRepository;
-        private readonly IShopRepository _shopRepository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<AddMealPlanCommandHandler> _logger;
-
-        public MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<AddMealPlanCommandHandler> logger)
-        {
-            _meanPlanRepository = mealPlanRepository;
-            _shoppingListRepository = shoppingListRepository;
-            _shopRepository = shopRepository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IShoppingListRepository _shoppingListRepository = shoppingListRepository;
+        private readonly IMealPlanRepository _meanPlanRepository = mealPlanRepository;
+        private readonly IShopRepository _shopRepository = shopRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<AddMealPlanCommandHandler> _logger = logger;
 
         public async Task<EditShoppingListModel?> Handle(MakeShoppingListCommand request, CancellationToken cancellationToken)
         {

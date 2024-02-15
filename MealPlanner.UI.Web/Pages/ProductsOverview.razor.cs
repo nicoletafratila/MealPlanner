@@ -39,12 +39,12 @@ namespace MealPlanner.UI.Web.Pages
 
         private void New()
         {
-            NavigationManager!.NavigateTo($"productedit/");
+            NavigationManager?.NavigateTo($"productedit/");
         }
 
         private void Update(ProductModel item)
         {
-            NavigationManager!.NavigateTo($"productedit/{item.Id}");
+            NavigationManager?.NavigateTo($"productedit/{item.Id}");
         }
 
         private async void DeleteAsync(ProductModel item)
@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ProductService!.DeleteAsync(item.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    MessageComponent!.ShowError(response);
+                    MessageComponent?.ShowError(response);
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void OnCategoryChangedAsync(ChangeEventArgs e)
         {
-            CategoryId = e!.Value!.ToString();
+            CategoryId = e?.Value?.ToString();
             QueryParameters = new();
             await RefreshAsync();
         }

@@ -12,14 +12,9 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator;
-
-        public ProductController(ISender mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
         public async Task<EditProductModel> GetEdit(int id)

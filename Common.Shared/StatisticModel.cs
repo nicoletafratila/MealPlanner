@@ -7,7 +7,7 @@ namespace Common.Shared
     {
         public string? Title { get; set; }
         public string? Label { get; set; }
-        public Dictionary<string, double>? Data { get; set; } = new Dictionary<string, double>();
+        public Dictionary<string, double>? Data { get; set; } = [];
         public DoughnutChart? Chart = new();
         public DoughnutChartOptions? ChartOptions = new();
         public ChartData? ChartData = new();
@@ -27,7 +27,7 @@ namespace Common.Shared
             var datasets = new List<IChartDataset>();
             if (Data != null)
             {
-                List<double> values = Data!.Select(item => item.Value).ToList();
+                List<double>? values = Data?.Select(item => item.Value).ToList();
                 List<string>? backgroundColors = Colors.GetBackgroundColors(Data!.Count);
                 datasets.Add(new DoughnutChartDataset() { Label = Label, Data = values, BackgroundColor = backgroundColors });
 
@@ -50,15 +50,9 @@ namespace Common.Shared
             return datasets;
         }
 
-        private List<string> GetDataLabels()
+        private List<string>? GetDataLabels()
         {
-            if (Data != null)
-            {
-                return Data!.Select(item => item.Key).ToList();
-            }
-            return new List<string>();
+            return Data?.Select(item => item.Key).ToList();
         }
-
-
     }
 }

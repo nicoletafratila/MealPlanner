@@ -36,7 +36,7 @@
                             </TableHeader>
                             <RowTemplate Context="DisplaySequence">
                                 <td>
-                                    @DisplaySequence.ProductCategory!.Name
+                                    @DisplaySequence.ProductCategory?.Name
                                 </td>
                                 <td>
                                     @if (DisplaySequence.IsSelected)

@@ -25,10 +25,10 @@ namespace RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe
 
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = _mealPlannerApiConfig!.BaseUrl;
+                    client.BaseAddress = _mealPlannerApiConfig?.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig!.Endpoints![ApiEndpointNames.MealPlanApi]}/search/{request.Id}", cancellationToken);
+                    var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/search/{request.Id}", cancellationToken);
                     if (result != null && result.Any())
                     {
                         return new DeleteRecipeCommandResponse { Message = "The recipe you try to delete is used in meal plans and cannot be deleted." };

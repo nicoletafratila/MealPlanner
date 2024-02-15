@@ -8,11 +8,11 @@ namespace MealPlanner.Api
         public static async Task EnsureSeedData(IServiceScope scope)
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
-            context!.Database.EnsureCreated();
-            await SeedProductCategories(context);
-            await SeedRecipesCategories(context);
-            await SeedUnits(context);
-            await SeedShops(context);
+            context?.Database.EnsureCreated();
+            await SeedProductCategories(context!);
+            await SeedRecipesCategories(context!);
+            await SeedUnits(context!);
+            await SeedShops(context!);
         }
 
         private static async Task SeedProductCategories(MealPlannerDbContext context)

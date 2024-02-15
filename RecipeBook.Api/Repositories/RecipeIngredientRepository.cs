@@ -4,18 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RecipeBook.Api.Repositories
 {
-    public class RecipeIngredientRepository : IRecipeIngredientRepository
+    public class RecipeIngredientRepository(MealPlannerDbContext dbContext) : IRecipeIngredientRepository
     {
-        protected readonly MealPlannerDbContext DbContext;
+        protected readonly MealPlannerDbContext DbContext = dbContext;
 
-        public RecipeIngredientRepository(MealPlannerDbContext dbContext)
+        public async Task<IReadOnlyList<RecipeIngredient>?> SearchAsync(int productId)
         {
-            DbContext = dbContext;
-        }
-
-        public async Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId)
-        {
-            return await (DbContext as MealPlannerDbContext)!.RecipeIngredients.Where(x => x.ProductId == productId).ToListAsync();
+            return await DbContext!.RecipeIngredients.Where(x => x.ProductId == productId).ToListAsync();
         }
     }
 }

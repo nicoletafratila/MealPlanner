@@ -3,18 +3,11 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Product.Commands.DeleteProduct
 {
-    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, DeleteProductCommandResponse>
+    public class DeleteProductCommandHandler(IProductRepository repository, IRecipeIngredientRepository recipeIngredientRepository, ILogger<DeleteProductCommandHandler> logger) : IRequestHandler<DeleteProductCommand, DeleteProductCommandResponse>
     {
-        private readonly IProductRepository _repository;
-        private readonly IRecipeIngredientRepository _recipeIngredientRepository;
-        private readonly ILogger<DeleteProductCommandHandler> _logger;
-
-        public DeleteProductCommandHandler(IProductRepository repository, IRecipeIngredientRepository recipeIngredientRepository, ILogger<DeleteProductCommandHandler> logger)
-        {
-            _repository = repository;
-            _recipeIngredientRepository = recipeIngredientRepository;
-            _logger = logger;
-        }
+        private readonly IProductRepository _repository = repository;
+        private readonly IRecipeIngredientRepository _recipeIngredientRepository = recipeIngredientRepository;
+        private readonly ILogger<DeleteProductCommandHandler> _logger = logger;
 
         public async Task<DeleteProductCommandResponse> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {

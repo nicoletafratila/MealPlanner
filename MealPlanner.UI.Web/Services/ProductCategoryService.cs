@@ -13,7 +13,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<ProductCategoryModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<ProductCategoryModel>>($"{_apiConfig!.Endpoints![ApiEndpointNames.ProductCategoryApi]}");
+            return await _httpClient.GetFromJsonAsync<IList<ProductCategoryModel>>($"{_apiConfig?.Endpoints![ApiEndpointNames.ProductCategoryApi]}");
         }
 
         public async Task<PagedList<ProductCategoryModel>?> SearchAsync(QueryParameters? queryParameters = null)
@@ -24,7 +24,7 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig!.Endpoints![ApiEndpointNames.ProductCategoryApi]}/search", query));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig?.Endpoints![ApiEndpointNames.ProductCategoryApi]}/search", query));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ProductCategoryModel>?>(await response.Content.ReadAsStringAsync());
         }
     }

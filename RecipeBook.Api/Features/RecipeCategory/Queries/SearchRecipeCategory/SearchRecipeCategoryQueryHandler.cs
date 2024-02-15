@@ -6,16 +6,10 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Queries.SearchRecipeCategory
 {
-    public class SearchRecipeCategoryQueryHandler : IRequestHandler<SearchRecipeCategoryQuery, PagedList<RecipeCategoryModel>>
+    public class SearchRecipeCategoryQueryHandler(IRecipeCategoryRepository repository, IMapper mapper) : IRequestHandler<SearchRecipeCategoryQuery, PagedList<RecipeCategoryModel>>
     {
-        private readonly IRecipeCategoryRepository _repository;
-        private readonly IMapper _mapper;
-
-        public SearchRecipeCategoryQueryHandler(IRecipeCategoryRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IRecipeCategoryRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<PagedList<RecipeCategoryModel>> Handle(SearchRecipeCategoryQuery request, CancellationToken cancellationToken)
         {

@@ -44,9 +44,9 @@
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {
-                                @foreach (var item in Products!.Items!)
+                                @foreach (var item in Products?.Items!)
                                 {
-                                    <option value="@item.Id">@item.Name (@item.Unit!.Name)</option>
+                                    <option value="@item.Id">@item.Name (@item.Unit?.Name)</option>
                                 }
                             }
                         </InputSelect>
@@ -92,7 +92,7 @@
                                             <p>&nbsp;&nbsp;</p>
                                             <p>@ProductModel.Quantity</p>
                                             <p>&nbsp;&nbsp;</p>
-                                            <p>@ProductModel.Product.Unit!.Name</p>
+                                            <p>@ProductModel.Product.Unit?.Name</p>
                                         </div>
                                     </td>
                                     <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteProductAsync(ProductModel.Product)"></button></td>

@@ -6,16 +6,10 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Queries.SearchShoppingLists
 {
-    public class SearchShoppingListsQueryHandler : IRequestHandler<SearchShoppingListsQuery, PagedList<ShoppingListModel>>
+    public class SearchShoppingListsQueryHandler(IShoppingListRepository repository, IMapper mapper) : IRequestHandler<SearchShoppingListsQuery, PagedList<ShoppingListModel>>
     {
-        private readonly IShoppingListRepository _repository;
-        private readonly IMapper _mapper;
-
-        public SearchShoppingListsQueryHandler(IShoppingListRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IShoppingListRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<PagedList<ShoppingListModel>> Handle(SearchShoppingListsQuery request, CancellationToken cancellationToken)
         {

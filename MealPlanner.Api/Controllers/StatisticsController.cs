@@ -9,14 +9,9 @@ namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StatisticsController : ControllerBase
+    public class StatisticsController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator;
-
-        public StatisticsController(ISender mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly ISender _mediator = mediator;
 
         [HttpGet("favoriterecipes")]
         public async Task<IList<StatisticModel>> SearchFavoriteRecipes([FromQuery] string? categories)
@@ -25,11 +20,12 @@ namespace MealPlanner.Api.Controllers
             {
                 Categories = new List<RecipeCategoryModel>()
             };
-            foreach (var item in categories!.Split(","))
+            foreach (var item in categories?.Split(",")!)
             {
                 var category = item.Split('|');
-                query.Categories!.Add(new RecipeCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
+                query.Categories?.Add(new RecipeCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
             }
+
             return await _mediator.Send(query);
         }
 
@@ -40,10 +36,10 @@ namespace MealPlanner.Api.Controllers
             {
                 Categories = new List<ProductCategoryModel>()
             };
-            foreach (var item in categories!.Split(","))
+            foreach (var item in categories?.Split(",")!)
             {
                 var category = item.Split('|');
-                query.Categories!.Add(new ProductCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
+                query.Categories?.Add(new ProductCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
             }
             return await _mediator.Send(query);
         }

@@ -22,15 +22,15 @@ namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes
                 var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryId(category.Id);
                 foreach (var mealPlan in mealPlanWithRecipes!)
                 {
-                    if (mealPlan.Recipe!.RecipeCategoryId == category.Id)
+                    if (mealPlan.Recipe?.RecipeCategoryId == category.Id)
                     {
-                        if (model.Data!.ContainsKey(mealPlan.Recipe!.Name!))
-                            model.Data[mealPlan.Recipe!.Name!]++;
+                        if (model.Data!.ContainsKey(mealPlan.Recipe?.Name!))
+                            model.Data[mealPlan.Recipe?.Name!]++;
                         else
-                            model.Data[mealPlan.Recipe!.Name!] = 1;
+                            model.Data[mealPlan.Recipe?.Name!] = 1;
                     }
                 }
-                model.Data = model.Data!.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+                model.Data = model.Data?.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
                 result.Add(model);
             }
 

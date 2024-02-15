@@ -68,9 +68,9 @@
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {
-                                @foreach (var item in Products!.Items!)
+                                @foreach (var item in Products?.Items!)
                                 {
-                                    <option value="@item.Id">@item.Name (@item.Unit!.Name)</option>
+                                    <option value="@item.Id">@item.Name (@item.Unit?.Name)</option>
                                 }
                             }
                         </InputSelect>
@@ -107,14 +107,14 @@
                                 <th style="width: 30px"></th>
                             </TableHeader>
                             <RowTemplate Context="RecipeIngredient">
-                                <td>@RecipeIngredient.Product!.Name</td>
+                                <td>@RecipeIngredient.Product?.Name</td>
                                 <td>
-                                    <img src="@RecipeIngredient.Product.ImageUrl" class="img-fluid" width="100" height="80" />
+                                    <img src="@RecipeIngredient.Product?.ImageUrl" class="img-fluid" width="100" height="80" />
                                 </td>
                                 <td>@RecipeIngredient.Quantity</td>
-                                <td>@RecipeIngredient.Product.Unit!.Name</td>
-                                <td>@RecipeIngredient.Product.ProductCategory!.Name</td>
-                                <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredientAsync(RecipeIngredient.Product)"></button></td>
+                                <td>@RecipeIngredient.Product?.Unit?.Name</td>
+                                <td>@RecipeIngredient.Product?.ProductCategory?.Name</td>
+                                <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredientAsync(RecipeIngredient.Product!)"></button></td>
                             </RowTemplate>
                         </TableTemplate>
                     </div>

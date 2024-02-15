@@ -48,7 +48,7 @@ namespace MealPlanner.UI.Web.Pages
             PreloadService.Show(SpinnerColor.Primary);
             Statistics = new List<StatisticModel>();
             Categories = await CategoryService!.SearchAsync(QueryParameters!);
-            Statistics = await StatisticsService!.GetFavoriteProductsAsync(Categories!.Items!);
+            Statistics = await StatisticsService!.GetFavoriteProductsAsync(Categories?.Items!);
             foreach (var item in Statistics!)
             {
                 item.GenerateChartData();

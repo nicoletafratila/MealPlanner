@@ -13,7 +13,7 @@ namespace MealPlanner.Api.Repositories
                     .Include(x => x.MealPlanRecipes)!
                         .ThenInclude(x => x.Recipe)
                             .ThenInclude(x => x!.RecipeCategory)
-                    .FirstOrDefaultAsync(item => item.Id == id);
+                    .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(int id)
@@ -32,7 +32,7 @@ namespace MealPlanner.Api.Repositories
                       .ThenInclude(x => x!.RecipeIngredients)!
                           .ThenInclude(x => x.Product)
                             .ThenInclude(x => x!.Unit)
-              .FirstOrDefaultAsync(item => item.Id == id);
+              .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IList<MealPlanRecipe>?> SearchByRecipeCategoryId(int categoryId)
@@ -49,15 +49,15 @@ namespace MealPlanner.Api.Repositories
                                          .Where(x => x.Product!.ProductCategoryId == categoryId)
                                          .Select(x => new { x.Product, x.Recipe })
                                          .ToListAsync();
-            var recipedWhereUsed = productPerRecipe.Select(i => i.Recipe!.Id);
+            var recipedWhereUsed = productPerRecipe.Select(i => i.Recipe?.Id);
             var mealPlansPerRecipe = await (DbContext as MealPlannerDbContext)!.MealPlanRecipes
                     .Select(x => new { x.MealPlan, x.Recipe })
                     .Where(x => recipedWhereUsed.Contains(x.Recipe!.Id)).ToListAsync();
 
             return productPerRecipe.Join(
                     mealPlansPerRecipe,
-                    product => product.Recipe!.Id,
-                    mealPlan => mealPlan.Recipe!.Id, (product, mealPlan) => new KeyValuePair<Product, MealPlan>(product.Product!, mealPlan.MealPlan!)).ToList();
+                    product => product.Recipe?.Id,
+                    mealPlan => mealPlan.Recipe?.Id, (product, mealPlan) => new KeyValuePair<Product, MealPlan>(product.Product!, mealPlan.MealPlan!)).ToList();
         }
 
         public async Task<IList<MealPlan>?> SearchByRecipeAsync(int recipeId)

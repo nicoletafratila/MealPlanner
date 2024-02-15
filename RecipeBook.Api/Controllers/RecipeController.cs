@@ -13,14 +13,9 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeController : ControllerBase
+    public class RecipeController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator;
-
-        public RecipeController(ISender mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly ISender _mediator = mediator;
 
         [HttpGet("{id:int}")]
         public async Task<RecipeModel> GetById(int id)
@@ -33,7 +28,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("edit/{id:int}")]
-        public async Task<ActionResult<EditRecipeModel>> GetEdit(int id)
+        public async Task<EditRecipeModel> GetEdit(int id)
         {
             GetEditRecipeQuery query = new()
             {

@@ -5,16 +5,10 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.Product.Queries.GetEditProduct
 {
-    public class GetEditProductQueryHandler : IRequestHandler<GetEditProductQuery, EditProductModel>
+    public class GetEditProductQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<GetEditProductQuery, EditProductModel>
     {
-        private readonly IProductRepository _repository;
-        private readonly IMapper _mapper;
-
-        public GetEditProductQueryHandler(IProductRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IProductRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<EditProductModel> Handle(GetEditProductQuery request, CancellationToken cancellationToken)
         {

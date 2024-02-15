@@ -3,16 +3,10 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.DeleteShoppingList
 {
-    public class DeleteShoppingListCommandHandler : IRequestHandler<DeleteShoppingListCommand, DeleteShoppingListCommandResponse>
+    public class DeleteShoppingListCommandHandler(IShoppingListRepository repository, ILogger<DeleteShoppingListCommandHandler> logger) : IRequestHandler<DeleteShoppingListCommand, DeleteShoppingListCommandResponse>
     {
-        private readonly IShoppingListRepository _repository;
-        private readonly ILogger<DeleteShoppingListCommandHandler> _logger;
-
-        public DeleteShoppingListCommandHandler(IShoppingListRepository repository, ILogger<DeleteShoppingListCommandHandler> logger)
-        {
-            _repository = repository;
-            _logger = logger;
-        }
+        private readonly IShoppingListRepository _repository = repository;
+        private readonly ILogger<DeleteShoppingListCommandHandler> _logger = logger;
 
         public async Task<DeleteShoppingListCommandResponse> Handle(DeleteShoppingListCommand request, CancellationToken cancellationToken)
         {

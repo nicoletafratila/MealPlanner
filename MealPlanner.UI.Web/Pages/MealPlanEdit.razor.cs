@@ -78,21 +78,21 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void SaveAsync()
         {
-            var response = MealPlan!.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan);
+            var response = MealPlan?.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan!);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                MessageComponent!.ShowError(response);
+                MessageComponent?.ShowError(response);
             }
             else
             {
-                MessageComponent!.ShowInfo("Data has been saved successfully");
+                MessageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
 
         private async void DeleteAsync()
         {
-            if (MealPlan!.Id != 0)
+            if (MealPlan?.Id != 0)
             {
                 var options = new ConfirmDialogOptions
                 {
@@ -110,14 +110,14 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                var response = await MealPlanService!.DeleteAsync(MealPlan.Id);
+                var response = await MealPlanService!.DeleteAsync(MealPlan!.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    MessageComponent!.ShowError(response);
+                    MessageComponent?.ShowError(response);
                 }
                 else
                 {
-                    MessageComponent!.ShowInfo("Data has been deleted successfully");
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -157,12 +157,12 @@ namespace MealPlanner.UI.Web.Pages
 
         private void EditRecipe(RecipeModel item)
         {
-            NavigationManager!.NavigateTo($"recipeedit/{item.Id}");
+            NavigationManager?.NavigateTo($"recipeedit/{item.Id}");
         }
 
         private async void DeleteRecipeAsync(RecipeModel item)
         {
-            RecipeModel? itemToDelete = MealPlan!.Recipes!.FirstOrDefault(i => i.Id == item.Id);
+            RecipeModel? itemToDelete = MealPlan?.Recipes?.FirstOrDefault(i => i.Id == item.Id);
             if (itemToDelete != null)
             {
                 var options = new ConfirmDialogOptions
@@ -181,7 +181,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                MealPlan.Recipes!.Remove(itemToDelete);
+                MealPlan?.Recipes?.Remove(itemToDelete);
                 StateHasChanged();
             }
         }
@@ -191,25 +191,25 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var shopSelectionModal = Modal!.Show<ShopSelection>();
-            var result = await shopSelectionModal.Result;
+            var shopSelectionModal = Modal?.Show<ShopSelection>();
+            var result = await shopSelectionModal!.Result;
 
             if (result.Cancelled)
                 return;
 
-            if (result.Confirmed && result!.Data != null)
+            if (result.Confirmed && result?.Data != null)
             {
                 if (!int.TryParse(result.Data.ToString(), out int shopId))
                     return;
 
                 var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = shopId });
-                if (addedEntity != null && addedEntity!.Id > 0)
+                if (addedEntity != null && addedEntity?.Id > 0)
                 {
-                    NavigationManager!.NavigateTo($"shoppinglistedit/{addedEntity!.Id}");
+                    NavigationManager?.NavigateTo($"shoppinglistedit/{addedEntity?.Id}");
                 }
                 else
                 {
-                    MessageComponent!.ShowError("There has been an error when saving the shopping list");
+                    MessageComponent?.ShowError("There has been an error when saving the shopping list");
                 }
             }
         }
@@ -220,14 +220,14 @@ namespace MealPlanner.UI.Web.Pages
             var parameters = new Dictionary<string, object>
             {
                 { "Recipe", recipe! },
-                { "RecipeCategory", item.RecipeCategory!.Name! },
+                { "RecipeCategory", item.RecipeCategory?.Name! },
             };
             await offcanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager!.NavigateTo("/mealplansoverview");
+            NavigationManager?.NavigateTo("/mealplansoverview");
         }
 
         private async void OnRecipeCategoryChangedAsync(string? value)

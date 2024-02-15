@@ -9,7 +9,7 @@ PM> Script-migration
 
 MealPlanner
 -
-?. sau !.
+?. sau ?.
 add meal plan to shopping list
 navigation, breadcrumps
 unit conversions

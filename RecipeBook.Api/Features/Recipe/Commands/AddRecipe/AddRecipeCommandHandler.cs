@@ -4,24 +4,17 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.AddRecipe
 {
-    public class AddRecipeCommandHandler : IRequestHandler<AddRecipeCommand, AddRecipeCommandResponse>
+    public class AddRecipeCommandHandler(IRecipeRepository repository, IMapper mapper, ILogger<AddRecipeCommandHandler> logger) : IRequestHandler<AddRecipeCommand, AddRecipeCommandResponse>
     {
-        private readonly IRecipeRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<AddRecipeCommandHandler> _logger;
-
-        public AddRecipeCommandHandler(IRecipeRepository repository, IMapper mapper, ILogger<AddRecipeCommandHandler> logger)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IRecipeRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<AddRecipeCommandHandler> _logger = logger;
 
         public async Task<AddRecipeCommandResponse> Handle(AddRecipeCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var existingItem = await _repository.SearchAsync(request.Model!.Name!);
+                var existingItem = await _repository.SearchAsync(request.Model?.Name!);
                 if (existingItem != null)
                     return new AddRecipeCommandResponse { Id = 0, Message = "This recipe already exists in this category." };
 

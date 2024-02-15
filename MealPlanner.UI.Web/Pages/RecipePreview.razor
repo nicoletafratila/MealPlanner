@@ -28,13 +28,13 @@
                     <th>Category</th>
                 </TableHeader>
                 <RowTemplate Context="RecipeIngredient">
-                    <td>@RecipeIngredient.Product!.Name</td>
+                    <td>@RecipeIngredient.Product?.Name</td>
                     <td>
-                        <img src="@RecipeIngredient.Product.ImageUrl" class="img-fluid" width="100" height="80" />
+                        <img src="@RecipeIngredient.Product?.ImageUrl" class="img-fluid" width="100" height="80" />
                     </td>
                     <td>@RecipeIngredient.Quantity</td>
-                    <td>@RecipeIngredient.Product.Unit!.Name</td>
-                    <td>@RecipeIngredient.Product.ProductCategory!.Name</td>
+                    <td>@RecipeIngredient.Product?.Unit?.Name</td>
+                    <td>@RecipeIngredient.Product?.ProductCategory?.Name</td>
                 </RowTemplate>
             </TableTemplate>
         </div>

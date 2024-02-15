@@ -40,12 +40,12 @@
                         <th style="width: 30px"></th>
                     </TableHeader>
                     <RowTemplate Context="Product">
-                        <td>@Product.ProductCategory!.Name</td>
+                        <td>@Product.ProductCategory?.Name</td>
                         <td>@Product.Name</td>
                         <td>
                             <img src="@Product.ImageUrl" class="img-fluid" width="100" height="80" />
                         </td>
-                        <td>@Product.Unit!.Name</td>
+                        <td>@Product.Unit?.Name</td>
                         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Product)">Edit</button></td>
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Product)"></button></td>
                     </RowTemplate>

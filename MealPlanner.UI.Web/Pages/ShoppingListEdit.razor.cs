@@ -96,21 +96,21 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void SaveAsync()
         {
-            var response = ShoppingList!.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList);
+            var response = ShoppingList?.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList!);
             if (!string.IsNullOrWhiteSpace(response))
             {
-                MessageComponent!.ShowError(response);
+                MessageComponent?.ShowError(response);
             }
             else
             {
-                MessageComponent!.ShowInfo("Data has been saved successfully");
+                MessageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
 
         private async void DeleteAsync()
         {
-            if (ShoppingList!.Id != 0)
+            if (ShoppingList?.Id != 0)
             {
                 var options = new ConfirmDialogOptions
                 {
@@ -128,14 +128,14 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                var result = await ShoppingListService!.DeleteAsync(ShoppingList.Id);
+                var result = await ShoppingListService!.DeleteAsync(ShoppingList!.Id);
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    MessageComponent!.ShowError(result);
+                    MessageComponent?.ShowError(result);
                 }
                 else
                 {
-                    MessageComponent!.ShowInfo("Data has been deleted successfully");
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -165,23 +165,23 @@ namespace MealPlanner.UI.Web.Pages
                         ShoppingList.Products = new List<ShoppingListProductModel>();
                     }
 
-                    ShoppingListProductModel? item = ShoppingList.Products.FirstOrDefault(i => i.Product!.Id == int.Parse(ProductId));
+                    ShoppingListProductModel? item = ShoppingList.Products.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
                     if (item != null)
                     {
                         item.Quantity += decimal.Parse(Quantity!);
                     }
                     else
                     {
-                        var product = Products!.Items!.FirstOrDefault(i => i.Id == int.Parse(ProductId));
+                        var product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId));
                         item = new ShoppingListProductModel
                         {
                             ShoppingListId = ShoppingList.Id,
                             Collected = false,
                             Product = product,
                             Quantity = decimal.Parse(Quantity!),
-                            DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory!.Id == product!.ProductCategory!.Id)!.Value
+                            DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product?.ProductCategory?.Id)!.Value
                         };
-                        ShoppingList.Products!.Add(item);
+                        ShoppingList.Products?.Add(item);
                         Quantity = string.Empty;
                     }
 
@@ -192,7 +192,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void DeleteProductAsync(ProductModel item)
         {
-            ShoppingListProductModel? itemToDelete = ShoppingList!.Products!.FirstOrDefault(i => i.Product!.Id == item.Id);
+            ShoppingListProductModel? itemToDelete = ShoppingList?.Products?.FirstOrDefault(i => i.Product?.Id == item.Id);
             if (itemToDelete != null)
             {
                 var options = new ConfirmDialogOptions
@@ -211,7 +211,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                ShoppingList.Products!.Remove(itemToDelete);
+                ShoppingList!.Products?.Remove(itemToDelete);
                 StateHasChanged();
             }
         }
@@ -221,20 +221,20 @@ namespace MealPlanner.UI.Web.Pages
             int shopId = ShoppingList!.ShopId;
             if (shopId == 0)
             {
-                var shopSelectionModal = Modal!.Show<ShopSelection>();
-                var result = await shopSelectionModal.Result;
+                var shopSelectionModal = Modal?.Show<ShopSelection>();
+                var result = await shopSelectionModal!.Result;
 
                 if (result.Cancelled)
                 {
-                    MessageComponent!.ShowError("You must select a shop for the list.");
+                    MessageComponent?.ShowError("You must select a shop for the list.");
                     return;
                 }
 
-                if (result.Confirmed && result!.Data != null)
+                if (result.Confirmed && result?.Data != null)
                 {
                     if (!int.TryParse(result.Data.ToString(), out shopId))
                     {
-                        MessageComponent!.ShowError("You must select a shop for the list.");
+                        MessageComponent?.ShowError("You must select a shop for the list.");
                         return;
                     }
                 }
@@ -245,21 +245,21 @@ namespace MealPlanner.UI.Web.Pages
 
         private void NavigateToOverview()
         {
-            NavigationManager!.NavigateTo($"/shoppinglistsoverview");
+            NavigationManager?.NavigateTo($"/shoppinglistsoverview");
         }
 
         private async void CheckboxChangedAsync(ShoppingListProductModel model)
         {
-            var itemToChange = ShoppingList!.Products!.FirstOrDefault(item => item.Product!.Id == model!.Product!.Id);
+            var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
             if (itemToChange != null)
             {
                 itemToChange.Collected = !itemToChange.Collected;
             }
-            var response = await ShoppingListService!.UpdateAsync(ShoppingList);
+            var response = await ShoppingListService!.UpdateAsync(ShoppingList!);
 
             if (!string.IsNullOrWhiteSpace(response))
             {
-                MessageComponent!.ShowError(response);
+                MessageComponent?.ShowError(response);
             }
             else
             {

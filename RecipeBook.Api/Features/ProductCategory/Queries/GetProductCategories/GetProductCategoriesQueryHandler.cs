@@ -5,16 +5,10 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.ProductCategory.Queries.GetProductCategories
 {
-    public class GetProductCategoriesQueryHandler : IRequestHandler<GetProductCategoriesQuery, IList<ProductCategoryModel>>
+    public class GetProductCategoriesQueryHandler(IProductCategoryRepository repository, IMapper mapper) : IRequestHandler<GetProductCategoriesQuery, IList<ProductCategoryModel>>
     {
-        private readonly IProductCategoryRepository _repository;
-        private readonly IMapper _mapper;
-
-        public GetProductCategoriesQueryHandler(IProductCategoryRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IProductCategoryRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IList<ProductCategoryModel>> Handle(GetProductCategoriesQuery request, CancellationToken cancellationToken)
         {

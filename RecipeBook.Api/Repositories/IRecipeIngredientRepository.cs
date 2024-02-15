@@ -4,6 +4,6 @@ namespace RecipeBook.Api.Repositories
 {
     public interface IRecipeIngredientRepository
     {
-        Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId);
+        Task<IReadOnlyList<RecipeIngredient>?> SearchAsync(int productId);
     }
 }

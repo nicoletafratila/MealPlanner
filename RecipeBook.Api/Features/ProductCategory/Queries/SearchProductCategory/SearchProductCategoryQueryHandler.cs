@@ -16,7 +16,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.SearchProductCategory
         {
             var data = new List<Common.Data.Entities.ProductCategory>();
             var categories = await _productCategoryRepository.GetAllAsync();
-            foreach (var category in categories)
+            foreach (var category in categories!)
             {
                 var products = await _productRepository.SearchAsync(category.Id);
                 if (products != null && products.Any())

@@ -11,7 +11,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<IList<UnitModel>?> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IList<UnitModel>?>(_apiConfig!.Endpoints![ApiEndpointNames.UnitApi]);
+            return await _httpClient.GetFromJsonAsync<IList<UnitModel>?>(_apiConfig?.Endpoints![ApiEndpointNames.UnitApi]);
         }
     }
 }

@@ -5,13 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RecipeBook.Api.Repositories
 {
-    public class ProductRepository : BaseAsyncRepository<Product, int>, IProductRepository
+    public class ProductRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<Product, int>(dbContext), IProductRepository
     {
-        public ProductRepository(MealPlannerDbContext dbContext) : base(dbContext)
-        {
-        }
-
-        public override async Task<IReadOnlyList<Product>> GetAllAsync()
+        public override async Task<IReadOnlyList<Product>?> GetAllAsync()
         {
             return await (DbContext as MealPlannerDbContext)!.Products
                         .Include(x => x.ProductCategory)
@@ -26,7 +22,7 @@ namespace RecipeBook.Api.Repositories
                     .FirstOrDefaultAsync(item => item.Id == id);
         }
 
-        public async Task<IReadOnlyList<Product>> SearchAsync(int categoryId)
+        public async Task<IReadOnlyList<Product>?> SearchAsync(int categoryId)
         {
             return await (DbContext as MealPlannerDbContext)!.Products
                     .Include(x => x.ProductCategory)
@@ -39,7 +35,7 @@ namespace RecipeBook.Api.Repositories
             return await (DbContext as MealPlannerDbContext)!.Products
                     .Include(x => x.ProductCategory)
                     .Include(x => x.Unit)
-                    .FirstOrDefaultAsync(x => x.Name!.ToLower() == name.ToLower());
+                    .FirstOrDefaultAsync(x => x.Name!.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

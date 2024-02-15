@@ -1,14 +1,8 @@
 ﻿namespace Common.Pagination
 {
-    public class PagedList<T>
+    public class PagedList<T>(List<T> items, Metadata metadata)
     {
-        public Metadata? Metadata { get; set; }
-        public List<T>? Items { get; set; }
-
-        public PagedList(List<T> items, Metadata metadata)
-        {
-            Metadata = metadata;
-            Items = items;
-        }
+        public Metadata? Metadata { get; set; } = metadata;
+        public List<T>? Items { get; set; } = items;
     }
 }

@@ -14,9 +14,11 @@ namespace Common.Data.Profiles.Resolvers
             {
                 foreach (var item in source.Recipes)
                 {
-                    var mealPlanRecipe = new MealPlanRecipe();
-                    mealPlanRecipe.RecipeId = item.Id;
-                    mealPlanRecipe.MealPlanId = source.Id;
+                    var mealPlanRecipe = new MealPlanRecipe
+                    {
+                        RecipeId = item.Id,
+                        MealPlanId = source.Id
+                    };
                     result.Add(mealPlanRecipe);
                 }
             }

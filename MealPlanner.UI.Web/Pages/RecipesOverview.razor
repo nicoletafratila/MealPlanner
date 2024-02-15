@@ -39,7 +39,7 @@
                         <th style="width: 30px"></th>
                     </TableHeader>
                     <RowTemplate Context="Recipe">
-                        <td>@Recipe.RecipeCategory!.Name</td>
+                        <td>@Recipe.RecipeCategory?.Name</td>
                         <td>@Recipe.Name</td>
                         <td>
                             <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />

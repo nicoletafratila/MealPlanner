@@ -28,12 +28,12 @@ namespace MealPlanner.UI.Web.Pages
 
         private void New()
         {
-            NavigationManager!.NavigateTo($"shopedit/");
+            NavigationManager?.NavigateTo($"shopedit/");
         }
 
         private void Update(ShopModel item)
         {
-            NavigationManager!.NavigateTo($"shopedit/{item.Id}");
+            NavigationManager?.NavigateTo($"shopedit/{item.Id}");
         }
 
         private async void DeleteAsync(ShopModel item)
@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ShopService!.DeleteAsync(item.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
-                    MessageComponent!.ShowError(response);
+                    MessageComponent?.ShowError(response);
                 }
                 else
                 {

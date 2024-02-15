@@ -4,18 +4,11 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.UpdateShoppingList
 {
-    public class UpdateShoppingListCommandHandler : IRequestHandler<UpdateShoppingListCommand, UpdateShoppingListCommandResponse>
+    public class UpdateShoppingListCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<UpdateShoppingListCommandHandler> logger) : IRequestHandler<UpdateShoppingListCommand, UpdateShoppingListCommandResponse>
     {
-        private readonly IShoppingListRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<UpdateShoppingListCommandHandler> _logger;
-
-        public UpdateShoppingListCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<UpdateShoppingListCommandHandler> logger)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IShoppingListRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<UpdateShoppingListCommandHandler> _logger = logger;
 
         public async Task<UpdateShoppingListCommandResponse> Handle(UpdateShoppingListCommand request, CancellationToken cancellationToken)
         {
@@ -23,7 +16,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.UpdateShoppingList
             {
                 var existingItem = await _repository.GetByIdIncludeProductsAsync(request.Model!.Id);
                 if (existingItem == null)
-                    return new UpdateShoppingListCommandResponse { Message = $"Could not find with id {request.Model!.Id}" };
+                    return new UpdateShoppingListCommandResponse { Message = $"Could not find with id {request.Model?.Id}" };
 
                 _mapper.Map(request.Model, existingItem);
                 await _repository.UpdateAsync(existingItem);

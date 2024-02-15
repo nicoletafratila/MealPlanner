@@ -5,16 +5,10 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.Unit.Queries.GetUnits
 {
-    public class GetUnitsQueryHandler : IRequestHandler<GetUnitsQuery, IList<UnitModel>>
+    public class GetUnitsQueryHandler(IUnitRepository repository, IMapper mapper) : IRequestHandler<GetUnitsQuery, IList<UnitModel>>
     {
-        private readonly IUnitRepository _repository;
-        private readonly IMapper _mapper;
-
-        public GetUnitsQueryHandler(IUnitRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IUnitRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IList<UnitModel>> Handle(GetUnitsQuery request, CancellationToken cancellationToken)
         {

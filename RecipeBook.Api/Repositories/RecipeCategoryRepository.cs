@@ -4,10 +4,7 @@ using Common.Data.Repository;
 
 namespace RecipeBook.Api.Repositories
 {
-    public class RecipeCategoryRepository : BaseAsyncRepository<RecipeCategory, int>, IRecipeCategoryRepository
+    public class RecipeCategoryRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
     {
-        public RecipeCategoryRepository(MealPlannerDbContext dbContext) : base(dbContext)
-        {
-        }
     }
 }

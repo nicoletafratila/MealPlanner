@@ -12,12 +12,12 @@ namespace Common.Data.Repository
             return await DbContext.Set<T>().FindAsync(id);
         }
 
-        public virtual async Task<IReadOnlyList<T>> GetAllAsync()
+        public virtual async Task<IReadOnlyList<T>?> GetAllAsync()
         {
             return await DbContext.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<IReadOnlyList<T>> GetPagedResponseAsync(int page, int size)
+        public virtual async Task<IReadOnlyList<T>?> GetPagedResponseAsync(int page, int size)
         {
             return await DbContext.Set<T>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
         }

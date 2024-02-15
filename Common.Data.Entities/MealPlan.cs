@@ -15,12 +15,12 @@
             var products = new List<ShoppingListProduct>();
             foreach (var item in MealPlanRecipes!)
             {
-                foreach (var i in item.Recipe!.RecipeIngredients!)
+                foreach (var i in item.Recipe?.RecipeIngredients!)
                 {
                     var existingProduct = products.FirstOrDefault(x => x.ProductId == i.ProductId);
                     if (existingProduct == null)
                     {
-                        var displaySequence = shop!.GetDisplaySequence(i.Product!.ProductCategory!.Id);
+                        var displaySequence = shop?.GetDisplaySequence(i.Product?.ProductCategory?.Id);
                         var newProduct = i.ToShoppingListProduct(displaySequence!.Value);
                         products.Add(newProduct);
                     }

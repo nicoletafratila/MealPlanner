@@ -4,24 +4,17 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList
 {
-    public class AddShoppingListCommandHandler : IRequestHandler<AddShoppingListCommand, AddShoppingListCommandResponse>
+    public class AddShoppingListCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<AddShoppingListCommandHandler> logger) : IRequestHandler<AddShoppingListCommand, AddShoppingListCommandResponse>
     {
-        private readonly IShoppingListRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<AddShoppingListCommandHandler> _logger;
-
-        public AddShoppingListCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<AddShoppingListCommandHandler> logger)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IShoppingListRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<AddShoppingListCommandHandler> _logger = logger;
 
         public async Task<AddShoppingListCommandResponse> Handle(AddShoppingListCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var existingItem = await _repository.SearchAsync(request.Model!.Name!);
+                var existingItem = await _repository.SearchAsync(request.Model?.Name!);
                 if (existingItem != null)
                     return new AddShoppingListCommandResponse { Id = 0, Message = "This shopping list already exists." };
 

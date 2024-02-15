@@ -5,7 +5,7 @@ namespace Common.Api
 {
     public class RecipeBookApiConfig : ApiConfig
     {
-        public override string Name => ApiConfigNames.RecipeBook;
+        public override string? Name => ApiConfigNames.RecipeBook;
 
         public RecipeBookApiConfig(IConfiguration configuration) : base(configuration)
         {

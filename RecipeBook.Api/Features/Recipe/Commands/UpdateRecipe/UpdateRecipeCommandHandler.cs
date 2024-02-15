@@ -14,9 +14,9 @@ namespace RecipeBook.Api.Features.Recipe.Commands.UpdateRecipe
         {
             try
             {
-                var existingItem = await _repository.GetByIdIncludeIngredientsAsync(request.Model!.Id);
+                var existingItem = await _repository.GetByIdIncludeIngredientsAsync(request.Model?.Id);
                 if (existingItem == null)
-                    return new UpdateRecipeCommandResponse { Message = $"Could not find with id {request.Model!.Id}" };
+                    return new UpdateRecipeCommandResponse { Message = $"Could not find with id {request.Model?.Id}" };
 
                 _mapper.Map(request.Model, existingItem);
                 await _repository.UpdateAsync(existingItem);

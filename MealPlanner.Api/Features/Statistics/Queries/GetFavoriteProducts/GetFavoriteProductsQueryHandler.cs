@@ -22,13 +22,10 @@ namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteProducts
                 var mealPlanWithProducts = await _mealPlanRepository.SearchByProductCategoryId(category.Id);
                 foreach (var mealPlan in mealPlanWithProducts!)
                 {
-                    if (model.Data!.ContainsKey(mealPlan.Key.Name!))
-                        model.Data[mealPlan.Key.Name!]++;
-                    else
-                        model.Data[mealPlan.Key.Name!] = 1;
+                    model.Data![mealPlan.Key.Name!] = !model.Data!.TryGetValue(mealPlan.Key.Name!, out double value) ? 1 : ++value;
                 }
 
-                model.Data = model.Data!.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+                model.Data = model.Data?.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
                 result.Add(model);
             }
 

@@ -8,7 +8,7 @@ namespace Common.Data.Profiles.Resolvers
     {
         public IList<ShoppingListProduct>? Resolve(EditShoppingListModel source, ShoppingList destination, IList<ShoppingListProductModel>? sourceValue, IList<ShoppingListProduct>? destValue, ResolutionContext context)
         {
-            return source.Products!.Select(context.Mapper.Map<ShoppingListProduct>).ToList();
+            return source.Products?.Select(context.Mapper.Map<ShoppingListProduct>).ToList();
         }
     }
 }

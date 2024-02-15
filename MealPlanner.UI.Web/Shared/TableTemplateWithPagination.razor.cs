@@ -21,9 +21,9 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public PagedList<TItem>? Data { get; set; }
 
-        private int CalculateIndex(int indexFromView)
+        private int? CalculateIndex(int indexFromView)
         {
-            return Data!.Metadata!.PageSize * (Data!.Metadata!.PageNumber - 1) + indexFromView;
+            return Data?.Metadata?.PageSize * (Data?.Metadata?.PageNumber - 1) + indexFromView;
         }
     }
 }

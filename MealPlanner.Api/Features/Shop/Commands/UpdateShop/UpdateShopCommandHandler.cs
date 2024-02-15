@@ -14,9 +14,9 @@ namespace MealPlanner.Api.Features.Shop.Commands.UpdateShop
         {
             try
             {
-                var existingItem = await _repository.GetByIdIncludeDisplaySequenceAsync(request.Model!.Id);
+                var existingItem = await _repository.GetByIdIncludeDisplaySequenceAsync(request.Model?.Id);
                 if (existingItem == null)
-                    return new UpdateShopCommandResponse { Message = $"Could not find with id {request.Model!.Id}" };
+                    return new UpdateShopCommandResponse { Message = $"Could not find with id {request.Model?.Id}" };
                  
                 _mapper.Map(request.Model, existingItem);
                 await _repository.UpdateAsync(existingItem);

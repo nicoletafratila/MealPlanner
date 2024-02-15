@@ -4,24 +4,17 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Product.Commands.AddProduct
 {
-    public class AddProductCommandHandler : IRequestHandler<AddProductCommand, AddProductCommandResponse>
+    public class AddProductCommandHandler(IProductRepository repository, IMapper mapper, ILogger<AddProductCommandHandler> logger) : IRequestHandler<AddProductCommand, AddProductCommandResponse>
     {
-        private readonly IProductRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<AddProductCommandHandler> _logger;
-
-        public AddProductCommandHandler(IProductRepository repository, IMapper mapper, ILogger<AddProductCommandHandler> logger)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+        private readonly IProductRepository _repository = repository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<AddProductCommandHandler> _logger = logger;
 
         public async Task<AddProductCommandResponse> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var existingItem = await _repository.SearchAsync(request.Model!.Name!);
+                var existingItem = await _repository.SearchAsync(request.Model?.Name!);
                 if (existingItem != null)
                     return new AddProductCommandResponse { Id = 0, Message = "This product already exists." };
 
