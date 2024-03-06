@@ -70,7 +70,7 @@ namespace MealPlanner.Api.Repositories
         public async Task<MealPlan?> SearchAsync(string name)
         {
             return await (DbContext as MealPlannerDbContext)!.MealPlans
-                   .FirstOrDefaultAsync(item => item.Name!.Equals(name, StringComparison.OrdinalIgnoreCase));
+                   .FirstOrDefaultAsync(item => item.Name!.ToLower() == name.ToLower());
         }
     }
 }

@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Repositories
             return await (DbContext as MealPlannerDbContext)!.Products
                     .Include(x => x.ProductCategory)
                     .Include(x => x.Unit)
-                    .FirstOrDefaultAsync(x => x.Name!.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    .FirstOrDefaultAsync(x => x!.Name!.ToLower() == name.ToLower());
         }
     }
 }

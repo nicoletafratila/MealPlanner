@@ -23,7 +23,7 @@ namespace MealPlanner.Api.Repositories
         public async Task<ShoppingList?> SearchAsync(string name)
         {
             return await (DbContext as MealPlannerDbContext)!.ShoppingLists
-                   .FirstOrDefaultAsync(x => x!.Name!.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                   .FirstOrDefaultAsync(x => x!.Name!.ToLower() == name.ToLower());
         }
     }
 }
