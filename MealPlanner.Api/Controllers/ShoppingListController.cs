@@ -1,4 +1,5 @@
 ﻿using Common.Pagination;
+using MealPlanner.Api.Features.ShoppingList.Commands.AddMealPlanToShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Commands.DeleteShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
@@ -44,6 +45,17 @@ namespace MealPlanner.Api.Controllers
             {
                 MealPlanId = model.MealPlanId,
                 ShopId = model.ShopId
+            };
+            return await _mediator.Send(command);
+        }
+
+        [HttpPost("addMealPlanToShoppingList")]
+        public async Task<EditShoppingListModel?> AddMealPlanToShoppingList(AddMealPlanToShoppingListModel model)
+        {
+            AddMealPlanToShoppingListCommand command = new()
+            {
+                MealPlanId = model.MealPlanId,
+                ShoppingListId = model.ShoppingListId
             };
             return await _mediator.Send(command);
         }

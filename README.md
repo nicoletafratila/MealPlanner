@@ -9,7 +9,7 @@ PM> Script-migration
 
 MealPlanner
 -
-add meal plan to shopping list
+add recipe to shopping list
 navigation, breadcrumps
 unit conversions
 edit product categorie

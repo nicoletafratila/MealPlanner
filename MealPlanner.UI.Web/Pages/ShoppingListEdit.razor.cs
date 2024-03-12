@@ -1,11 +1,11 @@
-﻿using BlazorBootstrap;
+﻿using System.ComponentModel.DataAnnotations;
+using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -241,6 +241,33 @@ namespace MealPlanner.UI.Web.Pages
             }
             _shop ??= await ShopService!.GetEditAsync(shopId);
             ShoppingList!.ShopId = shopId;
+        }
+
+        private async void AddMealPlanAsync()
+        {
+            var mealPlanSelectionModal = Modal?.Show<MealPlanSelection>();
+            var result = await mealPlanSelectionModal!.Result;
+
+            if (result.Confirmed && result?.Data != null)
+            {
+                int mealPlanId;
+                if (!int.TryParse(result.Data.ToString(), out mealPlanId))
+                {
+                    MessageComponent?.ShowError("You must select a meal plan to add to the shopping list.");
+                    return;
+                }
+
+                var addedEntity = await ShoppingListService!.AddMealPlanToShoppingList(new AddMealPlanToShoppingListModel { ShoppingListId = ShoppingList!.Id, MealPlanId = mealPlanId });
+                if (addedEntity != null && addedEntity?.Id > 0)
+                {
+                    ShoppingList = addedEntity;
+                    StateHasChanged();
+                }
+                else
+                {
+                    MessageComponent?.ShowError("There has been an error when saving the shopping list");
+                }
+            }
         }
 
         private void NavigateToOverview()

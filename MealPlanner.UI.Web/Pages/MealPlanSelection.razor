@@ -1,0 +1,30 @@
+﻿<div class="modal-body">
+    <div class="modal-title">
+        <h5>Please select the meal plan you would like to add to the list:</h5>
+    </div>
+
+    <div class="col">
+        <EditForm Model="@this" OnValidSubmit="@SaveAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mt-3">
+                <InputSelect id="Meal plan" class="form-select" @bind-Value="@MealPlanId">
+                    <option selected value="0">Choose...</option>
+                    @if (MealPlans != null && MealPlans.Any())
+                    {
+                        @foreach (var item in MealPlans)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col mt-3">
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                <button class="btn btn-danger btn-sm" @onclick="@CancelAsync">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

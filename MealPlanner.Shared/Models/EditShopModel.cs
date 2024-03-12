@@ -18,6 +18,9 @@ namespace MealPlanner.Shared.Models
         [MinimumCountCollection(1, ErrorMessage = "The shop requires at least product category order.")]
         public IList<ShopDisplaySequenceModel>? DisplaySequence { get; set; }
 
+        public EditShopModel()
+        { }
+
         public EditShopModel(IList<ProductCategoryModel>? categories)
         {
             var index = 1;

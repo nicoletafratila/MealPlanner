@@ -3,6 +3,7 @@ using MealPlanner.Api.Features.MealPlan.Commands.AddMealPlan;
 using MealPlanner.Api.Features.MealPlan.Commands.DeleteMealPlan;
 using MealPlanner.Api.Features.MealPlan.Commands.UpdateMealPlan;
 using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlan;
+using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlans;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlans;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlansByRecipeId;
 using MealPlanner.Shared.Models;
@@ -25,6 +26,12 @@ namespace MealPlanner.Api.Controllers
                 Id = id
             };
             return await _mediator.Send(query);
+        }
+
+        [HttpGet]
+        public async Task<IList<MealPlanModel>> GetAll()
+        {
+            return await _mediator.Send(new GetMealPlansQuery());
         }
 
         [HttpGet("search")]
