@@ -8,8 +8,6 @@ PM> Update-database "InitialMealPlanner"
 PM> Script-migration
 
 MealPlanner
-modifica shop pt o lista si reordoneaza, edit cu shop
-apeleaza direct comezi, fara modele
 logging
 navigation, breadcrumps
 unit conversions

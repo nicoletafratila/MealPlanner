@@ -35,5 +35,10 @@ namespace MealPlanner.Shared.Models
                 });
             }
         }
+
+        public ShopDisplaySequenceModel? GetDisplaySequence(int? categoryId)
+        {
+            return DisplaySequence?.FirstOrDefault(i => i.ProductCategory!.Id == categoryId);
+        }
     }
 }

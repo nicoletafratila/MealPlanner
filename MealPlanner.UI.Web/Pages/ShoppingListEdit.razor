@@ -25,6 +25,20 @@
                     </div>
 
                     <div class="form-group mt-3">
+                        <label for="Shop" class="col-sm-3">Shop: </label>
+                        <InputSelect id="Shop" class="form-select" @bind-Value="@ShopId">
+                            <option selected value="0">Choose...</option>
+                            @if (Shops != null && Shops.Any())
+                            {
+                                @foreach (var item in Shops)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="form-group mt-3">
                         <label for="ProductCategory" class="col-sm-3">Product category: </label>
                         <InputSelect id="ProductCategory" class="form-select" @bind-Value="@ProductCategoryId">
                             <option selected value="0">Choose...</option>
@@ -58,11 +72,11 @@
                             <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Enter the quantity for the product"></InputText>
                             @if (CanAddProduct == true)
                             {
-                                <button class="btn btn-primary" type="button" @onclick="@AddProductAsync">Add</button>
+                                <button class="btn btn-primary" type="button" @onclick="@AddProduct">Add</button>
                             }
                             else
                             {
-                                <button class="btn btn-primary" type="button" disabled @onclick="@AddProductAsync">Add</button>
+                                <button class="btn btn-primary" type="button" disabled @onclick="@AddProduct">Add</button>
                             }
                         </div>
                         <ValidationMessage For="@(() => Quantity)" />
@@ -102,9 +116,23 @@
 
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
                         <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="@AddMealPlanAsync">Add meal plan</button>
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="@AddRecipeAsync">Add recipe</button>
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                        @if (CanAddMealPlan == true)
+                        {
+                            <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@AddMealPlanAsync">Add meal plan</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary btn-sm" type="button" disabled style="margin:5px" @onclick="@AddMealPlanAsync">Add meal plan</button>
+                        }
+                        @if (CanAddRecipe == true)
+                        {
+                            <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="@AddRecipeAsync">Add recipe</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary btn-sm" type="button" disabled style="margin:0px,5px, 5px, 5px" @onclick="@AddRecipeAsync">Add recipe</button>
+                        }
+                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@NavigateToOverview">Back to overview</button>
                     </div>
                 </EditForm>
             </div>
