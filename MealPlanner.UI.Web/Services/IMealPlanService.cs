@@ -6,6 +6,7 @@ namespace MealPlanner.UI.Web.Services
     public interface IMealPlanService
     {
         Task<EditMealPlanModel?> GetEditAsync(int id);
+        Task<IList<ShoppingListProductModel>?> GetShoppingListProducts(int mealPlanId, int shopId);
         Task<IList<MealPlanModel>?> GetAllAsync();
         Task<PagedList<MealPlanModel>?> SearchAsync(QueryParameters? queryParameters = null);
         Task<string?> AddAsync(EditMealPlanModel model);

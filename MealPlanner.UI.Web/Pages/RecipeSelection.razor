@@ -1,0 +1,45 @@
+﻿<div class="modal-body">
+    <div class="modal-title">
+        <h5>Please select the recipe you would like to add to the list:</h5>
+    </div>
+
+    <div class="col">
+        <EditForm Model="@this" OnValidSubmit="@SaveAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mt-3">
+                <label for="recipeCategory">Recipe category: </label>
+                <InputSelect id="recipeCategory" class="form-select" @bind-Value="@RecipeCategoryId">
+                    <option selected value="0">Choose...</option>
+                    @if (Categories != null && Categories.Any())
+                    {
+                        @foreach (var item in Categories!)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="recipeCategory">Recipe: </label>
+                <InputSelect id="recipe" class="form-select" @bind-Value="@RecipeId">
+                    <option selected value="0">Choose...</option>
+                    @if (Recipes != null && Recipes.Items!.Any())
+                    {
+                        @foreach (var item in Recipes.Items!)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col mt-3">
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                <button class="btn btn-danger btn-sm" @onclick="@CancelAsync">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

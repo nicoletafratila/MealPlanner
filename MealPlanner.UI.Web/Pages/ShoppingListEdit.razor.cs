@@ -69,6 +69,12 @@ namespace MealPlanner.UI.Web.Pages
         public IShopService? ShopService { get; set; }
 
         [Inject]
+        public IMealPlanService? MealPlanService { get; set; }
+
+        [Inject]
+        public IRecipeService? RecipeService { get; set; }
+
+        [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [CascadingParameter]
@@ -154,39 +160,11 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void AddProductAsync()
         {
+            await SetShopAsync();
+
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
-                if (ShoppingList != null)
-                {
-                    await SetShopAsync();
-
-                    if (ShoppingList.Products == null)
-                    {
-                        ShoppingList.Products = new List<ShoppingListProductModel>();
-                    }
-
-                    ShoppingListProductModel? item = ShoppingList.Products.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
-                    if (item != null)
-                    {
-                        item.Quantity += decimal.Parse(Quantity!);
-                    }
-                    else
-                    {
-                        var product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId));
-                        item = new ShoppingListProductModel
-                        {
-                            ShoppingListId = ShoppingList.Id,
-                            Collected = false,
-                            Product = product,
-                            Quantity = decimal.Parse(Quantity!),
-                            DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product?.ProductCategory?.Id)!.Value
-                        };
-                        ShoppingList.Products?.Add(item);
-                        Quantity = string.Empty;
-                    }
-
-                    StateHasChanged();
-                }
+                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!));
             }
         }
 
@@ -213,6 +191,52 @@ namespace MealPlanner.UI.Web.Pages
 
                 ShoppingList?.Products?.Remove(itemToDelete);
                 StateHasChanged();
+            }
+        }
+
+        private async void AddMealPlanAsync()
+        {
+            await SetShopAsync();
+
+            var mealPlanSelectionModal = Modal?.Show<MealPlanSelection>();
+            var result = await mealPlanSelectionModal!.Result;
+
+            if (result.Confirmed && result?.Data != null)
+            {
+                int mealPlanId;
+                if (!int.TryParse(result.Data.ToString(), out mealPlanId))
+                {
+                    MessageComponent?.ShowError("You must select a meal plan to add to the shopping list.");
+                    return;
+                }
+                var products = await MealPlanService!.GetShoppingListProducts(mealPlanId, ShoppingList!.ShopId);
+                foreach (var item in products!)
+                {
+                    AddProduct(item.Product!, item.Quantity);
+                }
+            }
+        }
+
+        private async void AddRecipeAsync()
+        {
+            await SetShopAsync();
+
+            var recipeSelectionModal = Modal?.Show<RecipeSelection>();
+            var result = await recipeSelectionModal!.Result;
+
+            if (result.Confirmed && result?.Data != null)
+            {
+                int recipeId;
+                if (!int.TryParse(result.Data.ToString(), out recipeId))
+                {
+                    MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
+                    return;
+                }
+                var products = await RecipeService!.GetShoppingListProducts(recipeId, ShoppingList!.ShopId);
+                foreach (var item in products!)
+                {
+                    AddProduct(item.Product!, item.Quantity);
+                }
             }
         }
 
@@ -243,31 +267,28 @@ namespace MealPlanner.UI.Web.Pages
             ShoppingList!.ShopId = shopId;
         }
 
-        private async void AddMealPlanAsync()
+        private void AddProduct(ProductModel product, decimal quantity)
         {
-            var mealPlanSelectionModal = Modal?.Show<MealPlanSelection>();
-            var result = await mealPlanSelectionModal!.Result;
-
-            if (result.Confirmed && result?.Data != null)
+            ShoppingListProductModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
+            if (item != null)
             {
-                int mealPlanId;
-                if (!int.TryParse(result.Data.ToString(), out mealPlanId))
-                {
-                    MessageComponent?.ShowError("You must select a meal plan to add to the shopping list.");
-                    return;
-                }
-
-                var addedEntity = await ShoppingListService!.AddMealPlanToShoppingList(new AddMealPlanToShoppingListModel { ShoppingListId = ShoppingList!.Id, MealPlanId = mealPlanId });
-                if (addedEntity != null && addedEntity?.Id > 0)
-                {
-                    ShoppingList = addedEntity;
-                    StateHasChanged();
-                }
-                else
-                {
-                    MessageComponent?.ShowError("There has been an error when saving the shopping list");
-                }
+                item.Quantity += quantity;
             }
+            else
+            {
+                item = new ShoppingListProductModel
+                {
+                    ShoppingListId = ShoppingList.Id,
+                    Collected = false,
+                    Product = product,
+                    Quantity = quantity,
+                    DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
+                };
+                ShoppingList.Products?.Add(item);
+                Quantity = string.Empty;
+            }
+
+            StateHasChanged();
         }
 
         private void NavigateToOverview()

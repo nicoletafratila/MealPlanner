@@ -37,13 +37,6 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<EditShoppingListModel?> AddMealPlanToShoppingList(AddMealPlanToShoppingListModel model)
-        {
-            var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_apiConfig?.Endpoints![ApiEndpointNames.ShoppingListApi]}/addMealPlanToShoppingList", modelJson);
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<EditShoppingListModel?>(await response.Content.ReadAsStringAsync());
-        }
-
         public async Task<string?> AddAsync(EditShoppingListModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");

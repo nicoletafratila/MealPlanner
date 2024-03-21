@@ -4,6 +4,7 @@ using MealPlanner.Api.Features.MealPlan.Commands.DeleteMealPlan;
 using MealPlanner.Api.Features.MealPlan.Commands.UpdateMealPlan;
 using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlan;
 using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlans;
+using MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlans;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlansByRecipeId;
 using MealPlanner.Shared.Models;
@@ -24,6 +25,17 @@ namespace MealPlanner.Api.Controllers
             GetEditMealPlanQuery query = new()
             {
                 Id = id
+            };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("shoppingListProducts/{mealPlanId:int}/{shopId:int}")]
+        public async Task<IList<ShoppingListProductModel>?> GetShoppingListProducts(int mealPlanId, int shopId)
+        {
+            GetShoppingListProductsQuery query = new()
+            {
+                MealPlanId = mealPlanId,
+                ShopId= shopId
             };
             return await _mediator.Send(query);
         }

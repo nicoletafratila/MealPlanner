@@ -9,11 +9,11 @@ namespace Common.Data.Entities
         public int DisplaySequence { get; set; }
 
         [ForeignKey("ShoppingListId")]
-        public ShoppingList? ShoppingList { get; private set; }
+        public ShoppingList? ShoppingList { get; set; }
         public int ShoppingListId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product? Product { get; private set; }
+        public Product? Product { get; set; }
         public int ProductId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Common.Pagination;
+using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Recipe.Commands.AddRecipe;
@@ -6,6 +7,7 @@ using RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe;
 using RecipeBook.Api.Features.Recipe.Commands.UpdateRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetEditRecipe;
 using RecipeBook.Api.Features.Recipe.Queries.GetRecipe;
+using RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts;
 using RecipeBook.Api.Features.Recipe.Queries.SearchRecipes;
 using RecipeBook.Shared.Models;
 
@@ -33,6 +35,17 @@ namespace RecipeBook.Api.Controllers
             GetEditRecipeQuery query = new()
             {
                 Id = id
+            };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("shoppingListProducts/{recipeId:int}/{shopId:int}")]
+        public async Task<IList<ShoppingListProductModel>?> GetShoppingListProducts(int recipeId, int shopId)
+        {
+            GetShoppingListProductsQuery query = new()
+            {
+                RecipeId = recipeId,
+                ShopId = shopId
             };
             return await _mediator.Send(query);
         }

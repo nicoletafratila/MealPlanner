@@ -24,8 +24,12 @@ namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteProducts
                 {
                     model.Data![mealPlan.Key.Name!] = !model.Data.TryGetValue(mealPlan.Key.Name!, out double value) ? 1 : ++value;
                 }
-
-                model.Data = model.Data?.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+                if (model.Data!.Any(i => i.Value == 1))
+                {
+                    model.Data = model.Data!.Where(i => i.Value > 1).ToDictionary(x => x.Key, x => x.Value);
+                    model.Data!["Others"] = 1;
+                }
+                model.Data = model.Data?.OrderBy(x => x.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
                 result.Add(model);
             }
 

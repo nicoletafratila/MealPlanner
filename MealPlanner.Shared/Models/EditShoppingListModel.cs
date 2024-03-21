@@ -19,5 +19,10 @@ namespace MealPlanner.Shared.Models
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one product.")]
         public IList<ShoppingListProductModel>? Products { get; set; }
+
+        public EditShoppingListModel()
+        {
+            Products = new List<ShoppingListProductModel>();
+        }
     }
 }

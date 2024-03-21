@@ -8,8 +8,9 @@ PM> Update-database "InitialMealPlanner"
 PM> Script-migration
 
 MealPlanner
--
-add recipe to shopping list
+modifica shop pt o lista si reordoneaza, edit cu shop
+apeleaza direct comezi, fara modele
+logging
 navigation, breadcrumps
 unit conversions
 edit product categorie

@@ -3,6 +3,7 @@ using System.Text.Json;
 using Common.Api;
 using Common.Constants;
 using Common.Pagination;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 
@@ -21,6 +22,11 @@ namespace MealPlanner.UI.Web.Services
         public async Task<EditRecipeModel?> GetEditAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<EditRecipeModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi]}/edit/{id}");
+        }
+
+        public async Task<IList<ShoppingListProductModel>?> GetShoppingListProducts(int recipeId, int shopId)
+        {
+            return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi]}/shoppingListProducts/{recipeId}/{shopId}");
         }
 
         public async Task<PagedList<RecipeModel>?> SearchAsync(string? categoryId = null, QueryParameters? queryParameters = null)

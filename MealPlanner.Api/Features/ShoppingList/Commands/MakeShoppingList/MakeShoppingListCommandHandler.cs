@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
-using MealPlanner.Api.Features.MealPlan.Commands.AddMealPlan;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
 {
-    public class MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<AddMealPlanCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, EditShoppingListModel?>
+    public class MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<MakeShoppingListCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, EditShoppingListModel?>
     {
         private readonly IShoppingListRepository _shoppingListRepository = shoppingListRepository;
         private readonly IMealPlanRepository _meanPlanRepository = mealPlanRepository;
         private readonly IShopRepository _shopRepository = shopRepository;
         private readonly IMapper _mapper = mapper;
-        private readonly ILogger<AddMealPlanCommandHandler> _logger = logger;
+        private readonly ILogger<MakeShoppingListCommandHandler> _logger = logger;
 
         public async Task<EditShoppingListModel?> Handle(MakeShoppingListCommand request, CancellationToken cancellationToken)
         {
