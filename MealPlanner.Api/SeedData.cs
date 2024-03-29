@@ -13,6 +13,9 @@ namespace MealPlanner.Api
             await SeedRecipesCategories(context!);
             await SeedUnits(context!);
             await SeedShops(context!);
+            
+            var contextLogs = scope.ServiceProvider.GetService<MealPlannerLogsDbContext>();
+            contextLogs?.Database.EnsureCreated();
         }
 
         private static async Task SeedProductCategories(MealPlannerDbContext context)

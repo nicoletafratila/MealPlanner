@@ -1,0 +1,20 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
+{
+    /// <inheritdoc />
+    public partial class IX_Logs_TimeStamp : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateIndex("IX_Logs_TimeStamp", "Logs", "TimeStamp");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex("Logs", "IX_Logs_TimeStamp");
+        }
+    }
+}

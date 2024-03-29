@@ -2,6 +2,7 @@
 using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Repository;
+using Common.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Common.Api
 {
@@ -28,7 +28,13 @@ namespace Common.Api
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
             });
+            services.AddDbContext<MealPlannerLogsDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("MealPlannerLogs"), x => x.MigrationsAssembly("MealPlanner.Api"));
+                options.EnableSensitiveDataLogging();
+            });
 
+            services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var config = new MapperConfiguration(c =>
             {
@@ -43,12 +49,13 @@ namespace Common.Api
                 c.AddProfile<ShoppingListProductProfile>();
                 c.AddProfile<ShopProfile>();
                 c.AddProfile<ShopDisplaySequenceProfile>();
+                c.AddProfile<LogProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
-            services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
+            services.AddScoped<ILoggerRepository, LoggerRepository>();
+            services.AddScoped<ILoggerService, LoggerService>();
+
             RegisterRepositories(services);
             RegisterServices(services);
 

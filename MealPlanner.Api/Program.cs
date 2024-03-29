@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace MealPlanner.Api
 {
     public class Program
@@ -15,6 +17,7 @@ namespace MealPlanner.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .UseSerilog();
     }
 }

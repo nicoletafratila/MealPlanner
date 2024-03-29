@@ -7,8 +7,13 @@ PM> Add-migration InitialMealPlanner
 PM> Update-database "InitialMealPlanner"
 PM> Script-migration
 
+Add-Migration -Verbose -Context MealPlannerLogsDbContext InitialCreate 
+Add-Migration -Verbose -Context MealPlannerDbContext InitialCreate 
+
+
+
+
 MealPlanner
-logging
 navigation, breadcrumps
 unit conversions
 edit product categorie

@@ -17,11 +17,6 @@ namespace Common.Data.Repository
             return await DbContext.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<IReadOnlyList<T>?> GetPagedResponseAsync(int page, int size)
-        {
-            return await DbContext.Set<T>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
-        }
-
         public virtual async Task<T> AddAsync(T entity)
         {
             await DbContext.Set<T>().AddAsync(entity);

@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace MealPlanner.Api.Migrations
+namespace MealPlanner.Api.Migrations.MealPlannerDb
 {
     /// <inheritdoc />
-    public partial class InitialMealPlanner : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,20 +48,6 @@ namespace MealPlanner.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RecipeCategories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ShoppingLists",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShopId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShoppingLists", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,6 +116,26 @@ namespace MealPlanner.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShopDisplaySequences_Shops_ShopId",
+                        column: x => x.ShopId,
+                        principalTable: "Shops",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShoppingLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ShopId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShoppingLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShoppingLists_Shops_ShopId",
                         column: x => x.ShopId,
                         principalTable: "Shops",
                         principalColumn: "Id",
@@ -274,6 +280,11 @@ namespace MealPlanner.Api.Migrations
                 name: "IX_ShoppingListProducts_ProductId",
                 table: "ShoppingListProducts",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShoppingLists_ShopId",
+                table: "ShoppingLists",
+                column: "ShopId");
         }
 
         /// <inheritdoc />
@@ -298,9 +309,6 @@ namespace MealPlanner.Api.Migrations
                 name: "Recipes");
 
             migrationBuilder.DropTable(
-                name: "Shops");
-
-            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
@@ -314,6 +322,9 @@ namespace MealPlanner.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Units");
+
+            migrationBuilder.DropTable(
+                name: "Shops");
         }
     }
 }

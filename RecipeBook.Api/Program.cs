@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace RecipeBook.Api
 {
     public class Program
@@ -13,6 +15,7 @@ namespace RecipeBook.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .UseSerilog();
     }
 }

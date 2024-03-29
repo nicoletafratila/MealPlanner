@@ -3,20 +3,23 @@ using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MealPlanner.Api.Migrations
+namespace MealPlanner.Api.Migrations.MealPlannerDb
 {
     [DbContext(typeof(MealPlannerDbContext))]
-    partial class MealPlannerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240329140320_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -209,6 +212,8 @@ namespace MealPlanner.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ShopId");
+
                     b.ToTable("ShoppingLists");
                 });
 
@@ -336,6 +341,17 @@ namespace MealPlanner.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("ProductCategory");
+
+                    b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("Common.Data.Entities.ShoppingList", b =>
+                {
+                    b.HasOne("Common.Data.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Shop");
                 });

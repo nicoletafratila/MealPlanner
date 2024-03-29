@@ -1,23 +1,17 @@
 ﻿using Blazored.Modal;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 
 namespace MealPlanner.UI.Web
 {
-    public class Startup(IConfiguration configuration)
+    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
-        public IConfiguration Configuration { get; } = configuration;
-
-        public void ConfigureServices(IServiceCollection services)
+        protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddBlazoredModal();
-            services.AddBlazorBootstrap();
-
-            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
-            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
-
+            base.RegisterServices(services);
             services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -82,6 +76,28 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
+        }
+
+        public void ConfigureServices(IServiceCollection services, ConfigureHostBuilder host)
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+            string fileLoggerFilePath = Path.Combine(currentDir, "LogsFolder", "logs.log");
+            string? connectionString = Configuration.GetConnectionString("MealPlannerLogs");
+            host.UseSerilog((ctx, lc) => lc
+                        .MinimumLevel.Information()
+                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
+                        .WriteTo.File(fileLoggerFilePath, restrictedToMinimumLevel: LogEventLevel.Information, rollingInterval: RollingInterval.Hour, encoding: System.Text.Encoding.UTF8)
+                        .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", SchemaName = "dbo" }, null, null, LogEventLevel.Information)
+                    );
+            base.ConfigureServices(services);
+
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+            services.AddBlazoredModal();
+            services.AddBlazorBootstrap();
+
+            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
+            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)

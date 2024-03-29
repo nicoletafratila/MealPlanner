@@ -1,0 +1,45 @@
+﻿@page "/AuditTrail"
+@using Common.Logging
+@using Common.Shared
+
+<p>
+    <button class="btn btn-danger" @onclick="() => DeleteAllLogs()">Delete All Logs</button>
+</p>
+@if (Logs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@nameof(LogModel.Id)</th>
+                <th>@nameof(LogModel.Timestamp)</th>
+                <th>@nameof(LogModel.Message)</th>
+                <th>@nameof(LogModel.MessageTemplate)</th>
+                <th>@nameof(LogModel.Level)</th>
+                <th>@nameof(LogModel.Exception)</th>
+                <th>@nameof(LogModel.Properties)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Logs)
+            {
+                <tr>
+                    <td>@log.Id</td>
+                    <td>@log.Timestamp</td>
+                    <td>@log.Message</td>
+                    <td>@log.MessageTemplate</td>
+                    <td>
+                        <span class="text-@LogEventLevelHelper.GetBootstrapUIClass(log.Level)">
+                            @log.Level
+                        </span>
+                    </td>
+                    <td>@log.Exception</td>
+                    <td>@log.Properties</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
