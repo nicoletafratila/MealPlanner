@@ -8,25 +8,22 @@
 
   <ItemGroup>
     <Compile Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <Compile Remove="Migrations\**" />
     <Content Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <Content Remove="Migrations\**" />
     <EmbeddedResource Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <None Remove="Migrations\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20240110133358_InitialMealPlanner.cs" />
-    <Compile Remove="Migrations\20240110133358_InitialMealPlanner.Designer.cs" />
-    <Compile Remove="Migrations\20240329134353_MealPlanner_ShoppingLists_ShopId.cs" />
-    <Compile Remove="Migrations\20240329134353_MealPlanner_ShoppingLists_ShopId.Designer.cs" />
-    <Compile Remove="Migrations\20240329134459_InitialMealPlanner.cs" />
-    <Compile Remove="Migrations\20240329134459_InitialMealPlanner.Designer.cs" />
-    <Compile Remove="Migrations\20240329140130_InitialCreate.cs" />
-    <Compile Remove="Migrations\20240329140130_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\MealPlannerDbContextModelSnapshot.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Migrations\InitialMealPlanner.sql" />
+    <Compile Include="Migrations\20240329140320_InitialCreate.cs" />
+    <Compile Include="Migrations\20240329140320_InitialCreate.Designer.cs" />
+    <Compile Include="Migrations\20240401082025_Logs.cs" />
+    <Compile Include="Migrations\20240401082025_Logs.Designer.cs" />
+    <Compile Include="Migrations\20240401082200_IX_Logs_TimeStamp.cs" />
+    <Compile Include="Migrations\20240401082200_IX_Logs_TimeStamp.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

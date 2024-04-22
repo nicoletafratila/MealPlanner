@@ -18,6 +18,7 @@ namespace Common.Data.DataContext
         public DbSet<ShoppingListProduct> ShoppingListProducts => Set<ShoppingListProduct>();
         public DbSet<Shop> Shops => Set<Shop>();
         public DbSet<ShopDisplaySequence> ShopDisplaySequences => Set<ShopDisplaySequence>();
+        public DbSet<Log> Logs => Set<Log>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

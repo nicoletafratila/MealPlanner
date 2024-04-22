@@ -28,11 +28,6 @@ namespace Common.Api
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
             });
-            services.AddDbContext<MealPlannerLogsDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("MealPlannerLogs"), x => x.MigrationsAssembly("MealPlanner.Api"));
-                options.EnableSensitiveDataLogging();
-            });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -56,6 +51,9 @@ namespace Common.Api
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
 
+            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
+            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
+           
             RegisterRepositories(services);
             RegisterServices(services);
 

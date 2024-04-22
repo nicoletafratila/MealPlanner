@@ -1,5 +1,6 @@
 ﻿using Common.Data.DataContext;
 using Common.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api
 {
@@ -9,13 +10,11 @@ namespace MealPlanner.Api
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
             context?.Database.EnsureCreated();
+            //context?.Database.Migrate();
             await SeedProductCategories(context!);
             await SeedRecipesCategories(context!);
             await SeedUnits(context!);
             await SeedShops(context!);
-            
-            var contextLogs = scope.ServiceProvider.GetService<MealPlannerLogsDbContext>();
-            contextLogs?.Database.EnsureCreated();
         }
 
         private static async Task SeedProductCategories(MealPlannerDbContext context)

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
+namespace MealPlanner.Api.Migrations
 {
     /// <inheritdoc />
     public partial class IX_Logs_TimeStamp : Migration

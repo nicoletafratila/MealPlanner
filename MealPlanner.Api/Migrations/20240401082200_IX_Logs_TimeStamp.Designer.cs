@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
+namespace MealPlanner.Api.Migrations
 {
-    [DbContext(typeof(MealPlannerLogsDbContext))]
-    [Migration("20240329140024_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(MealPlannerDbContext))]
+    [Migration("20240401082200_IX_Logs_TimeStamp")]
+    partial class IX_Logs_TimeStamp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("MealPlan");
+                    b.ToTable("MealPlans");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.MealPlanRecipe", b =>
@@ -84,7 +84,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("MealPlanRecipe");
+                    b.ToTable("MealPlanRecipes");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.Product", b =>
@@ -113,7 +113,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.ProductCategory", b =>
@@ -129,7 +129,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.Recipe", b =>
@@ -153,7 +153,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasIndex("RecipeCategoryId");
 
-                    b.ToTable("Recipe");
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.RecipeCategory", b =>
@@ -172,7 +172,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecipeCategory");
+                    b.ToTable("RecipeCategories");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.RecipeIngredient", b =>
@@ -184,13 +184,14 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
                         .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("RecipeId", "ProductId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("RecipeIngredient");
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.Shop", b =>
@@ -206,7 +207,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shop");
+                    b.ToTable("Shops");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.ShopDisplaySequence", b =>
@@ -224,7 +225,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasIndex("ProductCategoryId");
 
-                    b.ToTable("ShopDisplaySequence");
+                    b.ToTable("ShopDisplaySequences");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.ShoppingList", b =>
@@ -245,7 +246,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("ShoppingList");
+                    b.ToTable("ShoppingLists");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.ShoppingListProduct", b =>
@@ -263,13 +264,14 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
                         .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ShoppingListId", "ProductId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ShoppingListProduct");
+                    b.ToTable("ShoppingListProducts");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.Unit", b =>
@@ -285,7 +287,7 @@ namespace MealPlanner.Api.Migrations.MealPlannerLogsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Unit");
+                    b.ToTable("Units");
                 });
 
             modelBuilder.Entity("Common.Data.Entities.MealPlanRecipe", b =>

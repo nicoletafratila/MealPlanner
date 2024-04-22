@@ -81,8 +81,8 @@ namespace MealPlanner.UI.Web
         public void ConfigureServices(IServiceCollection services, ConfigureHostBuilder host)
         {
             var currentDir = Directory.GetCurrentDirectory();
-            string fileLoggerFilePath = Path.Combine(currentDir, "LogsFolder", "logs.log");
-            string? connectionString = Configuration.GetConnectionString("MealPlannerLogs");
+            string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
+            string? connectionString = Configuration.GetConnectionString("MealPlanner");
             host.UseSerilog((ctx, lc) => lc
                         .MinimumLevel.Information()
                         .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
@@ -95,9 +95,6 @@ namespace MealPlanner.UI.Web
             services.AddServerSideBlazor();
             services.AddBlazoredModal();
             services.AddBlazorBootstrap();
-
-            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
-            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)

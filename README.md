@@ -3,12 +3,10 @@
 #Package Manager Console
 Default project: Services\MealPlanner.Api
 PM> Install-Package Microsoft.EntityFrameworkCore.Tools
-PM> Add-migration InitialMealPlanner
-PM> Update-database "InitialMealPlanner"
+PM> EntityFrameworkCore\Add-Migration InitialCreate
+PM> Update-database "InitialCreate"
 PM> Script-migration
 
-Add-Migration -Verbose -Context MealPlannerLogsDbContext InitialCreate 
-Add-Migration -Verbose -Context MealPlannerDbContext InitialCreate 
 
 
 
