@@ -89,6 +89,9 @@ namespace MealPlanner.UI.Web
                         .WriteTo.File(fileLoggerFilePath, restrictedToMinimumLevel: LogEventLevel.Information, rollingInterval: RollingInterval.Hour, encoding: System.Text.Encoding.UTF8)
                         .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", SchemaName = "dbo" }, null, null, LogEventLevel.Information)
                     );
+            // AutoCreateSqlTable = true
+            //Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+
             base.ConfigureServices(services);
 
             services.AddRazorPages();

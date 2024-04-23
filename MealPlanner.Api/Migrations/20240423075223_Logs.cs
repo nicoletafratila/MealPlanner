@@ -20,10 +20,9 @@ namespace MealPlanner.Api.Migrations
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MessageTemplate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime", nullable: true),
                     Exception = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LogEvent = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Properties = table.Column<string>(type: "xml", nullable: true)
+                    Properties = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

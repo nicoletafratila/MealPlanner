@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-write in db log
 navigation, breadcrumps
 unit conversions
 edit product categorie

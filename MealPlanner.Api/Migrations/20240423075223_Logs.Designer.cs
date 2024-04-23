@@ -39,9 +39,6 @@ namespace MealPlanner.Api.Migrations
                     b.Property<string>("Level")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LogEvent")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
@@ -49,10 +46,10 @@ namespace MealPlanner.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("xml");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
