@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MealPlanner.Api.Migrations.MealPlannerDb
+namespace MealPlanner.Api.Migrations
 {
     [DbContext(typeof(MealPlannerDbContext))]
-    [Migration("20240329140320_InitialCreate")]
+    [Migration("20240423075108_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

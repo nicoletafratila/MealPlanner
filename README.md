@@ -12,9 +12,11 @@ PM> Script-migration
 
 
 MealPlanner
+write in db log
 navigation, breadcrumps
 unit conversions
 edit product categorie
 edit recipe categories
 edit units
 design interfata
+migrations

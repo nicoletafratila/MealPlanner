@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace MealPlanner.Api.Migrations
 {
     /// <inheritdoc />

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace MealPlanner.Api.Migrations.MealPlannerDb
+namespace MealPlanner.Api.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

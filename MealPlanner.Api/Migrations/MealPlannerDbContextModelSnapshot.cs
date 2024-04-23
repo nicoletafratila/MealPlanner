@@ -4,7 +4,6 @@ using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MealPlanner.Api.Migrations
 {
     [DbContext(typeof(MealPlannerDbContext))]
-    [Migration("20240401082200_IX_Logs_TimeStamp")]
-    partial class IX_Logs_TimeStamp
+    partial class MealPlannerDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,6 +36,9 @@ namespace MealPlanner.Api.Migrations
                     b.Property<string>("Level")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LogEvent")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
@@ -46,7 +46,7 @@ namespace MealPlanner.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("xml");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
