@@ -19,6 +19,8 @@ namespace MealPlanner.UI.Web.Pages
         private async void DeleteAllLogs()
         {
             await LoggerService!.DeleteLogsAsync();
+            await OnInitializedAsync();
+            StateHasChanged();
         }
     }
 }
