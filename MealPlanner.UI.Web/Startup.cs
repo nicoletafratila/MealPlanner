@@ -84,10 +84,10 @@ namespace MealPlanner.UI.Web
             string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
             host.UseSerilog((ctx, lc) => lc
-                        .MinimumLevel.Information()
-                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                        .WriteTo.File(fileLoggerFilePath, restrictedToMinimumLevel: LogEventLevel.Information, rollingInterval: RollingInterval.Hour, encoding: System.Text.Encoding.UTF8)
-                        .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", SchemaName = "dbo" }, null, null, LogEventLevel.Information)
+                        .MinimumLevel.Error()
+                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error)
+                        .WriteTo.File(fileLoggerFilePath, restrictedToMinimumLevel: LogEventLevel.Error, rollingInterval: RollingInterval.Hour, encoding: System.Text.Encoding.UTF8)
+                        .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", SchemaName = "dbo" }, null, null, LogEventLevel.Error)
                     );
             // AutoCreateSqlTable = true
             //Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));

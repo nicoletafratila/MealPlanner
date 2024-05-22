@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,7 +11,9 @@ namespace MealPlanner.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("Logs"))
+            {
+                migrationBuilder.CreateTable(
                 name: "Logs",
                 columns: table => new
                 {
@@ -28,6 +30,7 @@ namespace MealPlanner.Api.Migrations
                 {
                     table.PrimaryKey("PK_Logs", x => x.Id);
                 });
+            }
         }
 
         /// <inheritdoc />

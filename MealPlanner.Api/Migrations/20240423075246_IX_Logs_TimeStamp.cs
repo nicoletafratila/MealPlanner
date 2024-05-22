@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Common.Data.DataContext;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,7 +11,10 @@ namespace MealPlanner.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateIndex("IX_Logs_TimeStamp", "Logs", "TimeStamp");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Logs_TimeStamp", ""))
+            {
+                migrationBuilder.CreateIndex("IX_Logs_TimeStamp", "Logs", "TimeStamp");
+            }
         }
 
         /// <inheritdoc />

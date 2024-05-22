@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Common.Data.DataContext;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,20 +11,25 @@ namespace MealPlanner.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "MealPlans",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MealPlans", x => x.Id);
-                });
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("MealPlans"))
+            {
+                migrationBuilder.CreateTable(
+                    name: "MealPlans",
+                    columns: table => new
+                    {
+                        Id = table.Column<int>(type: "int", nullable: false)
+                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_MealPlans", x => x.Id);
+                    });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("ProductCategories"))
+            {
+                migrationBuilder.CreateTable(
                 name: "ProductCategories",
                 columns: table => new
                 {
@@ -35,8 +41,11 @@ namespace MealPlanner.Api.Migrations
                 {
                     table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("RecipeCategories"))
+            {
+                migrationBuilder.CreateTable(
                 name: "RecipeCategories",
                 columns: table => new
                 {
@@ -49,8 +58,11 @@ namespace MealPlanner.Api.Migrations
                 {
                     table.PrimaryKey("PK_RecipeCategories", x => x.Id);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("Shops"))
+            {
+                migrationBuilder.CreateTable(
                 name: "Shops",
                 columns: table => new
                 {
@@ -62,8 +74,11 @@ namespace MealPlanner.Api.Migrations
                 {
                     table.PrimaryKey("PK_Shops", x => x.Id);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("MealPlans"))
+            {
+                migrationBuilder.CreateTable(
                 name: "Units",
                 columns: table => new
                 {
@@ -75,8 +90,11 @@ namespace MealPlanner.Api.Migrations
                 {
                     table.PrimaryKey("PK_Units", x => x.Id);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("Recipes"))
+            {
+                migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
@@ -96,8 +114,11 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("ShopDisplaySequences"))
+            {
+                migrationBuilder.CreateTable(
                 name: "ShopDisplaySequences",
                 columns: table => new
                 {
@@ -121,8 +142,11 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("ShoppingLists"))
+            {
+                migrationBuilder.CreateTable(
                 name: "ShoppingLists",
                 columns: table => new
                 {
@@ -141,8 +165,11 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("Products"))
+            {
+                migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -169,8 +196,11 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("MealPlanRecipes"))
+            {
+                migrationBuilder.CreateTable(
                 name: "MealPlanRecipes",
                 columns: table => new
                 {
@@ -193,8 +223,11 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("RecipeIngredients"))
+            {
+                migrationBuilder.CreateTable(
                 name: "RecipeIngredients",
                 columns: table => new
                 {
@@ -218,8 +251,11 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateTable(
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("ShoppingListProducts"))
+            {
+                migrationBuilder.CreateTable(
                 name: "ShoppingListProducts",
                 columns: table => new
                 {
@@ -245,46 +281,71 @@ namespace MealPlanner.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            }
 
-            migrationBuilder.CreateIndex(
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_MealPlanRecipes_RecipeId", "MealPlanRecipes"))
+            {
+                migrationBuilder.CreateIndex(
                 name: "IX_MealPlanRecipes_RecipeId",
                 table: "MealPlanRecipes",
                 column: "RecipeId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductCategoryId",
-                table: "Products",
-                column: "ProductCategoryId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Products_ProductCategoryId", "Products"))
+            {
+                migrationBuilder.CreateIndex(
+                    name: "IX_Products_ProductCategoryId",
+                    table: "Products",
+                    column: "ProductCategoryId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_UnitId",
-                table: "Products",
-                column: "UnitId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Products_UnitId", "Products"))
+            {
+                migrationBuilder.CreateIndex(
+                    name: "IX_Products_UnitId",
+                    table: "Products",
+                    column: "UnitId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_ProductId",
-                table: "RecipeIngredients",
-                column: "ProductId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_RecipeIngredients_ProductId", "RecipeIngredients"))
+            {
+                migrationBuilder.CreateIndex(
+                            name: "IX_RecipeIngredients_ProductId",
+                            table: "RecipeIngredients",
+                            column: "ProductId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Recipes_RecipeCategoryId",
-                table: "Recipes",
-                column: "RecipeCategoryId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Recipes_RecipeCategoryId", "Recipes"))
+            {
+                migrationBuilder.CreateIndex(
+                            name: "IX_Recipes_RecipeCategoryId",
+                            table: "Recipes",
+                            column: "RecipeCategoryId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ShopDisplaySequences_ProductCategoryId",
-                table: "ShopDisplaySequences",
-                column: "ProductCategoryId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShopDisplaySequences_ProductCategoryId", "ShopDisplaySequences"))
+            {
+                migrationBuilder.CreateIndex(
+                            name: "IX_ShopDisplaySequences_ProductCategoryId",
+                            table: "ShopDisplaySequences",
+                            column: "ProductCategoryId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingListProducts_ProductId",
-                table: "ShoppingListProducts",
-                column: "ProductId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShoppingListProducts_ProductId", "ShoppingListProducts"))
+            {
+                migrationBuilder.CreateIndex(
+                            name: "IX_ShoppingListProducts_ProductId",
+                            table: "ShoppingListProducts",
+                            column: "ProductId");
+            }
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingLists_ShopId",
-                table: "ShoppingLists",
-                column: "ShopId");
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShoppingLists_ShopId", "ShoppingLists"))
+            {
+                migrationBuilder.CreateIndex(
+                            name: "IX_ShoppingLists_ShopId",
+                            table: "ShoppingLists",
+                            column: "ShopId");
+            }
         }
 
         /// <inheritdoc />

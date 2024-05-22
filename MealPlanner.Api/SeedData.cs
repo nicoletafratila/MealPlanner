@@ -10,7 +10,7 @@ namespace MealPlanner.Api
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
             context?.Database.EnsureCreated();
-            //context?.Database.Migrate();
+            context?.Database.Migrate();
             await SeedProductCategories(context!);
             await SeedRecipesCategories(context!);
             await SeedUnits(context!);

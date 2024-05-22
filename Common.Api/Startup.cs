@@ -53,7 +53,7 @@ namespace Common.Api
 
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
-           
+
             RegisterRepositories(services);
             RegisterServices(services);
 
@@ -63,6 +63,8 @@ namespace Common.Api
             });
 
             services.AddControllers();
+
+            ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
