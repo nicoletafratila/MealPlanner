@@ -1,11 +1,11 @@
 ﻿using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.Product.Commands.AddProduct;
-using RecipeBook.Api.Features.Product.Commands.DeleteProduct;
-using RecipeBook.Api.Features.Product.Commands.UpdateProduct;
-using RecipeBook.Api.Features.Product.Queries.GetEditProduct;
-using RecipeBook.Api.Features.Product.Queries.SearchProducts;
+using RecipeBook.Api.Features.Product.Commands.Add;
+using RecipeBook.Api.Features.Product.Commands.Delete;
+using RecipeBook.Api.Features.Product.Commands.Update;
+using RecipeBook.Api.Features.Product.Queries.GetEdit;
+using RecipeBook.Api.Features.Product.Queries.Search;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -19,7 +19,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<EditProductModel> GetEdit(int id)
         {
-            GetEditProductQuery query = new()
+            GetEditQuery query = new()
             {
                 Id = id
             };
@@ -29,7 +29,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("search")]
         public async Task<PagedList<ProductModel>> Search([FromQuery] string? categoryId, [FromQuery] QueryParameters? queryParameters)
         {
-            SearchProductsQuery query = new()
+            SearchQuery query = new()
             {
                 CategoryId = categoryId,
                 QueryParameters = queryParameters
@@ -38,9 +38,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddProductCommandResponse> PostAsync(EditProductModel model)
+        public async Task<AddCommandResponse> PostAsync(EditProductModel model)
         {
-            AddProductCommand command = new()
+            AddCommand command = new()
             {
                 Model = model
             };
@@ -48,9 +48,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateProductCommandResponse> Put(EditProductModel model)
+        public async Task<UpdateCommandResponse> Put(EditProductModel model)
         {
-            UpdateProductCommand command = new()
+            UpdateCommand command = new()
             {
                 Model = model
             };
@@ -58,9 +58,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteProductCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> Delete(int id)
         {
-            DeleteProductCommand command = new()
+            DeleteCommand command = new()
             {
                 Id = id
             };

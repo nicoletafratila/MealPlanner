@@ -4,14 +4,14 @@ using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.Product.Queries.SearchProducts
+namespace RecipeBook.Api.Features.Product.Queries.Search
 {
-    public class SearchProductsQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<SearchProductsQuery, PagedList<ProductModel>>
+    public class SearchQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<ProductModel>>
     {
         private readonly IProductRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<PagedList<ProductModel>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<ProductModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var data = await _repository.GetAllAsync();
             if (!string.IsNullOrWhiteSpace(request.CategoryId))

@@ -3,14 +3,14 @@ using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.Product.Queries.GetEditProduct
+namespace RecipeBook.Api.Features.Product.Queries.GetEdit
 {
-    public class GetEditProductQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<GetEditProductQuery, EditProductModel>
+    public class GetEditQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<GetEditQuery, EditProductModel>
     {
         private readonly IProductRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<EditProductModel> Handle(GetEditProductQuery request, CancellationToken cancellationToken)
+        public async Task<EditProductModel> Handle(GetEditQuery request, CancellationToken cancellationToken)
         {
             var result = await _repository.GetByIdAsync(request.Id);
             return _mapper.Map<EditProductModel>(result);
