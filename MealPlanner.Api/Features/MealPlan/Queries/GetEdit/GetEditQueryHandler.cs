@@ -3,9 +3,9 @@ using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
 
-namespace MealPlanner.Api.Features.MealPlan.Queries.GetMealPlan
+namespace MealPlanner.Api.Features.MealPlan.Queries.GetEdit
 {
-    public class GetEditMealPlanQueryHandler(IMealPlanRepository repository, IMapper mapper) : IRequestHandler<GetEditMealPlanQuery, EditMealPlanModel>
+    public class GetEditQueryHandler(IMealPlanRepository repository, IMapper mapper) : IRequestHandler<GetEditMealPlanQuery, EditMealPlanModel>
     {
         private readonly IMealPlanRepository _repository = repository;
         private readonly IMapper _mapper = mapper;

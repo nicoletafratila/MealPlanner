@@ -1,12 +1,12 @@
 ﻿using Common.Pagination;
-using MealPlanner.Api.Features.MealPlan.Commands.AddMealPlan;
-using MealPlanner.Api.Features.MealPlan.Commands.DeleteMealPlan;
-using MealPlanner.Api.Features.MealPlan.Commands.UpdateMealPlan;
-using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlan;
-using MealPlanner.Api.Features.MealPlan.Queries.GetMealPlans;
+using MealPlanner.Api.Features.MealPlan.Commands.Add;
+using MealPlanner.Api.Features.MealPlan.Commands.Delete;
+using MealPlanner.Api.Features.MealPlan.Commands.Update;
+using MealPlanner.Api.Features.MealPlan.Queries.GetAll;
+using MealPlanner.Api.Features.MealPlan.Queries.GetEdit;
 using MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts;
-using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlans;
-using MealPlanner.Api.Features.MealPlan.Queries.SearchMealPlansByRecipeId;
+using MealPlanner.Api.Features.MealPlan.Queries.Search;
+using MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -43,13 +43,13 @@ namespace MealPlanner.Api.Controllers
         [HttpGet]
         public async Task<IList<MealPlanModel>> GetAll()
         {
-            return await _mediator.Send(new GetMealPlansQuery());
+            return await _mediator.Send(new GetAllQuery());
         }
 
         [HttpGet("search")]
         public async Task<PagedList<MealPlanModel>> Search([FromQuery] QueryParameters? queryParameters)
         {
-            SearchMealPlansQuery query = new()
+            SearchQuery query = new()
             {
                 QueryParameters = queryParameters
             };
@@ -59,7 +59,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("search/{recipeId:int}")]
         public async Task<IList<MealPlanModel>> SearchByRecipeId(int recipeId)
         {
-            SearchMealPlansByRecipeIdQuery query = new()
+            SearchByRecipeIdQuery query = new()
             {
                 RecipeId = recipeId
             };
@@ -67,9 +67,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddMealPlanCommandResponse> Post(EditMealPlanModel model)
+        public async Task<AddCommandResponse> Post(EditMealPlanModel model)
         {
-            AddMealPlanCommand command = new()
+            AddCommand command = new()
             {
                 Model = model
             };
@@ -77,9 +77,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateMealPlanCommandResponse> Put(EditMealPlanModel model)
+        public async Task<UpdateCommandResponse> Put(EditMealPlanModel model)
         {
-            UpdateMealPlanCommand command = new()
+            UpdateCommand command = new()
             {
                 Model = model
             };
@@ -87,9 +87,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteMealPlanCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> Delete(int id)
         {
-            DeleteMealPlanCommand command = new()
+            DeleteCommand command = new()
             {
                 Id = id
             };
