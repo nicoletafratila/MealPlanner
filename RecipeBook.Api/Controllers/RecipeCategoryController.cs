@@ -1,8 +1,8 @@
 ﻿using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.RecipeCategory.Queries.GetRecipeCategories;
-using RecipeBook.Api.Features.RecipeCategory.Queries.SearchRecipeCategory;
+using RecipeBook.Api.Features.RecipeCategory.Queries.GetAll;
+using RecipeBook.Api.Features.RecipeCategory.Queries.Search;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -16,13 +16,13 @@ namespace RecipeBook.Api.Controllers
         [HttpGet]
         public async Task<IList<RecipeCategoryModel>> GetAll()
         {
-            return await _mediator.Send(new GetRecipeCategoriesQuery());
+            return await _mediator.Send(new GetAllQuery());
         }
 
         [HttpGet("search")]
         public async Task<PagedList<RecipeCategoryModel>> Search([FromQuery] QueryParameters? queryParameters)
         {
-            SearchRecipeCategoryQuery query = new()
+            SearchQuery query = new()
             {
                 QueryParameters = queryParameters
             };

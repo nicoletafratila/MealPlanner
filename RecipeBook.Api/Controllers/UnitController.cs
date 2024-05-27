@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.Unit.Queries.GetUnits;
+using RecipeBook.Api.Features.Unit.Queries.GetAll;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -14,7 +14,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet]
         public async Task<IList<UnitModel>> GetAll()
         {
-            return await _mediator.Send(new GetUnitsQuery());
+            return await _mediator.Send(new GetAllQuery());
         }
     }
 }

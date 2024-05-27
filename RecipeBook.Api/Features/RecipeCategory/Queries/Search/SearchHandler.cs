@@ -4,14 +4,14 @@ using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.RecipeCategory.Queries.SearchRecipeCategory
+namespace RecipeBook.Api.Features.RecipeCategory.Queries.Search
 {
-    public class SearchRecipeCategoryQueryHandler(IRecipeCategoryRepository repository, IMapper mapper) : IRequestHandler<SearchRecipeCategoryQuery, PagedList<RecipeCategoryModel>>
+    public class SearchHandler(IRecipeCategoryRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<RecipeCategoryModel>>
     {
         private readonly IRecipeCategoryRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<PagedList<RecipeCategoryModel>> Handle(SearchRecipeCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<RecipeCategoryModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var data = await _repository.GetAllAsync();
             var results = _mapper.Map<IList<RecipeCategoryModel>>(data).OrderBy(item => item.Name);

@@ -3,14 +3,14 @@ using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.Unit.Queries.GetUnits
+namespace RecipeBook.Api.Features.Unit.Queries.GetAll
 {
-    public class GetUnitsQueryHandler(IUnitRepository repository, IMapper mapper) : IRequestHandler<GetUnitsQuery, IList<UnitModel>>
+    public class GetAllQueryHandler(IUnitRepository repository, IMapper mapper) : IRequestHandler<GetAllQuery, IList<UnitModel>>
     {
         private readonly IUnitRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<IList<UnitModel>> Handle(GetUnitsQuery request, CancellationToken cancellationToken)
+        public async Task<IList<UnitModel>> Handle(GetAllQuery request, CancellationToken cancellationToken)
         {
             var results = await _repository.GetAllAsync();
             return _mapper.Map<IList<UnitModel>>(results).OrderBy(r => r.Name).ToList();
