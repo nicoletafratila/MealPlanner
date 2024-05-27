@@ -2,13 +2,13 @@
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.Recipe.Commands.AddRecipe;
-using RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe;
-using RecipeBook.Api.Features.Recipe.Commands.UpdateRecipe;
-using RecipeBook.Api.Features.Recipe.Queries.GetEditRecipe;
-using RecipeBook.Api.Features.Recipe.Queries.GetRecipe;
+using RecipeBook.Api.Features.Recipe.Commands.Add;
+using RecipeBook.Api.Features.Recipe.Commands.Delete;
+using RecipeBook.Api.Features.Recipe.Commands.Update;
+using RecipeBook.Api.Features.Recipe.Queries.GetById;
+using RecipeBook.Api.Features.Recipe.Queries.GetEdit;
 using RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts;
-using RecipeBook.Api.Features.Recipe.Queries.SearchRecipes;
+using RecipeBook.Api.Features.Recipe.Queries.Search;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("{id:int}")]
         public async Task<RecipeModel> GetById(int id)
         {
-            GetRecipeQuery query = new()
+            GetByIdQuery query = new()
             {
                 Id = id
             };
@@ -32,7 +32,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<EditRecipeModel> GetEdit(int id)
         {
-            GetEditRecipeQuery query = new()
+            GetEditQuery query = new()
             {
                 Id = id
             };
@@ -53,7 +53,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("search")]
         public async Task<PagedList<RecipeModel>> Search([FromQuery] string? categoryId, [FromQuery] QueryParameters? queryParameters)
         {
-            SearchRecipesQuery query = new()
+            SearchQuery query = new()
             {
                 CategoryId = categoryId,
                 QueryParameters = queryParameters
@@ -62,9 +62,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddRecipeCommandResponse> PostAsync(EditRecipeModel model)
+        public async Task<AddCommandResponse> PostAsync(EditRecipeModel model)
         {
-            AddRecipeCommand command = new()
+            AddCommand command = new()
             {
                 Model = model
             };
@@ -72,9 +72,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateRecipeCommandResponse> Put(EditRecipeModel model)
+        public async Task<UpdateCommandResponse> Put(EditRecipeModel model)
         {
-            UpdateRecipeCommand command = new()
+            UpdateCommand command = new()
             {
                 Model = model
             };
@@ -82,9 +82,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteRecipeCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> Delete(int id)
         {
-            DeleteRecipeCommand command = new()
+            DeleteCommand command = new()
             {
                 Id = id
             };

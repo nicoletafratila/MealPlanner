@@ -5,22 +5,22 @@ using MealPlanner.Shared.Models;
 using MediatR;
 using RecipeBook.Api.Repositories;
 
-namespace RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe
+namespace RecipeBook.Api.Features.Recipe.Commands.Delete
 {
-    public class DeleteRecipeCommandHandler(IRecipeRepository repository, IServiceProvider serviceProvider, ILogger<DeleteRecipeCommandHandler> logger) : IRequestHandler<DeleteRecipeCommand, DeleteRecipeCommandResponse>
+    public class DeleteCommandHandler(IRecipeRepository repository, IServiceProvider serviceProvider, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, DeleteCommandResponse>
     {
         private readonly IRecipeRepository _repository = repository;
-        private readonly ILogger<DeleteRecipeCommandHandler> _logger = logger;
+        private readonly ILogger<DeleteCommandHandler> _logger = logger;
         private readonly IApiConfig _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
-        public async Task<DeleteRecipeCommandResponse> Handle(DeleteRecipeCommand request, CancellationToken cancellationToken)
+        public async Task<DeleteCommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var itemToDelete = await _repository.GetByIdAsync(request.Id);
                 if (itemToDelete == null)
                 {
-                    return new DeleteRecipeCommandResponse { Message = $"Could not find with id {request.Id}" };
+                    return new DeleteCommandResponse { Message = $"Could not find with id {request.Id}" };
                 }
 
                 using (var client = new HttpClient())
@@ -31,17 +31,17 @@ namespace RecipeBook.Api.Features.Recipe.Commands.DeleteRecipe
                     var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/search/{request.Id}", cancellationToken);
                     if (result != null && result.Any())
                     {
-                        return new DeleteRecipeCommandResponse { Message = "The recipe you try to delete is used in meal plans and cannot be deleted." };
+                        return new DeleteCommandResponse { Message = "The recipe you try to delete is used in meal plans and cannot be deleted." };
                     }
                 }
 
                 await _repository.DeleteAsync(itemToDelete!);
-                return new DeleteRecipeCommandResponse();
+                return new DeleteCommandResponse();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new DeleteRecipeCommandResponse { Message = "An error occured when deleting the recipe." };
+                return new DeleteCommandResponse { Message = "An error occured when deleting the recipe." };
             }
         }
     }

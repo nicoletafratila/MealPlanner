@@ -2,9 +2,9 @@
 using MediatR;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.Recipe.Queries.SearchRecipes
+namespace RecipeBook.Api.Features.Recipe.Queries.Search
 {
-    public class SearchRecipesQuery : IRequest<PagedList<RecipeModel>>
+    public class SearchQuery : IRequest<PagedList<RecipeModel>>
     {
         public string? CategoryId { get; set; }
         public QueryParameters? QueryParameters { get; set; }
