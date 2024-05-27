@@ -18,4 +18,3 @@ edit product categorie
 edit recipe categories
 edit units
 design interfata
-migrations

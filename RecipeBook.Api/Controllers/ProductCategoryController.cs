@@ -1,13 +1,12 @@
 ﻿using Common.Pagination;
-using MealPlanner.Api.Features.ProductCategory.Commands.AddProductCategory;
-using MealPlanner.Api.Features.ProductCategory.Commands.DeleteProductCategory;
-using MealPlanner.Api.Features.ProductCategory.Commands.ProductCategory;
-using MealPlanner.Api.Features.ProductCategory.Commands.UpdateProductCategory;
-using MealPlanner.Api.Features.ProductCategory.Queries.GetEditProductCategory;
+using MealPlanner.Api.Features.ProductCategory.Commands.Add;
+using MealPlanner.Api.Features.ProductCategory.Commands.Delete;
+using MealPlanner.Api.Features.ProductCategory.Commands.Update;
+using MealPlanner.Api.Features.ProductCategory.Queries.GetEdit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Api.Features.ProductCategory.Queries.GetProductCategories;
-using RecipeBook.Api.Features.ProductCategory.Queries.SearchProductCategory;
+using RecipeBook.Api.Features.ProductCategory.Queries.GetAll;
+using RecipeBook.Api.Features.ProductCategory.Queries.Search;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -21,7 +20,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<EditProductCategoryModel> GetEdit(int id)
         {
-            GetEditProductCategoryQuery query = new()
+            GetEditQuery query = new()
             {
                 Id = id
             };
@@ -31,13 +30,13 @@ namespace RecipeBook.Api.Controllers
         [HttpGet]
         public async Task<IList<ProductCategoryModel>> GetAll()
         {
-            return await _mediator.Send(new GetProductCategoriesQuery());
+            return await _mediator.Send(new GetAllQuery());
         }
 
         [HttpGet("search")]
         public async Task<PagedList<ProductCategoryModel>> Search([FromQuery] QueryParameters? queryParameters)
         {
-            SearchProductCategoryQuery query = new()
+            SearchQuery query = new()
             {
                 QueryParameters = queryParameters
             };
@@ -45,9 +44,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddProductCategoryCommandResponse> Post(EditProductCategoryModel model)
+        public async Task<AddCommandResponse> Post(EditProductCategoryModel model)
         {
-            AddProductCategoryCommand command = new()
+            AddCommand command = new()
             {
                 Model = model
             };
@@ -55,9 +54,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateProductCategoryCommandResponse> Put(EditProductCategoryModel model)
+        public async Task<UpdateCommandResponse> Put(EditProductCategoryModel model)
         {
-            UpdateProductCategoryCommand command = new()
+            UpdateCommand command = new()
             {
                 Model = model
             };
@@ -65,9 +64,9 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteProductCategoryCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> Delete(int id)
         {
-            DeleteProductCategoryCommand command = new()
+            DeleteCommand command = new()
             {
                 Id = id
             };
