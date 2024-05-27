@@ -1,0 +1,36 @@
+﻿@page "/productcategoriesoverview"
+
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-11">
+                    <h2>Product categories</h2>
+                </div>
+                <div class="col-auto align-self-center">
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                </div>
+            </div>
+        </div>
+
+        @if (Categories != null)
+        {
+            <div class="card-body">
+                <TableTemplate Data="@Categories" ShowIndex="true">
+                    <TableHeader>
+                        <th>Name</th>
+                        <th style="width: 50px"></th>
+                        <th style="width: 30px"></th>
+                    </TableHeader>
+                    <RowTemplate Context="category">
+                        <td>@category.Name</td>
+                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">Edit</button></td>
+                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
+                    </RowTemplate>
+                </TableTemplate>
+            </div>
+        }
+    </div>
+</div>
+
+<ConfirmDialog @ref="dialog" />
