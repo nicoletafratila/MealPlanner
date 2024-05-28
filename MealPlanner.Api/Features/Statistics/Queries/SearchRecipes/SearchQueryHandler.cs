@@ -2,13 +2,13 @@
 using MealPlanner.Api.Repositories;
 using MediatR;
 
-namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteProducts
+namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
 {
-    public class GetFavoriteProductsQueryHandler(IMealPlanRepository mealPlanRepository) : IRequestHandler<GetFavoriteProductsQuery, IList<StatisticModel>>
+    public class SearchQueryHandler(IMealPlanRepository mealPlanRepository) : IRequestHandler<SearchQuery, IList<StatisticModel>>
     {
         private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository;
 
-        public async Task<IList<StatisticModel>> Handle(GetFavoriteProductsQuery request, CancellationToken cancellationToken)
+        public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var result = new List<StatisticModel>();
             foreach (var category in request.Categories!)
@@ -19,10 +19,13 @@ namespace MealPlanner.Api.Features.Statistics.Queries.GetFavoriteProducts
                     Label = category.Name
                 };
 
-                var mealPlanWithProducts = await _mealPlanRepository.SearchByProductCategoryId(category.Id);
-                foreach (var mealPlan in mealPlanWithProducts!)
+                var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryId(category.Id);
+                foreach (var mealPlan in mealPlanWithRecipes!)
                 {
-                    model.Data![mealPlan.Key.Name!] = !model.Data.TryGetValue(mealPlan.Key.Name!, out double value) ? 1 : ++value;
+                    if (mealPlan.Recipe?.RecipeCategoryId == category.Id)
+                    {
+                        model.Data![mealPlan.Recipe.Name!] = !model.Data.TryGetValue(mealPlan.Recipe.Name!, out double value) ? 1 : ++value;
+                    }
                 }
                 if (model.Data!.Any(i => i.Value == 1))
                 {

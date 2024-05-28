@@ -1,10 +1,10 @@
 ﻿using Common.Pagination;
-using MealPlanner.Api.Features.ShoppingList.Commands.AddShoppingList;
-using MealPlanner.Api.Features.ShoppingList.Commands.DeleteShoppingList;
+using MealPlanner.Api.Features.ShoppingList.Commands.Add;
+using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
-using MealPlanner.Api.Features.ShoppingList.Commands.UpdateShoppingList;
-using MealPlanner.Api.Features.ShoppingList.Queries.GetEditShoppingList;
-using MealPlanner.Api.Features.ShoppingList.Queries.SearchShoppingLists;
+using MealPlanner.Api.Features.ShoppingList.Commands.Update;
+using MealPlanner.Api.Features.ShoppingList.Queries.GetEdit;
+using MealPlanner.Api.Features.ShoppingList.Queries.Search;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<EditShoppingListModel> GetEdit(int id)
         {
-            GetEditShoppingListQuery query = new()
+            GetEditQuery query = new()
             {
                 Id = id
             };
@@ -30,7 +30,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("search")]
         public async Task<PagedList<ShoppingListModel>> Search([FromQuery] QueryParameters? queryParameters)
         {
-            SearchShoppingListsQuery query = new()
+            SearchQuery query = new()
             {
                 QueryParameters = queryParameters
             };
@@ -49,9 +49,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddShoppingListCommandResponse> Post(EditShoppingListModel model)
+        public async Task<AddCommandResponse> Post(EditShoppingListModel model)
         {
-            AddShoppingListCommand command = new()
+            AddCommand command = new()
             {
                 Model = model
             };
@@ -59,9 +59,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateShoppingListCommandResponse> Put(EditShoppingListModel model)
+        public async Task<UpdateCommandResponse> Put(EditShoppingListModel model)
         {
-            UpdateShoppingListCommand command = new()
+            UpdateCommand command = new()
             {
                 Model = model
             };
@@ -69,9 +69,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteShoppingListCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> Delete(int id)
         {
-            DeleteShoppingListCommand command = new()
+            DeleteCommand command = new()
             {
                 Id = id
             };

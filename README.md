@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-renames
 edit recipe categories
 edit units
 

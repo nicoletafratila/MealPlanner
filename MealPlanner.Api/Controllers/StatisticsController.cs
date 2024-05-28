@@ -1,6 +1,4 @@
 ﻿using Common.Shared;
-using MealPlanner.Api.Features.Statistics.Queries.GetFavoriteProducts;
-using MealPlanner.Api.Features.Statistics.Queries.GetFavoriteRecipes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Shared.Models;
@@ -16,7 +14,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("favoriterecipes")]
         public async Task<IList<StatisticModel>> SearchFavoriteRecipes([FromQuery] string? categories)
         {
-            GetFavoriteRecipesQuery query = new()
+            Features.Statistics.Queries.SearchRecipes.SearchQuery query = new()
             {
                 Categories = new List<RecipeCategoryModel>()
             };
@@ -32,7 +30,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("favoriteproducts")]
         public async Task<IList<StatisticModel>?> SearchFavoriteProducts([FromQuery] string? categories)
         {
-            GetFavoriteProductsQuery query = new()
+            Features.Statistics.Queries.SearchProducts.SearchQuery query = new()
             {
                 Categories = new List<ProductCategoryModel>()
             };
