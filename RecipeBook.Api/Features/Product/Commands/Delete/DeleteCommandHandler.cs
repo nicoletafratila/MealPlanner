@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Delete
                 var result = await _recipeIngredientRepository.SearchAsync(request.Id);
                 if (result != null && result.Any())
                 {
-                    return new DeleteCommandResponse { Message = "The product you try to delete is used in recipes and cannot be deleted." };
+                    return new DeleteCommandResponse { Message = $"Product '{itemToDelete.Name}' can not be deleted, it is used in recipes." };
                 }
 
                 await _repository.DeleteAsync(itemToDelete!);

@@ -12,8 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-edit units
-
 in memory db
 user module
 navigation, breadcrumps

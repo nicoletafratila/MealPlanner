@@ -31,7 +31,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
                     var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/search/{request.Id}", cancellationToken);
                     if (result != null && result.Any())
                     {
-                        return new DeleteCommandResponse { Message = "The recipe you try to delete is used in meal plans and cannot be deleted." };
+                        return new DeleteCommandResponse { Message = $"Recipe {itemToDelete.Name} can not be deleted, it is used in meal plans." };
                     }
                 }
 

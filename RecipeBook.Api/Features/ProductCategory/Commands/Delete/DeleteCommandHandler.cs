@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
                 var products = await _productRepository.GetAllAsync();
                 if (products!.Any(item => item.ProductCategoryId == request.Id))
                 {
-                    return new DeleteCommandResponse { Message = $"Product category {request.Id} can not be deleted, it is used in products." };
+                    return new DeleteCommandResponse { Message = $"Product category '{itemToDelete.Name}' can not be deleted, it is used in products." };
                 }
 
                 await _repository.DeleteAsync(itemToDelete!);

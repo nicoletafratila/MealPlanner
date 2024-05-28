@@ -5,14 +5,14 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
-    public partial class ProductCategoryEdit
+    public partial class UnitEdit
     {
         [Parameter]
         public string? Id { get; set; }
-        public EditProductCategoryModel? ProductCategory { get; set; }
+        public EditUnitModel? Unit { get; set; }
 
         [Inject]
-        public IProductCategoryService? ProductCategoryService { get; set; }
+        public IUnitService? UnitService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -28,18 +28,18 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                var categories = await ProductCategoryService!.GetAllAsync();
-                ProductCategory = new EditProductCategoryModel();
+                var categories = await UnitService!.GetAllAsync();
+                Unit = new EditUnitModel();
             }
             else
             {
-                ProductCategory = await ProductCategoryService!.GetEditAsync(id);
+                Unit = await UnitService!.GetEditAsync(id);
             }
         }
 
         private async void SaveAsync()
         {
-            var response = ProductCategory?.Id == 0 ? await ProductCategoryService!.AddAsync(ProductCategory) : await ProductCategoryService!.UpdateAsync(ProductCategory!);
+            var response = Unit?.Id == 0 ? await UnitService!.AddAsync(Unit) : await UnitService!.UpdateAsync(Unit!);
             if (!string.IsNullOrWhiteSpace(response))
             {
                 MessageComponent?.ShowError(response);
@@ -53,7 +53,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void DeleteAsync()
         {
-            if (ProductCategory?.Id != 0)
+            if (Unit?.Id != 0)
             {
                 var options = new ConfirmDialogOptions
                 {
@@ -71,7 +71,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                var response = await ProductCategoryService!.DeleteAsync(ProductCategory!.Id);
+                var response = await UnitService!.DeleteAsync(Unit!.Id);
                 if (!string.IsNullOrWhiteSpace(response))
                 {
                     MessageComponent?.ShowError(response);
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("/productcategoriesoverview");
+            NavigationManager?.NavigateTo("/Unitsoverview");
         }
     }
 }

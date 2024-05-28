@@ -10,6 +10,9 @@ namespace Common.Data.Profiles
         {
             CreateMap<Unit, UnitModel>()
                .ReverseMap();
+
+            CreateMap<Unit, EditUnitModel>()
+               .ReverseMap();
         }
     }
 }

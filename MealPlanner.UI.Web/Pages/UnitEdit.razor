@@ -1,0 +1,38 @@
+﻿@page "/unitedit"
+@page "/unitedit/{Id}"
+
+@if (Unit != null)
+{
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row g-0">
+                    <div class="col-md-8">
+                        <h2>@Unit.Name</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <EditForm Model="@Unit" OnValidSubmit="@SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3">Unit name: </label>
+                        <InputText id="name" class="form-control" @bind-Value="@Unit.Name" placeholder="Enter unit name"></InputText>
+                        <ValidationMessage For="@(() => Unit.Name)" />
+                    </div>
+
+                    <div class="col mt-3">
+                        <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                        <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+<ConfirmDialog @ref="dialog" />
