@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-edit recipe categories
 edit units
 
 in memory db

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RecipeBook.Api.Repositories;
 
-namespace MealPlanner.Api.Features.ProductCategory.Commands.Delete
+namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
 {
     public class DeleteCommandHandler(IProductCategoryRepository repository, IProductRepository productRepository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, DeleteCommandResponse>
     {

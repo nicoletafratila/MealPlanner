@@ -2,7 +2,7 @@
 using MediatR;
 using RecipeBook.Api.Repositories;
 
-namespace MealPlanner.Api.Features.ProductCategory.Commands.Add
+namespace RecipeBook.Api.Features.ProductCategory.Commands.Add
 {
     public class AddCommandHandler(IProductCategoryRepository repository, IMapper mapper, ILogger<AddCommandHandler> logger) : IRequestHandler<AddCommand, AddCommandResponse>
     {

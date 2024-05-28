@@ -2,11 +2,11 @@
 using MediatR;
 using RecipeBook.Api.Repositories;
 
-namespace RecipeBook.Api.Features.ProductCategory.Commands.Update
+namespace RecipeBook.Api.Features.RecipeCategory.Commands.Update
 {
-    public class UpdateCommandHandler(IProductCategoryRepository repository, IMapper mapper, ILogger<UpdateCommandHandler> logger) : IRequestHandler<UpdateCommand, UpdateCommandResponse>
+    public class UpdateCommandHandler(IRecipeCategoryRepository repository, IMapper mapper, ILogger<UpdateCommandHandler> logger) : IRequestHandler<UpdateCommand, UpdateCommandResponse>
     {
-        private readonly IProductCategoryRepository _repository = repository;
+        private readonly IRecipeCategoryRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<UpdateCommandHandler> _logger = logger;
 
@@ -25,7 +25,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Update
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new UpdateCommandResponse { Message = "An error occured when saving the product category." };
+                return new UpdateCommandResponse { Message = "An error occured when saving the Recipe category." };
             }
         }
     }

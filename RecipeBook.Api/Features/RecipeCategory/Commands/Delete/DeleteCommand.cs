@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
+namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
 {
     public class DeleteCommand : IRequest<DeleteCommandResponse>
     {

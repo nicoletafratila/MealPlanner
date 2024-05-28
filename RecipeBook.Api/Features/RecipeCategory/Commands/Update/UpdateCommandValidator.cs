@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace RecipeBook.Api.Features.ProductCategory.Commands.Update
+namespace RecipeBook.Api.Features.RecipeCategory.Commands.Update
 {
     public class UpdateCommandValidator : AbstractValidator<UpdateCommand>
     {

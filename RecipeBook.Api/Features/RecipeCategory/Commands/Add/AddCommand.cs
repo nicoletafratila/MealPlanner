@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.ProductCategory.Commands.Add
+namespace RecipeBook.Api.Features.RecipeCategory.Commands.Add
 {
     public class AddCommand : IRequest<AddCommandResponse>
     {
-        public EditProductCategoryModel? Model { get; set; }
+        public EditRecipeCategoryModel? Model { get; set; }
     }
 }

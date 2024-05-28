@@ -1,11 +1,11 @@
 ﻿using Common.Pagination;
-using MealPlanner.Api.Features.ProductCategory.Commands.Add;
-using MealPlanner.Api.Features.ProductCategory.Commands.Delete;
-using MealPlanner.Api.Features.ProductCategory.Commands.Update;
-using MealPlanner.Api.Features.ProductCategory.Queries.GetEdit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.Api.Features.ProductCategory.Commands.Add;
+using RecipeBook.Api.Features.ProductCategory.Commands.Delete;
+using RecipeBook.Api.Features.ProductCategory.Commands.Update;
 using RecipeBook.Api.Features.ProductCategory.Queries.GetAll;
+using RecipeBook.Api.Features.ProductCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.ProductCategory.Queries.Search;
 using RecipeBook.Shared.Models;
 

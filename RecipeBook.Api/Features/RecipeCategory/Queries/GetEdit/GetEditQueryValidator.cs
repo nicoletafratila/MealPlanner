@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace RecipeBook.Api.Features.ProductCategory.Queries.GetEdit
+namespace RecipeBook.Api.Features.RecipeCategory.Queries.GetEdit
 {
     public class GetEditQueryValidator : AbstractValidator<GetEditQuery>
     {

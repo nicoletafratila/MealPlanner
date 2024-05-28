@@ -1,27 +1,27 @@
-﻿@page "/productcategoryedit"
-@page "/productcategoryedit/{Id}"
+﻿@page "/recipecategoryedit"
+@page "/recipecategoryedit/{Id}"
 
-@if (ProductCategory != null)
+@if (RecipeCategory != null)
 {
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
                 <div class="row g-0">
                     <div class="col-md-8">
-                        <h2>@ProductCategory.Name</h2>
+                        <h2>@RecipeCategory.Name</h2>
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
-                <EditForm Model="@ProductCategory" OnValidSubmit="@SaveAsync">
+                <EditForm Model="@RecipeCategory" OnValidSubmit="@SaveAsync">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
                     <div class="form-group">
-                        <label for="name" class="col-sm-3">Product category name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@ProductCategory.Name" placeholder="Enter product category name"></InputText>
-                        <ValidationMessage For="@(() => ProductCategory.Name)" />
+                        <label for="name" class="col-sm-3">Recipe category name: </label>
+                        <InputText id="name" class="form-control" @bind-Value="@RecipeCategory.Name" placeholder="Enter recipe category name"></InputText>
+                        <ValidationMessage For="@(() => RecipeCategory.Name)" />
                     </div>
 
                     <div class="col mt-3">
