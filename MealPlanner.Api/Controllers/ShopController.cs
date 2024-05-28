@@ -1,8 +1,8 @@
-﻿using MealPlanner.Api.Features.Shop.Commands.AddShop;
-using MealPlanner.Api.Features.Shop.Commands.DeleteShop;
-using MealPlanner.Api.Features.Shop.Commands.UpdateShop;
-using MealPlanner.Api.Features.Shop.Queries.GetEditShop;
-using MealPlanner.Api.Features.Shop.Queries.GetShops;
+﻿using MealPlanner.Api.Features.Shop.Commands.Add;
+using MealPlanner.Api.Features.Shop.Commands.Delete;
+using MealPlanner.Api.Features.Shop.Commands.Update;
+using MealPlanner.Api.Features.Shop.Queries.GetAll;
+using MealPlanner.Api.Features.Shop.Queries.GetEdit;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("edit/{id:int}")]
         public async Task<EditShopModel> GetEdit(int id)
         {
-            GetEditShopQuery query = new()
+            GetEditQuery query = new()
             {
                 Id = id
             };
@@ -28,13 +28,13 @@ namespace MealPlanner.Api.Controllers
         [HttpGet]
         public async Task<IList<ShopModel>> GetAll()
         {
-            return await _mediator.Send(new GetShopsQuery());
+            return await _mediator.Send(new GetAllQuery());
         }
 
         [HttpPost]
-        public async Task<AddShopCommandResponse> Post(EditShopModel model)
+        public async Task<AddCommandResponse> Post(EditShopModel model)
         {
-            AddShopCommand command = new()
+            AddCommand command = new()
             {
                 Model = model
             };
@@ -42,9 +42,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateShopCommandResponse> Put(EditShopModel model)
+        public async Task<UpdateCommandResponse> Put(EditShopModel model)
         {
-            UpdateShopCommand command = new()
+            UpdateCommand command = new()
             {
                 Model = model
             };
@@ -52,9 +52,9 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteShopCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> Delete(int id)
         {
-            DeleteShopCommand command = new()
+            DeleteCommand command = new()
             {
                 Id = id
             };

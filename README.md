@@ -12,9 +12,12 @@ PM> Script-migration
 
 
 MealPlanner
-navigation, breadcrumps
-unit conversions
-edit product categorie
+renames
 edit recipe categories
 edit units
+
+in memory db
+user module
+navigation, breadcrumps
+unit conversions
 design interfata
