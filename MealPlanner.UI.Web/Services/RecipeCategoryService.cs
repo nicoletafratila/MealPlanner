@@ -57,6 +57,17 @@ namespace MealPlanner.UI.Web.Services
             return result?.Message;
         }
 
+        public async Task<string?> UpdateAsync(IList<RecipeCategoryModel> models)
+        {
+            var modelJson = new StringContent(JsonSerializer.Serialize(models), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/updateAll", modelJson);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
+            {
+                Message = string.Empty
+            });
+            return result?.Message;
+        }
+
         public async Task<string?> DeleteAsync(int id)
         {
             var response = await _httpClient.DeleteAsync($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/{id}");

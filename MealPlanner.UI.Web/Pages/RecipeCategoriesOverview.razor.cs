@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
@@ -65,6 +66,60 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     await RefreshAsync();
                 }
+            }
+        }
+
+        private async void SaveAsync()
+        {
+            var response = await RecipeCategoriesService!.UpdateAsync(Categories!);
+            if (!string.IsNullOrWhiteSpace(response))
+            {
+                MessageComponent?.ShowError(response);
+            }
+            else
+            {
+                MessageComponent?.ShowInfo("Data has been saved successfully");
+                await RefreshAsync();
+            }
+        }
+
+        private bool CanMoveUp(RecipeCategoryModel item)
+        {
+            return Categories?.IndexOf(item) - 1 >= 0;
+        }
+
+        private void MoveUp(RecipeCategoryModel item)
+        {
+            int index = Categories!.IndexOf(item);
+            Categories.RemoveAt(index);
+            if (index - 1 >= 0)
+            {
+                Categories.Insert(index - 1, item);
+            }
+            UpdateDisplaySeqenceValues();
+        }
+
+        private bool CanMoveDown(RecipeCategoryModel item)
+        {
+            return Categories?.IndexOf(item) + 2 <= Categories?.Count;
+        }
+
+        private void MoveDown(RecipeCategoryModel item)
+        {
+            int index = Categories!.IndexOf(item);
+            Categories.RemoveAt(index);
+            if (index + 1 <= Categories.Count)
+            {
+                Categories.Insert(index + 1, item);
+            }
+            UpdateDisplaySeqenceValues();
+        }
+
+        private void UpdateDisplaySeqenceValues()
+        {
+            for (int i = 0; i < Categories?.Count; i++)
+            {
+                Categories[i].DisplaySequence = i + 1;
             }
         }
 

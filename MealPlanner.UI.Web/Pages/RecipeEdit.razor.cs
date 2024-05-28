@@ -159,16 +159,16 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     if (Recipe.Ingredients == null)
                     {
-                        Recipe.Ingredients = new List<RecipeIngredientModel>();
+                        Recipe.Ingredients = new List<EditRecipeIngredientModel>();
                     }
-                    RecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
+                    EditRecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
                     if (item != null)
                     {
                         item.Quantity += decimal.Parse(Quantity!);
                     }
                     else
                     {
-                        item = new RecipeIngredientModel
+                        item = new EditRecipeIngredientModel
                         {
                             Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
                             RecipeId = Recipe.Id,
@@ -183,7 +183,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void DeleteIngredientAsync(ProductModel item)
         {
-            RecipeIngredientModel? itemToDelete = Recipe?.Ingredients?.FirstOrDefault(i => i.Product?.Id == item.Id);
+            EditRecipeIngredientModel? itemToDelete = Recipe?.Ingredients?.FirstOrDefault(i => i.Product?.Id == item.Id);
             if (itemToDelete != null)
             {
                 var options = new ConfirmDialogOptions

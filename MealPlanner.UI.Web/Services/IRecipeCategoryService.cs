@@ -10,6 +10,7 @@ namespace MealPlanner.UI.Web.Services
         Task<PagedList<RecipeCategoryModel>?> SearchAsync(QueryParameters? queryParameters = null);
         Task<string?> AddAsync(EditRecipeCategoryModel model);
         Task<string?> UpdateAsync(EditRecipeCategoryModel model);
+        Task<string?> UpdateAsync(IList<RecipeCategoryModel> models);
         Task<string?> DeleteAsync(int id);
     }
 }

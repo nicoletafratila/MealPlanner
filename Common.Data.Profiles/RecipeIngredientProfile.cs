@@ -9,7 +9,7 @@ namespace Common.Data.Profiles
     {
         public RecipeIngredientProfile()
         {
-            CreateMap<RecipeIngredient, RecipeIngredientModel>()
+            CreateMap<RecipeIngredient, EditRecipeIngredientModel>()
                .ReverseMap()
                .ForMember(data => data.Recipe, opt => opt.Ignore())
                .ForMember(data => data.Product, opt => opt.Ignore());

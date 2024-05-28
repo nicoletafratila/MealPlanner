@@ -4,11 +4,11 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class RecipeToEditRecipeModelResolver : IMemberValueResolver<Recipe, EditRecipeModel, IList<RecipeIngredient>?, IList<RecipeIngredientModel>?>
+    public class RecipeToEditRecipeModelResolver : IMemberValueResolver<Recipe, EditRecipeModel, IList<RecipeIngredient>?, IList<EditRecipeIngredientModel>?>
     {
-        public IList<RecipeIngredientModel>? Resolve(Recipe source, EditRecipeModel destination, IList<RecipeIngredient>? sourceValue, IList<RecipeIngredientModel>? destValue, ResolutionContext context)
+        public IList<EditRecipeIngredientModel>? Resolve(Recipe source, EditRecipeModel destination, IList<RecipeIngredient>? sourceValue, IList<EditRecipeIngredientModel>? destValue, ResolutionContext context)
         {
-            return source.RecipeIngredients?.Select(context.Mapper.Map<RecipeIngredientModel>)
+            return source.RecipeIngredients?.Select(context.Mapper.Map<EditRecipeIngredientModel>)
                          .OrderBy(item => item.Product?.ProductCategory?.Name)
                          .ThenBy(item => item.Product?.Name).ToList();
         }

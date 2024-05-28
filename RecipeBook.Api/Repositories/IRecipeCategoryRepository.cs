@@ -5,5 +5,6 @@ namespace RecipeBook.Api.Repositories
 {
     public interface IRecipeCategoryRepository : IAsyncRepository<RecipeCategory, int>
     {
+        Task UpdateAllAsync(IList<RecipeCategory> entities);
     }
 }

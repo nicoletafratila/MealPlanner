@@ -24,6 +24,6 @@ namespace RecipeBook.Shared.Models
 
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one ingredient.")]
-        public IList<RecipeIngredientModel>? Ingredients { get; set; }
+        public IList<EditRecipeIngredientModel>? Ingredients { get; set; }
     }
 }

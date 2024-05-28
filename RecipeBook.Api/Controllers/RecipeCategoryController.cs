@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Add;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Delete;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Update;
+using RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll;
 using RecipeBook.Api.Features.RecipeCategory.Queries.GetAll;
 using RecipeBook.Api.Features.RecipeCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.RecipeCategory.Queries.Search;
@@ -59,6 +60,16 @@ namespace RecipeBook.Api.Controllers
             UpdateCommand command = new()
             {
                 Model = model
+            };
+            return await _mediator.Send(command);
+        }
+
+        [HttpPut("updateAll")]
+        public async Task<UpdateAllCommandResponse> Put(IList<RecipeCategoryModel> models)
+        {
+            UpdateAllCommand command = new()
+            {
+                Models = models
             };
             return await _mediator.Send(command);
         }
