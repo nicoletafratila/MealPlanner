@@ -4,10 +4,6 @@ namespace Common.Data.Entities
 {
     public class ShoppingListProduct
     {
-        public decimal Quantity { get; set; }
-        public bool Collected { get; set; }
-        public int DisplaySequence { get; set; }
-
         [ForeignKey("ShoppingListId")]
         public ShoppingList? ShoppingList { get; set; }
         public int ShoppingListId { get; set; }
@@ -15,5 +11,14 @@ namespace Common.Data.Entities
         [ForeignKey("ProductId")]
         public Product? Product { get; set; }
         public int ProductId { get; set; }
+
+        public decimal Quantity { get; set; }
+
+        [ForeignKey("UnitId")]
+        public Unit? Unit { get; set; }
+        public int UnitId { get; set; }
+
+        public bool Collected { get; set; }
+        public int DisplaySequence { get; set; }
     }
 }

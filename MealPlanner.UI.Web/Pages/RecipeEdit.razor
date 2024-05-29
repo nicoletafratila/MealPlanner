@@ -70,10 +70,25 @@
                             {
                                 @foreach (var item in Products?.Items!)
                                 {
-                                    <option value="@item.Id">@item.Name (@item.Unit?.Name)</option>
+                                    <option value="@item.Id">@item.Name</option>
                                 }
                             }
                         </InputSelect>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="unit" class="col-sm-3">Unit of measurement: </label>
+                        <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
+                            <option selected value="0">Choose...</option>
+                            @if (Units != null && Units.Any())
+                            {
+                                @foreach (var unit in Units!)
+                                {
+                                    <option value="@unit.Id">@unit.Name</option>
+                                }
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => UnitId)" />
                     </div>
 
                     <div class="form-group mt-3">
@@ -112,7 +127,7 @@
                                     <img src="@RecipeIngredient.Product?.ImageUrl" class="img-fluid" width="100" height="80" />
                                 </td>
                                 <td>@RecipeIngredient.Quantity</td>
-                                <td>@RecipeIngredient.Product?.Unit?.Name</td>
+                                <td>@RecipeIngredient.Unit?.Name</td>
                                 <td>@RecipeIngredient.Product?.ProductCategory?.Name</td>
                                 <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteIngredientAsync(RecipeIngredient.Product!)"></button></td>
                             </RowTemplate>

@@ -74,6 +74,11 @@ namespace MealPlanner.UI.Web.Pages
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
         public string? Quantity { get; set; }
 
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        public int UnitId { get; set; }
+        public IList<UnitModel>? Units { get; set; }
+
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
 
@@ -93,6 +98,9 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeService? RecipeService { get; set; }
 
         [Inject]
+        public IUnitService? UnitService { get; set; }
+
+        [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [CascadingParameter]
@@ -108,6 +116,7 @@ namespace MealPlanner.UI.Web.Pages
             _ = int.TryParse(Id, out int id);
             ProductCategories = await ProductCategoryService!.GetAllAsync();
             Shops = await ShopService!.GetAllAsync();
+            Units = await UnitService!.GetAllAsync();
 
             if (id == 0)
             {
@@ -208,7 +217,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
-                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!));
+                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), UnitId);
             }
         }
 
@@ -237,7 +246,7 @@ namespace MealPlanner.UI.Web.Pages
                 var products = await MealPlanService!.GetShoppingListProducts(mealPlanId, ShoppingList!.ShopId);
                 foreach (var item in products!)
                 {
-                    AddProduct(item.Product!, item.Quantity);
+                    AddProduct(item.Product!, item.Quantity, item.UnitId);
                 }
             }
         }
@@ -267,12 +276,12 @@ namespace MealPlanner.UI.Web.Pages
                 var products = await RecipeService!.GetShoppingListProducts(recipeId, ShoppingList!.ShopId);
                 foreach (var item in products!)
                 {
-                    AddProduct(item.Product!, item.Quantity);
+                    AddProduct(item.Product!, item.Quantity, item.UnitId);
                 }
             }
         }
 
-        private void AddProduct(ProductModel product, decimal quantity)
+        private void AddProduct(ProductModel product, decimal quantity, int unitId)
         {
             ShoppingListProductModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
             if (item != null)
@@ -287,6 +296,8 @@ namespace MealPlanner.UI.Web.Pages
                     Collected = false,
                     Product = product,
                     Quantity = quantity,
+                    UnitId = unitId,
+                    Unit = Units!.FirstOrDefault(i => i.Id == unitId),
                     DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
                 };
                 ShoppingList.Products?.Add(item);

@@ -15,9 +15,6 @@ namespace MealPlanner.UI.Web.Pages
         public IRecipeCategoryService? RecipeCategoryService { get; set; }
 
         [Inject]
-        public IRecipeCategoryService? RecipeCategoriesService { get; set; }
-
-        [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [CascadingParameter(Name = "MessageComponent")]
@@ -31,7 +28,6 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                var categories = await RecipeCategoriesService!.GetAllAsync();
                 RecipeCategory = new EditRecipeCategoryModel();
             }
             else

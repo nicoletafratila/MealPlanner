@@ -8,6 +8,12 @@ namespace RecipeBook.Api.Repositories
     {
         protected readonly MealPlannerDbContext DbContext = dbContext;
 
+        public async Task<IReadOnlyList<RecipeIngredient>?> GetAllAsync()
+        {
+            return await DbContext!.RecipeIngredients
+                        .Include(x => x.Unit).ToListAsync();
+        }
+
         public async Task<IReadOnlyList<RecipeIngredient>?> SearchAsync(int productId)
         {
             return await DbContext!.RecipeIngredients.Where(x => x.ProductId == productId).ToListAsync();

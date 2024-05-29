@@ -2,10 +2,8 @@
 
 namespace Common.Data.Entities
 {
-    public class RecipeIngredient 
+    public class RecipeIngredient
     {
-        public decimal Quantity { get; set; }
-        
         [ForeignKey("RecipeId")]
         public Recipe? Recipe { get; set; }
         public int RecipeId { get; set; }
@@ -14,6 +12,12 @@ namespace Common.Data.Entities
         public Product? Product { get; set; }
         public int ProductId { get; set; }
 
+        public decimal Quantity { get; set; }
+
+        [ForeignKey("UnitId")]
+        public Unit? Unit { get; private set; }
+        public int UnitId { get; set; }
+
         public ShoppingListProduct ToShoppingListProduct(int displaySequence)
         {
             var result = new ShoppingListProduct
@@ -21,6 +25,8 @@ namespace Common.Data.Entities
                 ProductId = ProductId,
                 Product = Product,
                 Quantity = Quantity,
+                UnitId = UnitId,
+                Unit = Unit,
                 Collected = false,
                 DisplaySequence = displaySequence
             };

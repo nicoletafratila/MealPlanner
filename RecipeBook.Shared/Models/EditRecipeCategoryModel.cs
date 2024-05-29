@@ -13,7 +13,7 @@ namespace RecipeBook.Shared.Models
         public string? Name { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select the display sequence for the category.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please select the display sequence for the category.")]
         public int DisplaySequence { get; set; }
     }
 }

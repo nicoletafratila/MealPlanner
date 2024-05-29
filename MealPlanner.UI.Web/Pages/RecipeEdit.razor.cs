@@ -49,6 +49,7 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     _productId = value;
                     Quantity = string.Empty;
+                    UnitId = string.Empty;
                 }
             }
         }
@@ -56,6 +57,11 @@ namespace MealPlanner.UI.Web.Pages
 
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
         public string? Quantity { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        public string? UnitId { get; set; }
+        public IList<UnitModel>? Units { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -70,6 +76,9 @@ namespace MealPlanner.UI.Web.Pages
         public IProductService? ProductService { get; set; }
 
         [Inject]
+        public IUnitService? UnitService { get; set; }
+
+        [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [CascadingParameter(Name = "MessageComponent")]
@@ -82,6 +91,7 @@ namespace MealPlanner.UI.Web.Pages
             _ = int.TryParse(Id, out var id);
             RecipeCategories = await RecipeCategoryService!.GetAllAsync();
             ProductCategories = await ProductCategoryService!.GetAllAsync();
+            Units = await UnitService!.GetAllAsync();
 
             if (id == 0)
             {
@@ -146,6 +156,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 return !string.IsNullOrWhiteSpace(ProductId) &&
                        ProductId != "0" &&
+                       UnitId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
                        decimal.TryParse(Quantity, out _);
             }
@@ -170,12 +181,15 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         item = new EditRecipeIngredientModel
                         {
-                            Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
                             RecipeId = Recipe.Id,
-                            Quantity = decimal.Parse(Quantity!)
+                            Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
+                            Quantity = decimal.Parse(Quantity!),
+                            UnitId = int.Parse(UnitId!),
+                            Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!)),
                         };
                         Recipe.Ingredients?.Add(item);
                         Quantity = string.Empty;
+                        UnitId = string.Empty;
                     }
                 }
             }

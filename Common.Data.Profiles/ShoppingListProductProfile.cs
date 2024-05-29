@@ -11,7 +11,8 @@ namespace Common.Data.Profiles
             CreateMap<ShoppingListProduct, ShoppingListProductModel>()
                .ReverseMap()
                .ForMember(data => data.ShoppingList, opt => opt.Ignore())
-               .ForMember(data => data.Product, opt => opt.Ignore());
+               .ForMember(data => data.Product, opt => opt.Ignore())
+               .ForMember(data => data.Unit, opt => opt.Ignore());
         }
     }
 }
