@@ -30,7 +30,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("edit/{id:int}")]
-        public async Task<EditRecipeModel> GetEdit(int id)
+        public async Task<RecipeEditModel> GetEdit(int id)
         {
             GetEditQuery query = new()
             {
@@ -62,7 +62,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> PostAsync(EditRecipeModel model)
+        public async Task<AddCommandResponse> PostAsync(RecipeEditModel model)
         {
             AddCommand command = new()
             {
@@ -72,7 +72,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(EditRecipeModel model)
+        public async Task<UpdateCommandResponse> Put(RecipeEditModel model)
         {
             UpdateCommand command = new()
             {

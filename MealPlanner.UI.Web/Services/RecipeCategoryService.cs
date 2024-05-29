@@ -13,9 +13,9 @@ namespace MealPlanner.UI.Web.Services
         private readonly HttpClient _httpClient = httpClient;
         private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
 
-        public async Task<EditRecipeCategoryModel?> GetEditAsync(int id)
+        public async Task<RecipeCategoryEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditRecipeCategoryModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<RecipeCategoryEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/edit/{id}");
         }
 
         public async Task<IList<RecipeCategoryModel>?> GetAllAsync()
@@ -35,7 +35,7 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<RecipeCategoryModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> AddAsync(EditRecipeCategoryModel model)
+        public async Task<string?> AddAsync(RecipeCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi], modelJson);
@@ -46,7 +46,7 @@ namespace MealPlanner.UI.Web.Services
             return result?.Message;
         }
 
-        public async Task<string?> UpdateAsync(EditRecipeCategoryModel model)
+        public async Task<string?> UpdateAsync(RecipeCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi], modelJson);

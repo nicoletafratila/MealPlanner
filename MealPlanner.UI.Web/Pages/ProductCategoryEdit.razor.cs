@@ -9,7 +9,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
-        public EditProductCategoryModel? ProductCategory { get; set; }
+        public ProductCategoryEditModel? ProductCategory { get; set; }
 
         [Inject]
         public IProductCategoryService? ProductCategoryService { get; set; }
@@ -29,7 +29,7 @@ namespace MealPlanner.UI.Web.Pages
             if (id == 0)
             {
                 var categories = await ProductCategoryService!.GetAllAsync();
-                ProductCategory = new EditProductCategoryModel();
+                ProductCategory = new ProductCategoryEditModel();
             }
             else
             {

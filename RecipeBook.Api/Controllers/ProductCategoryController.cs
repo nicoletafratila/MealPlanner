@@ -18,7 +18,7 @@ namespace RecipeBook.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<EditProductCategoryModel> GetEdit(int id)
+        public async Task<ProductCategoryEditModel> GetEdit(int id)
         {
             GetEditQuery query = new()
             {
@@ -44,7 +44,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(EditProductCategoryModel model)
+        public async Task<AddCommandResponse> Post(ProductCategoryEditModel model)
         {
             AddCommand command = new()
             {
@@ -54,7 +54,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(EditProductCategoryModel model)
+        public async Task<UpdateCommandResponse> Put(ProductCategoryEditModel model)
         {
             UpdateCommand command = new()
             {

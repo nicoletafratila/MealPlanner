@@ -5,6 +5,6 @@ namespace RecipeBook.Api.Features.Unit.Commands.Update
 {
     public class UpdateCommand : IRequest<UpdateCommandResponse>
     {
-        public EditUnitModel? Model { get; set; }
+        public UnitEditModel? Model { get; set; }
     }
 }

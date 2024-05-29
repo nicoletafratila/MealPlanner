@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RecipeBook.Shared.Models
 {
-    public class EditRecipeModel : BaseModel
+    public class RecipeEditModel : BaseModel
     {
         [Required]
         public int Id { get; set; }
@@ -24,6 +24,6 @@ namespace RecipeBook.Shared.Models
 
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one ingredient.")]
-        public IList<EditRecipeIngredientModel>? Ingredients { get; set; }
+        public IList<RecipeIngredientEditModel>? Ingredients { get; set; }
     }
 }

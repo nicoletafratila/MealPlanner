@@ -6,7 +6,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class RecipePreview
     {
         [Parameter]
-        public EditRecipeModel? Recipe { get; set; }
+        public RecipeEditModel? Recipe { get; set; }
         
         [Parameter]
         public string? RecipeCategory { get; set; }

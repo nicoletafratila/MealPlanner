@@ -9,7 +9,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
-        public EditRecipeCategoryModel? RecipeCategory { get; set; }
+        public RecipeCategoryEditModel? RecipeCategory { get; set; }
 
         [Inject]
         public IRecipeCategoryService? RecipeCategoryService { get; set; }
@@ -28,7 +28,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                RecipeCategory = new EditRecipeCategoryModel();
+                RecipeCategory = new RecipeCategoryEditModel();
             }
             else
             {

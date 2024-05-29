@@ -14,7 +14,7 @@ namespace MealPlanner.UI.Web.Pages
 
         [Parameter]
         public string? Id { get; set; }
-        public EditRecipeModel? Recipe { get; set; }
+        public RecipeEditModel? Recipe { get; set; }
 
         public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
 
@@ -95,7 +95,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                Recipe = new EditRecipeModel();
+                Recipe = new RecipeEditModel();
             }
             else
             {
@@ -170,16 +170,16 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     if (Recipe.Ingredients == null)
                     {
-                        Recipe.Ingredients = new List<EditRecipeIngredientModel>();
+                        Recipe.Ingredients = new List<RecipeIngredientEditModel>();
                     }
-                    EditRecipeIngredientModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
+                    RecipeIngredientEditModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
                     if (item != null)
                     {
                         item.Quantity += decimal.Parse(Quantity!);
                     }
                     else
                     {
-                        item = new EditRecipeIngredientModel
+                        item = new RecipeIngredientEditModel
                         {
                             RecipeId = Recipe.Id,
                             Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
@@ -197,7 +197,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void DeleteIngredientAsync(ProductModel item)
         {
-            EditRecipeIngredientModel? itemToDelete = Recipe?.Ingredients?.FirstOrDefault(i => i.Product?.Id == item.Id);
+            RecipeIngredientEditModel? itemToDelete = Recipe?.Ingredients?.FirstOrDefault(i => i.Product?.Id == item.Id);
             if (itemToDelete != null)
             {
                 var options = new ConfirmDialogOptions

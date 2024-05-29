@@ -5,6 +5,6 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
 {
     public class AddCommand : IRequest<AddCommandResponse>
     {
-        public EditRecipeModel? Model { get; set; }
+        public RecipeEditModel? Model { get; set; }
     }
 }

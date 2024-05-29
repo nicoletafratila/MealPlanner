@@ -3,7 +3,7 @@ using Common.Shared;
 
 namespace RecipeBook.Shared.Models
 {
-    public class EditUnitModel : BaseModel
+    public class RecipeCategoryEditModel : BaseModel
     {
         [Required]
         public int Id { get; set; }
@@ -11,5 +11,9 @@ namespace RecipeBook.Shared.Models
         [Required]
         [StringLength(100)]
         public string? Name { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Please select the display sequence for the category.")]
+        public int DisplaySequence { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
-        public EditUnitModel? Unit { get; set; }
+        public UnitEditModel? Unit { get; set; }
 
         [Inject]
         public IUnitService? UnitService { get; set; }
@@ -29,7 +29,7 @@ namespace MealPlanner.UI.Web.Pages
             if (id == 0)
             {
                 var categories = await UnitService!.GetAllAsync();
-                Unit = new EditUnitModel();
+                Unit = new UnitEditModel();
             }
             else
             {

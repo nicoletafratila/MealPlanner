@@ -8,7 +8,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeCategoriesOverview
     {
-        public EditRecipeCategoryModel? Category { get; set; }
+        public RecipeCategoryEditModel? Category { get; set; }
         public IList<RecipeCategoryModel>? Categories { get; set; }
 
         [Inject]

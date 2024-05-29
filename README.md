@@ -12,9 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-EditShopDisplaySequenceModel
-EditShoppingListProductModel
-
 in memory db
 user module
 navigation, breadcrumps

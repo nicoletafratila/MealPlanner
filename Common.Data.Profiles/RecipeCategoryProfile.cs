@@ -11,7 +11,7 @@ namespace Common.Data.Profiles
             CreateMap<RecipeCategory, RecipeCategoryModel>()
                .ReverseMap();
 
-            CreateMap<RecipeCategory, EditRecipeCategoryModel>()
+            CreateMap<RecipeCategory, RecipeCategoryEditModel>()
                 .ReverseMap();
         }
     }

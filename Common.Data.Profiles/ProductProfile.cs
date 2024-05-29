@@ -14,7 +14,7 @@ namespace Common.Data.Profiles
                .ForMember(data => data.ImageContent, opt => opt.Ignore())
                .ForMember(data => data.ProductCategory, opt => opt.Ignore());
 
-            CreateMap<Product, EditProductModel>()
+            CreateMap<Product, ProductEditModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
                 .ReverseMap()
                 .ForMember(data => data.ProductCategory, opt => opt.Ignore());

@@ -13,12 +13,12 @@ namespace Common.Data.Profiles
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
                 .ReverseMap();
 
-            CreateMap<Recipe, EditRecipeModel>()
+            CreateMap<Recipe, RecipeEditModel>()
                 .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
                 .ForMember(model => model.Ingredients, opt => opt.MapFrom<RecipeToEditRecipeModelResolver, IList<RecipeIngredient>?>(data => data.RecipeIngredients!))
                 .ReverseMap()
                 .ForMember(data => data.RecipeCategory, opt => opt.Ignore())
-                .ForMember(data => data.RecipeIngredients, opt => opt.MapFrom<EditRecipeModelToRecipeResolver, IList<EditRecipeIngredientModel>?>(model => model.Ingredients!));
+                .ForMember(data => data.RecipeIngredients, opt => opt.MapFrom<EditRecipeModelToRecipeResolver, IList<RecipeIngredientEditModel>?>(model => model.Ingredients!));
         }
     }
 }

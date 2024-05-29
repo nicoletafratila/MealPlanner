@@ -11,7 +11,7 @@ namespace Common.Data.Profiles
             CreateMap<Unit, UnitModel>()
                .ReverseMap();
 
-            CreateMap<Unit, EditUnitModel>()
+            CreateMap<Unit, UnitEditModel>()
                .ReverseMap();
         }
     }

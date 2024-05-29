@@ -3,7 +3,7 @@ using Common.Shared;
 
 namespace RecipeBook.Shared.Models
 {
-    public class EditRecipeIngredientModel : BaseModel
+    public class RecipeIngredientEditModel : BaseModel
     {
         [Required]
         public int RecipeId { get; set; }

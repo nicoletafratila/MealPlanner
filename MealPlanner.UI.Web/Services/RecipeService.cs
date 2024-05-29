@@ -19,9 +19,9 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<RecipeModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi]}/{id}");
         }
 
-        public async Task<EditRecipeModel?> GetEditAsync(int id)
+        public async Task<RecipeEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditRecipeModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<RecipeEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi]}/edit/{id}");
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProducts(int recipeId, int shopId)
@@ -42,7 +42,7 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<RecipeModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> AddAsync(EditRecipeModel model)
+        public async Task<string?> AddAsync(RecipeEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi], modelJson);
@@ -53,7 +53,7 @@ namespace MealPlanner.UI.Web.Services
             return result?.Message;
         }
 
-        public async Task<string?> UpdateAsync(EditRecipeModel model)
+        public async Task<string?> UpdateAsync(RecipeEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(_apiConfig?.Endpoints![ApiEndpointNames.RecipeApi], modelJson);

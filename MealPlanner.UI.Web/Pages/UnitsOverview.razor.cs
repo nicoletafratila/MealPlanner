@@ -7,7 +7,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class UnitsOverview
     {
-        public EditUnitModel? Unit { get; set; }
+        public UnitEditModel? Unit { get; set; }
         public IList<UnitModel>? Units { get; set; }
 
         [Inject]

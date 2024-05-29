@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Pages
 
         [Parameter]
         public string? Id { get; set; }
-        public EditProductModel? Product { get; set; }
+        public ProductEditModel? Product { get; set; }
 
         public IList<ProductCategoryModel>? Categories { get; set; }
 
@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                Product = new EditProductModel();
+                Product = new ProductEditModel();
             }
             else
             {
