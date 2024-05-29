@@ -8,7 +8,7 @@ namespace Common.Data.Profiles
     {
         public ShopDisplaySequenceProfile()
         {
-            CreateMap<ShopDisplaySequence, ShopDisplaySequenceModel>()
+            CreateMap<ShopDisplaySequence, ShopDisplaySequenceEditModel>()
                .ReverseMap()
                .ForMember(data => data.Shop, opt => opt.Ignore())
                .ForMember(data => data.ProductCategory, opt => opt.Ignore());

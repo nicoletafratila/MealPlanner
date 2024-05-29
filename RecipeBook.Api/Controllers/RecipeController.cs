@@ -40,7 +40,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("shoppingListProducts/{recipeId:int}/{shopId:int}")]
-        public async Task<IList<ShoppingListProductModel>?> GetShoppingListProducts(int recipeId, int shopId)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProducts(int recipeId, int shopId)
         {
             GetShoppingListProductsQuery query = new()
             {

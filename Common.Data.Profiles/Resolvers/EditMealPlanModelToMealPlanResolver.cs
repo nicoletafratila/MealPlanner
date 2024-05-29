@@ -5,9 +5,9 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class EditMealPlanModelToMealPlanResolver : IMemberValueResolver<EditMealPlanModel, MealPlan, IList<RecipeModel>?, IList<MealPlanRecipe>?>
+    public class EditMealPlanModelToMealPlanResolver : IMemberValueResolver<MealPlanEditModel, MealPlan, IList<RecipeModel>?, IList<MealPlanRecipe>?>
     {
-        public IList<MealPlanRecipe>? Resolve(EditMealPlanModel source, MealPlan destination, IList<RecipeModel>? sourceValue, IList<MealPlanRecipe>? destValue, ResolutionContext context)
+        public IList<MealPlanRecipe>? Resolve(MealPlanEditModel source, MealPlan destination, IList<RecipeModel>? sourceValue, IList<MealPlanRecipe>? destValue, ResolutionContext context)
         {
             var result = new List<MealPlanRecipe>();
             if (source.Recipes != null && source.Recipes.Any())

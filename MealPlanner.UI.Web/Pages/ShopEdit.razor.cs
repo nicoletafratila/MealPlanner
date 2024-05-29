@@ -9,7 +9,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
-        public EditShopModel? Shop { get; set; }
+        public ShopEditModel? Shop { get; set; }
 
         [Inject]
         public IShopService? ShopService { get; set; }
@@ -32,7 +32,7 @@ namespace MealPlanner.UI.Web.Pages
             if (id == 0)
             {
                 var categories = await ProductCategoriesService!.GetAllAsync();
-                Shop = new EditShopModel(categories);
+                Shop = new ShopEditModel(categories);
             }
             else
             {
@@ -87,12 +87,12 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private bool CanMoveUp(ShopDisplaySequenceModel item)
+        private bool CanMoveUp(ShopDisplaySequenceEditModel item)
         {
             return Shop?.DisplaySequence?.IndexOf(item) - 1 >= 0;
         }
 
-        private void MoveUp(ShopDisplaySequenceModel item)
+        private void MoveUp(ShopDisplaySequenceEditModel item)
         {
             int index = Shop!.DisplaySequence!.IndexOf(item);
             Shop.DisplaySequence.RemoveAt(index);
@@ -103,12 +103,12 @@ namespace MealPlanner.UI.Web.Pages
             UpdateDisplaySeqenceValues();
         }
 
-        private bool CanMoveDown(ShopDisplaySequenceModel item)
+        private bool CanMoveDown(ShopDisplaySequenceEditModel item)
         {
             return Shop?.DisplaySequence?.IndexOf(item) + 2 <= Shop?.DisplaySequence?.Count;
         }
 
-        private void MoveDown(ShopDisplaySequenceModel item)
+        private void MoveDown(ShopDisplaySequenceEditModel item)
         {
             int index = Shop!.DisplaySequence!.IndexOf(item);
             Shop.DisplaySequence.RemoveAt(index);

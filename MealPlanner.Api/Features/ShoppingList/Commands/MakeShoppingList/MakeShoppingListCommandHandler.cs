@@ -5,7 +5,7 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
 {
-    public class MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<MakeShoppingListCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, EditShoppingListModel?>
+    public class MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<MakeShoppingListCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, ShoppingListEditModel?>
     {
         private readonly IShoppingListRepository _shoppingListRepository = shoppingListRepository;
         private readonly IMealPlanRepository _meanPlanRepository = mealPlanRepository;
@@ -13,7 +13,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<MakeShoppingListCommandHandler> _logger = logger;
 
-        public async Task<EditShoppingListModel?> Handle(MakeShoppingListCommand request, CancellationToken cancellationToken)
+        public async Task<ShoppingListEditModel?> Handle(MakeShoppingListCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
                 var shop = await _shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId);
                 var data = await _shoppingListRepository.AddAsync(mealPlan.MakeShoppingList(shop!));
                 var list = await _shoppingListRepository.GetByIdIncludeProductsAsync(data.Id);
-                return _mapper.Map<EditShoppingListModel>(list);
+                return _mapper.Map<ShoppingListEditModel>(list);
             }
             catch (Exception ex)
             {

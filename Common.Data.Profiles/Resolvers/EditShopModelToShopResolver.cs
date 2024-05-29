@@ -4,9 +4,9 @@ using MealPlanner.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class EditShopModelToShopResolver : IMemberValueResolver<EditShopModel, Shop, IList<ShopDisplaySequenceModel>?, IList<ShopDisplaySequence>?>
+    public class EditShopModelToShopResolver : IMemberValueResolver<ShopEditModel, Shop, IList<ShopDisplaySequenceEditModel>?, IList<ShopDisplaySequence>?>
     {
-        public IList<ShopDisplaySequence>? Resolve(EditShopModel source, Shop destination, IList<ShopDisplaySequenceModel>? sourceValue, IList<ShopDisplaySequence>? destValue, ResolutionContext context)
+        public IList<ShopDisplaySequence>? Resolve(ShopEditModel source, Shop destination, IList<ShopDisplaySequenceEditModel>? sourceValue, IList<ShopDisplaySequence>? destValue, ResolutionContext context)
         {
             return source.DisplaySequence?.Select(context.Mapper.Map<ShopDisplaySequence>).ToList();
         }

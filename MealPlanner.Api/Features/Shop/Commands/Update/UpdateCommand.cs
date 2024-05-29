@@ -5,6 +5,6 @@ namespace MealPlanner.Api.Features.Shop.Commands.Update
 {
     public class UpdateCommand : IRequest<UpdateCommandResponse>
     {
-        public EditShopModel? Model { get; set; }
+        public ShopEditModel? Model { get; set; }
     }
 }

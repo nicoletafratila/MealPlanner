@@ -13,10 +13,10 @@ namespace Common.Data.Profiles
                .ReverseMap()
                .ForMember(data => data.DisplaySequence, opt => opt.Ignore());
 
-            CreateMap<Shop, EditShopModel>()
+            CreateMap<Shop, ShopEditModel>()
                .ForMember(model => model.DisplaySequence, opt => opt.MapFrom<ShopToEditShopModelResolver, IList<ShopDisplaySequence>?>(data => data.DisplaySequence))
                .ReverseMap()
-               .ForMember(data => data.DisplaySequence, opt => opt.MapFrom<EditShopModelToShopResolver, IList<ShopDisplaySequenceModel>?>(model => model.DisplaySequence));
+               .ForMember(data => data.DisplaySequence, opt => opt.MapFrom<EditShopModelToShopResolver, IList<ShopDisplaySequenceEditModel>?>(model => model.DisplaySequence));
         }
     }
 }

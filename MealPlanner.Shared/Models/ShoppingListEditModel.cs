@@ -4,7 +4,7 @@ using Common.Validators;
 
 namespace MealPlanner.Shared.Models
 {
-    public class EditShoppingListModel : BaseModel
+    public class ShoppingListEditModel : BaseModel
     {
         [Required]
         public int Id { get; set; }
@@ -18,11 +18,6 @@ namespace MealPlanner.Shared.Models
 
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one product.")]
-        public IList<ShoppingListProductModel>? Products { get; set; }
-
-        public EditShoppingListModel()
-        {
-            Products = new List<ShoppingListProductModel>();
-        }
+        public IList<ShoppingListProductEditModel>? Products { get; set; }
     }
 }

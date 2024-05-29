@@ -5,7 +5,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
-    public class EditShopModel : BaseModel
+    public class ShopEditModel : BaseModel
     {
         [Required]
         public int Id { get; set; }
@@ -16,18 +16,18 @@ namespace MealPlanner.Shared.Models
 
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The shop requires at least product category order.")]
-        public IList<ShopDisplaySequenceModel>? DisplaySequence { get; set; }
+        public IList<ShopDisplaySequenceEditModel>? DisplaySequence { get; set; }
 
-        public EditShopModel()
+        public ShopEditModel()
         { }
 
-        public EditShopModel(IList<ProductCategoryModel>? categories)
+        public ShopEditModel(IList<ProductCategoryModel>? categories)
         {
             var index = 1;
-            DisplaySequence = new List<ShopDisplaySequenceModel>();
+            DisplaySequence = new List<ShopDisplaySequenceEditModel>();
             foreach (var item in categories!)
             {
-                DisplaySequence.Add(new ShopDisplaySequenceModel
+                DisplaySequence.Add(new ShopDisplaySequenceEditModel
                 {
                     ShopId = Id,
                     ProductCategory = item,
@@ -36,7 +36,7 @@ namespace MealPlanner.Shared.Models
             }
         }
 
-        public ShopDisplaySequenceModel? GetDisplaySequence(int? categoryId)
+        public ShopDisplaySequenceEditModel? GetDisplaySequence(int? categoryId)
         {
             return DisplaySequence?.FirstOrDefault(i => i.ProductCategory!.Id == categoryId);
         }

@@ -11,11 +11,11 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ShoppingListEdit
     {
-        private EditShopModel? _shop;
+        private ShopEditModel? _shop;
 
         [Parameter]
         public string? Id { get; set; }
-        public EditShoppingListModel? ShoppingList { get; set; }
+        public ShoppingListEditModel? ShoppingList { get; set; }
 
         private string? _productCategoryId;
         public string? ProductCategoryId
@@ -120,7 +120,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                ShoppingList = new EditShoppingListModel();
+                ShoppingList = new ShoppingListEditModel();
             }
             else
             {
@@ -178,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void DeleteProductAsync(ProductModel item)
         {
-            ShoppingListProductModel? itemToDelete = ShoppingList?.Products?.FirstOrDefault(i => i.Product?.Id == item.Id);
+            ShoppingListProductEditModel? itemToDelete = ShoppingList?.Products?.FirstOrDefault(i => i.Product?.Id == item.Id);
             if (itemToDelete != null)
             {
                 var options = new ConfirmDialogOptions
@@ -283,14 +283,14 @@ namespace MealPlanner.UI.Web.Pages
 
         private void AddProduct(ProductModel product, decimal quantity, int unitId)
         {
-            ShoppingListProductModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
+            ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
             if (item != null)
             {
                 item.Quantity += quantity;
             }
             else
             {
-                item = new ShoppingListProductModel
+                item = new ShoppingListProductEditModel
                 {
                     ShoppingListId = ShoppingList.Id,
                     Collected = false,
@@ -312,7 +312,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo($"/shoppinglistsoverview");
         }
 
-        private async void CheckboxChangedAsync(ShoppingListProductModel model)
+        private async void CheckboxChangedAsync(ShoppingListProductEditModel model)
         {
             var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
             if (itemToChange != null)

@@ -11,10 +11,5 @@ namespace Common.Data.Entities
         public int ShopId { get; set; }
 
         public IList<ShoppingListProduct>? Products { get; set; }
-
-        public ShoppingList()
-        {
-            Products = new List<ShoppingListProduct>();
-        }
     }
 }

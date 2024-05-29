@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.Shared.Models
 {
-    public class EditMealPlanModel : BaseModel
+    public class MealPlanEditModel : BaseModel
     {
         [Required]
         public int Id { get; set; }

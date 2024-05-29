@@ -13,14 +13,14 @@ namespace MealPlanner.UI.Web.Services
         private readonly HttpClient _httpClient = httpClient;
         private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
-        public async Task<EditMealPlanModel?> GetEditAsync(int id)
+        public async Task<MealPlanEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<EditMealPlanModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<MealPlanEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/edit/{id}");
         }
 
-        public async Task<IList<ShoppingListProductModel>?> GetShoppingListProducts(int mealPlanId, int shopId)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProducts(int mealPlanId, int shopId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
+            return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
         }
 
         public async Task<IList<MealPlanModel>?> GetAllAsync()
@@ -40,7 +40,7 @@ namespace MealPlanner.UI.Web.Services
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<MealPlanModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> AddAsync(EditMealPlanModel model)
+        public async Task<string?> AddAsync(MealPlanEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi], modelJson);
@@ -51,7 +51,7 @@ namespace MealPlanner.UI.Web.Services
             return result?.Message;
         }
 
-        public async Task<string?> UpdateAsync(EditMealPlanModel model)
+        public async Task<string?> UpdateAsync(MealPlanEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi], modelJson);

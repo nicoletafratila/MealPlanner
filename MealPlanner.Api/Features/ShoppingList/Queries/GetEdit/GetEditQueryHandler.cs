@@ -5,7 +5,7 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Queries.GetEdit
 {
-    public class GetEditQueryHandler : IRequestHandler<GetEditQuery, EditShoppingListModel>
+    public class GetEditQueryHandler : IRequestHandler<GetEditQuery, ShoppingListEditModel>
     {
         private readonly IShoppingListRepository _repository;
         private readonly IMapper _mapper;
@@ -16,10 +16,10 @@ namespace MealPlanner.Api.Features.ShoppingList.Queries.GetEdit
             _mapper = mapper;
         }
 
-        public async Task<EditShoppingListModel> Handle(GetEditQuery request, CancellationToken cancellationToken)
+        public async Task<ShoppingListEditModel> Handle(GetEditQuery request, CancellationToken cancellationToken)
         {
             var result = await _repository.GetByIdIncludeProductsAsync(request.Id);
-            return _mapper.Map<EditShoppingListModel>(result);
+            return _mapper.Map<ShoppingListEditModel>(result);
         }
     }
 }

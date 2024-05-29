@@ -5,15 +5,15 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.MealPlan.Queries.GetEdit
 {
-    public class GetEditQueryHandler(IMealPlanRepository repository, IMapper mapper) : IRequestHandler<GetEditMealPlanQuery, EditMealPlanModel>
+    public class GetEditQueryHandler(IMealPlanRepository repository, IMapper mapper) : IRequestHandler<GetEditMealPlanQuery, MealPlanEditModel>
     {
         private readonly IMealPlanRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<EditMealPlanModel> Handle(GetEditMealPlanQuery request, CancellationToken cancellationToken)
+        public async Task<MealPlanEditModel> Handle(GetEditMealPlanQuery request, CancellationToken cancellationToken)
         {
             var result = await _repository.GetByIdAsync(request.Id);
-            return _mapper.Map<EditMealPlanModel>(result);
+            return _mapper.Map<MealPlanEditModel>(result);
         }
     }
 }

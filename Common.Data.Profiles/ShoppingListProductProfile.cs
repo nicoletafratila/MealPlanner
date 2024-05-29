@@ -8,7 +8,7 @@ namespace Common.Data.Profiles
     {
         public ShoppingListProductProfile()
         {
-            CreateMap<ShoppingListProduct, ShoppingListProductModel>()
+            CreateMap<ShoppingListProduct, ShoppingListProductEditModel>()
                .ReverseMap()
                .ForMember(data => data.ShoppingList, opt => opt.Ignore())
                .ForMember(data => data.Product, opt => opt.Ignore())

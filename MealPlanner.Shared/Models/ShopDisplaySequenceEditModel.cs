@@ -4,7 +4,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
-    public class ShopDisplaySequenceModel : BaseModel
+    public class ShopDisplaySequenceEditModel : BaseModel
     {
         [Required]
         public int ShopId { get; set; }

@@ -5,6 +5,6 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
 {
     public class AddCommand : IRequest<AddCommandResponse>
     {
-        public EditShoppingListModel? Model { get; set; }
+        public ShoppingListEditModel? Model { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace MealPlanner.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<EditShoppingListModel> GetEdit(int id)
+        public async Task<ShoppingListEditModel> GetEdit(int id)
         {
             GetEditQuery query = new()
             {
@@ -38,7 +38,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost("makeShoppingList")]
-        public async Task<EditShoppingListModel?> MakeShoppingList(MakeShoppingListModel model)
+        public async Task<ShoppingListEditModel?> MakeShoppingList(ShoppingListCreateModel model)
         {
             MakeShoppingListCommand command = new()
             {
@@ -49,7 +49,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(EditShoppingListModel model)
+        public async Task<AddCommandResponse> Post(ShoppingListEditModel model)
         {
             AddCommand command = new()
             {
@@ -59,7 +59,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(EditShoppingListModel model)
+        public async Task<UpdateCommandResponse> Put(ShoppingListEditModel model)
         {
             UpdateCommand command = new()
             {

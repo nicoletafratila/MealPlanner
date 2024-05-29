@@ -5,13 +5,13 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
 {
-    public class GetShoppingListProductsQueryHandler(IMealPlanRepository mealPlanRepository, IShopRepository shopRepository, IMapper mapper, ILogger<GetShoppingListProductsQueryHandler> logger) : IRequestHandler<GetShoppingListProductsQuery, IList<ShoppingListProductModel>?>
+    public class GetShoppingListProductsQueryHandler(IMealPlanRepository mealPlanRepository, IShopRepository shopRepository, IMapper mapper, ILogger<GetShoppingListProductsQueryHandler> logger) : IRequestHandler<GetShoppingListProductsQuery, IList<ShoppingListProductEditModel>?>
     {
         private readonly IMealPlanRepository _meanPlanRepository = mealPlanRepository;
         private readonly IShopRepository _shopRepository = shopRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<GetShoppingListProductsQueryHandler> _logger = logger;
-        public async Task<IList<ShoppingListProductModel>?> Handle(GetShoppingListProductsQuery request, CancellationToken cancellationToken)
+        public async Task<IList<ShoppingListProductEditModel>?> Handle(GetShoppingListProductsQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
                     return null;
 
                 var products = mealPlan.MakeShoppingList(shop!).Products;
-                return products!.Select(_mapper.Map<ShoppingListProductModel>)
+                return products!.Select(_mapper.Map<ShoppingListProductEditModel>)
                          .OrderBy(item => item.Collected)
                          .ThenBy(item => item.DisplaySequence)
                          .ThenBy(item => item.Product?.Name).ToList();

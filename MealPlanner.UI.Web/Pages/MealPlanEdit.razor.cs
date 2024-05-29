@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         [Parameter]
         public string? Id { get; set; }
-        public EditMealPlanModel? MealPlan { get; set; }
+        public MealPlanEditModel? MealPlan { get; set; }
 
         private string? _recipeCategoryId;
         public string? RecipeCategoryId
@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Web.Pages
 
             if (id == 0)
             {
-                MealPlan = new EditMealPlanModel();
+                MealPlan = new MealPlanEditModel();
             }
             else
             {
@@ -202,7 +202,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (!int.TryParse(result.Data.ToString(), out int shopId))
                     return;
 
-                var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new MakeShoppingListModel { MealPlanId = MealPlan.Id, ShopId = shopId });
+                var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new ShoppingListCreateModel { MealPlanId = MealPlan.Id, ShopId = shopId });
                 if (addedEntity != null && addedEntity?.Id > 0)
                 {
                     NavigationManager?.NavigateTo($"shoppinglistedit/{addedEntity?.Id}");

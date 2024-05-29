@@ -5,11 +5,11 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IShoppingListService
     {
-        Task<EditShoppingListModel?> GetEditAsync(int id);
+        Task<ShoppingListEditModel?> GetEditAsync(int id);
         Task<PagedList<ShoppingListModel>?> SearchAsync(QueryParameters? queryParameters = null);
-        Task<EditShoppingListModel?> MakeShoppingListAsync(MakeShoppingListModel model);
-        Task<string?> AddAsync(EditShoppingListModel model);
-        Task<string?> UpdateAsync(EditShoppingListModel model);
+        Task<ShoppingListEditModel?> MakeShoppingListAsync(ShoppingListCreateModel model);
+        Task<string?> AddAsync(ShoppingListEditModel model);
+        Task<string?> UpdateAsync(ShoppingListEditModel model);
         Task<string?> DeleteAsync(int id);
     }
 }

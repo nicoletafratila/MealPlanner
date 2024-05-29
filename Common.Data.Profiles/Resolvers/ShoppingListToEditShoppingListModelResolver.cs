@@ -4,11 +4,11 @@ using MealPlanner.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class ShoppingListToEditShoppingListModelResolver : IMemberValueResolver<ShoppingList, EditShoppingListModel, IList<ShoppingListProduct>?, IList<ShoppingListProductModel>?>
+    public class ShoppingListToEditShoppingListModelResolver : IMemberValueResolver<ShoppingList, ShoppingListEditModel, IList<ShoppingListProduct>?, IList<ShoppingListProductEditModel>?>
     {
-        public IList<ShoppingListProductModel>? Resolve(ShoppingList source, EditShoppingListModel destination, IList<ShoppingListProduct>? sourceValue, IList<ShoppingListProductModel>? destValue, ResolutionContext context)
+        public IList<ShoppingListProductEditModel>? Resolve(ShoppingList source, ShoppingListEditModel destination, IList<ShoppingListProduct>? sourceValue, IList<ShoppingListProductEditModel>? destValue, ResolutionContext context)
         {
-            return source.Products?.Select(context.Mapper.Map<ShoppingListProductModel>)
+            return source.Products?.Select(context.Mapper.Map<ShoppingListProductEditModel>)
                          .OrderBy(item => item.Collected)
                          .ThenBy(item => item.DisplaySequence)
                          .ThenBy(item => item.Product?.Name).ToList();

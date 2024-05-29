@@ -2,7 +2,7 @@
 
 namespace MealPlanner.Shared.Models
 {
-    public class MakeShoppingListModel : BaseModel
+    public class ShoppingListCreateModel : BaseModel
     {
         public int MealPlanId { get; set; }
         public int ShopId { get; set; }

@@ -10,12 +10,14 @@ namespace Common.Data.Profiles
         public ShoppingListProfile()
         {
             CreateMap<ShoppingList, ShoppingListModel>()
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(data => data.Products, opt => opt.Ignore())
+                .ForMember(data => data.Shop, opt => opt.Ignore());
 
-            CreateMap<ShoppingList, EditShoppingListModel>()
+            CreateMap<ShoppingList, ShoppingListEditModel>()
                 .ForMember(model => model.Products, opt => opt.MapFrom<ShoppingListToEditShoppingListModelResolver, IList<ShoppingListProduct>?>(data => data.Products!))
                 .ReverseMap()
-                .ForMember(data => data.Products, opt => opt.MapFrom<EditShoppingListModelToShoppingListResolver, IList<ShoppingListProductModel>?>(model => model.Products!));
+                .ForMember(data => data.Products, opt => opt.MapFrom<EditShoppingListModelToShoppingListResolver, IList<ShoppingListProductEditModel>?>(model => model.Products!));
         }
     }
 }
