@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
-using Common.Shared;
+using Common.Shared.Models;
 
 namespace Common.Data.Profiles
 {

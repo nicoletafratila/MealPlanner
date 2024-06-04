@@ -1,4 +1,4 @@
-﻿namespace Common.Shared
+﻿namespace Common.Shared.Models
 {
     public class LogModel
     {

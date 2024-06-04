@@ -1,5 +1,5 @@
 ﻿using Common.Logging;
-using Common.Shared;
+using Common.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Pages

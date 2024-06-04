@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Common.Shared;
+using Common.Shared.Models;
 using Common.Validators;
 using RecipeBook.Shared.Models;
 

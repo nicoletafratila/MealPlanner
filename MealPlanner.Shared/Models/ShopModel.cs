@@ -1,4 +1,4 @@
-﻿using Common.Shared;
+﻿using Common.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Common.Shared;
+using Common.Shared.Models;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models

@@ -1,4 +1,4 @@
-﻿using Common.Shared;
+﻿using Common.Shared.Models;
 using MealPlanner.Api.Repositories;
 using MediatR;
 

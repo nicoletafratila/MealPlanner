@@ -1,6 +1,6 @@
-﻿using Common.Shared;
+﻿using System.ComponentModel.DataAnnotations;
+using Common.Shared.Models;
 using Common.Validators;
-using System.ComponentModel.DataAnnotations;
 
 namespace RecipeBook.Shared.Models
 {
