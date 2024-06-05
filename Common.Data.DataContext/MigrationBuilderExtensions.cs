@@ -53,5 +53,21 @@ namespace Common.Data.DataContext
                 new SqlParameter(nameof(indexName), indexName),
             }).Any((int x) => x > 0);
         }
+
+        public static bool ForeignKeyExists<TDbContext>(this MigrationBuilder migrationBuilder, string keyName, string tableName, string? schemaName = null) where TDbContext : DbContext
+        {
+            TDbContext instance = ServiceLocator.Current.GetInstance<TDbContext>();
+            if (!instance.Database.CanConnect())
+            {
+                return false;
+            }
+
+            return instance.Database.SqlQueryRaw<int>("SELECT COUNT(*) AS Value FROM sys.foreign_keys WHERE object_id = OBJECT_ID(@keyName) AND parent_object_id = OBJECT_ID(@schemaName + '.' + @tableName)", new DbParameter[3]
+            {
+                new SqlParameter(nameof(tableName), tableName),
+                new SqlParameter(nameof(schemaName), schemaName ?? "dbo"),
+                new SqlParameter(nameof(keyName), keyName),
+            }).Any((int x) => x > 0);
+        }
     }
 }

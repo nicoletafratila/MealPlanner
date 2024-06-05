@@ -12,14 +12,6 @@ namespace MealPlanner.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.DropForeignKey(
-            //    name: "FK_Products_Units_UnitId",
-            //    table: "Products");
-
-            //migrationBuilder.DropColumn(
-            //    name: "UnitId",
-            //    table: "Products");
-
             if (!migrationBuilder.ColumnExists<MealPlannerDbContext>("UnitId", "RecipeIngredients"))
             {
                 migrationBuilder.AddColumn<int>(
@@ -40,21 +32,27 @@ namespace MealPlanner.Api.Migrations
                 defaultValue: 0);
             }
 
-            migrationBuilder.AddForeignKey(
+            if (!migrationBuilder.ForeignKeyExists<MealPlannerDbContext>("FK_RecipeIngredients_Units_UnitId", "RecipeIngredients"))
+            {
+                migrationBuilder.AddForeignKey(
                 name: "FK_RecipeIngredients_Units_UnitId",
                 table: "RecipeIngredients",
                 column: "UnitId",
                 principalTable: "Units",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+            }
 
-            migrationBuilder.AddForeignKey(
+            if (!migrationBuilder.ForeignKeyExists<MealPlannerDbContext>("FK_ShoppingListProducts_Units_UnitId", "ShoppingListProducts"))
+            {
+                migrationBuilder.AddForeignKey(
                 name: "FK_ShoppingListProducts_Units_UnitId",
                 table: "ShoppingListProducts",
                 column: "UnitId",
                 principalTable: "Units",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+            }
         }
 
         /// <inheritdoc />
@@ -75,20 +73,6 @@ namespace MealPlanner.Api.Migrations
             migrationBuilder.DropColumn(
                 name: "UnitId",
                 table: "ShoppingListProducts");
-
-            //migrationBuilder.AddColumn<int>(
-            //    name: "UnitId",
-            //    table: "Products",
-            //    type: "int",
-            //    nullable: true);
-
-            //migrationBuilder.AddForeignKey(
-            //    name: "FK_Products_Units_UnitId",
-            //    table: "Products",
-            //    column: "UnitId",
-            //    principalTable: "Units",
-            //    principalColumn: "Id",
-            //    onDelete: ReferentialAction.Cascade);
         }
     }
 }
