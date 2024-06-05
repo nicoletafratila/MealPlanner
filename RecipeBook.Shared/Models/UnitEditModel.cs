@@ -14,6 +14,7 @@ namespace RecipeBook.Shared.Models
         public string? Name { get; set; }
 
         [Required]
+        [Range(0, 1)]
         public UnitType UnitType { get; set; }
     }
 }

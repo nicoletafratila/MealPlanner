@@ -1,5 +1,6 @@
 ﻿@page "/unitedit"
 @page "/unitedit/{Id}"
+@using Common.Constants
 
 @if (Unit != null)
 {
@@ -22,6 +23,20 @@
                         <label for="name" class="col-sm-3">Unit name: </label>
                         <InputText id="name" class="form-control" @bind-Value="@Unit.Name" placeholder="Enter unit name"></InputText>
                         <ValidationMessage For="@(() => Unit.Name)" />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="unitType" class="col-sm-3">Unit type: </label>
+                        <div class="container vertical">
+                            <InputRadioGroup Name="unitType" @bind-Value="Unit.UnitType">
+                                @foreach (var value in Enum.GetValues(typeof(UnitType)))
+                                {
+                                    <InputRadio Value="value" style="margin: 10px" />
+                                    @((UnitType)value)
+                                }
+                            </InputRadioGroup>
+                        </div>
+                        <ValidationMessage For="@(() => Unit.UnitType)" />
                     </div>
 
                     <div class="col mt-3">
