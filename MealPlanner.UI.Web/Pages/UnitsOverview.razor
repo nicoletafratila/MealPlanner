@@ -19,11 +19,13 @@
                 <TableTemplate Data="@Units" ShowIndex="true">
                     <TableHeader>
                         <th>Name</th>
+                        <th>Unit type</th>
                         <th style="width: 50px"></th>
                         <th style="width: 30px"></th>
                     </TableHeader>
                     <RowTemplate Context="unit">
                         <td>@unit.Name</td>
+                        <td>@unit.UnitType.ToString()</td>
                         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(unit)">Edit</button></td>
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(unit)"></button></td>
                     </RowTemplate>

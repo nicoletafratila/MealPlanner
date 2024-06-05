@@ -13,7 +13,7 @@ namespace RecipeBook.Api.Features.Unit.Queries.GetAll
         public async Task<IList<UnitModel>> Handle(GetAllQuery request, CancellationToken cancellationToken)
         {
             var results = await _repository.GetAllAsync();
-            return _mapper.Map<IList<UnitModel>>(results).OrderBy(r => r.Name).ToList();
+            return _mapper.Map<IList<UnitModel>>(results).OrderBy(r => r.UnitType).OrderBy(r => r.Name).ToList();
         }
     }
 }

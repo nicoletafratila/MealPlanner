@@ -1,4 +1,5 @@
-﻿using Common.Data.DataContext;
+﻿using Common.Constants;
+using Common.Data.DataContext;
 using Common.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -79,19 +80,13 @@ namespace MealPlanner.Api
             {
                 return;
             }
-            context.Units.Add(new Unit { Name = "Baton" });
-            context.Units.Add(new Unit { Name = "Bucata" });
-            context.Units.Add(new Unit { Name = "Caserola" });
-            context.Units.Add(new Unit { Name = "Conserva" });
-            context.Units.Add(new Unit { Name = "Cutie" });
-            context.Units.Add(new Unit { Name = "Fiole" });
-            context.Units.Add(new Unit { Name = "Kilogram" });
-            context.Units.Add(new Unit { Name = "Legatura" });
-            context.Units.Add(new Unit { Name = "Lingurita" });
-            context.Units.Add(new Unit { Name = "Litru" });
-            context.Units.Add(new Unit { Name = "Pachet" });
-            context.Units.Add(new Unit { Name = "Plic" });
-            context.Units.Add(new Unit { Name = "Punga" });
+            context.Units.Add(new Unit { Name = "kg", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "g", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "cup", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "tbsp", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "tsp", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "l", UnitType = UnitType.Liquid });
+            context.Units.Add(new Unit { Name = "ml", UnitType = UnitType.Liquid });
             await context.SaveChangesAsync();
         }
 

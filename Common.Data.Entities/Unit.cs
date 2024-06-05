@@ -1,7 +1,10 @@
-﻿namespace Common.Data.Entities
+﻿using Common.Constants;
+
+namespace Common.Data.Entities
 {
     public class Unit : Entity<int>
     {
         public string? Name { get; set; }
+        public UnitType UnitType { get; set; }
     }
 }

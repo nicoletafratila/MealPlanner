@@ -18,4 +18,8 @@
     <None Remove="TableConfigurations\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
+  </ItemGroup>
+
 </Project>

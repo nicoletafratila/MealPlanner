@@ -1,4 +1,5 @@
-﻿using Common.Shared.Models;
+﻿using Common.Constants;
+using Common.Shared.Models;
 
 namespace RecipeBook.Shared.Models
 {
@@ -6,5 +7,6 @@ namespace RecipeBook.Shared.Models
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public UnitType UnitType { get; set; }
     }
 }

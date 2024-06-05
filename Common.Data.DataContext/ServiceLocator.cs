@@ -16,7 +16,7 @@ namespace Common.Data.DataContext
         {
             get
             {
-                return new ServiceLocator(_serviceProvider);
+                return new ServiceLocator(_serviceProvider!);
             }
         }
 
@@ -27,12 +27,12 @@ namespace Common.Data.DataContext
 
         public object GetInstance(Type serviceType)
         {
-            return _currentServiceProvider.GetService(serviceType);
+            return _currentServiceProvider!.GetService(serviceType)!;
         }
 
         public TService GetInstance<TService>()
         {
-            return _currentServiceProvider.GetService<TService>();
+            return _currentServiceProvider!.GetService<TService>()!;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Common.Constants;
 using Common.Shared.Models;
 
 namespace RecipeBook.Shared.Models
@@ -11,5 +12,8 @@ namespace RecipeBook.Shared.Models
         [Required]
         [StringLength(100)]
         public string? Name { get; set; }
+
+        [Required]
+        public UnitType UnitType { get; set; }
     }
 }
