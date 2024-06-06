@@ -80,13 +80,21 @@ namespace MealPlanner.Api
             {
                 return;
             }
+            context.Units.Add(new Unit { Name = "buc", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "cas", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "gr", UnitType = UnitType.Mass });
             context.Units.Add(new Unit { Name = "kg", UnitType = UnitType.Mass });
-            context.Units.Add(new Unit { Name = "g", UnitType = UnitType.Mass });
-            context.Units.Add(new Unit { Name = "cup", UnitType = UnitType.Mass });
-            context.Units.Add(new Unit { Name = "tbsp", UnitType = UnitType.Mass });
-            context.Units.Add(new Unit { Name = "tsp", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "leg", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = "pac", UnitType = UnitType.Mass });
+
             context.Units.Add(new Unit { Name = "l", UnitType = UnitType.Liquid });
             context.Units.Add(new Unit { Name = "ml", UnitType = UnitType.Liquid });
+
+            context.Units.Add(new Unit { Name = "con", UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = "cup", UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = "tbsp", UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = "tsp", UnitType = UnitType.All });
+
             await context.SaveChangesAsync();
         }
 
