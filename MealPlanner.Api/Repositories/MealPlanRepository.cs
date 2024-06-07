@@ -27,6 +27,11 @@ namespace MealPlanner.Api.Repositories
                       .ThenInclude(x => x!.RecipeIngredients)!
                           .ThenInclude(x => x.Product)
                              .ThenInclude(x => x!.ProductCategory)
+            .Include(x => x.MealPlanRecipes)!
+                  .ThenInclude(x => x.Recipe)
+                      .ThenInclude(x => x!.RecipeIngredients)!
+                          .ThenInclude(x => x.Product)
+                             .ThenInclude(x => x!.BaseUnit)
               .Include(x => x.MealPlanRecipes)!
                   .ThenInclude(x => x.Recipe)
                       .ThenInclude(x => x!.RecipeIngredients)!

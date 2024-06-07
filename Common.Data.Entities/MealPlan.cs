@@ -25,7 +25,7 @@
                         products.Add(newProduct);
                     }
                     else
-                        existingProduct.Quantity += i.Quantity;
+                        existingProduct.Quantity += i.Quantity; //convert here
                 }
             }
             list.Products = products;

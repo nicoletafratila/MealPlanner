@@ -12,9 +12,9 @@ PM> Script-migration
 
 
 MealPlanner
+unit conversions
 drop column unitid from product table
 in memory db
 user module
 navigation, breadcrumps
-unit conversions
 design interfata

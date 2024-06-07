@@ -295,7 +295,7 @@ namespace MealPlanner.UI.Web.Pages
                     ShoppingListId = ShoppingList.Id,
                     Collected = false,
                     Product = product,
-                    Quantity = quantity,
+                    Quantity = quantity, //convert here
                     UnitId = unitId,
                     Unit = Units!.FirstOrDefault(i => i.Id == unitId),
                     DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value

@@ -35,6 +35,7 @@
                         </th>
                         <th>Name</th>
                         <th></th>
+                        <th>Unit</th>
                         <th style="width: 50px"></th>
                         <th style="width: 30px"></th>
                     </TableHeader>
@@ -44,6 +45,7 @@
                         <td>
                             <img src="@Product.ImageUrl" class="img-fluid" width="100" height="80" />
                         </td>
+                        <td>@Product.BaseUnit!.Name</td>
                         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Product)">Edit</button></td>
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Product)"></button></td>
                     </RowTemplate>
