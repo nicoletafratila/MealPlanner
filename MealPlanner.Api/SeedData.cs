@@ -1,4 +1,4 @@
-﻿using Common.Constants;
+﻿using Common.Constants.Units;
 using Common.Data.DataContext;
 using Common.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -81,21 +81,21 @@ namespace MealPlanner.Api
                 return;
             }
 
-            context.Units.Add(new Unit { Name = "gr", UnitType = UnitType.Mass });
-            context.Units.Add(new Unit { Name = "kg", UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = MassUnit.kg.ToString(), UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = MassUnit.gr.ToString(), UnitType = UnitType.Mass });
 
-            context.Units.Add(new Unit { Name = "l", UnitType = UnitType.Liquid });
-            context.Units.Add(new Unit { Name = "ml", UnitType = UnitType.Liquid });
+            context.Units.Add(new Unit { Name = LiquidUnit.l.ToString(), UnitType = UnitType.Liquid });
+            context.Units.Add(new Unit { Name = LiquidUnit.ml.ToString(), UnitType = UnitType.Liquid });
 
-            context.Units.Add(new Unit { Name = "con", UnitType = UnitType.All });
-            context.Units.Add(new Unit { Name = "cup", UnitType = UnitType.All });
-            context.Units.Add(new Unit { Name = "tbsp", UnitType = UnitType.All });
-            context.Units.Add(new Unit { Name = "tsp", UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = AllUnit.cup.ToString(), UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = AllUnit.tbsp.ToString(), UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = AllUnit.tsp.ToString(), UnitType = UnitType.All });
 
-            context.Units.Add(new Unit { Name = "buc", UnitType = UnitType.Unit });
-            context.Units.Add(new Unit { Name = "cas", UnitType = UnitType.Unit });
-            context.Units.Add(new Unit { Name = "leg", UnitType = UnitType.Unit });
-            context.Units.Add(new Unit { Name = "pac", UnitType = UnitType.Unit });
+            context.Units.Add(new Unit { Name = PieceUnit.buc.ToString(), UnitType = UnitType.Piece });
+            context.Units.Add(new Unit { Name = PieceUnit.cas.ToString(), UnitType = UnitType.Piece });
+            context.Units.Add(new Unit { Name = PieceUnit.con.ToString(), UnitType = UnitType.Piece });
+            context.Units.Add(new Unit { Name = PieceUnit.leg.ToString(), UnitType = UnitType.Piece });
+            context.Units.Add(new Unit { Name = PieceUnit.pac.ToString(), UnitType = UnitType.Piece });
 
             await context.SaveChangesAsync();
         }

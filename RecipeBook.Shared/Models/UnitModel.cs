@@ -1,4 +1,4 @@
-﻿using Common.Constants;
+﻿using Common.Constants.Units;
 using Common.Models;
 
 namespace RecipeBook.Shared.Models

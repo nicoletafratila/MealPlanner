@@ -1,4 +1,5 @@
 ﻿using Common.Constants;
+using Common.Constants.Units;
 
 namespace Common.Services
 {
@@ -13,7 +14,7 @@ namespace Common.Services
                 case UnitType.Liquid:
                     return new LiquidConverter().Convert(fromValue, fromUnit.ToEnum<LiquidUnit>(), toUnit.ToEnum<LiquidUnit>());
                 case UnitType.All:
-                case UnitType.Unit:
+                case UnitType.Piece:
                 default:
                     return fromValue;
             }

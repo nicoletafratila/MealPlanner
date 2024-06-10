@@ -1,4 +1,4 @@
-﻿using Common.Constants;
+﻿using Common.Constants.Units;
 
 namespace Common.Data.Entities
 {
