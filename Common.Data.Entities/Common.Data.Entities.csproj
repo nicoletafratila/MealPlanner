@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
+    <ProjectReference Include="..\Common.Services\Common.Services.csproj" />
   </ItemGroup>
 
 </Project>

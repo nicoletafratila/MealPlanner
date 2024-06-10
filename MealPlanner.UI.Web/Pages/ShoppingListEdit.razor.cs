@@ -2,6 +2,7 @@
 using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Pagination;
+using Common.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +13,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ShoppingListEdit
     {
         private ShopEditModel? _shop;
+        private UnitConverter? _unitConverter;
 
         [Parameter]
         public string? Id { get; set; }
@@ -114,6 +116,8 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             _ = int.TryParse(Id, out int id);
+            _unitConverter = new UnitConverter();
+
             ProductCategories = await ProductCategoryService!.GetAllAsync();
             Shops = await ShopService!.GetAllAsync();
             Units = await UnitService!.GetAllAsync();
@@ -121,6 +125,7 @@ namespace MealPlanner.UI.Web.Pages
             if (id == 0)
             {
                 ShoppingList = new ShoppingListEditModel();
+                ShoppingList.Products = new List<ShoppingListProductEditModel>();
             }
             else
             {
@@ -209,7 +214,7 @@ namespace MealPlanner.UI.Web.Pages
                 return !string.IsNullOrWhiteSpace(ProductId) &&
                        ProductId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
-                       decimal.TryParse(Quantity, out _);
+                       double.TryParse(Quantity, out _);
             }
         }
 
@@ -217,7 +222,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
-                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), UnitId);
+                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, double.Parse(Quantity!), UnitId);
             }
         }
 
@@ -281,12 +286,14 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private void AddProduct(ProductModel product, decimal quantity, int unitId)
+        private void AddProduct(ProductModel product, double quantity, int unitId)
         {
             ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
+            UnitModel? unit = Units!.FirstOrDefault(i => i.Id == unitId);
+
             if (item != null)
             {
-                item.Quantity += quantity;
+                item.Quantity += _unitConverter!.Convert(quantity, unit!.Name!, product!.BaseUnit!.Name!, product.BaseUnit.UnitType);
             }
             else
             {
@@ -295,9 +302,9 @@ namespace MealPlanner.UI.Web.Pages
                     ShoppingListId = ShoppingList.Id,
                     Collected = false,
                     Product = product,
-                    Quantity = quantity, //convert here
-                    UnitId = unitId,
-                    Unit = Units!.FirstOrDefault(i => i.Id == unitId),
+                    Quantity = _unitConverter!.Convert(quantity, unit!.Name!, product!.BaseUnit!.Name!, product.BaseUnit.UnitType), 
+                    UnitId = product!.BaseUnit!.Id,
+                    Unit = product!.BaseUnit!,
                     DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
                 };
                 ShoppingList.Products?.Add(item);
@@ -344,15 +351,19 @@ namespace MealPlanner.UI.Web.Pages
         {
             ShoppingList!.ShopId = int.Parse(value);
             _shop = await ShopService!.GetEditAsync(ShoppingList!.ShopId);
-            foreach (var item in ShoppingList.Products!)
+
+            if (ShoppingList.Products != null && ShoppingList.Products.Any())
             {
-                var displaySequence = _shop?.GetDisplaySequence(item.Product?.ProductCategory?.Id)!;
-                item.DisplaySequence = displaySequence != null ? displaySequence.Value : 1;
+                foreach (var item in ShoppingList.Products)
+                {
+                    var displaySequence = _shop?.GetDisplaySequence(item.Product?.ProductCategory?.Id)!;
+                    item.DisplaySequence = displaySequence != null ? displaySequence.Value : 1;
+                }
+                ShoppingList.Products = ShoppingList.Products.OrderBy(item => item.Collected)
+                                                             .ThenBy(item => item.DisplaySequence)
+                                                             .ThenBy(item => item.Product?.Name).ToList();
+                StateHasChanged();
             }
-            ShoppingList.Products = ShoppingList.Products.OrderBy(item => item.Collected)
-                                                         .ThenBy(item => item.DisplaySequence)
-                                                         .ThenBy(item => item.Product?.Name).ToList();
-            StateHasChanged();
         }
     }
 }

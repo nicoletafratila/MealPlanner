@@ -158,7 +158,7 @@ namespace MealPlanner.UI.Web.Pages
                        ProductId != "0" &&
                        UnitId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
-                       decimal.TryParse(Quantity, out _);
+                       double.TryParse(Quantity, out _);
             }
         }
 
@@ -175,7 +175,14 @@ namespace MealPlanner.UI.Web.Pages
                     RecipeIngredientEditModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
                     if (item != null)
                     {
-                        item.Quantity += decimal.Parse(Quantity!);
+                        if (item.Unit!.Id == int.Parse(UnitId!))
+                        {
+                            item.Quantity += double.Parse(Quantity!);
+                        }
+                        else
+                        {
+                            MessageComponent?.ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
+                        }
                     }
                     else
                     {
@@ -183,7 +190,7 @@ namespace MealPlanner.UI.Web.Pages
                         {
                             RecipeId = Recipe.Id,
                             Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
-                            Quantity = decimal.Parse(Quantity!),
+                            Quantity = double.Parse(Quantity!),
                             UnitId = int.Parse(UnitId!),
                             Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!)),
                         };

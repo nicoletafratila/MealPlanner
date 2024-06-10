@@ -1,4 +1,4 @@
-﻿using Common.Shared.Models;
+﻿using Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Shared.Models;

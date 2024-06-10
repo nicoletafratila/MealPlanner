@@ -50,7 +50,6 @@ namespace Common.Api
 
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
-
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
 

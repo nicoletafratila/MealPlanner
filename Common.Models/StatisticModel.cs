@@ -1,7 +1,7 @@
 ﻿using BlazorBootstrap;
 using Common.Constants;
 
-namespace Common.Shared.Models
+namespace Common.Models
 {
     public class StatisticModel : BaseModel
     {

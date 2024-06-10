@@ -60,7 +60,7 @@
                             {
                                 @foreach (var item in Products?.Items!)
                                 {
-                                    <option value="@item.Id">@item.Name</option>
+                                    <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
                                 }
                             }
                         </InputSelect>

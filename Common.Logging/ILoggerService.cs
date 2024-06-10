@@ -1,4 +1,4 @@
-﻿using Common.Shared.Models;
+﻿using Common.Models;
 
 namespace Common.Logging
 {

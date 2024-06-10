@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Common.Shared.Models;
+using Common.Models;
 
 namespace RecipeBook.Shared.Models
 {
@@ -10,7 +10,7 @@ namespace RecipeBook.Shared.Models
 
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
-        public decimal Quantity { get; set; }
+        public double Quantity { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]

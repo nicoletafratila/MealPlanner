@@ -226,7 +226,7 @@ namespace MealPlanner.Api.Migrations
                 {
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Quantity = table.Column<double>(type: "double(18,2)", precision: 18, scale: 2, nullable: false),
                     UnitId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
@@ -263,7 +263,7 @@ namespace MealPlanner.Api.Migrations
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Collected = table.Column<bool>(type: "bit", nullable: false),
                     DisplaySequence = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Quantity = table.Column<double>(type: "double(18,2)", precision: 18, scale: 2, nullable: false),
                     UnitId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>

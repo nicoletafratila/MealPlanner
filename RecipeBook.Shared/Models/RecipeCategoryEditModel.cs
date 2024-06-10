@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Common.Shared.Models;
+using Common.Models;
 
 namespace RecipeBook.Shared.Models
 {

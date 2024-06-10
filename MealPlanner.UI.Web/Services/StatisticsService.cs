@@ -1,6 +1,6 @@
 ﻿using Common.Api;
 using Common.Constants;
-using Common.Shared.Models;
+using Common.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.Repository;
-using Common.Shared.Models;
+using Common.Models;
 
 namespace Common.Logging
 {

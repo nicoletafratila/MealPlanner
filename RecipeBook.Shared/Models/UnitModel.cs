@@ -1,5 +1,5 @@
 ﻿using Common.Constants;
-using Common.Shared.Models;
+using Common.Models;
 
 namespace RecipeBook.Shared.Models
 {

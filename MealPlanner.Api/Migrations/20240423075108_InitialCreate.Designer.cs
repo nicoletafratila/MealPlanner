@@ -151,9 +151,9 @@ namespace MealPlanner.Api.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<double>("Quantity")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("double(18,2)");
 
                     b.HasKey("RecipeId", "ProductId");
 
@@ -231,9 +231,9 @@ namespace MealPlanner.Api.Migrations
                     b.Property<int>("DisplaySequence")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Quantity")
+                    b.Property<double>("Quantity")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("double(18,2)");
 
                     b.HasKey("ShoppingListId", "ProductId");
 

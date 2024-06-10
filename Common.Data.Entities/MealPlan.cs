@@ -1,4 +1,6 @@
-﻿namespace Common.Data.Entities
+﻿using Common.Services;
+
+namespace Common.Data.Entities
 {
     public class MealPlan : Entity<int>
     {
@@ -12,7 +14,9 @@
                 Name = $"Shopping list details for {Name} in shop {shop.Name}",
                 ShopId = shop.Id
             };
+
             var products = new List<ShoppingListProduct>();
+            var unitConverter = new UnitConverter();
             foreach (var item in MealPlanRecipes!)
             {
                 foreach (var i in item.Recipe?.RecipeIngredients!)
@@ -25,7 +29,7 @@
                         products.Add(newProduct);
                     }
                     else
-                        existingProduct.Quantity += i.Quantity; //convert here
+                        existingProduct.Quantity += unitConverter!.Convert(i.Quantity, existingProduct.Unit!.Name!, existingProduct!.Product!.BaseUnit!.Name!, existingProduct!.Product.BaseUnit.UnitType);  
                 }
             }
             list.Products = products;

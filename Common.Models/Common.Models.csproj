@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="1.10.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
-    <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
-    <ProjectReference Include="..\Common.Validators\Common.Validators.csproj" />
   </ItemGroup>
 
 </Project>

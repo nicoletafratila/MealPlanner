@@ -4,6 +4,7 @@
     {
         Mass = 0,
         Liquid = 1,
-        All = 2
+        All = 2,
+        Unit = 3
     }
 }
