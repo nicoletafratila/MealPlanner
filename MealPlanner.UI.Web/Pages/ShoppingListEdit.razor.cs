@@ -222,7 +222,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
             {
-                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, double.Parse(Quantity!), UnitId);
+                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), UnitId);
             }
         }
 
@@ -286,7 +286,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private void AddProduct(ProductModel product, double quantity, int unitId)
+        private void AddProduct(ProductModel product, decimal quantity, int unitId)
         {
             ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
             UnitModel? unit = Units!.FirstOrDefault(i => i.Id == unitId);

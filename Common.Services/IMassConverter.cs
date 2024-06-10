@@ -4,6 +4,6 @@ namespace Common.Services
 {
     public interface IMassConverter
     {
-        public double Convert(double fromValue, MassUnit fromUnit, MassUnit toUnit);
+        public decimal Convert(decimal fromValue, MassUnit fromUnit, MassUnit toUnit);
     }
 }

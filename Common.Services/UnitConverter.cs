@@ -5,7 +5,7 @@ namespace Common.Services
 {
     public class UnitConverter : IUnitConverter
     {
-        public double Convert(double fromValue, string fromUnit, string toUnit, UnitType unitType)
+        public decimal Convert(decimal fromValue, string fromUnit, string toUnit, UnitType unitType)
         {
             switch (unitType)
             {

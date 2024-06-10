@@ -4,6 +4,6 @@ namespace Common.Services
 {
     public interface ILiquidConverter
     {
-        public double Convert(double fromValue, LiquidUnit fromUnit, LiquidUnit toUnit);
+        public decimal Convert(decimal fromValue, LiquidUnit fromUnit, LiquidUnit toUnit);
     }
 }

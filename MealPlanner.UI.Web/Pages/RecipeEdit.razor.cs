@@ -177,7 +177,7 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         if (item.Unit!.Id == int.Parse(UnitId!))
                         {
-                            item.Quantity += double.Parse(Quantity!);
+                            item.Quantity += decimal.Parse(Quantity!);
                         }
                         else
                         {
@@ -190,7 +190,7 @@ namespace MealPlanner.UI.Web.Pages
                         {
                             RecipeId = Recipe.Id,
                             Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
-                            Quantity = double.Parse(Quantity!),
+                            Quantity = decimal.Parse(Quantity!),
                             UnitId = int.Parse(UnitId!),
                             Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!)),
                         };

@@ -11,7 +11,7 @@ namespace MealPlanner.Shared.Models
 
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
-        public double Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the product.")]

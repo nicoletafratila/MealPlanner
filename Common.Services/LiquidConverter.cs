@@ -4,15 +4,15 @@ namespace Common.Services
 {
     public class LiquidConverter : ILiquidConverter
     {
-        public Dictionary<LiquidUnit, double> Conversions = new Dictionary<LiquidUnit, double>()
+        public Dictionary<LiquidUnit, decimal> Conversions = new Dictionary<LiquidUnit, decimal>()
         {
             { LiquidUnit.l, 1 },
             { LiquidUnit.ml, 1000 }
         };
 
-        public double Convert(double fromValue, LiquidUnit fromUnit, LiquidUnit toUnit)
+        public decimal Convert(decimal fromValue, LiquidUnit fromUnit, LiquidUnit toUnit)
         {
-            double workingValue;
+            decimal workingValue;
 
             if (fromUnit == LiquidUnit.l)
                 workingValue = fromValue;
