@@ -63,6 +63,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
                 else
                 {
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
                     await RefreshAsync();
                 }
             }

@@ -18,6 +18,10 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the product.")]
+        public int BaseUnitId { get; set; }
+
+        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the product.")]
         public int ProductCategoryId { get; set; }
     }

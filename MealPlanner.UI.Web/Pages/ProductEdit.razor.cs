@@ -15,12 +15,16 @@ namespace MealPlanner.UI.Web.Pages
         public ProductEditModel? Product { get; set; }
 
         public IList<ProductCategoryModel>? Categories { get; set; }
+        public IList<UnitModel>? Units { get; set; }
 
         [Inject]
         public IProductService? ProductService { get; set; }
 
         [Inject]
         public IProductCategoryService? CategoryService { get; set; }
+
+        [Inject]
+        public IUnitService? UnitService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -34,6 +38,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             _ = int.TryParse(Id, out var id);
             Categories = await CategoryService!.GetAllAsync();
+            Units = await UnitService!.GetAllAsync();
 
             if (id == 0)
             {

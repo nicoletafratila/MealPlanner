@@ -11,12 +11,14 @@ namespace MealPlanner.UI.Web.Shared
         public void ShowError(string message)
         {
             IsErrorActive = true;
+            IsInfoActive = false;
             Message = message;
             StateHasChanged();
         }
 
         public void ShowInfo(string message)
         {
+            IsErrorActive = false;
             IsInfoActive = true;
             Message = message;
             StateHasChanged();

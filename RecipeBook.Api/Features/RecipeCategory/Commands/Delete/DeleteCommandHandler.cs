@@ -19,8 +19,8 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
                     return new DeleteCommandResponse { Message = $"Could not find with id {request.Id}." };
                 }
 
-                var Recipes = await _recipeRepository.GetAllAsync();
-                if (Recipes!.Any(item => item.RecipeCategoryId == request.Id))
+                var recipes = await _recipeRepository.GetAllAsync();
+                if (recipes!.Any(item => item.RecipeCategoryId == request.Id))
                 {
                     return new DeleteCommandResponse { Message = $"Recipe category {itemToDelete.Name} can not be deleted, it is used in recipes." };
                 }
