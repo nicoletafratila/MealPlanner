@@ -2,10 +2,10 @@
 using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Pagination;
-using Common.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using RecipeBook.Shared.Converters;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -13,7 +13,6 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ShoppingListEdit
     {
         private ShopEditModel? _shop;
-        private UnitConverter? _unitConverter;
 
         [Parameter]
         public string? Id { get; set; }
@@ -116,7 +115,6 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             _ = int.TryParse(Id, out int id);
-            _unitConverter = new UnitConverter();
 
             ProductCategories = await ProductCategoryService!.GetAllAsync();
             Shops = await ShopService!.GetAllAsync();
@@ -291,24 +289,31 @@ namespace MealPlanner.UI.Web.Pages
             ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
             UnitModel? unit = Units!.FirstOrDefault(i => i.Id == unitId);
 
-            if (item != null)
+            try
             {
-                item.Quantity += _unitConverter!.Convert(quantity, unit!.Name!, product!.BaseUnit!.Name!, product.BaseUnit.UnitType);
-            }
-            else
-            {
-                item = new ShoppingListProductEditModel
+                if (item != null)
                 {
-                    ShoppingListId = ShoppingList.Id,
-                    Collected = false,
-                    Product = product,
-                    Quantity = _unitConverter!.Convert(quantity, unit!.Name!, product!.BaseUnit!.Name!, product.BaseUnit.UnitType), 
-                    UnitId = product!.BaseUnit!.Id,
-                    Unit = product!.BaseUnit!,
-                    DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
-                };
-                ShoppingList.Products?.Add(item);
-                Quantity = string.Empty;
+                    item.Quantity += UnitConverter.Convert(quantity, unit!, product!.BaseUnit!);
+                }
+                else
+                {
+                    item = new ShoppingListProductEditModel
+                    {
+                        ShoppingListId = ShoppingList.Id,
+                        Collected = false,
+                        Product = product,
+                        Quantity = UnitConverter.Convert(quantity, unit!, product!.BaseUnit!),
+                        UnitId = product!.BaseUnit!.Id,
+                        Unit = product!.BaseUnit!,
+                        DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
+                    };
+                    ShoppingList.Products?.Add(item);
+                    Quantity = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageComponent?.ShowError(ex.Message);
             }
 
             StateHasChanged();

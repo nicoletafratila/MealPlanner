@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Common.Services;
+using Common.Data.Entities.Converters;
 
 namespace Common.Data.Entities
 {
@@ -23,7 +23,6 @@ namespace Common.Data.Entities
             };
 
             var products = new List<ShoppingListProduct>();
-            var unitConverter = new UnitConverter();
             foreach (var item in RecipeIngredients!)
             {
                 var existingProduct = products.FirstOrDefault(x => x.ProductId == item.ProductId);
@@ -34,7 +33,7 @@ namespace Common.Data.Entities
                     products.Add(newProduct);
                 }
                 else
-                    existingProduct.Quantity += unitConverter!.Convert(item.Quantity, existingProduct.Unit!.Name!, existingProduct!.Product!.BaseUnit!.Name!, existingProduct!.Product.BaseUnit.UnitType);
+                    existingProduct.Quantity += UnitConverter.Convert(item.Quantity, existingProduct.Unit!, existingProduct!.Product!.BaseUnit!);
             }
             list.Products = products;
             return list;

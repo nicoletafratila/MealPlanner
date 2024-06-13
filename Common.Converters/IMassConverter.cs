@@ -1,6 +1,6 @@
 ﻿using Common.Constants.Units;
 
-namespace Common.Services
+namespace Common.Data.Profiles.Converters
 {
     public interface IMassConverter
     {
