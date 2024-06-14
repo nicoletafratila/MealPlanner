@@ -16,7 +16,7 @@ namespace Common.Data.Entities
 
         [ForeignKey("UnitId")]
         public Unit? Unit { get; set; }
-        public int UnitId { get; set; }
+        public int? UnitId { get; set; }
 
         public bool Collected { get; set; }
         public int DisplaySequence { get; set; }

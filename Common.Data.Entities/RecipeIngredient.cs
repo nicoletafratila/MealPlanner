@@ -16,7 +16,7 @@ namespace Common.Data.Entities
 
         [ForeignKey("UnitId")]
         public Unit? Unit { get; private set; }
-        public int UnitId { get; set; }
+        public int? UnitId { get; set; }
 
         public ShoppingListProduct ToShoppingListProduct(int displaySequence)
         {

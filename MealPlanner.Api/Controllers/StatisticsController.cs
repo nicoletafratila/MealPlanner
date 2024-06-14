@@ -34,10 +34,14 @@ namespace MealPlanner.Api.Controllers
             {
                 Categories = new List<ProductCategoryModel>()
             };
-            foreach (var item in categories?.Split(",")!)
+
+            if (categories != null)
             {
-                var category = item.Split('|');
-                query.Categories?.Add(new ProductCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
+                foreach (var item in categories!.Split(",")!)
+                {
+                    var category = item.Split('|');
+                    query.Categories?.Add(new ProductCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
+                }
             }
             return await _mediator.Send(query);
         }

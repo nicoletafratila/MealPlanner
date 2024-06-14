@@ -11,7 +11,10 @@ namespace MealPlanner.Api
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
             context?.Database.EnsureCreated();
-            context?.Database.Migrate();
+            if (context!.Database.IsRelational())
+            {
+                context?.Database.Migrate();
+            }
             await SeedProductCategories(context!);
             await SeedRecipesCategories(context!);
             await SeedUnits(context!);
@@ -96,7 +99,6 @@ namespace MealPlanner.Api
             context.Units.Add(new Unit { Name = PieceUnit.con.ToString(), UnitType = UnitType.Piece });
             context.Units.Add(new Unit { Name = PieceUnit.leg.ToString(), UnitType = UnitType.Piece });
             context.Units.Add(new Unit { Name = PieceUnit.pac.ToString(), UnitType = UnitType.Piece });
-
             await context.SaveChangesAsync();
         }
 

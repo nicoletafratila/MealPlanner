@@ -25,6 +25,7 @@ namespace Common.Api
         {
             services.AddDbContext<MealPlannerDbContext>(options =>
             {
+                //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
             });

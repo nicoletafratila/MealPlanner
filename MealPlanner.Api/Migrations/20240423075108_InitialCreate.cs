@@ -76,7 +76,7 @@ namespace MealPlanner.Api.Migrations
                 });
             }
 
-            if (!migrationBuilder.TableExists<MealPlannerDbContext>("MealPlans"))
+            if (!migrationBuilder.TableExists<MealPlannerDbContext>("Units"))
             {
                 migrationBuilder.CreateTable(
                 name: "Units",
@@ -227,7 +227,6 @@ namespace MealPlanner.Api.Migrations
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<double>(type: "double(18,2)", precision: 18, scale: 2, nullable: false),
-                    UnitId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -244,12 +243,6 @@ namespace MealPlanner.Api.Migrations
                         principalTable: "Recipes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredients_Units_UnitId",
-                        column: x => x.UnitId,
-                        principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
             }
 
@@ -264,7 +257,6 @@ namespace MealPlanner.Api.Migrations
                     Collected = table.Column<bool>(type: "bit", nullable: false),
                     DisplaySequence = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<double>(type: "double(18,2)", precision: 18, scale: 2, nullable: false),
-                    UnitId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -279,12 +271,6 @@ namespace MealPlanner.Api.Migrations
                         name: "FK_ShoppingListProducts_ShoppingLists_ShoppingListId",
                         column: x => x.ShoppingListId,
                         principalTable: "ShoppingLists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ShoppingListProducts_Units_UnitId",
-                        column: x => x.UnitId,
-                        principalTable: "Units",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -304,14 +290,6 @@ namespace MealPlanner.Api.Migrations
                     name: "IX_Products_ProductCategoryId",
                     table: "Products",
                     column: "ProductCategoryId");
-            }
-
-            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Products_UnitId", "Products"))
-            {
-                migrationBuilder.CreateIndex(
-                    name: "IX_Products_UnitId",
-                    table: "Products",
-                    column: "UnitId");
             }
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_RecipeIngredients_ProductId", "RecipeIngredients"))
