@@ -31,6 +31,52 @@ namespace MealPlanner.Api.Migrations
                 defaultValue: 0);
             }
 
+            if (migrationBuilder.ColumnExists<MealPlannerDbContext>("Quantity", "RecipeIngredients"))
+            {
+                migrationBuilder.AlterColumn<decimal>(
+                name: "Quantity",
+                table: "RecipeIngredients",
+                type: "decimal(18,2)",
+                precision: 18,
+                scale: 2,
+                nullable: false,
+                oldClrType: typeof(double),
+                oldType: "double(18,2)",
+                oldPrecision: 18,
+                oldScale: 2);
+            }
+
+            if (migrationBuilder.ColumnExists<MealPlannerDbContext>("Quantity", "ShoppingListProducts"))
+            {
+                migrationBuilder.AlterColumn<decimal>(
+                name: "Quantity",
+                table: "ShoppingListProducts",
+                type: "decimal(18,2)",
+                precision: 18,
+                scale: 2,
+                nullable: false,
+                oldClrType: typeof(double),
+                oldType: "double(18,2)",
+                oldPrecision: 18,
+                oldScale: 2);
+            }
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_RecipeIngredients_UnitId", "RecipeIngredients"))
+            {
+                migrationBuilder.CreateIndex(
+                name: "IX_RecipeIngredients_UnitId",
+                table: "RecipeIngredients",
+                column: "UnitId");
+            }
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShoppingListProducts_UnitId", "ShoppingListProducts"))
+            {
+                migrationBuilder.CreateIndex(
+                name: "IX_ShoppingListProducts_UnitId",
+                table: "ShoppingListProducts",
+                column: "UnitId");
+            }
+
             if (!migrationBuilder.ForeignKeyExists<MealPlannerDbContext>("FK_RecipeIngredients_Units_UnitId", "RecipeIngredients"))
             {
                 migrationBuilder.AddForeignKey(
@@ -57,6 +103,30 @@ namespace MealPlanner.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<double>(
+                name: "Quantity",
+                table: "ShoppingListProducts",
+                type: "double(18,2)",
+                precision: 18,
+                scale: 2,
+                nullable: false,
+                oldClrType: typeof(decimal),
+                oldType: "decimal(18,2)",
+                oldPrecision: 18,
+                oldScale: 2);
+
+            migrationBuilder.AlterColumn<double>(
+                name: "Quantity",
+                table: "RecipeIngredients",
+                type: "double(18,2)",
+                precision: 18,
+                scale: 2,
+                nullable: false,
+                oldClrType: typeof(decimal),
+                oldType: "decimal(18,2)",
+                oldPrecision: 18,
+                oldScale: 2);
+
             migrationBuilder.DropForeignKey(
                 name: "FK_RecipeIngredients_Units_UnitId",
                 table: "RecipeIngredients");
@@ -64,6 +134,14 @@ namespace MealPlanner.Api.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_ShoppingListProducts_Units_UnitId",
                 table: "ShoppingListProducts");
+
+            migrationBuilder.DropIndex(
+               name: "IX_RecipeIngredients_UnitId",
+               table: "RecipeIngredients");
+
+            migrationBuilder.DropIndex(
+               name: "IX_ShoppingListProducts_UnitId",
+               table: "ShoppingListProducts");
 
             migrationBuilder.DropColumn(
                 name: "UnitId",

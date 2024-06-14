@@ -9,7 +9,7 @@ namespace Common.Data.Entities
         public byte[]? ImageContent { get; set; }
 
         [ForeignKey("RecipeCategoryId")]
-        public RecipeCategory? RecipeCategory { get; private set; }
+        public RecipeCategory? RecipeCategory { get; set; }
         public int RecipeCategoryId { get; set; }
 
         public IList<RecipeIngredient>? RecipeIngredients { get; set; }

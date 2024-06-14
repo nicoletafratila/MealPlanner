@@ -19,17 +19,11 @@
 
   <ItemGroup>
     <Compile Include="Migrations\20240423075108_InitialCreate.cs" />
-    <Compile Include="Migrations\20240423075108_InitialCreate.Designer.cs" />
     <Compile Include="Migrations\20240423075223_Logs.cs" />
-    <Compile Include="Migrations\20240423075223_Logs.Designer.cs" />
     <Compile Include="Migrations\20240423075246_IX_Logs_TimeStamp.cs" />
-    <Compile Include="Migrations\20240423075246_IX_Logs_TimeStamp.Designer.cs" />
     <Compile Include="Migrations\20240605105153_Products_UnitId.cs" />
-    <Compile Include="Migrations\20240605105153_Products_UnitId.Designer.cs" />
     <Compile Include="Migrations\20240605105552_Units_UnitType.cs" />
-    <Compile Include="Migrations\20240605105552_Units_UnitType.Designer.cs" />
     <Compile Include="Migrations\20240606115902_Products_BaseUnitId.cs" />
-    <Compile Include="Migrations\20240606115902_Products_BaseUnitId.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 

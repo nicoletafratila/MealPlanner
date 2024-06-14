@@ -7,11 +7,11 @@ namespace Common.Data.Entities
         public int Value { get; set; }
 
         [ForeignKey("ShopId")]
-        public Shop? Shop { get; private set; }
+        public Shop? Shop { get; set; }
         public int ShopId { get; set; }
 
         [ForeignKey("ProductCategoryId")]
-        public ProductCategory? ProductCategory { get; private set; }
+        public ProductCategory? ProductCategory { get; set; }
         public int ProductCategoryId { get; set; }
     }
 }

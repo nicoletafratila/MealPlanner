@@ -12,7 +12,8 @@ PM> Script-migration
 
 
 MealPlanner
-in memory db
 user module
 navigation, breadcrumps
 design interfata
+
+public int? UnitId { get; set; } de ce int? la RecipeIngredient si ShoppingListProduct

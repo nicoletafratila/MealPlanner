@@ -8,11 +8,11 @@ namespace Common.Data.Entities
         public byte[]? ImageContent { get; set; }
 
         [ForeignKey("BaseUnitId")]
-        public Unit? BaseUnit { get; private set; }
+        public Unit? BaseUnit { get; set; }
         public int BaseUnitId { get; set; }
 
         [ForeignKey("ProductCategoryId")]
-        public ProductCategory? ProductCategory { get; private set; }
+        public ProductCategory? ProductCategory { get; set; }
         public int ProductCategoryId { get; set; }
     }
 }

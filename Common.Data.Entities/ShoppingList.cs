@@ -7,7 +7,7 @@ namespace Common.Data.Entities
         public string? Name { get; set; }
 
         [ForeignKey("ShopId")]
-        public Shop? Shop { get; private set; }
+        public Shop? Shop { get; set; }
         public int ShopId { get; set; }
 
         public IList<ShoppingListProduct>? Products { get; set; }

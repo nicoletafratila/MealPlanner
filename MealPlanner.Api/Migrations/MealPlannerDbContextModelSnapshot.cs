@@ -17,7 +17,7 @@ namespace MealPlanner.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -180,9 +180,9 @@ namespace MealPlanner.Api.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Quantity")
+                    b.Property<decimal>("Quantity")
                         .HasPrecision(18, 2)
-                        .HasColumnType("double(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
@@ -265,9 +265,9 @@ namespace MealPlanner.Api.Migrations
                     b.Property<int>("DisplaySequence")
                         .HasColumnType("int");
 
-                    b.Property<double>("Quantity")
+                    b.Property<decimal>("Quantity")
                         .HasPrecision(18, 2)
-                        .HasColumnType("double(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UnitId")
                         .HasColumnType("int");

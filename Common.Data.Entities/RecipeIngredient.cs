@@ -15,7 +15,7 @@ namespace Common.Data.Entities
         public decimal Quantity { get; set; }
 
         [ForeignKey("UnitId")]
-        public Unit? Unit { get; private set; }
+        public Unit? Unit { get; set; }
         public int? UnitId { get; set; }
 
         public ShoppingListProduct ToShoppingListProduct(int displaySequence)

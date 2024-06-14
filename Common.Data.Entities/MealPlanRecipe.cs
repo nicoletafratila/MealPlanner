@@ -5,11 +5,11 @@ namespace Common.Data.Entities
     public class MealPlanRecipe
     {
         [ForeignKey("MealPlanId")]
-        public MealPlan? MealPlan { get; private set; }
+        public MealPlan? MealPlan { get; set; }
         public int MealPlanId { get; set; }
 
         [ForeignKey("RecipeId")]
-        public Recipe? Recipe { get; private set; }
+        public Recipe? Recipe { get; set; }
         public int RecipeId { get; set; }
     }
 }
