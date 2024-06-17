@@ -10,6 +10,8 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class MealPlanEdit
     {
+        private List<BreadcrumbItem>? NavItems { get; set; }
+
         [Parameter]
         public string? Id { get; set; }
         public MealPlanEditModel? MealPlan { get; set; }
@@ -63,6 +65,13 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            NavItems = new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem{ Text = "Home", Href ="/" },
+                new BreadcrumbItem{ Text = "Meal plans", Href ="/mealplansoverview" },
+                new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
+            };
+
             _ = int.TryParse(Id, out var id);
             Categories = await RecipeCategoryService!.GetAllAsync();
 
