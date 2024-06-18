@@ -10,6 +10,7 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeEdit
     {
+        private List<BreadcrumbItem>? NavItems { get; set; }
         private readonly long maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [Parameter]
@@ -88,6 +89,13 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            NavItems = new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem{ Text = "Home", Href ="/" },
+                new BreadcrumbItem{ Text = "Recipes", Href ="/recipesoverview" },
+                new BreadcrumbItem{ Text = "Recipe", IsCurrentPage = true },
+            };
+
             _ = int.TryParse(Id, out var id);
             RecipeCategories = await RecipeCategoryService!.GetAllAsync();
             ProductCategories = await ProductCategoryService!.GetAllAsync();

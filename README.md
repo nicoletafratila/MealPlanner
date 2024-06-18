@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-navigation, breadcrumps
 user module
 design interfata
 

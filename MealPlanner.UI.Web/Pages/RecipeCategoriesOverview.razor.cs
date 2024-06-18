@@ -1,5 +1,4 @@
 ﻿using BlazorBootstrap;
-using Common.Data.Entities;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
@@ -8,6 +7,8 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class RecipeCategoriesOverview
     {
+        private List<BreadcrumbItem>? NavItems { get; set; }
+
         public RecipeCategoryEditModel? Category { get; set; }
         public IList<RecipeCategoryModel>? Categories { get; set; }
 
@@ -24,6 +25,11 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            NavItems = new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem{ Text = "Home", Href ="/" },
+                new BreadcrumbItem{ Text = "Recipe categories", IsCurrentPage = true }
+            };
             await RefreshAsync();
         }
 

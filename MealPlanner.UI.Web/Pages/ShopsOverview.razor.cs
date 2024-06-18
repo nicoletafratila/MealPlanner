@@ -7,6 +7,8 @@ namespace MealPlanner.UI.Web.Pages
 {
     public partial class ShopsOverview
     {
+        private List<BreadcrumbItem>? NavItems { get; set; }
+
         public ShopEditModel? Shop { get; set; }
         public IList<ShopModel>? Shops { get; set; }
 
@@ -23,6 +25,11 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            NavItems = new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem{ Text = "Home", Href ="/" },
+                new BreadcrumbItem{ Text = "Shops", IsCurrentPage = true }
+            };
             await RefreshAsync();
         }
 
