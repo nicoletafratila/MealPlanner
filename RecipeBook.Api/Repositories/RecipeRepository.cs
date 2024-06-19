@@ -29,6 +29,9 @@ namespace RecipeBook.Api.Repositories
                             .ThenInclude(x => x!.ProductCategory)
                     .Include(x => x.RecipeIngredients)!
                         .ThenInclude(x => x.Product)
+                            .ThenInclude(x => x!.BaseUnit)
+                    .Include(x => x.RecipeIngredients)!
+                        .ThenInclude(x => x.Product)
                     .Include(x => x!.RecipeIngredients)!
                         .ThenInclude(x => x.Unit)
                     .FirstOrDefaultAsync(x => x.Id == id);
