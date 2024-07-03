@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Common.Data.Entities.Converters;
 
 namespace Common.Data.Entities
 {
@@ -24,9 +25,9 @@ namespace Common.Data.Entities
             {
                 ProductId = ProductId,
                 Product = Product,
-                Quantity = Quantity,
-                UnitId = UnitId,
-                Unit = Unit,
+                Quantity = UnitConverter.Convert(Quantity, Unit!, Product!.BaseUnit!),
+                UnitId = Product!.BaseUnit!.Id,
+                Unit = Product!.BaseUnit,
                 Collected = false,
                 DisplaySequence = displaySequence
             };

@@ -22,20 +22,24 @@ namespace MealPlanner.Api.Repositories
               .Include(x => x.MealPlanRecipes)!
                   .ThenInclude(x => x.Recipe)
                       .ThenInclude(x => x!.RecipeCategory)
-             .Include(x => x.MealPlanRecipes)!
+              .Include(x => x.MealPlanRecipes)!
                   .ThenInclude(x => x.Recipe)
                       .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Product)
-                             .ThenInclude(x => x!.ProductCategory)
-            .Include(x => x.MealPlanRecipes)!
-                  .ThenInclude(x => x.Recipe)
-                      .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Product)
-                             .ThenInclude(x => x!.BaseUnit)
+                          .ThenInclude(x => x.Unit)
               .Include(x => x.MealPlanRecipes)!
                   .ThenInclude(x => x.Recipe)
                       .ThenInclude(x => x!.RecipeIngredients)!
                           .ThenInclude(x => x.Product)
+              .Include(x => x.MealPlanRecipes)!
+                  .ThenInclude(x => x.Recipe)
+                      .ThenInclude(x => x!.RecipeIngredients)!
+                          .ThenInclude(x => x.Product)
+                             .ThenInclude(x => x!.ProductCategory)
+              .Include(x => x.MealPlanRecipes)!
+                  .ThenInclude(x => x.Recipe)
+                      .ThenInclude(x => x!.RecipeIngredients)!
+                          .ThenInclude(x => x.Product)
+                             .ThenInclude(x => x!.BaseUnit)
               .FirstOrDefaultAsync(x => x.Id == id);
         }
 
