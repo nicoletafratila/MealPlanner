@@ -33,7 +33,7 @@ namespace Common.Data.Entities
                     products.Add(newProduct);
                 }
                 else
-                    existingProduct.Quantity += UnitConverter.Convert(item.Quantity, existingProduct.Unit!, existingProduct!.Product!.BaseUnit!);
+                    existingProduct.Quantity += UnitConverter.Convert(item.Quantity, item.Unit!, existingProduct!.Product!.BaseUnit!);
             }
             list.Products = products;
             return list;

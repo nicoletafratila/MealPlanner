@@ -28,7 +28,7 @@ namespace Common.Data.Entities
                         products.Add(newProduct);
                     }
                     else
-                        existingProduct.Quantity += UnitConverter.Convert(i.Quantity, existingProduct.Unit!, existingProduct!.Product!.BaseUnit!);  
+                        existingProduct.Quantity += UnitConverter.Convert(i.Quantity, i.Unit!, existingProduct!.Product!.BaseUnit!);  
                 }
             }
             list.Products = products;
