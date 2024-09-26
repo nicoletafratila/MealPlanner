@@ -7,6 +7,7 @@ namespace Common.Data.Entities
     {
         public string? Name { get; set; }
         public byte[]? ImageContent { get; set; }
+        public string? Source { get; set; }
 
         [ForeignKey("RecipeCategoryId")]
         public RecipeCategory? RecipeCategory { get; set; }

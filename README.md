@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
+organizeaza pr features
 user module
 design interfata
-
-public int? UnitId { get; set; } de ce int? la RecipeIngredient si ShoppingListProduct

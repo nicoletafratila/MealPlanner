@@ -13,6 +13,9 @@ namespace RecipeBook.Shared.Models
         [StringLength(100)]
         public string? Name { get; set; }
 
+        [StringLength(256)]
+        public string? Source { get; set; }
+
         [Required]
         [MaxLength(512000, ErrorMessage = "The image provided is too large.")]
         public byte[]? ImageContent { get; set; }
