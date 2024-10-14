@@ -9,5 +9,6 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
         public string? Source { get; set; }
         public RecipeCategoryModel? RecipeCategory { get; set; }
+        public string? RecipeCategoryName { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace MealPlanner.UI.Web.Pages
 
         [Parameter]
         public QueryParameters? QueryParameters { get; set; } = new();
+        public string ItemsOfTotal { get; set; }
 
         public string? CategoryId { get; set; }
         public IList<RecipeCategoryModel>? Categories { get; set; }
@@ -89,14 +90,16 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            Recipes = await RecipeService!.SearchAsync(CategoryId, QueryParameters!);
+            //Recipes = await RecipeService!.SearchAsync(CategoryId, QueryParameters!);
+            Recipes = await RecipeService!.SearchAsync(CategoryId);
+            ItemsOfTotal = $"{QueryParameters!.PageSize * (QueryParameters!.PageNumber - 1) + 1}-{QueryParameters!.PageSize * (QueryParameters!.PageNumber - 1) + Recipes!.Items!.Count} of {Recipes!.Metadata!.TotalCount} items";
             StateHasChanged();
         }
 
         private async void OnCategoryChangedAsync(ChangeEventArgs e)
         {
             CategoryId = e?.Value?.ToString();
-            QueryParameters = new();
+            QueryParameters = new(QueryParameters!.PageSize);
             await RefreshAsync();
         }
 
@@ -104,6 +107,21 @@ namespace MealPlanner.UI.Web.Pages
         {
             QueryParameters!.PageNumber = pageNumber;
             await RefreshAsync();
+        }
+
+        private async void OnUpdateItemsPerPageAsync(ChangeEventArgs e)
+        {
+            if (Recipes != null && Recipes.Metadata != null && !string.IsNullOrWhiteSpace(e.Value?.ToString()))
+            {
+                QueryParameters!.PageNumber = 1;
+                QueryParameters!.PageSize = int.Parse(e.Value?.ToString());
+                await RefreshAsync();
+            }
+        }
+
+        private async Task<GridDataProviderResult<RecipeModel>> EmployeesDataProvider(GridDataProviderRequest<RecipeModel> request)
+        {
+            return await Task.FromResult(request.ApplyTo(Recipes.Items));
         }
     }
 }

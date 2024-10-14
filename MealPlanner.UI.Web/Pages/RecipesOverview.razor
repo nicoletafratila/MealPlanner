@@ -1,4 +1,5 @@
 ﻿@page "/recipesoverview"
+@using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -18,7 +19,7 @@
         @if (Recipes != null)
         {
             <div class="card-body">
-                <TableTemplateWithPagination Data="@Recipes" ShowIndex="true">
+               @*  <TableTemplateWithPagination Data="@Recipes" ShowIndex="true">
                     <TableHeader>
                         <th style="width: 320px">
                             <div>
@@ -57,14 +58,61 @@
                 {
                     <Pagination ActivePageNumber="@Recipes.Metadata.PageNumber"
                                 TotalPages="@Recipes.Metadata.TotalPages"
-                                DisplayPages="@Recipes.Metadata.PageSize"
+                                DisplayPages="5"
                                 FirstLinkIcon="IconName.ChevronDoubleLeft"
                                 PreviousLinkIcon="IconName.ChevronLeft"
                                 NextLinkIcon="IconName.ChevronRight"
                                 LastLinkIcon="IconName.ChevronDoubleRight"
-                                Alignment="Alignment.Center" 
+                                Alignment="Alignment.Start"
                                 PageChanged="OnPageChangedAsync" />
-                }
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select id="itemsPerPage" class="form-select" @onchange="@OnUpdateItemsPerPageAsync">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                            <label for="itemsPerPage">Items per page</label>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="itemsOfTotal">@ItemsOfTotal</label>
+                        </div>
+                    </div>
+                } *@
+
+                <Grid TItem="RecipeModel"
+                      AllowFiltering="true"
+                      AllowPaging="true"
+                      AllowSorting="true"
+                      AutoHidePaging="true"
+                      Class="table table-hover table-bordered table-striped"
+                      DataProvider="EmployeesDataProvider"
+                      PageSize="10"
+                      PageSizeSelectorVisible="true"
+                      PageSizeSelectorItems="@(new int[] { 5,10,20,50 })"
+                      Responsive="true">
+                    <GridColumns>
+                        <GridColumn TItem="RecipeModel" HeaderText="Category" PropertyName="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+                            @context.RecipeCategoryName
+                        </GridColumn>
+                        <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortKeySelector="item => item.Name" StringComparison="StringComparison.OrdinalIgnoreCase">
+                            @context.Name
+                        </GridColumn>
+                        <GridColumn TItem="RecipeModel" Filterable="false">
+                            <a href="@context!.Source" target="_blank">
+                                <img src="@context.ImageUrl" class="img-fluid" width="100" height="80" />
+                            </a>
+                        </GridColumn>
+                        <GridColumn TItem="RecipeModel" Filterable="false">
+                            <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
+                        </GridColumn>
+                        <GridColumn TItem="RecipeModel" Filterable="false">
+                            <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                        </GridColumn>
+                    </GridColumns>
+                </Grid>
             </div>
         }
     </div>

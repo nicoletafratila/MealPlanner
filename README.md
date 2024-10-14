@@ -12,6 +12,7 @@ PM> Script-migration
 
 
 MealPlanner
+pastreaza pagina la navigare
 organizeaza pr features
 user module
 design interfata
