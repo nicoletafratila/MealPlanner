@@ -19,85 +19,25 @@
         @if (Recipes != null)
         {
             <div class="card-body">
-               @*  <TableTemplateWithPagination Data="@Recipes" ShowIndex="true">
-                    <TableHeader>
-                        <th style="width: 320px">
-                            <div>
-                                <label for="category" class="col-sm-4">Category</label>
-                                <select id="category" class="form-select-sm" style="width:200px" @onchange="@OnCategoryChangedAsync">
-                                    <option selected value="0">Choose...</option>
-                                    @if (Categories != null && Categories.Any())
-                                    {
-                                        @foreach (var item in Categories)
-                                        {
-                                            <option value="@item.Id">@item.Name</option>
-                                        }
-                                    }
-                                </select>
-                            </div>
-                        </th>
-                        <th>Name</th>
-                        <th></th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="Recipe">
-                        <td>@Recipe.RecipeCategory?.Name</td>
-                        <td>@Recipe.Name</td>
-                        <td>
-                            <a href="@Recipe.Source" target="_blank">
-                                <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
-                            </a>
-                        </td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(Recipe)">Edit</button></td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(Recipe)"></button></td>
-                    </RowTemplate>
-                </TableTemplateWithPagination>
-
-                @if (Recipes.Metadata != null)
-                {
-                    <Pagination ActivePageNumber="@Recipes.Metadata.PageNumber"
-                                TotalPages="@Recipes.Metadata.TotalPages"
-                                DisplayPages="5"
-                                FirstLinkIcon="IconName.ChevronDoubleLeft"
-                                PreviousLinkIcon="IconName.ChevronLeft"
-                                NextLinkIcon="IconName.ChevronRight"
-                                LastLinkIcon="IconName.ChevronDoubleRight"
-                                Alignment="Alignment.Start"
-                                PageChanged="OnPageChangedAsync" />
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <select id="itemsPerPage" class="form-select" @onchange="@OnUpdateItemsPerPageAsync">
-                                <option value="5">5</option>
-                                <option value="10" selected>10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                            </select>
-                            <label for="itemsPerPage">Items per page</label>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="itemsOfTotal">@ItemsOfTotal</label>
-                        </div>
-                    </div>
-                } *@
-
                 <Grid TItem="RecipeModel"
                       AllowFiltering="true"
                       AllowPaging="true"
                       AllowSorting="true"
                       AutoHidePaging="true"
                       Class="table table-hover table-bordered table-striped"
-                      DataProvider="EmployeesDataProvider"
+                      DataProvider="RecipesDataProvider"
                       PageSize="10"
                       PageSizeSelectorVisible="true"
                       PageSizeSelectorItems="@(new int[] { 5,10,20,50 })"
-                      Responsive="true">
+                      Responsive="true"
+                      EmptyText="No records to display"
+                      FiltersRowCssClass="bg-primary text-white bg-opacity-25 border-bottom-0"
+                      HeaderRowCssClass="bg-primary text-white border-bottom-0">
                     <GridColumns>
-                        <GridColumn TItem="RecipeModel" HeaderText="Category" PropertyName="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
+                        <GridColumn TItem="RecipeModel" HeaderText="Category" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending">
                             @context.RecipeCategoryName
                         </GridColumn>
-                        <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortKeySelector="item => item.Name" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" StringComparison="StringComparison.OrdinalIgnoreCase">
                             @context.Name
                         </GridColumn>
                         <GridColumn TItem="RecipeModel" Filterable="false">

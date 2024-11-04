@@ -10,21 +10,11 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-        public string ItemsOfTotal { get; set; }
-
-        public string? CategoryId { get; set; }
-        public IList<RecipeCategoryModel>? Categories { get; set; }
-
         public RecipeModel? Recipe { get; set; }
         public PagedList<RecipeModel>? Recipes { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
-
-        [Inject]
-        public IRecipeCategoryService? CategoryService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -41,7 +31,7 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Home", Href ="/" },
                 new BreadcrumbItem{ Text = "Recipes", IsCurrentPage = true }
             };
-            Categories = await CategoryService!.GetAllAsync();
+
             await RefreshAsync();
         }
 
@@ -90,38 +80,31 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            //Recipes = await RecipeService!.SearchAsync(CategoryId, QueryParameters!);
-            Recipes = await RecipeService!.SearchAsync(CategoryId);
-            ItemsOfTotal = $"{QueryParameters!.PageSize * (QueryParameters!.PageNumber - 1) + 1}-{QueryParameters!.PageSize * (QueryParameters!.PageNumber - 1) + Recipes!.Items!.Count} of {Recipes!.Metadata!.TotalCount} items";
+            Recipes = await RecipeService!.SearchAsync();
             StateHasChanged();
         }
 
-        private async void OnCategoryChangedAsync(ChangeEventArgs e)
+        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProvider(GridDataProviderRequest<RecipeModel> request)
         {
-            CategoryId = e?.Value?.ToString();
-            QueryParameters = new(QueryParameters!.PageSize);
-            await RefreshAsync();
-        }
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
 
-        private async Task OnPageChangedAsync(int pageNumber)
-        {
-            QueryParameters!.PageNumber = pageNumber;
-            await RefreshAsync();
-        }
-
-        private async void OnUpdateItemsPerPageAsync(ChangeEventArgs e)
-        {
-            if (Recipes != null && Recipes.Metadata != null && !string.IsNullOrWhiteSpace(e.Value?.ToString()))
+            if (request.Sorting is not null && request.Sorting.Any())
             {
-                QueryParameters!.PageNumber = 1;
-                QueryParameters!.PageSize = int.Parse(e.Value?.ToString());
-                await RefreshAsync();
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
             }
-        }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
 
-        private async Task<GridDataProviderResult<RecipeModel>> EmployeesDataProvider(GridDataProviderRequest<RecipeModel> request)
-        {
-            return await Task.FromResult(request.ApplyTo(Recipes.Items));
+            var result = await RecipeService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }
