@@ -12,8 +12,7 @@ PM> Script-migration
 
 
 MealPlanner
-la unitati, lasa doar cele ce se pot converti
-acelasi grid pt meal plans si shopping list
+acelasi grid pt products, meal plans si shopping list
 organizeaza pr features
 user module
 design interfata

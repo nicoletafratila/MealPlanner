@@ -90,9 +90,9 @@ namespace MealPlanner.Api
             context.Units.Add(new Unit { Name = LiquidUnit.l.ToString(), UnitType = UnitType.Liquid });
             context.Units.Add(new Unit { Name = LiquidUnit.ml.ToString(), UnitType = UnitType.Liquid });
 
-            context.Units.Add(new Unit { Name = AllUnit.cup.ToString(), UnitType = UnitType.All });
-            context.Units.Add(new Unit { Name = AllUnit.tbsp.ToString(), UnitType = UnitType.All });
-            context.Units.Add(new Unit { Name = AllUnit.tsp.ToString(), UnitType = UnitType.All });
+            context.Units.Add(new Unit { Name = VolumeUnit.cup.ToString(), UnitType = UnitType.Volume });
+            context.Units.Add(new Unit { Name = VolumeUnit.tbsp.ToString(), UnitType = UnitType.Volume });
+            context.Units.Add(new Unit { Name = VolumeUnit.tsp.ToString(), UnitType = UnitType.Volume });
 
             context.Units.Add(new Unit { Name = PieceUnit.buc.ToString(), UnitType = UnitType.Piece });
             context.Units.Add(new Unit { Name = PieceUnit.cas.ToString(), UnitType = UnitType.Piece });

@@ -1,6 +1,6 @@
 ﻿namespace Common.Constants.Units
 {
-    public enum AllUnit
+    public enum VolumeUnit
     {
         cup = 0,
         tbsp = 1,

@@ -4,7 +4,7 @@
     {
         Mass = 0,
         Liquid = 1,
-        All = 2,
+        Volume = 2,
         Piece = 3
     }
 }
