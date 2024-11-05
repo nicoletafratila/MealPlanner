@@ -12,7 +12,8 @@ PM> Script-migration
 
 
 MealPlanner
-pastreaza pagina la navigare
+la unitati, lasa doar cele ce se pot converti
+acelasi grid pt meal plans si shopping list
 organizeaza pr features
 user module
 design interfata

@@ -1,9 +1,11 @@
-﻿using BlazorBootstrap;
+﻿using Azure.Core;
+using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -244,12 +246,21 @@ namespace MealPlanner.UI.Web.Pages
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
             {
-                filters.Add(new FilterItem("RecipeCategoryName", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
 
             RecipeCategoryId = value;
             RecipeId = string.Empty;
-            Recipes = await RecipeService!.SearchAsync(new QueryParameters() { Filters = filters });
+
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Recipes = await RecipeService!.SearchAsync(queryParameters);
             StateHasChanged();
         }
     }
