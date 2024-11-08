@@ -3,6 +3,7 @@ using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -84,6 +85,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JS { get; set; } = default!;
+
         [CascadingParameter(Name = "MessageComponent")]
         protected IMessageComponent? MessageComponent { get; set; }
 
@@ -164,11 +168,13 @@ namespace MealPlanner.UI.Web.Pages
         {
             get
             {
+
                 return !string.IsNullOrWhiteSpace(ProductId) &&
                        ProductId != "0" &&
                        UnitId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
-                       double.TryParse(Quantity, out _);
+                       double.TryParse(Quantity, out double quantity1) &&
+                       quantity1 > 0;
             }
         }
 
@@ -286,6 +292,11 @@ namespace MealPlanner.UI.Web.Pages
                 MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
+        }
+
+        private async Task CheckQuantity(ChangeEventArgs e)
+        {
+            await JS.InvokeVoidAsync("checkQuantity");
         }
     }
 }

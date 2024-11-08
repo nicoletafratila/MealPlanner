@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
+using Common.Data.Entities;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using Newtonsoft.Json.Linq;
 using RecipeBook.Shared.Converters;
 using RecipeBook.Shared.Models;
 
@@ -50,6 +53,8 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     _productId = value;
                     Quantity = string.Empty;
+                    UnitId = string.Empty;
+                    OnProductChangedAsync(_productId!);
                 }
             }
         }
@@ -77,9 +82,10 @@ namespace MealPlanner.UI.Web.Pages
         public string? Quantity { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
-        public int UnitId { get; set; }
+		[Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        public string? UnitId { get; set; }
         public IList<UnitModel>? Units { get; set; }
+        public IList<UnitModel>? BaseUnits { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -105,6 +111,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JS { get; set; } = default!;
+
         [CascadingParameter]
         protected IModalService? Modal { get; set; } = default!;
 
@@ -124,7 +133,7 @@ namespace MealPlanner.UI.Web.Pages
 
             ProductCategories = await ProductCategoryService!.GetAllAsync();
             Shops = await ShopService!.GetAllAsync();
-            Units = await UnitService!.GetAllAsync();
+            BaseUnits = await UnitService!.GetAllAsync();
 
             _ = int.TryParse(Id, out int id);
             if (id == 0)
@@ -225,9 +234,9 @@ namespace MealPlanner.UI.Web.Pages
 
         private void AddProduct()
         {
-            if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
+            if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0" && UnitId != "0")
             {
-                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), UnitId);
+                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), int.Parse(UnitId));
             }
         }
 
@@ -294,7 +303,7 @@ namespace MealPlanner.UI.Web.Pages
         private void AddProduct(ProductModel product, decimal quantity, int unitId)
         {
             ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
-            UnitModel? unit = Units!.FirstOrDefault(i => i.Id == unitId);
+            UnitModel? unit = BaseUnits!.FirstOrDefault(i => i.Id == unitId);
 
             try
             {
@@ -359,8 +368,29 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
+        private async void OnProductChangedAsync(string value)
+        {
+            Quantity = string.Empty;
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var product = await ProductService!.GetEditAsync(int.Parse(value));
+                if (product != null)
+                {
+                    var baseUnit = BaseUnits!.FirstOrDefault(x => x.Id == product.BaseUnitId);
+                    Units = BaseUnits!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
+                }
+            }
+            StateHasChanged();
+        }
+
         private async void OnShopChangedAsync(string value)
         {
+            if (value == "0")
+            {
+                _shop = null;
+                return;
+            }
+
             ShoppingList!.ShopId = int.Parse(value);
             _shop = await ShopService!.GetEditAsync(ShoppingList!.ShopId);
 
@@ -376,6 +406,11 @@ namespace MealPlanner.UI.Web.Pages
                                                              .ThenBy(item => item.Product?.Name).ToList();
                 StateHasChanged();
             }
+        }
+
+        private async Task CheckQuantity(ChangeEventArgs e)
+        {
+            await JS.InvokeVoidAsync("checkQuantity");
         }
     }
 }

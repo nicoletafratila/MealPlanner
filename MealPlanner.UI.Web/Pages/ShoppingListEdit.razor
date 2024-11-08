@@ -86,15 +86,8 @@
                     <div class="form-group mt-3">
                         <label for="quantity" class="col-sm-3">Quantity: </label>
                         <div class="input-group">
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Enter the quantity for the product"></InputText>
-                            @if (CanAddProduct == true)
-                            {
-                                <button class="btn btn-primary" type="button" @onclick="@AddProduct">Add</button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-primary" type="button" disabled @onclick="@AddProduct">Add</button>
-                            }
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantity" placeholder="Enter the quantity for the product"></InputText>
+                            <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProduct" disabled="@(!CanAddProduct)">Add</button>
                         </div>
                         <ValidationMessage For="@(() => Quantity)" />
                     </div>
@@ -133,22 +126,9 @@
 
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
                         <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
-                        @if (CanAddMealPlan == true)
-                        {
-                            <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@AddMealPlanAsync">Add meal plan</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary btn-sm" type="button" disabled style="margin:5px" @onclick="@AddMealPlanAsync">Add meal plan</button>
-                        }
-                        @if (CanAddRecipe == true)
-                        {
-                            <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="@AddRecipeAsync">Add recipe</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-primary btn-sm" type="button" disabled style="margin:0px,5px, 5px, 5px" @onclick="@AddRecipeAsync">Add recipe</button>
-                        }
+
+                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@AddMealPlanAsync" disabled="@(!CanAddMealPlan)">Add meal plan</button>
+                        <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="@AddRecipeAsync" disabled="@(!CanAddRecipe)">Add recipe</button>
                         <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@NavigateToOverview">Back to overview</button>
                     </div>
                 </EditForm>
@@ -158,3 +138,16 @@
 }
 
 <ConfirmDialog @ref="dialog" />
+
+<script>
+    function checkQuantity() {
+        var quantity = document.getElementById("quantity").value;
+        var unit = document.getElementById("unit").value;
+        var addButton = document.getElementById("addButton");
+        if (quantity > 0 && unit != "0") {
+            addButton.disabled = false;
+        } else {
+            addButton.disabled = true;
+        }
+    }
+</script>

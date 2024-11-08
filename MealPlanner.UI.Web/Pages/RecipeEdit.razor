@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-md-4 align-self-center">
                         <a href="@Recipe.Source" target="_blank">
-                            <img src="@Recipe.ImageUrl" class="img-fluid"/>
+                            <img src="@Recipe.ImageUrl" class="img-fluid" />
                         </a>
                     </div>
                 </div>
@@ -104,15 +104,8 @@
                     <div class="form-group mt-3">
                         <label for="quantity" class="col-sm-3">Quantity: </label>
                         <div class="input-group">
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" placeholder="Enter the quantity for the product"></InputText>
-                            @if (CanAddIngredient == true)
-                            {
-                                <button class="btn btn-primary" type="button" @onclick="@AddIngredient">Add</button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-primary" type="button" disabled @onclick="@AddIngredient">Add</button>
-                            }
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantity" placeholder="Enter the quantity for the product"></InputText>
+                            <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredient" disabled="@(!CanAddIngredient)">Add</button>
                         </div>
                         <ValidationMessage For="@(() => Quantity)" />
                     </div>
@@ -154,3 +147,16 @@
 }
 
 <ConfirmDialog @ref="dialog" />
+
+<script>
+    function checkQuantity() {
+        var quantity = document.getElementById("quantity").value;
+        var unit = document.getElementById("unit").value;
+        var addButton = document.getElementById("addButton");
+        if (quantity > 0 && unit != "0") {
+            addButton.disabled = false;
+        } else {
+            addButton.disabled = true;
+        }
+    }
+</script>

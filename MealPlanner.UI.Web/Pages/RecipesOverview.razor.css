@@ -2,3 +2,23 @@
     width: max-content;
     min-width: 900px;
 }
+
+.no-space {
+    display: flex;
+}
+
+    .no-space .col-md-3 {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-space img {
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-space div {
+        margin: 0;
+        padding: 0;
+    }

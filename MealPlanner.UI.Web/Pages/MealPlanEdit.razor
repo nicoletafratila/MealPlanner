@@ -53,14 +53,7 @@
                                     }
                                 }
                             </InputSelect>
-                            @if (CanAddRecipe == true)
-                            {
-                                <button class="btn btn-primary" type="button" @onclick="@AddRecipeAsync">Add</button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-primary" type="button" disabled @onclick="@AddRecipeAsync">Add</button>
-                            }
+                            <button class="btn btn-primary" type="button" @onclick="@AddRecipeAsync" disabled="@(!CanAddRecipe)">Add</button>
                         </div>
                     </div>
 
