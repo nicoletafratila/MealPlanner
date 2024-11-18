@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Models;
 using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
@@ -12,8 +13,10 @@ namespace RecipeBook.Api.Features.RecipeCategory.Queries.GetAll
 
         public async Task<IList<RecipeCategoryModel>> Handle(GetAllQuery request, CancellationToken cancellationToken)
         {
-            var results = await _repository.GetAllAsync();
-            return _mapper.Map<IList<RecipeCategoryModel>>(results).OrderBy(r => r.DisplaySequence).ToList();
+            var data = await _repository.GetAllAsync();
+            var results= _mapper.Map<IList<RecipeCategoryModel>>(data).OrderBy(r => r.DisplaySequence).ToList();
+            results.SetIndexes();
+            return results;
         }
     }
 }

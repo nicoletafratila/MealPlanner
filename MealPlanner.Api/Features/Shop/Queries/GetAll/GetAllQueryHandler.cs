@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Models;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
@@ -12,8 +13,10 @@ namespace MealPlanner.Api.Features.Shop.Queries.GetAll
 
         public async Task<IList<ShopModel>> Handle(GetAllQuery request, CancellationToken cancellationToken)
         {
-            var results = await _repository.GetAllAsync();
-            return _mapper.Map<IList<ShopModel>>(results).OrderBy(r => r.Name).ToList();
+            var data = await _repository.GetAllAsync();
+            var results = _mapper.Map<IList<ShopModel>>(data).OrderBy(r => r.Name).ToList();
+            results.SetIndexes();
+            return results;
         }
     }
 }

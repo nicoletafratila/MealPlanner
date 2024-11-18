@@ -13,6 +13,7 @@ PM> Script-migration
 
 MealPlanner
 acelasi grid pt products, meal plans si shopping list
-organizeaza pr features
+grid template pt sortare
+organizeaza pe features
 user module
 design interfata

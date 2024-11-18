@@ -3,6 +3,7 @@ using AutoMapper;
 using Common.Api;
 using Common.Constants;
 using Common.Data.Entities;
+using Common.Models;
 using MealPlanner.Shared.Models;
 using MediatR;
 using RecipeBook.Api.Repositories;
@@ -35,11 +36,13 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
                         return null;
                 }
 
-                var products = recipe.MakeShoppingList(_mapper.Map<Shop>(shop)!).Products;
-                return products!.Select(_mapper.Map<ShoppingListProductEditModel>)
+                var data = recipe.MakeShoppingList(_mapper.Map<Shop>(shop)!).Products;
+                var results = data!.Select(_mapper.Map<ShoppingListProductEditModel>)
                          .OrderBy(item => item.Collected)
                          .ThenBy(item => item.DisplaySequence)
                          .ThenBy(item => item.Product?.Name).ToList();
+                results.SetIndexes();
+                return results;
             }
             catch (Exception ex)
             {

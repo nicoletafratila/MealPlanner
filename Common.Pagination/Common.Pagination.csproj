@@ -10,4 +10,8 @@
     <PackageReference Include="Blazor.Bootstrap" Version="3.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
+  </ItemGroup>
+
 </Project>

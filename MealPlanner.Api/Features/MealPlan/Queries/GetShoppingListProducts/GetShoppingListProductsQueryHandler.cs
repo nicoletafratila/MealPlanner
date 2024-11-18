@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Models;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
@@ -23,11 +24,13 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
                 if (shop == null)
                     return null;
 
-                var products = mealPlan.MakeShoppingList(shop!).Products;
-                return products!.Select(_mapper.Map<ShoppingListProductEditModel>)
+                var data = mealPlan.MakeShoppingList(shop!).Products;
+                var results = data!.Select(_mapper.Map<ShoppingListProductEditModel>)
                          .OrderBy(item => item.Collected)
                          .ThenBy(item => item.DisplaySequence)
                          .ThenBy(item => item.Product?.Name).ToList();
+                results.SetIndexes();
+                return results;
             }
             catch (Exception ex)
             {

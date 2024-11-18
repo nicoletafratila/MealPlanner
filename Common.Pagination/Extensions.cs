@@ -1,11 +1,12 @@
 ﻿using BlazorBootstrap;
+using Common.Models;
 using System.Linq.Expressions;
 
 namespace Common.Pagination
 {
     public static class Extensions
     {
-        public static PagedList<T> ToPagedList<T>(this IEnumerable<T> source, int pageNumber, int pageSize)
+        public static PagedList<T> ToPagedList<T>(this IEnumerable<T> source, int pageNumber, int pageSize) where T : BaseModel
         {
             var metadata = new Metadata
             {
@@ -18,6 +19,10 @@ namespace Common.Pagination
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize).ToList();
 
+            foreach (var item in items)
+            {
+                item.Index = pageSize * (pageNumber - 1) + items.IndexOf(item)+1;
+            }
             return new PagedList<T>(items, metadata);
         }
     }
@@ -38,19 +43,19 @@ namespace Common.Pagination
                     member,
                     typeof(string).GetMethod("Contains", new[] { typeof(string), typeof(StringComparison) }),
                     constant,
-                    Expression.Constant(StringComparison.OrdinalIgnoreCase) 
+                    Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 FilterOperator.StartsWith => Expression.Call(
                     member,
                     typeof(string).GetMethod("StartsWith", new[] { typeof(string), typeof(StringComparison) }),
                     constant,
-                    Expression.Constant(StringComparison.OrdinalIgnoreCase) 
+                    Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 FilterOperator.EndsWith => Expression.Call(
                     member,
                     typeof(string).GetMethod("EndsWith", new[] { typeof(string), typeof(StringComparison) }),
                     constant,
-                    Expression.Constant(StringComparison.OrdinalIgnoreCase) 
+                    Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 _ => throw new NotSupportedException($"Operator {filter.Operator} is not supported")
             };
