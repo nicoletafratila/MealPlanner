@@ -13,7 +13,6 @@ namespace MealPlanner.UI.Web.Pages
         private List<BreadcrumbItem>? NavItems { get; set; }
 
         public RecipeModel? Recipe { get; set; }
-        public PagedList<RecipeModel>? Recipes { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -37,7 +36,7 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Recipes", IsCurrentPage = true }
             };
 
-            await RefreshAsync();
+            await RecipesDataProvider(new GridDataProviderRequest<RecipeModel>() { PageNumber = 1, PageSize = int.MaxValue });
         }
 
         private void New()
@@ -78,15 +77,9 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    NavigationManager?.NavigateTo("/recipesoverview");
                 }
             }
-        }
-
-        private async Task RefreshAsync()
-        {
-            Recipes = await RecipeService!.SearchAsync();
-            StateHasChanged();
         }
 
         private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProvider(GridDataProviderRequest<RecipeModel> request)

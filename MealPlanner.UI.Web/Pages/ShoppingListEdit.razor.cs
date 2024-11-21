@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
-using Common.Data.Entities;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Newtonsoft.Json.Linq;
 using RecipeBook.Shared.Converters;
 using RecipeBook.Shared.Models;
 
@@ -82,7 +81,7 @@ namespace MealPlanner.UI.Web.Pages
         public string? Quantity { get; set; }
 
         [Required]
-		[Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public string? UnitId { get; set; }
         public IList<UnitModel>? Units { get; set; }
         public IList<UnitModel>? BaseUnits { get; set; }
@@ -217,6 +216,7 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 ShoppingList?.Products?.Remove(itemToDelete);
+                ShoppingList?.Products?.SetIndexes();
                 StateHasChanged();
             }
         }
@@ -324,6 +324,7 @@ namespace MealPlanner.UI.Web.Pages
                         DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
                     };
                     ShoppingList.Products?.Add(item);
+                    ShoppingList.Products?.SetIndexes();
                     Quantity = string.Empty;
                 }
             }

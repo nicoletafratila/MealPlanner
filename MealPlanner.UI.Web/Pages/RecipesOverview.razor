@@ -16,26 +16,27 @@
             </div>
         </div>
 
-        @if (Recipes != null)
-        {
             <div class="card-body">
                 <Grid TItem="RecipeModel"
                       AllowFiltering="true"
                       AllowPaging="true"
                       AllowSorting="true"
                       AutoHidePaging="true"
-                      Class="table table-hover table-bordered table-striped"
+                      Class="table table-hover table-striped"
                       DataProvider="RecipesDataProvider"
                       PageSizeSelectorVisible="true"
                       PageSizeSelectorItems="@(new int[] { 5, 10, 20, 50 })"
                       Responsive="true"
-                      FiltersRowCssClass="bg-primary text-white bg-opacity-25 border-bottom-0"
-                      HeaderRowCssClass="bg-primary text-white border-bottom-0"
+                      FiltersRowCssClass="bg-primary text-white bg-opacity-25"
+                      HeaderRowCssClass="bg-primary text-white"
                       GridSettingsChanged="OnGridSettingsChanged"
                       SettingsProvider="GridSettingsProvider">
                     <GridColumns>
+                        <GridColumn TItem="RecipeModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                            @context.Index
+                        </GridColumn>
                         <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
-                            <div class="row no-space">
+                            <div class="row">
                                 <div class="col-sm-3">
                                     <a href="@context!.Source" target="_blank">
                                         <img src="@context.ImageUrl" class="img-fluid" width="100" height="80" />
@@ -51,8 +52,6 @@
                         </GridColumn>
                         <GridColumn TItem="RecipeModel" Filterable="false">
                             <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
-                        </GridColumn>
-                        <GridColumn TItem="RecipeModel" Filterable="false">
                             <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
                         </GridColumn>
                     </GridColumns>
@@ -66,7 +65,6 @@
                     </GridTemplates>
                 </Grid>
             </div>
-        }
     </div>
 </div>
 

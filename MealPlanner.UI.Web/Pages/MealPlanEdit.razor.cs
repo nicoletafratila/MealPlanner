@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
@@ -159,6 +160,7 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
+                        MealPlan.Recipes.SetIndexes();
                     }
                 }
 
@@ -193,6 +195,7 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
+                MealPlan?.Recipes?.SetIndexes();
                 StateHasChanged();
             }
         }

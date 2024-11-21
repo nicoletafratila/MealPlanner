@@ -204,11 +204,12 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         item = new RecipeIngredientEditModel
                         {
+                            Index = Recipe.Ingredients.Count + 1,
                             RecipeId = Recipe.Id,
                             Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
                             Quantity = decimal.Parse(Quantity!),
                             UnitId = int.Parse(UnitId!),
-                            Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!)),
+                            Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!))
                         };
                         Recipe.Ingredients?.Add(item);
                         Quantity = string.Empty;
