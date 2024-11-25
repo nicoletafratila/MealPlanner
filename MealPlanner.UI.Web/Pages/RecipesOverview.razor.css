@@ -1,29 +1,13 @@
 ﻿.card {
     width: max-content;
-    min-width: 900px;
+    min-width: auto;
 }
 
 .no-space {
     display: flex;
 }
-
-    .no-space .col-md-3 {
-        flex: 1;
-        margin: 10px;
-        padding: 10px;
-    }
-
-    .no-space .col-md-8 {
-        flex: 1;
-        padding: 10px;
-        vertical-align: central;
-    }
-
     .no-space img {
         padding: 5px;
     }
 
-    .no-space div {
-        margin: 0;
-        padding: 0;
-    }
+
