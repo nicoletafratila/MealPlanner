@@ -9,5 +9,7 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
         public UnitModel? BaseUnit { get; set; }
         public ProductCategoryModel? ProductCategory { get; set; }
+        public string? ProductCategoryName { get; set; }
+        public string? ProductCategoryId { get; set; }
     }
 }

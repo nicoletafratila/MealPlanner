@@ -139,6 +139,5 @@ namespace MealPlanner.UI.Web.Pages
 
             return settings;
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Data.Entities;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -252,10 +253,25 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void OnProductCategoryChangedAsync(string value)
         {
+            var filters = new List<FilterItem>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                filters.Add(new FilterItem("ProductCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            };
+
             ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
-            Products = await ProductService!.SearchAsync(ProductCategoryId);
+
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Products = await ProductService!.SearchAsync(queryParameters);
             StateHasChanged();
         }
 

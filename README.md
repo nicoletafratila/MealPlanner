@@ -12,7 +12,7 @@ PM> Script-migration
 
 
 MealPlanner
-acelasi grid pt products, meal plans si shopping list
+acelasi grid pt meal plans si shopping list
 grid template pt sortare
 organizeaza pe features
 user module
