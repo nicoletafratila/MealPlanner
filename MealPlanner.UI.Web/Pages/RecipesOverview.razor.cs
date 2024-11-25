@@ -35,8 +35,7 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Home", Href ="/" },
                 new BreadcrumbItem{ Text = "Recipes", IsCurrentPage = true }
             };
-
-            await RecipesDataProvider(new GridDataProviderRequest<RecipeModel>() { PageNumber = 1, PageSize = int.MaxValue });
+            await RefreshAsync();
         }
 
         private void New()
@@ -77,9 +76,24 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigationManager?.NavigateTo("/recipesoverview");
+                    NavigationManager?.NavigateTo("recipesoverview", forceLoad: true);
                 }
             }
+        }
+
+        private async Task RefreshAsync()
+        {
+            var request = new GridDataProviderRequest<RecipeModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<RecipeModel>>
+                        {
+                            new SortingItem<RecipeModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await RecipesDataProvider(request);
         }
 
         private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProvider(GridDataProviderRequest<RecipeModel> request)
