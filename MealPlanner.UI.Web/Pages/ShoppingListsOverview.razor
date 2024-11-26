@@ -1,4 +1,5 @@
 ﻿@page "/shoppinglistsoverview"
+@using MealPlanner.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -15,36 +16,22 @@
             </div>
         </div>
 
-        @if (ShoppingLists != null)
-        {
-            <div class="card-body">
-                <TableTemplateWithPagination Data="@ShoppingLists" ShowIndex="true">
-                    <TableHeader>
-                        <th>Name</th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="ShoppingList">
-                        <td>@ShoppingList.Name</td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(ShoppingList)">Edit</button></td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(ShoppingList)"></button></td>
-                    </RowTemplate>
-                </TableTemplateWithPagination>
-
-                @if (ShoppingLists.Metadata != null)
-                {
-                   <Pagination ActivePageNumber="@ShoppingLists.Metadata.PageNumber"
-                                TotalPages="@ShoppingLists.Metadata.TotalPages"
-                                DisplayPages="@ShoppingLists.Metadata.PageSize"
-                                FirstLinkIcon="IconName.ChevronDoubleLeft"
-                                PreviousLinkIcon="IconName.ChevronLeft"
-                                NextLinkIcon="IconName.ChevronRight"
-                                LastLinkIcon="IconName.ChevronDoubleRight"
-                                Alignment="Alignment.Center" 
-                                PageChanged="OnPageChangedAsync" />
-                }
-            </div>
-        }
+        <div class="card-body">
+            <GridPlanner TItem="ShoppingListModel" DataProvider="ShoppingListsDataProvider">
+                <Columns>
+                    <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn TItem="ShoppingListModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        @context.Name
+                    </GridColumn>
+                    <GridColumn TItem="ShoppingListModel" Filterable="false" Class="text-start-right">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridPlanner>
+        </div>
     </div>
 </div>
 
