@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
+using Common.Models;
 using MealPlanner.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
@@ -8,7 +9,9 @@ namespace Common.Data.Profiles.Resolvers
     {
         public IList<ShopDisplaySequenceEditModel>? Resolve(Shop source, ShopEditModel destination, IList<ShopDisplaySequence>? sourceValue, IList<ShopDisplaySequenceEditModel>? destValue, ResolutionContext context)
         {
-            return source.DisplaySequence?.Select(context.Mapper.Map<ShopDisplaySequenceEditModel>).OrderBy(i => i.Value).ToList();
+            var results = source.DisplaySequence?.Select(context.Mapper.Map<ShopDisplaySequenceEditModel>).OrderBy(i => i.Value).ToList();
+            results!.SetIndexes();
+            return results;
         }
     }
 }

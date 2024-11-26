@@ -22,7 +22,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                 var mealPlanWithProducts = await _mealPlanRepository.SearchByProductCategoryId(category.Id);
                 foreach (var mealPlan in mealPlanWithProducts!)
                 {
-                    model.Data![mealPlan.Key.Name!] = !model.Data.TryGetValue(mealPlan.Key.Name!, out double value) ? 1 : ++value;
+                    model.Data![mealPlan.Key.Name!] = !model.Data.TryGetValue(mealPlan.Key.Name!, out double? value) ? 1 : ++value;
                 }
                 if (model.Data!.Any(i => i.Value == 1))
                 {

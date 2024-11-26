@@ -1,4 +1,5 @@
 ﻿@page "/mealplansoverview"
+@using MealPlanner.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -15,36 +16,22 @@
             </div>
         </div>
 
-        @if (MealPlans != null)
-        {
-            <div class="card-body">
-                <TableTemplateWithPagination Data="@MealPlans" ShowIndex="true">
-                    <TableHeader>
-                        <th>Name</th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="MealPlan">
-                        <td>@MealPlan.Name</td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(MealPlan)">Edit</button></td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(MealPlan)"></button></td>
-                    </RowTemplate>
-                </TableTemplateWithPagination>
-
-                @if (MealPlans.Metadata != null)
-                {
-                    <Pagination ActivePageNumber="@MealPlans.Metadata.PageNumber" 
-                                TotalPages="@MealPlans.Metadata.TotalPages"
-                                DisplayPages="@MealPlans.Metadata.PageSize"
-                                FirstLinkIcon="IconName.ChevronDoubleLeft"
-                                PreviousLinkIcon="IconName.ChevronLeft"
-                                NextLinkIcon="IconName.ChevronRight"
-                                LastLinkIcon="IconName.ChevronDoubleRight"
-                                Alignment="Alignment.Center"
-                                PageChanged="OnPageChangedAsync" />
-                }
-            </div>
-        }
+        <div class="card-body">
+            <GridTemplate TItem="MealPlanModel" DataProvider="MealPlansDataProvider">
+                <Columns>
+                    <GridColumn TItem="MealPlanModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn TItem="MealPlanModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        @context.Name
+                    </GridColumn>
+                    <GridColumn TItem="MealPlanModel" Filterable="false" Class="text-start-right">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridTemplate>
+        </div>
     </div>
 </div>
 

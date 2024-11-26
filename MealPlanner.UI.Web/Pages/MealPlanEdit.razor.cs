@@ -1,9 +1,12 @@
-﻿using BlazorBootstrap;
+﻿using Azure.Core;
+using BlazorBootstrap;
 using Blazored.Modal.Services;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -157,6 +160,7 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
+                        MealPlan.Recipes.SetIndexes();
                     }
                 }
 
@@ -191,6 +195,7 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
+                MealPlan?.Recipes?.SetIndexes();
                 StateHasChanged();
             }
         }
@@ -241,9 +246,24 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void OnRecipeCategoryChangedAsync(string? value)
         {
+            var filters = new List<FilterItem>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            };
+
             RecipeCategoryId = value;
             RecipeId = string.Empty;
-            Recipes = await RecipeService!.SearchAsync(RecipeCategoryId);
+
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Recipes = await RecipeService!.SearchAsync(queryParameters);
             StateHasChanged();
         }
     }

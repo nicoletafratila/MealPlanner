@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BlazorBootstrap;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Common.Pagination;
@@ -60,9 +61,24 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void OnRecipeCategoryChangedAsync(string? value)
         {
+            var filters = new List<FilterItem>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            };
+
             RecipeCategoryId = value;
             RecipeId = string.Empty;
-            Recipes = await RecipeService!.SearchAsync(RecipeCategoryId);
+
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Recipes = await RecipeService!.SearchAsync(queryParameters);
             StateHasChanged();
         }
     }

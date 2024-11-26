@@ -10,20 +10,10 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
-        public string? CategoryId { get; set; }
-        public IList<RecipeCategoryModel>? Categories { get; set; }
-
         public RecipeModel? Recipe { get; set; }
-        public PagedList<RecipeModel>? Recipes { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
-
-        [Inject]
-        public IRecipeCategoryService? CategoryService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -40,7 +30,6 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Home", Href ="/" },
                 new BreadcrumbItem{ Text = "Recipes", IsCurrentPage = true }
             };
-            Categories = await CategoryService!.GetAllAsync();
             await RefreshAsync();
         }
 
@@ -82,28 +71,47 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    NavigationManager?.NavigateTo("recipesoverview", forceLoad: true);
                 }
             }
         }
 
         private async Task RefreshAsync()
         {
-            Recipes = await RecipeService!.SearchAsync(CategoryId, QueryParameters!);
-            StateHasChanged();
+            var request = new GridDataProviderRequest<RecipeModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<RecipeModel>>
+                        {
+                            new SortingItem<RecipeModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await RecipesDataProvider(request);
         }
 
-        private async void OnCategoryChangedAsync(ChangeEventArgs e)
+        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProvider(GridDataProviderRequest<RecipeModel> request)
         {
-            CategoryId = e?.Value?.ToString();
-            QueryParameters = new();
-            await RefreshAsync();
-        }
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
 
-        private async Task OnPageChangedAsync(int pageNumber)
-        {
-            QueryParameters!.PageNumber = pageNumber;
-            await RefreshAsync();
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await RecipeService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }

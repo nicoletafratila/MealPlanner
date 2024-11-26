@@ -2,6 +2,7 @@
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -10,20 +11,10 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-        
         public ProductModel? Product { get; set; }
-        public PagedList<ProductModel>? Products { get; set; }
         
-        public string? CategoryId { get; set; }
-        public IList<ProductCategoryModel>? Categories { get; set; }
-
         [Inject]
         public IProductService? ProductService { get; set; }
-
-        [Inject]
-        public IProductCategoryService? CategoryService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -40,7 +31,6 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Home", Href ="/" },
                 new BreadcrumbItem{ Text = "Products", IsCurrentPage = true }
             };
-            Categories = await CategoryService!.GetAllAsync();
             await RefreshAsync();
         }
 
@@ -82,28 +72,47 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    NavigationManager?.NavigateTo("productsoverview", forceLoad: true);
                 }
             }
         }
 
         private async Task RefreshAsync()
         {
-            Products = await ProductService!.SearchAsync(CategoryId, QueryParameters!);
-            StateHasChanged();
+            var request = new GridDataProviderRequest<ProductModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<ProductModel>>
+                        {
+                            new SortingItem<ProductModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await ProductsDataProvider(request);
         }
 
-        private async void OnCategoryChangedAsync(ChangeEventArgs e)
+        private async Task<GridDataProviderResult<ProductModel>> ProductsDataProvider(GridDataProviderRequest<ProductModel> request)
         {
-            CategoryId = e?.Value?.ToString();
-            QueryParameters = new();
-            await RefreshAsync();
-        }
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
 
-        private async Task OnPageChangedAsync(int pageNumber)
-        {
-            QueryParameters!.PageNumber = pageNumber;
-            await RefreshAsync();
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await ProductService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<ProductModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }

@@ -18,17 +18,15 @@
         }
         else
         {
-           var index = 1;
             @foreach (var item in Data!)
             {
                 <tr @onclick="@(() => OnSelectedItemChanged(item))">
                     @if (ShowIndex)
                     {
-                        <td>@index</td>
+                        <td>@item.Index</td>
                     }
                     @RowTemplate!(item)
                 </tr>
-                index++;
             }
         }
     </tbody>

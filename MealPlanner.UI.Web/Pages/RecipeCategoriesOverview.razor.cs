@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
@@ -103,7 +104,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Categories.Insert(index - 1, item);
             }
-            UpdateDisplaySeqenceValues();
+            Categories.SetIndexes();
         }
 
         private bool CanMoveDown(RecipeCategoryModel item)
@@ -119,15 +120,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Categories.Insert(index + 1, item);
             }
-            UpdateDisplaySeqenceValues();
-        }
-
-        private void UpdateDisplaySeqenceValues()
-        {
-            for (int i = 0; i < Categories?.Count; i++)
-            {
-                Categories[i].DisplaySequence = i + 1;
-            }
+            Categories.SetIndexes();
         }
 
         private async Task RefreshAsync()

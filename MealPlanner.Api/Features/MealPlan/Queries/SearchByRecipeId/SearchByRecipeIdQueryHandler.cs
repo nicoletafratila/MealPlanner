@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Models;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;
@@ -13,7 +14,9 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId
         public async Task<IList<MealPlanModel>> Handle(SearchByRecipeIdQuery request, CancellationToken cancellationToken)
         {
             var data = await _repository.SearchByRecipeAsync(request.RecipeId);
-            return _mapper.Map<IList<MealPlanModel>>(data).ToList();
+            var results= _mapper.Map<IList<MealPlanModel>>(data).ToList();
+            results.SetIndexes();
+            return results;
         }
     }
 }

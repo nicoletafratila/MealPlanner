@@ -24,7 +24,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                 {
                     if (mealPlan.Recipe?.RecipeCategoryId == category.Id)
                     {
-                        model.Data![mealPlan.Recipe.Name!] = !model.Data.TryGetValue(mealPlan.Recipe.Name!, out double value) ? 1 : ++value;
+                        model.Data![mealPlan.Recipe.Name!] = !model.Data.TryGetValue(mealPlan.Recipe.Name!, out double? value) ? 1 : ++value;
                     }
                 }
                 if (model.Data!.Any(i => i.Value == 1))

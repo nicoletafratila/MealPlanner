@@ -1,3 +1,32 @@
+.card {
+    width: max-content;
+    min-width: 800px;
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.1rem 0.2rem !important;
+}
+
+.row > * {
+     padding-right: calc(var(--bs-gutter-x)* .1); 
+     padding-left: calc(var(--bs-gutter-x)* .1); 
+}
+
+.text-start-right {
+    text-align: right !important;
+}
+
+@media {
+    .col-sm-8 {
+        margin-left: 10px !important;
+    }
+}
+
+.bb-grid-pagination-text {
+    align-content: flex-start;
+    margin-left: 5px;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

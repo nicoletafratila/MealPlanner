@@ -14,12 +14,27 @@ namespace RecipeBook.Api.Features.Product.Queries.Search
         public async Task<PagedList<ProductModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var data = await _repository.GetAllAsync();
-            if (!string.IsNullOrWhiteSpace(request.CategoryId))
+            var results = _mapper.Map<IList<ProductModel>>(data);
+
+            if (results != null && request.QueryParameters != null)
             {
-                data = await _repository.SearchAsync(int.Parse(request.CategoryId));
+                if (request.QueryParameters.Filters != null)
+                {
+                    foreach (var filter in request.QueryParameters.Filters)
+                    {
+                        results = results.Where(filter.ConvertFilterItemToFunc<ProductModel>()).ToList();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(request.QueryParameters!.SortString))
+                {
+                    results = results.AsQueryable().OrderByPropertyName(request.QueryParameters.SortString, request.QueryParameters.SortDirection).ToList();
+                }
+
+                return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
             }
-            var results = _mapper.Map<IList<ProductModel>>(data).OrderBy(item => item.ProductCategory?.Name).ThenBy(item => item.Name).ToList();
-            return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
+
+            return new PagedList<ProductModel>(new List<ProductModel>(), new Metadata());
         }
     }
 }

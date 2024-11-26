@@ -1,10 +1,16 @@
-﻿namespace Common.Pagination
+﻿using BlazorBootstrap;
+
+namespace Common.Pagination
 {
     public class QueryParameters
     {
-        private const int MaxPageSize = int.MaxValue;
-        public int PageNumber { get; set; } = 1;
         private int _pageSize = 10;
+        private const int MaxPageSize = int.MaxValue;
+
+        public IEnumerable<FilterItem>? Filters;
+        public string? SortString { get; set; }
+        public SortDirection SortDirection { get; set; }
+        public int PageNumber { get; set; } = 1;
 
         public int PageSize
         {

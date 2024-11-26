@@ -10,11 +10,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
         public ShoppingListModel? ShoppingList { get; set; }
-        public PagedList<ShoppingListModel>? ShoppingLists { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -75,21 +71,47 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    NavigationManager?.NavigateTo("shoppinglistsoverview", forceLoad: true);
                 }
             }
         }
 
         private async Task RefreshAsync()
         {
-            ShoppingLists = await ShoppingListService!.SearchAsync(QueryParameters!);
-            StateHasChanged();
+            var request = new GridDataProviderRequest<ShoppingListModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<ShoppingListModel>>
+                        {
+                            new SortingItem<ShoppingListModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await ShoppingListsDataProvider(request);
         }
 
-        private async Task OnPageChangedAsync(int pageNumber)
+        private async Task<GridDataProviderResult<ShoppingListModel>> ShoppingListsDataProvider(GridDataProviderRequest<ShoppingListModel> request)
         {
-            QueryParameters!.PageNumber = pageNumber;
-            await RefreshAsync();
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
+
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await ShoppingListService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<ShoppingListModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using BlazorBootstrap;
+using Common.Data.Entities;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -51,6 +53,7 @@ namespace MealPlanner.UI.Web.Pages
                     _productId = value;
                     Quantity = string.Empty;
                     UnitId = string.Empty;
+                    OnProductChangedAsync(_productId!);
                 }
             }
         }
@@ -63,6 +66,7 @@ namespace MealPlanner.UI.Web.Pages
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public string? UnitId { get; set; }
         public IList<UnitModel>? Units { get; set; }
+        public IList<UnitModel>? BaseUnits { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -82,6 +86,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
+        [Inject]
+        public IJSRuntime JS { get; set; } = default!;
+
         [CascadingParameter(Name = "MessageComponent")]
         protected IMessageComponent? MessageComponent { get; set; }
 
@@ -99,7 +106,7 @@ namespace MealPlanner.UI.Web.Pages
             _ = int.TryParse(Id, out var id);
             RecipeCategories = await RecipeCategoryService!.GetAllAsync();
             ProductCategories = await ProductCategoryService!.GetAllAsync();
-            Units = await UnitService!.GetAllAsync();
+            BaseUnits = await UnitService!.GetAllAsync();
 
             if (id == 0)
             {
@@ -162,11 +169,13 @@ namespace MealPlanner.UI.Web.Pages
         {
             get
             {
+
                 return !string.IsNullOrWhiteSpace(ProductId) &&
                        ProductId != "0" &&
                        UnitId != "0" &&
                        !string.IsNullOrWhiteSpace(Quantity) &&
-                       double.TryParse(Quantity, out _);
+                       double.TryParse(Quantity, out double quantity1) &&
+                       quantity1 > 0;
             }
         }
 
@@ -196,11 +205,12 @@ namespace MealPlanner.UI.Web.Pages
                     {
                         item = new RecipeIngredientEditModel
                         {
+                            Index = Recipe.Ingredients.Count + 1,
                             RecipeId = Recipe.Id,
                             Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
                             Quantity = decimal.Parse(Quantity!),
                             UnitId = int.Parse(UnitId!),
-                            Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!)),
+                            Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!))
                         };
                         Recipe.Ingredients?.Add(item);
                         Quantity = string.Empty;
@@ -243,10 +253,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void OnProductCategoryChangedAsync(string value)
         {
+            var filters = new List<FilterItem>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                filters.Add(new FilterItem("ProductCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            };
+
             ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
-            Products = await ProductService!.SearchAsync(ProductCategoryId);
+
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Products = await ProductService!.SearchAsync(queryParameters);
+            StateHasChanged();
+        }
+
+        private async void OnProductChangedAsync(string value)
+        {
+            Quantity = string.Empty;
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var product = await ProductService!.GetEditAsync(int.Parse(value));
+                if (product != null)
+                {
+                    var baseUnit = BaseUnits!.FirstOrDefault(x => x.Id == product.BaseUnitId);
+                    Units = BaseUnits!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
+                }
+            }
             StateHasChanged();
         }
 
@@ -269,6 +309,11 @@ namespace MealPlanner.UI.Web.Pages
                 MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
+        }
+
+        private async Task CheckQuantity(ChangeEventArgs e)
+        {
+            await JS.InvokeVoidAsync("checkQuantity");
         }
     }
 }
