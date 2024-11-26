@@ -10,11 +10,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
-
         public MealPlanModel? MealPlan { get; set; }
-        public PagedList<MealPlanModel>? MealPlans { get; set; }
 
         [Inject]
         public IMealPlanService? MealPlanService { get; set; }
@@ -76,21 +72,47 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    NavigationManager?.NavigateTo("mealplansoverview", forceLoad: true);
                 }
             }
         }
 
         private async Task RefreshAsync()
         {
-            MealPlans = await MealPlanService!.SearchAsync(QueryParameters!);
-            StateHasChanged();
+            var request = new GridDataProviderRequest<MealPlanModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<MealPlanModel>>
+                        {
+                            new SortingItem<MealPlanModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await MealPlansDataProvider(request);
         }
 
-        private async Task OnPageChangedAsync(int pageNumber)
+        private async Task<GridDataProviderResult<MealPlanModel>> MealPlansDataProvider(GridDataProviderRequest<MealPlanModel> request)
         {
-            QueryParameters!.PageNumber = pageNumber;
-            await RefreshAsync();
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
+
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await MealPlanService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<MealPlanModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }

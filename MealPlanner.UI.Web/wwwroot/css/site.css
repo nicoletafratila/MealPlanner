@@ -1,3 +1,8 @@
+.card {
+    width: max-content;
+    min-width: 700px;
+}
+
 .table > :not(caption) > * > * {
     padding: 0.1rem 0.2rem !important;
 }
@@ -5,6 +10,10 @@
 .row > * {
      padding-right: calc(var(--bs-gutter-x)* .1); 
      padding-left: calc(var(--bs-gutter-x)* .1); 
+}
+
+.text-start-right {
+    text-align: right !important;
 }
 
 @media {

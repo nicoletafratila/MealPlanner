@@ -22,12 +22,12 @@ namespace MealPlanner.UI.Web.Shared
             if (settings is null)
                 return;
 
-            await JS.InvokeVoidAsync("window.localStorage.setItem", "grid-settings", JsonSerializer.Serialize(settings));
+            await JS.InvokeVoidAsync("window.localStorage.setItem", typeof(TItem).ToString(), JsonSerializer.Serialize(settings));
         }
 
         private async Task<GridSettings> GridSettingsProvider()
         {
-            var settingsJson = await JS.InvokeAsync<string>("window.localStorage.getItem", "grid-settings");
+            var settingsJson = await JS.InvokeAsync<string>("window.localStorage.getItem", typeof(TItem).ToString());
             if (string.IsNullOrWhiteSpace(settingsJson))
                 return null!;
 

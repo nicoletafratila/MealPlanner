@@ -35,7 +35,7 @@
                     <GridColumn TItem="ProductModel" HeaderText="Category" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase">
                         @context.ProductCategoryName
                     </GridColumn>
-                    <GridColumn TItem="ProductModel" Filterable="false">
+                    <GridColumn TItem="ProductModel" Filterable="false" Class="text-start-right">
                         <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
                         <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
                     </GridColumn>

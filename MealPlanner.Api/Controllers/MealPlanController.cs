@@ -1,4 +1,6 @@
-﻿using Common.Pagination;
+﻿using System.Text.Json;
+using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
 using MealPlanner.Api.Features.MealPlan.Commands.Delete;
 using MealPlanner.Api.Features.MealPlan.Commands.Update;
@@ -47,11 +49,18 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<MealPlanModel>> Search([FromQuery] QueryParameters? queryParameters)
+        public async Task<PagedList<MealPlanModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
-                QueryParameters = queryParameters
+                QueryParameters = new QueryParameters()
+                {
+                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonSerializer.Deserialize<IEnumerable<FilterItem>>(filters) : null,
+                    SortString = sortString,
+                    SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
+                    PageSize = int.Parse(pageSize),
+                    PageNumber = int.Parse(pageNumber)
+                }
             };
             return await _mediator.Send(query);
         }
