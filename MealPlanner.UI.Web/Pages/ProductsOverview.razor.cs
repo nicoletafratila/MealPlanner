@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using BlazorBootstrap;
+﻿using BlazorBootstrap;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -14,17 +13,11 @@ namespace MealPlanner.UI.Web.Pages
 
         public ProductModel? Product { get; set; }
         
-        public string? CategoryId { get; set; }
-        public IList<ProductCategoryModel>? Categories { get; set; }
-
         [Inject]
         public IProductService? ProductService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
-
-        [Inject]
-        public IJSRuntime JS { get; set; } = default!;
 
         [CascadingParameter(Name = "MessageComponent")]
         protected IMessageComponent? MessageComponent { get; set; }
@@ -120,27 +113,6 @@ namespace MealPlanner.UI.Web.Pages
 
             var result = await ProductService!.SearchAsync(queryParameters);
             return await Task.FromResult(new GridDataProviderResult<ProductModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
-        }
-
-        private async Task OnGridSettingsChanged(GridSettings settings)
-        {
-            if (settings is null)
-                return;
-
-            await JS.InvokeVoidAsync("window.localStorage.setItem", "grid-settings", JsonSerializer.Serialize(settings));
-        }
-
-        private async Task<GridSettings> GridSettingsProvider()
-        {
-            var settingsJson = await JS.InvokeAsync<string>("window.localStorage.getItem", "grid-settings");
-            if (string.IsNullOrWhiteSpace(settingsJson))
-                return null!;
-
-            var settings = JsonSerializer.Deserialize<GridSettings>(settingsJson);
-            if (settings is null)
-                return null!;
-
-            return settings;
         }
     }
 }
