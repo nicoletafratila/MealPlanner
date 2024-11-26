@@ -6,7 +6,7 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.ProductCategory.Queries.GetAll
 {
-    public class GetAllHandler(IProductCategoryRepository repository, IMapper mapper) : IRequestHandler<GetAllQuery, IList<ProductCategoryModel>>
+    public class GetAllQueryHandler(IProductCategoryRepository repository, IMapper mapper) : IRequestHandler<GetAllQuery, IList<ProductCategoryModel>>
     {
         private readonly IProductCategoryRepository _repository = repository;
         private readonly IMapper _mapper = mapper;

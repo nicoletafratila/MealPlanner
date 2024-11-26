@@ -12,7 +12,7 @@ namespace Common.Data.Profiles.Resolvers
             var results = source.RecipeIngredients?.Select(context.Mapper.Map<RecipeIngredientEditModel>)
                          .OrderBy(item => item.Product?.ProductCategory?.Name)
                          .ThenBy(item => item.Product?.Name).ToList();
-            results.SetIndexes();
+            results!.SetIndexes();
             return results;
         }
     }

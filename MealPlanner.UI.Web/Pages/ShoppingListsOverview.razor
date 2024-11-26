@@ -17,7 +17,7 @@
         </div>
 
         <div class="card-body">
-            <GridPlanner TItem="ShoppingListModel" DataProvider="ShoppingListsDataProvider">
+            <GridTemplate TItem="ShoppingListModel" DataProvider="ShoppingListsDataProvider">
                 <Columns>
                     <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
@@ -30,7 +30,7 @@
                         <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
                     </GridColumn>
                 </Columns>
-            </GridPlanner>
+            </GridTemplate>
         </div>
     </div>
 </div>

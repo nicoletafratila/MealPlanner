@@ -14,7 +14,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Queries.GetAll
         public async Task<IList<RecipeCategoryModel>> Handle(GetAllQuery request, CancellationToken cancellationToken)
         {
             var data = await _repository.GetAllAsync();
-            var results= _mapper.Map<IList<RecipeCategoryModel>>(data).OrderBy(r => r.DisplaySequence).ToList();
+            var results = _mapper.Map<IList<RecipeCategoryModel>>(data).OrderBy(r => r.DisplaySequence).ToList();
             results.SetIndexes();
             return results;
         }

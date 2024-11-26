@@ -13,7 +13,7 @@ namespace Common.Data.Profiles.Resolvers
             var results = source.MealPlanRecipes?.Select(item => context.Mapper.Map<RecipeModel>(item.Recipe))
                                           .OrderBy(item => item.RecipeCategory?.DisplaySequence)
                                           .ThenBy(item => item.Name).ToList();
-            results.SetIndexes();
+            results!.SetIndexes();
             return results;
         }
     }

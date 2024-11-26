@@ -1,6 +1,6 @@
 .card {
     width: max-content;
-    min-width: 700px;
+    min-width: 800px;
 }
 
 .table > :not(caption) > * > * {

@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace MealPlanner.UI.Web.Shared
 {
-    public partial class GridPlanner<TItem> where TItem : BaseModel
+    public partial class GridTemplate<TItem> where TItem : BaseModel
     {
         [Parameter]
         public GridDataProviderDelegate<TItem>? DataProvider { get; set; }

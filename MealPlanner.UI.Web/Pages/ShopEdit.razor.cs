@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Models;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -108,7 +109,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Shop.DisplaySequence.Insert(index - 1, item);
             }
-            UpdateDisplaySeqenceValues();
+            Shop!.DisplaySequence.SetIndexes();
         }
 
         private bool CanMoveDown(ShopDisplaySequenceEditModel item)
@@ -124,15 +125,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 Shop.DisplaySequence.Insert(index + 1, item);
             }
-            UpdateDisplaySeqenceValues();
-        }
-
-        private void UpdateDisplaySeqenceValues()
-        {
-            for (int i = 0; i < Shop?.DisplaySequence?.Count; i++)
-            {
-                Shop.DisplaySequence[i].Value = i + 1;
-            }
+            Shop!.DisplaySequence.SetIndexes();
         }
 
         private void NavigateToOverview()
