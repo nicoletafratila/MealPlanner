@@ -1,15 +1,62 @@
-.page {
-    position: relative;
+.page-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
 }
 
-main {
-    flex: 1;
+.banner {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+.banner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: left;
+    margin-top: 200px;
+    padding: 35px 100px 0px 150px;
+}
+
+.logo-image {
+    max-width: 100px;
+    max-height: 100px;
+    justify-content: center;
+}
+
+.logo-text {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+    text-align: left;
+    margin: 20px 0;
+}
+
+.motto-text {
+    display: flex;
+    align-items: flex-start;
+    justify-content: left;
+    padding: 10px 0px 0px 10px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.custom-line {
+    border: 1px solid #333;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.image-column {
+    width: 1px;
+    white-space: nowrap;
 }
 
 .top-row {
@@ -48,13 +95,6 @@ main {
 @media (min-width: 641px) {
     .page {
         flex-direction: row;
-    }
-
-    .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: sticky;
-        top: 0;
     }
 
     .top-row {

@@ -1,42 +1,75 @@
 ﻿@inherits LayoutComponentBase
+@using MudBlazor
 
 <PageTitle>Meal planner</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<MudContainer Class="page-container">
+    <MudPaper Class="banner" Elevation="4">
+        <Banner />
+    </MudPaper>
+
+    <div class="banner-container">
+        <table>
+            <tr>
+                <td class="image-column">
+                    <img src="Images\logo.jpg" alt="Logo Image" class="logo-image" />
+                </td>
+                <td>
+                    <p class="logo-text">Recipes & Meal planner</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p class="motto-text">Baking for family and friends</p>
+                </td>
+            </tr>
+        </table>
+        <hr class="custom-line">
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+    <table>
+        <tr>
+            <td class="row">
+                <NavMenu />
+            </td>
+            <td style="vertical-align: top">
+                <div class="page-content">
+                    <main>
+                        @*   <div class="top-row px-4">
+                        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                        </div> *@
 
-        <div class="content px-4">
-            @if (IsErrorActive)
-            {
-                <div>
-                    <Alert Color="AlertColor.Danger" Dismissable="true" OnClose="HideError">
-                        <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>
-                        @Message 
-                    </Alert>
+                        <div class="content px-4">
+                            @if (IsErrorActive)
+                            {
+                                <div>
+                                    <Alert Color="AlertColor.Danger" Dismissable="true" OnClose="HideError">
+                                        <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>
+                                        @Message
+                                    </Alert>
+                                </div>
+                            }
+                            @if (IsInfoActive)
+                            {
+                                <div>
+                                    <Alert Color="AlertColor.Success" Dismissable="true" OnClose="HideInfo">
+                                        <Icon Name="IconName.CheckCircleFill" class="me-2"></Icon>
+                                        @Message
+                                    </Alert>
+                                </div>
+                            }
+                            <CascadingValue Value="this" Name="MessageComponent">
+                                <div class="main-content">
+                                    @Body
+                                </div>
+                            </CascadingValue>
+                        </div>
+                    </main>
                 </div>
-            }
-            @if (IsInfoActive)
-            {
-                <div>
-                    <Alert Color="AlertColor.Success" Dismissable="true" OnClose="HideInfo">
-                        <Icon Name="IconName.CheckCircleFill" class="me-2"></Icon>
-                        @Message
-                    </Alert>
-                </div>
-            }
-            <CascadingValue Value="this" Name="MessageComponent">
-                @Body
-            </CascadingValue>
-        </div>
-    </main>
-</div>
+            </td>
+        </tr>
+    </table>
+</MudContainer>
 
 <Modal IsServiceModal="true" />
 <Preload />

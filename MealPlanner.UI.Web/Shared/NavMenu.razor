@@ -1,73 +1,64 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Meal planner</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using MudBlazor
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="productcategoriesoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Product categories
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="unitsoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Product units
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="productsoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="productstatistics">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Products statistics
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="recipecategoriesoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Recipe categories
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="recipesoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Recipes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="recipestatistics">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Recipes statistics
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="mealplansoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Meal plans
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="shoppinglistsoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Shopping lists
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="shopsoverview">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Shops
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="audittrail">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Audit trail
-            </NavLink>
-        </div>
-    </nav>
+<div @onclick="ToggleNavMenu" class="nav-menu">
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <span class="oi oi-home" aria-hidden="true"></span> Home
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="productcategoriesoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Product categories
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="unitsoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Product units
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="productsoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Products
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="productstatistics">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Products statistics
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="recipecategoriesoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Recipe categories
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="recipesoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Recipes
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="recipestatistics">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Recipes statistics
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="mealplansoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Meal plans
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="shoppinglistsoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Shopping lists
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="shopsoverview">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Shops
+        </MudNavLink>
+    </div>
+    <div class="nav-item px-3">
+        <MudNavLink class="nav-link" href="audittrail">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Audit trail
+        </MudNavLink>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 .card {
     width: max-content;
-    min-width: 800px;
+    min-width: 850px;
 }
 
 .table > :not(caption) > * > * {
@@ -25,10 +25,6 @@
 .bb-grid-pagination-text {
     align-content: flex-start;
     margin-left: 5px;
-}
-
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 h1:focus {
