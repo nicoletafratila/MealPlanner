@@ -2,11 +2,6 @@
 
 <div @onclick="ToggleNavMenu" class="nav-menu">
     <div class="nav-item px-3">
-        <MudNavLink class="nav-link" href="" Match="NavLinkMatch.All">
-            <span class="oi oi-home" aria-hidden="true"></span> Home
-        </MudNavLink>
-    </div>
-    <div class="nav-item px-3">
         <MudNavLink class="nav-link" href="productcategoriesoverview">
             <span class="oi oi-list-rich" aria-hidden="true"></span> Product categories
         </MudNavLink>
@@ -32,7 +27,7 @@
         </MudNavLink>
     </div>
     <div class="nav-item px-3">
-        <MudNavLink class="nav-link" href="recipesoverview">
+        <MudNavLink class="nav-link" href="recipesoverview" Match="NavLinkMatch.All">
             <span class="oi oi-list-rich" aria-hidden="true"></span> Recipes
         </MudNavLink>
     </div>

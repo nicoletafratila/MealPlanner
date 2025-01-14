@@ -39,7 +39,6 @@ namespace MealPlanner.UI.Web.Pages
         {
             NavItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Home", Href ="/" },
                 new BreadcrumbItem{ Text = "Products", Href ="/productoverview" },
                 new BreadcrumbItem{ Text = "Product", IsCurrentPage = true },
             };
