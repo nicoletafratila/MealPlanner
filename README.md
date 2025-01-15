@@ -14,4 +14,4 @@ PM> Script-migration
 MealPlanner
 organizeaza pe features
 user module
-design interfata
+muta pe maui

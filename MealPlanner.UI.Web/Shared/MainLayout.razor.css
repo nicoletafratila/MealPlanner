@@ -8,6 +8,17 @@
     position: relative;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.content {
+    flex: 1;
+    padding: 0px;
+}
+
 .banner {
     width: 100%;
     text-align: center;
@@ -19,8 +30,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: left;
-    margin-top: 200px;
-    padding: 35px 100px 0px 150px;
+    padding: 20px 100px 0px 150px;
 }
 
 .logo-image {

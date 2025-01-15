@@ -4,7 +4,7 @@
 <PageTitle>Meal planner</PageTitle>
 
 <MudContainer Class="page-container">
-    <MudPaper Class="banner" Elevation="4">
+    <MudPaper Class="banner" >
         <Banner />
     </MudPaper>
 
@@ -20,7 +20,17 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <p class="motto-text">Baking for family and friends</p>
+                    <p class="motto-text">
+                        Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!
+@* 
+                        Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!
+                        Savor the Simplicity: Your Ultimate Menu and Recipe Organizer!
+                        "Culinary Harmony: Your Go-To Menu and Recipe Organizer!"
+                        "Tastefully Organized: Simplify Your Cooking Journey!"
+                        "Recipe Bliss: Your Personal Menu and Recipe Keeper!"
+                        "Cook Smart, Eat Well: Your Menu and Recipe Assistant!"
+ *@
+                    </p>
                 </td>
             </tr>
         </table>
@@ -33,7 +43,7 @@
                 <NavMenu />
             </td>
             <td style="vertical-align: top">
-                <div class="page-content">
+                <div>
                     <main>
                         @*   <div class="top-row px-4">
                         <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
@@ -59,8 +69,10 @@
                                 </div>
                             }
                             <CascadingValue Value="this" Name="MessageComponent">
-                                <div class="main-content">
-                                    @Body
+                                <div class="container">
+                                    <div class="content">
+                                        @Body
+                                    </div>
                                 </div>
                             </CascadingValue>
                         </div>
