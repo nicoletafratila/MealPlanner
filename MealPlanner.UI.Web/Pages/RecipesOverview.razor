@@ -13,7 +13,7 @@
             <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                 <div class="card-recipe">
                     <div class="card-header" style="padding: 0px;">
-                        <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
+                        <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
                     </div>
                     <div class="card-body">
                         <table>
@@ -31,7 +31,6 @@
                                 </td>
                                 <td class="min-space">
                                     <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="() => DeleteAsync(context)">
-
                                 </td>
                             </tr>
                         </table>

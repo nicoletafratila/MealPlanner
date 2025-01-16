@@ -14,6 +14,9 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public RenderFragment? Columns { get; set; }
 
+        [Parameter]
+        public string TableGridClass { get; set; } = "table-grid";
+
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 

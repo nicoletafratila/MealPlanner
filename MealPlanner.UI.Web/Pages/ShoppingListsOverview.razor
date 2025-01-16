@@ -17,7 +17,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="ShoppingListModel" DataProvider="ShoppingListsDataProvider">
+            <GridTemplate TItem="ShoppingListModel" DataProvider="ShoppingListsDataProvider" TableGridClass="table table-hover table-striped">
                 <Columns>
                     <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index

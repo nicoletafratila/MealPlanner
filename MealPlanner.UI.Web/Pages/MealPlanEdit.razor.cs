@@ -134,6 +134,11 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
+        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProvider(GridDataProviderRequest<RecipeModel> request)
+        {
+            return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = MealPlan!.Recipes, TotalCount = MealPlan.Recipes!.Count });
+        }
+
         private bool CanAddRecipe
         {
             get
