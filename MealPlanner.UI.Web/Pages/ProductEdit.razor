@@ -8,14 +8,16 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <div class="row g-0">
-                    <div class="col-md-8">
-                        <h2>@Product.Name</h2>
-                    </div>
-                    <div class="col-md-4 align-self-center">
-                        <img class="img-fluid" src="@Product.ImageUrl" />
-                    </div>
-                </div>
+                <table>
+                    <tr class="row g-0" style="display:contents">
+                        <td class="col-md-8" style="vertical-align: top">
+                            <h2>@Product.Name</h2>
+                        </td>
+                        <td class="col-md-3" style="align-content:flex-end;">
+                            <img class="img-fluid" src="@Product.ImageUrl" />
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="card-body">
@@ -50,7 +52,7 @@
                         <ValidationMessage For="@(() => Product.ProductCategoryId)" />
                     </div>
 
-                     <div class="form-group mt-3">
+                    <div class="form-group mt-3">
                         <label for="unit" class="col-sm-3">Unit of measurement: </label>
                         <InputSelect id="unit" class="form-select" @bind-Value="@Product.BaseUnitId">
                             <option selected value="0">Choose...</option>

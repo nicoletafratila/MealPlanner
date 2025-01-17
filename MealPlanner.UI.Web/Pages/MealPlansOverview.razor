@@ -6,14 +6,16 @@
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
-            <div class="row g-0">
-                <div class="col-md-11">
-                    <h2>Meal plans</h2>
-                </div>
-                <div class="col-auto align-self-center">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
-                </div>
-            </div>
+            <table>
+                <tr>
+                    <td style="width: 100%;">
+                        <h2>Meal plans</h2>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div class="card-body">
@@ -22,7 +24,7 @@
                     <GridColumn TItem="MealPlanModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
                     </GridColumn>
-                    <GridColumn TItem="MealPlanModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <GridColumn FilterTextboxWidth="600" TItem="MealPlanModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                         @context.Name
                     </GridColumn>
                     <GridColumn TItem="MealPlanModel" Filterable="false" Class="text-start-right">

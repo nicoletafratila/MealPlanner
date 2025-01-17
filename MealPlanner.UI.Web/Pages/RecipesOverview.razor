@@ -4,42 +4,56 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
-<div class="card-body">
-    <div class="btn-new-container">
-        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <table>
+                <tr>
+                    <td style="width: 100%;">
+                        <h2>Recipes</h2>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-body">
+            <GridTemplate TItem="RecipeModel" DataProvider="RecipesDataProvider">
+                <Columns>
+                    <GridColumn FilterTextboxWidth="600" TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        <div class="card-recipe">
+                            <div class="card-header" style="padding: 0px;">
+                                <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
+                            </div>
+                            <div class="card-body">
+                                <table>
+                                    <tr>
+                                        <td class="fill-space">
+                                            @context.Name
+                                        </td>
+                                        <td class="min-space">
+                                            @if (!string.IsNullOrWhiteSpace((context.Source)))
+                                            {
+                                                <a href="@context.Source" target="_blank">
+                                                    <img src="Images\webIcon.png" alt="icon" class="small-icon">
+                                                </a>
+                                            }
+                                        </td>
+                                        <td class="min-space">
+                                            <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="() => DeleteAsync(context)">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </GridColumn>
+                    <GridColumn FilterTextboxWidth="305" TItem="RecipeModel" HeaderText="Category" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
+                </Columns>
+            </GridTemplate>
+        </div>
     </div>
-    <GridTemplate TItem="RecipeModel" DataProvider="RecipesDataProvider">
-        <Columns>
-            <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
-                <div class="card-recipe">
-                    <div class="card-header" style="padding: 0px;">
-                        <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
-                    </div>
-                    <div class="card-body">
-                        <table>
-                            <tr>
-                                <td class="fill-space">
-                                    @context.Name
-                                </td>
-                                <td class="min-space">
-                                    @if (!string.IsNullOrWhiteSpace((context.Source)))
-                                    {
-                                        <a href="@context.Source" target="_blank">
-                                            <img src="Images\webIcon.png" alt="icon" class="small-icon">
-                                        </a>
-                                    }
-                                </td>
-                                <td class="min-space">
-                                    <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="() => DeleteAsync(context)">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </GridColumn>
-            <GridColumn TItem="RecipeModel" HeaderText="Category" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
-        </Columns>
-    </GridTemplate>
 </div>
 
 <ConfirmDialog @ref="dialog" />

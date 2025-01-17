@@ -29,6 +29,7 @@ namespace MealPlanner.Shared.Models
             {
                 DisplaySequence.Add(new ShopDisplaySequenceEditModel
                 {
+                    Index = index,
                     ShopId = Id,
                     ProductCategory = item,
                     Value = index++,

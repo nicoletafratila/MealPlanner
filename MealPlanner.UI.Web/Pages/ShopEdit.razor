@@ -30,7 +30,7 @@
                         <label for="display" class="col-sm-3">Display order: </label>
                     </div>
 
-                    <div class="col">
+                    <div class="card-body">
                         <TableTemplate Data="@Shop.DisplaySequence" ShowIndex="true">
                             <TableHeader>
                                 <th>Name</th>
@@ -49,11 +49,11 @@
                                 </td>
                             </RowTemplate>
                         </TableTemplate>
-                    </div>
 
-                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                        <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                        <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                    </div>
                 </EditForm>
             </div>
         </div>

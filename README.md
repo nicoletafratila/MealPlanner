@@ -12,6 +12,8 @@ PM> Script-migration
 
 
 MealPlanner
+product categories cu paginare
+statistics
 organizeaza pe features
 user module
 muta pe maui

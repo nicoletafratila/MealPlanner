@@ -21,7 +21,7 @@
         <div class="card-body">
             <GridTemplate TItem="ProductModel" DataProvider="ProductsDataProvider">
                 <Columns>
-                    <GridColumn TItem="ProductModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <GridColumn FilterTextboxWidth="600" TItem="ProductModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                         <div class="card-recipe">
                             <div class="card-header" style="padding: 0px;">
                                 <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
@@ -45,6 +45,7 @@
                             </div>
                         </div>
                     </GridColumn>
+                    <GridColumn FilterTextboxWidth="305" TItem="ProductModel" HeaderText="Category" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
                 </Columns>
             </GridTemplate>
         </div>
