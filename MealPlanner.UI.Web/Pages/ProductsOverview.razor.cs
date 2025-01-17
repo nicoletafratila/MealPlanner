@@ -2,7 +2,6 @@
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -28,7 +27,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             NavItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Products", IsCurrentPage = true }
+                new BreadcrumbItem{ Text = "Home", Href ="/recipesoverview" }
             };
             await RefreshAsync();
         }

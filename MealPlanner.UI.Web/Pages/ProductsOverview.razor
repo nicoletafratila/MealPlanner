@@ -6,38 +6,44 @@
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
-            <div class="row g-0">
-                <div class="col-md-11">
-                    <h2>Products</h2>
-                </div>
-                <div class="col-auto align-self-center">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
-                </div>
-            </div>
+            <table>
+                <tr>
+                    <td style="width: 100%;">
+                        <h2>Products</h2>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div class="card-body">
             <GridTemplate TItem="ProductModel" DataProvider="ProductsDataProvider">
                 <Columns>
-                    <GridColumn TItem="ProductModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
-                        @context.Index
-                    </GridColumn>
                     <GridColumn TItem="ProductModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
-                        <div style="display: flex; align-items: start;">
-                            <div class="col-sm-3">
-                                <img src="@context.ImageUrl" class="img-fluid" width="100" height="80" />
+                        <div class="card-recipe">
+                            <div class="card-header" style="padding: 0px;">
+                                <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
                             </div>
-                            <div class="col-sm-8">
-                                @context.Name
+                            <div class="card-body">
+                                <table>
+                                    <tr>
+                                        <td class="fill-space">
+                                            @context.Name
+                                        </td>
+                                        <td class="min-space">
+                                            <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="() => DeleteAsync(context)">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fill-space">
+                                            @context.ProductCategoryName
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
-                    </GridColumn>
-                    <GridColumn TItem="ProductModel" HeaderText="Category" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase">
-                        @context.ProductCategoryName
-                    </GridColumn>
-                    <GridColumn TItem="ProductModel" Filterable="false" Class="text-start-right">
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
-                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
                     </GridColumn>
                 </Columns>
             </GridTemplate>
