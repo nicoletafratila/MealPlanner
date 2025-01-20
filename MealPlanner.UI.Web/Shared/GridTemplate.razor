@@ -1,8 +1,10 @@
 ﻿@typeparam TItem
 
-<Grid TItem="TItem"
+<Grid 
+      TItem="TItem"
+      @ref="gridTemplateReference"
       AllowFiltering="true"
-      AllowPaging="true"
+      AllowPaging="@AllowPaging"
       AllowSorting="true"
       AutoHidePaging="true"
       Class="@TableGridClass"
@@ -11,7 +13,7 @@
       PageSizeSelectorItems="@(new int[] { 5, 10, 20, 50 })"
       Responsive="true"
       FiltersRowCssClass="bg-primary text-white bg-opacity-25"
-      HeaderRowCssClass="bg-primary text-white"
+      HeaderRowCssClass="@HeaderRowCssClass"
       GridSettingsChanged="OnGridSettingsChanged"
       SettingsProvider="GridSettingsProvider">
     <GridColumns>

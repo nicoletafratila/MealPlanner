@@ -4,6 +4,12 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
+<style>
+    .table-grid > thead {
+        visibility: collapse;
+    }
+</style>
+
 @if (MealPlan != null)
 {
     <div class="col-sm-6">
@@ -60,7 +66,7 @@
 
                     <div class="card-body">
                         <ValidationMessage For="@(() => MealPlan.Recipes)" />
-                        <GridTemplate TItem="RecipeModel" DataProvider="RecipesDataProvider">
+                        <GridTemplate TItem="RecipeModel" @ref="selectedRecipedGrid" DataProvider="RecipesDataProviderAsync" AllowPaging="false">
                             <Columns>
                                 <GridColumn TItem="RecipeModel" Filterable="false">
                                     <ChildContent Context="recipeContext">

@@ -17,8 +17,24 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public string TableGridClass { get; set; } = "table-grid";
 
+        [Parameter]
+        public string HeaderRowCssClass { get; set; } = "bg-primary text-white";
+
+        [Parameter]
+        public bool AllowPaging { get; set; } = true;
+
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
+
+        private Grid<TItem>? gridTemplateReference;
+
+        public async Task RefreshData()
+        {
+            if (gridTemplateReference != null)
+            {
+                await gridTemplateReference.RefreshDataAsync();
+            }
+        }
 
         private async Task OnGridSettingsChanged(GridSettings settings)
         {

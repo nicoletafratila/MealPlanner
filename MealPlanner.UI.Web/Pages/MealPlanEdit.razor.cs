@@ -1,12 +1,11 @@
-﻿using Azure.Core;
-using BlazorBootstrap;
+﻿using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
@@ -65,6 +64,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected ConfirmDialog dialog = default!;
         protected Offcanvas offcanvas = default!;
+        protected GridTemplate<RecipeModel>? selectedRecipedGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -87,7 +87,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             var response = MealPlan?.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan!);
             if (!string.IsNullOrWhiteSpace(response))
@@ -101,7 +101,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (MealPlan?.Id != 0)
             {
@@ -134,9 +134,10 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProvider(GridDataProviderRequest<RecipeModel> request)
+        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
-            return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = MealPlan!.Recipes, TotalCount = MealPlan.Recipes == null ? 0 : MealPlan.Recipes!.Count });
+            var data = MealPlan!.Recipes == null ? new List<RecipeModel>() : MealPlan.Recipes;
+            return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = data, TotalCount = data.Count });
         }
 
         private bool CanAddRecipe
@@ -148,7 +149,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void AddRecipeAsync()
+        private async Task AddRecipeAsync()
         {
             if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
             {
@@ -165,6 +166,7 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
+                        await selectedRecipedGrid!.RefreshData();
                     }
                 }
 
@@ -177,7 +179,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo($"recipeedit/{item.Id}");
         }
 
-        private async void DeleteRecipeAsync(RecipeModel item)
+        private async Task DeleteRecipeAsync(RecipeModel item)
         {
             RecipeModel? itemToDelete = MealPlan?.Recipes?.FirstOrDefault(i => i.Id == item.Id);
             if (itemToDelete != null)
@@ -200,11 +202,12 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
+                await selectedRecipedGrid!.RefreshData();
                 StateHasChanged();
             }
         }
 
-        private async void SaveShoppingListAsync()
+        private async Task SaveShoppingListAsync()
         {
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
@@ -248,7 +251,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo("/mealplansoverview");
         }
 
-        private async void OnRecipeCategoryChangedAsync(string? value)
+        private async Task OnRecipeCategoryChangedAsync(string? value)
         {
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
