@@ -17,7 +17,6 @@ cand lista  e goala, centreaza poza
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task
 about cu link linkedin
-scoate buton edit, edit la click pe row
 organizeaza pe features
 user module
 muta pe maui

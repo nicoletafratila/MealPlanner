@@ -27,8 +27,11 @@
                         <th style="width: 30px"></th>
                     </TableHeader>
                     <RowTemplate Context="shop">
-                        <td>@shop.Name</td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(shop)">Edit</button></td>
+                        <td>
+                            <div style="cursor: pointer;" @onclick="() => Update(shop)">
+                                @shop.Name
+                            </div>
+                        </td>
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(shop)"></button></td>
                     </RowTemplate>
                 </TableTemplate>
