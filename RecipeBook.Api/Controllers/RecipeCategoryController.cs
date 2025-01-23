@@ -1,4 +1,7 @@
-﻿using Common.Pagination;
+﻿using BlazorBootstrap;
+using System.Text.Json;
+using Common.Pagination;
+using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Add;
@@ -28,11 +31,18 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<RecipeCategoryModel>> Search([FromQuery] QueryParameters? queryParameters)
+        public async Task<PagedList<RecipeCategoryModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
-                QueryParameters = queryParameters
+                QueryParameters = new QueryParameters()
+                {
+                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonSerializer.Deserialize<IEnumerable<FilterItem>>(filters) : null,
+                    SortString = sortString,
+                    SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
+                    PageSize = int.Parse(pageSize!),
+                    PageNumber = int.Parse(pageNumber!)
+                }
             };
             return await _mediator.Send(query);
         }

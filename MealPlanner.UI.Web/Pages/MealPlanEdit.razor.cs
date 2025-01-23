@@ -166,7 +166,7 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
-                        await selectedRecipedGrid!.RefreshData();
+                        await selectedRecipedGrid!.RefreshDataAsync();
                     }
                 }
 
@@ -202,7 +202,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
-                await selectedRecipedGrid!.RefreshData();
+                await selectedRecipedGrid!.RefreshDataAsync();
                 StateHasChanged();
             }
         }
