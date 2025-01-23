@@ -1,4 +1,5 @@
 ﻿@page "/productcategoriesoverview"
+@using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -17,26 +18,23 @@
             </table>
         </div>
 
-        @if (Categories != null)
-        {
-            <div class="card-body">
-                <TableTemplate Data="@Categories" ShowIndex="true">
-                    <TableHeader>
-                        <th>Name</th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="category">
-                        <td>
-                            <div style="cursor: pointer;" @onclick="() => Update(category)">
-                                @category.Name
-                            </div>
-                        </td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
-                    </RowTemplate>
-                </TableTemplate>
-            </div>
-        }
+        <div class="card-body">
+            <GridTemplate TItem="ProductCategoryModel" DataProvider="CategoriesDataProvider" TableGridClass="table table-hover table-striped">
+                <Columns>
+                    <GridColumn TItem="ProductCategoryModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn FilterTextboxWidth="600" TItem="ProductCategoryModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        <div style="cursor: pointer;" @onclick="() => Update(context)">
+                            @context.Name
+                        </div>
+                    </GridColumn>
+                    <GridColumn TItem="ProductCategoryModel" Filterable="false" Class="text-start-right">
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridTemplate>
+        </div>
     </div>
 </div>
 

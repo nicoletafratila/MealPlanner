@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
@@ -10,7 +11,6 @@ namespace MealPlanner.UI.Web.Pages
         private List<BreadcrumbItem>? NavItems { get; set; }
 
         public ProductCategoryEditModel? Category { get; set; }
-        public IList<ProductCategoryModel>? Categories { get; set; }
 
         [Inject]
         public IProductCategoryService? ProductCategoriesService { get; set; }
@@ -77,8 +77,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            Categories = await ProductCategoriesService!.GetAllAsync();
-            StateHasChanged();
+            var request = new GridDataProviderRequest<ProductCategoryModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<ProductCategoryModel>>
+                        {
+                            new SortingItem<ProductCategoryModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await CategoriesDataProvider(request);
+        }
+
+        private async Task<GridDataProviderResult<ProductCategoryModel>> CategoriesDataProvider(GridDataProviderRequest<ProductCategoryModel> request)
+        {
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
+
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await ProductCategoriesService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<ProductCategoryModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }
