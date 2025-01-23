@@ -39,8 +39,8 @@ namespace MealPlanner.Api.Controllers
                     Filters = !string.IsNullOrWhiteSpace(filters) ? JsonSerializer.Deserialize<IEnumerable<FilterItem>>(filters) : null,
                     SortString = sortString,
                     SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
-                    PageSize = int.Parse(pageSize),
-                    PageNumber = int.Parse(pageNumber)
+                    PageSize = int.Parse(pageSize!),
+                    PageNumber = int.Parse(pageNumber!)
                 }
             };
             return await _mediator.Send(query);

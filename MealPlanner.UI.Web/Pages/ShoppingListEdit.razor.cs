@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
             }
         }
-        public IList<ProductCategoryModel>? ProductCategories { get; set; }
+        public PagedList<ProductCategoryModel>? ProductCategories { get; set; }
 
         private string? _productId;
         public string? ProductId
@@ -84,7 +84,7 @@ namespace MealPlanner.UI.Web.Pages
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public string? UnitId { get; set; }
         public IList<UnitModel>? Units { get; set; }
-        public IList<UnitModel>? BaseUnits { get; set; }
+        public PagedList<UnitModel>? BaseUnits { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }
@@ -129,17 +129,9 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Shopping list", IsCurrentPage = true },
             };
 
-            var queryParameters = new QueryParameters()
-            {
-                Filters = new List<FilterItem>(),
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
-                PageNumber = 1,
-                PageSize = int.MaxValue,
-            };
-            Shops = await ShopService!.SearchAsync(queryParameters);
-            ProductCategories = await ProductCategoryService!.GetAllAsync();
-            BaseUnits = await UnitService!.GetAllAsync();
+            Shops = await ShopService!.SearchAsync();
+            ProductCategories = await ProductCategoryService!.SearchAsync();
+            BaseUnits = await UnitService!.SearchAsync();
 
             _ = int.TryParse(Id, out int id);
             if (id == 0)
@@ -243,7 +235,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0" && UnitId != "0")
             {
-                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), int.Parse(UnitId));
+                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), int.Parse(UnitId!));
             }
         }
 
@@ -310,7 +302,7 @@ namespace MealPlanner.UI.Web.Pages
         private void AddProduct(ProductModel product, decimal quantity, int unitId)
         {
             ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
-            UnitModel? unit = BaseUnits!.FirstOrDefault(i => i.Id == unitId);
+            UnitModel? unit = BaseUnits!.Items!.FirstOrDefault(i => i.Id == unitId);
 
             try
             {
@@ -379,16 +371,7 @@ namespace MealPlanner.UI.Web.Pages
             ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
-
-            var queryParameters = new QueryParameters()
-            {
-                Filters = filters,
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
-                PageNumber = 1,
-                PageSize = int.MaxValue,
-            };
-            Products = await ProductService!.SearchAsync(queryParameters);
+            Products = await ProductService!.SearchAsync();
             StateHasChanged();
         }
 
@@ -400,8 +383,8 @@ namespace MealPlanner.UI.Web.Pages
                 var product = await ProductService!.GetEditAsync(int.Parse(value));
                 if (product != null)
                 {
-                    var baseUnit = BaseUnits!.FirstOrDefault(x => x.Id == product.BaseUnitId);
-                    Units = BaseUnits!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
+                    var baseUnit = BaseUnits!.Items!.FirstOrDefault(x => x.Id == product.BaseUnitId);
+                    Units = BaseUnits!.Items!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
                 }
             }
             StateHasChanged();

@@ -30,11 +30,11 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    OnRecipeCategoryChangedAsync(_recipeCategoryId!);
+                    OnRecipeCategoryChanged(_recipeCategoryId!);
                 }
             }
         }
-        public IList<RecipeCategoryModel>? Categories { get; set; }
+        public PagedList<RecipeCategoryModel>? Categories { get; set; }
 
         public string? RecipeId { get; set; }
         public PagedList<RecipeModel>? Recipes { get; set; }
@@ -75,7 +75,7 @@ namespace MealPlanner.UI.Web.Pages
             };
 
             _ = int.TryParse(Id, out var id);
-            Categories = await RecipeCategoryService!.GetAllAsync();
+            Categories = await RecipeCategoryService!.SearchAsync();
 
             if (id == 0)
             {
@@ -251,7 +251,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo("/mealplansoverview");
         }
 
-        private async Task OnRecipeCategoryChangedAsync(string? value)
+        private void OnRecipeCategoryChanged(string? value)
         {
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
@@ -261,16 +261,7 @@ namespace MealPlanner.UI.Web.Pages
 
             RecipeCategoryId = value;
             RecipeId = string.Empty;
-
-            var queryParameters = new QueryParameters()
-            {
-                Filters = filters,
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
-                PageNumber = 1,
-                PageSize = int.MaxValue,
-            };
-            Recipes = await RecipeService!.SearchAsync(queryParameters);
+            Recipes = RecipeService!.SearchAsync().GetAwaiter().GetResult();
             StateHasChanged();
         }
     }

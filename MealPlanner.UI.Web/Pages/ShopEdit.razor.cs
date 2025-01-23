@@ -1,5 +1,6 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -39,8 +40,8 @@ namespace MealPlanner.UI.Web.Pages
             _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
-                var categories = await ProductCategoriesService!.GetAllAsync();
-                Shop = new ShopEditModel(categories);
+                var categories = await ProductCategoriesService!.SearchAsync();
+                Shop = new ShopEditModel(categories!.Items);
             }
             else
             {

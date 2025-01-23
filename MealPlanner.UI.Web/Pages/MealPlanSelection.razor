@@ -11,9 +11,9 @@
             <div class="form-group mt-3">
                 <InputSelect id="Meal plan" class="form-select" @bind-Value="@MealPlanId">
                     <option selected value="0">Choose...</option>
-                    @if (MealPlans != null && MealPlans.Any())
+                    @if (MealPlans != null && MealPlans.Items != null && MealPlans.Items.Any())
                     {
-                        @foreach (var item in MealPlans)
+                        @foreach (var item in MealPlans.Items)
                         {
                             <option value="@item.Id">@item.Name</option>
                         }

@@ -1,9 +1,11 @@
-﻿using Blazored.Modal.Services;
+﻿using System.ComponentModel.DataAnnotations;
+using BlazorBootstrap;
 using Blazored.Modal;
+using Blazored.Modal.Services;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -12,7 +14,7 @@ namespace MealPlanner.UI.Web.Pages
         [Required]
         public string? MealPlanId { get; set; }
 
-        public IList<MealPlanModel>? MealPlans { get; set; }
+        public PagedList<MealPlanModel>? MealPlans { get; set; }
 
         [Inject]
         public IMealPlanService? MealPlanService { get; set; }
@@ -22,7 +24,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            MealPlans = await MealPlanService!.GetAllAsync();
+            MealPlans = await MealPlanService!.SearchAsync();
             BlazoredModal.SetTitle("Select a meal plan");
         }
 

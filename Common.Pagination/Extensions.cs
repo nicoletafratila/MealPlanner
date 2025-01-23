@@ -41,19 +41,19 @@ namespace Common.Pagination
                 FilterOperator.NotEquals => Expression.NotEqual(member, constant),
                 FilterOperator.Contains => Expression.Call(
                     member,
-                    typeof(string).GetMethod("Contains", new[] { typeof(string), typeof(StringComparison) }),
+                    typeof(string).GetMethod("Contains", new[] { typeof(string), typeof(StringComparison) })!,
                     constant,
                     Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 FilterOperator.StartsWith => Expression.Call(
                     member,
-                    typeof(string).GetMethod("StartsWith", new[] { typeof(string), typeof(StringComparison) }),
+                    typeof(string).GetMethod("StartsWith", new[] { typeof(string), typeof(StringComparison) })!,
                     constant,
                     Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 FilterOperator.EndsWith => Expression.Call(
                     member,
-                    typeof(string).GetMethod("EndsWith", new[] { typeof(string), typeof(StringComparison) }),
+                    typeof(string).GetMethod("EndsWith", new[] { typeof(string), typeof(StringComparison) })!,
                     constant,
                     Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),

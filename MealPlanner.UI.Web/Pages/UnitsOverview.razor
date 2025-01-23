@@ -1,4 +1,5 @@
 ﻿@page "/unitsoverview"
+@using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -17,28 +18,26 @@
             </table>
         </div>
 
-        @if (Units != null)
-        {
-            <div class="card-body">
-                <TableTemplate Data="@Units" ShowIndex="true">
-                    <TableHeader>
-                        <th>Name</th>
-                        <th>Unit type</th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="unit">
-                        <td>
-                            <div style="cursor: pointer;" @onclick="() => Update(unit)">
-                                @unit.Name
-                            </div>
-                        </td>
-                        <td>@unit.UnitType.ToString()</td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(unit)"></button></td>
-                    </RowTemplate>
-                </TableTemplate>
-            </div>
-        }
+        <div class="card-body">
+            <GridTemplate TItem="UnitModel" DataProvider="UnitsDataProvider" TableGridClass="table table-hover table-striped">
+                <Columns>
+                    <GridColumn TItem="UnitModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn TItem="UnitModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        <div style="cursor: pointer;" @onclick="() => Update(context)">
+                            @context.Name
+                        </div>
+                    </GridColumn>
+                    <GridColumn TItem="UnitModel" HeaderText="Unit type" PropertyName="UnitType" SortString="UnitType" SortKeySelector="item => item.UnitType">
+                        @context.UnitType
+                    </GridColumn>
+                    <GridColumn TItem="UnitModel" Filterable="false" Class="text-start-right">
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridTemplate>
+        </div>
     </div>
 </div>
 

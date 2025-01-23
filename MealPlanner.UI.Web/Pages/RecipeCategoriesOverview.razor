@@ -17,33 +17,30 @@
             </table>
         </div>
 
-        @if (Categories != null)
-        {
-            <div class="card-body">
-                <TableTemplate Data="@Categories" ShowIndex="true">
-                    <TableHeader>
-                        <th>Name</th>
-                        <th style="width: 100px"></th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="category">
-                        <td>
-                            @category.Name
-                        </td>
-                        <td>
-                            @if (category.IsSelected)
-                            {
-                                <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>
-                                <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(category)" disabled="@(!CanMoveDown(category))">&#9660;</button>
-                            }
-                        </td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">Edit</button></td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
-                    </RowTemplate>
-                </TableTemplate>
-            </div>
-        }
+        <div class="card-body">
+            <TableTemplate Data="@Categories!.Items" ShowIndex="true">
+                <TableHeader>
+                    <th>Name</th>
+                    <th style="width: 100px"></th>
+                    <th style="width: 50px"></th>
+                    <th style="width: 30px"></th>
+                </TableHeader>
+                <RowTemplate Context="category">
+                    <td>
+                        @category.Name
+                    </td>
+                    <td>
+                        @if (category.IsSelected)
+                        {
+                            <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>
+                            <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(category)" disabled="@(!CanMoveDown(category))">&#9660;</button>
+                        }
+                    </td>
+                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">Edit</button></td>
+                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
+                </RowTemplate>
+            </TableTemplate>
+        </div>
     </div>
 
     <div class="col mt-3">

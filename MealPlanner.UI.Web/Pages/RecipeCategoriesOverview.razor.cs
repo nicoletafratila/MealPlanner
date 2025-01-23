@@ -1,5 +1,6 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
@@ -10,7 +11,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        public IList<RecipeCategoryModel>? Categories { get; set; }
+        public PagedList<RecipeCategoryModel>? Categories { get; set; }
 
         [Inject]
         public IRecipeCategoryService? RecipeCategoriesService { get; set; }
@@ -77,7 +78,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async void SaveAsync()
         {
-            var response = await RecipeCategoriesService!.UpdateAsync(Categories!);
+            var response = await RecipeCategoriesService!.UpdateAsync(Categories!.Items!);
             if (!string.IsNullOrWhiteSpace(response))
             {
                 MessageComponent?.ShowError(response);
@@ -91,39 +92,39 @@ namespace MealPlanner.UI.Web.Pages
 
         private bool CanMoveUp(RecipeCategoryModel item)
         {
-            return Categories?.IndexOf(item) - 1 >= 0;
+            return Categories!.Items!.IndexOf(item) - 1 >= 0;
         }
 
         private void MoveUp(RecipeCategoryModel item)
         {
-            int index = Categories!.IndexOf(item);
-            Categories.RemoveAt(index);
+            int index = Categories!.Items!.IndexOf(item);
+            Categories!.Items!.RemoveAt(index);
             if (index - 1 >= 0)
             {
-                Categories.Insert(index - 1, item);
+                Categories!.Items!.Insert(index - 1, item);
             }
-            Categories.SetIndexes();
+            Categories!.Items!.SetIndexes();
         }
 
         private bool CanMoveDown(RecipeCategoryModel item)
         {
-            return Categories?.IndexOf(item) + 2 <= Categories?.Count;
+            return Categories!.Items!.IndexOf(item) + 2 <= Categories!.Items!.Count;
         }
 
         private void MoveDown(RecipeCategoryModel item)
         {
-            int index = Categories!.IndexOf(item);
-            Categories.RemoveAt(index);
-            if (index + 1 <= Categories.Count)
+            int index = Categories!.Items!.IndexOf(item);
+            Categories!.Items!.RemoveAt(index);
+            if (index + 1 <= Categories!.Items!.Count)
             {
-                Categories.Insert(index + 1, item);
+                Categories!.Items!.Insert(index + 1, item);
             }
-            Categories.SetIndexes();
+            Categories!.Items!.SetIndexes();
         }
 
         private async Task RefreshAsync()
         {
-            Categories = await RecipeCategoriesService!.GetAllAsync();
+            Categories = await RecipeCategoriesService!.SearchAsync();
             StateHasChanged();
         }
     }

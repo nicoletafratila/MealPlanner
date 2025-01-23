@@ -44,9 +44,9 @@
                         <label for="ProductCategory" class="col-sm-3">Product category: </label>
                         <InputSelect id="ProductCategory" class="form-select" @bind-Value="@ProductCategoryId">
                             <option selected value="0">Choose...</option>
-                            @if (ProductCategories != null && ProductCategories.Any())
+                            @if (ProductCategories != null && ProductCategories.Items != null && ProductCategories.Items.Any())
                             {
-                                @foreach (var item in ProductCategories)
+                                @foreach (var item in ProductCategories.Items)
                                 {
                                     <option value="@item.Id">@item.Name</option>
                                 }

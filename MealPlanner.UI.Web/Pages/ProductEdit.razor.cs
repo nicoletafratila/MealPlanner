@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -15,8 +16,8 @@ namespace MealPlanner.UI.Web.Pages
         public string? Id { get; set; }
         public ProductEditModel? Product { get; set; }
 
-        public IList<ProductCategoryModel>? Categories { get; set; }
-        public IList<UnitModel>? Units { get; set; }
+        public PagedList<ProductCategoryModel>? Categories { get; set; }
+        public PagedList<UnitModel>? Units { get; set; }
 
         [Inject]
         public IProductService? ProductService { get; set; }
@@ -44,8 +45,8 @@ namespace MealPlanner.UI.Web.Pages
             };
 
             _ = int.TryParse(Id, out var id);
-            Categories = await CategoryService!.GetAllAsync();
-            Units = await UnitService!.GetAllAsync();
+            Units = await UnitService!.SearchAsync();
+            Categories = await CategoryService!.SearchAsync();
 
             if (id == 0)
             {

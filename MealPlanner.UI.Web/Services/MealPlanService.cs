@@ -24,11 +24,6 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
         }
 
-        public async Task<IList<MealPlanModel>?> GetAllAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}");
-        }
-
         public async Task<PagedList<MealPlanModel>?> SearchAsync(QueryParameters? queryParameters = null)
         {
             var query = new Dictionary<string, string?>

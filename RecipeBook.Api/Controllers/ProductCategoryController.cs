@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.ProductCategory.Commands.Add;
 using RecipeBook.Api.Features.ProductCategory.Commands.Delete;
 using RecipeBook.Api.Features.ProductCategory.Commands.Update;
-using RecipeBook.Api.Features.ProductCategory.Queries.GetAll;
 using RecipeBook.Api.Features.ProductCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.ProductCategory.Queries.Search;
 using RecipeBook.Shared.Models;
@@ -25,12 +24,6 @@ namespace RecipeBook.Api.Controllers
                 Id = id
             };
             return await _mediator.Send(query);
-        }
-
-        [HttpGet]
-        public async Task<IList<ProductCategoryModel>> GetAll()
-        {
-            return await _mediator.Send(new GetAllQuery());
         }
 
         [HttpGet("search")]

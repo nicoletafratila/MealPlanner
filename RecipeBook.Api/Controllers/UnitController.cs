@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using System.Text.Json;
+using BlazorBootstrap;
+using Common.Pagination;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Unit.Commands.Add;
 using RecipeBook.Api.Features.Unit.Commands.Delete;
 using RecipeBook.Api.Features.Unit.Commands.Update;
-using RecipeBook.Api.Features.Unit.Queries.GetAll;
 using RecipeBook.Api.Features.Unit.Queries.GetEdit;
+using RecipeBook.Api.Features.Unit.Queries.Search;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -25,10 +28,21 @@ namespace RecipeBook.Api.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpGet]
-        public async Task<IList<UnitModel>> GetAll()
+        [HttpGet("search")]
+        public async Task<PagedList<UnitModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
-            return await _mediator.Send(new GetAllQuery());
+            SearchQuery query = new()
+            {
+                QueryParameters = new QueryParameters()
+                {
+                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonSerializer.Deserialize<IEnumerable<FilterItem>>(filters) : null,
+                    SortString = sortString,
+                    SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
+                    PageSize = int.Parse(pageSize!),
+                    PageNumber = int.Parse(pageNumber!)
+                }
+            };
+            return await _mediator.Send(query);
         }
 
         [HttpPost]

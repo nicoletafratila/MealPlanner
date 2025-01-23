@@ -5,7 +5,6 @@ using RecipeBook.Api.Features.RecipeCategory.Commands.Add;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Delete;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Update;
 using RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll;
-using RecipeBook.Api.Features.RecipeCategory.Queries.GetAll;
 using RecipeBook.Api.Features.RecipeCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.RecipeCategory.Queries.Search;
 using RecipeBook.Shared.Models;
@@ -26,12 +25,6 @@ namespace RecipeBook.Api.Controllers
                 Id = id
             };
             return await _mediator.Send(query);
-        }
-
-        [HttpGet]
-        public async Task<IList<RecipeCategoryModel>> GetAll()
-        {
-            return await _mediator.Send(new GetAllQuery());
         }
 
         [HttpGet("search")]

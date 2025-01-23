@@ -41,9 +41,9 @@
                         <label for="productCategory" class="col-sm-3">Product category: </label>
                         <InputSelect id="productCategory" class="form-select" @bind-Value="@Product.ProductCategoryId">
                             <option selected value="0">Choose...</option>
-                            @if (Categories != null && Categories.Any())
+                            @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                             {
-                                @foreach (var category in Categories!)
+                                @foreach (var category in Categories.Items!)
                                 {
                                     <option value="@category.Id">@category.Name</option>
                                 }
@@ -56,9 +56,9 @@
                         <label for="unit" class="col-sm-3">Unit of measurement: </label>
                         <InputSelect id="unit" class="form-select" @bind-Value="@Product.BaseUnitId">
                             <option selected value="0">Choose...</option>
-                            @if (Units != null && Units.Any())
+                            @if (Units != null && Units.Items != null && Units.Items.Any())
                             {
-                                @foreach (var unit in Units!)
+                                @foreach (var unit in Units.Items!)
                                 {
                                     <option value="@unit.Id">@unit.Name</option>
                                 }

@@ -4,7 +4,6 @@ using Common.Pagination;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
 using MealPlanner.Api.Features.MealPlan.Commands.Delete;
 using MealPlanner.Api.Features.MealPlan.Commands.Update;
-using MealPlanner.Api.Features.MealPlan.Queries.GetAll;
 using MealPlanner.Api.Features.MealPlan.Queries.GetEdit;
 using MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts;
 using MealPlanner.Api.Features.MealPlan.Queries.Search;
@@ -42,12 +41,6 @@ namespace MealPlanner.Api.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpGet]
-        public async Task<IList<MealPlanModel>> GetAll()
-        {
-            return await _mediator.Send(new GetAllQuery());
-        }
-
         [HttpGet("search")]
         public async Task<PagedList<MealPlanModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
@@ -58,8 +51,8 @@ namespace MealPlanner.Api.Controllers
                     Filters = !string.IsNullOrWhiteSpace(filters) ? JsonSerializer.Deserialize<IEnumerable<FilterItem>>(filters) : null,
                     SortString = sortString,
                     SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
-                    PageSize = int.Parse(pageSize),
-                    PageNumber = int.Parse(pageNumber)
+                    PageSize = int.Parse(pageSize!),
+                    PageNumber = int.Parse(pageNumber!)
                 }
             };
             return await _mediator.Send(query);

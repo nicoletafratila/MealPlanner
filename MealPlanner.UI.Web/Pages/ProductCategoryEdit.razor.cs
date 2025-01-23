@@ -35,7 +35,6 @@ namespace MealPlanner.UI.Web.Pages
             _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
-                var categories = await ProductCategoryService!.GetAllAsync();
                 ProductCategory = new ProductCategoryEditModel();
             }
             else
