@@ -75,7 +75,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
             }
         }
-        public IList<ShopModel>? Shops { get; set; }
+        public PagedList<ShopModel>? Shops { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
         public string? Quantity { get; set; }
@@ -129,8 +129,16 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Shopping list", IsCurrentPage = true },
             };
 
+            var queryParameters = new QueryParameters()
+            {
+                Filters = new List<FilterItem>(),
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Shops = await ShopService!.SearchAsync(queryParameters);
             ProductCategories = await ProductCategoryService!.GetAllAsync();
-            Shops = await ShopService!.GetAllAsync();
             BaseUnits = await UnitService!.GetAllAsync();
 
             _ = int.TryParse(Id, out int id);

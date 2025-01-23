@@ -10,8 +10,6 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        public RecipeModel? Recipe { get; set; }
-
         [Inject]
         public IRecipeService? RecipeService { get; set; }
 

@@ -1,8 +1,11 @@
 ﻿using System.Text;
 using System.Text.Json;
+using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace MealPlanner.UI.Web.Services
 {
@@ -16,9 +19,19 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<ShopEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.ShopApi]}/edit/{id}");
         }
 
-        public async Task<IList<ShopModel>?> GetAllAsync()
+        public async Task<PagedList<ShopModel>?> SearchAsync(QueryParameters? queryParameters = null)
         {
-            return await _httpClient.GetFromJsonAsync<IList<ShopModel>>($"{_apiConfig?.Endpoints![ApiEndpointNames.ShopApi]}");
+            var query = new Dictionary<string, string?>
+            {
+                [nameof(QueryParameters.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonSerializer.Serialize(queryParameters?.Filters),
+                [nameof(QueryParameters.SortString)] = queryParameters == null ? null : queryParameters?.SortString?.ToString(),
+                [nameof(QueryParameters.SortDirection)] = queryParameters == null ? SortDirection.Ascending.ToString() : queryParameters.SortDirection.ToString(),
+                [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
+                [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+            };
+
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig?.Endpoints![ApiEndpointNames.ShopApi]}/search", query));
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ShopModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string?> AddAsync(ShopEditModel model)

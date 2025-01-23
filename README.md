@@ -13,7 +13,6 @@ PM> Script-migration
 
 MealPlanner
 product categories cu paginare
-cand lista  e goala, centreaza poza
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task
 about cu link linkedin

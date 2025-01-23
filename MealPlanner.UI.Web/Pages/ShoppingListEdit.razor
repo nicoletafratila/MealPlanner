@@ -30,9 +30,9 @@
                         <label for="Shop" class="col-sm-3">Shop: </label>
                         <InputSelect id="Shop" class="form-select" @bind-Value="@ShopId">
                             <option selected value="0">Choose...</option>
-                            @if (Shops != null && Shops.Any())
+                            @if (Shops != null && Shops.Items != null && Shops.Items.Any())
                             {
-                                @foreach (var item in Shops)
+                                @foreach (var item in Shops.Items!)
                                 {
                                     <option value="@item.Id">@item.Name</option>
                                 }

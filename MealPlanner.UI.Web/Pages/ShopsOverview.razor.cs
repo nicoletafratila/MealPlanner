@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
@@ -8,9 +9,6 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ShopsOverview
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
-
-        public ShopEditModel? Shop { get; set; }
-        public IList<ShopModel>? Shops { get; set; }
 
         [Inject]
         public IShopService? ShopService { get; set; }
@@ -77,8 +75,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            Shops = await ShopService!.GetAllAsync();
-            StateHasChanged();
+            var request = new GridDataProviderRequest<ShopModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<ShopModel>>
+                        {
+                            new SortingItem<ShopModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await ShopsDataProvider(request);
+        }
+
+        private async Task<GridDataProviderResult<ShopModel>> ShopsDataProvider(GridDataProviderRequest<ShopModel> request)
+        {
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
+
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await ShopService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<ShopModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }

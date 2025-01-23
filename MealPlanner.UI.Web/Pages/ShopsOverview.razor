@@ -1,4 +1,5 @@
 ﻿@page "/shopsoverview"
+@using MealPlanner.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -17,26 +18,23 @@
             </table>
         </div>
 
-        @if (Shops != null)
-        {
-            <div class="card-body">
-                <TableTemplate Data="@Shops" ShowIndex="true">
-                    <TableHeader>
-                        <th>Name</th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
-                    </TableHeader>
-                    <RowTemplate Context="shop">
-                        <td>
-                            <div style="cursor: pointer;" @onclick="() => Update(shop)">
-                                @shop.Name
-                            </div>
-                        </td>
-                        <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(shop)"></button></td>
-                    </RowTemplate>
-                </TableTemplate>
-            </div>
-        }
+        <div class="card-body">
+            <GridTemplate TItem="ShopModel" DataProvider="ShopsDataProvider" TableGridClass="table table-hover table-striped">
+                <Columns>
+                    <GridColumn TItem="ShopModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn FilterTextboxWidth="600" TItem="ShopModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        <div style="cursor: pointer;" @onclick="() => Update(context)">
+                            @context.Name
+                        </div>
+                    </GridColumn>
+                    <GridColumn TItem="ShopModel" Filterable="false" Class="text-start-right">
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridTemplate>
+        </div>
     </div>
 </div>
 
