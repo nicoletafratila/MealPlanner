@@ -30,7 +30,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    OnRecipeCategoryChanged(_recipeCategoryId!);
+                    OnRecipeCategoryChangedAsync(_recipeCategoryId!);
                 }
             }
         }
@@ -75,7 +75,15 @@ namespace MealPlanner.UI.Web.Pages
             };
 
             _ = int.TryParse(Id, out var id);
-            Categories = await RecipeCategoryService!.SearchAsync();
+            var queryParameters = new QueryParameters()
+            {
+                Filters = new List<FilterItem>(),
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
 
             if (id == 0)
             {
@@ -251,17 +259,26 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo("/mealplansoverview");
         }
 
-        private void OnRecipeCategoryChanged(string? value)
+        private async Task OnRecipeCategoryChangedAsync(string? value)
         {
+            RecipeCategoryId = value;
+            RecipeId = string.Empty;
+
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
             {
                 filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
 
-            RecipeCategoryId = value;
-            RecipeId = string.Empty;
-            Recipes = RecipeService!.SearchAsync().GetAwaiter().GetResult();
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+            Recipes = await RecipeService!.SearchAsync(queryParameters);
             StateHasChanged();
         }
     }

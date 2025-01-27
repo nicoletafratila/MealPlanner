@@ -2,6 +2,7 @@
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
@@ -23,6 +24,7 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
+        protected GridTemplate<RecipeCategoryModel>? recipeCategoryGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -71,7 +73,7 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    await recipeCategoryGrid!.RefreshDataAsync();
                 }
             }
         }
@@ -124,8 +126,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            Categories = await RecipeCategoriesService!.SearchAsync();
-            StateHasChanged();
+            var request = new GridDataProviderRequest<RecipeCategoryModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<RecipeCategoryModel>>
+                        {
+                            new SortingItem<RecipeCategoryModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await CategoriesDataProvider(request);
+        }
+
+        private async Task<GridDataProviderResult<RecipeCategoryModel>> CategoriesDataProvider(GridDataProviderRequest<RecipeCategoryModel> request)
+        {
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
+
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            Categories = await RecipeCategoriesService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<RecipeCategoryModel> { Data = Categories!.Items, TotalCount = Categories.Metadata!.TotalCount });
         }
     }
 }

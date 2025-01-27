@@ -12,7 +12,8 @@ PM> Script-migration
 
 
 MealPlanner
-product categories cu paginare
+update card header on typeing
+recipe categories row select to display move buttons
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task
 about cu link linkedin

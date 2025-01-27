@@ -1,4 +1,5 @@
 ﻿@page "/recipecategoriesoverview"
+@using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -18,28 +19,52 @@
         </div>
 
         <div class="card-body">
-            <TableTemplate Data="@Categories!.Items" ShowIndex="true">
-                <TableHeader>
-                    <th>Name</th>
-                    <th style="width: 100px"></th>
-                    <th style="width: 50px"></th>
-                    <th style="width: 30px"></th>
-                </TableHeader>
-                <RowTemplate Context="category">
-                    <td>
-                        @category.Name
-                    </td>
-                    <td>
-                        @if (category.IsSelected)
+            @*  <TableTemplate Data="@Categories!.Items" ShowIndex="true">
+            <TableHeader>
+            <th>Name</th>
+            <th style="width: 100px"></th>
+            <th style="width: 50px"></th>
+            <th style="width: 30px"></th>
+            </TableHeader>
+            <RowTemplate Context="category">
+            <td>
+            @category.Name
+            </td>
+            <td>
+            @if (category.IsSelected)
+            {
+            <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>
+            <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(category)" disabled="@(!CanMoveDown(category))">&#9660;</button>
+            }
+            </td>
+            <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">Edit</button></td>
+            <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
+            </RowTemplate>
+            </TableTemplate> *@
+
+            <GridTemplate TItem="RecipeCategoryModel" @ref="recipeCategoryGrid" DataProvider="CategoriesDataProvider" TableGridClass="table table-hover table-striped">
+                <Columns>
+                    <GridColumn TItem="RecipeCategoryModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn FilterTextboxWidth="600" TItem="RecipeCategoryModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        @context.Name
+                    </GridColumn>
+                    <GridColumn TItem="RecipeCategoryModel" FilterTextboxWidth="200" Filterable="false" Sortable="false">
+                        @if (context.IsSelected)
                         {
-                            <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>
-                            <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(category)" disabled="@(!CanMoveDown(category))">&#9660;</button>
+                            <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(context)" disabled="@(!CanMoveUp(context))">&#9650;</button>
+                            <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(context)" disabled="@(!CanMoveDown(context))">&#9660;</button>
                         }
-                    </td>
-                    <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">Edit</button></td>
-                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
-                </RowTemplate>
-            </TableTemplate>
+                    </GridColumn>
+                    <GridColumn TItem="RecipeCategoryModel" Filterable="false" Sortable="false" Class="text-start-right">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(context)">Edit</button>
+                    </GridColumn>
+                    <GridColumn TItem="RecipeCategoryModel" Filterable="false" Sortable="false" Class="text-start-right">
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridTemplate>
         </div>
     </div>
 

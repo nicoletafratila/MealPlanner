@@ -2,9 +2,9 @@
 
 namespace RecipeBook.Api.Features.RecipeCategory.Queries.Search
 {
-    public class SearchValidator : AbstractValidator<SearchQuery>
+    public class SearchQueryValidator : AbstractValidator<SearchQuery>
     {
-        public SearchValidator()
+        public SearchQueryValidator()
         {
             RuleFor(x => x.QueryParameters).NotNull();
         }
