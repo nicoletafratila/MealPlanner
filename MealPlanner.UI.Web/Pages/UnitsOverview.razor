@@ -29,8 +29,8 @@
                             @context.Name
                         </div>
                     </GridColumn>
-                    <GridColumn TItem="UnitModel" HeaderText="Unit type" PropertyName="UnitType" SortString="UnitType" SortKeySelector="item => item.UnitType">
-                        @context.UnitType
+                    <GridColumn TItem="UnitModel" HeaderText="Unit type" PropertyName="UnitType" SortString="UnitType" SortKeySelector="item => item.UnitType.ToString()" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        @context.UnitType.ToString()
                     </GridColumn>
                     <GridColumn TItem="UnitModel" Filterable="false" Class="text-start-right">
                         <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
