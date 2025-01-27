@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-filtru co ddl la units
 product categories cu paginare
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task

@@ -33,7 +33,19 @@ namespace Common.Pagination
         {
             var parameter = Expression.Parameter(typeof(T), "x");
             var member = Expression.Property(parameter, filter.PropertyName);
-            var constant = Expression.Constant(filter.Value);
+
+            var propertyType = typeof(T).GetProperty(filter.PropertyName)?.PropertyType;
+            if (propertyType == null)
+            {
+                throw new ArgumentException($"Property {filter.PropertyName} does not exist on type {typeof(T).Name}");
+            }
+
+            object? filterValue = filter.Value;
+            if (propertyType.IsEnum)
+            {
+                filterValue = Enum.Parse(propertyType, filter.Value.ToString());
+            }
+            var constant = Expression.Constant(filterValue, propertyType);
 
             Expression body = filter.Operator switch
             {
