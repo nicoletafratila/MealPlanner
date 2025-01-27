@@ -13,7 +13,8 @@ PM> Script-migration
 
 MealPlanner
 update card header on typeing
-recipe categories row select to display move buttons
+unde apare cardul cu reteta?
+refresh la delete shops
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task
 about cu link linkedin

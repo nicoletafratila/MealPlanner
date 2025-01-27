@@ -26,12 +26,6 @@ namespace MealPlanner.UI.Web.Shared
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 
-        [Parameter]
-        public EventCallback<TItem> SelectedItemChanged { get; set; }
-
-        [Parameter]
-        public TItem? SelectedItem { get; set; }
-
         private Grid<TItem>? gridTemplateReference;
 
         public async Task RefreshDataAsync()
@@ -40,14 +34,6 @@ namespace MealPlanner.UI.Web.Shared
             {
                 await gridTemplateReference.RefreshDataAsync();
             }
-        }
-
-        public async Task OnItemSelectedAsync(GridRowEventArgs<TItem> args)
-        {
-            SelectedItem = args.Item;
-            gridTemplateReference?.Data?.ToList().ForEach(i => i.IsSelected = false);
-            args.Item.IsSelected = true;
-            await SelectedItemChanged.InvokeAsync(args.Item);
         }
 
         private async Task OnGridSettingsChanged(GridSettings settings)

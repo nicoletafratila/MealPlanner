@@ -1,8 +1,6 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
-using Common.Pagination;
 using MealPlanner.UI.Web.Services;
-using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
@@ -12,7 +10,7 @@ namespace MealPlanner.UI.Web.Pages
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
 
-        public PagedList<RecipeCategoryModel>? Categories { get; set; }
+        public IList<RecipeCategoryModel>? Categories { get; set; }
 
         [Inject]
         public IRecipeCategoryService? RecipeCategoriesService { get; set; }
@@ -24,7 +22,6 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
-        protected GridTemplate<RecipeCategoryModel>? recipeCategoryGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -73,14 +70,14 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await recipeCategoryGrid!.RefreshDataAsync();
+                    await RefreshAsync();
                 }
             }
         }
 
         private async void SaveAsync()
         {
-            var response = await RecipeCategoriesService!.UpdateAsync(Categories!.Items!);
+            var response = await RecipeCategoriesService!.UpdateAsync(Categories!);
             if (!string.IsNullOrWhiteSpace(response))
             {
                 MessageComponent?.ShowError(response);
@@ -94,72 +91,41 @@ namespace MealPlanner.UI.Web.Pages
 
         private bool CanMoveUp(RecipeCategoryModel item)
         {
-            return Categories!.Items!.IndexOf(item) - 1 >= 0;
+            return Categories!.IndexOf(item) - 1 >= 0;
         }
 
         private void MoveUp(RecipeCategoryModel item)
         {
-            int index = Categories!.Items!.IndexOf(item);
-            Categories!.Items!.RemoveAt(index);
+            int index = Categories!.IndexOf(item);
+            Categories!.RemoveAt(index);
             if (index - 1 >= 0)
             {
-                Categories!.Items!.Insert(index - 1, item);
+                Categories!.Insert(index - 1, item);
             }
-            Categories!.Items!.SetIndexes();
+            Categories!.SetIndexes();
         }
 
         private bool CanMoveDown(RecipeCategoryModel item)
         {
-            return Categories!.Items!.IndexOf(item) + 2 <= Categories!.Items!.Count;
+            return Categories!.IndexOf(item) + 2 <= Categories!.Count;
         }
 
         private void MoveDown(RecipeCategoryModel item)
         {
-            int index = Categories!.Items!.IndexOf(item);
-            Categories!.Items!.RemoveAt(index);
-            if (index + 1 <= Categories!.Items!.Count)
+            int index = Categories!.IndexOf(item);
+            Categories!.RemoveAt(index);
+            if (index + 1 <= Categories!.Count)
             {
-                Categories!.Items!.Insert(index + 1, item);
+                Categories!.Insert(index + 1, item);
             }
-            Categories!.Items!.SetIndexes();
+            Categories!.SetIndexes();
         }
 
         private async Task RefreshAsync()
         {
-            var request = new GridDataProviderRequest<RecipeCategoryModel>
-            {
-                Filters = new List<FilterItem>() { },
-                Sorting = new List<SortingItem<RecipeCategoryModel>>
-                        {
-                            new SortingItem<RecipeCategoryModel>("Name", item => item.Name!, SortDirection.Ascending),
-                        },
-                PageNumber = 1,
-                PageSize = 10
-            };
-            await CategoriesDataProvider(request);
-        }
-
-        private async Task<GridDataProviderResult<RecipeCategoryModel>> CategoriesDataProvider(GridDataProviderRequest<RecipeCategoryModel> request)
-        {
-            string sortString = "";
-            SortDirection sortDirection = SortDirection.None;
-
-            if (request.Sorting is not null && request.Sorting.Any())
-            {
-                sortString = request.Sorting.FirstOrDefault()!.SortString;
-                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
-            }
-            var queryParameters = new QueryParameters()
-            {
-                Filters = request.Filters,
-                SortString = sortString,
-                SortDirection = sortDirection,
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize,
-            };
-
-            Categories = await RecipeCategoriesService!.SearchAsync(queryParameters);
-            return await Task.FromResult(new GridDataProviderResult<RecipeCategoryModel> { Data = Categories!.Items, TotalCount = Categories.Metadata!.TotalCount });
+            var result = await RecipeCategoriesService!.SearchAsync();
+            Categories = result!.Items;
+            StateHasChanged();
         }
     }
 }
