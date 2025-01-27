@@ -8,5 +8,6 @@ namespace RecipeBook.Shared.Models
         public int Id { get; set; }
         public string? Name { get; set; }
         public UnitType UnitType { get; set; }
+        public string? UnitTypeValue { get { return UnitType.ToString(); } }
     }
 }

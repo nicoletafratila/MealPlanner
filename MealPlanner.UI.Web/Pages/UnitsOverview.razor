@@ -29,7 +29,7 @@
                             @context.Name
                         </div>
                     </GridColumn>
-                    <GridColumn TItem="UnitModel" HeaderText="Unit type">
+                    <GridColumn TItem="UnitModel" HeaderText="Unit type" PropertyName="UnitTypeValue" SortString="UnitTypeValue" SortKeySelector="item => item.UnitTypeValue">
                         @context.UnitType
                     </GridColumn>
                     <GridColumn TItem="UnitModel" Filterable="false" Class="text-start-right">
