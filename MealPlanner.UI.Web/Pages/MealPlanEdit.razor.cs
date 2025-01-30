@@ -74,17 +74,17 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
             };
 
-            _ = int.TryParse(Id, out var id);
             var queryParameters = new QueryParameters()
             {
                 Filters = new List<FilterItem>(),
-                SortString = "Name",
+                SortString = "DisplaySequence",
                 SortDirection = SortDirection.Ascending,
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
             Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
 
+            _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
                 MealPlan = new MealPlanEditModel();
@@ -269,7 +269,6 @@ namespace MealPlanner.UI.Web.Pages
             {
                 filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
-
             var queryParameters = new QueryParameters()
             {
                 Filters = filters,

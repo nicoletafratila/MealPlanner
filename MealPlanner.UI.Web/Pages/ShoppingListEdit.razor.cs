@@ -367,11 +367,19 @@ namespace MealPlanner.UI.Web.Pages
             {
                 filters.Add(new FilterItem("ProductCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Products = await ProductService!.SearchAsync(queryParameters);
 
             ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
-            Products = await ProductService!.SearchAsync();
             StateHasChanged();
         }
 

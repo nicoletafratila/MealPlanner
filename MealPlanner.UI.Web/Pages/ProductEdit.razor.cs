@@ -44,18 +44,10 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Product", IsCurrentPage = true },
             };
 
-            _ = int.TryParse(Id, out var id);
-            var queryParameters = new QueryParameters()
-            {
-                Filters = new List<FilterItem>(),
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
-                PageSize = int.MaxValue,
-                PageNumber = 1
-            };
-            Units = await UnitService!.SearchAsync(queryParameters);
-            Categories = await CategoryService!.SearchAsync(queryParameters);
+            Units = await UnitService!.SearchAsync();
+            Categories = await CategoryService!.SearchAsync();
 
+            _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
                 Product = new ProductEditModel();

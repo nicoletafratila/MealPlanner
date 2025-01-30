@@ -45,7 +45,15 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Categories = await RecipeCategoryService!.SearchAsync();
+            var queryParameters = new QueryParameters()
+            {
+                Filters = new List<FilterItem>(),
+                SortString = "DisplaySequence",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
             BlazoredModal.SetTitle("Select a recipe");
         }
 
@@ -66,11 +74,18 @@ namespace MealPlanner.UI.Web.Pages
             {
                 filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Recipes = await RecipeService!.SearchAsync(queryParameters);
 
             RecipeCategoryId = value;
             RecipeId = string.Empty;
-
-            Recipes = await RecipeService!.SearchAsync();
             StateHasChanged();
         }
     }

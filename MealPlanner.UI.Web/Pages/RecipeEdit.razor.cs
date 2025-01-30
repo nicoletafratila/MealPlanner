@@ -101,11 +101,19 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Recipe", IsCurrentPage = true },
             };
 
-            _ = int.TryParse(Id, out var id);
-            RecipeCategories = await RecipeCategoryService!.SearchAsync();
+            var queryParameters = new QueryParameters()
+            {
+                Filters = new List<FilterItem>(),
+                SortString = "DisplaySequence",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            RecipeCategories = await RecipeCategoryService!.SearchAsync(queryParameters);
             ProductCategories = await ProductCategoryService!.SearchAsync();
             BaseUnits = await UnitService!.SearchAsync();
 
+            _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
                 Recipe = new RecipeEditModel();
@@ -256,12 +264,19 @@ namespace MealPlanner.UI.Web.Pages
             {
                 filters.Add(new FilterItem("ProductCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
+            var queryParameters = new QueryParameters()
+            {
+                Filters = filters,
+                SortString = "Name",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Products = await ProductService!.SearchAsync(queryParameters);
 
             ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
-
-            Products = await ProductService!.SearchAsync();
             StateHasChanged();
         }
 
