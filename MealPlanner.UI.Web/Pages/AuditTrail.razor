@@ -3,7 +3,7 @@
 @using Common.Models
 
 <p>
-    <button class="btn btn-danger" @onclick="() => DeleteAllLogs()">Delete All Logs</button>
+    <button class="btn btn-danger" @onclick="() => DeleteAllLogsAsync()">Delete All Logs</button>
 </p>
 @if (Logs == null)
 {

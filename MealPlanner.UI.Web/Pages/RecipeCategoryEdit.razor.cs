@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             var response = RecipeCategory?.Id == 0 ? await RecipeCategoryService!.AddAsync(RecipeCategory) : await RecipeCategoryService!.UpdateAsync(RecipeCategory!);
             if (!string.IsNullOrWhiteSpace(response))
@@ -57,7 +57,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (RecipeCategory?.Id != 0)
             {

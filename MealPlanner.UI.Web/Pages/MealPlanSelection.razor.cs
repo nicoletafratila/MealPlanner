@@ -28,12 +28,12 @@ namespace MealPlanner.UI.Web.Pages
             BlazoredModal.SetTitle("Select a meal plan");
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             await BlazoredModal.CloseAsync(ModalResult.Ok(MealPlanId));
         }
 
-        private async void CancelAsync()
+        private async Task CancelAsync()
         {
             await BlazoredModal.CancelAsync();
         }

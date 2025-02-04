@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo($"recipecategoryedit/{item.Id}");
         }
 
-        private async void DeleteAsync(RecipeCategoryModel item)
+        private async Task DeleteAsync(RecipeCategoryModel item)
         {
             if (item != null)
             {
@@ -76,7 +76,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             var response = await RecipeCategoriesService!.UpdateAsync(Categories!);
             if (!string.IsNullOrWhiteSpace(response))

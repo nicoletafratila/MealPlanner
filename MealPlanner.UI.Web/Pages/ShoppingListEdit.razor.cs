@@ -146,7 +146,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             var response = ShoppingList?.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList!);
             if (!string.IsNullOrWhiteSpace(response))
@@ -160,7 +160,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void DeleteAsync()
+        private async Task DeleteAsync()
         {
             if (ShoppingList?.Id != 0)
             {
@@ -193,7 +193,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void DeleteProductAsync(ProductModel item)
+        private async Task DeleteProductAsync(ProductModel item)
         {
             ShoppingListProductEditModel? itemToDelete = ShoppingList?.Products?.FirstOrDefault(i => i.Product?.Id == item.Id);
             if (itemToDelete != null)
@@ -248,7 +248,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void AddMealPlanAsync()
+        private async Task AddMealPlanAsync()
         {
             var mealPlanSelectionModal = Modal?.Show<MealPlanSelection>();
             var result = await mealPlanSelectionModal!.Result;
@@ -278,7 +278,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void AddRecipeAsync()
+        private async Task AddRecipeAsync()
         {
             var recipeSelectionModal = Modal?.Show<RecipeSelection>();
             var result = await recipeSelectionModal!.Result;
@@ -340,7 +340,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo($"/shoppinglistsoverview");
         }
 
-        private async void CheckboxChangedAsync(ShoppingListProductEditModel model)
+        private async Task CheckboxChangedAsync(ShoppingListProductEditModel model)
         {
             var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
             if (itemToChange != null)
@@ -360,7 +360,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async void OnProductCategoryChangedAsync(string value)
+        private async Task OnProductCategoryChangedAsync(string value)
         {
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
@@ -383,7 +383,7 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async void OnProductChangedAsync(string value)
+        private async Task OnProductChangedAsync(string value)
         {
             Quantity = string.Empty;
             if (!string.IsNullOrWhiteSpace(value))
@@ -398,7 +398,7 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async void OnShopChangedAsync(string value)
+        private async Task OnShopChangedAsync(string value)
         {
             if (value == "0")
             {

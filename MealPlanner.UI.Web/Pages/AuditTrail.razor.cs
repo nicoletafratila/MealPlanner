@@ -16,7 +16,7 @@ namespace MealPlanner.UI.Web.Pages
             Logs = await LoggerService!.GetLogsAsync();
         }
 
-        private async void DeleteAllLogs()
+        private async Task DeleteAllLogsAsync()
         {
             await LoggerService!.DeleteLogsAsync();
             await OnInitializedAsync();

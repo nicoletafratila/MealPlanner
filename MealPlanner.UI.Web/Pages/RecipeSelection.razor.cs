@@ -57,17 +57,17 @@ namespace MealPlanner.UI.Web.Pages
             BlazoredModal.SetTitle("Select a recipe");
         }
 
-        private async void SaveAsync()
+        private async Task SaveAsync()
         {
             await BlazoredModal.CloseAsync(ModalResult.Ok(RecipeId));
         }
 
-        private async void CancelAsync()
+        private async Task CancelAsync()
         {
             await BlazoredModal.CancelAsync();
         }
 
-        private async void OnRecipeCategoryChangedAsync(string? value)
+        private async Task OnRecipeCategoryChangedAsync(string? value)
         {
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))

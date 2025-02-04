@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo($"shoppinglistedit/{item.Id}");
         }
 
-        private async void DeleteAsync(ShoppingListModel item)
+        private async Task DeleteAsync(ShoppingListModel item)
         {
             if (item != null)
             {

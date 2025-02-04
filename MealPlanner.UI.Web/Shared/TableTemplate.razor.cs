@@ -26,7 +26,7 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public TItem? SelectedItem { get; set; }
 
-        public async void OnSelectedItemChanged(TItem item)
+        public async Task OnSelectedItemChanged(TItem item)
         {
             SelectedItem = item;
             Data?.ToList().ForEach(i => i.IsSelected = false);
