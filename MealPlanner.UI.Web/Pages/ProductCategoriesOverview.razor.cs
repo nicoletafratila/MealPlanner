@@ -21,7 +21,7 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
-        protected GridTemplate<ProductCategoryModel>? productCategoryGrid;
+        protected GridTemplate<ProductCategoryModel>? categoriesGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await productCategoryGrid!.RefreshDataAsync();
+                    await categoriesGrid!.RefreshDataAsync();
                 }
             }
         }
