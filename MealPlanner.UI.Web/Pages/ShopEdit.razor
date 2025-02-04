@@ -8,11 +8,13 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <div class="row g-0">
-                    <div class="col-md-8">
-                        <h2>@Shop.Name</h2>
-                    </div>
-                </div>
+                <table>
+                    <tr class="row g-0" style="display:contents">
+                        <td class="col-md-8" style="vertical-align: top">
+                            <h2 id="headerName">@Shop.Name</h2>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="card-body">
@@ -22,7 +24,7 @@
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Shop name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@Shop.Name" placeholder="Enter shop name"></InputText>
+                        <InputText id="name" class="form-control" @bind-Value="@Shop.Name" placeholder="Enter shop name" oninput="updateHeader()"></InputText>
                         <ValidationMessage For="@(() => Shop.Name)" />
                     </div>
 
@@ -61,3 +63,10 @@
 }
 
 <ConfirmDialog @ref="dialog" />
+
+<script>
+    function updateHeader() {
+        var input = document.getElementById("name").value;
+        document.getElementById("headerName").innerText = input;
+    }
+</script>

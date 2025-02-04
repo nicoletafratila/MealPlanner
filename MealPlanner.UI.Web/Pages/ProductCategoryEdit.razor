@@ -11,8 +11,7 @@
                 <table>
                     <tr class="row g-0" style="display:contents">
                         <td class="col-md-8" style="vertical-align: top">
-                            @* <h2>@ProductCategory.Name</h2> *@
-                            <label id="dynamicLabel">some text</label>
+                            <h2 id="headerName">@ProductCategory.Name</h2>
                         </td>
                     </tr>
                 </table>
@@ -25,7 +24,7 @@
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Product category name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@ProductCategory.Name" placeholder="Enter product category name"></InputText>
+                        <InputText id="name" class="form-control" @bind-Value="@ProductCategory.Name" placeholder="Enter product category name" oninput="updateHeader()"></InputText>
                         <ValidationMessage For="@(() => ProductCategory.Name)" />
                     </div>
 
@@ -43,10 +42,8 @@
 <ConfirmDialog @ref="dialog" />
 
 <script>
-    const textInput = document.getElementById('name');
-    const dynamicLabel = document.getElementById('dynamicLabel');
-
-    textInput.addEventListener('input', function () {
-        dynamicLabel.textContent = textInput.value;
-    });
+    function updateHeader() {
+        var input = document.getElementById("name").value;
+        document.getElementById("headerName").innerText = input;
+    }
 </script>

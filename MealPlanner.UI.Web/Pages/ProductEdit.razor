@@ -11,7 +11,7 @@
                 <table>
                     <tr class="row g-0" style="display:contents">
                         <td class="col-md-8" style="vertical-align: top">
-                            <h2>@Product.Name</h2>
+                            <h2 id="headerName">@Product.Name</h2>
                         </td>
                         <td class="col-md-3" style="align-content:flex-end;">
                             <img class="img-fluid" src="@Product.ImageUrl" />
@@ -27,7 +27,7 @@
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Product name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@Product.Name" placeholder="Enter product name"></InputText>
+                        <InputText id="name" class="form-control" @bind-Value="@Product.Name" placeholder="Enter product name" oninput="updateHeader()"></InputText>
                         <ValidationMessage For="@(() => Product.Name)" />
                     </div>
 
@@ -79,3 +79,10 @@
 }
 
 <ConfirmDialog @ref="dialog" />
+
+<script>
+    function updateHeader() {
+        var input = document.getElementById("name").value;
+        document.getElementById("headerName").innerText = input;
+    }
+</script>

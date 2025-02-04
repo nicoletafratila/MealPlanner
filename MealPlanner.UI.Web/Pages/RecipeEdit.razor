@@ -8,16 +8,16 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <div class="row g-0">
-                    <div class="col-md-8">
-                        <h2>@Recipe.Name</h2>
-                    </div>
-                    <div class="col-md-4 align-self-center">
-                        <a href="@Recipe.Source" target="_blank">
-                            <img src="@Recipe.ImageUrl" class="img-fluid" />
-                        </a>
-                    </div>
-                </div>
+                <table>
+                    <tr class="row g-0" style="display:contents">
+                        <td class="col-md-8" style="vertical-align: top">
+                            <h2 id="headerName">@Recipe.Name</h2>
+                        </td>
+                        <td class="col-md-3" style="align-content:flex-end;">
+                            <img class="img-fluid" src="@Recipe.ImageUrl" />
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="card-body">
@@ -27,7 +27,7 @@
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Recipe name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@Recipe.Name" placeholder="Enter recipe name"></InputText>
+                        <InputText id="name" class="form-control" @bind-Value="@Recipe.Name" placeholder="Enter recipe name" oninput="updateHeader()"></InputText>
                         <ValidationMessage For="@(() => Recipe.Name)" />
                     </div>
 
@@ -158,5 +158,10 @@
         } else {
             addButton.disabled = true;
         }
+    }
+
+    function updateHeader() {
+        var input = document.getElementById("name").value;
+        document.getElementById("headerName").innerText = input;
     }
 </script>

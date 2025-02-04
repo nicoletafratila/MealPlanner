@@ -13,13 +13,15 @@
 @if (MealPlan != null)
 {
     <div class="col-sm-6">
-        <div class="card" style="width: max-content;">
+        <div class="card">
             <div class="card-header">
-                <div class="row g-0">
-                    <div class="col-md-8">
-                        <h2>@MealPlan.Name</h2>
-                    </div>
-                </div>
+                <table>
+                    <tr class="row g-0" style="display:contents">
+                        <td class="col-md-8" style="vertical-align: top">
+                            <h2 id="headerName">@MealPlan.Name</h2>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="card-body">
@@ -29,7 +31,7 @@
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Meal plan name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@MealPlan.Name" placeholder="Enter meal plan name"></InputText>
+                        <InputText id="name" class="form-control" @bind-Value="@MealPlan.Name" placeholder="Enter meal plan name" oninput="updateHeader()"></InputText>
                         <ValidationMessage For="@(() => MealPlan.Name)" />
                     </div>
 
@@ -118,3 +120,10 @@
 
 <ConfirmDialog @ref="dialog" />
 <Offcanvas @ref="offcanvas" />
+
+<script>
+    function updateHeader() {
+        var input = document.getElementById("name").value;
+        document.getElementById("headerName").innerText = input;
+    }
+</script>

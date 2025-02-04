@@ -8,11 +8,13 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                <div class="row g-0">
-                    <div class="col-md-8">
-                        <h2>@ShoppingList.Name</h2>
-                    </div>
-                </div>
+                <table>
+                    <tr class="row g-0" style="display:contents">
+                        <td class="col-md-8" style="vertical-align: top">
+                            <h2 id="headerName">@ShoppingList.Name</h2>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="card-body">
@@ -22,7 +24,7 @@
 
                     <div class="form-group">
                         <label for="name" class="col-sm-3">Shopping list name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name"></InputText>
+                        <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name" oninput="updateHeader()"></InputText>
                         <ValidationMessage For="@(() => ShoppingList.Name)" />
                     </div>
 
@@ -149,5 +151,10 @@
         } else {
             addButton.disabled = true;
         }
+    }
+    
+    function updateHeader() {
+        var input = document.getElementById("name").value;
+        document.getElementById("headerName").innerText = input;
     }
 </script>

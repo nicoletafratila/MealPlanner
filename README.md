@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 MealPlanner
-update card header on typeing
 unde apare cardul cu reteta?
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task
