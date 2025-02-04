@@ -19,7 +19,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="ProductModel" @ref="productsGrid" DataProvider="ProductsDataProvider">
+            <GridTemplate TItem="ProductModel" @ref="productsGrid" DataProvider="ProductsDataProviderAsync">
                 <Columns>
                     <GridColumn FilterTextboxWidth="600" TItem="ProductModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                         <div class="card-recipe">

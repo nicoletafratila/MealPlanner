@@ -316,7 +316,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task CheckQuantity(ChangeEventArgs e)
+        private async Task CheckQuantityAsync(ChangeEventArgs e)
         {
             await JS.InvokeVoidAsync("checkQuantity");
         }

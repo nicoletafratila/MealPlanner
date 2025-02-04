@@ -43,7 +43,7 @@ namespace MealPlanner.Api.Repositories
               .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IList<MealPlanRecipe>?> SearchByRecipeCategoryId(int categoryId)
+        public async Task<IList<MealPlanRecipe>?> SearchByRecipeCategoryIdAsync(int categoryId)
         {
             return await (DbContext as MealPlannerDbContext)!.MealPlanRecipes
                   .Include(x => x.Recipe)
@@ -51,7 +51,7 @@ namespace MealPlanner.Api.Repositories
                   .Where(item => item.Recipe!.RecipeCategoryId == categoryId).ToListAsync();
         }
 
-        public async Task<IList<KeyValuePair<Product, MealPlan>>?> SearchByProductCategoryId(int categoryId)
+        public async Task<IList<KeyValuePair<Product, MealPlan>>?> SearchByProductCategoryIdAsync(int categoryId)
         {
             var productPerRecipe = await (DbContext as MealPlannerDbContext)!.RecipeIngredients
                                          .Where(x => x.Product!.ProductCategoryId == categoryId)

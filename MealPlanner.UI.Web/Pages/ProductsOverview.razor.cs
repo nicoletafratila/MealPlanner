@@ -87,10 +87,10 @@ namespace MealPlanner.UI.Web.Pages
                 PageNumber = 1,
                 PageSize = 10
             };
-            await ProductsDataProvider(request);
+            await ProductsDataProviderAsync(request);
         }
 
-        private async Task<GridDataProviderResult<ProductModel>> ProductsDataProvider(GridDataProviderRequest<ProductModel> request)
+        private async Task<GridDataProviderResult<ProductModel>> ProductsDataProviderAsync(GridDataProviderRequest<ProductModel> request)
         {
             string sortString = "";
             SortDirection sortDirection = SortDirection.None;

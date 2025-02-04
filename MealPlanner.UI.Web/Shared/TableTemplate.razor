@@ -20,7 +20,7 @@
         {
             @foreach (var item in Data!)
             {
-                <tr @onclick="@(() => OnSelectedItemChanged(item))">
+                <tr @onclick="@(() => OnSelectedItemChangedAsync(item))">
                     @if (ShowIndex)
                     {
                         <td>@item.Index</td>

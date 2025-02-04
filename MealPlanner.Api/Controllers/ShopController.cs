@@ -19,7 +19,7 @@ namespace MealPlanner.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<ShopEditModel> GetEdit(int id)
+        public async Task<ShopEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
             {
@@ -29,7 +29,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<ShopModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<PagedList<ShopModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
@@ -46,7 +46,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(ShopEditModel model)
+        public async Task<AddCommandResponse> PostAsync(ShopEditModel model)
         {
             AddCommand command = new()
             {
@@ -56,7 +56,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(ShopEditModel model)
+        public async Task<UpdateCommandResponse> PutAsync(ShopEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -66,7 +66,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

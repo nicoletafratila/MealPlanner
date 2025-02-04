@@ -20,7 +20,7 @@ namespace RecipeBook.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<ProductCategoryEditModel> GetEdit(int id)
+        public async Task<ProductCategoryEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
             {
@@ -30,7 +30,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<ProductCategoryModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<PagedList<ProductCategoryModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
@@ -47,7 +47,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(ProductCategoryEditModel model)
+        public async Task<AddCommandResponse> PostAsync(ProductCategoryEditModel model)
         {
             AddCommand command = new()
             {
@@ -57,7 +57,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(ProductCategoryEditModel model)
+        public async Task<UpdateCommandResponse> PutAsync(ProductCategoryEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -67,7 +67,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

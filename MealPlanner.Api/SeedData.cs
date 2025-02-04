@@ -7,7 +7,7 @@ namespace MealPlanner.Api
 {
     public class SeedData
     {
-        public static async Task EnsureSeedData(IServiceScope scope)
+        public static async Task EnsureSeedDataAsync(IServiceScope scope)
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
             context?.Database.EnsureCreated();
@@ -15,13 +15,13 @@ namespace MealPlanner.Api
             {
                 context?.Database.Migrate();
             }
-            await SeedProductCategories(context!);
-            await SeedRecipesCategories(context!);
-            await SeedUnits(context!);
-            await SeedShops(context!);
+            await SeedProductCategoriesAsync(context!);
+            await SeedRecipesCategoriesAsync(context!);
+            await SeedUnitsAsync(context!);
+            await SeedShopsAsync(context!);
         }
 
-        private static async Task SeedProductCategories(MealPlannerDbContext context)
+        private static async Task SeedProductCategoriesAsync(MealPlannerDbContext context)
         {
             if (context == null || context.ProductCategories.Any())
             {
@@ -61,7 +61,7 @@ namespace MealPlanner.Api
             await context.SaveChangesAsync();
         }
 
-        private static async Task SeedRecipesCategories(MealPlannerDbContext context)
+        private static async Task SeedRecipesCategoriesAsync(MealPlannerDbContext context)
         {
             if (context == null || context.RecipeCategories.Any())
             {
@@ -77,7 +77,7 @@ namespace MealPlanner.Api
             await context.SaveChangesAsync();
         }
 
-        private static async Task SeedUnits(MealPlannerDbContext context)
+        private static async Task SeedUnitsAsync(MealPlannerDbContext context)
         {
             if (context == null || context.Units.Any())
             {
@@ -102,7 +102,7 @@ namespace MealPlanner.Api
             await context.SaveChangesAsync();
         }
 
-        private static async Task SeedShops(MealPlannerDbContext context)
+        private static async Task SeedShopsAsync(MealPlannerDbContext context)
         {
             if (context == null || context.Shops.Any())
             {

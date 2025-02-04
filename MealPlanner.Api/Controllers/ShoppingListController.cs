@@ -20,7 +20,7 @@ namespace MealPlanner.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<ShoppingListEditModel> GetEdit(int id)
+        public async Task<ShoppingListEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
             {
@@ -30,7 +30,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<ShoppingListModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<PagedList<ShoppingListModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
@@ -47,7 +47,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost("makeShoppingList")]
-        public async Task<ShoppingListEditModel?> MakeShoppingList(ShoppingListCreateModel model)
+        public async Task<ShoppingListEditModel?> MakeShoppingListAsync(ShoppingListCreateModel model)
         {
             MakeShoppingListCommand command = new()
             {
@@ -58,7 +58,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(ShoppingListEditModel model)
+        public async Task<AddCommandResponse> PostAsync(ShoppingListEditModel model)
         {
             AddCommand command = new()
             {
@@ -68,7 +68,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(ShoppingListEditModel model)
+        public async Task<UpdateCommandResponse> PutAsync(ShoppingListEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -78,7 +78,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

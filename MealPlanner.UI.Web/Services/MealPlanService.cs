@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<MealPlanEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/edit/{id}");
         }
 
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProducts(int mealPlanId, int shopId)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId)
         {
             return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
         }

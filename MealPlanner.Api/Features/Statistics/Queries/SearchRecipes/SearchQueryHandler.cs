@@ -19,7 +19,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                     Label = category.Name
                 };
 
-                var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryId(category.Id);
+                var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryIdAsync(category.Id);
                 foreach (var mealPlan in mealPlanWithRecipes!)
                 {
                     if (mealPlan.Recipe?.RecipeCategoryId == category.Id)

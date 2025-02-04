@@ -8,7 +8,7 @@ namespace MealPlanner.Api
         {
             var host = CreateHostBuilder(args).Build();
             using var scope = host.Services.CreateScope();
-            await SeedData.EnsureSeedData(scope);
+            await SeedData.EnsureSeedDataAsync(scope);
             host.Run();
         }
 

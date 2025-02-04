@@ -36,7 +36,7 @@ namespace MealPlanner.UI.Web.Shared
             }
         }
 
-        private async Task OnGridSettingsChanged(GridSettings settings)
+        private async Task OnGridSettingsChangedAsync(GridSettings settings)
         {
             if (settings is null)
                 return;
@@ -44,7 +44,7 @@ namespace MealPlanner.UI.Web.Shared
             await JS.InvokeVoidAsync("window.localStorage.setItem", typeof(TItem).ToString(), JsonSerializer.Serialize(settings));
         }
 
-        private async Task<GridSettings> GridSettingsProvider()
+        private async Task<GridSettings> GridSettingsProviderAsync()
         {
             var settingsJson = await JS.InvokeAsync<string>("window.localStorage.getItem", typeof(TItem).ToString());
             if (string.IsNullOrWhiteSpace(settingsJson))

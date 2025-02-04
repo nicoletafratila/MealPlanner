@@ -21,7 +21,7 @@ namespace RecipeBook.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<RecipeCategoryEditModel> GetEdit(int id)
+        public async Task<RecipeCategoryEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
             {
@@ -31,7 +31,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<RecipeCategoryModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<PagedList<RecipeCategoryModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
@@ -48,7 +48,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(RecipeCategoryEditModel model)
+        public async Task<AddCommandResponse> PostAsync(RecipeCategoryEditModel model)
         {
             AddCommand command = new()
             {
@@ -58,7 +58,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(RecipeCategoryEditModel model)
+        public async Task<UpdateCommandResponse> PutAsync(RecipeCategoryEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -68,7 +68,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut("updateAll")]
-        public async Task<UpdateAllCommandResponse> Put(IList<RecipeCategoryModel> models)
+        public async Task<UpdateAllCommandResponse> PutAsync(IList<RecipeCategoryModel> models)
         {
             UpdateAllCommand command = new()
             {
@@ -78,7 +78,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

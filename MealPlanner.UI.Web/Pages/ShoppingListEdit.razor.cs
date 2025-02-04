@@ -261,7 +261,7 @@ namespace MealPlanner.UI.Web.Pages
                     MessageComponent?.ShowError("You must select a meal plan to add to the shopping list.");
                     return;
                 }
-                var products = await MealPlanService!.GetShoppingListProducts(mealPlanId, ShoppingList!.ShopId);
+                var products = await MealPlanService!.GetShoppingListProductsAsync(mealPlanId, ShoppingList!.ShopId);
                 foreach (var item in products!)
                 {
                     AddProduct(item.Product!, item.Quantity, item.UnitId);
@@ -291,7 +291,7 @@ namespace MealPlanner.UI.Web.Pages
                     MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
                     return;
                 }
-                var products = await RecipeService!.GetShoppingListProducts(recipeId, ShoppingList!.ShopId);
+                var products = await RecipeService!.GetShoppingListProductsAsync(recipeId, ShoppingList!.ShopId);
                 foreach (var item in products!)
                 {
                     AddProduct(item.Product!, item.Quantity, item.UnitId);
@@ -423,7 +423,7 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task CheckQuantity(ChangeEventArgs e)
+        private async Task CheckQuantityAsync(ChangeEventArgs e)
         {
             await JS.InvokeVoidAsync("checkQuantity");
         }

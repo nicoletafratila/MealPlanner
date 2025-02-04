@@ -21,7 +21,7 @@ namespace MealPlanner.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("edit/{id:int}")]
-        public async Task<MealPlanEditModel> GetEdit(int id)
+        public async Task<MealPlanEditModel> GetEditAsync(int id)
         {
             GetEditMealPlanQuery query = new()
             {
@@ -31,7 +31,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("shoppingListProducts/{mealPlanId:int}/{shopId:int}")]
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProducts(int mealPlanId, int shopId)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId)
         {
             GetShoppingListProductsQuery query = new()
             {
@@ -42,7 +42,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<MealPlanModel>> Search([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<PagedList<MealPlanModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
@@ -59,7 +59,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search/{recipeId:int}")]
-        public async Task<IList<MealPlanModel>> SearchByRecipeId(int recipeId)
+        public async Task<IList<MealPlanModel>> SearchByRecipeIdAsync(int recipeId)
         {
             SearchByRecipeIdQuery query = new()
             {
@@ -69,7 +69,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> Post(MealPlanEditModel model)
+        public async Task<AddCommandResponse> PostAsync(MealPlanEditModel model)
         {
             AddCommand command = new()
             {
@@ -79,7 +79,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> Put(MealPlanEditModel model)
+        public async Task<UpdateCommandResponse> PutAsync(MealPlanEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -89,7 +89,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> Delete(int id)
+        public async Task<DeleteCommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

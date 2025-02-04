@@ -12,7 +12,7 @@ namespace MealPlanner.Api.Controllers
         private readonly ISender _mediator = mediator;
 
         [HttpGet("favoriterecipes")]
-        public async Task<IList<StatisticModel>> SearchFavoriteRecipes([FromQuery] string? categories)
+        public async Task<IList<StatisticModel>> SearchFavoriteRecipesAsync([FromQuery] string? categories)
         {
             Features.Statistics.Queries.SearchRecipes.SearchQuery query = new()
             {
@@ -28,7 +28,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("favoriteproducts")]
-        public async Task<IList<StatisticModel>?> SearchFavoriteProducts([FromQuery] string? categories)
+        public async Task<IList<StatisticModel>?> SearchFavoriteProductsAsync([FromQuery] string? categories)
         {
             Features.Statistics.Queries.SearchProducts.SearchQuery query = new()
             {

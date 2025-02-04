@@ -104,7 +104,7 @@
                     <div class="form-group mt-3">
                         <label for="quantity" class="col-sm-3">Quantity: </label>
                         <div class="input-group">
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantity" placeholder="Enter the quantity for the product"></InputText>
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
                             <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredient" disabled="@(!CanAddIngredient)">Add</button>
                         </div>
                         <ValidationMessage For="@(() => Quantity)" />

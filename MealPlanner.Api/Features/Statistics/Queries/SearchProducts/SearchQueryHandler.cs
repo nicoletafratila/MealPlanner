@@ -19,7 +19,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                     Label = category.Name
                 };
 
-                var mealPlanWithProducts = await _mealPlanRepository.SearchByProductCategoryId(category.Id);
+                var mealPlanWithProducts = await _mealPlanRepository.SearchByProductCategoryIdAsync(category.Id);
                 foreach (var mealPlan in mealPlanWithProducts!)
                 {
                     model.Data![mealPlan.Key.Name!] = !model.Data.TryGetValue(mealPlan.Key.Name!, out double? value) ? 1 : ++value;
