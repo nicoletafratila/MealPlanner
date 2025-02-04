@@ -25,15 +25,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var queryParameters = new QueryParameters()
-            {
-                Filters = new List<FilterItem>(),
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
-                PageNumber = 1,
-                PageSize = int.MaxValue,
-            };
-            Shops = await ShopService!.SearchAsync(queryParameters);
+            Shops = await ShopService!.SearchAsync();
             BlazoredModal.SetTitle("Select a shop");
         }
 

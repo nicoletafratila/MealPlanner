@@ -34,7 +34,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
             }
         }
-        public IList<RecipeCategoryModel>? Categories { get; set; }
+        public PagedList<RecipeCategoryModel>? Categories { get; set; }
 
         public string? RecipeId { get; set; }
         public PagedList<RecipeModel>? Recipes { get; set; }
@@ -74,9 +74,17 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
             };
 
-            _ = int.TryParse(Id, out var id);
-            Categories = await RecipeCategoryService!.GetAllAsync();
+            var queryParameters = new QueryParameters()
+            {
+                Filters = new List<FilterItem>(),
+                SortString = "DisplaySequence",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
 
+            _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
                 MealPlan = new MealPlanEditModel();
@@ -166,7 +174,7 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
-                        await selectedRecipedGrid!.RefreshData();
+                        await selectedRecipedGrid!.RefreshDataAsync();
                     }
                 }
 
@@ -202,7 +210,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
-                await selectedRecipedGrid!.RefreshData();
+                await selectedRecipedGrid!.RefreshDataAsync();
                 StateHasChanged();
             }
         }
@@ -253,15 +261,14 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task OnRecipeCategoryChangedAsync(string? value)
         {
+            RecipeCategoryId = value;
+            RecipeId = string.Empty;
+
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
             {
                 filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
-
-            RecipeCategoryId = value;
-            RecipeId = string.Empty;
-
             var queryParameters = new QueryParameters()
             {
                 Filters = filters,

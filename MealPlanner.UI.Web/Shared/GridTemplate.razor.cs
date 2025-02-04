@@ -28,7 +28,7 @@ namespace MealPlanner.UI.Web.Shared
 
         private Grid<TItem>? gridTemplateReference;
 
-        public async Task RefreshData()
+        public async Task RefreshDataAsync()
         {
             if (gridTemplateReference != null)
             {

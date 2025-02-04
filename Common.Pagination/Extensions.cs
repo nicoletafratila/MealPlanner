@@ -33,7 +33,19 @@ namespace Common.Pagination
         {
             var parameter = Expression.Parameter(typeof(T), "x");
             var member = Expression.Property(parameter, filter.PropertyName);
-            var constant = Expression.Constant(filter.Value);
+
+            var propertyType = typeof(T).GetProperty(filter.PropertyName)?.PropertyType;
+            if (propertyType == null)
+            {
+                throw new ArgumentException($"Property {filter.PropertyName} does not exist on type {typeof(T).Name}");
+            }
+
+            object? filterValue = filter.Value;
+            if (propertyType.IsEnum)
+            {
+                filterValue = Enum.Parse(propertyType, filter.Value.ToString());
+            }
+            var constant = Expression.Constant(filterValue, propertyType);
 
             Expression body = filter.Operator switch
             {
@@ -41,19 +53,19 @@ namespace Common.Pagination
                 FilterOperator.NotEquals => Expression.NotEqual(member, constant),
                 FilterOperator.Contains => Expression.Call(
                     member,
-                    typeof(string).GetMethod("Contains", new[] { typeof(string), typeof(StringComparison) }),
+                    typeof(string).GetMethod("Contains", new[] { typeof(string), typeof(StringComparison) })!,
                     constant,
                     Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 FilterOperator.StartsWith => Expression.Call(
                     member,
-                    typeof(string).GetMethod("StartsWith", new[] { typeof(string), typeof(StringComparison) }),
+                    typeof(string).GetMethod("StartsWith", new[] { typeof(string), typeof(StringComparison) })!,
                     constant,
                     Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),
                 FilterOperator.EndsWith => Expression.Call(
                     member,
-                    typeof(string).GetMethod("EndsWith", new[] { typeof(string), typeof(StringComparison) }),
+                    typeof(string).GetMethod("EndsWith", new[] { typeof(string), typeof(StringComparison) })!,
                     constant,
                     Expression.Constant(StringComparison.OrdinalIgnoreCase)
                 ),

@@ -1,6 +1,7 @@
 ﻿using BlazorBootstrap;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
@@ -20,6 +21,7 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
+        protected GridTemplate<ProductModel>? productsGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -68,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigationManager?.NavigateTo("productsoverview", forceLoad: true);
+                    await productsGrid!.RefreshDataAsync();
                 }
             }
         }

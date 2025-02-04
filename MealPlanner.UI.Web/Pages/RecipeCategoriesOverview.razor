@@ -1,4 +1,5 @@
 ﻿@page "/recipecategoriesoverview"
+@using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
@@ -17,9 +18,9 @@
             </table>
         </div>
 
-        @if (Categories != null)
-        {
-            <div class="card-body">
+        <div class="card-body">
+            @if (Categories != null)
+            {
                 <TableTemplate Data="@Categories" ShowIndex="true">
                     <TableHeader>
                         <th>Name</th>
@@ -42,8 +43,8 @@
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
                     </RowTemplate>
                 </TableTemplate>
-            </div>
-        }
+            }
+        </div>
     </div>
 
     <div class="col mt-3">

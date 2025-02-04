@@ -1,12 +1,11 @@
-﻿using BlazorBootstrap;
-using Common.Data.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using BlazorBootstrap;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using RecipeBook.Shared.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -19,7 +18,7 @@ namespace MealPlanner.UI.Web.Pages
         public string? Id { get; set; }
         public RecipeEditModel? Recipe { get; set; }
 
-        public IList<RecipeCategoryModel>? RecipeCategories { get; set; }
+        public PagedList<RecipeCategoryModel>? RecipeCategories { get; set; }
 
         private string? _productCategoryId;
         public string? ProductCategoryId
@@ -37,7 +36,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
             }
         }
-        public IList<ProductCategoryModel>? ProductCategories { get; set; }
+        public PagedList<ProductCategoryModel>? ProductCategories { get; set; }
 
         private string? _productId;
         public string? ProductId
@@ -66,7 +65,7 @@ namespace MealPlanner.UI.Web.Pages
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public string? UnitId { get; set; }
         public IList<UnitModel>? Units { get; set; }
-        public IList<UnitModel>? BaseUnits { get; set; }
+        public PagedList<UnitModel>? BaseUnits { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -102,11 +101,19 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Recipe", IsCurrentPage = true },
             };
 
-            _ = int.TryParse(Id, out var id);
-            RecipeCategories = await RecipeCategoryService!.GetAllAsync();
-            ProductCategories = await ProductCategoryService!.GetAllAsync();
-            BaseUnits = await UnitService!.GetAllAsync();
+            var queryParameters = new QueryParameters()
+            {
+                Filters = new List<FilterItem>(),
+                SortString = "DisplaySequence",
+                SortDirection = SortDirection.Ascending,
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            RecipeCategories = await RecipeCategoryService!.SearchAsync(queryParameters);
+            ProductCategories = await ProductCategoryService!.SearchAsync();
+            BaseUnits = await UnitService!.SearchAsync();
 
+            _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
                 Recipe = new RecipeEditModel();
@@ -257,20 +264,19 @@ namespace MealPlanner.UI.Web.Pages
             {
                 filters.Add(new FilterItem("ProductCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
-
-            ProductCategoryId = value;
-            ProductId = string.Empty;
-            Quantity = string.Empty;
-
             var queryParameters = new QueryParameters()
             {
                 Filters = filters,
                 SortString = "Name",
                 SortDirection = SortDirection.Ascending,
-                PageNumber = 1,
                 PageSize = int.MaxValue,
+                PageNumber = 1
             };
             Products = await ProductService!.SearchAsync(queryParameters);
+
+            ProductCategoryId = value;
+            ProductId = string.Empty;
+            Quantity = string.Empty;
             StateHasChanged();
         }
 
@@ -282,8 +288,8 @@ namespace MealPlanner.UI.Web.Pages
                 var product = await ProductService!.GetEditAsync(int.Parse(value));
                 if (product != null)
                 {
-                    var baseUnit = BaseUnits!.FirstOrDefault(x => x.Id == product.BaseUnitId);
-                    Units = BaseUnits!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
+                    var baseUnit = BaseUnits!.Items!.FirstOrDefault(x => x.Id == product.BaseUnitId);
+                    Units = BaseUnits!.Items!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
                 }
             }
             StateHasChanged();

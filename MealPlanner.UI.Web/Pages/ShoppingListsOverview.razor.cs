@@ -2,7 +2,9 @@
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -20,6 +22,7 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
+        protected GridTemplate<ShoppingListModel>? shoppingListsGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -68,7 +71,7 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigationManager?.NavigateTo("shoppinglistsoverview", forceLoad: true);
+                    await shoppingListsGrid!.RefreshDataAsync();
                 }
             }
         }

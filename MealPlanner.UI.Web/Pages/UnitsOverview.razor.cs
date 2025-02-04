@@ -1,5 +1,7 @@
 ﻿using BlazorBootstrap;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
@@ -8,9 +10,6 @@ namespace MealPlanner.UI.Web.Pages
     public partial class UnitsOverview
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
-
-        public UnitEditModel? Unit { get; set; }
-        public IList<UnitModel>? Units { get; set; }
 
         [Inject]
         public IUnitService? UnitsService { get; set; }
@@ -22,6 +21,7 @@ namespace MealPlanner.UI.Web.Pages
         protected IMessageComponent? MessageComponent { get; set; }
 
         protected ConfirmDialog dialog = default!;
+        protected GridTemplate<UnitModel>? unitsGrid;
 
         protected override async Task OnInitializedAsync()
         {
@@ -70,15 +70,47 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await RefreshAsync();
+                    await unitsGrid!.RefreshDataAsync();
                 }
             }
         }
 
         private async Task RefreshAsync()
         {
-            Units = await UnitsService!.GetAllAsync();
-            StateHasChanged();
+            var request = new GridDataProviderRequest<UnitModel>
+            {
+                Filters = new List<FilterItem>() { },
+                Sorting = new List<SortingItem<UnitModel>>
+                        {
+                            new SortingItem<UnitModel>("Name", item => item.Name!, SortDirection.Ascending),
+                        },
+                PageNumber = 1,
+                PageSize = 10
+            };
+            await UnitsDataProvider(request);
+        }
+
+        private async Task<GridDataProviderResult<UnitModel>> UnitsDataProvider(GridDataProviderRequest<UnitModel> request)
+        {
+            string sortString = "";
+            SortDirection sortDirection = SortDirection.None;
+
+            if (request.Sorting is not null && request.Sorting.Any())
+            {
+                sortString = request.Sorting.FirstOrDefault()!.SortString;
+                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
+            }
+            var queryParameters = new QueryParameters()
+            {
+                Filters = request.Filters,
+                SortString = sortString,
+                SortDirection = sortDirection,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+            };
+
+            var result = await UnitsService!.SearchAsync(queryParameters);
+            return await Task.FromResult(new GridDataProviderResult<UnitModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
 }

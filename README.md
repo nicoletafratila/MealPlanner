@@ -12,7 +12,8 @@ PM> Script-migration
 
 
 MealPlanner
-product categories cu paginare
+update card header on typeing
+unde apare cardul cu reteta?
 fa culoarea la statistics gradient al aceleasi nuante
 verifica  Task AddRecipeAsync sa aiba task
 about cu link linkedin

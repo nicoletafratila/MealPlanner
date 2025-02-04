@@ -1,11 +1,17 @@
 ﻿@typeparam TItem
 
+<style>
+    .table-responsive  {
+        overflow-x: visible;
+    }
+</style>
+
 <Grid 
       TItem="TItem"
       @ref="gridTemplateReference"
       AllowFiltering="true"
-      AllowPaging="@AllowPaging"
       AllowSorting="true"
+      AllowPaging="@AllowPaging"
       AutoHidePaging="true"
       Class="@TableGridClass"
       DataProvider="@DataProvider"

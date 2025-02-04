@@ -4,17 +4,17 @@ using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Api.Features.ProductCategory.Queries.Search
+namespace RecipeBook.Api.Features.Unit.Queries.Search
 {
-    public class SearchQueryHandler(IProductCategoryRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<ProductCategoryModel>>
+    public class SearchQueryHandler(IUnitRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<UnitModel>>
     {
-        private readonly IProductCategoryRepository _repository = repository;
+        private readonly IUnitRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<PagedList<ProductCategoryModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<UnitModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var data = await _repository.GetAllAsync();
-            var results = _mapper.Map<IList<ProductCategoryModel>>(data);
+            var results = _mapper.Map<IList<UnitModel>>(data);
 
             if (results != null && request.QueryParameters != null)
             {
@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.Search
                 {
                     foreach (var filter in request.QueryParameters.Filters)
                     {
-                        results = results.Where(filter.ConvertFilterItemToFunc<ProductCategoryModel>()).ToList();
+                        results = results.Where(filter.ConvertFilterItemToFunc<UnitModel>()).ToList();
                     }
                 }
 
@@ -34,7 +34,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.Search
                 return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
             }
 
-            return new PagedList<ProductCategoryModel>(new List<ProductCategoryModel>(), new Metadata());
+            return new PagedList<UnitModel>(new List<UnitModel>(), new Metadata());
         }
     }
 }

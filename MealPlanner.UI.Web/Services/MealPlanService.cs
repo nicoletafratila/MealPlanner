@@ -24,17 +24,12 @@ namespace MealPlanner.UI.Web.Services
             return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
         }
 
-        public async Task<IList<MealPlanModel>?> GetAllAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}");
-        }
-
         public async Task<PagedList<MealPlanModel>?> SearchAsync(QueryParameters? queryParameters = null)
         {
             var query = new Dictionary<string, string?>
             {
                 [nameof(QueryParameters.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonSerializer.Serialize(queryParameters?.Filters),
-                [nameof(QueryParameters.SortString)] = queryParameters == null ? null : queryParameters?.SortString?.ToString(),
+                [nameof(QueryParameters.SortString)] = queryParameters == null ? "Name" : queryParameters?.SortString?.ToString(),
                 [nameof(QueryParameters.SortDirection)] = queryParameters == null ? SortDirection.Ascending.ToString() : queryParameters.SortDirection.ToString(),
                 [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()

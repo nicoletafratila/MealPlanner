@@ -37,9 +37,9 @@
                         <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
                         <InputSelect id="recipeCategory" class="form-select" @bind-Value="@RecipeCategoryId">
                             <option selected value="0">Choose...</option>
-                            @if (Categories != null && Categories.Any())
+                            @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                             {
-                                @foreach (var item in Categories!)
+                                @foreach (var item in Categories.Items)
                                 {
                                     <option value="@item.Id">@item.Name</option>
                                 }

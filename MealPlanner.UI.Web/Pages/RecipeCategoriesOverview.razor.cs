@@ -1,6 +1,7 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
@@ -91,39 +92,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private bool CanMoveUp(RecipeCategoryModel item)
         {
-            return Categories?.IndexOf(item) - 1 >= 0;
+            return Categories!.IndexOf(item) - 1 >= 0;
         }
 
         private void MoveUp(RecipeCategoryModel item)
         {
             int index = Categories!.IndexOf(item);
-            Categories.RemoveAt(index);
+            Categories!.RemoveAt(index);
             if (index - 1 >= 0)
             {
-                Categories.Insert(index - 1, item);
+                Categories!.Insert(index - 1, item);
             }
-            Categories.SetIndexes();
+            Categories!.SetIndexes();
         }
 
         private bool CanMoveDown(RecipeCategoryModel item)
         {
-            return Categories?.IndexOf(item) + 2 <= Categories?.Count;
+            return Categories!.IndexOf(item) + 2 <= Categories!.Count;
         }
 
         private void MoveDown(RecipeCategoryModel item)
         {
             int index = Categories!.IndexOf(item);
-            Categories.RemoveAt(index);
-            if (index + 1 <= Categories.Count)
+            Categories!.RemoveAt(index);
+            if (index + 1 <= Categories!.Count)
             {
-                Categories.Insert(index + 1, item);
+                Categories!.Insert(index + 1, item);
             }
-            Categories.SetIndexes();
+            Categories!.SetIndexes();
         }
 
         private async Task RefreshAsync()
         {
-            Categories = await RecipeCategoriesService!.GetAllAsync();
+            var result = await RecipeCategoriesService!.SearchAsync();
+            Categories = result!.Items;
             StateHasChanged();
         }
     }
