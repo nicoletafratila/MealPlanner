@@ -28,7 +28,7 @@ namespace Common.Models
             if (Data != null)
             {
                 List<double?>? values = Data?.Select(item => item.Value).ToList();
-                List<string>? backgroundColors = Colors.GetBackgroundColors(Data!.Count);
+                List<string>? backgroundColors = Colors.GetBackgroundColors(Data!.Count, System.Drawing.Color.DarkOliveGreen);
                 datasets.Add(new DoughnutChartDataset() { Label = Label, Data = values, BackgroundColor = backgroundColors });
 
                 //switch (chartType)

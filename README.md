@@ -12,7 +12,6 @@ PM> Script-migration
 
 
 
-fa culoarea la statistics gradient al aceleasi nuante
 about cu link linkedin
 organizeaza pe features
 user module
