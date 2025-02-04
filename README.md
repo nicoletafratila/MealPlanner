@@ -11,10 +11,9 @@ PM> Script-migration
 
 
 
-MealPlanner
-unde apare cardul cu reteta?
-fa culoarea la statistics gradient al aceleasi nuante
+
 verifica  Task AddRecipeAsync sa aiba task
+fa culoarea la statistics gradient al aceleasi nuante
 about cu link linkedin
 organizeaza pe features
 user module

@@ -74,7 +74,7 @@
                                     <ChildContent Context="recipeContext">
                                         <div class="card-recipe">
                                             <div class="card-header" style="padding: 0px;">
-                                                <img src="@recipeContext.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => EditRecipe(recipeContext)" />
+                                                <img src="@recipeContext.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => ShowRecipeAsync(recipeContext)" />
                                             </div>
                                             <div class="card-body">
                                                 <table>
