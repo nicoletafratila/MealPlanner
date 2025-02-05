@@ -12,7 +12,7 @@ PM> Script-migration
 
 
 
-about cu link linkedin
+
 organizeaza pe features
 user module
 muta pe maui

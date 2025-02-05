@@ -4,12 +4,12 @@
 <PageTitle>Meal planner</PageTitle>
 
 <MudContainer Class="page-container">
-    <MudPaper Class="banner" >
+    <MudPaper Class="banner">
         <Banner />
     </MudPaper>
 
     <div class="banner-container">
-        <table>
+        <table style="width: -webkit-fill-available">
             <tr>
                 <td class="image-column">
                     <img src="Images\logo.jpg" alt="Logo Image" class="logo-image" />
@@ -22,15 +22,18 @@
                 <td colspan="2">
                     <p class="motto-text">
                         Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!
-@* 
+                        @*
                         Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!
                         Savor the Simplicity: Your Ultimate Menu and Recipe Organizer!
                         "Culinary Harmony: Your Go-To Menu and Recipe Organizer!"
                         "Tastefully Organized: Simplify Your Cooking Journey!"
                         "Recipe Bliss: Your Personal Menu and Recipe Keeper!"
                         "Cook Smart, Eat Well: Your Menu and Recipe Assistant!"
- *@
+                        *@
                     </p>
+                </td>
+                <td style="align-content: flex-end; text-align: right;">
+                    <a href="https://linkedin.com/in/claudia-nicoleta-fratila" target="_blank">About me</a>
                 </td>
             </tr>
         </table>
@@ -45,10 +48,6 @@
             <td style="vertical-align: top">
                 <div>
                     <main>
-                        @*   <div class="top-row px-4">
-                        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-                        </div> *@
-
                         <div class="content">
                             @if (IsErrorActive)
                             {
