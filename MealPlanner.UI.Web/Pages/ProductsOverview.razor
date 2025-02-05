@@ -3,6 +3,12 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
 
+<style>
+    .card {
+        min-width: 1370px;
+    }
+</style>
+
 <div class="col-sm-6">
     <div class="card">
         <div class="card-header">
@@ -45,7 +51,7 @@
                             </div>
                         </div>
                     </GridColumn>
-                    <GridColumn FilterTextboxWidth="305" TItem="ProductModel" HeaderText="Category" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
+                    <GridColumn FilterTextboxWidth="510" TItem="ProductModel" HeaderText="Category" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
                 </Columns>
             </GridTemplate>
         </div>
