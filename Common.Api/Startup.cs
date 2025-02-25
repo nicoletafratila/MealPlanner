@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Common.Api
 {
@@ -53,6 +54,7 @@ namespace Common.Api
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
+            services.AddScoped<AuthHandler>();
 
             RegisterRepositories(services);
             RegisterServices(services);
@@ -69,21 +71,19 @@ namespace Common.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSerilogRequestLogging();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseCors("Open");
-
+            app.UseAuthentication();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseHttpsRedirection();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

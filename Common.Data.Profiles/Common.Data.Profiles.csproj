@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
+    <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>

@@ -26,20 +26,27 @@
     <Compile Include="Migrations\20240606115902_Products_BaseUnitId.cs" />
     <Compile Include="Migrations\20240926150443_Recipe_Source.cs" />
     <Compile Include="Migrations\20240926150443_Recipe_Source.Designer.cs" />
+    <Compile Include="Migrations\20250225121525_ApplicationUser.cs" />
+    <Compile Include="Migrations\20250225121525_ApplicationUser.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.9.2" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-    <PackageReference Include="microsoft.entityframeworkcore.design" Version="8.0.6">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.13" />
+    <PackageReference Include="microsoft.entityframeworkcore.design" Version="8.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,7 +30,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_recipeCategoryId != value)
                 {
                     _recipeCategoryId = value;
-                    OnRecipeCategoryChangedAsync(_recipeCategoryId!);
+                    OnRecipeCategoryChangedAsync(_recipeCategoryId!).GetAwaiter();
                 }
             }
         }

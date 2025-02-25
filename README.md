@@ -12,7 +12,8 @@ PM> Script-migration
 
 
 
-
+welcome page fara autentificare
+swagger
+acceasi reteta de mai multe ori
 organizeaza pe features
-user module
 muta pe maui

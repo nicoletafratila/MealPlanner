@@ -18,35 +18,40 @@ namespace MealPlanner.UI.Web
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IProductCategoryService, ProductCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
                     var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-                });
+                })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IUnitService, UnitService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.RecipeBook);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               })
+               .AddHttpMessageHandler<AuthHandler>();
 
             services.AddHttpClient<IMealPlanService, MealPlanService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
@@ -54,28 +59,32 @@ namespace MealPlanner.UI.Web
                     var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-                });
+                })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IShoppingListService, ShoppingListService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
                     var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
                     httpClient.BaseAddress = clientConfig.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-                });
+                })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IShopService, ShopService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               })
+               .AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IStatisticsService, StatisticsService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
                    var clientConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == Common.Constants.ApiConfigNames.MealPlanner);
                    httpClient.BaseAddress = clientConfig.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
+               })
+               .AddHttpMessageHandler<AuthHandler>();
         }
 
         public void ConfigureServices(IServiceCollection services, ConfigureHostBuilder host)
@@ -84,10 +93,12 @@ namespace MealPlanner.UI.Web
             string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
             host.UseSerilog((ctx, lc) => lc
+                        .ReadFrom.Configuration(ctx.Configuration)
                         .MinimumLevel.Error()
-                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error)
+                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error, outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
                         .WriteTo.File(fileLoggerFilePath, restrictedToMinimumLevel: LogEventLevel.Error, rollingInterval: RollingInterval.Hour, encoding: System.Text.Encoding.UTF8)
                         .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", SchemaName = "dbo" }, null, null, LogEventLevel.Error)
+                        .Enrich.FromLogContext()
                     );
             // AutoCreateSqlTable = true
             //Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
@@ -111,13 +122,12 @@ namespace MealPlanner.UI.Web
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
-
+            app.UseIdentityServer();
             app.UseRouting();
-
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
+            app.MapRazorPages().RequireAuthorization();
 
             app.Run();
         }

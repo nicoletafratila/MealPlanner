@@ -1,0 +1,19 @@
+@page 
+@model Identity.API.Pages.Account.Logout.Index
+
+<div class="logout-page">
+    <div class="lead">
+        <h1>Logout</h1>
+        <p>Would you like to logout of IdentityServer?</p>
+    </div>
+
+    <form asp-page="/Account/Logout/Index">
+        <input type="hidden" name="logoutId" value="@Model.LogoutId"  />
+        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+
+        <div class="form-group">
+            <button class="btn btn-primary prm-trivia-color">Yes</button>
+        </div>
+    </form>
+    <p>Click <a href="@Model.ReturnUrl">here</a> to go back to the application.</p>
+</div>
