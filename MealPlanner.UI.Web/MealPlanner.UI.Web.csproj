@@ -40,12 +40,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazor.Bootstrap" Version="3.1.1" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />
     <PackageReference Include="Blazored.Modal" Version="7.3.1" />
     <PackageReference Include="bootstrap-dialog" Version="3.3.4.1" />
-    <PackageReference Include="MudBlazor" Version="7.15.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+    <PackageReference Include="MudBlazor" Version="8.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
