@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using Common.Api;
 using Common.Constants;
+using Common.Data.DataContext;
 using MealPlanner.Shared.Models;
 using MediatR;
 using RecipeBook.Api.Repositories;
@@ -11,7 +12,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
     {
         private readonly IRecipeRepository _repository = repository;
         private readonly ILogger<DeleteCommandHandler> _logger = logger;
-        private readonly IApiConfig _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
+        private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();//serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
         public async Task<DeleteCommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {

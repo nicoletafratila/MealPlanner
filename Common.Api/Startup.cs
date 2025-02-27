@@ -24,6 +24,8 @@ namespace Common.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
+
             services.AddDbContext<MealPlannerDbContext>(options =>
             {
                 //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");
@@ -54,7 +56,7 @@ namespace Common.Api
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
             services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
-            services.AddScoped<AuthHandler>();
+            services.AddSingleton<IApiConfig, IdentityApiConfig>();
 
             RegisterRepositories(services);
             RegisterServices(services);
@@ -65,8 +67,6 @@ namespace Common.Api
             });
 
             services.AddControllers();
-
-            ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

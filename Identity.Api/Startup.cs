@@ -1,23 +1,38 @@
-﻿using Common.Data.DataContext;
+﻿using Common.Api;
+using Common.Data.DataContext;
 using Common.Data.Entities;
+using Duende.IdentityServer.Configuration;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Api
 {
     public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
+        //private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.Identity);
+
         protected override void RegisterServices(IServiceCollection services)
         {
             base.RegisterServices(services);
 
-            var identityServerOptions = new IdentityServerOptions();
-            configuration.GetSection(nameof(IdentityServerOptions)).Bind(identityServerOptions);
-            services.AddSingleton(typeof(IdentityServerOptions), identityServerOptions);
+            var a = new IdentityServerOptions();
+            services.AddSingleton(typeof(IdentityServerOptions), a);
+            //services.AddSingleton(typeof(PersistentComponentState), new PersistentComponentState());
+
+            var b = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
+            services.AddSingleton<PersistentComponentState>();
+
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication("Bearer", options =>
+                {
+                    options.Authority = b.BaseUrl!.AbsoluteUri;
+                    options.ApiName = b.Name;
+                });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<MealPlannerDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddLocalApiAuthentication();
             services
                 .AddIdentityServer(options =>
                 {
@@ -35,9 +50,16 @@ namespace Identity.Api
                 .AddInMemoryApiResources(Config.ApiResources)
                 .AddAspNetIdentity<ApplicationUser>();
 
-            services.AddAuthentication();
+            services.AddOptions();
+            services.AddAuthorizationCore();
+            services.AddCascadingAuthenticationState();
+            //services.AddAuthentication();
+            services.AddLocalApiAuthentication();
+            services.AddScoped<PersistentAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<PersistentAuthenticationStateProvider>());
+            services.AddTransient<AuthHandler>();
 
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>

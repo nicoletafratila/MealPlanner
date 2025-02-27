@@ -2,6 +2,7 @@
 using AutoMapper;
 using Common.Api;
 using Common.Constants;
+using Common.Data.DataContext;
 using Common.Data.Entities;
 using Common.Models;
 using MealPlanner.Shared.Models;
@@ -15,7 +16,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
         private readonly IRecipeRepository _recipeRepository = recipeRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ILogger<GetShoppingListProductsQueryHandler> _logger = logger;
-        private readonly IApiConfig _mealPlannerApiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
+        private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();//serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
         public async Task<IList<ShoppingListProductEditModel>?> Handle(GetShoppingListProductsQuery request, CancellationToken cancellationToken)
         {

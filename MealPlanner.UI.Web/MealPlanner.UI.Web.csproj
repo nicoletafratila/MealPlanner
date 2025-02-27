@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logs\**" />
     <Compile Remove="wwwroot\css\bootstrap\**" />
     <Compile Remove="wwwroot\css\open-iconic\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="wwwroot\css\bootstrap\**" />
     <Content Remove="wwwroot\css\open-iconic\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="wwwroot\css\bootstrap\**" />
     <EmbeddedResource Remove="wwwroot\css\open-iconic\**" />
+    <None Remove="Logs\**" />
     <None Remove="wwwroot\css\bootstrap\**" />
     <None Remove="wwwroot\css\open-iconic\**" />
   </ItemGroup>
@@ -56,10 +60,6 @@
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Logs\" />
   </ItemGroup>
 
   <ItemGroup>

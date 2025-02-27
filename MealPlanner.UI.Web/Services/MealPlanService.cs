@@ -3,6 +3,7 @@ using System.Text.Json;
 using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
+using Common.Data.DataContext;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
@@ -12,16 +13,16 @@ namespace MealPlanner.UI.Web.Services
     public class MealPlanService(HttpClient httpClient, IServiceProvider serviceProvider) : IMealPlanService
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
+        private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();//serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
         public async Task<MealPlanEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<MealPlanEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<MealPlanEditModel?>($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/edit/{id}");
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
+            return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/shoppingListProducts/{mealPlanId}/{shopId}");
         }
 
         public async Task<PagedList<MealPlanModel>?> SearchAsync(QueryParameters? queryParameters = null)
@@ -35,14 +36,14 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/search", query));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/search", query));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<MealPlanModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string?> AddAsync(MealPlanEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi], modelJson);
+            var response = await _httpClient.PostAsync(_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -53,7 +54,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> UpdateAsync(MealPlanEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi], modelJson);
+            var response = await _httpClient.PutAsync(_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -63,7 +64,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<string?> DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_apiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/{id}");
+            var response = await _httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.MealPlanApi]}/{id}");
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty

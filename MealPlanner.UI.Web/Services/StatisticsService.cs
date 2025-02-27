@@ -1,5 +1,6 @@
 ﻿using Common.Api;
 using Common.Constants;
+using Common.Data.DataContext;
 using Common.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
@@ -9,7 +10,7 @@ namespace MealPlanner.UI.Web.Services
     public class StatisticsService(HttpClient httpClient, IServiceProvider serviceProvider) : IStatisticsService
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
+        private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();//serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.MealPlanner);
 
         public async Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories)
         {
@@ -17,7 +18,7 @@ namespace MealPlanner.UI.Web.Services
             {
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig?.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes", query!));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes", query!));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
 
@@ -27,7 +28,7 @@ namespace MealPlanner.UI.Web.Services
             {
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig?.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriteproducts", query!));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriteproducts", query!));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
     }
