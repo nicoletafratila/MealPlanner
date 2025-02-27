@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Common.Data.Entities
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
         [Display(Name = "First Name")]

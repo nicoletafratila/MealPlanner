@@ -26,6 +26,8 @@
     <Compile Include="Migrations\20240606115902_Products_BaseUnitId.cs" />
     <Compile Include="Migrations\20240926150443_Recipe_Source.cs" />
     <Compile Include="Migrations\20240926150443_Recipe_Source.Designer.cs" />
+    <Compile Include="Migrations\20250227122210_ApplicationUser.cs" />
+    <Compile Include="Migrations\20250227122210_ApplicationUser.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 

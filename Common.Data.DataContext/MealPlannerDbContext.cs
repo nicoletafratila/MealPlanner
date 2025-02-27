@@ -1,10 +1,11 @@
 ﻿using Common.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Common.Data.DataContext
 {
-    public class MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : DbContext(options)
+    public class MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
         public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
