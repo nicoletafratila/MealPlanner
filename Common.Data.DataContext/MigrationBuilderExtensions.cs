@@ -9,7 +9,7 @@ namespace Common.Data.DataContext
     {
         public static bool TableExists<TDbContext>(this MigrationBuilder migrationBuilder, string tableName, string? schemaName = null) where TDbContext : DbContext
         {
-            TDbContext instance = ServiceLocator.Current.GetInstance<TDbContext>();
+            TDbContext instance = ServiceLocator.Current!.GetInstance<TDbContext>();
             if (!instance.Database.CanConnect())
             {
                 return false;

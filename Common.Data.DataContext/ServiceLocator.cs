@@ -4,8 +4,7 @@ namespace Common.Data.DataContext
 {
     public class ServiceLocator
     {
-        private ServiceProvider _currentServiceProvider;
-        private static ServiceProvider? _serviceProvider;
+        private static ServiceProvider? _currentServiceProvider;
 
         public ServiceLocator(ServiceProvider currentServiceProvider)
         {
@@ -16,13 +15,13 @@ namespace Common.Data.DataContext
         {
             get
             {
-                return new ServiceLocator(_serviceProvider!);
+                return new ServiceLocator(_currentServiceProvider!);
             }
         }
 
         public static void SetLocatorProvider(ServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            _currentServiceProvider = serviceProvider;
         }
 
         public object GetInstance(Type serviceType)

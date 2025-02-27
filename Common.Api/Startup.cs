@@ -31,7 +31,7 @@ namespace Common.Api
             });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<HttpContextAccessor>();
             var config = new MapperConfiguration(c =>
             {
                 c.AddProfile<ProductProfile>();
@@ -51,8 +51,8 @@ namespace Common.Api
 
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
-            services.AddSingleton<IApiConfig, RecipeBookApiConfig>();
-            services.AddSingleton<IApiConfig, MealPlannerApiConfig>();
+            services.AddSingleton<RecipeBookApiConfig>();
+            services.AddSingleton<MealPlannerApiConfig>();
 
             RegisterRepositories(services);
             RegisterServices(services);
@@ -63,7 +63,7 @@ namespace Common.Api
             });
 
             services.AddControllers();
-
+         
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
 

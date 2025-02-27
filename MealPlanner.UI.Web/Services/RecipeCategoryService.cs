@@ -3,20 +3,21 @@ using System.Text.Json;
 using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
+using Common.Data.DataContext;
 using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class RecipeCategoryService(HttpClient httpClient, IServiceProvider serviceProvider) : IRecipeCategoryService
+    public class RecipeCategoryService(HttpClient httpClient) : IRecipeCategoryService
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly IApiConfig _apiConfig = serviceProvider.GetServices<IApiConfig>().First(item => item.Name == ApiConfigNames.RecipeBook);
+        private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
         public async Task<RecipeCategoryEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<RecipeCategoryEditModel?>($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/edit/{id}");
+            return await _httpClient.GetFromJsonAsync<RecipeCategoryEditModel?>($"{_recipeBookApiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/edit/{id}");
         }
 
         public async Task<PagedList<RecipeCategoryModel>?> SearchAsync(QueryParameters? queryParameters = null)
@@ -30,14 +31,14 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/search", query));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/search", query));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<RecipeCategoryModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string?> AddAsync(RecipeCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi], modelJson);
+            var response = await _httpClient.PostAsync(_recipeBookApiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -48,7 +49,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> UpdateAsync(RecipeCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi], modelJson);
+            var response = await _httpClient.PutAsync(_recipeBookApiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -59,7 +60,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> UpdateAsync(IList<RecipeCategoryModel> models)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(models), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/updateAll", modelJson);
+            var response = await _httpClient.PutAsync($"{_recipeBookApiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/updateAll", modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -69,7 +70,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<string?> DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_apiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/{id}");
+            var response = await _httpClient.DeleteAsync($"{_recipeBookApiConfig?.Endpoints![ApiEndpointNames.RecipeCategoryApi]}/{id}");
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
