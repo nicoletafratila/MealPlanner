@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Common.Api
 {
@@ -99,16 +100,14 @@ namespace Common.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
-
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseCors("Open");
-
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseIdentityServer();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
