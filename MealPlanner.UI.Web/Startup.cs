@@ -118,9 +118,9 @@ namespace MealPlanner.UI.Web
             app.UseCors();
             app.UseStaticFiles();
             app.UseRouting();
-            //app.UseIdentityServer();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseIdentityServer();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();

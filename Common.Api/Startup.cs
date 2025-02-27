@@ -89,13 +89,6 @@ namespace Common.Api
             RegisterRepositories(services);
             RegisterServices(services);
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            //});
-
-            //services.AddControllers();
-         
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
 
