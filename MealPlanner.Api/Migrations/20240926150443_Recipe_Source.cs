@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Common.Data.DataContext;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,11 +11,14 @@ namespace MealPlanner.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            if (!migrationBuilder.ColumnExists<MealPlannerDbContext>("Source", "Recipes"))
+            {
+                migrationBuilder.AddColumn<string>(
                 name: "Source",
                 table: "Recipes",
                 type: "nvarchar(max)",
                 nullable: true);
+            }
         }
 
         /// <inheritdoc />

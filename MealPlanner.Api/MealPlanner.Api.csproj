@@ -26,8 +26,8 @@
     <Compile Include="Migrations\20240606115902_Products_BaseUnitId.cs" />
     <Compile Include="Migrations\20240926150443_Recipe_Source.cs" />
     <Compile Include="Migrations\20240926150443_Recipe_Source.Designer.cs" />
-    <Compile Include="Migrations\20250227122210_ApplicationUser.cs" />
-    <Compile Include="Migrations\20250227122210_ApplicationUser.Designer.cs" />
+    <Compile Include="Migrations\20250227134333_ApplicationUser.cs" />
+    <Compile Include="Migrations\20250227134333_ApplicationUser.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 
@@ -46,6 +46,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
   </ItemGroup>

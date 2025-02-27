@@ -113,15 +113,21 @@ namespace MealPlanner.UI.Web
                 app.UseHsts();
             }
 
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
-
+            app.UseCors();
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            //app.UseIdentityServer();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
+            //app.MapRazorPages().RequireAuthorization();
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
-
             app.Run();
         }
     }

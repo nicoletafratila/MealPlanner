@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Common.Data.DataContext;
+using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +30,35 @@ namespace Common.Api
                 //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
+            });
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+               .AddEntityFrameworkStores<MealPlannerDbContext>()
+               .AddDefaultTokenProviders();
+            services.AddLocalApiAuthentication();
+            services.AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+
+                    // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
+                    options.EmitStaticAudienceClaim = true;
+                })
+                .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
+                .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
+                .AddInMemoryClients(IdentityConfig.Clients)
+                .AddInMemoryApiResources(IdentityConfig.ApiResources)
+                .AddAspNetIdentity<ApplicationUser>();
+            services.AddAuthentication();
+            services.AddControllersWithViews();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
             });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
@@ -58,12 +89,12 @@ namespace Common.Api
             RegisterRepositories(services);
             RegisterServices(services);
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            //});
 
-            services.AddControllers();
+            //services.AddControllers();
          
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
