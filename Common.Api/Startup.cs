@@ -46,6 +46,7 @@ namespace Common.Api
                 c.AddProfile<ShopProfile>();
                 c.AddProfile<ShopDisplaySequenceProfile>();
                 c.AddProfile<LogProfile>();
+                c.AddProfile<ApplicationUserProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
 

@@ -86,7 +86,9 @@ namespace MealPlanner.UI.Web
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
             host.UseSerilog((ctx, lc) => lc
                         .MinimumLevel.Error()
-                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error)
+                        .Enrich.FromLogContext()
+                        .ReadFrom.Configuration(ctx.Configuration)
+                        .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error, outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
                         .WriteTo.File(fileLoggerFilePath, restrictedToMinimumLevel: LogEventLevel.Error, rollingInterval: RollingInterval.Hour, encoding: System.Text.Encoding.UTF8)
                         .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", SchemaName = "dbo" }, null, null, LogEventLevel.Error)
                     );
