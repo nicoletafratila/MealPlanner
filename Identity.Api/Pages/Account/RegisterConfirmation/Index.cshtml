@@ -1,0 +1,21 @@
+﻿@page
+@model Identity.Api.Pages.Account.RegisterConfirmation.IndexModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+        <p>
+            Click <a id="confirm-link" href="@Model.EmailConfirmationUrl">here</a> to confirm your account.
+        </p>
+    }
+    else
+    {
+        <p>
+            Please check your email to confirm your account.
+        </p>
+    }
+}
