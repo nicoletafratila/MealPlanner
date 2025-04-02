@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "RecipeBook.API": {
+    "RecipeBook.Api": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

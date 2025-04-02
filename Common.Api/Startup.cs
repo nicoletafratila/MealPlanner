@@ -86,6 +86,7 @@ namespace Common.Api
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddSingleton<RecipeBookApiConfig>();
             services.AddSingleton<MealPlannerApiConfig>();
+            services.AddSingleton<IdentityApiConfig>();
 
             RegisterRepositories(services);
             RegisterServices(services);
@@ -110,7 +111,7 @@ namespace Common.Api
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
