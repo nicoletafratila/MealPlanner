@@ -4,5 +4,6 @@
     {
         public const string RecipeBook = "RecipeBook";
         public const string MealPlanner = "MealPlanner";
+        public const string Identity = "Identity";
     }
 }
