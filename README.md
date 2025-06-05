@@ -12,7 +12,10 @@ PM> Script-migration
 
 
 
-
+click dreapta sa adauge reteta la meniu
+display la statistics e taiat
+la cautare cand nu gaseste, aseaza cutia la mijloc si scoate background gri
 organizeaza pe features
+swagger
 user module
 muta pe maui

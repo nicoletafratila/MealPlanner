@@ -53,6 +53,7 @@ namespace Common.Api
                 .AddInMemoryApiResources(IdentityConfig.ApiResources)
                 .AddAspNetIdentity<ApplicationUser>();
             services.AddAuthentication();
+            services.AddApiAuthorization();
             services.AddControllersWithViews();
             services.AddCors(options =>
             {
@@ -87,7 +88,7 @@ namespace Common.Api
             services.AddSingleton<RecipeBookApiConfig>();
             services.AddSingleton<MealPlannerApiConfig>();
             services.AddSingleton<IdentityApiConfig>();
-
+            services.AddScoped<AuthHandler>();
             RegisterRepositories(services);
             RegisterServices(services);
 
@@ -99,6 +100,8 @@ namespace Common.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //app.UseSwagger();
+                //app.UseSwaggerUI();
             }
 
             app.UseSerilogRequestLogging();

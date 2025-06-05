@@ -6,11 +6,11 @@ namespace Common.Api
     public class AuthHandler : AuthorizationMessageHandler
     {
         public AuthHandler(
-            IAccessTokenProvider provider, 
-            NavigationManager navigation, 
-            MealPlannerApiConfig mealPlannerApiConfig, 
+            IAccessTokenProvider provider,
+            NavigationManager navigation,
+            MealPlannerApiConfig mealPlannerApiConfig,
             RecipeBookApiConfig recipeBookApiConfig,
-            IdentityApiConfig identityApiConfig) 
+            IdentityApiConfig identityApiConfig)
             : base(provider, navigation)
         {
             ConfigureHandler(
