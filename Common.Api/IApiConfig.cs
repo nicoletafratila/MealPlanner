@@ -2,9 +2,9 @@
 {
     public interface IApiConfig
     {
-        public Uri? BaseUrl { get; set; }
-        public int Timeout { get; set; }
-        public string? Name { get; }
-        public Dictionary<string, string>? Endpoints { get; set; }
+        Uri? BaseUrl { get; set; }
+        int Timeout { get; set; }
+        string? Name { get; }
+        Dictionary<string, string>? Endpoints { get; set; }
     }
 }

@@ -11,8 +11,14 @@ PM> Script-migration
 
 
 
-
+home page, authorized or not
+click pe meniu fara auth te duce la home
 click dreapta sa adauge reteta la meniu
+pagini in foldere
+
+ @if (context.User.Identity?.IsAuthenticated != true || !context.User.IsInRole("admin"))
+ manageusers vizibil doar pt admin
+
 display la statistics e taiat
 la cautare cand nu gaseste, aseaza cutia la mijloc si scoate background gri
 organizeaza pe features

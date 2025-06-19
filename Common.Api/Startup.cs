@@ -5,6 +5,8 @@ using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -53,6 +55,7 @@ namespace Common.Api
                 .AddInMemoryApiResources(IdentityConfig.ApiResources)
                 .AddAspNetIdentity<ApplicationUser>();
             services.AddAuthentication();
+            services.AddAuthorizationCore();
             services.AddApiAuthorization();
             services.AddControllersWithViews();
             services.AddCors(options =>
@@ -87,8 +90,11 @@ namespace Common.Api
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddSingleton<RecipeBookApiConfig>();
             services.AddSingleton<MealPlannerApiConfig>();
+            services.AddSingleton<MealPlannerWebConfig>();
             services.AddSingleton<IdentityApiConfig>();
-            services.AddScoped<AuthHandler>();
+            //services.AddScoped<AuthHandler>();
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+            
             RegisterRepositories(services);
             RegisterServices(services);
 
