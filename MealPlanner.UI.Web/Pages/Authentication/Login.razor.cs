@@ -1,31 +1,35 @@
-﻿using Common.Data.Entities;
+﻿using Identity.Shared.Models;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Identity;
 
 namespace MealPlanner.UI.Web.Pages.Authentication
 {
     [AllowAnonymous]
     public partial class Login
     {
-        private Credential Credential = new Credential();
+        public LoginModel? Credential { get; set; }
 
         [Inject]
-        public SignInManager<ApplicationUser> SignInManager { get; set; }
+        public IAuthenticationService? AuthenticationService { get; set; }
+
+        protected override void OnInitialized()
+        {
+            Credential = new LoginModel();
+        }
 
         private async Task AuthenticateAsync()
         {
-            var result = await SignInManager.PasswordSignInAsync(Credential.Username, Credential.Password, Credential.RememberLogin, lockoutOnFailure: true);
-            if (result.Succeeded)
-            {
-            }
+            var response = await AuthenticationService!.LoginAsync(Credential);
+            //if (!string.IsNullOrWhiteSpace(response))
+            //{
+            //    MessageComponent?.ShowError(response);
+            //}
+            //else
+            //{
+            //    MessageComponent?.ShowInfo("Data has been saved successfully");
+            //    NavigateToOverview();
+            //}
         }
-    }
-
-    public class Credential
-    {
-        public string Username { get; set; } = "";
-        public string Password { get; set; } = "";
-        public bool RememberLogin { get; set; } = false;
     }
 }

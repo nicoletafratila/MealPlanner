@@ -11,12 +11,12 @@ namespace Identity.Api.Controllers
     [ApiController]
     [Route("[controller]")]
     [Authorize(IdentityServerConstants.LocalApi.PolicyName, Roles = "admin, member")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UsersController(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserController(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -43,7 +43,7 @@ namespace Identity.Api.Controllers
 
         [HttpPut]
         [Authorize(IdentityServerConstants.LocalApi.PolicyName, Roles = "admin")]
-        public async Task<IActionResult> UpdateAsync(ApplicationUserModel user)
+        public async Task<IActionResult> PutAsync(ApplicationUserModel user)
         {
             if (user == null)
                 return BadRequest();
@@ -75,5 +75,6 @@ namespace Identity.Api.Controllers
             await _userManager.DeleteAsync(existingUser);
             return NoContent();
         }
+
     }
 }
