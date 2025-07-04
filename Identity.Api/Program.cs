@@ -1,21 +1,24 @@
-﻿using Identity.Api;
-using Serilog;
+﻿using Serilog;
 
-public class Program
+namespace Identity.Api
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        var host = CreateHostBuilder(args).Build();
-        host.Run();
-    }
+        public static void Main(string[] args)
+        {
+            var host = CreateHostBuilder(args).Build();
+            using var scope = host.Services.CreateScope();
+            host.Run();
+        }
 
-    public static IHostBuilder CreateHostBuilder(string[] args)
-    {
-        return Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            })
-            .UseSerilog();
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                })
+                .UseSerilog();
+        }
     }
 }

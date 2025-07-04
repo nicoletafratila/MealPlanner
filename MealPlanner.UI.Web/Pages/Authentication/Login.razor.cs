@@ -20,7 +20,7 @@ namespace MealPlanner.UI.Web.Pages.Authentication
 
         private async Task AuthenticateAsync()
         {
-            var response = await AuthenticationService!.LoginAsync(Credential);
+            var response = await AuthenticationService!.LoginAsync(Credential!);
             //if (!string.IsNullOrWhiteSpace(response))
             //{
             //    MessageComponent?.ShowError(response);

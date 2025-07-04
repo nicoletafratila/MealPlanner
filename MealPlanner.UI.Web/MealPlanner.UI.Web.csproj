@@ -40,23 +40,22 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />
+    <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
     <PackageReference Include="Blazored.Modal" Version="7.3.1" />
     <PackageReference Include="bootstrap-dialog" Version="3.3.4.1" />
-    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.16" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.13" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.17" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.17">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
-    <PackageReference Include="MudBlazor" Version="8.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="MudBlazor" Version="8.9.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.1.0" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 

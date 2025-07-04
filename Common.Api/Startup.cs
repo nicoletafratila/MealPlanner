@@ -92,7 +92,6 @@ namespace Common.Api
             services.AddSingleton<MealPlannerApiConfig>();
             services.AddSingleton<MealPlannerWebConfig>();
             services.AddSingleton<IdentityApiConfig>();
-            //services.AddScoped<AuthHandler>();
             services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
             
             RegisterRepositories(services);

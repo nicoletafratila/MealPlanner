@@ -48,7 +48,7 @@ namespace Identity.Api.Controllers
             if (user == null)
                 return BadRequest();
 
-            var existingUser = _userManager.FindByIdAsync(user.UserId).Result;
+            var existingUser = _userManager.FindByIdAsync(user.UserId!).Result;
             if (existingUser == null)
             {
                 return NotFound($"Could not find a user with id = {user.UserId}");

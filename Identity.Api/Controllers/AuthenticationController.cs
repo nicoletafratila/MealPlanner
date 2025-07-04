@@ -11,7 +11,7 @@ namespace Identity.Api.Controllers
     {
         private readonly ISender _mediator = mediator;
 
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<LoginCommandResponse> PostAsync(LoginModel model)
         {
             LoginCommand command = new()

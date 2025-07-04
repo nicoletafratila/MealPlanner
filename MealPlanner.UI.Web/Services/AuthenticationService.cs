@@ -15,7 +15,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> LoginAsync(LoginModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/login", modelJson);
+            var response = await _httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}", modelJson);
             var result = JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
