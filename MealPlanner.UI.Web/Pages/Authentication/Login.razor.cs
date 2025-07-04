@@ -13,6 +13,12 @@ namespace MealPlanner.UI.Web.Pages.Authentication
         [Inject]
         public IAuthenticationService? AuthenticationService { get; set; }
 
+        [Inject]
+        public NavigationManager? NavigationManager { get; set; }
+
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? MessageComponent { get; set; }
+
         protected override void OnInitialized()
         {
             Credential = new LoginModel();
@@ -21,15 +27,19 @@ namespace MealPlanner.UI.Web.Pages.Authentication
         private async Task AuthenticateAsync()
         {
             var response = await AuthenticationService!.LoginAsync(Credential!);
-            //if (!string.IsNullOrWhiteSpace(response))
-            //{
-            //    MessageComponent?.ShowError(response);
-            //}
-            //else
-            //{
-            //    MessageComponent?.ShowInfo("Data has been saved successfully");
-            //    NavigateToOverview();
-            //}
+            if (!string.IsNullOrWhiteSpace(response))
+            {
+                MessageComponent?.ShowError(response);
+            }
+            else
+            {
+                NavigateToOverview();
+            }
+        }
+
+        private void NavigateToOverview()
+        {
+            NavigationManager?.NavigateTo("/");
         }
     }
 }

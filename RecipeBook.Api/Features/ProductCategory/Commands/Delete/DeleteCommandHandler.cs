@@ -31,7 +31,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new DeleteCommandResponse { Message = "An error occured when deleting the product category." };
+                return new DeleteCommandResponse { Message = "An error occurred when deleting the product category." };
             }
         }
     }

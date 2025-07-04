@@ -25,7 +25,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new AddCommandResponse { Message = "An error occured when saving the recipe." };
+                return new AddCommandResponse { Message = "An error occurred when saving the recipe." };
             }
         }
     }

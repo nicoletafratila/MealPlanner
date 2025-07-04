@@ -31,7 +31,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new DeleteCommandResponse { Message = "An error occured when deleting the unit." };
+                return new DeleteCommandResponse { Message = "An error occurred when deleting the unit." };
             }
         }
     }

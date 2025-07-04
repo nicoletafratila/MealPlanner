@@ -24,7 +24,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new DeleteCommandResponse { Message = "An error occured when deleting the shopping list." };
+                return new DeleteCommandResponse { Message = "An error occurred when deleting the shopping list." };
             }
         }
     }

@@ -37,7 +37,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new UpdateAllCommandResponse { Message = "An error occured when saving the Recipe category." };
+                return new UpdateAllCommandResponse { Message = "An error occurred when saving the Recipe category." };
             }
         }
     }
