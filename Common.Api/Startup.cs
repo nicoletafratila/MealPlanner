@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Common.Constants;
 using Common.Data.DataContext;
 using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -14,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace Common.Api
@@ -45,8 +48,6 @@ namespace Common.Api
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
-
-                    // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                     options.EmitStaticAudienceClaim = true;
                 })
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
@@ -54,7 +55,21 @@ namespace Common.Api
                 .AddInMemoryClients(IdentityConfig.Clients)
                 .AddInMemoryApiResources(IdentityConfig.ApiResources)
                 .AddAspNetIdentity<ApplicationUser>();
-            services.AddAuthentication();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidAudience = "mealplanner.com",
+                    ValidateIssuer = true,
+                    ValidIssuer = "mealplanner.com", 
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(MealPlannerKey.SigningKey))
+                };
+            });
+
             services.AddAuthorizationCore();
             services.AddApiAuthorization();
             services.AddControllersWithViews();

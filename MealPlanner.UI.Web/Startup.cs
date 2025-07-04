@@ -89,6 +89,8 @@ namespace MealPlanner.UI.Web
 
         public void ConfigureServices(IServiceCollection services, ConfigureHostBuilder host)
         {
+            base.ConfigureServices(services);
+
             var currentDir = Directory.GetCurrentDirectory();
             string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
@@ -107,15 +109,15 @@ namespace MealPlanner.UI.Web
             services.AddServerSideBlazor();
             services.AddBlazoredModal();
             services.AddBlazorBootstrap();
-
-            base.ConfigureServices(services);
+            services.AddRazorComponents()
+                    .AddInteractiveServerComponents();
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Error", createScopeForErrors: true);
                 app.UseHsts();
             }
 
@@ -131,6 +133,7 @@ namespace MealPlanner.UI.Web
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
             //app.MapRazorPages().RequireAuthorization();
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
@@ -139,6 +142,7 @@ namespace MealPlanner.UI.Web
             //    app.UseSwagger();
             //    app.UseSwaggerUI();
             //}
+
             app.Run();
         }
     }

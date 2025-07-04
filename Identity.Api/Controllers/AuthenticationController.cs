@@ -11,8 +11,18 @@ namespace Identity.Api.Controllers
     {
         private readonly ISender _mediator = mediator;
 
-        [HttpPost]
-        public async Task<LoginCommandResponse> PostAsync(LoginModel model)
+        [HttpPost("login")]
+        public async Task<LoginCommandResponse> LoginAsync(LoginModel model)
+        {
+            LoginCommand command = new()
+            {
+                Model = model
+            };
+            return await _mediator.Send(command);
+        }
+
+        [HttpPost("register")]
+        public async Task<LoginCommandResponse> RegisterAsync(LoginModel model)
         {
             LoginCommand command = new()
             {

@@ -249,10 +249,12 @@ namespace MealPlanner.Api
 
                 result = await userManager.AddClaimsAsync(admin, new Claim[]
                 {
+                    new Claim(JwtClaimTypes.Id, admin.Id),
                     new Claim(JwtClaimTypes.Name, admin.UserName),
                     new Claim(JwtClaimTypes.GivenName, admin.FirstName),
                     new Claim(JwtClaimTypes.FamilyName, admin.LastName),
-                    new Claim(JwtClaimTypes.WebSite, "http://admin.com")
+                    new Claim(JwtClaimTypes.Email, admin.Email),
+                    new Claim(JwtClaimTypes.WebSite, "http://mealplanner.com")
                 });
                 if (!result.Succeeded)
                 {
@@ -266,7 +268,7 @@ namespace MealPlanner.Api
                     {
                         throw new Exception(roleResult.Errors.First().Description);
                     }
-                    await userManager.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
+                    await userManager.AddClaimAsync(admin, new Claim(JwtClaimTypes.Role, "admin"));
                 }
 
                 Serilog.Log.Debug("Admin created");
@@ -296,10 +298,12 @@ namespace MealPlanner.Api
 
                 result = await userManager.AddClaimsAsync(member, new Claim[]
                 {
+                    new Claim(JwtClaimTypes.Id, member.Id),
                     new Claim(JwtClaimTypes.Name, member.UserName),
                     new Claim(JwtClaimTypes.GivenName, member.FirstName),
                     new Claim(JwtClaimTypes.FamilyName, member.LastName),
-                    new Claim(JwtClaimTypes.WebSite, "http://member.com")
+                    new Claim(JwtClaimTypes.Email, member.Email),
+                    new Claim(JwtClaimTypes.WebSite, "http://mealplanner.com")
                 });
                 if (!result.Succeeded)
                 {
@@ -313,7 +317,7 @@ namespace MealPlanner.Api
                     {
                         throw new Exception(roleResult.Errors.First().Description);
                     }
-                    await userManager.AddClaimAsync(member, new Claim(ClaimTypes.Role, "member"));
+                    await userManager.AddClaimAsync(member, new Claim(JwtClaimTypes.Role, "member"));
                 }
 
                 Serilog.Log.Debug("Member created");

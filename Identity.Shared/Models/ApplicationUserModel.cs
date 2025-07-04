@@ -7,7 +7,6 @@ namespace Identity.Shared.Models
         public string? UserId { get; set; }
 
         [Required]
-        [Display(Name = "User name")]
         public string? Username { get; set; }
 
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "First Name must be alpha characters only.")]

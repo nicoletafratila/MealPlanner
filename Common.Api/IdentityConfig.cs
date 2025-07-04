@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Duende.IdentityModel;
+﻿using Duende.IdentityModel;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
@@ -16,7 +15,15 @@ namespace Common.Api
                 new IdentityResource
                 {
                     Name = "role",
-                    UserClaims = new List<string> { ClaimTypes.Role }
+                    UserClaims = new List<string> { 
+                        JwtClaimTypes.Id,
+                        JwtClaimTypes.Name,
+                        JwtClaimTypes.GivenName,
+                        JwtClaimTypes.FamilyName,
+                        JwtClaimTypes.Email,
+                        JwtClaimTypes.Role,
+                        JwtClaimTypes.WebSite 
+                    }
                 }
             };
 
@@ -33,11 +40,15 @@ namespace Common.Api
                 ApiSecrets = { new Secret("secret".Sha256()) },
                 Scopes = new List<string> { "MealPlanner.Api.full" },
                 UserClaims = {
+                    JwtClaimTypes.Id,
                     JwtClaimTypes.Name,
-                    JwtClaimTypes.Subject,
-                    JwtClaimTypes.Profile,
+                    JwtClaimTypes.GivenName,
+                    JwtClaimTypes.FamilyName,
+                    //JwtClaimTypes.Subject,
+                    //JwtClaimTypes.Profile,
                     JwtClaimTypes.Email,
-                    JwtClaimTypes.Role
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.WebSite
                 }
             }
         };
