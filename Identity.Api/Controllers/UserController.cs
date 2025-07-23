@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Common.Data.Entities;
 using Duende.IdentityServer;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +12,10 @@ namespace Identity.Api.Controllers
     [Authorize(IdentityServerConstants.LocalApi.PolicyName, Roles = "admin, member")]
     public class UserController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUserModel> _userManager;
         private readonly IMapper _mapper;
 
-        public UserController(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserController(UserManager<ApplicationUserModel> userManager, IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -35,7 +34,7 @@ namespace Identity.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(id))
                 return BadRequest($"Bad request for the id = {id}");
-            var user = _userManager.Users.FirstOrDefault(item => item.Id == id);
+            var user = _userManager.Users.FirstOrDefault(item => item.UserId == id);
             if (user == null)
                 return BadRequest($"Bad request for the id = {id}");
             return Ok(_mapper.Map<ApplicationUserModel>(user));

@@ -1,10 +1,11 @@
-﻿using Identity.Shared.Models;
+﻿using Common.Models;
+using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
     public interface IAuthenticationService
     {
-        Task<string?> LoginAsync(LoginModel model);
-        Task<string?> RegisterAsync(RegistrationModel model);
+        Task<CommandResponse> LoginAsync(LoginModel model);
+        Task<CommandResponse> RegisterAsync(RegistrationModel model);
     }
 }

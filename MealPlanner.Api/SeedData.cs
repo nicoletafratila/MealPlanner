@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Common.Api;
 using Common.Constants.Units;
 using Common.Data.DataContext;
 using Common.Data.Entities;
@@ -249,6 +251,8 @@ namespace MealPlanner.Api
 
                 result = await userManager.AddClaimsAsync(admin, new Claim[]
                 {
+                    new Claim(JwtClaimTypes.ClientId, "MealPlanner"),
+                    new Claim(JwtClaimTypes.Subject, admin.Id),
                     new Claim(JwtClaimTypes.Id, admin.Id),
                     new Claim(JwtClaimTypes.Name, admin.UserName),
                     new Claim(JwtClaimTypes.GivenName, admin.FirstName),
@@ -298,6 +302,8 @@ namespace MealPlanner.Api
 
                 result = await userManager.AddClaimsAsync(member, new Claim[]
                 {
+                    new Claim(JwtClaimTypes.ClientId, "MealPlanner"),
+                    new Claim(JwtClaimTypes.Subject, member.Id),
                     new Claim(JwtClaimTypes.Id, member.Id),
                     new Claim(JwtClaimTypes.Name, member.UserName),
                     new Claim(JwtClaimTypes.GivenName, member.FirstName),

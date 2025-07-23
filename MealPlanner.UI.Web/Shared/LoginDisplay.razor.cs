@@ -1,5 +1,6 @@
 ﻿using Common.Api;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace MealPlanner.UI.Web.Shared
@@ -15,6 +16,13 @@ namespace MealPlanner.UI.Web.Shared
         [Inject]
         protected MealPlannerWebConfig? MealPlannerWebConfig { get; set; }
 
+        [Inject]
+        AuthenticationStateProvider auth { get; set; }
+        protected override void OnInitialized()
+        {
+            var b = auth.GetAuthenticationStateAsync();
+            base.OnInitialized();
+        }
         //private void BeginSignOut(MouseEventArgs args)
         //{
         //    string path = $"{IdentityApiConfig!.BaseUrl}/account/logout?returnUrl={MealPlannerWebConfig!.BaseUrl}";

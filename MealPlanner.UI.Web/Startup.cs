@@ -1,6 +1,8 @@
-﻿using Blazored.Modal;
+﻿using System.Net.Http.Headers;
+using Blazored.Modal;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
@@ -12,6 +14,23 @@ namespace MealPlanner.UI.Web
         protected override void RegisterServices(IServiceCollection services)
         {
             base.RegisterServices(services);
+
+            services.AddOidcAuthentication(options =>
+            {
+                configuration.Bind("Oidc", options.ProviderOptions);
+            });
+
+            services.AddTransient<TokenProvider>();
+            services.AddTransient<TokenMessageHandler>();
+
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>()
+                .ConfigureHttpClient((serviceProvider, httpClient) =>
+                {
+                    var clientConfig = serviceProvider.GetService<IdentityApiConfig>();
+                    httpClient.BaseAddress = clientConfig!.BaseUrl;
+                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+                })
+                .AddHttpMessageHandler<TokenMessageHandler>();
 
             services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
@@ -77,24 +96,16 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig!.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-
-            services.AddHttpClient<IAuthenticationService, AuthenticationService>()
-               .ConfigureHttpClient((serviceProvider, httpClient) =>
-               {
-                   var clientConfig = serviceProvider.GetService<IdentityApiConfig>();
-                   httpClient.BaseAddress = clientConfig!.BaseUrl;
-                   httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-               });
         }
 
-        public void ConfigureServices(IServiceCollection services, ConfigureHostBuilder host)
+        public void ConfigureServices(WebApplicationBuilder builder)
         {
-            base.ConfigureServices(services);
+            base.ConfigureServices(builder.Services);
 
             var currentDir = Directory.GetCurrentDirectory();
             string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
-            host.UseSerilog((ctx, lc) => lc
+            builder.Host.UseSerilog((ctx, lc) => lc
                         .MinimumLevel.Error()
                         .Enrich.FromLogContext()
                         .ReadFrom.Configuration(ctx.Configuration)
@@ -105,11 +116,11 @@ namespace MealPlanner.UI.Web
             // AutoCreateSqlTable = true
             //Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddBlazoredModal();
-            services.AddBlazorBootstrap();
-            services.AddRazorComponents()
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
+            builder.Services.AddBlazoredModal();
+            builder.Services.AddBlazorBootstrap();
+            builder.Services.AddRazorComponents()
                     .AddInteractiveServerComponents();
         }
 
@@ -144,6 +155,24 @@ namespace MealPlanner.UI.Web
             //}
 
             app.Run();
+        }
+    }
+
+    public class TokenMessageHandler(TokenProvider? tokenProvider) : DelegatingHandler
+    {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var token = await tokenProvider!.GetAccessTokenAsync();
+                if (!string.IsNullOrEmpty(token))
+                    request.Headers.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }

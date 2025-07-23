@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Constants;
+using Blazored.LocalStorage;
 using Common.Data.DataContext;
 using Common.Data.Entities;
 using Common.Data.Profiles;
@@ -37,11 +37,18 @@ namespace Common.Api
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
             });
+            services.AddScoped<ILoggerRepository, LoggerRepository>();
+            services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
+            services.AddSingleton<RecipeBookApiConfig>();
+            services.AddSingleton<MealPlannerApiConfig>();
+            services.AddSingleton<MealPlannerWebConfig>();
+            services.AddSingleton<IdentityApiConfig>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-               .AddEntityFrameworkStores<MealPlannerDbContext>()
-               .AddDefaultTokenProviders();
-            services.AddLocalApiAuthentication();
+                    .AddEntityFrameworkStores<MealPlannerDbContext>()
+                    .AddDefaultTokenProviders();
+            //services.AddIdentityServer();
             services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;
@@ -56,32 +63,97 @@ namespace Common.Api
                 .AddInMemoryApiResources(IdentityConfig.ApiResources)
                 .AddAspNetIdentity<ApplicationUser>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            services.Configure<IdentityOptions>(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = true,
-                    ValidAudience = "mealplanner.com",
-                    ValidateIssuer = true,
-                    ValidIssuer = "mealplanner.com", 
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(MealPlannerKey.SigningKey))
-                };
+                options.SignIn.RequireConfirmedEmail = true;
+                //options.SignIn.RequireConfirmedPhoneNumber = false;
             });
+            //services.Configure<DataProtectionTokenProviderOptions>(options =>
+            //{
+            //    // Set password reset tokens to be valid for 2 hours
+            //    options.TokenLifespan = TimeSpan.FromHours(2);
+            //});
 
+            //services.AddApiAuthorization();
             services.AddAuthorizationCore();
-            services.AddApiAuthorization();
             services.AddControllersWithViews();
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-            });
+            services.AddBlazoredLocalStorage();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = "https://localhost:5001"; // Server address
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(2),
+                        //NameClaimType = "name",   // or JwtClaimTypes.Name if using IdentityModel
+                        //RoleClaimType = "role",   // or JwtClaimTypes.Role
+                    };
+                });
 
-            services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
+
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+
+            //services.AddIdentityServer(options =>
+            //    {
+            //        options.Events.RaiseErrorEvents = true;
+            //        options.Events.RaiseInformationEvents = true;
+            //        options.Events.RaiseFailureEvents = true;
+            //        options.Events.RaiseSuccessEvents = true;
+            //        options.EmitStaticAudienceClaim = true;
+            //    })
+            //    .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
+            //    .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
+            //    .AddInMemoryClients(IdentityConfig.Clients)
+            //    .AddInMemoryApiResources(IdentityConfig.ApiResources)
+            //    .AddAspNetIdentity<ApplicationUser>();
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateAudience = true,
+            //        ValidAudience = "mealplanner.com",
+            //        ValidateIssuer = true,
+            //        ValidIssuer = "mealplanner.com", 
+            //        ValidateLifetime = true,
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(MealPlannerKey.SigningKey))
+            //    };
+            //});
+
+            //services.AddLocalApiAuthentication();
+            //services.AddIdentityServer()
+            //    .AddInMemoryClients(new[]
+            //    {
+            //                    new Client
+            //                    {
+            //                        ClientId = "MealPlanner",
+            //                        AllowedGrantTypes = GrantTypes.Code,
+            //                        RequirePkce = true,
+            //                        RequireClientSecret = false,
+            //                        RedirectUris = { "https://localhost:5002/authentication/login-callback" },
+            //                        PostLogoutRedirectUris = { "https://localhost:5002/" },
+            //                        AllowedScopes = { "openid", "profile", "MealPlanner.Api", "RecipeBook.Api", IdentityServerConstants.LocalApi.ScopeName },
+            //                        AllowedCorsOrigins = { "https://localhost:5001" },
+            //                        AllowAccessTokensViaBrowser = true
+            //                    }
+            //    })
+            //    .AddInMemoryIdentityResources(new List<IdentityResource>()
+            //    {
+            //                    new IdentityResources.OpenId(),
+            //                    new IdentityResources.Profile(),
+            //    })
+            //    .AddInMemoryApiScopes(new[]
+            //    {
+            //                    new ApiScope("MealPlanner.Api"),
+            //                    new ApiScope("RecipeBook.Api"),
+            //                    new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
+            //    });
+
             services.AddSingleton<HttpContextAccessor>();
             var config = new MapperConfiguration(c =>
             {
@@ -101,14 +173,6 @@ namespace Common.Api
             });
             services.AddSingleton(s => config.CreateMapper());
 
-            services.AddScoped<ILoggerRepository, LoggerRepository>();
-            services.AddScoped<ILoggerService, LoggerService>();
-            services.AddSingleton<RecipeBookApiConfig>();
-            services.AddSingleton<MealPlannerApiConfig>();
-            services.AddSingleton<MealPlannerWebConfig>();
-            services.AddSingleton<IdentityApiConfig>();
-            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-            
             RegisterRepositories(services);
             RegisterServices(services);
 
@@ -120,8 +184,6 @@ namespace Common.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseSwagger();
-                //app.UseSwaggerUI();
             }
 
             app.UseSerilogRequestLogging();
@@ -139,3 +201,4 @@ namespace Common.Api
         }
     }
 }
+

@@ -1,4 +1,5 @@
-﻿using Identity.Shared.Models;
+﻿using Common.Models;
+using Identity.Shared.Models;
 using MediatR;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
