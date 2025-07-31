@@ -1,14 +1,13 @@
 @page
-@model Identity.Api.Pages.Account.Logout.LoggedOut
+@model IdentityServerHost.Pages.Logout.LoggedOut
 
 <div class="logged-out-page">
     <h1>
         Logout
-        <br/>
-        <small>You are now logged out.</small>
+        <small>You are now logged out</small>
     </h1>
 
-    @if (Model!.View!.PostLogoutRedirectUri != null)
+    @if (Model.View.PostLogoutRedirectUri != null)
     {
         <div>
             Click <a class="PostLogoutRedirectUri" href="@Model.View.PostLogoutRedirectUri">here</a> to return to the

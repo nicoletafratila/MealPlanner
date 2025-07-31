@@ -15,6 +15,9 @@ namespace MealPlanner.UI.Web.Shared
         [Inject]
         protected MealPlannerWebConfig? MealPlannerWebConfig { get; set; }
 
+        void Login() => Navigation.NavigateTo("authentication/login");
+        void Logout() => Navigation.NavigateTo("authentication/logout");
+
         //private void BeginSignOut(MouseEventArgs args)
         //{
         //    string path = $"{IdentityApiConfig!.BaseUrl}/account/logout?returnUrl={MealPlannerWebConfig!.BaseUrl}";

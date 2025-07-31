@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
-    public class LoginCommandHandler(SignInManager<ApplicationUser> signInManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, LoginCommandResponse>
+    public class LoginCommandHandler(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, LoginCommandResponse>
     {
         private readonly ILogger<LoginCommandHandler> _logger = logger;
 
@@ -17,13 +17,19 @@ namespace Identity.Api.Features.Authentication.Commands.Login
         {
             try
             {
-                var result = await signInManager.PasswordSignInAsync(request.Model?.Username!, request.Model?.Password!, true, false);
-
-                if (result.Succeeded)
+                var user = await userManager.FindByNameAsync(request.Model!.Username!);
+                if (user != null)
                 {
+                    var result = await signInManager.PasswordSignInAsync(request.Model!.Username!, request.Model?.Password!, true, false);
+                    await signInManager.SignInAsync(user, true);
+
+                    if (result.Succeeded)
+                    {
+                        return new LoginCommandResponse { Success = result.Succeeded, Message = string.Empty };
+                    }
                     return new LoginCommandResponse { Success = result.Succeeded, Message = string.Empty };
                 }
-                return new LoginCommandResponse { Success = result.Succeeded, Message = string.Empty };
+                return new LoginCommandResponse { Success = false, Message = "User was not found." };
             }
             catch (Exception ex)
             {

@@ -5,6 +5,8 @@ using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -18,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Duende.IdentityServer.Test;
 
 namespace Common.Api
 {
@@ -38,47 +41,147 @@ namespace Common.Api
                 options.EnableSensitiveDataLogging();
             });
 
+            services.AddScoped<ILoggerRepository, LoggerRepository>();
+            services.AddScoped<ILoggerService, LoggerService>();
+            services.AddSingleton<RecipeBookApiConfig>();
+            services.AddSingleton<MealPlannerApiConfig>();
+            services.AddSingleton<MealPlannerWebConfig>();
+            services.AddSingleton<IdentityApiConfig>();
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                .AddEntityFrameworkStores<MealPlannerDbContext>()
                .AddDefaultTokenProviders();
             services.AddLocalApiAuthentication();
-            services.AddIdentityServer(options =>
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                    options.EmitStaticAudienceClaim = true;
-                })
-                .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
-                .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
-                .AddInMemoryClients(IdentityConfig.Clients)
-                .AddInMemoryApiResources(IdentityConfig.ApiResources)
-                .AddAspNetIdentity<ApplicationUser>();
+            //services.AddIdentityServer(options =>
+            //    {
+            //        options.Events.RaiseErrorEvents = true;
+            //        options.Events.RaiseInformationEvents = true;
+            //        options.Events.RaiseFailureEvents = true;
+            //        options.Events.RaiseSuccessEvents = true;
+            //        options.EmitStaticAudienceClaim = true;
+            //    })
+            //    .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
+            //    .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
+            //    .AddInMemoryClients(IdentityConfig.Clients)
+            //    .AddInMemoryApiResources(IdentityConfig.ApiResources)
+            //    .AddAspNetIdentity<ApplicationUser>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            //services.AddIdentityServer()
+            //    .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
+            //    .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
+            //    .AddInMemoryClients(IdentityConfig.Clients)
+            //    //.AddInMemoryApiResources(IdentityConfig.ApiResources)
+            //    .AddAspNetIdentity<ApplicationUser>();
+
+            services.AddIdentityServer()
+                    .AddInMemoryClients(IdentityConfig.Clients)
+                    .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
+                    .AddInMemoryApiResources(IdentityConfig.ApiResources)
+                    .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
+                    .AddDeveloperSigningCredential();
+            services.AddOidcAuthentication(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = true,
-                    ValidAudience = "mealplanner.com",
-                    ValidateIssuer = true,
-                    ValidIssuer = "mealplanner.com", 
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(MealPlannerKey.SigningKey))
-                };
+                Configuration.Bind("Oidc", options.ProviderOptions);
             });
+            //services.AddOidcAuthentication(options =>
+            //{
+            //    //options.ProviderOptions.Authority = "https://localhost:5000"; 
+            //    //options.ProviderOptions.ClientId = "blazor_wasm";
+            //    //options.ProviderOptions.ResponseType = "code";
+            //    //options.ProviderOptions.DefaultScopes.Add(ApiConfigNames.RecipeBook);
+            //    //options.ProviderOptions.DefaultScopes.Add(ApiConfigNames.MealPlanner);
+            //    //options.ProviderOptions.DefaultScopes.Add(IdentityServerConstants.LocalApi.ScopeName);
 
+            //    options.ProviderOptions.Authority = "https://localhost:5001";         // Your IdentityServer URL
+            //    options.ProviderOptions.ClientId = "blazor_client";                   // Must match your IdentityServer client id
+            //    options.ProviderOptions.ResponseType = "code";                        // Use OIDC code flow (PKCE)
+            //    options.ProviderOptions.RedirectUri = "https://localhost:5002/authentication/login-callback"; // Update to dev port if needed
+            //    options.ProviderOptions.PostLogoutRedirectUri = "https://localhost:5002/";                    // Where to return after logout
+            //    options.ProviderOptions.DefaultScopes.Add("openid");
+            //    options.ProviderOptions.DefaultScopes.Add("profile");
+            //    options.ProviderOptions.DefaultScopes.Add(ApiConfigNames.RecipeBook);
+            //    options.ProviderOptions.DefaultScopes.Add(ApiConfigNames.MealPlanner);
+            //    options.ProviderOptions.DefaultScopes.Add(IdentityServerConstants.LocalApi.ScopeName);
+            //});
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                    {
+                        options.Authority = "https://localhost:5001";
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateAudience = false
+                        };
+                    });
+
+            //        services.AddAuthentication(options =>
+            //        {
+            //            options.DefaultScheme = "cookie";
+            //        })
+            //.AddCookie("cookie");
+
+            services.AddAuthentication(options =>
+                    {
+                        options.DefaultScheme = "cookie";
+                    })
+             .AddCookie("cookie")
+             .AddOpenIdConnect(options => {
+                 options.Authority = "https://localhost:5001"; // IdentityServer base URL
+
+                 options.ClientId = "blazor-wasm";           // The client id registered in IdentityServer
+                 options.ClientSecret = MealPlannerKey.SigningKey;  // If required; for confidential clients
+
+                 options.ResponseType = "code";                // Authorization Code flow is standard now
+
+                 options.SaveTokens = true;                    // To keep tokens in the auth cookie (enables API calls)
+
+                 options.Scope.Clear();
+                 options.Scope.Add("openid");
+                 options.Scope.Add("profile");
+                 options.Scope.Add(ApiConfigNames.RecipeBook);                    // Additional scopes registered in IdentityServer
+
+                 options.GetClaimsFromUserInfoEndpoint = true; // Recommended: fetch profile info
+
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     NameClaimType = "name",
+                     RoleClaimType = "role"
+                 };
+             });
+
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateAudience = true,
+            //        ValidAudience = "mealplanner.com",
+            //        ValidateIssuer = true,
+            //        ValidIssuer = "mealplanner.com",
+            //        ValidateLifetime = true,
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(MealPlannerKey.SigningKey))
+            //    };
+            //});
+
+            services.AddAuthorization();
             services.AddAuthorizationCore();
-            services.AddApiAuthorization();
+            //services.AddApiAuthorization();
             services.AddControllersWithViews();
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder =>
+            //        builder.AllowAnyOrigin()
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader());
+            //});
+
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+                options.AddDefaultPolicy(policy =>
+                    policy.WithOrigins("https://localhost:5002")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
             });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
@@ -101,14 +204,6 @@ namespace Common.Api
             });
             services.AddSingleton(s => config.CreateMapper());
 
-            services.AddScoped<ILoggerRepository, LoggerRepository>();
-            services.AddScoped<ILoggerService, LoggerService>();
-            services.AddSingleton<RecipeBookApiConfig>();
-            services.AddSingleton<MealPlannerApiConfig>();
-            services.AddSingleton<MealPlannerWebConfig>();
-            services.AddSingleton<IdentityApiConfig>();
-            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-            
             RegisterRepositories(services);
             RegisterServices(services);
 

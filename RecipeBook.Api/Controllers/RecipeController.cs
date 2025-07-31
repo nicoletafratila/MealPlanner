@@ -3,6 +3,7 @@ using BlazorBootstrap;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Features.Recipe.Commands.Delete;
@@ -16,6 +17,7 @@ using RecipeBook.Shared.Models;
 namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class RecipeController(ISender mediator) : ControllerBase
     {

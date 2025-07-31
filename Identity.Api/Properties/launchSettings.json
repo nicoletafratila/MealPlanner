@@ -2,6 +2,7 @@
   "profiles": {
     "Identity.Api": {
       "commandName": "Project",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -23,5 +24,11 @@
       "applicationUrl": "http://localhost:50997/",
       "sslPort": 44354
     }
+  },
+  "Oidc": {
+    "Authority": "https://localhost:5001", // URL to your IdentityServer
+    "ClientId": "blazor-wasm",
+    "DefaultScopes": [ "openid", "profile", "RecipeBookApi" ],
+    "ResponseType": "code"
   }
 }

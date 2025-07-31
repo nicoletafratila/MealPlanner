@@ -32,7 +32,7 @@ namespace MealPlanner.UI.Web.Pages
                 if (_productCategoryId != value)
                 {
                     _productCategoryId = value;
-                    OnProductCategoryChangedAsync(_productCategoryId!).GetAwaiter().GetResult();
+                    OnProductCategoryChangedAsync(_productCategoryId!);
                 }
             }
         }

@@ -1,31 +1,32 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
-
-using System.Text;
-using System.Text.Json;
 using Duende.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using System.Text;
+using System.Text.Json;
 
-namespace Identity.Api.Pages.Diagnostics
+namespace IdentityServerHost.Pages.Diagnostics;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel(AuthenticateResult result)
     {
-        public ViewModel(AuthenticateResult result)
-        {
-            AuthenticateResult = result;
+        AuthenticateResult = result;
 
-            if (result.Properties!.Items.ContainsKey("client_list"))
+        if (result?.Properties?.Items.TryGetValue("client_list", out var encoded) == true)
+        {
+            if (encoded != null)
             {
-                var encoded = result.Properties.Items["client_list"];
                 var bytes = Base64Url.Decode(encoded);
                 var value = Encoding.UTF8.GetString(bytes);
-
-                Clients = JsonSerializer.Deserialize<string[]>(value);
+                Clients = JsonSerializer.Deserialize<string[]>(value) ?? Enumerable.Empty<string>();
+                return;
             }
         }
-
-        public AuthenticateResult AuthenticateResult { get; }
-        public IEnumerable<string>? Clients { get; } = new List<string>();
+        Clients = Enumerable.Empty<string>();
     }
+
+    public AuthenticateResult AuthenticateResult { get; }
+    public IEnumerable<string> Clients { get; }
 }

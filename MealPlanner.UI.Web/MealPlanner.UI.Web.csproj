@@ -22,10 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Authentication\Login.razor.cs" />
     <Compile Remove="Shared\Pagination.razor.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Authentication\Login.razor" />
     <Content Remove="Shared\Pagination.razor" />
   </ItemGroup>
 

@@ -1,11 +1,11 @@
 @page
-@model Identity.Api.Pages.Ciba.IndexModel
+@model IdentityServerHost.Pages.Ciba.IndexModel
 @{
 }
 
 <div class="ciba-page">
     <div class="lead">
-        @if (Model!.LoginRequest!.Client.LogoUri != null)
+        @if (Model.LoginRequest.Client.LogoUri != null)
         {
             <div class="client-logo"><img src="@Model.LoginRequest.Client.LogoUri"></div>
         }
@@ -23,7 +23,7 @@
             Do you wish to continue?
         </p>
         <div>
-            <a class="btn btn-primary prm-trivia-color" asp-page="/Ciba/Consent" asp-route-id="@Model.LoginRequest.InternalId">Yes, Continue</a>
+            <a class="btn btn-primary" asp-page="/Ciba/Consent" asp-route-id="@Model.LoginRequest.InternalId">Yes, Continue</a>
         </div>
         
     </div>

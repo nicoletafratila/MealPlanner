@@ -1,5 +1,5 @@
 @page
-@model Identity.Api.Pages.Home.Error.Index
+@model IdentityServerHost.Pages.Error.Index
 
 <div class="error-page">
     <div class="lead">
@@ -11,7 +11,7 @@
             <div class="alert alert-danger">
                 Sorry, there was an error
 
-                @if (Model!.View!.Error != null)
+                @if (Model.View.Error != null)
                 {
                     <strong>
                         <em>

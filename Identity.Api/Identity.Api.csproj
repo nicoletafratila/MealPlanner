@@ -4,17 +4,14 @@
 	  <TargetFramework>net8.0</TargetFramework>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
+	  <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="keys\**" />
-    <Compile Remove="Pages\**" />
     <Content Remove="keys\**" />
-    <Content Remove="Pages\**" />
     <EmbeddedResource Remove="keys\**" />
-    <EmbeddedResource Remove="Pages\**" />
     <None Remove="keys\**" />
-    <None Remove="Pages\**" />
   </ItemGroup>
 
   <ItemGroup>

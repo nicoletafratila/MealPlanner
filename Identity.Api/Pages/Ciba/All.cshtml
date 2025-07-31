@@ -1,5 +1,5 @@
 @page
-@model Identity.Api.Pages.Ciba.AllModel
+@model IdentityServerHost.Pages.Ciba.AllModel
 @{
 }
 
@@ -11,7 +11,7 @@
                     <h2>Pending Backchannel Login Requests</h2>
                 </div>
                 <div class="card-body">
-                    @if (Model.Logins?.Any() == true)
+                    @if (Model.Logins.Any())
                     {
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
@@ -30,7 +30,7 @@
                                         <td>@login.Client.ClientId</td>
                                         <td>@login.BindingMessage</td>
                                         <td>
-                                            <a asp-page="Consent" asp-route-id="@login.InternalId" class="btn btn-primary prm-trivia-color">Process</a>
+                                            <a asp-page="Consent" asp-route-id="@login.InternalId" class="btn btn-primary">Process</a>
                                         </td>
                                     </tr>
                                 }
