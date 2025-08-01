@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BlazorBootstrap;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MediatR;
@@ -68,7 +69,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> PostAsync(RecipeEditModel model)
+        public async Task<CommandResponse> PostAsync(RecipeEditModel model)
         {
             AddCommand command = new()
             {
@@ -78,7 +79,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> PutAsync(RecipeEditModel model)
+        public async Task<CommandResponse> PutAsync(RecipeEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -88,7 +89,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

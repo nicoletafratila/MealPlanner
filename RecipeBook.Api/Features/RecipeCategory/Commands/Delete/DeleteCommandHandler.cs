@@ -1,37 +1,34 @@
-﻿using MediatR;
+﻿using Common.Models;
+using MediatR;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
 {
-    public class DeleteCommandHandler(IRecipeCategoryRepository repository, IRecipeRepository recipeRepository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, DeleteCommandResponse>
+    public class DeleteCommandHandler(IRecipeCategoryRepository repository, IRecipeRepository recipeRepository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse>
     {
-        private readonly IRecipeCategoryRepository _repository = repository;
-        private readonly IRecipeRepository _recipeRepository = recipeRepository;
-        private readonly ILogger<DeleteCommandHandler> _logger = logger;
-
-        public async Task<DeleteCommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var itemToDelete = await _repository.GetByIdAsync(request.Id);
+                var itemToDelete = await repository.GetByIdAsync(request.Id);
                 if (itemToDelete == null)
                 {
-                    return new DeleteCommandResponse { Message = $"Could not find with id {request.Id}." };
+                    return CommandResponse.Failed($"Could not find with id {request.Id}.");
                 }
 
-                var recipes = await _recipeRepository.GetAllAsync();
+                var recipes = await recipeRepository.GetAllAsync();
                 if (recipes!.Any(item => item.RecipeCategoryId == request.Id))
                 {
-                    return new DeleteCommandResponse { Message = $"Recipe category {itemToDelete.Name} can not be deleted, it is used in recipes." };
+                    return CommandResponse.Failed($"Recipe category {itemToDelete.Name} can not be deleted, it is used in recipes.");
                 }
 
-                await _repository.DeleteAsync(itemToDelete!);
-                return new DeleteCommandResponse();
+                await repository.DeleteAsync(itemToDelete!);
+                return CommandResponse.Success();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                return new DeleteCommandResponse { Message = "An error occurred when deleting the recipe category." };
+                logger.LogError(ex.Message, ex);
+                return CommandResponse.Failed("An error occurred when deleting the recipe category.");
             }
         }
     }

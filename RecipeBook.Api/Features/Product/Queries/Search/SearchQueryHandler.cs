@@ -8,13 +8,10 @@ namespace RecipeBook.Api.Features.Product.Queries.Search
 {
     public class SearchQueryHandler(IProductRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<ProductModel>>
     {
-        private readonly IProductRepository _repository = repository;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<PagedList<ProductModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await _repository.GetAllAsync();
-            var results = _mapper.Map<IList<ProductModel>>(data);
+            var data = await repository.GetAllAsync();
+            var results = mapper.Map<IList<ProductModel>>(data);
 
             if (results != null && request.QueryParameters != null)
             {

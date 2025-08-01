@@ -13,16 +13,13 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
 {
     public class GetShoppingListProductsQueryHandler(IRecipeRepository recipeRepository, IMapper mapper, ILogger<GetShoppingListProductsQueryHandler> logger) : IRequestHandler<GetShoppingListProductsQuery, IList<ShoppingListProductEditModel>?>
     {
-        private readonly IRecipeRepository _recipeRepository = recipeRepository;
-        private readonly IMapper _mapper = mapper;
-        private readonly ILogger<GetShoppingListProductsQueryHandler> _logger = logger;
         private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();
 
         public async Task<IList<ShoppingListProductEditModel>?> Handle(GetShoppingListProductsQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var recipe = await _recipeRepository.GetByIdIncludeIngredientsAsync(request.RecipeId);
+                var recipe = await recipeRepository.GetByIdIncludeIngredientsAsync(request.RecipeId);
                 if (recipe == null)
                     return null;
 
@@ -37,8 +34,8 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
                         return null;
                 }
 
-                var data = recipe.MakeShoppingList(_mapper.Map<Shop>(shop)!).Products;
-                var results = data!.Select(_mapper.Map<ShoppingListProductEditModel>)
+                var data = recipe.MakeShoppingList(mapper.Map<Shop>(shop)!).Products;
+                var results = data!.Select(mapper.Map<ShoppingListProductEditModel>)
                          .OrderBy(item => item.Collected)
                          .ThenBy(item => item.DisplaySequence)
                          .ThenBy(item => item.Product?.Name).ToList();
@@ -47,7 +44,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                logger.LogError(ex.Message, ex);
                 return null;
             }
         }

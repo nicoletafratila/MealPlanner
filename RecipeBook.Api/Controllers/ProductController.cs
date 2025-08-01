@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BlazorBootstrap;
+using Common.Models;
 using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> PostAsync(ProductEditModel model)
+        public async Task<CommandResponse> PostAsync(ProductEditModel model)
         {
             AddCommand command = new()
             {
@@ -54,7 +55,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> PutAsync(ProductEditModel model)
+        public async Task<CommandResponse> PutAsync(ProductEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -64,7 +65,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {
