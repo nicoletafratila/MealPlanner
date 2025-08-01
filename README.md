@@ -10,6 +10,9 @@ PM> Script-migration
 
 
 
+sterge private readonly
+sterge campuri private
+inlocuieste DeserializeAnonymousType cu commandResponse
 
 cum se face autentifiare doar cu Identityserver simplu?
 fa toate handlere cu CommandResponse

@@ -8,13 +8,10 @@ namespace MealPlanner.Api.Features.Shop.Queries.Search
 {
     public class SearchQueryHandler(IShopRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<ShopModel>>
     {
-        private readonly IShopRepository _repository = repository;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<PagedList<ShopModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await _repository.GetAllAsync();
-            var results = _mapper.Map<IList<ShopModel>>(data);
+            var data = await repository.GetAllAsync();
+            var results = mapper.Map<IList<ShopModel>>(data);
 
             if (results != null && request.QueryParameters != null)
             {

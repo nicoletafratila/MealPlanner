@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BlazorBootstrap;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api.Features.Shop.Commands.Add;
 using MealPlanner.Api.Features.Shop.Commands.Delete;
@@ -16,8 +17,6 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class ShopController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpGet("edit/{id:int}")]
         public async Task<ShopEditModel> GetEditAsync(int id)
         {
@@ -25,7 +24,7 @@ namespace MealPlanner.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("search")]
@@ -42,37 +41,37 @@ namespace MealPlanner.Api.Controllers
                     PageNumber = int.Parse(pageNumber!)
                 }
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> PostAsync(ShopEditModel model)
+        public async Task<CommandResponse> PostAsync(ShopEditModel model)
         {
             AddCommand command = new()
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> PutAsync(ShopEditModel model)
+        public async Task<CommandResponse> PutAsync(ShopEditModel model)
         {
             UpdateCommand command = new()
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {
                 Id = id
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
     }
 }

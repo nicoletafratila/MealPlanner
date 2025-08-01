@@ -6,8 +6,6 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
 {
     public class SearchQueryHandler(IMealPlanRepository mealPlanRepository) : IRequestHandler<SearchQuery, IList<StatisticModel>>
     {
-        private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository;
-
         public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var result = new List<StatisticModel>();
@@ -19,7 +17,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                     Label = category.Name
                 };
 
-                var mealPlanWithRecipes = await _mealPlanRepository.SearchByRecipeCategoryIdAsync(category.Id);
+                var mealPlanWithRecipes = await mealPlanRepository.SearchByRecipeCategoryIdAsync(category.Id);
                 foreach (var mealPlan in mealPlanWithRecipes!)
                 {
                     if (mealPlan.Recipe?.RecipeCategoryId == category.Id)

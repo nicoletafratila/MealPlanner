@@ -6,8 +6,6 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
 {
     public class SearchQueryHandler(IMealPlanRepository mealPlanRepository) : IRequestHandler<SearchQuery, IList<StatisticModel>>
     {
-        private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository;
-
         public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var result = new List<StatisticModel>();
@@ -19,7 +17,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                     Label = category.Name
                 };
 
-                var mealPlanWithProducts = await _mealPlanRepository.SearchByProductCategoryIdAsync(category.Id);
+                var mealPlanWithProducts = await mealPlanRepository.SearchByProductCategoryIdAsync(category.Id);
                 foreach (var mealPlan in mealPlanWithProducts!)
                 {
                     model.Data![mealPlan.Key.Name!] = !model.Data.TryGetValue(mealPlan.Key.Name!, out double? value) ? 1 : ++value;

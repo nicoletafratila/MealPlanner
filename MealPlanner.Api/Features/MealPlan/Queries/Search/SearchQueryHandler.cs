@@ -8,13 +8,10 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.Search
 {
     public class SearchQueryHandler(IMealPlanRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<MealPlanModel>>
     {
-        private readonly IMealPlanRepository _repository = repository;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<PagedList<MealPlanModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await _repository.GetAllAsync();
-            var results = _mapper.Map<IList<MealPlanModel>>(data);
+            var data = await repository.GetAllAsync();
+            var results = mapper.Map<IList<MealPlanModel>>(data);
 
             if (results != null && request.QueryParameters != null)
             {

@@ -19,8 +19,6 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class RecipeController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpGet("{id:int}")]
         public async Task<RecipeModel> GetByIdAsync(int id)
         {
@@ -28,7 +26,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("edit/{id:int}")]
@@ -38,7 +36,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("shoppingListProducts/{recipeId:int}/{shopId:int}")]
@@ -49,7 +47,7 @@ namespace RecipeBook.Api.Controllers
                 RecipeId = recipeId,
                 ShopId = shopId
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("search")]
@@ -66,7 +64,7 @@ namespace RecipeBook.Api.Controllers
                     PageNumber = int.Parse(pageNumber!)
                 }
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpPost]
@@ -76,7 +74,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpPut]
@@ -86,7 +84,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
@@ -96,7 +94,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
     }
 }

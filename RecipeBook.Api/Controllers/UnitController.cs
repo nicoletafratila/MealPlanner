@@ -16,8 +16,6 @@ namespace RecipeBook.Api.Controllers
     [ApiController]
     public class UnitController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpGet("edit/{id:int}")]
         public async Task<UnitEditModel> GetEditAsync(int id)
         {
@@ -25,7 +23,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("search")]
@@ -42,7 +40,7 @@ namespace RecipeBook.Api.Controllers
                     PageNumber = int.Parse(pageNumber!)
                 }
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpPost]
@@ -51,8 +49,8 @@ namespace RecipeBook.Api.Controllers
             AddCommand command = new()
             {
                 Model = model
-            };
-            return await _mediator.Send(command);
+            };              
+            return await mediator.Send(command);
         }
 
         [HttpPut]
@@ -62,7 +60,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
@@ -72,7 +70,7 @@ namespace RecipeBook.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
     }
 }

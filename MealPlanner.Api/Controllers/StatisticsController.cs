@@ -9,8 +9,6 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class StatisticsController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpGet("favoriterecipes")]
         public async Task<IList<StatisticModel>> SearchFavoriteRecipesAsync([FromQuery] string? categories)
         {
@@ -24,7 +22,7 @@ namespace MealPlanner.Api.Controllers
                 query.Categories?.Add(new RecipeCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
             }
 
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("favoriteproducts")]
@@ -43,7 +41,7 @@ namespace MealPlanner.Api.Controllers
                     query.Categories?.Add(new ProductCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
                 }
             }
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
     }
 }

@@ -10,6 +10,7 @@ using MealPlanner.Api.Features.ShoppingList.Queries.Search;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Common.Models;
 
 namespace MealPlanner.Api.Controllers
 {
@@ -17,8 +18,6 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class ShoppingListController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpGet("edit/{id:int}")]
         public async Task<ShoppingListEditModel> GetEditAsync(int id)
         {
@@ -26,7 +25,7 @@ namespace MealPlanner.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("search")]
@@ -43,7 +42,7 @@ namespace MealPlanner.Api.Controllers
                     PageNumber = int.Parse(pageNumber!)
                 }
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpPost("makeShoppingList")]
@@ -54,37 +53,37 @@ namespace MealPlanner.Api.Controllers
                 MealPlanId = model.MealPlanId,
                 ShopId = model.ShopId
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> PostAsync(ShoppingListEditModel model)
+        public async Task<CommandResponse> PostAsync(ShoppingListEditModel model)
         {
             AddCommand command = new()
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> PutAsync(ShoppingListEditModel model)
+        public async Task<CommandResponse> PutAsync(ShoppingListEditModel model)
         {
             UpdateCommand command = new()
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {
                 Id = id
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BlazorBootstrap;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
 using MealPlanner.Api.Features.MealPlan.Commands.Delete;
@@ -18,8 +19,6 @@ namespace MealPlanner.Api.Controllers
     [ApiController]
     public class MealPlanController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpGet("edit/{id:int}")]
         public async Task<MealPlanEditModel> GetEditAsync(int id)
         {
@@ -27,7 +26,7 @@ namespace MealPlanner.Api.Controllers
             {
                 Id = id
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("shoppingListProducts/{mealPlanId:int}/{shopId:int}")]
@@ -38,7 +37,7 @@ namespace MealPlanner.Api.Controllers
                 MealPlanId = mealPlanId,
                 ShopId= shopId
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("search")]
@@ -55,7 +54,7 @@ namespace MealPlanner.Api.Controllers
                     PageNumber = int.Parse(pageNumber!)
                 }
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpGet("search/{recipeId:int}")]
@@ -65,37 +64,37 @@ namespace MealPlanner.Api.Controllers
             {
                 RecipeId = recipeId
             };
-            return await _mediator.Send(query);
+            return await mediator.Send(query);
         }
 
         [HttpPost]
-        public async Task<AddCommandResponse> PostAsync(MealPlanEditModel model)
+        public async Task<CommandResponse> PostAsync(MealPlanEditModel model)
         {
             AddCommand command = new()
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpPut]
-        public async Task<UpdateCommandResponse> PutAsync(MealPlanEditModel model)
+        public async Task<CommandResponse> PutAsync(MealPlanEditModel model)
         {
             UpdateCommand command = new()
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
-        public async Task<DeleteCommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {
                 Id = id
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
     }
 }
