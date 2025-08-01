@@ -8,12 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
-    <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
   </ItemGroup>
 
 </Project>

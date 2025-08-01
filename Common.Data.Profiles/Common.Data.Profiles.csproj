@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
     <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
