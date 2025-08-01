@@ -12,12 +12,11 @@ namespace MealPlanner.UI.Web.Services
 {
     public class ProductCategoryService(HttpClient httpClient) : IProductCategoryService
     {
-        private readonly HttpClient _httpClient = httpClient;
         private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
         public async Task<ProductCategoryEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<ProductCategoryEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory]}/edit/{id}");
+            return await httpClient.GetFromJsonAsync<ProductCategoryEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory]}/edit/{id}");
         }
 
         public async Task<PagedList<ProductCategoryModel>?> SearchAsync(QueryParameters? queryParameters = null)
@@ -31,14 +30,14 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory]}/search", query));
+            var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory]}/search", query));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<ProductCategoryModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string?> AddAsync(ProductCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory], modelJson);
+            var response = await httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -49,7 +48,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> UpdateAsync(ProductCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory], modelJson);
+            var response = await httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -59,7 +58,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<string?> DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory]}/{id}");
+            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.ProductCategory]}/{id}");
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty

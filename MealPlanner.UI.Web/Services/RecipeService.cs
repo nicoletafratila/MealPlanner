@@ -13,22 +13,21 @@ namespace MealPlanner.UI.Web.Services
 {
     public class RecipeService(HttpClient httpClient) : IRecipeService
     {
-        private readonly HttpClient _httpClient = httpClient;
         private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
         public async Task<RecipeModel?> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
+            return await httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
         }
 
         public async Task<RecipeEditModel?> GetEditAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<RecipeEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/edit/{id}");
+            return await httpClient.GetFromJsonAsync<RecipeEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/edit/{id}");
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, int shopId)
         {
-            return await _httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/shoppingListProducts/{recipeId}/{shopId}");
+            return await httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/shoppingListProducts/{recipeId}/{shopId}");
         }
 
         public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters? queryParameters = null)
@@ -44,14 +43,14 @@ namespace MealPlanner.UI.Web.Services
 
             var a = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/search", query));
+            var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/search", query));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<RecipeModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string?> AddAsync(RecipeEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
+            var response = await httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -62,7 +61,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<string?> UpdateAsync(RecipeEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
+            var response = await httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty
@@ -72,7 +71,7 @@ namespace MealPlanner.UI.Web.Services
 
         public async Task<string?> DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
+            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
             var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
             {
                 Message = string.Empty

@@ -10,22 +10,13 @@ namespace Identity.Api.Controllers
     [ApiController]
     [Route("[controller]")]
     [Authorize(IdentityServerConstants.LocalApi.PolicyName, Roles = "admin, member")]
-    public class UserController : ControllerBase
+    public class UserController(UserManager<ApplicationUserModel> userManager, IMapper mapper)  : ControllerBase
     {
-        private readonly UserManager<ApplicationUserModel> _userManager;
-        private readonly IMapper _mapper;
-
-        public UserController(UserManager<ApplicationUserModel> userManager, IMapper mapper)
-        {
-            _userManager = userManager;
-            _mapper = mapper;
-        }
-
         [HttpGet]
         [Authorize(IdentityServerConstants.LocalApi.PolicyName, Roles = "admin")]
         public IActionResult Get()
         {
-            return Ok(_mapper.Map<IEnumerable<ApplicationUserModel>>(_userManager.Users.ToList()));
+            return Ok(mapper.Map<IEnumerable<ApplicationUserModel>>(userManager.Users.ToList()));
         }
 
         [HttpGet("{id}")]
@@ -34,10 +25,10 @@ namespace Identity.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(id))
                 return BadRequest($"Bad request for the id = {id}");
-            var user = _userManager.Users.FirstOrDefault(item => item.UserId == id);
+            var user = userManager.Users.FirstOrDefault(item => item.UserId == id);
             if (user == null)
                 return BadRequest($"Bad request for the id = {id}");
-            return Ok(_mapper.Map<ApplicationUserModel>(user));
+            return Ok(mapper.Map<ApplicationUserModel>(user));
         }
 
         [HttpPut]
@@ -47,14 +38,14 @@ namespace Identity.Api.Controllers
             if (user == null)
                 return BadRequest();
 
-            var existingUser = _userManager.FindByIdAsync(user.UserId).Result;
+            var existingUser = userManager.FindByIdAsync(user.UserId).Result;
             if (existingUser == null)
             {
                 return NotFound($"Could not find a user with id = {user.UserId}");
             }
 
-            _mapper.Map(user, existingUser);
-            await _userManager.UpdateAsync(existingUser);
+            mapper.Map(user, existingUser);
+            await userManager.UpdateAsync(existingUser);
             return NoContent();
         }
 
@@ -65,13 +56,13 @@ namespace Identity.Api.Controllers
             if (string.IsNullOrWhiteSpace(id))
                 return BadRequest();
 
-            var existingUser = _userManager.FindByIdAsync(id).Result;
+            var existingUser = userManager.FindByIdAsync(id).Result;
             if (existingUser == null)
             {
                 return NotFound($"Could not find a user with id = {id}");
             }
 
-            await _userManager.DeleteAsync(existingUser);
+            await userManager.DeleteAsync(existingUser);
             return NoContent();
         }
     }

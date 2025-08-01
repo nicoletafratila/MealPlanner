@@ -10,8 +10,6 @@ namespace Identity.Api.Controllers
     [ApiController]
     public class AuthenticationController(ISender mediator) : ControllerBase
     {
-        private readonly ISender _mediator = mediator;
-
         [HttpPost("login")]
         public async Task<LoginCommandResponse> LoginAsync(LoginModel model)
         {
@@ -19,7 +17,7 @@ namespace Identity.Api.Controllers
             {
                 Model = model
             };
-            return await _mediator.Send(command);
+            return await mediator.Send(command);
         }
 
         //[HttpPost("register")]

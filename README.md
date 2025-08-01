@@ -10,13 +10,9 @@ PM> Script-migration
 
 
 
-sterge private readonly
-sterge campuri private
 inlocuieste DeserializeAnonymousType cu commandResponse
 
 cum se face autentifiare doar cu Identityserver simplu?
-fa toate handlere cu CommandResponse
-use primary constructor and remove fields
 home page, authorized or not
 click pe meniu fara auth te duce la home
 click dreapta sa adauge reteta la meniu
