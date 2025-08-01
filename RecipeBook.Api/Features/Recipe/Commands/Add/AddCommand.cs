@@ -4,7 +4,7 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.Add
 {
-    public class AddCommand : IRequest<CommandResponse>
+    public class AddCommand : IRequest<CommandResponse?>
     {
         public RecipeEditModel? Model { get; set; }
     }

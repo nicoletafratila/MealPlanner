@@ -4,6 +4,7 @@ using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -64,9 +65,9 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 var response = await MealPlanService!.DeleteAsync(item.Id);
-                if (!string.IsNullOrWhiteSpace(response))
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
@@ -111,6 +112,10 @@ namespace MealPlanner.UI.Web.Pages
             };
 
             var result = await MealPlanService!.SearchAsync(queryParameters);
+            if (result == null || result.Items == null)
+            {
+                result = new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata());
+            }
             return await Task.FromResult(new GridDataProviderResult<MealPlanModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }

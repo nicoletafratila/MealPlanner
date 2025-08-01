@@ -10,12 +10,10 @@ PM> Script-migration
 
 
 
-inlocuieste DeserializeAnonymousType cu commandResponse
 
 cum se face autentifiare doar cu Identityserver simplu?
 home page, authorized or not
 click pe meniu fara auth te duce la home
-click dreapta sa adauge reteta la meniu
 pagini in foldere
 
  @if (context.User.Identity?.IsAuthenticated != true || !context.User.IsInRole("admin"))

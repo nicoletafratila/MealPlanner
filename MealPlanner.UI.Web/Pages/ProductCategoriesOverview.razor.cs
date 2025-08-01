@@ -63,9 +63,9 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 var response = await ProductCategoriesService!.DeleteAsync(item.Id);
-                if (!string.IsNullOrWhiteSpace(response))
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
@@ -110,6 +110,10 @@ namespace MealPlanner.UI.Web.Pages
             };
 
             var result = await ProductCategoriesService!.SearchAsync(queryParameters);
+            if (result == null || result.Items == null)
+            {
+                result = new PagedList<ProductCategoryModel>(new List<ProductCategoryModel>(), new Metadata());
+            }
             return await Task.FromResult(new GridDataProviderResult<ProductCategoryModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }

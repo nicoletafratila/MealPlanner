@@ -10,7 +10,7 @@
         {
         }
 
-        public CommandResponse(bool succeeded, string message = null, string errorCode = null)
+        public CommandResponse(bool succeeded, string message = "", string errorCode = "")
         {
             Succeeded = succeeded;
             Message = message;

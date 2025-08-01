@@ -4,6 +4,7 @@ using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
 using Common.Data.DataContext;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
@@ -38,39 +39,27 @@ namespace MealPlanner.UI.Web.Services
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.ShoppingList]}/makeShoppingList", modelJson);
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ShoppingListEditModel?>(await response.Content.ReadAsStringAsync());
+            return JsonSerializer.Deserialize<ShoppingListEditModel?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> AddAsync(ShoppingListEditModel model)
+        public async Task<CommandResponse?> AddAsync(ShoppingListEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(_mealPlannerApiConfig?.Controllers![MealPlannerControllers.ShoppingList], modelJson);
-            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
-            {
-                Message = string.Empty
-            });
-            return result?.Message;
+            return JsonSerializer.Deserialize<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> UpdateAsync(ShoppingListEditModel model)
+        public async Task<CommandResponse?> UpdateAsync(ShoppingListEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PutAsync(_mealPlannerApiConfig?.Controllers![MealPlannerControllers.ShoppingList], modelJson);
-            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
-            {
-                Message = string.Empty
-            });
-            return result?.Message;
+            return JsonSerializer.Deserialize<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> DeleteAsync(int id)
+        public async Task<CommandResponse?> DeleteAsync(int id)
         {
             var response = await httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.ShoppingList]}/{id}");
-            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
-            {
-                Message = string.Empty
-            });
-            return result?.Message;
+            return JsonSerializer.Deserialize<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
     }
 }

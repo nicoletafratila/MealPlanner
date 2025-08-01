@@ -8,12 +8,12 @@
         {
         }
 
-        public LoginCommandResponse(bool succeeded, string message = null, string errorCode = null)
+        public LoginCommandResponse(bool succeeded, string message = "", string errorCode = "")
             : base(succeeded, message, errorCode)
         {
         }
 
-        public LoginCommandResponse(bool succeeded, string message = null, string errorCode = null, string token = null)
+        public LoginCommandResponse(bool succeeded, string message = "", string errorCode = "", string token = "")
             : base(succeeded, message, errorCode)
         {
             JwtBearer = token;

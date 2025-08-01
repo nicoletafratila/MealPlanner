@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Azure;
 using BlazorBootstrap;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
@@ -127,9 +128,9 @@ namespace MealPlanner.UI.Web.Pages
         private async Task SaveAsync()
         {
             var response = Recipe?.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe!);
-            if (!string.IsNullOrWhiteSpace(response))
+            if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
@@ -158,10 +159,10 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                var result = await RecipeService!.DeleteAsync(Recipe!.Id);
-                if (!string.IsNullOrWhiteSpace(result))
+                var response = await RecipeService!.DeleteAsync(Recipe!.Id);
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(result);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {

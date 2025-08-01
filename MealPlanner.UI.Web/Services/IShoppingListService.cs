@@ -1,4 +1,5 @@
-﻿using Common.Pagination;
+﻿using Common.Models;
+using Common.Pagination;
 using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
@@ -8,8 +9,8 @@ namespace MealPlanner.UI.Web.Services
         Task<ShoppingListEditModel?> GetEditAsync(int id);
         Task<PagedList<ShoppingListModel>?> SearchAsync(QueryParameters? queryParameters = null);
         Task<ShoppingListEditModel?> MakeShoppingListAsync(ShoppingListCreateModel model);
-        Task<string?> AddAsync(ShoppingListEditModel model);
-        Task<string?> UpdateAsync(ShoppingListEditModel model);
-        Task<string?> DeleteAsync(int id);
+        Task<CommandResponse?> AddAsync(ShoppingListEditModel model);
+        Task<CommandResponse?> UpdateAsync(ShoppingListEditModel model);
+        Task<CommandResponse?> DeleteAsync(int id);
     }
 }

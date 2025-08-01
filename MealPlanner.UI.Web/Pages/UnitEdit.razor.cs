@@ -46,9 +46,9 @@ namespace MealPlanner.UI.Web.Pages
         private async Task SaveAsync()
         {
             var response = Unit?.Id == 0 ? await UnitService!.AddAsync(Unit) : await UnitService!.UpdateAsync(Unit!);
-            if (!string.IsNullOrWhiteSpace(response))
+            if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
@@ -78,9 +78,9 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 var response = await UnitService!.DeleteAsync(Unit!.Id);
-                if (!string.IsNullOrWhiteSpace(response))
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {

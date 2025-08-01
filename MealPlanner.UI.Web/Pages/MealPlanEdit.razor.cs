@@ -98,9 +98,9 @@ namespace MealPlanner.UI.Web.Pages
         private async Task SaveAsync()
         {
             var response = MealPlan?.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan!);
-            if (!string.IsNullOrWhiteSpace(response))
+            if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
@@ -130,9 +130,9 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 var response = await MealPlanService!.DeleteAsync(MealPlan!.Id);
-                if (!string.IsNullOrWhiteSpace(response))
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
@@ -268,7 +268,8 @@ namespace MealPlanner.UI.Web.Pages
             if (!string.IsNullOrWhiteSpace(value))
             {
                 filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
-            };
+            }
+            ;
             var queryParameters = new QueryParameters()
             {
                 Filters = filters,

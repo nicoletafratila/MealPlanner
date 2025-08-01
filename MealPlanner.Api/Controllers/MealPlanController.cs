@@ -68,7 +68,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<CommandResponse> PostAsync(MealPlanEditModel model)
+        public async Task<CommandResponse?> PostAsync(MealPlanEditModel model)
         {
             AddCommand command = new()
             {
@@ -78,7 +78,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<CommandResponse> PutAsync(MealPlanEditModel model)
+        public async Task<CommandResponse?> PutAsync(MealPlanEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -88,7 +88,7 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<CommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse?> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

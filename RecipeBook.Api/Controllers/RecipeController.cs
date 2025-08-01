@@ -69,7 +69,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<CommandResponse> PostAsync(RecipeEditModel model)
+        public async Task<CommandResponse?> PostAsync(RecipeEditModel model)
         {
             AddCommand command = new()
             {
@@ -79,7 +79,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<CommandResponse> PutAsync(RecipeEditModel model)
+        public async Task<CommandResponse?> PutAsync(RecipeEditModel model)
         {
             UpdateCommand command = new()
             {
@@ -89,7 +89,7 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<CommandResponse> DeleteAsync(int id)
+        public async Task<CommandResponse?> DeleteAsync(int id)
         {
             DeleteCommand command = new()
             {

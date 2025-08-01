@@ -35,7 +35,7 @@ namespace Identity.Api.Controllers
         [Authorize(IdentityServerConstants.LocalApi.PolicyName, Roles = "admin")]
         public async Task<IActionResult> PutAsync(ApplicationUserModel user)
         {
-            if (user == null)
+            if (user == null || string.IsNullOrWhiteSpace(user.UserId))
                 return BadRequest();
 
             var existingUser = userManager.FindByIdAsync(user.UserId).Result;

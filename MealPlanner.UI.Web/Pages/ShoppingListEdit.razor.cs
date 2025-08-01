@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Azure;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Models;
@@ -149,9 +150,9 @@ namespace MealPlanner.UI.Web.Pages
         private async Task SaveAsync()
         {
             var response = ShoppingList?.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList!);
-            if (!string.IsNullOrWhiteSpace(response))
+            if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
@@ -180,10 +181,10 @@ namespace MealPlanner.UI.Web.Pages
                 if (!confirmation)
                     return;
 
-                var result = await ShoppingListService!.DeleteAsync(ShoppingList!.Id);
-                if (!string.IsNullOrWhiteSpace(result))
+                var response = await ShoppingListService!.DeleteAsync(ShoppingList!.Id);
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(result);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
@@ -347,11 +348,11 @@ namespace MealPlanner.UI.Web.Pages
             {
                 itemToChange.Collected = !itemToChange.Collected;
             }
-            var response = await ShoppingListService!.UpdateAsync(ShoppingList!);
 
-            if (!string.IsNullOrWhiteSpace(response))
+            var response = await ShoppingListService!.UpdateAsync(ShoppingList!);
+            if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {

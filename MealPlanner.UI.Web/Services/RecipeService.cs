@@ -4,6 +4,7 @@ using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
 using Common.Data.DataContext;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
@@ -13,6 +14,7 @@ namespace MealPlanner.UI.Web.Services
 {
     public class RecipeService(HttpClient httpClient) : IRecipeService
     {
+        private readonly HttpClient httpClient = httpClient;
         private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
         public async Task<RecipeModel?> GetByIdAsync(int id)
@@ -41,42 +43,28 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
-            var a = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
-
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/search", query));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<PagedList<RecipeModel>?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> AddAsync(RecipeEditModel model)
+        public async Task<CommandResponse?> AddAsync(RecipeEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
-            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
-            {
-                Message = string.Empty
-            });
-            return result?.Message;
+            return JsonSerializer.Deserialize<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> UpdateAsync(RecipeEditModel model)
+        public async Task<CommandResponse?> UpdateAsync(RecipeEditModel model)
         {
             var modelJson = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
-            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
-            {
-                Message = string.Empty
-            });
-            return result?.Message;
+            return JsonSerializer.Deserialize<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<string?> DeleteAsync(int id)
+        public async Task<CommandResponse?> DeleteAsync(int id)
         {
             var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
-            var result = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(await response.Content.ReadAsStringAsync(), new
-            {
-                Message = string.Empty
-            });
-            return result?.Message;
+            return JsonSerializer.Deserialize<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
     }
 }

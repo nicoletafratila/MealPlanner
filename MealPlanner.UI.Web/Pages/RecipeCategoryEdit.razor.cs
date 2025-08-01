@@ -46,9 +46,9 @@ namespace MealPlanner.UI.Web.Pages
         private async Task SaveAsync()
         {
             var response = RecipeCategory?.Id == 0 ? await RecipeCategoryService!.AddAsync(RecipeCategory) : await RecipeCategoryService!.UpdateAsync(RecipeCategory!);
-            if (!string.IsNullOrWhiteSpace(response))
+            if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
@@ -78,9 +78,9 @@ namespace MealPlanner.UI.Web.Pages
                     return;
 
                 var response = await RecipeCategoryService!.DeleteAsync(RecipeCategory!.Id);
-                if (!string.IsNullOrWhiteSpace(response))
+                if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
