@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authentication;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
@@ -13,6 +14,15 @@ namespace MealPlanner.UI.Web
         {
             base.RegisterServices(services);
 
+            //services.AddHttpClient<IAuthenticationService, AuthenticationService>()
+            //    .ConfigureHttpClient((serviceProvider, httpClient) =>
+            //    {
+            //        var clientConfig = serviceProvider.GetService<IdentityApiConfig>();
+            //        httpClient.BaseAddress = clientConfig!.BaseUrl;
+            //        httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+            //    });
+                //.AddHttpMessageHandler<TokenMessageHandler>();
+
             services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -21,7 +31,6 @@ namespace MealPlanner.UI.Web
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
 
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IProductCategoryService, ProductCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -29,7 +38,6 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig!.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
@@ -37,7 +45,6 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -45,7 +52,6 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig!.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IUnitService, UnitService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -53,7 +59,6 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig!.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-               //.AddHttpMessageHandler<AuthHandler>();
 
             services.AddHttpClient<IMealPlanService, MealPlanService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
@@ -62,7 +67,6 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IShoppingListService, ShoppingListService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
@@ -70,7 +74,6 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IShopService, ShopService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -78,7 +81,6 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig!.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-               //.AddHttpMessageHandler<AuthHandler>();
             services.AddHttpClient<IStatisticsService, StatisticsService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -86,15 +88,14 @@ namespace MealPlanner.UI.Web
                    httpClient.BaseAddress = clientConfig!.BaseUrl;
                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                });
-               //.AddHttpMessageHandler<AuthHandler>();
         }
 
-        public void ConfigureServices(IServiceCollection services, ConfigureHostBuilder host)
+        public void ConfigureServices(WebApplicationBuilder builder)
         {
             var currentDir = Directory.GetCurrentDirectory();
             string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
-            host.UseSerilog((ctx, lc) => lc
+            builder.Host.UseSerilog((ctx, lc) => lc
                         .MinimumLevel.Error()
                         .Enrich.FromLogContext()
                         .ReadFrom.Configuration(ctx.Configuration)
@@ -105,12 +106,12 @@ namespace MealPlanner.UI.Web
             // AutoCreateSqlTable = true
             //Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddBlazoredModal();
-            services.AddBlazorBootstrap();
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
+            builder.Services.AddBlazoredModal();
+            builder.Services.AddBlazorBootstrap();
 
-            base.ConfigureServices(services);
+            base.ConfigureServices(builder.Services);
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)

@@ -8,7 +8,7 @@ namespace Identity.Shared.Models
 
         [Required]
         [Display(Name = "User Name")]
-        public string? UserName { get; set; }
+        public string? Username { get; set; }
 
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "First Name must be alpha characters only.")]
         public string? FirstName { get; set; }
@@ -23,6 +23,7 @@ namespace Identity.Shared.Models
         public string? PhoneNumber { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Email address is not valid.")]
         public string? EmailAddress { get; set; }
 
         public bool IsActive { get; set; }

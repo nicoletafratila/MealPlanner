@@ -10,7 +10,7 @@ namespace Common.Data.Profiles
         {
             CreateMap<ApplicationUser, ApplicationUserModel>()
                 .ForMember(model => model.UserId, opt => opt.MapFrom(data => data.Id))
-                .ForMember(model => model.UserName, opt => opt.MapFrom(data => data.UserName))
+                .ForMember(model => model.Username, opt => opt.MapFrom(data => data.UserName))
                 .ForMember(model => model.FirstName, opt => opt.MapFrom(data => data.FirstName))
                 .ForMember(model => model.LastName, opt => opt.MapFrom(data => data.LastName))
                 .ForMember(model => model.ProfilePictureUrl, opt => opt.MapFrom(data => $"data:image/jpg;base64,{Convert.ToBase64String(data!.ProfilePicture!)}"))

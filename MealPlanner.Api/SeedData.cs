@@ -194,8 +194,8 @@ namespace MealPlanner.Api
 
         private static async Task SeedRolesAsync(IServiceScope scope)
         {
-            var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var admin = await roleMgr.FindByIdAsync("admin");
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var admin = await roleManager.FindByIdAsync("admin");
             if (admin == null)
             {
                 admin = new IdentityRole
@@ -203,14 +203,14 @@ namespace MealPlanner.Api
                     Id = "admin",
                     Name = "admin"
                 };
-                var result = await roleMgr.CreateAsync(admin);
+                var result = await roleManager.CreateAsync(admin);
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
             }
 
-            var member = await roleMgr.FindByIdAsync("member");
+            var member = await roleManager.FindByIdAsync("member");
             if (member == null)
             {
                 member = new IdentityRole
@@ -218,7 +218,7 @@ namespace MealPlanner.Api
                     Id = "member",
                     Name = "member"
                 };
-                var result = await roleMgr.CreateAsync(member);
+                var result = await roleManager.CreateAsync(member);
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
@@ -228,8 +228,8 @@ namespace MealPlanner.Api
 
         private static async Task SeedUsersAsync(IServiceScope scope)
         {
-            var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var admin = await userMgr.FindByNameAsync("admin");
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var admin = await userManager.FindByNameAsync("admin");
             if (admin == null)
             {
                 admin = new ApplicationUser
@@ -241,13 +241,13 @@ namespace MealPlanner.Api
                     LastName = "Admin",
                     IsActive = true
                 };
-                var result = await userMgr.CreateAsync(admin, "Test123!");
+                var result = await userManager.CreateAsync(admin, "Test123!");
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = await userMgr.AddClaimsAsync(admin, new Claim[]
+                result = await userManager.AddClaimsAsync(admin, new Claim[]
                 {
                     new Claim(JwtClaimTypes.Name, admin.UserName),
                     new Claim(JwtClaimTypes.GivenName, admin.FirstName),
@@ -259,14 +259,14 @@ namespace MealPlanner.Api
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                if (!await userMgr.IsInRoleAsync(admin, "admin"))
+                if (!await userManager.IsInRoleAsync(admin, "admin"))
                 {
-                    var roleResult = await userMgr.AddToRoleAsync(admin, "admin");
+                    var roleResult = await userManager.AddToRoleAsync(admin, "admin");
                     if (!roleResult.Succeeded)
                     {
                         throw new Exception(roleResult.Errors.First().Description);
                     }
-                    await userMgr.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
+                    await userManager.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
                 }
 
                 Serilog.Log.Debug("Admin created");
@@ -276,7 +276,7 @@ namespace MealPlanner.Api
                 Serilog.Log.Debug("Admin already exists");
             }
 
-            var member = await userMgr.FindByNameAsync("member");
+            var member = await userManager.FindByNameAsync("member");
             if (member == null)
             {
                 member = new ApplicationUser
@@ -288,13 +288,13 @@ namespace MealPlanner.Api
                     LastName = "Member last name",
                     IsActive = true
                 };
-                var result = await userMgr.CreateAsync(member, "Test123!");
+                var result = await userManager.CreateAsync(member, "Test123!");
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = await userMgr.AddClaimsAsync(member, new Claim[]
+                result = await userManager.AddClaimsAsync(member, new Claim[]
                 {
                     new Claim(JwtClaimTypes.Name, member.UserName),
                     new Claim(JwtClaimTypes.GivenName, member.FirstName),
@@ -306,14 +306,14 @@ namespace MealPlanner.Api
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                if (!await userMgr.IsInRoleAsync(member, "member"))
+                if (!await userManager.IsInRoleAsync(member, "member"))
                 {
-                    var roleResult = await userMgr.AddToRoleAsync(member, "member");
+                    var roleResult = await userManager.AddToRoleAsync(member, "member");
                     if (!roleResult.Succeeded)
                     {
                         throw new Exception(roleResult.Errors.First().Description);
                     }
-                    await userMgr.AddClaimAsync(member, new Claim(ClaimTypes.Role, "member"));
+                    await userManager.AddClaimAsync(member, new Claim(ClaimTypes.Role, "member"));
                 }
 
                 Serilog.Log.Debug("Member created");

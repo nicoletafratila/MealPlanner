@@ -8,13 +8,11 @@ namespace RecipeBook.Api
     {
         protected override void RegisterServices(IServiceCollection services)
         {
-            base.RegisterServices(services);
             services.AddMediatR(Assembly.GetExecutingAssembly());
         }
 
         protected override void RegisterRepositories(IServiceCollection services)
         {
-            base.RegisterRepositories(services);
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeIngredientRepository, RecipeIngredientRepository>();
             services.AddScoped<IRecipeCategoryRepository, RecipeCategoryRepository>();
