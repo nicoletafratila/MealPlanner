@@ -32,7 +32,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
                     client.BaseAddress = _mealPlannerApiConfig?.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    shop = await client.GetFromJsonAsync<ShopEditModel>($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.ShopApi]}/edit/{request.ShopId}", cancellationToken);
+                    shop = await client.GetFromJsonAsync<ShopEditModel>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/edit/{request.ShopId}", cancellationToken);
                     if (shop == null)
                         return null;
                 }

@@ -25,7 +25,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Update
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new UpdateCommandResponse { Message = "An error occured when saving the meal plan." };
+                return new UpdateCommandResponse { Message = "An error occurred when saving the meal plan." };
             }
         }
     }

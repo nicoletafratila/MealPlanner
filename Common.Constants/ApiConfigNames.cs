@@ -2,8 +2,9 @@
 {
     public class ApiConfigNames
     {
-        public const string RecipeBook = "RecipeBook";
-        public const string MealPlanner = "MealPlanner";
-        public const string Identity = "Identity";
+        public const string RecipeBook = "RecipeBookApi";
+        public const string MealPlanner = "MealPlannerApi";
+        public const string MealPlannerWeb = "MealPlannerWeb";
+        public const string Identity = "IdentityApi";
     }
 }

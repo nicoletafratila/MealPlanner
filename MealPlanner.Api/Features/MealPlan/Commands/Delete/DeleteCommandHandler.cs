@@ -24,7 +24,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new DeleteCommandResponse { Message = "An error occured when deleting the meal plan." };
+                return new DeleteCommandResponse { Message = "An error occurred when deleting the meal plan." };
             }
         }
     }

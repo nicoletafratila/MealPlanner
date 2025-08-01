@@ -26,7 +26,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return new AddCommandResponse { Message = "An error occured when saving the shop." };
+                return new AddCommandResponse { Message = "An error occurred when saving the shop." };
             }
         }
     }

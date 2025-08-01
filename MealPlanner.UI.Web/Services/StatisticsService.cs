@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Web.Services
             {
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriterecipes", query!));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query!));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
 
@@ -28,7 +28,7 @@ namespace MealPlanner.UI.Web.Services
             {
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Endpoints![ApiEndpointNames.StatisticsApi]}/favoriteproducts", query!));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query!));
             return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
     }
