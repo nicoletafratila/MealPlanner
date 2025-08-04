@@ -98,7 +98,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                         Client = IdentityConfig.Clients.FirstOrDefault(),       // Required: the client for which the token is issued
                         ClientId = IdentityConfig.Clients.FirstOrDefault().ClientId,
                         GrantType = "password",  // Or use "client_credentials", "password", etc., as appropriate
-                        Subject = principal    // User context, or null for client credentials flow
+                        Subject = principal,    // User context, or null for client credentials flow
                                                // Optionally: set Raw (NameValueCollection), SessionId, Nonce, AccessTokenLifetime, etc.
                     };
                     var tokenRequest = new TokenCreationRequest

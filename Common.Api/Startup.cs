@@ -5,6 +5,8 @@ using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -62,6 +64,7 @@ namespace Common.Api
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddSingleton<HttpContextAccessor>();

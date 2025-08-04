@@ -7,13 +7,13 @@ namespace MealPlanner.UI.Web.Shared
     public partial class LoginDisplay
     {
         [Inject]
-        protected NavigationManager? Navigation { get; set; }
+        public NavigationManager? Navigation { get; set; }
 
         [Inject]
-        protected IdentityApiConfig? IdentityApiConfig { get; set; }
+        public IdentityApiConfig? IdentityApiConfig { get; set; }
 
         [Inject]
-        protected MealPlannerWebConfig? MealPlannerWebConfig { get; set; }
+        public MealPlannerWebConfig? MealPlannerWebConfig { get; set; }
 
         //[Inject]
         //AuthenticationStateProvider auth { get; set; }
