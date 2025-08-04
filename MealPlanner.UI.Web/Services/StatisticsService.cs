@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Common.Api;
+﻿using Common.Api;
 using Common.Constants;
 using Common.Data.DataContext;
 using Common.Models;
@@ -19,7 +18,7 @@ namespace MealPlanner.UI.Web.Services
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query!));
-            return JsonSerializer.Deserialize<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories)
@@ -29,7 +28,7 @@ namespace MealPlanner.UI.Web.Services
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query!));
-            return JsonSerializer.Deserialize<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
     }
 }

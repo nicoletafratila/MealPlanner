@@ -87,6 +87,7 @@ namespace Common.Api
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddSingleton<RecipeBookApiConfig>();
             services.AddSingleton<MealPlannerApiConfig>();
+            services.AddSingleton<MealPlannerWebConfig>();
             services.AddSingleton<IdentityApiConfig>();
             services.AddScoped<AuthHandler>();
             RegisterRepositories(services);

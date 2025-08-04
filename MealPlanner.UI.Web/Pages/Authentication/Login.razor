@@ -1,0 +1,7 @@
+﻿@page "/authentication/login"
+
+<EditForm Model="LoginModel" OnValidSubmit="OnLoginAsync">
+    <InputText @bind-Value="LoginModel.Username" placeholder="Username" />
+    <InputText @bind-Value="LoginModel.Password" type="password" placeholder="Password" />
+    <button type="submit">Login</button>
+</EditForm>
