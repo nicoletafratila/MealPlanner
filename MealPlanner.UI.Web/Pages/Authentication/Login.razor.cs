@@ -20,16 +20,12 @@ namespace MealPlanner.UI.Web.Pages.Authentication
         [CascadingParameter(Name = "MessageComponent")]
         protected IMessageComponent? MessageComponent { get; set; }
 
-        [Inject]
-        protected AuthenticationStateProvider auth { get;set; }
-
         private async Task OnLoginAsync()
         {
             var result = await AuthenticationService!.LoginAsync(LoginModel);
             if (result.Succeeded)
             {
-                var a =await auth.GetAuthenticationStateAsync();
-                NavigationManager?.NavigateTo(NavigationManager.Uri, forceLoad: true);
+                NavigationManager?.NavigateTo("/", forceLoad: true);
             }
             else
             {

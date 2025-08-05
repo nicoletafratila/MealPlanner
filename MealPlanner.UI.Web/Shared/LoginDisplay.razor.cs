@@ -15,13 +15,15 @@ namespace MealPlanner.UI.Web.Shared
         [Inject]
         public MealPlannerWebConfig? MealPlannerWebConfig { get; set; }
 
-        //[Inject]
-        //AuthenticationStateProvider auth { get; set; }
-        //protected override void OnInitialized()
-        //{
-        //    var b = auth.GetAuthenticationStateAsync();
-        //    base.OnInitialized();
-        //}
+        [Inject]
+        protected AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            var state = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
+            var user = state.User;
+        }
+
         //private void BeginSignOut(MouseEventArgs args)
         //{
         //    string path = $"{IdentityApiConfig!.BaseUrl}/account/logout?returnUrl={MealPlannerWebConfig!.BaseUrl}";

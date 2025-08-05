@@ -4,6 +4,8 @@ using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -39,21 +41,14 @@ namespace Common.Api
                .AddEntityFrameworkStores<MealPlannerDbContext>()
                .AddDefaultTokenProviders();
             services.AddLocalApiAuthentication();
-            services.AddIdentityServer(options =>
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-
-                    // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
-                    options.EmitStaticAudienceClaim = true;
-                })
+            services.AddIdentityServer()
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
                 .AddInMemoryClients(IdentityConfig.Clients)
                 .AddInMemoryApiResources(IdentityConfig.ApiResources)
-                .AddAspNetIdentity<ApplicationUser>();
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddDeveloperSigningCredential();
+
             services.AddAuthentication();
             services.AddApiAuthorization();
             services.AddControllersWithViews();

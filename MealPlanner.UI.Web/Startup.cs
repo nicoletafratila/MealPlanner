@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
@@ -20,6 +21,7 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
+                //.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
             //.AddHttpMessageHandler<TokenMessageHandler>();
 
             services.AddHttpClient<IProductService, ProductService>()
@@ -44,6 +46,7 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
+                //.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {

@@ -1,10 +1,10 @@
-﻿using System.Text.Json;
-using BlazorBootstrap;
+﻿using BlazorBootstrap;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Features.Recipe.Commands.Delete;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
@@ -58,7 +58,7 @@ namespace RecipeBook.Api.Controllers
             {
                 QueryParameters = new QueryParameters()
                 {
-                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonSerializer.Deserialize<IEnumerable<FilterItem>>(filters) : null,
+                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters) : null,
                     SortString = sortString,
                     SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
                     PageSize = int.Parse(pageSize!),

@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-using BlazorBootstrap;
+﻿using BlazorBootstrap;
 using Common.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Shared
 {
@@ -41,7 +41,7 @@ namespace MealPlanner.UI.Web.Shared
             if (settings is null)
                 return;
 
-            await JS.InvokeVoidAsync("window.localStorage.setItem", typeof(TItem).ToString(), JsonSerializer.Serialize(settings));
+            await JS.InvokeVoidAsync("window.localStorage.setItem", typeof(TItem).ToString(), JsonConvert.SerializeObject(settings));
         }
 
         private async Task<GridSettings> GridSettingsProviderAsync()
@@ -50,7 +50,7 @@ namespace MealPlanner.UI.Web.Shared
             if (string.IsNullOrWhiteSpace(settingsJson))
                 return null!;
 
-            var settings = JsonSerializer.Deserialize<GridSettings>(settingsJson);
+            var settings = JsonConvert.DeserializeObject<GridSettings>(settingsJson);
             if (settings is null)
                 return null!;
 

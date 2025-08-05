@@ -3,6 +3,7 @@ using Common.Constants;
 using Common.Data.DataContext;
 using Common.Models;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
@@ -18,7 +19,7 @@ namespace MealPlanner.UI.Web.Services
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query!));
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories)
@@ -28,7 +29,7 @@ namespace MealPlanner.UI.Web.Services
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query!));
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
     }
 }
