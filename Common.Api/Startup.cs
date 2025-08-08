@@ -4,8 +4,7 @@ using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
-using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Test;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -16,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace Common.Api
@@ -38,9 +38,9 @@ namespace Common.Api
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-               .AddEntityFrameworkStores<MealPlannerDbContext>()
-               .AddDefaultTokenProviders();
-            services.AddLocalApiAuthentication();
+                    .AddEntityFrameworkStores<MealPlannerDbContext>()
+                    .AddDefaultTokenProviders();
+
             services.AddIdentityServer()
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
@@ -49,9 +49,23 @@ namespace Common.Api
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddDeveloperSigningCredential();
 
-            services.AddAuthentication();
-            services.AddApiAuthorization();
+            services.AddAuthentication()
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = "https://localhost:5001";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(2)
+                    };
+                });
+
+            services.AddAuthorizationCore();
             services.AddControllersWithViews();
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -59,7 +73,6 @@ namespace Common.Api
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
-            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddSingleton<HttpContextAccessor>();
@@ -87,7 +100,6 @@ namespace Common.Api
             services.AddSingleton<MealPlannerApiConfig>();
             services.AddSingleton<MealPlannerWebConfig>();
             services.AddSingleton<IdentityApiConfig>();
-            services.AddScoped<AuthHandler>();
             RegisterRepositories(services);
             RegisterServices(services);
 

@@ -18,6 +18,7 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RecipeController(ISender mediator) : ControllerBase
     {
         [HttpGet("{id:int}")]
