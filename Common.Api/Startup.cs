@@ -1,22 +1,12 @@
 ﻿using AutoMapper;
 using Common.Data.DataContext;
-using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Serilog;
 
 namespace Common.Api
 {
@@ -37,35 +27,10 @@ namespace Common.Api
                 options.EnableSensitiveDataLogging();
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<MealPlannerDbContext>()
-                    .AddDefaultTokenProviders();
-
-            services.AddIdentityServer()
-                .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
-                .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
-                .AddInMemoryClients(IdentityConfig.Clients)
-                .AddInMemoryApiResources(IdentityConfig.ApiResources)
-                .AddAspNetIdentity<ApplicationUser>()
-                .AddDeveloperSigningCredential();
-
-            services.AddAuthentication()
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                {
-                    options.Authority = "https://localhost:5001";
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(2)
-                    };
-                });
-
-            services.AddAuthorizationCore();
+            //services.AddIdentity<ApplicationUser, IdentityRole>()
+            //        .AddEntityFrameworkStores<MealPlannerDbContext>()
+            //        .AddDefaultTokenProviders();
             services.AddControllersWithViews();
-
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -99,34 +64,10 @@ namespace Common.Api
             services.AddSingleton<RecipeBookApiConfig>();
             services.AddSingleton<MealPlannerApiConfig>();
             services.AddSingleton<MealPlannerWebConfig>();
-            services.AddSingleton<IdentityApiConfig>();
             RegisterRepositories(services);
             RegisterServices(services);
 
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                //app.UseSwagger();
-                //app.UseSwaggerUI();
-            }
-
-            app.UseSerilogRequestLogging();
-            app.UseHttpsRedirection();
-            app.UseCors("Open");
-            app.UseStaticFiles();
-            app.UseRouting();
-            app.UseIdentityServer();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
         }
     }
 }

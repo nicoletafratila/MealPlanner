@@ -11,18 +11,6 @@ namespace MealPlanner.UI.Web
     {
         protected override void RegisterServices(IServiceCollection services)
         {
-            base.RegisterServices(services);
-
-            services.AddHttpClient<IAuthenticationService, AuthenticationService>()
-                .ConfigureHttpClient((serviceProvider, httpClient) =>
-                {
-                    var clientConfig = serviceProvider.GetService<IdentityApiConfig>();
-                    httpClient.BaseAddress = clientConfig!.BaseUrl;
-                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-                });
-                //.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
-            //.AddHttpMessageHandler<TokenMessageHandler>();
-
             services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -45,7 +33,6 @@ namespace MealPlanner.UI.Web
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
                 });
-                //.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -93,6 +80,8 @@ namespace MealPlanner.UI.Web
 
         public void ConfigureServices(WebApplicationBuilder builder)
         {
+            ConfigureServices(builder.Services);
+
             var currentDir = Directory.GetCurrentDirectory();
             string fileLoggerFilePath = Path.Combine(currentDir, "Logs", "logs.log");
             string? connectionString = Configuration.GetConnectionString("MealPlanner");
@@ -111,8 +100,6 @@ namespace MealPlanner.UI.Web
             builder.Services.AddServerSideBlazor();
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazorBootstrap();
-
-            base.ConfigureServices(builder.Services);
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -120,7 +107,6 @@ namespace MealPlanner.UI.Web
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
             }
 
             app.UseSerilogRequestLogging();
@@ -128,9 +114,9 @@ namespace MealPlanner.UI.Web
             app.UseCors("Open");
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseIdentityServer();
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseIdentityServer();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
@@ -138,11 +124,6 @@ namespace MealPlanner.UI.Web
             //app.MapRazorPages().RequireAuthorization();
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
             app.Run();
         }
     }
