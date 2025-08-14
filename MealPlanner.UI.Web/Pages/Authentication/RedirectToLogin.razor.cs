@@ -8,12 +8,12 @@ namespace MealPlanner.UI.Web.Pages.Authentication
         [Inject]
         protected NavigationManager? Navigation { get; set; }
 
-        [Inject]
-        public AuthenticationStateProvider? AuthStateProvider { get; set; }
+        [CascadingParameter]
+        private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            var authState = await AuthStateProvider!.GetAuthenticationStateAsync();
+            var authState = await AuthenticationStateTask!;
             if (authState?.User?.Identity == null || !authState.User.Identity.IsAuthenticated)
             {
                 var returnUrl = Navigation!.ToBaseRelativePath(Navigation.Uri);

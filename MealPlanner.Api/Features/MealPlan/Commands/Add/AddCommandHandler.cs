@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Add
         {
             try
             {
-                var existingItem = await repository.SearchAsync(request.Model?.Name!);
+                var existingItem = await repository.SearchAsync(request.Model!.Name!);
                 if (existingItem != null)
                     return CommandResponse.Failed("This meal plan already exists.");
 

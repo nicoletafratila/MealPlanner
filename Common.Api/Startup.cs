@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Common.Data.DataContext;
+using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,9 +29,10 @@ namespace Common.Api
                 options.EnableSensitiveDataLogging();
             });
 
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //        .AddEntityFrameworkStores<MealPlannerDbContext>()
-            //        .AddDefaultTokenProviders();
+            services.AddIdentityServer();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<MealPlannerDbContext>()
+                    .AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddCors(options =>
             {
@@ -64,6 +67,7 @@ namespace Common.Api
             services.AddSingleton<RecipeBookApiConfig>();
             services.AddSingleton<MealPlannerApiConfig>();
             services.AddSingleton<MealPlannerWebConfig>();
+            services.AddSingleton<IdentityApiConfig>();
             RegisterRepositories(services);
             RegisterServices(services);
 

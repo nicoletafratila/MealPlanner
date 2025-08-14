@@ -11,7 +11,15 @@ PM> Script-migration
 
 
 
-cum se face autentifiare doar cu Identityserver simplu?
+@if (SignInManager.IsSignedIn(User))
+{
+    <div @onclick="ToggleNavMenu" class="nav-menu">
+        <div class="nav-item px-3">
+            <MudNavLink class="nav-link" href="/">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Home
+            </MudNavLink>
+        </div>
+
 home page, authorized or not
 click pe meniu fara auth te duce la home
 

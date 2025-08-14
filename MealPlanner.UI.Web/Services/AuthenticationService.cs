@@ -4,11 +4,12 @@ using Common.Constants;
 using Common.Data.DataContext;
 using Common.Models;
 using Identity.Shared.Models;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class AuthenticationService(HttpClient httpClient) : IAuthenticationService
+    public class AuthenticationService(HttpClient httpClient, AuthenticationStateProvider authStateProvider) : IAuthenticationService
     {
         private readonly IApiConfig _identityApiConfig = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
 
@@ -22,7 +23,8 @@ namespace MealPlanner.UI.Web.Services
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>();
                 if (loginResponse != null && loginResponse.Succeeded && !string.IsNullOrEmpty(loginResponse.JwtBearer))
                 {
-                    //await tokenProvider.StoreTokensAsync(loginResponse.JwtBearer);
+                    var jwtProvider = (JwtAuthenticationStateProvider)authStateProvider;
+                    await jwtProvider.MarkUserAsAuthenticated(loginResponse.JwtBearer);
                     return CommandResponse.Success();
                 }
                 else

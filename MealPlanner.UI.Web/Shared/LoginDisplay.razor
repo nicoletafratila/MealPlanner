@@ -4,10 +4,12 @@
         <form method="post" action="authentication/logout">
             <button type="submit" class="nav-link btn btn-link">Log out</button>
         </form>
-        @* <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button> *@
     </Authorized>
     <NotAuthorized>
         <a href="authentication/register">Register</a>
         <a href="authentication/login" style="margin-left:5px;">Log in</a>
     </NotAuthorized>
+    <Authorizing>
+        Please wait, we are checking your authorization status...
+    </Authorizing>
 </AuthorizeView>

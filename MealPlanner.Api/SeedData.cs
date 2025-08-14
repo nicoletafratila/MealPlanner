@@ -249,7 +249,8 @@ namespace MealPlanner.Api
 
                 result = await userManager.AddClaimsAsync(admin, new Claim[]
                 {
-                    new Claim(JwtClaimTypes.Name, admin.UserName),
+                    new Claim(JwtClaimTypes.Subject, admin.Id),
+                    new Claim(ClaimTypes.Name, admin.UserName),
                     new Claim(JwtClaimTypes.GivenName, admin.FirstName),
                     new Claim(JwtClaimTypes.FamilyName, admin.LastName),
                     new Claim(JwtClaimTypes.WebSite, "http://admin.com")
@@ -296,7 +297,8 @@ namespace MealPlanner.Api
 
                 result = await userManager.AddClaimsAsync(member, new Claim[]
                 {
-                    new Claim(JwtClaimTypes.Name, member.UserName),
+                    new Claim(JwtClaimTypes.Subject, member.Id),
+                    new Claim(ClaimTypes.Name, member.UserName),
                     new Claim(JwtClaimTypes.GivenName, member.FirstName),
                     new Claim(JwtClaimTypes.FamilyName, member.LastName),
                     new Claim(JwtClaimTypes.WebSite, "http://member.com")

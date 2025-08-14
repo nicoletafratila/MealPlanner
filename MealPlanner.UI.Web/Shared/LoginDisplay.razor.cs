@@ -1,6 +1,4 @@
-﻿using Common.Api;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared
 {
@@ -8,21 +6,6 @@ namespace MealPlanner.UI.Web.Shared
     {
         [Inject]
         public NavigationManager? Navigation { get; set; }
-
-        [Inject]
-        public IdentityApiConfig? IdentityApiConfig { get; set; }
-
-        [Inject]
-        public MealPlannerWebConfig? MealPlannerWebConfig { get; set; }
-
-        [Inject]
-        protected AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            var state = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
-            var user = state.User;
-        }
 
         //private void BeginSignOut(MouseEventArgs args)
         //{

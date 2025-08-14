@@ -1,6 +1,10 @@
-﻿using Blazored.Modal;
+﻿using Blazored.LocalStorage;
+using Blazored.Modal;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
@@ -11,6 +15,17 @@ namespace MealPlanner.UI.Web
     {
         protected override void RegisterServices(IServiceCollection services)
         {
+            services.AddScoped<JwtAuthorizationMessageHandler>();
+            services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>()
+              .ConfigureHttpClient((serviceProvider, httpClient) =>
+              {
+                  var clientConfig = serviceProvider.GetService<IdentityApiConfig>();
+                  httpClient.BaseAddress = clientConfig!.BaseUrl;
+                  httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+              });
+
             services.AddHttpClient<IProductService, ProductService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -32,7 +47,7 @@ namespace MealPlanner.UI.Web
                     var clientConfig = serviceProvider.GetService<RecipeBookApiConfig>();
                     httpClient.BaseAddress = clientConfig!.BaseUrl;
                     httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-                });
+                }).AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                .ConfigureHttpClient((serviceProvider, httpClient) =>
                {
@@ -100,6 +115,22 @@ namespace MealPlanner.UI.Web
             builder.Services.AddServerSideBlazor();
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazorBootstrap();
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddAuthorizationCore();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidAudience = "domain.com", // NOTE: ENTER DOMAIN HERE
+                    ValidateIssuer = true,
+                    ValidIssuer = "domain.com", // NOTE: ENTER DOMAIN HERE
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("524C1F22-6115-4E16-9B6A-3FBF185308F2")) // NOTE: THIS SHOULD BE A SECRET KEY NOT TO BE SHARED; A GUID IS RECOMMENDED, DO NOT REUSE THIS GUID
+                };
+            });
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -114,9 +145,9 @@ namespace MealPlanner.UI.Web
             app.UseCors("Open");
             app.UseStaticFiles();
             app.UseRouting();
-            //app.UseIdentityServer();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseIdentityServer();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();

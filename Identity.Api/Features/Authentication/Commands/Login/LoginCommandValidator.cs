@@ -7,6 +7,8 @@ namespace Identity.Api.Features.Authentication.Commands.Login
         public LoginCommandValidator()
         {
             RuleFor(x => x.Model).NotEmpty();
+            RuleFor(x => x.Model!.Username).NotEmpty();
+            RuleFor(x => x.Model!.Password).NotEmpty();
         }
     }
 }

@@ -14,7 +14,6 @@ namespace MealPlanner.UI.Web.Services
 {
     public class RecipeService(HttpClient httpClient) : IRecipeService
     {
-        private readonly HttpClient httpClient = httpClient;
         private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
         public async Task<RecipeModel?> GetByIdAsync(int id)
