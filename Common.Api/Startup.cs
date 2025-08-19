@@ -29,18 +29,11 @@ namespace Common.Api
                 options.EnableSensitiveDataLogging();
             });
 
-            services.AddIdentityServer();
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<MealPlannerDbContext>()
-                    .AddDefaultTokenProviders();
+                    .AddEntityFrameworkStores<MealPlannerDbContext>();
+            services.AddAuthorization();
+
             services.AddControllersWithViews();
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-            });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
             services.AddSingleton<HttpContextAccessor>();

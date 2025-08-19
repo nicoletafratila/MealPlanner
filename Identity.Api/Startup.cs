@@ -13,6 +13,19 @@ namespace Identity.Api
 
         protected override void RegisterRepositories(IServiceCollection services)
         {
+            services.AddIdentityServer();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "mealplanner_auth";                 
+                options.Cookie.HttpOnly = true;                            
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;   
+                options.Cookie.SameSite = SameSiteMode.None;
+                //options.Cookie.Domain = ".mealplanner.com"; 
+                options.Cookie.Domain = "localhost/";
+                options.LoginPath = "/login";
+                options.LogoutPath = "/logout";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);        
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
