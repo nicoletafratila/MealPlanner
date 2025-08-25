@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
@@ -6,13 +7,14 @@ using Common.Data.DataContext;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class RecipeService(HttpClient httpClient) : IRecipeService
+    public class RecipeService(HttpClient httpClient, TokenProvider tokenProvider) : IRecipeService
     {
         private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
@@ -42,8 +44,18 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
+            var token = await tokenProvider.GetTokenAsync();
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
+            }
+
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/search", query));
-            return JsonConvert.DeserializeObject<PagedList<RecipeModel>?>(await response.Content.ReadAsStringAsync());
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<PagedList<RecipeModel>?>(await response.Content.ReadAsStringAsync());
+            }
+            return new PagedList<RecipeModel>(new List<RecipeModel>(), new Metadata());
         }
 
         public async Task<CommandResponse?> AddAsync(RecipeEditModel model)

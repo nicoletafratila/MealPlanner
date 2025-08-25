@@ -23,4 +23,12 @@
         public static CommandResponse Failed(string error)
             => new CommandResponse(false, error);
     }
+
+
+    public class LoginResponse :CommandResponse
+    {
+        public string Token { get; set; }
+        public string Username { get; set; }
+    }
+
 }

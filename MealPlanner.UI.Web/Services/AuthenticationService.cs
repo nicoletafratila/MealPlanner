@@ -8,31 +8,32 @@ using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class AuthenticationService(HttpClient httpClient) : IAuthenticationService
+    public class AuthenticationService(HttpClient httpClient, TokenProvider tokenProvider) : IAuthenticationService
     {
         private readonly IApiConfig _identityApiConfig = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
 
-        public async Task<CommandResponse> LoginAsync(LoginModel model)
+        public async Task<LoginResponse> LoginAsync(LoginModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/login", modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                var loginResponse = await response.Content.ReadFromJsonAsync<CommandResponse>();
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
                 if (loginResponse != null && loginResponse.Succeeded)
                 {
-                    return CommandResponse.Success();
+                    await tokenProvider.SetTokenAsync(loginResponse.Token);
+                    return loginResponse;
                 }
                 else
                 {
-                    return CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
+                    return new LoginResponse() { Succeeded = false };//CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
                 }
             }
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                return CommandResponse.Failed(error);
+                return new LoginResponse() { Succeeded = false };// CommandResponse.Failed(error);
             }
         }
 

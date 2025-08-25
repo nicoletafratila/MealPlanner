@@ -22,7 +22,7 @@ PM> Script-migration
 
 home page, authorized or not
 click pe meniu fara auth te duce la home
-
+muta tot in Sessionstorage
 
  @if (context.User.Identity?.IsAuthenticated != true || !context.User.IsInRole("admin"))
  manageusers vizibil doar pt admin

@@ -30,8 +30,6 @@ namespace MealPlanner.UI.Web.Pages.Authentication
             {
                 MessageComponent?.ShowError(result!.Message!);
             }
-
-
         }
 
         //[HttpPost]
