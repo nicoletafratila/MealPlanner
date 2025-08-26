@@ -10,7 +10,7 @@ PM> Script-migration
 
 
 
-
+adauga authorize la toate endpoints
 @if (SignInManager.IsSignedIn(User))
 {
     <div @onclick="ToggleNavMenu" class="nav-menu">

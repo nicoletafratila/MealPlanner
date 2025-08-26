@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Common.Data.Entities;
-using Duende.IdentityServer.Models;
 using MediatR;
 using Serilog;
 
@@ -17,10 +16,10 @@ namespace Identity.Api
         {
            services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
-                    .AddInMemoryClients(Config.GetClients())
-                    .AddInMemoryApiResources(Config.GetApiResources())
-                    .AddInMemoryApiScopes(Config.GetApiScopes())
-                    .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                    .AddInMemoryClients(IdentityConfigs.GetClients())
+                    .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
+                    .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
+                    .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
                     .AddAspNetIdentity<ApplicationUser>();
         }
 
@@ -32,7 +31,6 @@ namespace Identity.Api
             }
 
             app.UseSerilogRequestLogging();
-            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseIdentityServer();
@@ -43,42 +41,5 @@ namespace Identity.Api
                 endpoints.MapDefaultControllerRoute();
             });
         }
-    }
-
-    public static class Config
-    {
-        public static IEnumerable<Client> GetClients() =>
-            new List<Client>
-            {
-            new Client
-            {
-                ClientId = "mealplanner-client",
-                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                ClientSecrets = { new Secret(Common.Constants.MealPlanner.SigningKey.Sha256()) },
-                AllowedScopes = { "mealplanner_api", "openid", "profile" }
-            }
-            };
-
-        public static IEnumerable<ApiScope> GetApiScopes() =>
-            new List<ApiScope>
-            {
-            new ApiScope("mealplanner_api", "MealPlanner API")
-            };
-
-        public static IEnumerable<ApiResource> GetApiResources() =>
-            new List<ApiResource>
-            {
-            new ApiResource("mealplanner_api", "MealPlanner API")
-            {
-                Scopes = { "mealplanner_api" }
-            }
-            };
-
-        public static IEnumerable<IdentityResource> GetIdentityResources() =>
-            new List<IdentityResource>
-            {
-            new IdentityResources.OpenId(),
-            new IdentityResources.Profile()
-            };
     }
 }

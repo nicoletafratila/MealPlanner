@@ -136,8 +136,6 @@ namespace MealPlanner.UI.Web
             }
 
             app.UseSerilogRequestLogging();
-            //app.UseHttpsRedirection();
-            //app.UseCors("Open");
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();

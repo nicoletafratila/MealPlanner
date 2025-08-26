@@ -27,8 +27,6 @@ namespace MealPlanner.Api
             }
 
             app.UseSerilogRequestLogging();
-            //app.UseHttpsRedirection();
-            //app.UseCors("Open");
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();

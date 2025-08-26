@@ -23,7 +23,7 @@ namespace Identity.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<LoginCommandResponse> RegisterAsync(LoginModel model)
+        public async Task<CommandResponse> RegisterAsync(LoginModel model)
         {
             LoginCommand command = new()
             {

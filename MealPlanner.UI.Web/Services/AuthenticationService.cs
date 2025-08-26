@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Services
     {
         private readonly IApiConfig _identityApiConfig = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
 
-        public async Task<LoginCommandResponse> LoginAsync(LoginModel model)
+        public async Task<CommandResponse> LoginAsync(LoginModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/login", modelJson);
@@ -22,18 +22,18 @@ namespace MealPlanner.UI.Web.Services
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>();
                 if (loginResponse != null && loginResponse.Succeeded)
                 {
-                    await tokenProvider.SetTokenAsync(loginResponse.JwtBearer);
+                    await tokenProvider.SetTokenAsync(loginResponse!.JwtBearer!);
                     return loginResponse;
                 }
                 else
                 {
-                    return new LoginCommandResponse() { Succeeded = false };//CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
+                    return CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
                 }
             }
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                return new LoginCommandResponse() { Succeeded = false };// CommandResponse.Failed(error);
+                return CommandResponse.Failed(error);
             }
         }
 

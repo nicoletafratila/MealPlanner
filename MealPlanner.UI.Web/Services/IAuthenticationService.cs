@@ -5,7 +5,7 @@ namespace MealPlanner.UI.Web.Services
 {
     public interface IAuthenticationService
     {
-        Task<LoginCommandResponse> LoginAsync(LoginModel model);
+        Task<CommandResponse> LoginAsync(LoginModel model);
         Task<CommandResponse> RegisterAsync(RegistrationModel model);
     }
 }

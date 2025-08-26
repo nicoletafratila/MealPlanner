@@ -14,10 +14,9 @@
         {
         }
 
-        public LoginCommandResponse(bool succeeded, string message = "", string errorCode = "", string username = "", string token = "")
+        public LoginCommandResponse(bool succeeded, string message = "", string errorCode = "", string token = "")
             : base(succeeded, message, errorCode)
         {
-            Username = username;
             JwtBearer = token;
         }
     }

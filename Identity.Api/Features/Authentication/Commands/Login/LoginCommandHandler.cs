@@ -9,15 +9,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
-    public class LoginCommandHandler(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, LoginCommandResponse>
+    public class LoginCommandHandler(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse>
     {
-        public async Task<LoginCommandResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var user = await userManager.FindByNameAsync(request!.Model!.Username!);
                 if (user == null)
-                    return (LoginCommandResponse)LoginCommandResponse.Failed("Invalid credentials");
+                    return CommandResponse.Failed("Invalid credentials");
 
                 var result = await signInManager.PasswordSignInAsync(request!.Model!.Username!, request!.Model!.Password!, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
@@ -37,19 +37,18 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                         Message = "Login successful.",
                         Succeeded = true,
                         JwtBearer = token,
-                        Username = user.UserName
                     };
                 }
 
                 if (result.IsLockedOut)
-                    return (LoginCommandResponse)LoginCommandResponse.Failed("User is locked out");
+                    return CommandResponse.Failed("User is locked out");
 
-                return (LoginCommandResponse)LoginCommandResponse.Failed("User/password not found.");
+                return CommandResponse.Failed("User/password not found.");
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message, ex);
-                return (LoginCommandResponse)LoginCommandResponse.Failed("An error occurred when authenticating the user.");
+                return CommandResponse.Failed("An error occurred when authenticating the user.");
             }
         }
 
