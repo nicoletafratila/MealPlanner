@@ -12,28 +12,28 @@ namespace MealPlanner.UI.Web.Services
     {
         private readonly IApiConfig _identityApiConfig = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
 
-        public async Task<LoginResponse> LoginAsync(LoginModel model)
+        public async Task<LoginCommandResponse> LoginAsync(LoginModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/login", modelJson);
 
             if (response.IsSuccessStatusCode)
             {
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>();
                 if (loginResponse != null && loginResponse.Succeeded)
                 {
-                    await tokenProvider.SetTokenAsync(loginResponse.Token);
+                    await tokenProvider.SetTokenAsync(loginResponse.JwtBearer);
                     return loginResponse;
                 }
                 else
                 {
-                    return new LoginResponse() { Succeeded = false };//CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
+                    return new LoginCommandResponse() { Succeeded = false };//CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
                 }
             }
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                return new LoginResponse() { Succeeded = false };// CommandResponse.Failed(error);
+                return new LoginCommandResponse() { Succeeded = false };// CommandResponse.Failed(error);
             }
         }
 

@@ -31,8 +31,8 @@ namespace RecipeBook.Api
             })
             .AddCookie(options =>
             {
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Authentication/Login";
+                options.AccessDeniedPath = "/Authentication/AccessDenied";
                 options.Cookie.Name = Common.Constants.MealPlanner.AuthCookie;
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -88,7 +88,7 @@ namespace RecipeBook.Api
             }
 
             app.UseSerilogRequestLogging();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             //app.UseCors("Open");
             app.UseStaticFiles();
             app.UseRouting();

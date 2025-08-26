@@ -22,47 +22,6 @@ namespace Identity.Api
                     .AddInMemoryApiScopes(Config.GetApiScopes())
                     .AddInMemoryIdentityResources(Config.GetIdentityResources())
                     .AddAspNetIdentity<ApplicationUser>();
-
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //.AddCookie(options =>
-            //{
-            //    options.LoginPath = "/Account/Login";
-            //    options.AccessDeniedPath = "/Account/AccessDenied";
-            //    options.Cookie.Name = "authCookie";
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //    options.Cookie.SameSite = SameSiteMode.Strict;
-            //})
-            //.AddJwtBearer(options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidateLifetime = true,
-            //        ValidateIssuerSigningKey = true,
-            //        ValidIssuer = "MealPlanner",
-            //        ValidAudience = "MealPlanner",
-            //    };
-            //    options.Events = new JwtBearerEvents
-            //    {
-            //        OnMessageReceived = context =>
-            //        {
-            //            var token = context.Request.Headers["Authorization"].FirstOrDefault();
-            //            if (string.IsNullOrEmpty(token))
-            //            {
-            //                token = context.Request.Cookies["authCookie"];
-            //            }
-            //            context.Token = token;
-            //            return Task.CompletedTask;
-            //        }
-            //    };
-            //});
-            //services.AddAuthorization();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
