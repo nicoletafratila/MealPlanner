@@ -1,5 +1,4 @@
-﻿using Azure;
-using Blazored.SessionStorage;
+﻿using Blazored.SessionStorage;
 
 namespace MealPlanner.UI.Web
 {

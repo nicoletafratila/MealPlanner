@@ -11,12 +11,13 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class RecipeCategoryService(HttpClient httpClient) : IRecipeCategoryService
+    public class RecipeCategoryService(HttpClient httpClient, TokenProvider tokenProvider) : IRecipeCategoryService
     {
         private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
 
         public async Task<RecipeCategoryEditModel?> GetEditAsync(int id)
         {
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             return await httpClient.GetFromJsonAsync<RecipeCategoryEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.RecipeCategory]}/edit/{id}");
         }
 
@@ -31,6 +32,7 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.RecipeCategory]}/search", query));
             return JsonConvert.DeserializeObject<PagedList<RecipeCategoryModel>?>(await response.Content.ReadAsStringAsync());
         }
@@ -38,6 +40,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<CommandResponse?> AddAsync(RecipeCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.RecipeCategory], modelJson);
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
@@ -45,6 +48,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<CommandResponse?> UpdateAsync(RecipeCategoryEditModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.RecipeCategory], modelJson);
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
@@ -52,12 +56,14 @@ namespace MealPlanner.UI.Web.Services
         public async Task<CommandResponse?> UpdateAsync(IList<RecipeCategoryModel> models)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(models), Encoding.UTF8, "application/json");
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.PutAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.RecipeCategory]}/updateAll", modelJson);
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.RecipeCategory]}/{id}");
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }

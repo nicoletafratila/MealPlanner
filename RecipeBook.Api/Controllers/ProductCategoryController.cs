@@ -2,6 +2,7 @@
 using Common.Models;
 using Common.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RecipeBook.Api.Features.ProductCategory.Commands.Add;
@@ -15,6 +16,7 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductCategoryController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

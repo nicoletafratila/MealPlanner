@@ -10,6 +10,7 @@ using MealPlanner.Api.Features.MealPlan.Queries.Search;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId;
 using MealPlanner.Shared.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -17,6 +18,7 @@ namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MealPlanController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

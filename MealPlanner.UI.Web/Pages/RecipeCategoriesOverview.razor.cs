@@ -125,7 +125,7 @@ namespace MealPlanner.UI.Web.Pages
         private async Task RefreshAsync()
         {
             var result = await RecipeCategoriesService!.SearchAsync();
-            Categories = result!.Items;
+            Categories = result != null ? result.Items : new List<RecipeCategoryModel>();
             StateHasChanged();
         }
     }

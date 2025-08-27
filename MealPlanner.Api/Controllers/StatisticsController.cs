@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Shared.Models;
 
@@ -7,6 +8,7 @@ namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StatisticsController(ISender mediator) : ControllerBase
     {
         [HttpGet("favoriterecipes")]

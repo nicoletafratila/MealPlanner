@@ -11,11 +11,13 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Common.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShoppingListController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]
