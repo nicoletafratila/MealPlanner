@@ -1,9 +1,11 @@
 ﻿using Common.Logging;
 using Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize(Roles = "admin")]
     public partial class AuditTrail
     {
         private IEnumerable<LogModel>? Logs;
