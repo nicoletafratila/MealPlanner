@@ -27,7 +27,11 @@ namespace MealPlanner.UI.Web
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+            if (keyValuePairs != null)
+            {
+                return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!));
+            }
+            return new List<Claim>();   
         }
 
         private byte[] ParseBase64WithoutPadding(string base64)

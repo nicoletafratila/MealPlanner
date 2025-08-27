@@ -1,7 +1,7 @@
 ﻿using BlazorBootstrap;
+using Blazored.SessionStorage;
 using Common.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Shared
@@ -24,7 +24,7 @@ namespace MealPlanner.UI.Web.Shared
         public bool AllowPaging { get; set; } = true;
 
         [Inject]
-        public IJSRuntime JS { get; set; } = default!;
+        public ISessionStorageService? SessionStorage { get; set; }
 
         private Grid<TItem>? gridTemplateReference;
 
@@ -41,12 +41,12 @@ namespace MealPlanner.UI.Web.Shared
             if (settings is null)
                 return;
 
-            await JS.InvokeVoidAsync("window.localStorage.setItem", typeof(TItem).ToString(), JsonConvert.SerializeObject(settings));
+            await SessionStorage!.SetItemAsync(typeof(TItem).ToString(), JsonConvert.SerializeObject(settings));
         }
 
         private async Task<GridSettings> GridSettingsProviderAsync()
         {
-            var settingsJson = await JS.InvokeAsync<string>("window.localStorage.getItem", typeof(TItem).ToString());
+            var settingsJson = await SessionStorage!.GetItemAsync<string>(typeof(TItem).ToString());
             if (string.IsNullOrWhiteSpace(settingsJson))
                 return null!;
 

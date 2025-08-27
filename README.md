@@ -10,8 +10,7 @@ PM> Script-migration
 
 
 
-adauga authorize la toate endpoints
-muta tot in Sessionstorage
+
 cookie vs jwt
 @if (SignInManager.IsSignedIn(User))
 {
@@ -24,6 +23,7 @@ cookie vs jwt
 
 home page, authorized or not
 click pe meniu fara auth te duce la home
+audit trail pe admin
 
  @if (context.User.Identity?.IsAuthenticated != true || !context.User.IsInRole("admin"))
  manageusers vizibil doar pt admin
