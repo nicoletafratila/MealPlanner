@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using Common.Data.DataContext;
 using Common.Data.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 
 namespace Identity.Api
@@ -14,13 +16,17 @@ namespace Identity.Api
 
         protected override void RegisterRepositories(IServiceCollection services)
         {
-           services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
-                    .AddInMemoryClients(IdentityConfigs.GetClients())
-                    .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
-                    .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
-                    .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
-                    .AddAspNetIdentity<ApplicationUser>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<MealPlannerDbContext>()
+                    .AddDefaultTokenProviders();
+            services.AddIdentityServer()
+                   .AddDeveloperSigningCredential()
+                   .AddInMemoryClients(IdentityConfigs.GetClients())
+                   .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
+                   .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
+                   .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
+                   .AddAspNetIdentity<ApplicationUser>();
+            services.AddAuthorization();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

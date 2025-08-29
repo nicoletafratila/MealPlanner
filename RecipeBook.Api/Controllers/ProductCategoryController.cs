@@ -2,6 +2,7 @@
 using Common.Models;
 using Common.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ProductCategoryController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

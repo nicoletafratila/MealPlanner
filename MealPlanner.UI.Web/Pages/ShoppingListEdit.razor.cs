@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Azure;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using RecipeBook.Shared.Converters;
@@ -13,6 +13,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ShoppingListEdit
     {
         private List<BreadcrumbItem>? NavItems { get; set; }

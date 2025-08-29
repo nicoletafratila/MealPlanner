@@ -22,8 +22,8 @@ namespace MealPlanner.Api
             await SeedRecipesCategoriesAsync(context!);
             await SeedUnitsAsync(context!);
             await SeedShopsAsync(context!);
-            await SeedRolesAsync(scope);
-            await SeedUsersAsync(scope);
+            //await SeedRolesAsync(scope);
+            //await SeedUsersAsync(scope);
         }
 
         private static async Task SeedProductCategoriesAsync(MealPlannerDbContext context)

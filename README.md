@@ -9,9 +9,8 @@ PM> Script-migration
 
 
 
-
-
-cookie vs jwt
+problema cu seeding, de nu este identity inregistrat mai repede
+recipe categories cand nu se vad items nu se alineaza imagine in center
 home page
 click dreapta sa adauge reteta la meniu
 display la statistics e taiat

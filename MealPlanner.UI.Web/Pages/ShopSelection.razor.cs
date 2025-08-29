@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BlazorBootstrap;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using MudBlazor.Charts;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ShopSelection : IComponent
     {
         [Required]

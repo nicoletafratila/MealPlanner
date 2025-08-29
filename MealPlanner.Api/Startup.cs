@@ -3,6 +3,7 @@ using System.Text;
 using MealPlanner.Api.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
@@ -22,58 +23,32 @@ namespace MealPlanner.Api
             services.AddScoped<IShopRepository, ShopRepository>();
 
             services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Authentication/Login";
-                options.AccessDeniedPath = "/Authentication/AccessDenied";
-                options.Cookie.Name = Common.Constants.MealPlanner.AuthCookie;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.SameSite = SameSiteMode.Strict;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = "MealPlanner",
-                    ValidAudience = "MealPlanner",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey))
-
-                };
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
                     {
-                        var token = context.Request.Headers["Authorization"].FirstOrDefault();
-                        if (string.IsNullOrEmpty(token))
-                        {
-                            token = context.Request.Cookies[Common.Constants.MealPlanner.AuthCookie];
-                        }
-
-                        if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
-                        {
-                            token = token.Substring("Bearer ".Length).Trim();
-                        }
-
-                        Console.WriteLine($"Token received: {token}");
-                        context.Token = token;
-                        return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = context =>
-                    {
-                        Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+                        options.DefaultScheme = IdentityConstants.ApplicationScheme; 
+                        options.DefaultSignInScheme = IdentityConstants.ExternalScheme; 
+                        options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                    })
+                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
+                  {
+                      options.LoginPath = "/Authentication/Login";
+                      options.AccessDeniedPath = "/Authentication/AccessDenied";
+                      options.Cookie.HttpOnly = true;
+                      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                      options.Cookie.SameSite = SameSiteMode.Strict;
+                  })
+                  .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                  {
+                      options.TokenValidationParameters = new TokenValidationParameters
+                      {
+                          ValidateIssuer = true,
+                          ValidateAudience = true,
+                          ValidateLifetime = true,
+                          ValidateIssuerSigningKey = true,
+                          ValidIssuer = "MealPlanner",
+                          ValidAudience = "MealPlanner",
+                          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey))
+                      };
+                  });
             services.AddAuthorization();
         }
 

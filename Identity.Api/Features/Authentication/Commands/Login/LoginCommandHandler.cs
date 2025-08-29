@@ -24,21 +24,14 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 var result = await signInManager.PasswordSignInAsync(request!.Model!.Username!, request!.Model!.Password!, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var token = GenerateJwtToken(user, roles);
-                    //Response.Cookies.Append(
-                    //Common.Constants.MealPlanner.AuthCookie,
-                    //token,
-                    //new CookieOptions
-                    //{
-                    //    HttpOnly = true,          // Prevents JS access (mitigates XSS risk)
-                    //    Secure = true,            // Only sent on HTTPS
-                    //    SameSite = SameSiteMode.Strict // Restricts cross-site sending
-                    //});
+                    var claims = GetClaims(user, roles);
+                    var token = GenerateJwtToken(claims);
                     return new LoginCommandResponse
                     {
                         Message = "Login successful.",
                         Succeeded = true,
                         JwtBearer = token,
+                        Claims = claims.Select(x => new KeyValuePair<string, string>(x.Type, x.Value)).ToList(),
                     };
                 }
 
@@ -60,18 +53,9 @@ namespace Identity.Api.Features.Authentication.Commands.Login
         //    return Ok(new { message = "Logout successful." });
         //}
 
-        private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
+        private string GenerateJwtToken(IList<Claim> claims)
         {
             var expiration = DateTimeOffset.UtcNow.AddHours(1);
-            var claims = new[]
-            {
-                    new Claim(JwtRegisteredClaimNames.Sub, user!.UserName!),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user!.UserName !),
-                    new Claim(ClaimTypes.Role, string.Join(",", roles)),
-                };
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -83,6 +67,18 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private IList<Claim> GetClaims(ApplicationUser user, IList<string> roles)
+        {
+            return new List<Claim>()
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user!.UserName!),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user!.UserName !),
+                new Claim(ClaimTypes.Role, string.Join(",", roles))
+            };
         }
     }
 }

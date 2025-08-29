@@ -1,12 +1,13 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
 using MealPlanner.UI.Web.Services;
-using MealPlanner.UI.Web.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class RecipeCategoriesOverview
     {
         private List<BreadcrumbItem>? NavItems { get; set; }

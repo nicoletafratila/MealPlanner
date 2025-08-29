@@ -4,9 +4,11 @@ using Common.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ProductStatistics
     {
         [Parameter]

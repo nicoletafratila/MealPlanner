@@ -2,11 +2,13 @@
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class RecipesOverview
     {
         private List<BreadcrumbItem>? NavItems { get; set; }
