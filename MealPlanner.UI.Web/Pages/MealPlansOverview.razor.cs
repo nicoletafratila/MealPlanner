@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Constants;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
@@ -11,7 +12,13 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class MealPlansOverview
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private List<BreadcrumbItem>? navItems { get; set; }
+        private ConfirmDialog dialog = default!;
+        private GridTemplate<MealPlanModel>? mealPlansGrid = default!;
+        private string tableGridClass { get; set; } = CssClasses.GridTemplateWithItemsClass;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? messageComponent { get; set; }
 
         [Inject]
         public IMealPlanService? MealPlanService { get; set; }
@@ -19,15 +26,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-        protected GridTemplate<MealPlanModel>? mealPlansGrid;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Home", Href ="/" }
             };
@@ -68,11 +69,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await MealPlanService!.DeleteAsync(item.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response.Message!);
+                    messageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
+                    messageComponent?.ShowInfo("Data has been deleted successfully");
                     await mealPlansGrid!.RefreshDataAsync();
                 }
             }
@@ -117,6 +118,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata());
             }
+            tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsClass : CssClasses.GridTemplateEmptyClass;
             return await Task.FromResult(new GridDataProviderResult<MealPlanModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }

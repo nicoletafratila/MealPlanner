@@ -8,14 +8,14 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize(Roles = "admin")]
     public partial class AuditTrail
     {
-        private IEnumerable<LogModel>? Logs;
+        private IEnumerable<LogModel>? logs;
 
         [Inject]
         public ILoggerService? LoggerService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            Logs = await LoggerService!.GetLogsAsync();
+            logs = await LoggerService!.GetLogsAsync();
         }
 
         private async Task DeleteAllLogsAsync()
