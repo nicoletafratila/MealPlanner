@@ -24,7 +24,7 @@ namespace MealPlanner.UI.Web.Pages
         public IProductCategoryService? CategoryService { get; set; }
 
         [Inject]
-        protected PreloadService PreloadService { get; set; } = default!;
+        public PreloadService PreloadService { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {

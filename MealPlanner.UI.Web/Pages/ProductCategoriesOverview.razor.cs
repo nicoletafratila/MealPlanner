@@ -13,13 +13,12 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ProductCategoriesOverview
     {
         private List<BreadcrumbItem>? navItems { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-        protected GridTemplate<ProductCategoryModel>? categoriesGrid;
-        protected string tableGridClass { get; set; } = CssClasses.GridTemplateWithItemsClass;
+        private ConfirmDialog dialog = default!;
+        private GridTemplate<ProductCategoryModel>? categoriesGrid = default!;
+        private string tableGridClass { get; set; } = CssClasses.GridTemplateWithItemsClass;
 
         [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? messageComponent { get; set; }
+        private IMessageComponent? messageComponent { get; set; }
 
         [Inject]
         public IProductCategoryService? ProductCategoriesService { get; set; }

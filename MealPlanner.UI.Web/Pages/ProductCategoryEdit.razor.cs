@@ -9,7 +9,11 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class ProductCategoryEdit
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private List<BreadcrumbItem>? navItems { get; set; }
+        private ConfirmDialog dialog = default!;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? messageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -21,14 +25,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Product categories", Href ="/productcategoriesoverview" },
                 new BreadcrumbItem{ Text = "Product category", IsCurrentPage = true },
@@ -50,11 +49,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = ProductCategory?.Id == 0 ? await ProductCategoryService!.AddAsync(ProductCategory) : await ProductCategoryService!.UpdateAsync(ProductCategory!);
             if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response.Message!);
+                messageComponent?.ShowError(response.Message!);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
+                messageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -82,11 +81,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ProductCategoryService!.DeleteAsync(ProductCategory!.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response.Message!);
+                    messageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
+                    messageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
