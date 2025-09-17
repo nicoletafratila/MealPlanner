@@ -15,7 +15,7 @@ namespace MealPlanner.UI.Web.Shared
         public RenderFragment? Columns { get; set; }
 
         [Parameter]
-        public string TableGridClass { get; set; } = "table-grid";
+        public string TableGridClass { get; set; } = "table";
 
         [Parameter]
         public string HeaderRowCssClass { get; set; } = "bg-primary text-white";

@@ -24,6 +24,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected ConfirmDialog dialog = default!;
         protected GridTemplate<ShoppingListModel>? shoppingListsGrid;
+        protected string tableGridClass { get; set; } = "table table-hover table-striped";
 
         protected override async Task OnInitializedAsync()
         {
@@ -111,11 +112,13 @@ namespace MealPlanner.UI.Web.Pages
                 PageSize = request.PageSize,
             };
 
-            var result = await ShoppingListService!.SearchAsync(queryParameters);
-            if (result == null || result.Items == null)
-            {
-                result = new PagedList<ShoppingListModel>(new List<ShoppingListModel>(), new Metadata());
-            }
+            //var result = await ShoppingListService!.SearchAsync(queryParameters);
+            //if (result == null || result.Items == null)
+            //{
+            //    result = new PagedList<ShoppingListModel>(new List<ShoppingListModel>(), new Metadata());
+            //}
+            var result = new PagedList<ShoppingListModel>(new List<ShoppingListModel>(), new Metadata());
+            tableGridClass = result!.Items!.Any() ? "table table-hover table-striped table-accent" : "table table-empty";
             return await Task.FromResult(new GridDataProviderResult<ShoppingListModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }
