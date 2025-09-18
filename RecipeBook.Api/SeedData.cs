@@ -9,8 +9,8 @@ namespace RecipeBook.Api
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
             context?.Database.EnsureCreated();
-            //await SeedProductCategoriesAsync(context!);
-            //await SeedRecipesCategoriesAsync(context!);
+            await SeedProductCategoriesAsync(context!);
+            await SeedRecipesCategoriesAsync(context!);
         }
 
         private static async Task SeedProductCategoriesAsync(MealPlannerDbContext context)

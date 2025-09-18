@@ -15,8 +15,8 @@ namespace MealPlanner.Api
             {
                 context?.Database.Migrate();
             }
-            //await SeedUnitsAsync(context!);
-            //await SeedShopsAsync(context!);
+            await SeedUnitsAsync(context!);
+            await SeedShopsAsync(context!);
         }
 
         private static async Task SeedUnitsAsync(MealPlannerDbContext context)
