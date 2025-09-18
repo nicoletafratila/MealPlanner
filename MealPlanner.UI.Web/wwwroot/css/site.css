@@ -43,10 +43,6 @@
             cursor: pointer;
         }
 
-.table > :not(caption) > * > * {
-    padding: 0.3rem 0.3rem !important;
-}
-
 .fill-space {
     width: 100%;
 }

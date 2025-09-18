@@ -15,7 +15,7 @@ namespace MealPlanner.UI.Web.Pages
         private List<BreadcrumbItem>? navItems { get; set; }
         private ConfirmDialog dialog = default!;
         private GridTemplate<RecipeModel>? recipesGrid;
-        private string tableGridClass { get; set; } = CssClasses.GridTemplateClass;
+        private string tableGridClass { get; set; } = CssClasses.GridTemplateNoRowsClass;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? messageComponent { get; set; }
