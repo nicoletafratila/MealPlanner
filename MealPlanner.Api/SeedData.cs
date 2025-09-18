@@ -1,9 +1,6 @@
-﻿using System.Security.Claims;
-using Common.Constants.Units;
+﻿using Common.Constants.Units;
 using Common.Data.DataContext;
 using Common.Data.Entities;
-using Duende.IdentityModel;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api
@@ -18,68 +15,8 @@ namespace MealPlanner.Api
             {
                 context?.Database.Migrate();
             }
-            await SeedProductCategoriesAsync(context!);
-            await SeedRecipesCategoriesAsync(context!);
-            await SeedUnitsAsync(context!);
-            await SeedShopsAsync(context!);
-            //await SeedRolesAsync(scope);
-            //await SeedUsersAsync(scope);
-        }
-
-        private static async Task SeedProductCategoriesAsync(MealPlannerDbContext context)
-        {
-            if (context == null || context.ProductCategories.Any())
-            {
-                return;
-            }
-            context.ProductCategories.Add(new ProductCategory { Name = "Lactate" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Mezeluri" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Legume" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Fructe" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Condimente" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Carne" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Conserve" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Ulei/Otet" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Fructe uscate" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Paste" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Branzeturi" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Fainoase" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Sosuri" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Congelate" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Apa" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Cofetarie/Patiserie" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Brutarie" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Peste" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Produse bucatarie" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Cereale" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Rechizite" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Jucarii" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Detergenti" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Haine" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Alcool" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Produse igena" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Sucuri" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Ceai/Cafea" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Hartie/Servetele" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Snaks" });
-            context.ProductCategories.Add(new ProductCategory { Name = "Dulciuri" });
-            await context.SaveChangesAsync();
-        }
-
-        private static async Task SeedRecipesCategoriesAsync(MealPlannerDbContext context)
-        {
-            if (context == null || context.RecipeCategories.Any())
-            {
-                return;
-            }
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Aperitive/Gustari", DisplaySequence = 1 });
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Supe/Ciorbe", DisplaySequence = 2 });
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Fel principal", DisplaySequence = 3 });
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Garnituri", DisplaySequence = 4 });
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Paste", DisplaySequence = 5 });
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Salate", DisplaySequence = 6 });
-            context.RecipeCategories.Add(new RecipeCategory { Name = "Desert", DisplaySequence = 7 });
-            await context.SaveChangesAsync();
+            //await SeedUnitsAsync(context!);
+            //await SeedShopsAsync(context!);
         }
 
         private static async Task SeedUnitsAsync(MealPlannerDbContext context)
@@ -190,140 +127,6 @@ namespace MealPlanner.Api
                     }
             });
             await context.SaveChangesAsync();
-        }
-
-        private static async Task SeedRolesAsync(IServiceScope scope)
-        {
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var admin = await roleManager.FindByIdAsync("admin");
-            if (admin == null)
-            {
-                admin = new IdentityRole
-                {
-                    Id = "admin",
-                    Name = "admin"
-                };
-                var result = await roleManager.CreateAsync(admin);
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-            }
-
-            var member = await roleManager.FindByIdAsync("member");
-            if (member == null)
-            {
-                member = new IdentityRole
-                {
-                    Id = "member",
-                    Name = "member"
-                };
-                var result = await roleManager.CreateAsync(member);
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-            }
-        }
-
-        private static async Task SeedUsersAsync(IServiceScope scope)
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var admin = await userManager.FindByNameAsync("admin");
-            if (admin == null)
-            {
-                admin = new ApplicationUser
-                {
-                    UserName = "admin",
-                    Email = "admin@mealplanner.com",
-                    EmailConfirmed = true,
-                    FirstName = "Admin",
-                    LastName = "Admin",
-                    IsActive = true
-                };
-                var result = await userManager.CreateAsync(admin, "Test123!");
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                result = await userManager.AddClaimsAsync(admin, new Claim[]
-                {
-                    new Claim(JwtClaimTypes.Subject, admin.Id),
-                    new Claim(ClaimTypes.Name, admin.UserName),
-                    new Claim(JwtClaimTypes.GivenName, admin.FirstName),
-                    new Claim(JwtClaimTypes.FamilyName, admin.LastName),
-                    new Claim(JwtClaimTypes.WebSite, "http://admin.com")
-                });
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                if (!await userManager.IsInRoleAsync(admin, "admin"))
-                {
-                    var roleResult = await userManager.AddToRoleAsync(admin, "admin");
-                    if (!roleResult.Succeeded)
-                    {
-                        throw new Exception(roleResult.Errors.First().Description);
-                    }
-                    await userManager.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
-                }
-
-                Serilog.Log.Debug("Admin created");
-            }
-            else
-            {
-                Serilog.Log.Debug("Admin already exists");
-            }
-
-            var member = await userManager.FindByNameAsync("member");
-            if (member == null)
-            {
-                member = new ApplicationUser
-                {
-                    UserName = "member",
-                    Email = "member@mealplanner.com",
-                    EmailConfirmed = true,
-                    FirstName = "Member first name",
-                    LastName = "Member last name",
-                    IsActive = true
-                };
-                var result = await userManager.CreateAsync(member, "Test123!");
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                result = await userManager.AddClaimsAsync(member, new Claim[]
-                {
-                    new Claim(JwtClaimTypes.Subject, member.Id),
-                    new Claim(ClaimTypes.Name, member.UserName),
-                    new Claim(JwtClaimTypes.GivenName, member.FirstName),
-                    new Claim(JwtClaimTypes.FamilyName, member.LastName),
-                    new Claim(JwtClaimTypes.WebSite, "http://member.com")
-                });
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                if (!await userManager.IsInRoleAsync(member, "member"))
-                {
-                    var roleResult = await userManager.AddToRoleAsync(member, "member");
-                    if (!roleResult.Succeeded)
-                    {
-                        throw new Exception(roleResult.Errors.First().Description);
-                    }
-                    await userManager.AddClaimAsync(member, new Claim(ClaimTypes.Role, "member"));
-                }
-
-                Serilog.Log.Debug("Member created");
-            }
-            else
-            {
-                Serilog.Log.Debug("Member already exists");
-            }
         }
     }
 }

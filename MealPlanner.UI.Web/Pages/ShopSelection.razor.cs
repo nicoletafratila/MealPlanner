@@ -12,6 +12,9 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class ShopSelection : IComponent
     {
+        [CascadingParameter]
+        private BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
         [Required]
         public string? ShopId { get; set; }
 
@@ -19,9 +22,6 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public IShopService? ShopService { get; set; }
-
-        [CascadingParameter]
-        protected BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {

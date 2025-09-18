@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Web.Pages
         private string _tableGridClass = CssClasses.GridTemplateWithItemsClass;
 
         [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Inject]
         public IShoppingListService? ShoppingListService { get; set; }

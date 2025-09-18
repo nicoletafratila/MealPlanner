@@ -14,7 +14,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class RecipeSelection : IComponent
     {
         [CascadingParameter]
-        private BlazoredModalInstance blazoredModal { get; set; } = default!;
+        private BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         private string? _recipeCategoryId;
         public string? RecipeCategoryId
@@ -56,17 +56,17 @@ namespace MealPlanner.UI.Web.Pages
                 PageNumber = 1
             };
             Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
-            blazoredModal.SetTitle("Select a recipe");
+            BlazoredModal.SetTitle("Select a recipe");
         }
 
         private async Task SaveAsync()
         {
-            await blazoredModal.CloseAsync(ModalResult.Ok(RecipeId));
+            await BlazoredModal.CloseAsync(ModalResult.Ok(RecipeId));
         }
 
         private async Task CancelAsync()
         {
-            await blazoredModal.CancelAsync();
+            await BlazoredModal.CancelAsync();
         }
 
         private async Task OnRecipeCategoryChangedAsync(string? value)

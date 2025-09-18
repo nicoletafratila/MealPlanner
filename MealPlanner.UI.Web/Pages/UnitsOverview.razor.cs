@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Constants;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
@@ -12,8 +13,9 @@ namespace MealPlanner.UI.Web.Pages
     public partial class UnitsOverview
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem>? _navItems;
+        private List<BreadcrumbItem>? _navItems = default!;
         private GridTemplate<UnitModel>? _unitsGrid = default!;
+        private string _tableGridClass = CssClasses.GridTemplateWithItemsClass;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -115,6 +117,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<UnitModel>(new List<UnitModel>(), new Metadata());
             }
+            _tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsClass : CssClasses.GridTemplateEmptyClass;
             return await Task.FromResult(new GridDataProviderResult<UnitModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }

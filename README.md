@@ -10,7 +10,7 @@ PM> Script-migration
 
 
 
-run cu db noua, doar user
+
 home page
 click dreapta sa adauge reteta la meniu
 display la statistics e taiat

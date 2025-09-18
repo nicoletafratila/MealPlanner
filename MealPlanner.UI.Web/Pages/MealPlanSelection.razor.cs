@@ -13,7 +13,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class MealPlanSelection : IComponent
     {
         [CascadingParameter]
-        protected BlazoredModalInstance blazoredModal { get; set; } = default!;
+        private BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         [Required]
         public string? MealPlanId { get; set; }
@@ -26,17 +26,17 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             MealPlans = await MealPlanService!.SearchAsync();
-            blazoredModal.SetTitle("Select a meal plan");
+            BlazoredModal.SetTitle("Select a meal plan");
         }
 
         private async Task SaveAsync()
         {
-            await blazoredModal.CloseAsync(ModalResult.Ok(MealPlanId));
+            await BlazoredModal.CloseAsync(ModalResult.Ok(MealPlanId));
         }
 
         private async Task CancelAsync()
         {
-            await blazoredModal.CancelAsync();
+            await BlazoredModal.CancelAsync();
         }
     }
 }
