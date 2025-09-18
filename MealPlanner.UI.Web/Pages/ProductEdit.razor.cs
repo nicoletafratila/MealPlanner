@@ -1,16 +1,22 @@
 ﻿using BlazorBootstrap;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ProductEdit
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
-        private readonly long maxFileSize = 1024L * 1024L * 1024L * 3L;
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+        private readonly long _maxFileSize = 1024L * 1024L * 1024L * 3L;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -31,14 +37,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Products", Href ="/productsoverview" },
                 new BreadcrumbItem{ Text = "Product", IsCurrentPage = true },
@@ -83,7 +84,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -126,7 +127,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             catch (Exception)
             {
-                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
         }

@@ -1,7 +1,7 @@
 ﻿@page "/recipeedit"
 @page "/recipeedit/{id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 @if (Recipe != null)
 {
@@ -114,7 +114,7 @@
 
                     <div class="col">
                         <ValidationMessage For="@(() => Recipe.Ingredients)" />
-                        <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true">
+                        <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true" ColumnCount="6">
                             <TableCaption>List of ingredients:</TableCaption>
                             <TableHeader>
                                 <th>Name</th>
@@ -146,7 +146,7 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />
 
 <script>
     function checkQuantity() {

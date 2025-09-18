@@ -2,6 +2,8 @@
 using Common.Models;
 using Common.Pagination;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RecipeBook.Api.Features.Unit.Commands.Add;
@@ -15,6 +17,7 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UnitController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

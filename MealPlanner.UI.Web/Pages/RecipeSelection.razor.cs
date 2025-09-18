@@ -4,13 +4,18 @@ using Blazored.Modal;
 using Blazored.Modal.Services;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class RecipeSelection : IComponent
     {
+        [CascadingParameter]
+        private BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
         private string? _recipeCategoryId;
         public string? RecipeCategoryId
         {
@@ -39,9 +44,6 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
-
-        [CascadingParameter]
-        protected BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {

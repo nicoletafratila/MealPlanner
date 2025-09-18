@@ -3,6 +3,7 @@ using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,6 +20,7 @@ namespace RecipeBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RecipeController(ISender mediator) : ControllerBase
     {
         [HttpGet("{id:int}")]

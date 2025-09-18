@@ -8,7 +8,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class StatisticsService(HttpClient httpClient) : IStatisticsService
+    public class StatisticsService(HttpClient httpClient, TokenProvider tokenProvider) : IStatisticsService
     {
         private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();
 
@@ -18,6 +18,7 @@ namespace MealPlanner.UI.Web.Services
             {
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query!));
             return JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }
@@ -28,6 +29,7 @@ namespace MealPlanner.UI.Web.Services
             {
                 ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
             };
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query!));
             return JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
         }

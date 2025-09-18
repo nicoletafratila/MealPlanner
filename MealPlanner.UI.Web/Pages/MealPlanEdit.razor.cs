@@ -5,14 +5,25 @@ using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class MealPlanEdit
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+        private Offcanvas _offCanvas = default!;
+        private GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
+
+        [CascadingParameter]
+        private IModalService? ModalService { get; set; } = default!;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -56,19 +67,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter]
-        protected IModalService? Modal { get; set; } = default!;
-
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-        protected Offcanvas offcanvas = default!;
-        protected GridTemplate<RecipeModel>? selectedRecipedGrid;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Meal plans", Href ="/mealplansoverview" },
                 new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
@@ -120,7 +121,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -174,17 +175,12 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
-                        await selectedRecipedGrid!.RefreshDataAsync();
+                        await _selectedRecipeGrid!.RefreshDataAsync();
                     }
                 }
 
                 StateHasChanged();
             }
-        }
-
-        private void EditRecipe(RecipeModel item)
-        {
-            NavigationManager?.NavigateTo($"recipeedit/{item.Id}");
         }
 
         private async Task DeleteRecipeAsync(RecipeModel item)
@@ -199,7 +195,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -210,7 +206,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
-                await selectedRecipedGrid!.RefreshDataAsync();
+                await _selectedRecipeGrid!.RefreshDataAsync();
                 StateHasChanged();
             }
         }
@@ -220,7 +216,7 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var shopSelectionModal = Modal?.Show<ShopSelection>();
+            var shopSelectionModal = ModalService?.Show<ShopSelection>();
             var result = await shopSelectionModal!.Result;
 
             if (result.Cancelled)
@@ -251,7 +247,7 @@ namespace MealPlanner.UI.Web.Pages
                 { "Recipe", recipe! },
                 { "RecipeCategory", item.RecipeCategory?.Name! },
             };
-            await offcanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
+            await _offCanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
         }
 
         private void NavigateToOverview()

@@ -2,7 +2,7 @@
 @page "/mealplanedit/{Id}"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 <style>
     .table-grid > thead {
@@ -77,7 +77,7 @@
 
                     <div class="card-body">
                         <ValidationMessage For="@(() => MealPlan.Recipes)" />
-                        <GridTemplate TItem="RecipeModel" @ref="selectedRecipedGrid" DataProvider="RecipesDataProviderAsync" AllowPaging="false">
+                        <GridTemplate TItem="RecipeModel" @ref="_selectedRecipeGrid" DataProvider="RecipesDataProviderAsync" AllowPaging="false">
                             <Columns>
                                 <GridColumn TItem="RecipeModel" Filterable="false">
                                     <ChildContent Context="recipeContext">
@@ -127,8 +127,8 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
-<Offcanvas @ref="offcanvas" />
+<ConfirmDialog @ref="_dialog" />
+<Offcanvas @ref="_offCanvas" />
 
 <script>
     function updateHeader() {

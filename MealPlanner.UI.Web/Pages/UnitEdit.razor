@@ -3,7 +3,7 @@
 
 @using Common.Constants.Units
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 @if (Unit != null)
 {
@@ -55,7 +55,7 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />
 
 <script>
     function updateHeader() {

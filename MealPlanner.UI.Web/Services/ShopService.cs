@@ -11,12 +11,13 @@ using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class ShopService(HttpClient httpClient) : IShopService
+    public class ShopService(HttpClient httpClient, TokenProvider tokenProvider) : IShopService
     {
         private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();
 
         public async Task<ShopEditModel?> GetEditAsync(int id)
         {
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             return await httpClient.GetFromJsonAsync<ShopEditModel?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/edit/{id}");
         }
 
@@ -31,6 +32,7 @@ namespace MealPlanner.UI.Web.Services
                 [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/search", query));
             return JsonConvert.DeserializeObject<PagedList<ShopModel>?>(await response.Content.ReadAsStringAsync());
         }
@@ -38,6 +40,7 @@ namespace MealPlanner.UI.Web.Services
         public async Task<CommandResponse?> AddAsync(ShopEditModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.PostAsync(_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop], modelJson);
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
@@ -45,12 +48,14 @@ namespace MealPlanner.UI.Web.Services
         public async Task<CommandResponse?> UpdateAsync(ShopEditModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.PutAsync(_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop], modelJson);
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
+            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/{id}");
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }

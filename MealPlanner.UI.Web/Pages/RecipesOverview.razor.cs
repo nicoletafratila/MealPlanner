@@ -1,15 +1,24 @@
 ﻿using BlazorBootstrap;
+using Common.Constants;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class RecipesOverview
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+        private GridTemplate<RecipeModel>? _recipesGrid = default!;
+        private string _tableGridClass = CssClasses.GridTemplateNoRowsClass;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -17,15 +26,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-        protected GridTemplate<RecipeModel>? recipesGrid;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Home", Href ="/" }
             };
@@ -53,7 +56,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -70,7 +73,7 @@ namespace MealPlanner.UI.Web.Pages
                 else
                 {
                     MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    await recipesGrid!.RefreshDataAsync();
+                    await _recipesGrid!.RefreshDataAsync();
                 }
             }
         }

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Azure;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using RecipeBook.Shared.Converters;
@@ -13,10 +13,18 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ShoppingListEdit
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
         private ShopEditModel? _shop;
+
+        [CascadingParameter]
+        private IModalService? ModalService { get; set; } = default!;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -114,17 +122,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 
-        [CascadingParameter]
-        protected IModalService? Modal { get; set; } = default!;
-
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Shopping lists", Href ="/shoppinglistsoverview" },
                 new BreadcrumbItem{ Text = "Shopping list", IsCurrentPage = true },
@@ -172,7 +172,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -206,7 +206,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -251,7 +251,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task AddMealPlanAsync()
         {
-            var mealPlanSelectionModal = Modal?.Show<MealPlanSelection>();
+            var mealPlanSelectionModal = ModalService?.Show<MealPlanSelection>();
             var result = await mealPlanSelectionModal!.Result;
 
             if (result.Confirmed && result?.Data != null)
@@ -281,7 +281,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task AddRecipeAsync()
         {
-            var recipeSelectionModal = Modal?.Show<RecipeSelection>();
+            var recipeSelectionModal = ModalService?.Show<RecipeSelection>();
             var result = await recipeSelectionModal!.Result;
 
             if (result.Confirmed && result?.Data != null)

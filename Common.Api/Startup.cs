@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Common.Data.DataContext;
-using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,19 +25,6 @@ namespace Common.Api
                 //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.EnableSensitiveDataLogging();
-            });
-
-            services.AddIdentityServer();
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<MealPlannerDbContext>()
-                    .AddDefaultTokenProviders();
-            services.AddControllersWithViews();
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
             });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
@@ -71,6 +56,7 @@ namespace Common.Api
             RegisterRepositories(services);
             RegisterServices(services);
 
+            services.AddControllersWithViews();
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
     }

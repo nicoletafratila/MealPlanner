@@ -4,9 +4,11 @@ using Common.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ProductStatistics
     {
         [Parameter]
@@ -22,7 +24,7 @@ namespace MealPlanner.UI.Web.Pages
         public IProductCategoryService? CategoryService { get; set; }
 
         [Inject]
-        protected PreloadService PreloadService { get; set; } = default!;
+        public PreloadService PreloadService { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {

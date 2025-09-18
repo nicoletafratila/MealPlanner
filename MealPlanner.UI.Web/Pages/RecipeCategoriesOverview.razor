@@ -1,7 +1,7 @@
 ﻿@page "/recipecategoriesoverview"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 <div class="col-sm-6">
     <div class="card">
@@ -21,7 +21,7 @@
         <div class="card-body">
             @if (Categories != null)
             {
-                <TableTemplate Data="@Categories" ShowIndex="true">
+                <TableTemplate Data="@Categories" ShowIndex="true" ColumnCount="4">
                     <TableHeader>
                         <th>Name</th>
                         <th style="width: 100px"></th>
@@ -52,4 +52,4 @@
     </div>
 </div>
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />

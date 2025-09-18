@@ -11,11 +11,14 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Common.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ShoppingListController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

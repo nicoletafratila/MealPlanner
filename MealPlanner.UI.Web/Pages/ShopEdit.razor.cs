@@ -1,15 +1,20 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
-using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class ShopEdit
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -24,14 +29,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Shops", Href ="/shopsoverview" },
                 new BreadcrumbItem{ Text = "Shop", IsCurrentPage = true },
@@ -74,7 +74,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",

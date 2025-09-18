@@ -1,7 +1,7 @@
 ﻿@page "/unitsoverview"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 <div class="col-sm-6">
     <div class="card">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="UnitModel" @ref="unitsGrid" DataProvider="UnitsDataProviderAsync" TableGridClass="table table-hover table-striped">
+            <GridTemplate TItem="UnitModel" @ref="_unitsGrid" DataProvider="UnitsDataProviderAsync" TableGridClass="@_tableGridClass">
                 <Columns>
                     <GridColumn TItem="UnitModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
@@ -32,7 +32,7 @@
                     <GridColumn TItem="UnitModel" HeaderText="Unit type" PropertyName="UnitType" SortString="UnitType" SortKeySelector="item => item.UnitType">
                         @context.UnitType
                     </GridColumn>
-                    <GridColumn TItem="UnitModel" Filterable="false" Class="text-start-right">
+                    <GridColumn TItem="UnitModel" Filterable="false" Class="text-start-right" Style="min-width: 42px;">
                         <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
                     </GridColumn>
                 </Columns>
@@ -41,4 +41,4 @@
     </div>
 </div>
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />

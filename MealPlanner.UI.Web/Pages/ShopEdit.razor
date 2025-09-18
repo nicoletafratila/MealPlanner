@@ -1,7 +1,7 @@
 ﻿@page "/shopedit"
 @page "/shopedit/{Id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 @if (Shop != null)
 {
@@ -62,7 +62,7 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />
 
 <script>
     function updateHeader() {

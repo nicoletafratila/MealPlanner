@@ -1,15 +1,20 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
 using MealPlanner.UI.Web.Services;
-using MealPlanner.UI.Web.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages
 {
+    [Authorize]
     public partial class RecipeCategoriesOverview
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
 
         public IList<RecipeCategoryModel>? Categories { get; set; }
 
@@ -18,15 +23,10 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
-
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
+  
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                new BreadcrumbItem{ Text = "Home", Href ="/" }
             };
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -125,7 +125,7 @@ namespace MealPlanner.UI.Web.Pages
         private async Task RefreshAsync()
         {
             var result = await RecipeCategoriesService!.SearchAsync();
-            Categories = result!.Items;
+            Categories = result != null ? result.Items : new List<RecipeCategoryModel>();
             StateHasChanged();
         }
     }
