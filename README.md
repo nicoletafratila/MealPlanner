@@ -9,8 +9,8 @@ PM> Script-migration
 
 
 
-problema cu seeding, de nu este identity inregistrat mai repede
-recipe categories cand nu se vad items nu se alineaza imagine in center
+
+run cu db noua, doar user
 home page
 click dreapta sa adauge reteta la meniu
 display la statistics e taiat

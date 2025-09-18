@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Constants;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
@@ -11,7 +12,13 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class RecipesOverview
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private List<BreadcrumbItem>? navItems { get; set; }
+        private ConfirmDialog dialog = default!;
+        private GridTemplate<RecipeModel>? recipesGrid;
+        private string tableGridClass { get; set; } = CssClasses.GridTemplateClass;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? messageComponent { get; set; }
 
         [Inject]
         public IRecipeService? RecipeService { get; set; }
@@ -19,15 +26,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-        protected GridTemplate<RecipeModel>? recipesGrid;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Home", Href ="/" }
             };
@@ -67,11 +68,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await RecipeService!.DeleteAsync(item.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response.Message!);
+                    messageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
+                    messageComponent?.ShowInfo("Data has been deleted successfully");
                     await recipesGrid!.RefreshDataAsync();
                 }
             }

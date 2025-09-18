@@ -10,7 +10,11 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class RecipeCategoriesOverview
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private List<BreadcrumbItem>? navItems { get; set; }
+        private ConfirmDialog dialog = default!;
+       
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? messageComponent { get; set; }
 
         public IList<RecipeCategoryModel>? Categories { get; set; }
 
@@ -19,15 +23,10 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
-
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
+  
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            navItems = new List<BreadcrumbItem>
             {
                new BreadcrumbItem{ Text = "Home", Href ="/" }
             };
@@ -67,11 +66,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await RecipeCategoriesService!.DeleteAsync(item.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response.Message!);
+                    messageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
+                    messageComponent?.ShowInfo("Data has been deleted successfully");
                     await RefreshAsync();
                 }
             }
@@ -82,11 +81,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = await RecipeCategoriesService!.UpdateAsync(Categories!);
             if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response.Message!);
+                messageComponent?.ShowError(response.Message!);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
+                messageComponent?.ShowInfo("Data has been saved successfully");
                 await RefreshAsync();
             }
         }

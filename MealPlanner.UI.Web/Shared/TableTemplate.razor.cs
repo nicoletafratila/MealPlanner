@@ -12,6 +12,9 @@ namespace MealPlanner.UI.Web.Shared
         public RenderFragment? TableHeader { get; set; }
 
         [Parameter]
+        public int ColumnCount { get; set; } = 0;
+
+        [Parameter]
         public RenderFragment? TableCaption { get; set; }
 
         [Parameter]

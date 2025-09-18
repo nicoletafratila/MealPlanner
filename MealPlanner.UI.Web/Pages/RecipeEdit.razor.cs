@@ -13,8 +13,12 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class RecipeEdit
     {
-        private List<BreadcrumbItem>? NavItems { get; set; }
+        private List<BreadcrumbItem>? navItems { get; set; }
         private readonly long maxFileSize = 1024L * 1024L * 1024L * 3L;
+        private ConfirmDialog dialog = default!;
+
+        [CascadingParameter(Name = "MessageComponent")]
+        protected IMessageComponent? messageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -90,14 +94,9 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-
         protected override async Task OnInitializedAsync()
         {
-            NavItems = new List<BreadcrumbItem>
+            navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Recipes", Href ="/recipesoverview" },
                 new BreadcrumbItem{ Text = "Recipe", IsCurrentPage = true },
@@ -131,11 +130,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = Recipe?.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe!);
             if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response.Message!);
+                messageComponent?.ShowError(response.Message!);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
+                messageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -163,11 +162,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await RecipeService!.DeleteAsync(Recipe!.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    MessageComponent?.ShowError(response.Message!);
+                    messageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
+                    messageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -206,7 +205,7 @@ namespace MealPlanner.UI.Web.Pages
                         }
                         else
                         {
-                            MessageComponent?.ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
+                            messageComponent?.ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
                         }
                     }
                     else
@@ -313,7 +312,7 @@ namespace MealPlanner.UI.Web.Pages
             }
             catch (Exception)
             {
-                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+                messageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
         }

@@ -1,7 +1,7 @@
 ﻿@page "/recipesoverview"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="navItems"></Breadcrumb>
 
 <style>
     .card {
@@ -25,7 +25,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="RecipeModel" @ref="recipesGrid" DataProvider="RecipesDataProviderAsync">
+            <GridTemplate TItem="RecipeModel" @ref="recipesGrid" DataProvider="RecipesDataProviderAsync" TableGridClass="@tableGridClass">
                 <Columns>
                     <GridColumn FilterTextboxWidth="600" TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                         <div class="card-recipe">
