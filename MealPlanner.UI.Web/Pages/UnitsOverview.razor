@@ -1,7 +1,7 @@
 ﻿@page "/unitsoverview"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 <div class="col-sm-6">
     <div class="card">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="UnitModel" @ref="unitsGrid" DataProvider="UnitsDataProviderAsync" TableGridClass="table table-hover table-striped">
+            <GridTemplate TItem="UnitModel" @ref="_unitsGrid" DataProvider="UnitsDataProviderAsync" TableGridClass="table table-hover table-striped">
                 <Columns>
                     <GridColumn TItem="UnitModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
@@ -41,4 +41,4 @@
     </div>
 </div>
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />

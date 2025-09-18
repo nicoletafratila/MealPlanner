@@ -1,7 +1,7 @@
 ﻿@page "/productcategoryedit"
 @page "/productcategoryedit/{Id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="navItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 @if (ProductCategory != null)
 {
@@ -39,7 +39,7 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />
 
 <script>
     function updateHeader() {

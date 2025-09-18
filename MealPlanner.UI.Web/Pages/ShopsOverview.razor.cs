@@ -12,14 +12,13 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class ShopsOverview
     {
-        private List<BreadcrumbItem>? navItems { get; set; }
-
-        protected ConfirmDialog dialog = default!;
-        protected GridTemplate<ShopModel>? shopsGrid;
-        protected string tableGridClass { get; set; } = CssClasses.GridTemplateWithItemsClass;
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+        private GridTemplate<ShopModel>? _shopsGrid = default!;
+        private string _tableGridClass = CssClasses.GridTemplateWithItemsClass;
 
         [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? messageComponent { get; set; }
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Inject]
         public IShopService? ShopService { get; set; }
@@ -29,7 +28,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            navItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Home", Href ="/" }
             };
@@ -57,7 +56,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -69,12 +68,12 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ShopService!.DeleteAsync(item.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    messageComponent?.ShowError(response.Message!);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    messageComponent?.ShowInfo("Data has been deleted successfully");
-                    await shopsGrid!.RefreshDataAsync();
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
+                    await _shopsGrid!.RefreshDataAsync();
                 }
             }
         }
@@ -118,7 +117,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<ShopModel>(new List<ShopModel>(), new Metadata());
             }
-            tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsClass : CssClasses.GridTemplateEmptyClass;
+            _tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsClass : CssClasses.GridTemplateEmptyClass;
             return await Task.FromResult(new GridDataProviderResult<ShopModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }

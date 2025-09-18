@@ -1,7 +1,7 @@
 ﻿@page "/shoppinglistedit"
 @page "/shoppinglistedit/{id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 @if (ShoppingList != null)
 {
@@ -139,7 +139,7 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />
 
 <script>
     function checkQuantity() {

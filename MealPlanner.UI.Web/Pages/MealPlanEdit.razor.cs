@@ -14,16 +14,16 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class MealPlanEdit
     {
-        private List<BreadcrumbItem>? navItems { get; set; }
-        private ConfirmDialog dialog = default!;
-        private Offcanvas offCanvas = default!;
-        private GridTemplate<RecipeModel>? selectedRecipeGrid = default!;
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
+        private Offcanvas _offCanvas = default!;
+        private GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
 
         [CascadingParameter]
-        private IModalService? modal { get; set; } = default!;
+        private IModalService? ModalService { get; set; } = default!;
 
         [CascadingParameter(Name = "MessageComponent")]
-        private IMessageComponent? messageComponent { get; set; }
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -69,7 +69,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            navItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Meal plans", Href ="/mealplansoverview" },
                 new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
@@ -101,11 +101,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = MealPlan?.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan!);
             if (response != null && !response.Succeeded)
             {
-                messageComponent?.ShowError(response.Message!);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
-                messageComponent?.ShowInfo("Data has been saved successfully");
+                MessageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -121,7 +121,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -133,11 +133,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await MealPlanService!.DeleteAsync(MealPlan!.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    messageComponent?.ShowError(response.Message!);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    messageComponent?.ShowInfo("Data has been deleted successfully");
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }
@@ -175,7 +175,7 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
-                        await selectedRecipeGrid!.RefreshDataAsync();
+                        await _selectedRecipeGrid!.RefreshDataAsync();
                     }
                 }
 
@@ -195,7 +195,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -206,7 +206,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
-                await selectedRecipeGrid!.RefreshDataAsync();
+                await _selectedRecipeGrid!.RefreshDataAsync();
                 StateHasChanged();
             }
         }
@@ -216,7 +216,7 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var shopSelectionModal = modal?.Show<ShopSelection>();
+            var shopSelectionModal = ModalService?.Show<ShopSelection>();
             var result = await shopSelectionModal!.Result;
 
             if (result.Cancelled)
@@ -234,7 +234,7 @@ namespace MealPlanner.UI.Web.Pages
                 }
                 else
                 {
-                    messageComponent?.ShowError("There has been an error when saving the shopping list");
+                    MessageComponent?.ShowError("There has been an error when saving the shopping list");
                 }
             }
         }
@@ -247,7 +247,7 @@ namespace MealPlanner.UI.Web.Pages
                 { "Recipe", recipe! },
                 { "RecipeCategory", item.RecipeCategory?.Name! },
             };
-            await offCanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
+            await _offCanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
         }
 
         private void NavigateToOverview()

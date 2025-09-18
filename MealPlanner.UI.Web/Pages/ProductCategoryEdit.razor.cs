@@ -9,11 +9,11 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize]
     public partial class ProductCategoryEdit
     {
-        private List<BreadcrumbItem>? navItems { get; set; }
-        private ConfirmDialog dialog = default!;
+        private ConfirmDialog _dialog = default!;
+        private List<BreadcrumbItem>? _navItems = default!;
 
         [CascadingParameter(Name = "MessageComponent")]
-        private IMessageComponent? messageComponent { get; set; }
+        private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -27,7 +27,7 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            navItems = new List<BreadcrumbItem>
+            _navItems = new List<BreadcrumbItem>
             {
                 new BreadcrumbItem{ Text = "Product categories", Href ="/productcategoriesoverview" },
                 new BreadcrumbItem{ Text = "Product category", IsCurrentPage = true },
@@ -49,11 +49,11 @@ namespace MealPlanner.UI.Web.Pages
             var response = ProductCategory?.Id == 0 ? await ProductCategoryService!.AddAsync(ProductCategory) : await ProductCategoryService!.UpdateAsync(ProductCategory!);
             if (response != null && !response.Succeeded)
             {
-                messageComponent?.ShowError(response.Message!);
+                MessageComponent?.ShowError(response.Message!);
             }
             else
             {
-                messageComponent?.ShowInfo("Data has been saved successfully");
+                MessageComponent?.ShowInfo("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -69,7 +69,7 @@ namespace MealPlanner.UI.Web.Pages
                     NoButtonText = "Cancel",
                     NoButtonColor = ButtonColor.Danger
                 };
-                var confirmation = await dialog.ShowAsync(
+                var confirmation = await _dialog.ShowAsync(
                         title: "Are you sure you want to delete this?",
                         message1: "This will delete the record. Once deleted can not be rolled back.",
                         message2: "Do you want to proceed?",
@@ -81,11 +81,11 @@ namespace MealPlanner.UI.Web.Pages
                 var response = await ProductCategoryService!.DeleteAsync(ProductCategory!.Id);
                 if (response != null && !response.Succeeded)
                 {
-                    messageComponent?.ShowError(response.Message!);
+                    MessageComponent?.ShowError(response.Message!);
                 }
                 else
                 {
-                    messageComponent?.ShowInfo("Data has been deleted successfully");
+                    MessageComponent?.ShowInfo("Data has been deleted successfully");
                     NavigateToOverview();
                 }
             }

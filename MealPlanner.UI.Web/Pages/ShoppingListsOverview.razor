@@ -1,7 +1,7 @@
 ﻿@page "/shoppinglistsoverview"
 @using MealPlanner.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="NavItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 <div class="col-sm-6">
     <div class="card">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="ShoppingListModel" @ref="shoppingListsGrid" DataProvider="ShoppingListsDataProviderAsync" TableGridClass="@tableGridClass">
+            <GridTemplate TItem="ShoppingListModel" @ref="_shoppingListsGrid" DataProvider="ShoppingListsDataProviderAsync" TableGridClass="@_tableGridClass">
                 <Columns>
                     <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
@@ -38,4 +38,4 @@
     </div>
 </div>
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />

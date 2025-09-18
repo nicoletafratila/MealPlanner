@@ -1,7 +1,7 @@
 ﻿@page "/recipeedit"
 @page "/recipeedit/{id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="navItems"></Breadcrumb>
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
 @if (Recipe != null)
 {
@@ -146,7 +146,7 @@
     </div>
 }
 
-<ConfirmDialog @ref="dialog" />
+<ConfirmDialog @ref="_dialog" />
 
 <script>
     function checkQuantity() {
