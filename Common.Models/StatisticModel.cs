@@ -19,7 +19,9 @@ namespace Common.Models
             ChartOptions.Responsive = true;
             ChartOptions.Plugins.Title!.Text = Title;
             ChartOptions.Plugins.Title.Display = true;
-            ChartOptions.Plugins.Legend.Position = "right";
+            ChartOptions.Plugins.Legend.Position = "bottom";
+            ChartOptions.Plugins.Legend.Reverse = true;
+            ChartOptions.Plugins.Legend.FullSize = true;
         }
 
         private List<IChartDataset> GetDataSets()

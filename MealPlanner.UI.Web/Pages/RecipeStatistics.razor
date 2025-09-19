@@ -19,17 +19,19 @@
     </div>
 
     <div class="card-body">
-        <div class="row" style="height: 500px">
+        <div class="row" style="height: 400px">
             @if (Statistics != null)
             {
                 foreach (var item in Statistics)
                 {
                     <div class="col-sm">
-                        <DoughnutChart @ref="item.Chart" Width="500" Class="mb-5" />
+                        <DoughnutChart @ref="item.Chart" Height="400" Class="mb-5" />
                     </div>
                 }
             }
         </div>
+
+        <br />
         
         @if (Categories != null && Categories.Metadata != null && Categories.Items != null)
         {

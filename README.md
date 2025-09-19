@@ -14,7 +14,6 @@ Unhandled exception in circuit '"ZC0kdYy9m6TuL2LtCnjdEJH4xvCHUc2YQ15qhG4Dm_Q"'.	
 
 home page
 click dreapta sa adauge reteta la meniu
-display la statistics e taiat
 organizeaza pe features
 swagger
 pagini in foldere
