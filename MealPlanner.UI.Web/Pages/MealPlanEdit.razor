@@ -1,5 +1,6 @@
 ﻿@page "/mealplanedit"
 @page "/mealplanedit/{Id}"
+@using Common.Constants
 @using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
@@ -77,7 +78,7 @@
 
                     <div class="card-body">
                         <ValidationMessage For="@(() => MealPlan.Recipes)" />
-                        <GridTemplate TItem="RecipeModel" @ref="_selectedRecipeGrid" DataProvider="RecipesDataProviderAsync" AllowPaging="false">
+                        <GridTemplate TItem="RecipeModel" DataProvider="RecipesDataProviderAsync" TableGridClass="@_tableGridClass" AllowPaging="false">
                             <Columns>
                                 <GridColumn TItem="RecipeModel" Filterable="false">
                                     <ChildContent Context="recipeContext">

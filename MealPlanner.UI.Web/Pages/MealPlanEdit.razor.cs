@@ -1,5 +1,6 @@
 ﻿using BlazorBootstrap;
 using Blazored.Modal.Services;
+using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
@@ -18,6 +19,7 @@ namespace MealPlanner.UI.Web.Pages
         private List<BreadcrumbItem>? _navItems = default!;
         private Offcanvas _offCanvas = default!;
         private GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
+        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
 
         [CascadingParameter]
         private IModalService? ModalService { get; set; } = default!;
