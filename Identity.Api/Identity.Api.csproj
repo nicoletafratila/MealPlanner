@@ -15,10 +15,8 @@
     <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="keys\**" />
     <EmbeddedResource Remove="Pages\**" />
-    <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="keys\**" />
     <None Remove="Pages\**" />
-    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
