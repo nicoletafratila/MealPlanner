@@ -15,7 +15,7 @@ namespace MealPlanner.UI.Web.Pages
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem>? _navItems = default!;
         private GridTemplate<RecipeModel>? _recipesGrid = default!;
-        private string _tableGridClass = CssClasses.GridTemplateNoRowsClass;
+        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -117,6 +117,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<RecipeModel>(new List<RecipeModel>(), new Metadata());
             }
+            _tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsHorizontalClass : CssClasses.GridTemplateEmptyHorizontalClass;
             return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
         }
     }

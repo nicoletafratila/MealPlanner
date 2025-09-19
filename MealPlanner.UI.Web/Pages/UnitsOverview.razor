@@ -24,7 +24,7 @@
                     <GridColumn TItem="UnitModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
                     </GridColumn>
-                    <GridColumn TItem="UnitModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <GridColumn TItem="UnitModel" FilterTextboxWidth="450" Style="min-width: 740px;" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                         <div style="cursor: pointer;" @onclick="() => Update(context)">
                             @context.Name
                         </div>
