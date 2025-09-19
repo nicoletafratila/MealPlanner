@@ -8,6 +8,9 @@ namespace MealPlanner.UI.Web.Pages.Authentication
     [AllowAnonymous]
     public partial class Login
     {
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
+
         public LoginModel LoginModel = new();
 
         [Inject]
@@ -15,9 +18,6 @@ namespace MealPlanner.UI.Web.Pages.Authentication
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
-
-        [CascadingParameter(Name = "MessageComponent")]
-        protected IMessageComponent? MessageComponent { get; set; }
 
         private async Task OnLoginAsync()
         {

@@ -7,14 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Authentication\Commands\Register\**" />
+    <Compile Remove="Features\User\**" />
     <Compile Remove="keys\**" />
     <Compile Remove="Pages\**" />
     <Compile Remove="wwwroot\**" />
+    <Content Remove="Features\Authentication\Commands\Register\**" />
+    <Content Remove="Features\User\**" />
     <Content Remove="keys\**" />
     <Content Remove="Pages\**" />
     <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Features\Authentication\Commands\Register\**" />
+    <EmbeddedResource Remove="Features\User\**" />
     <EmbeddedResource Remove="keys\**" />
     <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Features\Authentication\Commands\Register\**" />
+    <None Remove="Features\User\**" />
     <None Remove="keys\**" />
     <None Remove="Pages\**" />
   </ItemGroup>
@@ -31,10 +39,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Authentication\Commands\Register\" />
-    <Folder Include="Features\User\" />
   </ItemGroup>
 </Project>
