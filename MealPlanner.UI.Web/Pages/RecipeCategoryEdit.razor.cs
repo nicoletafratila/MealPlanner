@@ -10,7 +10,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class RecipeCategoryEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem>? _navItems = default!;
+        private List<BreadcrumbItem> _navItems = default!;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }

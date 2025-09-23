@@ -14,7 +14,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class RecipeEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem>? _navItems = default!;
+        private List<BreadcrumbItem> _navItems = default!;
         private readonly long _maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [CascadingParameter(Name = "MessageComponent")]

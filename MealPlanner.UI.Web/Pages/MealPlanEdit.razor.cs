@@ -16,9 +16,9 @@ namespace MealPlanner.UI.Web.Pages
     public partial class MealPlanEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem>? _navItems = default!;
+        private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
-        private GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
+        private GridTemplate<RecipeModel>? selectedRecipeGrid = default!;
         private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
 
         [CascadingParameter]
@@ -177,7 +177,7 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
-                        await _selectedRecipeGrid!.RefreshDataAsync();
+                        //await selectedRecipeGrid!.RefreshDataAsync();
                     }
                 }
 
@@ -208,7 +208,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
-                await _selectedRecipeGrid!.RefreshDataAsync();
+               // await selectedRecipeGrid!.RefreshDataAsync();
                 StateHasChanged();
             }
         }

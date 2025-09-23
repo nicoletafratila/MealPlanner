@@ -36,7 +36,7 @@
         {
             @foreach (var item in Data!)
             {
-                <tr @onclick="@(() => OnSelectedItemChangedAsync(item))">
+                <tr @onclick="async ()=> await OnSelectedItemChangedAsync(item)">
                     @if (ShowIndex)
                     {
                         <td>@item.Index</td>

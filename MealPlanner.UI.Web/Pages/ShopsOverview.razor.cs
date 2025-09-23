@@ -13,7 +13,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ShopsOverview
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem>? _navItems = default!;
+        private List<BreadcrumbItem> _navItems = default!;
         private GridTemplate<ShopModel>? _shopsGrid = default!;
         private string _tableGridClass = CssClasses.GridTemplateWithItemsClass;
 

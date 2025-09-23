@@ -70,7 +70,7 @@
                     <br />
 
                     <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async ()=> await DeleteAsync()">Delete</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
                 </EditForm>
             </div>

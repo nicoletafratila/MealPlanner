@@ -35,7 +35,7 @@
             </div>
 
             <div class="card-body">
-                <EditForm Model="@MealPlan" OnValidSubmit="@SaveAsync">
+                <EditForm Model="@MealPlan" OnValidSubmit="async () => await SaveAsync()">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
@@ -72,10 +72,27 @@
                                     }
                                 }
                             </InputSelect>
-                            <button class="btn btn-primary" type="button" @onclick="@AddRecipeAsync" disabled="@(!CanAddRecipe)">Add</button>
+                            <button class="btn btn-primary" type="button" @onclick="async ()=> await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add</button>
                         </div>
                     </div>
+@* 
+                    <TableTemplate Data="@MealPlan.Recipes" ShowIndex="false">
+                        <TableHeader>
+                            <th></th>
+                        </TableHeader>
+                        <RowTemplate Context="RecipeModel">
+                            @if (RecipeModel != null)
+                            {
+                                <td style="vertical-align:middle">
+                                    <div style="display:flex; align-items: center">
+                                        <p>@RecipeModel.Name</p>
+                                    </div>
+                                </td>
+                            }
+                        </RowTemplate>
+                    </TableTemplate> *@
 
+                    @* @ref="selectedRecipeGrid" *@
                     <div class="card-body">
                         <ValidationMessage For="@(() => MealPlan.Recipes)" />
                         <GridTemplate TItem="RecipeModel" DataProvider="RecipesDataProviderAsync" TableGridClass="@_tableGridClass" AllowPaging="false">
@@ -84,7 +101,7 @@
                                     <ChildContent Context="recipeContext">
                                         <div class="card-recipe">
                                             <div class="card-header" style="padding: 0px;">
-                                                <img src="@recipeContext.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => ShowRecipeAsync(recipeContext)" />
+                                                <img src="@recipeContext.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="async () => await ShowRecipeAsync(recipeContext)" />
                                             </div>
                                             <div class="card-body">
                                                 <table>
@@ -101,7 +118,7 @@
                                                             }
                                                         </td>
                                                         <td class="min-space">
-                                                            <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="() => DeleteRecipeAsync(recipeContext)">
+                                                            <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="async () => await DeleteRecipeAsync(recipeContext)">
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -118,8 +135,8 @@
                         </GridTemplate>
 
                         <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                        <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="@SaveShoppingListAsync">Make shopping list</button>
+                        <button class="btn btn-danger btn-sm" type="button" @onclick="async ()=> await DeleteAsync()">Delete</button>
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="async ()=> await SaveShoppingListAsync()">Make shopping list</button>
                         <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
                     </div>
                 </EditForm>

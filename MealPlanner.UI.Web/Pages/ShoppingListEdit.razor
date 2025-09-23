@@ -127,10 +127,10 @@
                         </TableTemplate>
 
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                        <button class="btn btn-danger btn-sm" type="button" @onclick="@DeleteAsync">Delete</button>
+                        <button class="btn btn-danger btn-sm" type="button" @onclick="async ()=> await DeleteAsync()">Delete</button>
 
-                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@AddMealPlanAsync" disabled="@(!CanAddMealPlan)">Add meal plan</button>
-                        <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="@AddRecipeAsync" disabled="@(!CanAddRecipe)">Add recipe</button>
+                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async ()=> await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">Add meal plan</button>
+                        <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async ()=> await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add recipe</button>
                         <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@NavigateToOverview">Back to overview</button>
                     </div>
                 </EditForm>

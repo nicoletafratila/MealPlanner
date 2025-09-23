@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class ShoppingListEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem>? _navItems = default!;
+        private List<BreadcrumbItem> _navItems = default!;
         private ShopEditModel? _shop;
 
         [CascadingParameter]

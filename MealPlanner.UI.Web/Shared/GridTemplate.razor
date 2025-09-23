@@ -23,10 +23,10 @@
         max-height: 100%;
         margin-bottom: 10px;
     }
-        
+
         .table-grid > tbody {
             display: flex;
-            justify-content: flex-start; 
+            justify-content: flex-start;
             align-items: flex-start;
             flex-wrap: wrap;
             width: 100%;
@@ -39,16 +39,16 @@
         border-color: white;
     }
 
-        .table-grid > thead > tr {
-            border-bottom-color: #dee2e6;
-            border-bottom-width: 0px;
-        }
+    .table-grid > thead > tr {
+        border-bottom-color: #dee2e6;
+        border-bottom-width: 0px;
+    }
 
-        .table-grid > :not(caption) > * > * {
-            padding: 0.3rem 0.3rem !important;
-            background-color: white !important;
-            color: black;
-        }
+    .table-grid > :not(caption) > * > * {
+        padding: 0.3rem 0.3rem !important;
+        background-color: white !important;
+        color: black;
+    }
 </style>
 
 <Grid TItem="TItem"
@@ -66,9 +66,7 @@
       HeaderRowCssClass="@HeaderRowCssClass"
       GridSettingsChanged="OnGridSettingsChangedAsync"
       SettingsProvider="GridSettingsProviderAsync">
-    <GridColumns>
-        @Columns
-    </GridColumns>
+    @Columns
 
     <GridTemplates>
         <GridEmptyDataTemplate TItem="TItem">
