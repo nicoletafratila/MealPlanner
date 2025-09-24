@@ -118,7 +118,7 @@ namespace MealPlanner.UI.Web.Pages
                 result = new PagedList<ProductCategoryModel>(new List<ProductCategoryModel>(), new Metadata());
             }
             _tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsClass : CssClasses.GridTemplateEmptyClass;
-            return await Task.FromResult(new GridDataProviderResult<ProductCategoryModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount });
+            return new GridDataProviderResult<ProductCategoryModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
         }
     }
 }

@@ -108,7 +108,7 @@
                                 @if (ProductModel != null && ProductModel.Product != null)
                                 {
                                     <td style="vertical-align:middle; text-align: center">
-                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="() => { CheckboxChangedAsync(ProductModel); }" />
+                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="async ()=> await CheckboxChangedAsync(ProductModel)" />
                                     </td>
                                     <td style="vertical-align:middle">
                                         <div style="display:flex; align-items: center">
@@ -131,7 +131,7 @@
 
                         <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async ()=> await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">Add meal plan</button>
                         <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async ()=> await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add recipe</button>
-                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="@NavigateToOverview">Back to overview</button>
+                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="NavigateToOverview">Back to overview</button>
                     </div>
                 </EditForm>
             </div>
@@ -152,7 +152,7 @@
             addButton.disabled = true;
         }
     }
-    
+
     function updateHeader() {
         var input = document.getElementById("name").value;
         document.getElementById("headerName").innerText = input;

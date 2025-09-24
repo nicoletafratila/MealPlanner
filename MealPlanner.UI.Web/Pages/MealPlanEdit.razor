@@ -1,6 +1,7 @@
 ﻿@page "/mealplanedit"
 @page "/mealplanedit/{Id}"
 @using Common.Constants
+@using MealPlanner.UI.Web.Shared
 @using RecipeBook.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
@@ -35,7 +36,7 @@
             </div>
 
             <div class="card-body">
-                <EditForm Model="@MealPlan" OnValidSubmit="async () => await SaveAsync()">
+                <EditForm Model="@MealPlan" OnValidSubmit="async () => await SaveAsync()" Context="mealPlanContext">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
@@ -75,61 +76,43 @@
                             <button class="btn btn-primary" type="button" @onclick="async ()=> await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add</button>
                         </div>
                     </div>
-@* 
-                    <TableTemplate Data="@MealPlan.Recipes" ShowIndex="false">
-                        <TableHeader>
-                            <th></th>
-                        </TableHeader>
-                        <RowTemplate Context="RecipeModel">
-                            @if (RecipeModel != null)
-                            {
-                                <td style="vertical-align:middle">
-                                    <div style="display:flex; align-items: center">
-                                        <p>@RecipeModel.Name</p>
-                                    </div>
-                                </td>
-                            }
-                        </RowTemplate>
-                    </TableTemplate> *@
 
-                    @* @ref="selectedRecipeGrid" *@
+                    @* @ref="_selectedRecipeGrid" *@
                     <div class="card-body">
                         <ValidationMessage For="@(() => MealPlan.Recipes)" />
                         <GridTemplate TItem="RecipeModel" DataProvider="RecipesDataProviderAsync" TableGridClass="@_tableGridClass" AllowPaging="false">
                             <Columns>
                                 <GridColumn TItem="RecipeModel" Filterable="false">
-                                    <ChildContent Context="recipeContext">
-                                        <div class="card-recipe">
-                                            <div class="card-header" style="padding: 0px;">
-                                                <img src="@recipeContext.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="async () => await ShowRecipeAsync(recipeContext)" />
-                                            </div>
-                                            <div class="card-body">
-                                                <table>
-                                                    <tr>
-                                                        <td class="fill-space">
-                                                            @recipeContext.Name
-                                                        </td>
-                                                        <td class="min-space">
-                                                            @if (!string.IsNullOrWhiteSpace((recipeContext.Source)))
-                                                            {
-                                                                <a href="@recipeContext.Source" target="_blank">
-                                                                    <img src="Images\webIcon.png" alt="icon" class="small-icon">
-                                                                </a>
-                                                            }
-                                                        </td>
-                                                        <td class="min-space">
-                                                            <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="async () => await DeleteRecipeAsync(recipeContext)">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fill-space">
-                                                            @recipeContext.RecipeCategoryName
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
+                                    <div class="card-recipe">
+                                        <div class="card-header" style="padding: 0px;">
+                                            <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="async () => await ShowRecipeAsync(context)" />
                                         </div>
-                                    </ChildContent>
+                                        <div class="card-body">
+                                            <table>
+                                                <tr>
+                                                    <td class="fill-space">
+                                                        @context.Name
+                                                    </td>
+                                                    <td class="min-space">
+                                                        @if (!string.IsNullOrWhiteSpace((context.Source)))
+                                                        {
+                                                            <a href="@context.Source" target="_blank">
+                                                                <img src="Images\webIcon.png" alt="icon" class="small-icon">
+                                                            </a>
+                                                        }
+                                                    </td>
+                                                    <td class="min-space">
+                                                        <img src="Images\delete.png" alt="icon" class="small-icon" @onclick="async () => await DeleteRecipeAsync(context)">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fill-space">
+                                                        @context.RecipeCategoryName
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </GridColumn>
                             </Columns>
                         </GridTemplate>

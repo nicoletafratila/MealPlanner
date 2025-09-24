@@ -17,10 +17,9 @@ namespace Identity.Api.Controllers
         public async Task<CommandResponse> LoginAsync(LoginModel model)
         {
             LoginCommand command = new() { Model = model };
-            var response = await mediator.Send(command) as LoginCommandResponse;
-            if (response != null && response.Succeeded)
+            if (await mediator.Send(command) is LoginCommandResponse response && response.Succeeded)
             {
-                var claimObjects = response.Claims.Select(c => new Claim(c.Key, c.Value));
+                var claimObjects = response.Claims?.Select(c => new Claim(c.Key, c.Value));
                 var identity = new ClaimsIdentity(claimObjects, IdentityConstants.ApplicationScheme);
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(

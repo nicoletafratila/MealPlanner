@@ -14,6 +14,8 @@ cand se cauta ceva si nu sunt rezultate, icoana e iar la stanga
 popup de make shopping list e taiat de banner
 
 
+
+
 home page
 click dreapta sa adauge reteta la meniu
 organizeaza pe features

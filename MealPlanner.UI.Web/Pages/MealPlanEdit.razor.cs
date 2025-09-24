@@ -18,8 +18,8 @@ namespace MealPlanner.UI.Web.Pages
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
-        private GridTemplate<RecipeModel>? selectedRecipeGrid = default!;
-        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
+        private GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
+        private readonly string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
 
         [CascadingParameter]
         private IModalService? ModalService { get; set; } = default!;
@@ -96,6 +96,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 MealPlan = await MealPlanService!.GetEditAsync(id);
             }
+            _selectedRecipeGrid = new GridTemplate<RecipeModel>();
         }
 
         private async Task SaveAsync()
@@ -177,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages
                         item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
                         MealPlan.Recipes.Add(item!);
                         MealPlan.Recipes.SetIndexes();
-                        //await selectedRecipeGrid!.RefreshDataAsync();
+                        await _selectedRecipeGrid!.RefreshDataAsync();
                     }
                 }
 
@@ -208,7 +209,7 @@ namespace MealPlanner.UI.Web.Pages
 
                 MealPlan?.Recipes?.Remove(itemToDelete);
                 MealPlan?.Recipes?.SetIndexes();
-               // await selectedRecipeGrid!.RefreshDataAsync();
+                await _selectedRecipeGrid!.RefreshDataAsync();
                 StateHasChanged();
             }
         }
@@ -265,7 +266,7 @@ namespace MealPlanner.UI.Web.Pages
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
             {
-                filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem(nameof(RecipeCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             }
             ;
             var queryParameters = new QueryParameters()

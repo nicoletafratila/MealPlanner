@@ -4,7 +4,7 @@
     {
         public string? Username { get; set; }
         public string? JwtBearer { get; set; }
-        public IList<KeyValuePair<string, string>> Claims { get; set; }
+        public IList<KeyValuePair<string, string>>? Claims { get; set; }
 
         public LoginCommandResponse()
         {
