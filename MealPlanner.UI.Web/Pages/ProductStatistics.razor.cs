@@ -14,7 +14,7 @@ namespace MealPlanner.UI.Web.Pages
         [Parameter]
         public QueryParameters? QueryParameters { get; set; } = new();
 
-        public IList<StatisticModel>? Statistics { get; set; }
+        public IList<StatisticModel>? Statistics { get; set; } = new List<StatisticModel>();
         public PagedList<ProductCategoryModel>? Categories { get; set; }
 
         [Inject]
@@ -40,16 +40,19 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     await item.Chart!.InitializeAsync(item.ChartData!, item.ChartOptions!);
                 }
+                PreloadService.Hide();
             }
-            PreloadService.Hide();
             await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task RefreshAsync()
         {
-            PreloadService.Show(SpinnerColor.Primary);
-            Statistics = new List<StatisticModel>();
             Categories = await CategoryService!.SearchAsync(QueryParameters!);
+            if (Categories != null && Categories.Items != null && Categories.Items.Count > 0)
+            {
+                PreloadService.Show(SpinnerColor.Primary);
+            }
+
             Statistics = await StatisticsService!.GetFavoriteProductsAsync(Categories?.Items!);
             foreach (var item in Statistics!)
             {
