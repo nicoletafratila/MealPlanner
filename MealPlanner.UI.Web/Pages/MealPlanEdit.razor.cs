@@ -5,7 +5,6 @@ using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
-using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
@@ -18,7 +17,7 @@ namespace MealPlanner.UI.Web.Pages
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
-        private GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
+        private Shared.GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
         private readonly string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
 
         [CascadingParameter]
@@ -96,7 +95,7 @@ namespace MealPlanner.UI.Web.Pages
             {
                 MealPlan = await MealPlanService!.GetEditAsync(id);
             }
-            _selectedRecipeGrid = new GridTemplate<RecipeModel>();
+            _selectedRecipeGrid = new Shared.GridTemplate<RecipeModel>();
         }
 
         private async Task SaveAsync()

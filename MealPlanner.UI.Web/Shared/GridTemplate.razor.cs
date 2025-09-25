@@ -15,6 +15,9 @@ namespace MealPlanner.UI.Web.Shared
         public RenderFragment? Columns { get; set; }
 
         [Parameter]
+        public RenderFragment? ChildContent { get; set; }
+
+        [Parameter]
         public string TableGridClass { get; set; } = "table";
 
         [Parameter]
