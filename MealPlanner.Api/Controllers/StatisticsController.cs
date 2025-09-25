@@ -19,10 +19,13 @@ namespace MealPlanner.Api.Controllers
             {
                 Categories = new List<RecipeCategoryModel>()
             };
-            foreach (var item in categories?.Split(",")!)
+            if (categories != null && categories.Count() > 0)
             {
-                var category = item.Split('|');
-                query.Categories?.Add(new RecipeCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
+                foreach (var item in categories?.Split(",")!)
+                {
+                    var category = item.Split('|');
+                    query.Categories?.Add(new RecipeCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
+                }
             }
 
             return await mediator.Send(query);

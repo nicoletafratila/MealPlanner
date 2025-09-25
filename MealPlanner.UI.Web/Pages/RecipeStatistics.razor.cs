@@ -40,8 +40,8 @@ namespace MealPlanner.UI.Web.Pages
                 {
                     await item.Chart!.InitializeAsync(item.ChartData!, item.ChartOptions!);
                 }
-                PreloadService.Hide();
             }
+            PreloadService.Hide();
             await base.OnAfterRenderAsync(firstRender);
         }
 

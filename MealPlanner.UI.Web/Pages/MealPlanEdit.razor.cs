@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Web.Pages
         private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
         private Shared.GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
-        private readonly string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
+        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
 
         [CascadingParameter]
         private IModalService? ModalService { get; set; } = default!;
@@ -148,6 +148,7 @@ namespace MealPlanner.UI.Web.Pages
         private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
             var data = MealPlan!.Recipes == null ? new List<RecipeModel>() : MealPlan.Recipes;
+            _tableGridClass = data!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
             return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = data, TotalCount = data.Count });
         }
 

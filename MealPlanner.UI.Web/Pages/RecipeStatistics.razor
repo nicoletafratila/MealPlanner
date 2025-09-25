@@ -33,7 +33,7 @@
 
         <br />
         
-        @if (Categories != null && Categories.Metadata != null && Categories.Items != null)
+        @if (Categories != null && Categories.Metadata != null && Categories.Items != null && Statistics != null && Statistics.Count() > 0)
         {
             <Pagination ActivePageNumber="@Categories.Metadata.PageNumber"
                         TotalPages="@Categories.Metadata.TotalPages"
