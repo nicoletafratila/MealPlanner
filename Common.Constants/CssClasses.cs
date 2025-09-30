@@ -4,7 +4,7 @@
     {
         public const string GridTemplateEmptyClass = "table table-empty";
         public const string GridTemplateWithItemsClass = "table table-hover table-striped";
-        public const string GridTemplateEmptyHorizontalClass = "table table-grid--center";
+        public const string GridTemplateEmptyHorizontalClass = "table table-grid table-grid--center";
         public const string GridTemplateWithItemsHorizontalClass = "table table-grid";
 
         public const string TableTemplateEmptyClass = "table table-sm caption-top";
