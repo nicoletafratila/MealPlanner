@@ -251,7 +251,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task AddMealPlanAsync()
         {
-            var mealPlanSelectionModal = ModalService?.Show<MealPlanSelection>();
+            var mealPlanSelectionModal = ModalService?.Show<MealPlanSelection>("Select a meal plan");
             var result = await mealPlanSelectionModal!.Result;
 
             if (result.Confirmed && result?.Data != null)
@@ -281,7 +281,7 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task AddRecipeAsync()
         {
-            var recipeSelectionModal = ModalService?.Show<RecipeSelection>();
+            var recipeSelectionModal = ModalService?.Show<RecipeSelection>("Select a recipe");
             var result = await recipeSelectionModal!.Result;
 
             if (result.Confirmed && result?.Data != null)

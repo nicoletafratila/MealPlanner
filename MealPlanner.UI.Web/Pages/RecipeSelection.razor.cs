@@ -55,7 +55,6 @@ namespace MealPlanner.UI.Web.Pages
                 PageNumber = 1
             };
             Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
-            BlazoredModal.SetTitle("Select a recipe");
         }
 
         private async Task SaveAsync()

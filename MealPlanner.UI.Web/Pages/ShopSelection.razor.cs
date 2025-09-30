@@ -26,7 +26,6 @@ namespace MealPlanner.UI.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             Shops = await ShopService!.SearchAsync();
-            BlazoredModal.SetTitle("Select a shop");
         }
 
         private async Task SaveAsync()

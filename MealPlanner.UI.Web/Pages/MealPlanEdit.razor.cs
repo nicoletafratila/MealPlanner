@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Blazored.Modal;
 using Blazored.Modal.Services;
 using Common.Constants;
 using Common.Models;
@@ -219,7 +220,7 @@ namespace MealPlanner.UI.Web.Pages
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var shopSelectionModal = ModalService?.Show<ShopSelection>();
+            var shopSelectionModal = ModalService?.Show<ShopSelection>("Select a shop");
             var result = await shopSelectionModal!.Result;
 
             if (result.Cancelled)

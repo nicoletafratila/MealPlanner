@@ -126,3 +126,11 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.blazored-modal {
+    display: flex !important;
+    vertical-align: central !important;
+    max-height: fit-content !important;
+    max-width: fit-content !important;
+    margin-top: 500px !important;
+}
