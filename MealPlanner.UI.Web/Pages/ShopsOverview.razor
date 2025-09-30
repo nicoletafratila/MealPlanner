@@ -19,7 +19,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="ShopModel" @ref="_shopsGrid" DataProvider="ShopsDataProviderAsync" TableGridClass="@_tableGridClass">
+            <GridTemplate TItem="ShopModel" @ref="_shopsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
                 <Columns>
                     <GridColumn TItem="ShopModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index

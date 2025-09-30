@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
@@ -15,7 +16,7 @@ namespace MealPlanner.UI.Web.Pages
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private GridTemplate<UnitModel>? _unitsGrid = default!;
-        private string _tableGridClass = CssClasses.GridTemplateWithItemsClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -25,6 +26,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
+
+        [Inject]
+        public ISessionStorageService? SessionStorage { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -80,34 +84,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            var request = new GridDataProviderRequest<UnitModel>
+            var request = new GridDataProviderRequest<UnitModel>();
+            var queryParameters = await SessionStorage!.GetItemAsync<QueryParameters<UnitModel>>();
+            if (queryParameters != null)
             {
-                Filters = new List<FilterItem>() { },
-                Sorting = new List<SortingItem<UnitModel>>
+                request = new GridDataProviderRequest<UnitModel>
+                {
+                    Filters = queryParameters.Filters != null ? queryParameters.Filters : new List<FilterItem>(),
+                    Sorting = queryParameters.Sorting != null ? queryParameters.Sorting.Select(QueryParameters<UnitModel>.FromModel).ToList() : new List<SortingItem<UnitModel>>(),
+                    PageNumber = queryParameters.PageNumber,
+                    PageSize = queryParameters.PageSize,
+                };
+            }
+            else
+            {
+                request = new GridDataProviderRequest<UnitModel>
+                {
+                    Filters = new List<FilterItem>() { },
+                    Sorting = new List<SortingItem<UnitModel>>
                         {
                             new SortingItem<UnitModel>("Name", item => item.Name!, SortDirection.Ascending),
                         },
-                PageNumber = 1,
-                PageSize = 10
-            };
-            await UnitsDataProviderAsync(request);
+                    PageNumber = 1,
+                    PageSize = 10
+                };
+            }
+            await DataProviderAsync(request);
         }
 
-        private async Task<GridDataProviderResult<UnitModel>> UnitsDataProviderAsync(GridDataProviderRequest<UnitModel> request)
+        private async Task<GridDataProviderResult<UnitModel>> DataProviderAsync(GridDataProviderRequest<UnitModel> request)
         {
-            string sortString = "";
-            SortDirection sortDirection = SortDirection.None;
-
-            if (request.Sorting is not null && request.Sorting.Any())
-            {
-                sortString = request.Sorting.FirstOrDefault()!.SortString;
-                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
-            }
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<UnitModel>()
             {
                 Filters = request.Filters,
-                SortString = sortString,
-                SortDirection = sortDirection,
+                Sorting = request.Sorting?.Select(x => QueryParameters<UnitModel>.ToModel(x)).ToList(),
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
             };
@@ -117,7 +127,9 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<UnitModel>(new List<UnitModel>(), new Metadata());
             }
-            _tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsClass : CssClasses.GridTemplateEmptyClass;
+            await SessionStorage!.SetItemAsync(queryParameters);
+            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
+            StateHasChanged();
             return new GridDataProviderResult<UnitModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
         }
     }

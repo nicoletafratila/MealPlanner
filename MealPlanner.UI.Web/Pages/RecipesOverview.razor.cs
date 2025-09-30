@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
@@ -15,7 +16,7 @@ namespace MealPlanner.UI.Web.Pages
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private GridTemplate<RecipeModel>? _recipesGrid = default!;
-        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -25,6 +26,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
+
+        [Inject]
+        public ISessionStorageService? SessionStorage { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -80,34 +84,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            var request = new GridDataProviderRequest<RecipeModel>
+            var request = new GridDataProviderRequest<RecipeModel>();
+            var queryParameters = await SessionStorage!.GetItemAsync<QueryParameters<RecipeModel>>();
+            if (queryParameters != null)
             {
-                Filters = new List<FilterItem>() { },
-                Sorting = new List<SortingItem<RecipeModel>>
+                request = new GridDataProviderRequest<RecipeModel>
+                {
+                    Filters = queryParameters.Filters != null ? queryParameters.Filters : new List<FilterItem>(),
+                    Sorting = queryParameters.Sorting != null ? queryParameters.Sorting.Select(QueryParameters<RecipeModel>.FromModel).ToList() : new List<SortingItem<RecipeModel>>(),
+                    PageNumber = queryParameters.PageNumber,
+                    PageSize = queryParameters.PageSize,
+                };
+            }
+            else
+            {
+                request = new GridDataProviderRequest<RecipeModel>
+                {
+                    Filters = new List<FilterItem>() { },
+                    Sorting = new List<SortingItem<RecipeModel>>
                         {
                             new SortingItem<RecipeModel>("Name", item => item.Name!, SortDirection.Ascending),
                         },
-                PageNumber = 1,
-                PageSize = 10
-            };
-            await RecipesDataProviderAsync(request);
+                    PageNumber = 1,
+                    PageSize = 10
+                };
+            }
+            await DataProviderAsync(request);
         }
 
-        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(GridDataProviderRequest<RecipeModel> request)
+        private async Task<GridDataProviderResult<RecipeModel>> DataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
-            string sortString = "";
-            SortDirection sortDirection = SortDirection.None;
-
-            if (request.Sorting is not null && request.Sorting.Any())
-            {
-                sortString = request.Sorting.FirstOrDefault()!.SortString;
-                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
-            }
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<RecipeModel>()
             {
                 Filters = request.Filters,
-                SortString = sortString,
-                SortDirection = sortDirection,
+                Sorting = request.Sorting?.Select(x => QueryParameters<RecipeModel>.ToModel(x)).ToList(),
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
             };
@@ -117,7 +127,9 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<RecipeModel>(new List<RecipeModel>(), new Metadata());
             }
-            _tableGridClass = result!.Items!.Count != 0 ? CssClasses.GridTemplateWithItemsHorizontalClass : CssClasses.GridTemplateEmptyHorizontalClass;
+            await SessionStorage!.SetItemAsync(queryParameters);
+            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyHorizontalClass : CssClasses.GridTemplateWithItemsHorizontalClass;
+            StateHasChanged();
             return new GridDataProviderResult<RecipeModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
         }
     }

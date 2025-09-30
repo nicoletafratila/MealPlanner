@@ -25,7 +25,7 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="ProductModel" @ref="_productsGrid" DataProvider="ProductsDataProviderAsync" TableGridClass="@_tableGridClass">
+            <GridTemplate TItem="ProductModel" @ref="_productsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
                 <Columns>
                     <GridColumn FilterTextboxWidth="600" Style="min-width: 740px;" TItem="ProductModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                         <div class="card-recipe">

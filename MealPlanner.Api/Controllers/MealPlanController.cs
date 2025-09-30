@@ -44,15 +44,14 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<MealPlanModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sortString, [FromQuery] string? sortDirection, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<PagedList<MealPlanModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sorting, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
         {
             SearchQuery query = new()
             {
-                QueryParameters = new QueryParameters()
+                QueryParameters = new QueryParameters<MealPlanModel>()
                 {
                     Filters = !string.IsNullOrWhiteSpace(filters) ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters) : null,
-                    SortString = sortString,
-                    SortDirection = sortDirection == SortDirection.Ascending.ToString() ? SortDirection.Ascending : SortDirection.Descending,
+                    Sorting = !string.IsNullOrWhiteSpace(sorting) ? JsonConvert.DeserializeObject<IEnumerable<SortingModel>>(sorting) : null,
                     PageSize = int.Parse(pageSize!),
                     PageNumber = int.Parse(pageNumber!)
                 }

@@ -34,15 +34,14 @@ namespace MealPlanner.UI.Web.Services
             return await httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/shoppingListProducts/{recipeId}/{shopId}");
         }
 
-        public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters? queryParameters = null)
+        public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null)
         {
             var query = new Dictionary<string, string?>
             {
-                [nameof(QueryParameters.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonConvert.SerializeObject(queryParameters?.Filters),
-                [nameof(QueryParameters.SortString)] = queryParameters == null ? "Name" : queryParameters?.SortString?.ToString(),
-                [nameof(QueryParameters.SortDirection)] = queryParameters == null ? SortDirection.Ascending.ToString() : queryParameters.SortDirection.ToString(),
-                [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
-                [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+                [nameof(QueryParameters<RecipeModel>.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonConvert.SerializeObject(queryParameters?.Filters),
+                [nameof(QueryParameters<RecipeModel>.Sorting)] = queryParameters == null || queryParameters?.Sorting == null ? null : JsonConvert.SerializeObject(queryParameters?.Sorting),
+                [nameof(QueryParameters<RecipeModel>.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
+                [nameof(QueryParameters<RecipeModel>.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);

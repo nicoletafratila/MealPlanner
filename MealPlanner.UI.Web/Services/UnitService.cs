@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
 using Common.Data.DataContext;
@@ -21,15 +20,14 @@ namespace MealPlanner.UI.Web.Services
             return await httpClient.GetFromJsonAsync<UnitEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Unit]}/edit/{id}");
         }
 
-        public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters? queryParameters = null)
+        public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null)
         {
             var query = new Dictionary<string, string?>
             {
-                [nameof(QueryParameters.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonConvert.SerializeObject(queryParameters?.Filters),
-                [nameof(QueryParameters.SortString)] = queryParameters == null ? "Name" : queryParameters?.SortString?.ToString(),
-                [nameof(QueryParameters.SortDirection)] = queryParameters == null ? SortDirection.Ascending.ToString() : queryParameters.SortDirection.ToString(),
-                [nameof(QueryParameters.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
-                [nameof(QueryParameters.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+                [nameof(QueryParameters<UnitModel>.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonConvert.SerializeObject(queryParameters?.Filters),
+                [nameof(QueryParameters<UnitModel>.Sorting)] = queryParameters == null || queryParameters?.Sorting == null ? null : JsonConvert.SerializeObject(queryParameters?.Sorting),
+                [nameof(QueryParameters<UnitModel>.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
+                [nameof(QueryParameters<UnitModel>.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
             };
 
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);

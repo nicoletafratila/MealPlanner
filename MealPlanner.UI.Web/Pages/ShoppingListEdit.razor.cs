@@ -366,13 +366,12 @@ namespace MealPlanner.UI.Web.Pages
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
             {
-                filters.Add(new FilterItem("ProductCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem(nameof(ProductCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<ProductModel>()
             {
                 Filters = filters,
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };

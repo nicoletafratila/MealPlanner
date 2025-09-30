@@ -6,6 +6,6 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.Search
 {
     public class SearchQuery : IRequest<PagedList<ProductCategoryModel>>
     {
-        public QueryParameters? QueryParameters { get; set; }
+        public QueryParameters<ProductCategoryModel>? QueryParameters { get; set; }
     }
 }

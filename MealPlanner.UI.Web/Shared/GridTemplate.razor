@@ -57,15 +57,13 @@
       AllowSorting="true"
       AllowPaging="@AllowPaging"
       AutoHidePaging="true"
-      Class="@TableGridClass"
+      Class="@(!string.IsNullOrEmpty(TableGridClass) ? TableGridClass : "")"
       DataProvider="@DataProvider"
       PageSizeSelectorVisible="true"
       PageSizeSelectorItems="@(new int[] { 5, 10, 20, 50 })"
       Responsive="true"
       FiltersRowCssClass="bg-primary text-white bg-opacity-25"
-      HeaderRowCssClass="@HeaderRowCssClass"
-      GridSettingsChanged="OnGridSettingsChangedAsync"
-      SettingsProvider="GridSettingsProviderAsync">
+      HeaderRowCssClass="@HeaderRowCssClass">
     
     @if (Columns != null)
     {

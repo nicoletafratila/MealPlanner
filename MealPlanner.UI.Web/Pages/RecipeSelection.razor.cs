@@ -47,11 +47,10 @@ namespace MealPlanner.UI.Web.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<RecipeCategoryModel>()
             {
                 Filters = new List<FilterItem>(),
-                SortString = "DisplaySequence",
-                SortDirection = SortDirection.Ascending,
+                Sorting = new List<SortingModel>(),
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
@@ -74,13 +73,13 @@ namespace MealPlanner.UI.Web.Pages
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(value))
             {
-                filters.Add(new FilterItem("RecipeCategoryId", value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
-            };
-            var queryParameters = new QueryParameters()
+                filters.Add(new FilterItem(nameof(RecipeCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            }
+            ;
+            var queryParameters = new QueryParameters<RecipeModel>()
             {
                 Filters = filters,
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };

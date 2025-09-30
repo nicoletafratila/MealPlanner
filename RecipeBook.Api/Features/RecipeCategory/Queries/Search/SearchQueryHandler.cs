@@ -23,9 +23,10 @@ namespace RecipeBook.Api.Features.RecipeCategory.Queries.Search
                     }
                 }
 
-                if (!string.IsNullOrEmpty(request.QueryParameters!.SortString))
+                if (request.QueryParameters!.Sorting != null && request.QueryParameters.Sorting.Any())
                 {
-                    results = results.AsQueryable().OrderByPropertyName(request.QueryParameters.SortString, request.QueryParameters.SortDirection).ToList();
+                    var sortingItems = request.QueryParameters.Sorting.Select(QueryParameters<RecipeCategoryModel>.FromModel).ToList();
+                    results = results.AsQueryable().ApplySorting(sortingItems).ToList();
                 }
 
                 return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);

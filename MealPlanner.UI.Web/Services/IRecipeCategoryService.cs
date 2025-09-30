@@ -7,7 +7,7 @@ namespace MealPlanner.UI.Web.Services
     public interface IRecipeCategoryService
     {
         Task<RecipeCategoryEditModel?> GetEditAsync(int id); 
-        Task<PagedList<RecipeCategoryModel>?> SearchAsync(QueryParameters? queryParameters = null);
+        Task<PagedList<RecipeCategoryModel>?> SearchAsync(QueryParameters<RecipeCategoryModel>? queryParameters = null);
         Task<CommandResponse?> AddAsync(RecipeCategoryEditModel model);
         Task<CommandResponse?> UpdateAsync(RecipeCategoryEditModel model);
         Task<CommandResponse?> UpdateAsync(IList<RecipeCategoryModel> models);

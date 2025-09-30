@@ -6,6 +6,6 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.Search
 { 
     public class SearchQuery : IRequest<PagedList<MealPlanModel>>
     {
-        public QueryParameters? QueryParameters { get; set; }
+        public QueryParameters<MealPlanModel>? QueryParameters { get; set; }
     }
 }

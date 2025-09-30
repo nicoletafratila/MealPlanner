@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Web.Pages
         private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
         private Shared.GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
-        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
 
         [CascadingParameter]
         private IModalService? ModalService { get; set; } = default!;
@@ -76,11 +76,10 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
             };
 
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<RecipeCategoryModel>()
             {
                 Filters = new List<FilterItem>(),
-                SortString = "DisplaySequence",
-                SortDirection = SortDirection.Ascending,
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending } },
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
@@ -269,11 +268,10 @@ namespace MealPlanner.UI.Web.Pages
                 filters.Add(new FilterItem(nameof(RecipeCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             }
             ;
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<RecipeModel>()
             {
                 Filters = filters,
-                SortString = "Name",
-                SortDirection = SortDirection.Ascending,
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
                 PageNumber = 1,
                 PageSize = int.MaxValue,
             };

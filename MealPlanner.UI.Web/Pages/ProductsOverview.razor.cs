@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using MealPlanner.UI.Web.Services;
@@ -15,7 +16,7 @@ namespace MealPlanner.UI.Web.Pages
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private GridTemplate<ProductModel>? _productsGrid = default!;
-        private string _tableGridClass = CssClasses.GridTemplateWithItemsHorizontalClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -25,6 +26,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
+
+        [Inject]
+        public ISessionStorageService? SessionStorage { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -80,34 +84,40 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task RefreshAsync()
         {
-            var request = new GridDataProviderRequest<ProductModel>
+            var request = new GridDataProviderRequest<ProductModel>();
+            var queryParameters = await SessionStorage!.GetItemAsync<QueryParameters<ProductModel>>();
+            if (queryParameters != null)
             {
-                Filters = new List<FilterItem>() { },
-                Sorting = new List<SortingItem<ProductModel>>
+                request = new GridDataProviderRequest<ProductModel>
+                {
+                    Filters = queryParameters.Filters != null ? queryParameters.Filters : new List<FilterItem>(),
+                    Sorting = queryParameters.Sorting != null ? queryParameters.Sorting.Select(QueryParameters<ProductModel>.FromModel).ToList() : new List<SortingItem<ProductModel>>(),
+                    PageNumber = queryParameters.PageNumber,
+                    PageSize = queryParameters.PageSize,
+                };
+            }
+            else
+            {
+                request = new GridDataProviderRequest<ProductModel>
+                {
+                    Filters = new List<FilterItem>() { },
+                    Sorting = new List<SortingItem<ProductModel>>
                         {
                             new SortingItem<ProductModel>("Name", item => item.Name!, SortDirection.Ascending),
                         },
-                PageNumber = 1,
-                PageSize = 10
-            };
-            await ProductsDataProviderAsync(request);
+                    PageNumber = 1,
+                    PageSize = 10
+                };
+            }
+            await DataProviderAsync(request);
         }
 
-        private async Task<GridDataProviderResult<ProductModel>> ProductsDataProviderAsync(GridDataProviderRequest<ProductModel> request)
+        private async Task<GridDataProviderResult<ProductModel>> DataProviderAsync(GridDataProviderRequest<ProductModel> request)
         {
-            string sortString = "";
-            SortDirection sortDirection = SortDirection.None;
-
-            if (request.Sorting is not null && request.Sorting.Any())
-            {
-                sortString = request.Sorting.FirstOrDefault()!.SortString;
-                sortDirection = request.Sorting.FirstOrDefault()!.SortDirection;
-            }
-            var queryParameters = new QueryParameters()
+            var queryParameters = new QueryParameters<ProductModel>()
             {
                 Filters = request.Filters,
-                SortString = sortString,
-                SortDirection = sortDirection,
+                Sorting = request.Sorting?.Select(x => QueryParameters<ProductModel>.ToModel(x)).ToList(),
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
             };
@@ -117,7 +127,9 @@ namespace MealPlanner.UI.Web.Pages
             {
                 result = new PagedList<ProductModel>(new List<ProductModel>(), new Metadata());
             }
-            _tableGridClass = result!.Items!.Any() ? CssClasses.GridTemplateWithItemsHorizontalClass : CssClasses.GridTemplateEmptyHorizontalClass;
+            await SessionStorage!.SetItemAsync(queryParameters);
+            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyHorizontalClass : CssClasses.GridTemplateWithItemsHorizontalClass;
+            StateHasChanged();
             return new GridDataProviderResult<ProductModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
         }
     }

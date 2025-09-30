@@ -1,10 +1,11 @@
 ﻿using BlazorBootstrap;
-using Common.Pagination;
+using Blazored.SessionStorage;
 using Common.Models;
+using Common.Pagination;
 using MealPlanner.UI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MealPlanner.UI.Web.Pages
 {
@@ -12,7 +13,7 @@ namespace MealPlanner.UI.Web.Pages
     public partial class RecipeStatistics
     {
         [Parameter]
-        public QueryParameters? QueryParameters { get; set; } = new();
+        public QueryParameters<RecipeCategoryModel>? QueryParameters { get; set; } = new();
 
         public IList<StatisticModel>? Statistics { get; set; } = new List<StatisticModel>();
         public PagedList<RecipeCategoryModel>? Categories { get; set; }
@@ -25,6 +26,9 @@ namespace MealPlanner.UI.Web.Pages
 
         [Inject]
         protected PreloadService PreloadService { get; set; } = default!;
+
+        [Inject]
+        public ISessionStorageService? SessionStorage { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
