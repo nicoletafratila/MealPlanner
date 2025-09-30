@@ -39,8 +39,8 @@ namespace Common.Pagination
             var memberAccess = Expression.MakeMemberAccess(parameter, property);
 
             Expression body = property.PropertyType.IsValueType
-                ? Expression.Convert(memberAccess, typeof(object))
-                : (Expression)memberAccess;
+                            ? Expression.Convert(memberAccess, typeof(IComparable))
+                            : (Expression)memberAccess;
 
             var lambda = Expression.Lambda<Func<TItem, IComparable>>(body, parameter);
 

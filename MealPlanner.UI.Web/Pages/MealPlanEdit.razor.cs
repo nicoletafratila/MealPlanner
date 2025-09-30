@@ -147,7 +147,8 @@ namespace MealPlanner.UI.Web.Pages
         private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
             var data = MealPlan!.Recipes == null ? new List<RecipeModel>() : MealPlan.Recipes;
-            _tableGridClass = data!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
+            _tableGridClass = data!.Count == 0 ? CssClasses.GridTemplateEmptyHorizontalClass : CssClasses.GridTemplateWithItemsHorizontalClass;
+            StateHasChanged();
             return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = data, TotalCount = data.Count });
         }
 
