@@ -105,7 +105,7 @@ namespace MealPlanner.UI.Web.Pages
             var queryParameters = new QueryParameters<RecipeCategoryModel>()
             {
                 Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending } },
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
