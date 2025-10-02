@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
-using Common.Data.Entities;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;

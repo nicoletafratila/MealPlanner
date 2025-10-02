@@ -32,11 +32,18 @@
                         <label for="Shop" class="col-sm-3">Shop: </label>
                         <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
                             <option selected value="0">Choose...</option>
-                            @if (Shops != null && Shops.Items != null && Shops.Items.Any())
+                            @if (Shops?.Items != null && Shops.Items.Any())
                             {
-                                @foreach (var item in Shops.Items!)
+                                @foreach (var item in Shops.Items)
                                 {
-                                    <option value="@item.Id">@item.Name</option>
+                                    if (item.Id == ShoppingList.ShopId)
+                                    {
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
                                 }
                             }
                         </select>

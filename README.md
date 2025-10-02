@@ -10,7 +10,6 @@ PM> Script-migration
 
 
 
-select shop when edit shopping list
 align when adding reciped to menu
 
 
