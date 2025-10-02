@@ -1,6 +1,31 @@
 ﻿@inherits LayoutComponentBase
 @using MudBlazor
 
+<style>
+    .login-cell,
+    .contact-cell,
+    .about-cell {
+        width: 1%;
+        white-space: nowrap;
+        padding: 0; 
+        text-align: end;
+        vertical-align: middle;
+        align-content: flex-end;
+    }
+
+        .contact-cell a,
+        .about-cell a {
+            display: inline-block;
+            padding-left: 0.5em; 
+        }
+
+    .motto-text {
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-align: left;
+    }
+</style>
+
 <PageTitle>Meal planner</PageTitle>
 
 <MudContainer Class="page-container">
@@ -9,7 +34,7 @@
     </MudPaper>
 
     <div class="banner-container">
-        <table style="width: -webkit-fill-available">
+        <table>
             <tr>
                 <td class="image-column">
                     <img src="Images\logo.jpg" alt="Logo Image" class="logo-image" />
@@ -17,28 +42,24 @@
                 <td>
                     <p class="logo-text">Recipes & Meal planner</p>
                 </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <p class="motto-text">
-                        Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!
-                        @*
-                        Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!
-                        Savor the Simplicity: Your Ultimate Menu and Recipe Organizer!
-                        "Culinary Harmony: Your Go-To Menu and Recipe Organizer!"
-                        "Tastefully Organized: Simplify Your Cooking Journey!"
-                        "Recipe Bliss: Your Personal Menu and Recipe Keeper!"
-                        "Cook Smart, Eat Well: Your Menu and Recipe Assistant!"
-                        *@
-                    </p>
+                    <p class="motto-text">Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!</p>
                 </td>
-                <td style="align-content: flex-end; width:120px;">
+                <td class="login-cell">
                     <LoginDisplay />
                 </td>
-                <td style="align-content: flex-end; width:90px;">
+                <td class="contact-cell">
                     <a href="contactus/">Contact us</a>
                 </td>
-                <td style="align-content: flex-end; width:90px;">
+                <td class="about-cell">
                     <a href="https://linkedin.com/in/claudia-nicoleta-fratila" target="_blank">About me</a>
                 </td>
             </tr>
