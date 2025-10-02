@@ -30,22 +30,6 @@ namespace MealPlanner.UI.Web.Pages
         public string? Id { get; set; }
         public MealPlanEditModel? MealPlan { get; set; }
 
-        private string? _recipeCategoryId;
-        public string? RecipeCategoryId
-        {
-            get
-            {
-                return _recipeCategoryId;
-            }
-            set
-            {
-                if (_recipeCategoryId != value)
-                {
-                    _recipeCategoryId = value;
-                    OnRecipeCategoryChangedAsync(_recipeCategoryId!);
-                }
-            }
-        }
         public PagedList<RecipeCategoryModel>? Categories { get; set; }
 
         public string? RecipeId { get; set; }
@@ -258,15 +242,15 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo("/mealplansoverview");
         }
 
-        private async Task OnRecipeCategoryChangedAsync(string? value)
+        private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)
         {
-            RecipeCategoryId = value;
+            var recipeCategoryId = e.Value?.ToString();
             RecipeId = string.Empty;
 
             var filters = new List<FilterItem>();
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new FilterItem(nameof(RecipeCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem("RecipeCategoryId", recipeCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             }
             ;
             var queryParameters = new QueryParameters<RecipeModel>()

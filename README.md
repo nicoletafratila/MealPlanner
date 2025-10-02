@@ -9,8 +9,11 @@ PM> Script-migration
 
 
 
-Unhandled exception in circuit '"YGrK4So4P6kcWM9nh-3Lxh8JdA1lnxK3e8UUaG8PQ4A"'.	Unhandled exception in circuit '{CircuitId}'.
-selectie dintr-o list si load la copii
+
+select shop when edit shopping list
+align when adding reciped to menu
+
+
 
 
 user management

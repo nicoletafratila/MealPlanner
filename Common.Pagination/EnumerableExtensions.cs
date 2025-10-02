@@ -5,7 +5,7 @@ namespace Common.Pagination
 {
     public static class EnumerableExtensions
     {
-        public static IQueryable<TItem> ApplySorting<TItem>(this IQueryable<TItem> source, IEnumerable<SortingItem<TItem>> sortingItems)
+        public static IQueryable<TItem>? ApplySorting<TItem>(this IQueryable<TItem> source, IEnumerable<SortingItem<TItem>> sortingItems)
         {
             bool firstSort = true;
             foreach (var sort in sortingItems)

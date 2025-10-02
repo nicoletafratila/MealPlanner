@@ -7,5 +7,6 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
     {
         public int RecipeId { get; set; }
         public int ShopId { get; set; }
+        public string? AuthToken { get; set; }
     }
 }

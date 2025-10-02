@@ -60,7 +60,7 @@
 
                     <div class="form-group mt-3">
                         <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
-                        <InputSelect id="ingredientCategory" class="form-select" @bind-Value="@ProductCategoryId">
+                        <select id="ingredientCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
                             <option selected value="0">Choose...</option>
                             @if (ProductCategories != null && ProductCategories.Items != null && ProductCategories.Items.Any())
                             {
@@ -69,12 +69,12 @@
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             }
-                        </InputSelect>
+                        </select>
                     </div>
 
                     <div class="form-group mt-3">
                         <label for="ingredient" class="col-sm-3">Ingredient: </label>
-                        <InputSelect id="ingredient" class="form-select" @bind-Value="@ProductId">
+                        <select id="ingredient" class="form-select" @onchange="OnProductChangedAsync">
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {
@@ -83,7 +83,7 @@
                                     <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
                                 }
                             }
-                        </InputSelect>
+                        </select>
                     </div>
 
                     <div class="form-group mt-3">

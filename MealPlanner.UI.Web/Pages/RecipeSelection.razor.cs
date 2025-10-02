@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using BlazorBootstrap;
+﻿using BlazorBootstrap;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Common.Pagination;
@@ -16,27 +15,9 @@ namespace MealPlanner.UI.Web.Pages
         [CascadingParameter]
         private BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-        private string? _recipeCategoryId;
-        public string? RecipeCategoryId
-        {
-            get
-            {
-                return _recipeCategoryId;
-            }
-            set
-            {
-                if (_recipeCategoryId != value)
-                {
-                    _recipeCategoryId = value;
-                    OnRecipeCategoryChangedAsync(_recipeCategoryId!);
-                }
-            }
-        }
         public PagedList<RecipeCategoryModel>? Categories { get; set; }
 
-        [Required]
         public string? RecipeId { get; set; }
-
         public PagedList<RecipeModel>? Recipes { get; set; }
 
         [Inject]
@@ -67,12 +48,15 @@ namespace MealPlanner.UI.Web.Pages
             await BlazoredModal.CancelAsync();
         }
 
-        private async Task OnRecipeCategoryChangedAsync(string? value)
+        private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)
         {
+            var recipeCategoryId = e.Value?.ToString();
+            RecipeId = string.Empty;
+
             var filters = new List<FilterItem>();
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new FilterItem(nameof(RecipeCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem("RecipeCategoryId", recipeCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             }
             ;
             var queryParameters = new QueryParameters<RecipeModel>()
@@ -83,9 +67,6 @@ namespace MealPlanner.UI.Web.Pages
                 PageNumber = 1
             };
             Recipes = await RecipeService!.SearchAsync(queryParameters);
-
-            RecipeCategoryId = value;
-            RecipeId = string.Empty;
             StateHasChanged();
         }
     }

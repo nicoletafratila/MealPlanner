@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
 using Blazored.Modal.Services;
+using Common.Data.Entities;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
@@ -30,60 +31,11 @@ namespace MealPlanner.UI.Web.Pages
         public string? Id { get; set; }
         public ShoppingListEditModel? ShoppingList { get; set; }
 
-        private string? _productCategoryId;
-        public string? ProductCategoryId
-        {
-            get
-            {
-                return _productCategoryId;
-            }
-            set
-            {
-                if (_productCategoryId != value)
-                {
-                    _productCategoryId = value;
-                    OnProductCategoryChangedAsync(_productCategoryId!);
-                }
-            }
-        }
-        public PagedList<ProductCategoryModel>? ProductCategories { get; set; }
+        public PagedList<ProductCategoryModel>? Categories { get; set; }
 
-        private string? _productId;
-        public string? ProductId
-        {
-            get
-            {
-                return _productId;
-            }
-            set
-            {
-                if (_productId != value)
-                {
-                    _productId = value;
-                    Quantity = string.Empty;
-                    UnitId = string.Empty;
-                    OnProductChangedAsync(_productId!);
-                }
-            }
-        }
+        public string? ProductId { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
 
-        private string? _shopId;
-        public string? ShopId
-        {
-            get
-            {
-                return _shopId;
-            }
-            set
-            {
-                if (_shopId != value)
-                {
-                    _shopId = value;
-                    OnShopChangedAsync(value!);
-                }
-            }
-        }
         public PagedList<ShopModel>? Shops { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
@@ -130,8 +82,15 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Shopping list", IsCurrentPage = true },
             };
 
+            var queryParametersProduct = new QueryParameters<ProductCategoryModel>()
+            {
+                Filters = new List<FilterItem>(),
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Categories = await ProductCategoryService!.SearchAsync(queryParametersProduct);
             Shops = await ShopService!.SearchAsync();
-            ProductCategories = await ProductCategoryService!.SearchAsync();
             BaseUnits = await UnitService!.SearchAsync();
 
             _ = int.TryParse(Id, out int id);
@@ -143,7 +102,7 @@ namespace MealPlanner.UI.Web.Pages
             else
             {
                 ShoppingList = await ShoppingListService!.GetEditAsync(id);
-                ShopId = ShoppingList!.ShopId.ToString();
+                await OnShopChangedAsync(new ChangeEventArgs() { Value = ShoppingList!.ShopId });
             }
         }
 
@@ -244,8 +203,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(ShopId) &&
-                       ShopId != "0";
+                return ShoppingList!.ShopId != 0;
             }
         }
 
@@ -274,8 +232,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(ShopId) &&
-                       ShopId != "0";
+                return ShoppingList!.ShopId != 0;
             }
         }
 
@@ -361,13 +318,15 @@ namespace MealPlanner.UI.Web.Pages
             }
         }
 
-        private async Task OnProductCategoryChangedAsync(string value)
+        private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
+            var productCategoryId = e.Value?.ToString();
             var filters = new List<FilterItem>();
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem(nameof(ProductCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
-            };
+                filters.Add(new FilterItem("ProductCategoryId", productCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            }
+            ;
             var queryParameters = new QueryParameters<ProductModel>()
             {
                 Filters = filters,
@@ -377,18 +336,19 @@ namespace MealPlanner.UI.Web.Pages
             };
             Products = await ProductService!.SearchAsync(queryParameters);
 
-            ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
             StateHasChanged();
         }
 
-        private async Task OnProductChangedAsync(string value)
+        private async Task OnProductChangedAsync(ChangeEventArgs e)
         {
+            var productId = e.Value?.ToString();
+            ProductId = productId;
             Quantity = string.Empty;
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(productId))
             {
-                var product = await ProductService!.GetEditAsync(int.Parse(value));
+                var product = await ProductService!.GetEditAsync(int.Parse(productId));
                 if (product != null)
                 {
                     var baseUnit = BaseUnits!.Items!.FirstOrDefault(x => x.Id == product.BaseUnitId);
@@ -398,28 +358,26 @@ namespace MealPlanner.UI.Web.Pages
             StateHasChanged();
         }
 
-        private async Task OnShopChangedAsync(string value)
+        private async Task OnShopChangedAsync(ChangeEventArgs e)
         {
-            if (value == "0")
+            var shopId = 0;
+            if (int.TryParse(e.Value?.ToString(), out shopId))
             {
-                _shop = null;
-                return;
-            }
+                ShoppingList!.ShopId = shopId;
+                _shop = await ShopService!.GetEditAsync(ShoppingList!.ShopId);
 
-            ShoppingList!.ShopId = int.Parse(value);
-            _shop = await ShopService!.GetEditAsync(ShoppingList!.ShopId);
-
-            if (ShoppingList.Products != null && ShoppingList.Products.Any())
-            {
-                foreach (var item in ShoppingList.Products)
+                if (ShoppingList.Products != null && ShoppingList.Products.Any())
                 {
-                    var displaySequence = _shop?.GetDisplaySequence(item.Product?.ProductCategory?.Id)!;
-                    item.DisplaySequence = displaySequence != null ? displaySequence.Value : 1;
+                    foreach (var item in ShoppingList.Products)
+                    {
+                        var displaySequence = _shop?.GetDisplaySequence(item.Product?.ProductCategory?.Id)!;
+                        item.DisplaySequence = displaySequence != null ? displaySequence.Value : 1;
+                    }
+                    ShoppingList.Products = ShoppingList.Products.OrderBy(item => item.Collected)
+                                                                 .ThenBy(item => item.DisplaySequence)
+                                                                 .ThenBy(item => item.Product?.Name).ToList();
+                    StateHasChanged();
                 }
-                ShoppingList.Products = ShoppingList.Products.OrderBy(item => item.Collected)
-                                                             .ThenBy(item => item.DisplaySequence)
-                                                             .ThenBy(item => item.Product?.Name).ToList();
-                StateHasChanged();
             }
         }
 

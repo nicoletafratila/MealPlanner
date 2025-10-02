@@ -26,42 +26,9 @@ namespace MealPlanner.UI.Web.Pages
 
         public PagedList<RecipeCategoryModel>? RecipeCategories { get; set; }
 
-        private string? _productCategoryId;
-        public string? ProductCategoryId
-        {
-            get
-            {
-                return _productCategoryId;
-            }
-            set
-            {
-                if (_productCategoryId != value)
-                {
-                    _productCategoryId = value;
-                    OnProductCategoryChangedAsync(_productCategoryId!);
-                }
-            }
-        }
         public PagedList<ProductCategoryModel>? ProductCategories { get; set; }
 
-        private string? _productId;
-        public string? ProductId
-        {
-            get
-            {
-                return _productId;
-            }
-            set
-            {
-                if (_productId != value)
-                {
-                    _productId = value;
-                    Quantity = string.Empty;
-                    UnitId = string.Empty;
-                    OnProductChangedAsync(_productId!);
-                }
-            }
-        }
+        public string? ProductId { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
@@ -102,15 +69,23 @@ namespace MealPlanner.UI.Web.Pages
                 new BreadcrumbItem{ Text = "Recipe", IsCurrentPage = true },
             };
 
-            var queryParameters = new QueryParameters<RecipeCategoryModel>()
+            var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>()
+            {
+                Filters = new List<FilterItem>(),
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending } },
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            RecipeCategories = await RecipeCategoryService!.SearchAsync(queryParametersRecipe);
+
+            var queryParametersProduct = new QueryParameters<ProductCategoryModel>()
             {
                 Filters = new List<FilterItem>(),
                 Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            RecipeCategories = await RecipeCategoryService!.SearchAsync(queryParameters);
-            ProductCategories = await ProductCategoryService!.SearchAsync();
+            ProductCategories = await ProductCategoryService!.SearchAsync(queryParametersProduct);
             BaseUnits = await UnitService!.SearchAsync();
 
             _ = int.TryParse(Id, out var id);
@@ -175,7 +150,6 @@ namespace MealPlanner.UI.Web.Pages
         {
             get
             {
-
                 return !string.IsNullOrWhiteSpace(ProductId) &&
                        ProductId != "0" &&
                        UnitId != "0" &&
@@ -257,12 +231,13 @@ namespace MealPlanner.UI.Web.Pages
             NavigationManager?.NavigateTo("/recipesoverview");
         }
 
-        private async Task OnProductCategoryChangedAsync(string value)
+        private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
+            var productCategoryId = e.Value?.ToString();
             var filters = new List<FilterItem>();
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem(nameof(ProductCategoryId), value, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem("ProductCategoryId", productCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
             };
 
             var queryParameters = new QueryParameters<ProductModel>()
@@ -274,18 +249,19 @@ namespace MealPlanner.UI.Web.Pages
             };
             Products = await ProductService!.SearchAsync(queryParameters);
 
-            ProductCategoryId = value;
             ProductId = string.Empty;
             Quantity = string.Empty;
             StateHasChanged();
         }
 
-        private async Task OnProductChangedAsync(string value)
+        private async Task OnProductChangedAsync(ChangeEventArgs e)
         {
+            var productId = e.Value?.ToString();
+            ProductId = productId;
             Quantity = string.Empty;
-            if (!string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(productId))
             {
-                var product = await ProductService!.GetEditAsync(int.Parse(value));
+                var product = await ProductService!.GetEditAsync(int.Parse(productId));
                 if (product != null)
                 {
                     var baseUnit = BaseUnits!.Items!.FirstOrDefault(x => x.Id == product.BaseUnitId);

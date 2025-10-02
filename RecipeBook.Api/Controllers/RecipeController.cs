@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Api;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
@@ -49,7 +50,8 @@ namespace RecipeBook.Api.Controllers
             GetShoppingListProductsQuery query = new()
             {
                 RecipeId = recipeId,
-                ShopId = shopId
+                ShopId = shopId,
+                AuthToken = HttpClientExtensions.CleanToken(Request.Headers["Authorization"].FirstOrDefault())
             };
             return await mediator.Send(query);
         }
@@ -95,7 +97,8 @@ namespace RecipeBook.Api.Controllers
         {
             DeleteCommand command = new()
             {
-                Id = id
+                Id = id,
+                AuthToken = HttpClientExtensions.CleanToken(Request.Headers["Authorization"].FirstOrDefault())
             };
             return await mediator.Send(command);
         }

@@ -1,6 +1,6 @@
 ﻿using Blazored.SessionStorage;
 
-namespace MealPlanner.UI.Web
+namespace Common.Api
 {
     public class TokenProvider(ISessionStorageService sessionStorage)
     {

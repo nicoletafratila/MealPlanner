@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Blazored.SessionStorage;
 using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Repository;
@@ -46,7 +47,8 @@ namespace Common.Api
                 c.AddProfile<ApplicationUserProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
-
+            
+            services.AddScoped<TokenProvider>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
             services.AddSingleton<RecipeBookApiConfig>();
@@ -57,6 +59,7 @@ namespace Common.Api
             RegisterServices(services);
 
             services.AddControllersWithViews();
+            services.AddBlazoredSessionStorage();
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
     }

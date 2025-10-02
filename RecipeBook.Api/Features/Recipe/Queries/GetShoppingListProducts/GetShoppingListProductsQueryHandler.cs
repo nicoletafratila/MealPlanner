@@ -26,6 +26,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
                 var shop = new ShopEditModel();
                 using (var client = new HttpClient())
                 {
+                    client.EnsureAuthorizationHeader(request.AuthToken);
                     client.BaseAddress = _mealPlannerApiConfig?.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

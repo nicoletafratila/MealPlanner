@@ -30,7 +30,7 @@
 
                     <div class="form-group mt-3">
                         <label for="Shop" class="col-sm-3">Shop: </label>
-                        <InputSelect id="Shop" class="form-select" @bind-Value="@ShopId">
+                        <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
                             <option selected value="0">Choose...</option>
                             @if (Shops != null && Shops.Items != null && Shops.Items.Any())
                             {
@@ -39,26 +39,26 @@
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             }
-                        </InputSelect>
+                        </select>
                     </div>
 
                     <div class="form-group mt-3">
                         <label for="ProductCategory" class="col-sm-3">Product category: </label>
-                        <InputSelect id="ProductCategory" class="form-select" @bind-Value="@ProductCategoryId">
+                        <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
                             <option selected value="0">Choose...</option>
-                            @if (ProductCategories != null && ProductCategories.Items != null && ProductCategories.Items.Any())
+                            @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                             {
-                                @foreach (var item in ProductCategories.Items)
+                                @foreach (var item in Categories.Items)
                                 {
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             }
-                        </InputSelect>
+                        </select>
                     </div>
 
                     <div class="form-group mt-3">
                         <label for="Product" class="col-sm-3">Product: </label>
-                        <InputSelect id="Product" class="form-select" @bind-Value="@ProductId">
+                        <select id="Product" class="form-select" @onchange="OnProductChangedAsync">
                             <option selected value="0">Choose...</option>
                             @if (Products != null && Products!.Items!.Any())
                             {
@@ -67,7 +67,7 @@
                                     <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
                                 }
                             }
-                        </InputSelect>
+                        </select>
                     </div>
 
                     <div class="form-group mt-3">

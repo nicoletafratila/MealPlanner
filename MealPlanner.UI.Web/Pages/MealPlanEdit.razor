@@ -48,7 +48,7 @@
 
                     <div class="form-group mt-3">
                         <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
-                        <InputSelect id="recipeCategory" class="form-select" @bind-Value="@RecipeCategoryId">
+                        <select id="recipeCategory" class="form-select" @onchange="OnRecipeCategoryChangedAsync">
                             <option selected value="0">Choose...</option>
                             @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                             {
@@ -57,7 +57,7 @@
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             }
-                        </InputSelect>
+                        </select>
                     </div>
 
                     <div class="form-group mt-3">

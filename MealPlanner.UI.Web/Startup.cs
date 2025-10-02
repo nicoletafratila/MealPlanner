@@ -1,5 +1,4 @@
 ﻿using Blazored.Modal;
-using Blazored.SessionStorage;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,8 +12,6 @@ namespace MealPlanner.UI.Web
     {
         protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddScoped<TokenProvider>();
-
             services.AddHttpClient<IAuthenticationService, AuthenticationService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
@@ -113,7 +110,6 @@ namespace MealPlanner.UI.Web
             builder.Services.AddServerSideBlazor();
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazorBootstrap();
-            builder.Services.AddBlazoredSessionStorage();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
         }

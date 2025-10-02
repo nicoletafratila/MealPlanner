@@ -25,6 +25,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
 
                 using (var client = new HttpClient())
                 {
+                    client.EnsureAuthorizationHeader(request.AuthToken);
                     client.BaseAddress = mealPlannerApiConfig?.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
