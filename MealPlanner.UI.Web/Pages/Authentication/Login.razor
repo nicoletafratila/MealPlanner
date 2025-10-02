@@ -1,7 +1,48 @@
 ﻿@page "/authentication/login"
 
-<EditForm Model="LoginModel" OnValidSubmit="OnLoginAsync">
-    <InputText @bind-Value="LoginModel.Username" placeholder="Username" />
-    <InputText @bind-Value="LoginModel.Password" type="password" placeholder="Password" />
-    <button type="submit">Login</button>
-</EditForm>
+<style>
+    .login-background {
+        background-image: url('images/loginbackground.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2030px;
+        height: 800px;
+        text-align: center;
+    }
+
+    .login-form {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        align-content: center;
+        text-align: left;
+        max-width: 400px;
+        margin: 3rem auto;
+    }
+</style>
+
+<div class="login-background">
+    <EditForm Model="LoginModel" OnValidSubmit="OnLoginAsync" class="login-form">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="username" class="col-sm-3">Username: </label>
+            <InputText id="username" class="form-control" @bind-Value="@LoginModel.Username" placeholder="Username"></InputText>
+            <ValidationMessage For="@(() => LoginModel.Username)" />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="password" class="col-sm-3">Password: </label>
+            <PasswordInput id="password" class="form-control" @bind-Value="@LoginModel.Password" placeholder="Password"></PasswordInput>
+            <ValidationMessage For="@(() => LoginModel.Password)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 15px;">Login</button>
+    </EditForm>
+</div>

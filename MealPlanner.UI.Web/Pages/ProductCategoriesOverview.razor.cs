@@ -34,7 +34,7 @@ namespace MealPlanner.UI.Web.Pages
         {
             _navItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Home", Href ="/" }
+                 new BreadcrumbItem{ Text = "Home", Href ="recipesoverview" }
             };
             await RefreshAsync();
         }

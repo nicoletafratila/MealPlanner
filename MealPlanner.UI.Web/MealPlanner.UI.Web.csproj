@@ -22,10 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Index.razor.cs" />
     <Compile Remove="Shared\Pagination.razor.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Index.razor" />
     <Content Remove="Shared\Pagination.razor" />
   </ItemGroup>
 

@@ -13,8 +13,6 @@ PM> Script-migration
 
 
 user management
-home page
-click dreapta sa adauge reteta la meniu
 organizeaza pe features
 swagger
 pagini in foldere
