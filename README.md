@@ -10,9 +10,6 @@ PM> Script-migration
 
 
 
-align when adding reciped to menu
-
-
 
 
 user management

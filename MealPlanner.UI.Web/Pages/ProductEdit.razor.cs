@@ -46,7 +46,15 @@ namespace MealPlanner.UI.Web.Pages
             };
 
             Units = await UnitService!.SearchAsync();
-            Categories = await CategoryService!.SearchAsync();
+
+            var queryParameters = new QueryParameters<ProductCategoryModel>()
+            {
+                Filters = new List<FilterItem>(),
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Categories = await CategoryService!.SearchAsync(queryParameters);
 
             _ = int.TryParse(Id, out var id);
             if (id == 0)
