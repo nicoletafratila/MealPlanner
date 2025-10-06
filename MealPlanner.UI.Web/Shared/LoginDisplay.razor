@@ -26,9 +26,7 @@
     <Authorized>
         <div class="profile-actions">
             <a href="authentication/profile">Hello, @context.User!.Identity!.Name!</a>
-            <form method="post" action="authentication/logout" style="display: inline;">
-                <button type="submit" class="nav-link btn btn-link">Log out</button>
-            </form>
+            <button class="nav-link btn btn-link" @onclick="LogoutAsync">Log out</button>
         </div>
     </Authorized>
     <NotAuthorized>

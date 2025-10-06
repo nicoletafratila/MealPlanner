@@ -7,5 +7,6 @@ namespace MealPlanner.UI.Web.Services
     {
         Task<CommandResponse> LoginAsync(LoginModel model);
         Task<CommandResponse> RegisterAsync(RegistrationModel model);
+        Task<CommandResponse> LogoutAsync();
     }
 }

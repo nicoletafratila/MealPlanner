@@ -6,12 +6,17 @@ namespace Common.Api
     {
         public async Task<string> GetTokenAsync()
         {
-            return await sessionStorage.GetItemAsync<string>(Common.Constants.MealPlanner.AuthToken);
+            return await sessionStorage.GetItemAsync<string>(Constants.MealPlanner.AuthToken);
         }
 
         public async Task SetTokenAsync(string token)
         {
-            await sessionStorage.SetItemAsync(Common.Constants.MealPlanner.AuthToken, token);
+            await sessionStorage.SetItemAsync(Constants.MealPlanner.AuthToken, token);
+        }
+
+        public async Task RemoveTokenAsync()
+        {
+            await sessionStorage.RemoveItemAsync(Constants.MealPlanner.AuthToken);
         }
     }
 }

@@ -31,21 +31,5 @@ namespace MealPlanner.UI.Web.Pages.Authentication
                 MessageComponent?.ShowError(result!.Message!);
             }
         }
-
-        //[HttpPost]
-        //public IActionResult Logout()
-        //{
-        //    Response.Cookies.Append(
-        //        "access_token", "",
-        //        new CookieOptions
-        //        {
-        //            Expires = DateTimeOffset.UtcNow.AddDays(-1),
-        //            HttpOnly = true,
-        //            Secure = true,
-        //            SameSite = SameSiteMode.Strict
-        //        }
-        //    );
-        //    return Ok();
-        //}
     }
 }

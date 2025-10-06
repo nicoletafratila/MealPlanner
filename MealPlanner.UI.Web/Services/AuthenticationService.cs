@@ -37,6 +37,29 @@ namespace MealPlanner.UI.Web.Services
             }
         }
 
+        public async Task<CommandResponse> LogoutAsync()
+        {
+            var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/logout", new StringContent(string.Empty));
+            if (response.IsSuccessStatusCode)
+            {
+                var logoutResponse = await response.Content.ReadFromJsonAsync<CommandResponse>();
+                if (logoutResponse != null && logoutResponse.Succeeded)
+                {
+                    await tokenProvider.RemoveTokenAsync();
+                    return logoutResponse;
+                }
+                else
+                {
+                    return CommandResponse.Failed(logoutResponse?.Message ?? "Logout failed.");
+                }
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                return CommandResponse.Failed(error);
+            }
+        }
+
         public Task<CommandResponse> RegisterAsync(RegistrationModel model)
         {
             throw new NotImplementedException();

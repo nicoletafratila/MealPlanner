@@ -47,12 +47,6 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             }
         }
 
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await _signInManager.SignOutAsync(); // Removes/invalidate the cookie
-        //    return Ok(new { message = "Logout successful." });
-        //}
-
         private string GenerateJwtToken(IList<Claim> claims)
         {
             var expiration = DateTimeOffset.UtcNow.AddHours(1);

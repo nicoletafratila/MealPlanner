@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
+using Identity.Api.Features.Authentication.Commands.Logout;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -34,6 +35,13 @@ namespace Identity.Api.Controllers
                 return response;
             }
             return CommandResponse.Failed("Invalid credentials.");
+        }
+
+        [HttpPost("logout")]
+        public async Task<CommandResponse> LogoutAsync()
+        {
+            LogoutCommand command = new() { };
+            return await mediator.Send(command);
         }
 
         [HttpPost("register")]
