@@ -25,7 +25,7 @@ namespace MealPlanner.UI.Web
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = typeof(TItem).Name;
+                name = typeof(TItem).FullName;
             }
             var infoJson = await sessionStorage!.GetItemAsync<string>(name);
             if (string.IsNullOrWhiteSpace(infoJson))
