@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 
-namespace MealPlanner.UI.Web.Pages.Authentication
+namespace MealPlanner.UI.Web.Pages.Identity
 {
     public partial class RedirectToLogin
     {
@@ -18,9 +18,9 @@ namespace MealPlanner.UI.Web.Pages.Authentication
             {
                 var returnUrl = Navigation!.ToBaseRelativePath(Navigation.Uri);
                 if (string.IsNullOrEmpty(returnUrl))
-                    Navigation.NavigateTo("/authentication/login", true);
+                    Navigation.NavigateTo("/identity/login", true);
                 else
-                    Navigation.NavigateTo("/authentication/login?returnUrl=" + returnUrl, true);
+                    Navigation.NavigateTo("/identity/login?returnUrl=" + returnUrl, true);
             }
         }
     }

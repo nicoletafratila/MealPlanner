@@ -1,7 +1,7 @@
 ﻿using Common.Models;
 using Identity.Shared.Models;
 
-namespace MealPlanner.UI.Web.Services
+namespace MealPlanner.UI.Web.Services.Identity
 {
     public interface IAuthenticationService
     {

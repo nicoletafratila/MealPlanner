@@ -9,7 +9,7 @@ namespace MealPlanner.UI.Web
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = typeof(TItem).Name;
+                name = typeof(TItem).FullName;
             }
             var settings = new JsonSerializerSettings
             {

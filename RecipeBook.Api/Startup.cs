@@ -33,25 +33,25 @@ namespace RecipeBook.Api
                 })
                  .AddCookie(IdentityConstants.ApplicationScheme, options =>
                  {
-                     options.LoginPath = "/Authentication/Login";
-                     options.AccessDeniedPath = "/Authentication/AccessDenied";
+                     options.LoginPath = "/Identity/Login";
+                     options.AccessDeniedPath = "/Identity/AccessDenied";
                      options.Cookie.HttpOnly = true;
                      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                      options.Cookie.SameSite = SameSiteMode.Strict;
                  })
-                   .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                   {
-                       options.TokenValidationParameters = new TokenValidationParameters
-                       {
-                           ValidateIssuer = true,
-                           ValidateAudience = true,
-                           ValidateLifetime = true,
-                           ValidateIssuerSigningKey = true,
-                           ValidIssuer = "MealPlanner",
-                           ValidAudience = "MealPlanner",
-                           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey))
-                       };
-                   });
+                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                 {
+                     options.TokenValidationParameters = new TokenValidationParameters
+                     {
+                         ValidateIssuer = true,
+                         ValidateAudience = true,
+                         ValidateLifetime = true,
+                         ValidateIssuerSigningKey = true,
+                         ValidIssuer = "MealPlanner",
+                         ValidAudience = "MealPlanner",
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey))
+                     };
+                 });
             services.AddAuthorization();
         }
 

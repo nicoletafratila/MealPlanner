@@ -2,7 +2,7 @@
 
 namespace Identity.Shared.Models
 {
-    public class ApplicationUserModel
+    public class ApplicationUserEditModel
     {
         public string? UserId { get; set; }
 

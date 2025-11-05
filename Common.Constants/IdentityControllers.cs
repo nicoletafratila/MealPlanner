@@ -3,6 +3,6 @@
     public class IdentityControllers
     {
         public const string Authentication = "Authentication";
-        public const string User = "User";
+        public const string ApplicationUser = "ApplicationUser";
     }
 }

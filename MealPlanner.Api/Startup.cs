@@ -30,8 +30,8 @@ namespace MealPlanner.Api
                     })
                  .AddCookie(IdentityConstants.ApplicationScheme, options =>
                   {
-                      options.LoginPath = "/Authentication/Login";
-                      options.AccessDeniedPath = "/Authentication/AccessDenied";
+                      options.LoginPath = "/Identity/Login";
+                      options.AccessDeniedPath = "/Identity/AccessDenied";
                       options.Cookie.HttpOnly = true;
                       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                       options.Cookie.SameSite = SameSiteMode.Strict;

@@ -8,7 +8,7 @@ namespace Common.Data.Profiles
     {
         public ApplicationUserProfile()
         {
-            CreateMap<ApplicationUser, ApplicationUserModel>()
+            CreateMap<ApplicationUser, ApplicationUserEditModel>()
                 .ForMember(model => model.UserId, opt => opt.MapFrom(data => data.Id))
                 .ForMember(model => model.Username, opt => opt.MapFrom(data => data.UserName))
                 .ForMember(model => model.FirstName, opt => opt.MapFrom(data => data.FirstName))

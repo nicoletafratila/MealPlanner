@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal;
 using Common.Api;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Services.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
 using Serilog;
 using Serilog.Events;
@@ -13,6 +14,13 @@ namespace MealPlanner.UI.Web
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddHttpClient<IAuthenticationService, AuthenticationService>()
+                .ConfigureHttpClient((serviceProvider, httpClient) =>
+                {
+                    var clientConfig = serviceProvider.GetService<IdentityApiConfig>();
+                    httpClient.BaseAddress = clientConfig!.BaseUrl;
+                    httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+                });
+            services.AddHttpClient<IApplicationUserService, ApplicationUserService>()
                 .ConfigureHttpClient((serviceProvider, httpClient) =>
                 {
                     var clientConfig = serviceProvider.GetService<IdentityApiConfig>();

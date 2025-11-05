@@ -12,8 +12,9 @@ PM> Script-migration
 
 
 
+modifica parametrii cu ?[FromQuery]
+fa folderre
+adauga reteta la meniu cu click dr si selectare mai multe
 user management
-organizeaza pe features
 swagger
-pagini in foldere
 muta pe maui

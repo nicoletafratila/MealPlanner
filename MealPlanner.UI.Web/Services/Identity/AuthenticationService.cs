@@ -6,7 +6,7 @@ using Common.Models;
 using Identity.Shared.Models;
 using Newtonsoft.Json;
 
-namespace MealPlanner.UI.Web.Services
+namespace MealPlanner.UI.Web.Services.Identity
 {
     public class AuthenticationService(HttpClient httpClient, TokenProvider tokenProvider) : IAuthenticationService
     {

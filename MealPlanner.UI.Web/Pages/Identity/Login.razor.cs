@@ -1,9 +1,10 @@
 ﻿using Identity.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using MealPlanner.UI.Web.Services.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
-namespace MealPlanner.UI.Web.Pages.Authentication
+namespace MealPlanner.UI.Web.Pages.Identity
 {
     [AllowAnonymous]
     public partial class Login
