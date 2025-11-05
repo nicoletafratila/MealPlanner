@@ -26,7 +26,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.Search
                 if (request.QueryParameters!.Sorting != null && request.QueryParameters.Sorting.Any())
                 {
                     var sortingItems = request.QueryParameters.Sorting.Select(QueryParameters<MealPlanModel>.FromModel).ToList();
-                    results = results.AsQueryable().ApplySorting(sortingItems).ToList();
+                    results = results.AsQueryable()!.ApplySorting(sortingItems)!.ToList();
                 }
 
                 return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);

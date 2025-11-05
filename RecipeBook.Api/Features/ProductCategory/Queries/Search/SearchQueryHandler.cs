@@ -26,7 +26,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.Search
                 if (request.QueryParameters != null && request.QueryParameters.Sorting != null && request.QueryParameters.Sorting.Any())
                 {
                     var sortingItems = request.QueryParameters.Sorting.Select(QueryParameters<ProductCategoryModel>.FromModel).ToList();
-                    results = results.AsQueryable().ApplySorting(sortingItems).ToList();
+                    results = results.AsQueryable()!.ApplySorting(sortingItems)!.ToList();
                 }
 
                 return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);

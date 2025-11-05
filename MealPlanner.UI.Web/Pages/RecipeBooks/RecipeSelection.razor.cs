@@ -1,0 +1,73 @@
+﻿using BlazorBootstrap;
+using Blazored.Modal;
+using Blazored.Modal.Services;
+using Common.Pagination;
+using MealPlanner.UI.Web.Services.RecipeBooks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
+using RecipeBook.Shared.Models;
+
+namespace MealPlanner.UI.Web.Pages.RecipeBooks
+{
+    [Authorize]
+    public partial class RecipeSelection : IComponent
+    {
+        [CascadingParameter]
+        private BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+        public PagedList<RecipeCategoryModel>? Categories { get; set; }
+
+        public string? RecipeId { get; set; }
+        public PagedList<RecipeModel>? Recipes { get; set; }
+
+        [Inject]
+        public IRecipeCategoryService? RecipeCategoryService { get; set; }
+
+        [Inject]
+        public IRecipeService? RecipeService { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            var queryParameters = new QueryParameters<RecipeCategoryModel>()
+            {
+                Filters = new List<FilterItem>(),
+                Sorting = new List<SortingModel>(),
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
+        }
+
+        private async Task SaveAsync()
+        {
+            await BlazoredModal.CloseAsync(ModalResult.Ok(RecipeId));
+        }
+
+        private async Task CancelAsync()
+        {
+            await BlazoredModal.CancelAsync();
+        }
+
+        private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)
+        {
+            var recipeCategoryId = e.Value?.ToString();
+            RecipeId = string.Empty;
+
+            var filters = new List<FilterItem>();
+            if (!string.IsNullOrWhiteSpace(recipeCategoryId))
+            {
+                filters.Add(new FilterItem("RecipeCategoryId", recipeCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            }
+            ;
+            var queryParameters = new QueryParameters<RecipeModel>()
+            {
+                Filters = filters,
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+            Recipes = await RecipeService!.SearchAsync(queryParameters);
+            StateHasChanged();
+        }
+    }
+}

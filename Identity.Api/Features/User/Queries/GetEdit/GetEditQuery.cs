@@ -5,6 +5,6 @@ namespace Identity.Api.Features.User.Queries.GetEdit
 {
     public class GetEditQuery : IRequest<ApplicationUserEditModel>
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

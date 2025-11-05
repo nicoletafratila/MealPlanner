@@ -33,8 +33,8 @@ namespace RecipeBook.Api
                 })
                  .AddCookie(IdentityConstants.ApplicationScheme, options =>
                  {
-                     options.LoginPath = "/Identity/Login";
-                     options.AccessDeniedPath = "/Identity/AccessDenied";
+                     options.LoginPath = "/identities/login";
+                     options.AccessDeniedPath = "/identities/accessdenied";
                      options.Cookie.HttpOnly = true;
                      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                      options.Cookie.SameSite = SameSiteMode.Strict;

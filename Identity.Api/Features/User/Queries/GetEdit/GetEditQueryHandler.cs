@@ -10,7 +10,7 @@ namespace Identity.Api.Features.User.Queries.GetEdit
     {
         public async Task<ApplicationUserEditModel> Handle(GetEditQuery request, CancellationToken cancellationToken)
         {
-            var result = await userManager.FindByNameAsync(request.Name);
+            var result = await userManager.FindByNameAsync(request.Name!);
             return mapper.Map<ApplicationUserEditModel>(result);
         }
     }

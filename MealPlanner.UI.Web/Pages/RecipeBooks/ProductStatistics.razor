@@ -1,0 +1,47 @@
+﻿@page "/recipebooks/productstatistics"
+
+<style>
+    .card {
+        width: 1375px;
+    }
+</style>
+
+<div class="align-left">
+    <div class="card">
+        <div class="card-header">
+            <div class="row g-0">
+                <div class="col-md-8">
+                    <h2>Statistics</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row" style="height: 400px">
+            @if (Statistics != null)
+            {
+                foreach (var item in Statistics)
+                {
+                    <div class="col-sm">
+                        <DoughnutChart @ref="item.Chart" Height="400" Class="mb-5" />
+                    </div>
+                }
+            }
+        </div>
+
+        <br />
+        @if (Categories != null && Categories.Metadata != null && Categories.Items != null && Statistics != null && Statistics.Count() > 0)
+        {
+            <Pagination ActivePageNumber="@Categories.Metadata.PageNumber"
+                        TotalPages="@Categories.Metadata.TotalPages"
+                        DisplayPages="@Categories.Metadata.PageSize"
+                        FirstLinkIcon="IconName.ChevronDoubleLeft"
+                        PreviousLinkIcon="IconName.ChevronLeft"
+                        NextLinkIcon="IconName.ChevronRight"
+                        LastLinkIcon="IconName.ChevronDoubleRight"
+                        Alignment="Alignment.Center"
+                        PageChanged="OnPageChangedAsync" />
+        }
+    </div>
+</div>

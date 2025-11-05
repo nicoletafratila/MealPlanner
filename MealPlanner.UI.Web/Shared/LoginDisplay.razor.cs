@@ -1,5 +1,5 @@
 ﻿using MealPlanner.UI.Web.Services;
-using MealPlanner.UI.Web.Services.Identity;
+using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared

@@ -1,15 +1,13 @@
 ﻿using Identity.Api.Features.User.Queries.GetEdit;
 using Identity.Shared.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin, member")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin, member")]
     public class ApplicationUserController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit")]

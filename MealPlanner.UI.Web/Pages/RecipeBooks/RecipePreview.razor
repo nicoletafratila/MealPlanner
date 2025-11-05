@@ -1,0 +1,52 @@
+﻿@page "/recipebooks/recipepreview"
+
+<style>
+    .card {
+        width: min-content;
+        min-width: fit-content;
+    }
+</style>
+
+@if (Recipe != null)
+{
+    <div class="card">
+        <div class="card-header">
+            <table>
+                <tr class="row g-0" style="display:contents">
+                    <td class="col-md-8" style="vertical-align: top">
+                        <h2>@Recipe.Name</h2>
+                    </td>
+                    <td class="col-md-3" style="align-content:flex-end;">
+                        <a href="@Recipe.Source" target="_blank" style="width: 100px; height: 80px">
+                            <img src="@Recipe.ImageUrl" class="img-fluid" width="100" height="80" />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-5 col-md-4 text-end">Recipe category:</div>
+            <div class="col-7 col-md-8">@RecipeCategory</div>
+        </div>
+
+        <div class="col">
+            <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true" ColumnCount="4">
+                <TableCaption>List of ingredients:</TableCaption>
+                <TableHeader>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Category</th>
+                </TableHeader>
+                <RowTemplate Context="RecipeIngredient">
+                    <td>@RecipeIngredient.Product?.Name</td>
+                    <td>@RecipeIngredient.Quantity</td>
+                    <td>@RecipeIngredient.Unit?.Name</td>
+                    <td>@RecipeIngredient.Product?.ProductCategory?.Name</td>
+                </RowTemplate>
+            </TableTemplate>
+        </div>
+    </div>
+}
+

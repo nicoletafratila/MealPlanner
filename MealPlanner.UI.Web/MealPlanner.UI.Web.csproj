@@ -65,11 +65,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\MealPlanner\" />
-    <Folder Include="Pages\RecipeBook\" />
-    <Folder Include="Services\MealPlanner\" />
-    <Folder Include="Services\RecipeBook\" />
-  </ItemGroup>
-
 </Project>

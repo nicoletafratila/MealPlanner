@@ -12,8 +12,7 @@ PM> Script-migration
 
 
 
-modifica parametrii cu ?[FromQuery]
-fa folderre
+modifica parametrii cu ?item=value
 adauga reteta la meniu cu click dr si selectare mai multe
 user management
 swagger

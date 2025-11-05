@@ -25,13 +25,13 @@
 <AuthorizeView>
     <Authorized>
         <div class="profile-actions">
-            <a href="identity/profile/@context.User!.Identity!.Name">Hello, @context.User!.Identity!.Name!</a>
+            <a href="identities/profile/@context.User!.Identity!.Name">Hello, @context.User!.Identity!.Name!</a>
             <button class="nav-link btn btn-link" @onclick="LogoutAsync">Log out</button>
         </div>
     </Authorized>
     <NotAuthorized>
-        <a href="identity/register">Register</a>
-        <a href="identity/login">Log in</a>
+        <a href="identities/register">Register</a>
+        <a href="identities/login">Log in</a>
     </NotAuthorized>
     <Authorizing>
         Please wait, we are checking your authorization status...

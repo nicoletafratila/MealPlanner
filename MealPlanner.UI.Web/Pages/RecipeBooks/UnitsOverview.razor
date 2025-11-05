@@ -1,0 +1,44 @@
+﻿@page "/recipebooks/unitsoverview"
+@using RecipeBook.Shared.Models
+
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+
+<div class="col-sm-6">
+    <div class="card">
+        <div class="card-header">
+            <table>
+                <tr>
+                    <td style="width: 100%;">
+                        <h2>Units</h2>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card-body">
+            <GridTemplate TItem="UnitModel" @ref="_unitsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+                <Columns>
+                    <GridColumn TItem="UnitModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                        @context.Index
+                    </GridColumn>
+                    <GridColumn TItem="UnitModel" FilterTextboxWidth="450" Style="min-width: 740px;" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                        <div style="cursor: pointer;" @onclick="() => Update(context)">
+                            @context.Name
+                        </div>
+                    </GridColumn>
+                    <GridColumn TItem="UnitModel" HeaderText="Unit type" PropertyName="UnitType" SortString="UnitType" SortKeySelector="item => item.UnitType">
+                        @context.UnitType
+                    </GridColumn>
+                    <GridColumn TItem="UnitModel" Filterable="false" Class="text-start-right" Style="min-width: 42px;">
+                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    </GridColumn>
+                </Columns>
+            </GridTemplate>
+        </div>
+    </div>
+</div>
+
+<ConfirmDialog @ref="_dialog" />

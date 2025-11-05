@@ -31,7 +31,7 @@ namespace Common.Pagination
                     .Single()
                     .MakeGenericMethod(typeof(TItem), property.Type);
 
-                source = (IQueryable<TItem>)method.Invoke(null, new object[] { source, lambda });
+                source = (IQueryable<TItem>)method!.Invoke(null, new object[] { source, lambda })!;
             }
 
             return source;
