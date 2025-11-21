@@ -242,7 +242,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("/mealplansoverview");
+            NavigationManager?.NavigateTo("mealplans/mealplansoverview");
         }
 
         private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)

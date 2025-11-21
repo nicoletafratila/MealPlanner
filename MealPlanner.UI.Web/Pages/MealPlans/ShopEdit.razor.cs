@@ -132,7 +132,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("/shopsoverview");
+            NavigationManager?.NavigateTo("mealplans/shopsoverview");
         }
     }
 }

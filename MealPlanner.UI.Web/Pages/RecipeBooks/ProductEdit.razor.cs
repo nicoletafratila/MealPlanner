@@ -117,7 +117,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("/productsoverview");
+            NavigationManager?.NavigateTo("recipebooks/productsoverview");
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)

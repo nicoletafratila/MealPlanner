@@ -94,7 +94,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("/recipecategoriesoverview");
+            NavigationManager?.NavigateTo("recipebooks/recipecategoriesoverview");
         }
     }
 }
