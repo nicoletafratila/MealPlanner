@@ -54,8 +54,8 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "MealPlanner",
-                audience: "MealPlanner",
+                issuer: Common.Constants.MealPlanner.Issuer,
+                audience: Common.Constants.MealPlanner.ApiScope,
                 claims: claims,
                 expires: expiration.UtcDateTime,
                 signingCredentials: creds);
@@ -71,7 +71,8 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user!.UserName !),
-                new Claim(ClaimTypes.Role, string.Join(",", roles))
+                new Claim(ClaimTypes.Role, string.Join(",", roles)),
+                //new Claim("scope", Common.Constants.MealPlanner.ApiScope)
             };
         }
     }

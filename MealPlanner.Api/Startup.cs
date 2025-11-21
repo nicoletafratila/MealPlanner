@@ -44,12 +44,20 @@ namespace MealPlanner.Api
                           ValidateAudience = true,
                           ValidateLifetime = true,
                           ValidateIssuerSigningKey = true,
-                          ValidIssuer = "MealPlanner",
-                          ValidAudience = "MealPlanner",
-                          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey))
+                          ValidIssuer = Common.Constants.MealPlanner.Issuer,
+                          ValidAudience = Common.Constants.MealPlanner.ApiScope,
+                          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey)),
+                         // NameClaimType = "name",
+                         // RoleClaimType = "role"
                       };
                   });
-            services.AddAuthorization();
+            //services.AddAuthorization();
+            services.AddAuthorizationBuilder()
+                .AddPolicy(Common.Constants.MealPlanner.PolicyScope, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", Common.Constants.MealPlanner.ApiScope);
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

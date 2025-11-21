@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer;
+﻿using System.Security.Claims;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
 namespace Identity.Api
@@ -6,7 +7,6 @@ namespace Identity.Api
     public static class IdentityConfigs
     {
         private const string CLIENTID = "mealplanner_client";
-        private const string APISCOPE = "mealplanner_api"; 
 
         public static IEnumerable<Client> GetClients() =>
             new List<Client>
@@ -16,22 +16,23 @@ namespace Identity.Api
                     ClientId = CLIENTID,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = { new Secret(Common.Constants.MealPlanner.SigningKey.Sha256()) },
-                    AllowedScopes = { APISCOPE, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile }
+                    AllowedScopes = { Common.Constants.MealPlanner.ApiScope, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "roles" }
                 }
             };
 
         public static IEnumerable<ApiScope> GetApiScopes() =>
             new List<ApiScope>
             {
-                new ApiScope(APISCOPE, "MealPlanner API")
+                new ApiScope(Common.Constants.MealPlanner.ApiScope, "MealPlanner API"/*, new[] { ClaimTypes.Role }*/)
             };
 
         public static IEnumerable<ApiResource> GetApiResources() =>
             new List<ApiResource>
             {
-                new ApiResource(APISCOPE, "MealPlanner API")
+                new ApiResource(Common.Constants.MealPlanner.ApiScope, "MealPlanner API")
                 {
-                    Scopes = { APISCOPE }
+                    Scopes = { Common.Constants.MealPlanner.ApiScope },
+                    //UserClaims = { ClaimTypes.Role }
                 }
             };
 
@@ -39,7 +40,8 @@ namespace Identity.Api
             new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                // IdentityResource("roles", new[] { ClaimTypes.Role })
             };
     }
 }

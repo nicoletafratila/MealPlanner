@@ -26,7 +26,13 @@ namespace Identity.Api
                    .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
                    .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
                    .AddAspNetIdentity<ApplicationUser>();
-            services.AddAuthorization();
+            //services.AddAuthorization();
+            services.AddAuthorizationBuilder()
+                .AddPolicy(Common.Constants.MealPlanner.PolicyScope, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", Common.Constants.MealPlanner.ApiScope);
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
