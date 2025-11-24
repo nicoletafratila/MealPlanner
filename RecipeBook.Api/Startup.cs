@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using Duende.IdentityModel;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -27,40 +28,39 @@ namespace RecipeBook.Api
 
             services.AddAuthentication(options =>
                 {
-                    options.DefaultScheme = IdentityConstants.ApplicationScheme; 
-                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme; 
+                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                 })
-                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
-                 {
-                     options.LoginPath = "/identities/login";
-                     options.AccessDeniedPath = "/identities/accessdenied";
-                     options.Cookie.HttpOnly = true;
-                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                     options.Cookie.SameSite = SameSiteMode.Strict;
-                 })
-                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                 {
-                     options.TokenValidationParameters = new TokenValidationParameters
-                     {
-                         ValidateIssuer = true,
-                         ValidateAudience = true,
-                         ValidateLifetime = true,
-                         ValidateIssuerSigningKey = true,
-                         ValidIssuer = Common.Constants.MealPlanner.Issuer,
-                         ValidAudience = Common.Constants.MealPlanner.ApiScope,
-                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey)),
-                         //NameClaimType = "name",
-                         //RoleClaimType = "role"
-                     };
-                 });
-            //services.AddAuthorization();
-            services.AddAuthorizationBuilder()
-               .AddPolicy(Common.Constants.MealPlanner.PolicyScope, policy =>
+               .AddCookie(IdentityConstants.ApplicationScheme, options =>
                {
-                   policy.RequireAuthenticatedUser();
-                   policy.RequireClaim("scope", Common.Constants.MealPlanner.ApiScope);
+                   options.LoginPath = "/identities/login";
+                   options.AccessDeniedPath = "/identities/accessdenied";
+                   options.Cookie.HttpOnly = true;
+                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                   options.Cookie.SameSite = SameSiteMode.Strict;
+               })
+               .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+               {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Common.Constants.MealPlanner.Issuer,
+                        ValidAudience = Common.Constants.MealPlanner.ApiScope,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey)),
+                    };
                });
+            services.AddAuthorizationBuilder()
+                .AddPolicy(Common.Constants.MealPlanner.PolicyScope, policy =>
+                {
+                    policy.AddAuthenticationSchemes(
+                            JwtBearerDefaults.AuthenticationScheme,
+                            IdentityConstants.ApplicationScheme);
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope);
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

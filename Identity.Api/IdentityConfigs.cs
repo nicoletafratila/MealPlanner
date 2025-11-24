@@ -16,14 +16,22 @@ namespace Identity.Api
                     ClientId = CLIENTID,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = { new Secret(Common.Constants.MealPlanner.SigningKey.Sha256()) },
-                    AllowedScopes = { Common.Constants.MealPlanner.ApiScope, IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "roles" }
+                    AllowedScopes = { 
+                        Common.Constants.MealPlanner.ApiScope, 
+                        IdentityServerConstants.StandardScopes.OpenId, 
+                        IdentityServerConstants.StandardScopes.Profile, 
+                        "roles" 
+                    }
                 }
             };
 
         public static IEnumerable<ApiScope> GetApiScopes() =>
             new List<ApiScope>
             {
-                new ApiScope(Common.Constants.MealPlanner.ApiScope, "MealPlanner API"/*, new[] { ClaimTypes.Role }*/)
+                new ApiScope(Common.Constants.MealPlanner.ApiScope, "MealPlanner API")
+                {
+                    UserClaims = { ClaimTypes.Role, ClaimTypes.Name }
+                }
             };
 
         public static IEnumerable<ApiResource> GetApiResources() =>
@@ -32,7 +40,7 @@ namespace Identity.Api
                 new ApiResource(Common.Constants.MealPlanner.ApiScope, "MealPlanner API")
                 {
                     Scopes = { Common.Constants.MealPlanner.ApiScope },
-                    //UserClaims = { ClaimTypes.Role }
+                    UserClaims = { ClaimTypes.Role, ClaimTypes.Name }
                 }
             };
 
@@ -41,7 +49,7 @@ namespace Identity.Api
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                // IdentityResource("roles", new[] { ClaimTypes.Role })
+                new IdentityResource("roles", new[] { ClaimTypes.Role })
             };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BlazorBootstrap;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api.Features.ShoppingList.Commands.Add;
 using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
@@ -8,17 +9,15 @@ using MealPlanner.Api.Features.ShoppingList.Queries.GetEdit;
 using MealPlanner.Api.Features.ShoppingList.Queries.Search;
 using MealPlanner.Shared.Models;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Common.Models;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class ShoppingListController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

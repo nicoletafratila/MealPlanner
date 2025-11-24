@@ -8,9 +8,7 @@ namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin, member")]
-    //[Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin, member")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class ApplicationUserController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit")]

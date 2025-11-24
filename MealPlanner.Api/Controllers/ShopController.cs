@@ -8,7 +8,6 @@ using MealPlanner.Api.Features.Shop.Queries.GetEdit;
 using MealPlanner.Api.Features.Shop.Queries.Search;
 using MealPlanner.Shared.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -17,7 +16,7 @@ namespace MealPlanner.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class ShopController(ISender mediator) : ControllerBase
     {
         [HttpGet("edit/{id:int}")]

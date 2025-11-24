@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Common.Data.Entities;
 using Common.Models;
+using Duende.IdentityModel;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -72,7 +73,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user!.UserName !),
                 new Claim(ClaimTypes.Role, string.Join(",", roles)),
-                //new Claim("scope", Common.Constants.MealPlanner.ApiScope)
+                new Claim(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope),
             };
         }
     }
