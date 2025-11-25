@@ -12,7 +12,8 @@ PM> Script-migration
 
 
 
-modifica parametrii cu ?item=value
+
+cum se face log la issues?
 adauga reteta la meniu cu click dr si selectare mai multe
 user management
 swagger

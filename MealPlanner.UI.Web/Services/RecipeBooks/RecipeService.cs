@@ -18,19 +18,19 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
         public async Task<RecipeModel?> GetByIdAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
+            return await httpClient.GetFromJsonAsync<RecipeModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}?id={id}");
         }
 
         public async Task<RecipeEditModel?> GetEditAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<RecipeEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/edit/{id}");
+            return await httpClient.GetFromJsonAsync<RecipeEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/edit?id={id}");
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, int shopId)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/shoppingListProducts/{recipeId}/{shopId}");
+            return await httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/shoppingListProducts?recipeId={recipeId}&shopId={shopId}");
         }
 
         public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null)
@@ -67,7 +67,7 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}/{id}");
+            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe]}?id={id}");
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
     }

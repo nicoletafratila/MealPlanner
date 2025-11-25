@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         public async Task<ShopEditModel?> GetEditAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<ShopEditModel?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/edit/{id}");
+            return await httpClient.GetFromJsonAsync<ShopEditModel?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/edit?id={id}");
         }
 
         public async Task<PagedList<ShopModel>?> SearchAsync(QueryParameters<ShopModel>? queryParameters = null)
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}/{id}");
+            var response = await httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Shop]}?id={id}");
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
     }

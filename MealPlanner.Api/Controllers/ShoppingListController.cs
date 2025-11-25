@@ -20,7 +20,7 @@ namespace MealPlanner.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class ShoppingListController(ISender mediator) : ControllerBase
     {
-        [HttpGet("edit/{id:int}")]
+        [HttpGet("edit")]
         public async Task<ShoppingListEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
@@ -77,7 +77,7 @@ namespace MealPlanner.Api.Controllers
             return await mediator.Send(command);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             DeleteCommand command = new()

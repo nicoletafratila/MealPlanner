@@ -20,7 +20,7 @@ namespace RecipeBook.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class RecipeCategoryController(ISender mediator) : ControllerBase
     {
-        [HttpGet("edit/{id:int}")]
+        [HttpGet("edit")]
         public async Task<RecipeCategoryEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
@@ -76,7 +76,7 @@ namespace RecipeBook.Api.Controllers
             return await mediator.Send(command);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             DeleteCommand command = new()

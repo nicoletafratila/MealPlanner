@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
         public async Task<UnitEditModel?> GetEditAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<UnitEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Unit]}/edit/{id}");
+            return await httpClient.GetFromJsonAsync<UnitEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Unit]}/edit?id={id}");
         }
 
         public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null)
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Unit]}/{id}");
+            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Unit]}?id={id}");
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
     }

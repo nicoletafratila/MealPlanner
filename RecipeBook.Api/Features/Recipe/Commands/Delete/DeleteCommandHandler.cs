@@ -29,7 +29,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
                     client.BaseAddress = mealPlannerApiConfig?.BaseUrl;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/search/{request.Id}", cancellationToken);
+                    var result = await client.GetFromJsonAsync<IList<MealPlanModel>>($"{mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/searchbyid?id={request.Id}", cancellationToken);
                     if (result != null && result.Any())
                     {
                         return CommandResponse.Failed($"Recipe {itemToDelete.Name} can not be deleted, it is used in meal plans.");

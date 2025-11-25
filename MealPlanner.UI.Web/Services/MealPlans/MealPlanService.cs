@@ -17,13 +17,13 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         public async Task<MealPlanEditModel?> GetEditAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<MealPlanEditModel?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/edit/{id}");
+            return await httpClient.GetFromJsonAsync<MealPlanEditModel?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/edit?id={id}");
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/shoppingListProducts/{mealPlanId}/{shopId}");
+            return await httpClient.GetFromJsonAsync<IList<ShoppingListProductEditModel>?>($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/shoppingListProducts?mealPlanId={mealPlanId}&shopId={shopId}");
         }
 
         public async Task<PagedList<MealPlanModel>?> SearchAsync(QueryParameters<MealPlanModel>? queryParameters = null)
@@ -60,7 +60,7 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}/{id}");
+            var response = await httpClient.DeleteAsync($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.MealPlan]}?id={id}");
             return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
         }
     }

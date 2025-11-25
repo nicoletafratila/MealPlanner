@@ -21,7 +21,7 @@ namespace MealPlanner.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class MealPlanController(ISender mediator) : ControllerBase
     {
-        [HttpGet("edit/{id:int}")]
+        [HttpGet("edit")]
         public async Task<MealPlanEditModel> GetEditAsync(int id)
         {
             GetEditMealPlanQuery query = new()
@@ -31,7 +31,7 @@ namespace MealPlanner.Api.Controllers
             return await mediator.Send(query);
         }
 
-        [HttpGet("shoppingListProducts/{mealPlanId:int}/{shopId:int}")]
+        [HttpGet("shoppingListProducts")]
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId)
         {
             GetShoppingListProductsQuery query = new()
@@ -58,7 +58,7 @@ namespace MealPlanner.Api.Controllers
             return await mediator.Send(query);
         }
 
-        [HttpGet("search/{recipeId:int}")]
+        [HttpGet("searchbyid")]
         public async Task<IList<MealPlanModel>> SearchByRecipeIdAsync(int recipeId)
         {
             SearchByRecipeIdQuery query = new()
@@ -88,7 +88,7 @@ namespace MealPlanner.Api.Controllers
             return await mediator.Send(command);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             DeleteCommand command = new()

@@ -23,7 +23,7 @@ namespace RecipeBook.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class RecipeController(ISender mediator) : ControllerBase
     {
-        [HttpGet("{id:int}")]
+        [HttpGet]
         public async Task<RecipeModel> GetByIdAsync(int id)
         {
             GetByIdQuery query = new()
@@ -33,7 +33,7 @@ namespace RecipeBook.Api.Controllers
             return await mediator.Send(query);
         }
 
-        [HttpGet("edit/{id:int}")]
+        [HttpGet("edit")]
         public async Task<RecipeEditModel> GetEditAsync(int id)
         {
             GetEditQuery query = new()
@@ -43,7 +43,7 @@ namespace RecipeBook.Api.Controllers
             return await mediator.Send(query);
         }
 
-        [HttpGet("shoppingListProducts/{recipeId:int}/{shopId:int}")]
+        [HttpGet("shoppingListProducts")]
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, int shopId)
         {
             GetShoppingListProductsQuery query = new()
@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Controllers
             return await mediator.Send(command);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
             DeleteCommand command = new()
