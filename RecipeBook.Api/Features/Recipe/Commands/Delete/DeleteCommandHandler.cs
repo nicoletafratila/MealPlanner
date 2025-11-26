@@ -9,11 +9,11 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.Delete
 {
-    public class DeleteCommandHandler(IRecipeRepository repository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse>
+    public class DeleteCommandHandler(IRecipeRepository repository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse?>
     {
         private readonly IApiConfig mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();
 
-        public async Task<CommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse?> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
             try
             {

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Identity.Api.Features.Authentication.Commands.Logout
 {
-    public class LogoutCommand : IRequest<CommandResponse>
+    public class LogoutCommand : IRequest<CommandResponse?>
     {
     }
 }

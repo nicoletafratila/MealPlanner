@@ -5,9 +5,9 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.Update
 {
-    public class UpdateCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<UpdateCommandHandler> logger) : IRequestHandler<UpdateCommand, CommandResponse>
+    public class UpdateCommandHandler(IShoppingListRepository repository, IMapper mapper, ILogger<UpdateCommandHandler> logger) : IRequestHandler<UpdateCommand, CommandResponse?>
     {
-        public async Task<CommandResponse> Handle(UpdateCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse?> Handle(UpdateCommand request, CancellationToken cancellationToken)
         {
             try
             {

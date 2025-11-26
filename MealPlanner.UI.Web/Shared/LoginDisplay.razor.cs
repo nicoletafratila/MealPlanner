@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Web.Shared
         public async Task LogoutAsync()
         {
             var result = await AuthenticationService!.LogoutAsync();
-            if (result.Succeeded)
+            if (result != null && result.Succeeded)
             {
                 NavigationManager?.NavigateTo("/", forceLoad: true);
             }

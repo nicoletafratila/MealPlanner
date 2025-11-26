@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Identity.Api.Features.User.Queries.GetEdit
+namespace Identity.Api.Features.ApplicationUser.Queries.GetEdit
 {
     public class GetEditQueryValidator : AbstractValidator<GetEditQuery>
     {

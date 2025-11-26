@@ -61,7 +61,7 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var response = await httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Recipe], modelJson);
-            return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<CommandResponse>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<CommandResponse?> DeleteAsync(int id)

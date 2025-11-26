@@ -15,7 +15,7 @@ namespace Identity.Api.Controllers
     public class AuthenticationController(ISender mediator) : ControllerBase
     {
         [HttpPost("login")]
-        public async Task<CommandResponse> LoginAsync(LoginModel model)
+        public async Task<CommandResponse?> LoginAsync(LoginModel model)
         {
             LoginCommand command = new() { Model = model };
             if (await mediator.Send(command) is LoginCommandResponse response && response.Succeeded)
@@ -38,14 +38,14 @@ namespace Identity.Api.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<CommandResponse> LogoutAsync()
+        public async Task<CommandResponse?> LogoutAsync()
         {
             LogoutCommand command = new() { };
             return await mediator.Send(command);
         }
 
         [HttpPost("register")]
-        public async Task<CommandResponse> RegisterAsync(LoginModel model)
+        public async Task<CommandResponse?> RegisterAsync(LoginModel model)
         {
             LoginCommand command = new()
             {

@@ -4,9 +4,9 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.Delete
 {
-    public class DeleteCommandHandler(IShoppingListRepository repository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse>
+    public class DeleteCommandHandler(IShoppingListRepository repository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse?>
     {
-        public async Task<CommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse?> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
             try
             {

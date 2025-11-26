@@ -1,7 +1,7 @@
 ﻿using Identity.Shared.Models;
 using MediatR;
 
-namespace Identity.Api.Features.User.Queries.GetEdit
+namespace Identity.Api.Features.ApplicationUser.Queries.GetEdit
 {
     public class GetEditQuery : IRequest<ApplicationUserEditModel>
     {

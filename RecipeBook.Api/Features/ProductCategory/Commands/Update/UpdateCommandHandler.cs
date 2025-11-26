@@ -5,9 +5,9 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.ProductCategory.Commands.Update
 {
-    public class UpdateCommandHandler(IProductCategoryRepository repository, IMapper mapper, ILogger<UpdateCommandHandler> logger) : IRequestHandler<UpdateCommand, CommandResponse>
+    public class UpdateCommandHandler(IProductCategoryRepository repository, IMapper mapper, ILogger<UpdateCommandHandler> logger) : IRequestHandler<UpdateCommand, CommandResponse?>
     {
-        public async Task<CommandResponse> Handle(UpdateCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse?> Handle(UpdateCommand request, CancellationToken cancellationToken)
         {
             try
             {

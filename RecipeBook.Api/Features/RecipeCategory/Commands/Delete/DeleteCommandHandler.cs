@@ -4,9 +4,9 @@ using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
 {
-    public class DeleteCommandHandler(IRecipeCategoryRepository repository, IRecipeRepository recipeRepository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse>
+    public class DeleteCommandHandler(IRecipeCategoryRepository repository, IRecipeRepository recipeRepository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse?>
     {
-        public async Task<CommandResponse> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse?> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
             try
             {

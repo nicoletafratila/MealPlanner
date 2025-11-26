@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Services.Identities
     {
         private readonly IApiConfig _identityApiConfig = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
 
-        public async Task<CommandResponse> LoginAsync(LoginModel model)
+        public async Task<CommandResponse?> LoginAsync(LoginModel model)
         {
             var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/login", modelJson);
@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
-        public async Task<CommandResponse> LogoutAsync()
+        public async Task<CommandResponse?> LogoutAsync()
         {
             var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/logout", new StringContent(string.Empty));
             if (response.IsSuccessStatusCode)
@@ -60,7 +60,7 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
-        public Task<CommandResponse> RegisterAsync(RegistrationModel model)
+        public Task<CommandResponse?> RegisterAsync(RegistrationModel model)
         {
             throw new NotImplementedException();
         }

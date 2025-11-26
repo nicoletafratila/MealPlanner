@@ -47,16 +47,16 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
         private async Task SaveAsync()
         {
-            //var response = Recipe?.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe!);
-            //if (response != null && !response.Succeeded)
-            //{
-            //    MessageComponent?.ShowError(response.Message!);
-            //}
-            //else
-            //{
-            //    MessageComponent?.ShowInfo("Data has been saved successfully");
-            //    NavigateToOverview();
-            //}
+            var response = await UserService!.UpdateAsync(ApplicationUser!);
+            if (response != null && !response.Succeeded)
+            {
+                MessageComponent?.ShowError(response.Message!);
+            }
+            else
+            {
+                MessageComponent?.ShowInfo("Data has been saved successfully");
+                NavigateToOverview();
+            }
         }
 
         private void NavigateToOverview()

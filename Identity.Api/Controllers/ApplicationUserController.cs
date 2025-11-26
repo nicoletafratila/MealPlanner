@@ -1,4 +1,6 @@
-﻿using Identity.Api.Features.User.Queries.GetEdit;
+﻿using Common.Models;
+using Identity.Api.Features.ApplicationUser.Commands.Update;
+using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +21,16 @@ namespace Identity.Api.Controllers
                 Name = username
             };
             return await mediator.Send(query);
+        }
+
+        [HttpPut]
+        public async Task<CommandResponse?> PutAsync(ApplicationUserEditModel model)
+        {
+            UpdateCommand command = new()
+            {
+                Model = model
+            };
+            return await mediator.Send(command);
         }
 
         //[HttpGet]

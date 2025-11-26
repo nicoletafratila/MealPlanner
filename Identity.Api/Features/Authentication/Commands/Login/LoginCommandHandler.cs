@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Common.Data.Entities;
 using Common.Models;
 using Duende.IdentityModel;
 using MediatR;
@@ -10,9 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
-    public class LoginCommandHandler(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse>
+    public class LoginCommandHandler(UserManager<Common.Data.Entities.ApplicationUser> userManager, SignInManager<Common.Data.Entities.ApplicationUser> signInManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse?>
     {
-        public async Task<CommandResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResponse?> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -64,7 +63,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private IList<Claim> GetClaims(ApplicationUser user, IList<string> roles)
+        private IList<Claim> GetClaims(Common.Data.Entities.ApplicationUser user, IList<string> roles)
         {
             return new List<Claim>()
             {
