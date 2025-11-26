@@ -9,7 +9,7 @@
         .profile-actions a {
             text-decoration: none;
             margin-right: 0.5rem;
-            display: inline-block;
+            display: inline-flex;
             padding: 0px;
         }
 
@@ -20,20 +20,34 @@
             border-radius: 4px;
             transition: background 0.12s;
         }
+
+    .profile-icon {
+        width: 24px; 
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
 </style>
 
 <AuthorizeView>
     <Authorized>
         <div class="profile-actions">
-            <a href="identities/userprofile/@context.User!.Identity!.Name">Hello, @context.User!.Identity!.Name!</a>
+            <a href="identities/userprofile/@context.User!.Identity!.Name">
+                Hello,
+                @if (ApplicationUser != null)
+                {
+                    <img class="profile-icon me-2" src="@ApplicationUser!.ProfilePictureUrl" />
+                }
+                @context.User!.Identity!.Name!
+            </a>
             <button class="nav-link btn btn-link" @onclick="LogoutAsync">Log out</button>
         </div>
     </Authorized>
-    <NotAuthorized>
-        <a href="identities/register">Register</a>
-        <a href="identities/login">Log in</a>
-    </NotAuthorized>
-    <Authorizing>
-        Please wait, we are checking your authorization status...
-    </Authorizing>
-</AuthorizeView>
+        <NotAuthorized>
+            <a href="identities/register">Register</a>
+            <a href="identities/login">Log in</a>
+        </NotAuthorized>
+        <Authorizing>
+            Please wait, we are checking your authorization status...
+        </Authorizing>
+    </AuthorizeView>

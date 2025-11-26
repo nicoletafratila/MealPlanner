@@ -23,7 +23,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
         public ApplicationUserEditModel? ApplicationUser { get; set; }
 
         [Inject]
-        public IApplicationUserService? UserService { get; set; }
+        public IApplicationUserService? ApplicationUserService { get; set; }
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -41,13 +41,13 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
             else
             {
-                ApplicationUser = await UserService!.GetEditAsync(Name);
+                ApplicationUser = await ApplicationUserService!.GetEditAsync(Name);
             }
         }
 
         private async Task SaveAsync()
         {
-            var response = await UserService!.UpdateAsync(ApplicationUser!);
+            var response = await ApplicationUserService!.UpdateAsync(ApplicationUser!);
             if (response != null && !response.Succeeded)
             {
                 MessageComponent?.ShowError(response.Message!);
