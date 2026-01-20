@@ -120,6 +120,7 @@ namespace MealPlanner.UI.Web
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazorBootstrap();
             builder.Services.AddAuthorizationCore();
+            builder.Services.AddRazorComponents().AddInteractiveServerComponents();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationState>();
         }
 

@@ -18,6 +18,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private List<BreadcrumbItem> _navItems = default!;
         private GridTemplate<MealPlanModel>? _mealPlansGrid = default!;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
+        private QueryParameters<MealPlanModel>? _cachedGridParams;
+        private bool _savedSortingApplied;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -37,8 +39,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             {
                 new BreadcrumbItem{ Text = "Home", Href ="recipebooks/recipesoverview" }
             };
-
-            await RefreshAsync();
+            _cachedGridParams = await QueryParametersProviderAsync();
         }
 
         private void New()
@@ -84,55 +85,106 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
-        private async Task RefreshAsync()
-        {
-            var request = new GridDataProviderRequest<MealPlanModel>();
-            var queryParameters = await SessionStorage!.GetItemAsync<QueryParameters<MealPlanModel>>();
-            if (queryParameters != null)
-            {
-                request = new GridDataProviderRequest<MealPlanModel>
-                {
-                    Filters = queryParameters.Filters != null ? queryParameters.Filters : new List<FilterItem>(),
-                    Sorting = queryParameters.Sorting != null ? queryParameters.Sorting.Select(QueryParameters<MealPlanModel>.FromModel).ToList() : new List<SortingItem<MealPlanModel>>(),
-                    PageNumber = queryParameters.PageNumber,
-                    PageSize = queryParameters.PageSize,
-                };
-            }
-            else
-            {
-                request = new GridDataProviderRequest<MealPlanModel>
-                {
-                    Filters = new List<FilterItem>() { },
-                    Sorting = new List<SortingItem<MealPlanModel>>
-                        {
-                            new SortingItem<MealPlanModel>("Name", item => item.Name!, SortDirection.Ascending),
-                        },
-                    PageNumber = 1,
-                    PageSize = 10
-                };
-            }
-            await DataProviderAsync(request);
-        }
+        //private async Task<GridDataProviderResult<MealPlanModel>> DataProviderAsync(GridDataProviderRequest<MealPlanModel> request)
+        //{
+        //    var queryParameters = new QueryParameters<MealPlanModel>
+        //    {
+        //        Filters = request.Filters,
+        //        Sorting = request.Sorting?.Select(QueryParameters<MealPlanModel>.ToModel).ToList(),
+        //        PageNumber = request.PageNumber,
+        //        PageSize = request.PageSize
+        //    };
+
+        //    var result = await MealPlanService!.SearchAsync(queryParameters);
+        //    if (result == null || result.Items == null)
+        //    {
+        //        result = new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata());
+        //    }
+        //    await SessionStorage!.SetItemAsync(queryParameters);
+        //    _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
+        //    return new GridDataProviderResult<MealPlanModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
+        //}
 
         private async Task<GridDataProviderResult<MealPlanModel>> DataProviderAsync(GridDataProviderRequest<MealPlanModel> request)
         {
-            var queryParameters = new QueryParameters<MealPlanModel>()
+            // Ensure we have last saved params in memory
+            _cachedGridParams ??= await QueryParametersProviderAsync();
+
+            // Use current request sorting if present; otherwise use saved sorting
+            var effectiveSorting =
+                (request.Sorting != null && request.Sorting.Any())
+                    ? request.Sorting.Select(QueryParameters<MealPlanModel>.ToModel).ToList()
+                    : _cachedGridParams?.Sorting;
+
+            // Optional: persist filters as well
+            var effectiveFilters =
+                (request.Filters != null && request.Filters.Any())
+                    ? request.Filters
+                    : _cachedGridParams?.Filters;
+
+            var queryParameters = new QueryParameters<MealPlanModel>
             {
-                Filters = request.Filters,
-                Sorting = request.Sorting?.Select(x => QueryParameters<MealPlanModel>.ToModel(x)).ToList(),
+                Filters = effectiveFilters,
+                Sorting = effectiveSorting,
                 PageNumber = request.PageNumber,
-                PageSize = request.PageSize,
+                PageSize = request.PageSize
             };
 
-            var result = await MealPlanService!.SearchAsync(queryParameters);
-            if (result == null || result.Items == null)
-            {
-                result = new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata());
-            }
+            var result = await MealPlanService!.SearchAsync(queryParameters)
+                         ?? new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata());
+
             await SessionStorage!.SetItemAsync(queryParameters);
-            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
-            StateHasChanged();
-            return new GridDataProviderResult<MealPlanModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
+            _cachedGridParams = queryParameters;
+
+            _tableGridClass = result.Items!.Count == 0
+                ? CssClasses.GridTemplateEmptyClass
+                : CssClasses.GridTemplateWithItemsClass;
+
+            return new GridDataProviderResult<MealPlanModel>
+            {
+                Data = result.Items!,
+                TotalCount = result.Metadata!.TotalCount
+            };
+        }
+
+        private async Task<QueryParameters<MealPlanModel>> QueryParametersProviderAsync()
+        {
+            return await SessionStorage!.GetItemAsync<QueryParameters<MealPlanModel>>();
+        }
+
+        private bool IsSortedColumn(string propertyName)
+        {
+            if (_cachedGridParams == null)
+                return false;
+
+            var s = _cachedGridParams.Sorting?.FirstOrDefault();
+            return s?.PropertyName == propertyName;
+        }
+
+        private SortDirection GetSortDirection(string propertyName)
+        {
+            if (_cachedGridParams == null)
+                return SortDirection.Ascending;
+
+            var s = _cachedGridParams.Sorting?.FirstOrDefault(x => x.PropertyName == propertyName);
+            return s?.Direction ?? SortDirection.Ascending;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && !_savedSortingApplied)
+            {
+                _savedSortingApplied = true;
+
+                _cachedGridParams = await QueryParametersProviderAsync();
+
+                StateHasChanged();
+
+                if (_mealPlansGrid is not null)
+                {
+                    await _mealPlansGrid.RefreshDataAsync();
+                }
+            }
         }
     }
 }

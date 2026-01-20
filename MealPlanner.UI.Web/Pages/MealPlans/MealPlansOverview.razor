@@ -19,12 +19,22 @@
         </div>
 
         <div class="card-body">
-            <GridTemplate TItem="MealPlanModel" @ref="_mealPlansGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+            <GridTemplate TItem="MealPlanModel" @ref="_mealPlansGrid" DataProvider="DataProviderAsync" QueryParametersProvider="QueryParametersProviderAsync" TableGridClass="@_tableGridClass">
                 <Columns>
                     <GridColumn TItem="MealPlanModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
                         @context.Index
                     </GridColumn>
-                    <GridColumn FilterTextboxWidth="600" Style="min-width: 740px;" TItem="MealPlanModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <GridColumn 
+                        FilterTextboxWidth="600" 
+                        Style="min-width: 740px;" 
+                        TItem="MealPlanModel" 
+                        HeaderText="Name" 
+                        PropertyName="Name" 
+                        SortString="Name" 
+                        SortKeySelector="item => item.Name" 
+                        StringComparison="StringComparison.OrdinalIgnoreCase"
+                        IsDefaultSortColumn="@IsSortedColumn(nameof(MealPlanModel.Name))"
+                        SortDirection="@GetSortDirection(nameof(MealPlanModel.Name))">
                         <div style="cursor: pointer;" @onclick="() => Update(context)">
                             @context.Name
                         </div>
