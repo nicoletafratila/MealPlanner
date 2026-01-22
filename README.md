@@ -14,6 +14,7 @@ PM> Script-migration
 
 
 cum se face log la issues?
+baza comuna pt clase cu functii
 adauga reteta la meniu cu click dr si selectare mai multe
 user management
 swagger

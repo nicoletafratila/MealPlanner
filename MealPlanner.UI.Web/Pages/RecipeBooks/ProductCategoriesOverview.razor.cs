@@ -31,13 +31,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Inject]
         public ISessionStorageService? SessionStorage { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             _navItems = new List<BreadcrumbItem>
             {
                  new BreadcrumbItem{ Text = "Home", Href ="recipebooks/recipesoverview" }
             };
-            await RefreshAsync();
         }
 
         private void New()
@@ -83,36 +82,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
         }
 
-        private async Task RefreshAsync()
-        {
-            var request = new GridDataProviderRequest<ProductCategoryModel>();
-            var queryParameters = await SessionStorage!.GetItemAsync<QueryParameters<ProductCategoryModel>>();
-            if (queryParameters != null)
-            {
-                request = new GridDataProviderRequest<ProductCategoryModel>
-                {
-                    Filters = queryParameters.Filters != null ? queryParameters.Filters : new List<FilterItem>(),
-                    Sorting = queryParameters.Sorting != null ? queryParameters.Sorting.Select(QueryParameters<ProductCategoryModel>.FromModel).ToList() : new List<SortingItem<ProductCategoryModel>>(),
-                    PageNumber = queryParameters.PageNumber,
-                    PageSize = queryParameters.PageSize,
-                };
-            }
-            else
-            {
-                request = new GridDataProviderRequest<ProductCategoryModel>
-                {
-                    Filters = new List<FilterItem>() { },
-                    Sorting = new List<SortingItem<ProductCategoryModel>>
-                        {
-                            new SortingItem<ProductCategoryModel>("Name", item => item.Name!, SortDirection.Ascending),
-                        },
-                    PageNumber = 1,
-                    PageSize = 10
-                };
-            }
-            await DataProviderAsync(request);
-        }
-
         private async Task<GridDataProviderResult<ProductCategoryModel>> DataProviderAsync(GridDataProviderRequest<ProductCategoryModel> request)
         {
             var queryParameters = new QueryParameters<ProductCategoryModel>()
@@ -129,7 +98,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 result = new PagedList<ProductCategoryModel>(new List<ProductCategoryModel>(), new Metadata());
             }
             await SessionStorage!.SetItemAsync(queryParameters);
-            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass :  CssClasses.GridTemplateWithItemsClass;
+            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
             StateHasChanged();
             return new GridDataProviderResult<ProductCategoryModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
         }

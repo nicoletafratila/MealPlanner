@@ -26,6 +26,13 @@
     }
 </style>
 
+<script>
+    window.focusElement = (id) => {
+        const el = document.getElementById(id);
+        if (el) el.focus();
+    };
+</script>
+
 <div class="login-background">
     <EditForm Model="LoginModel" OnValidSubmit="OnLoginAsync" class="login-form">
         <DataAnnotationsValidator />
@@ -39,7 +46,7 @@
 
         <div class="form-group mt-3">
             <label for="password" class="col-sm-3">Password: </label>
-            <PasswordInput id="password" class="form-control" @bind-Value="@LoginModel.Password" placeholder="Password"></PasswordInput>
+            <PasswordInput id="password" class="form-control" @onkeydown="HandleKeyDown" @bind-Value="@LoginModel.Password" placeholder="Password"></PasswordInput>
             <ValidationMessage For="@(() => LoginModel.Password)" />
         </div>
 

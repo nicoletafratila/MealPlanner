@@ -31,13 +31,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Inject]
         public ISessionStorageService? SessionStorage { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             _navItems = new List<BreadcrumbItem>
             {
                  new BreadcrumbItem{ Text = "Home", Href ="recipebooks/recipesoverview" }
             };
-            await RefreshAsync();
         }
 
         private void New()
@@ -81,36 +80,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     await _productsGrid!.RefreshDataAsync();
                 }
             }
-        }
-
-        private async Task RefreshAsync()
-        {
-            var request = new GridDataProviderRequest<ProductModel>();
-            var queryParameters = await SessionStorage!.GetItemAsync<QueryParameters<ProductModel>>();
-            if (queryParameters != null)
-            {
-                request = new GridDataProviderRequest<ProductModel>
-                {
-                    Filters = queryParameters.Filters != null ? queryParameters.Filters : new List<FilterItem>(),
-                    Sorting = queryParameters.Sorting != null ? queryParameters.Sorting.Select(QueryParameters<ProductModel>.FromModel).ToList() : new List<SortingItem<ProductModel>>(),
-                    PageNumber = queryParameters.PageNumber,
-                    PageSize = queryParameters.PageSize,
-                };
-            }
-            else
-            {
-                request = new GridDataProviderRequest<ProductModel>
-                {
-                    Filters = new List<FilterItem>() { },
-                    Sorting = new List<SortingItem<ProductModel>>
-                        {
-                            new SortingItem<ProductModel>("Name", item => item.Name!, SortDirection.Ascending),
-                        },
-                    PageNumber = 1,
-                    PageSize = 10
-                };
-            }
-            await DataProviderAsync(request);
         }
 
         private async Task<GridDataProviderResult<ProductModel>> DataProviderAsync(GridDataProviderRequest<ProductModel> request)
