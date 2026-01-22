@@ -3,38 +3,50 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
-<div class="col-sm-6">
-    <div class="card">
-        <div class="card-header">
-            <table>
-                <tr>
-                    <td style="width: 100%;">
-                        <h2>Shopping lists</h2>
-                    </td>
-                    <td style="white-space: nowrap;">
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
+<style>
+    .grid-additional-columns th:nth-child(1),
+    .grid-additional-columns td:nth-child(1) {
+        width: 40px;
+        max-width: 40px;
+    }
 
-        <div class="card-body">
-            <GridTemplate TItem="ShoppingListModel" @ref="_shoppingListsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
-                <Columns>
-                    <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
-                        @context.Index
-                    </GridColumn>
-                    <GridColumn FilterTextboxWidth="600" Style="min-width: 740px;" TItem="ShoppingListModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
-                        <div style="cursor: pointer;" @onclick="() => Update(context)">
-                            @context.Name
-                        </div>
-                    </GridColumn>
-                    <GridColumn TItem="ShoppingListModel" Filterable="false" Class="text-start-right" Style="min-width: 42px;">
-                        <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
-                    </GridColumn>
-                </Columns>
-            </GridTemplate>
-        </div>
+    .grid-additional-columns th:nth-child(3),
+    .grid-additional-columns td:nth-child(3) {
+        width: 40px;
+        max-width: 40px;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <table>
+            <tr>
+                <td style="width: 100%;">
+                    <h2>Shopping lists</h2>
+                </td>
+                <td style="white-space: nowrap;">
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card-body">
+        <GridTemplate TItem="ShoppingListModel" @ref="_shoppingListsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+            <Columns>
+                <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                    @context.Index
+                </GridColumn>
+                <GridColumn TItem="ShoppingListModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <div style="cursor: pointer;" @onclick="() => Update(context)">
+                        @context.Name
+                    </div>
+                </GridColumn>
+                <GridColumn TItem="ShoppingListModel" Filterable="false">
+                    <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                </GridColumn>
+            </Columns>
+        </GridTemplate>
     </div>
 </div>
 

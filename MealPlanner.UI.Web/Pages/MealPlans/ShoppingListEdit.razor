@@ -5,143 +5,141 @@
 
 @if (ShoppingList != null)
 {
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-header">
-                <table>
-                    <tr class="row g-0" style="display:contents">
-                        <td class="col-md-8" style="vertical-align: top">
-                            <h2 id="headerName">@ShoppingList.Name</h2>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <table>
+                <tr class="row g-0" style="display:contents">
+                    <td class="col-md-8" style="vertical-align: top">
+                        <h2 id="headerName">@ShoppingList.Name</h2>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-            <div class="card-body">
-                <EditForm Model="@ShoppingList" OnValidSubmit="@SaveAsync">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
+        <div class="card-body">
+            <EditForm Model="@ShoppingList" OnValidSubmit="@SaveAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-                    <div class="form-group">
-                        <label for="name" class="col-sm-3">Shopping list name: </label>
-                        <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name" oninput="updateHeader()"></InputText>
-                        <ValidationMessage For="@(() => ShoppingList.Name)" />
-                    </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-3">Shopping list name: </label>
+                    <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name" oninput="updateHeader()"></InputText>
+                    <ValidationMessage For="@(() => ShoppingList.Name)" />
+                </div>
 
-                    <div class="form-group mt-3">
-                        <label for="Shop" class="col-sm-3">Shop: </label>
-                        <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
-                            <option selected value="0">Choose...</option>
-                            @if (Shops?.Items != null && Shops.Items.Any())
+                <div class="form-group mt-3">
+                    <label for="Shop" class="col-sm-3">Shop: </label>
+                    <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
+                        <option selected value="0">Choose...</option>
+                        @if (Shops?.Items != null && Shops.Items.Any())
+                        {
+                            @foreach (var item in Shops.Items)
                             {
-                                @foreach (var item in Shops.Items)
+                                if (item.Id == ShoppingList.ShopId)
                                 {
-                                    if (item.Id == ShoppingList.ShopId)
-                                    {
-                                        <option value="@item.Id" selected>@item.Name</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.Id">@item.Name</option>
-                                    }
+                                    <option value="@item.Id" selected>@item.Name</option>
                                 }
-                            }
-                        </select>
-                    </div>
-
-                    <div class="form-group mt-3">
-                        <label for="ProductCategory" class="col-sm-3">Product category: </label>
-                        <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
-                            <option selected value="0">Choose...</option>
-                            @if (Categories != null && Categories.Items != null && Categories.Items.Any())
-                            {
-                                @foreach (var item in Categories.Items)
+                                else
                                 {
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             }
-                        </select>
-                    </div>
+                        }
+                    </select>
+                </div>
 
-                    <div class="form-group mt-3">
-                        <label for="Product" class="col-sm-3">Product: </label>
-                        <select id="Product" class="form-select" @onchange="OnProductChangedAsync">
-                            <option selected value="0">Choose...</option>
-                            @if (Products != null && Products!.Items!.Any())
+                <div class="form-group mt-3">
+                    <label for="ProductCategory" class="col-sm-3">Product category: </label>
+                    <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
+                        <option selected value="0">Choose...</option>
+                        @if (Categories != null && Categories.Items != null && Categories.Items.Any())
+                        {
+                            @foreach (var item in Categories.Items)
                             {
-                                @foreach (var item in Products?.Items!)
-                                {
-                                    <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
-                                }
+                                <option value="@item.Id">@item.Name</option>
                             }
-                        </select>
-                    </div>
+                        }
+                    </select>
+                </div>
 
-                    <div class="form-group mt-3">
-                        <label for="unit" class="col-sm-3">Unit of measurement: </label>
-                        <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
-                            <option selected value="0">Choose...</option>
-                            @if (Units != null && Units.Any())
+                <div class="form-group mt-3">
+                    <label for="Product" class="col-sm-3">Product: </label>
+                    <select id="Product" class="form-select" @onchange="OnProductChangedAsync">
+                        <option selected value="0">Choose...</option>
+                        @if (Products != null && Products!.Items!.Any())
+                        {
+                            @foreach (var item in Products?.Items!)
                             {
-                                @foreach (var unit in Units!)
-                                {
-                                    <option value="@unit.Id">@unit.Name</option>
-                                }
+                                <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
                             }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => UnitId)" />
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="unit" class="col-sm-3">Unit of measurement: </label>
+                    <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
+                        <option selected value="0">Choose...</option>
+                        @if (Units != null && Units.Any())
+                        {
+                            @foreach (var unit in Units!)
+                            {
+                                <option value="@unit.Id">@unit.Name</option>
+                            }
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => UnitId)" />
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="quantity" class="col-sm-3">Quantity: </label>
+                    <div class="input-group">
+                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
+                        <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProduct" disabled="@(!CanAddProduct)">Add</button>
                     </div>
+                    <ValidationMessage For="@(() => Quantity)" />
+                </div>
 
-                    <div class="form-group mt-3">
-                        <label for="quantity" class="col-sm-3">Quantity: </label>
-                        <div class="input-group">
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
-                            <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProduct" disabled="@(!CanAddProduct)">Add</button>
-                        </div>
-                        <ValidationMessage For="@(() => Quantity)" />
-                    </div>
+                <br />
 
-                    <br />
+                <div class="card-body">
+                    <TableTemplate Data="@ShoppingList.Products">
+                        <TableCaption>Products:</TableCaption>
+                        <TableHeader>
+                            <th></th>
+                            <th></th>
+                            <th style="width: 30px"></th>
+                        </TableHeader>
+                        <RowTemplate Context="ProductModel">
+                            @if (ProductModel != null && ProductModel.Product != null)
+                            {
+                                <td style="vertical-align:middle; text-align: center">
+                                    <input type="checkbox" checked="@ProductModel.Collected" @onchange="async () => await CheckboxChangedAsync(ProductModel)" />
+                                </td>
+                                <td style="vertical-align:middle">
+                                    <div style="display:flex; align-items: center">
+                                        <img src="@ProductModel.Product.ImageUrl" class="img-fluid" width="100" height="80" />
+                                        <p>&nbsp;&nbsp;</p>
+                                        <p>@ProductModel.Product.Name</p>
+                                        <p>&nbsp;&nbsp;</p>
+                                        <p>@ProductModel.Quantity</p>
+                                        <p>&nbsp;&nbsp;</p>
+                                        <p>@ProductModel.Unit?.Name</p>
+                                    </div>
+                                </td>
+                                <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteProductAsync(ProductModel.Product)"></button></td>
+                            }
+                        </RowTemplate>
+                    </TableTemplate>
 
-                    <div class="card-body">
-                        <TableTemplate Data="@ShoppingList.Products">
-                            <TableCaption>Products:</TableCaption>
-                            <TableHeader>
-                                <th></th>
-                                <th></th>
-                                <th style="width: 30px"></th>
-                            </TableHeader>
-                            <RowTemplate Context="ProductModel">
-                                @if (ProductModel != null && ProductModel.Product != null)
-                                {
-                                    <td style="vertical-align:middle; text-align: center">
-                                        <input type="checkbox" checked="@ProductModel.Collected" @onchange="async ()=> await CheckboxChangedAsync(ProductModel)" />
-                                    </td>
-                                    <td style="vertical-align:middle">
-                                        <div style="display:flex; align-items: center">
-                                            <img src="@ProductModel.Product.ImageUrl" class="img-fluid" width="100" height="80" />
-                                            <p>&nbsp;&nbsp;</p>
-                                            <p>@ProductModel.Product.Name</p>
-                                            <p>&nbsp;&nbsp;</p>
-                                            <p>@ProductModel.Quantity</p>
-                                            <p>&nbsp;&nbsp;</p>
-                                            <p>@ProductModel.Unit?.Name</p>
-                                        </div>
-                                    </td>
-                                    <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteProductAsync(ProductModel.Product)"></button></td>
-                                }
-                            </RowTemplate>
-                        </TableTemplate>
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
 
-                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                        <button class="btn btn-danger btn-sm" type="button" @onclick="async ()=> await DeleteAsync()">Delete</button>
-
-                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async ()=> await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">Add meal plan</button>
-                        <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async ()=> await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add recipe</button>
-                        <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="NavigateToOverview">Back to overview</button>
-                    </div>
-                </EditForm>
-            </div>
+                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">Add meal plan</button>
+                    <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add recipe</button>
+                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="NavigateToOverview">Back to overview</button>
+                </div>
+            </EditForm>
         </div>
     </div>
 }

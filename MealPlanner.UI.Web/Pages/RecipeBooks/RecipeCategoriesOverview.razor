@@ -3,7 +3,7 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
-<div class="col-sm-6">
+<div>
     <div class="card">
         <div class="card-header">
             <table>
@@ -24,15 +24,15 @@
                 <TableTemplate Data="@Categories" ShowIndex="true" ColumnCount="4">
                     <TableHeader>
                         <th>Name</th>
-                        <th style="width: 100px"></th>
-                        <th style="width: 50px"></th>
-                        <th style="width: 30px"></th>
+                        <th style="width: 80px"></th>
+                        <th style="width: 40px"></th>
+                        <th style="width: 40px"></th>
                     </TableHeader>
                     <RowTemplate Context="category">
-                        <td>
+                        <td class="column-center">
                             @category.Name
                         </td>
-                        <td>
+                        <td class="column-center">
                             @if (category.IsSelected)
                             {
                                 <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>

@@ -10,6 +10,11 @@
         background: none !important;
         cursor: default !important;
     }
+
+    .column-center
+    {
+        align-content: center;
+    }
 </style>
 
 <table class="@(Data == null || !Data.Any() ? CssClasses.TableTemplateEmptyClass : CssClasses.TableTemplateWithItemsClass)">
@@ -18,7 +23,7 @@
         <tr>
             @if (ShowIndex)
             {
-                <th style="width: 34px">#</th>
+                <th style="width: 40px">#</th>
             }
             @TableHeader
         </tr>
@@ -39,7 +44,7 @@
                 <tr @onclick="async ()=> await OnSelectedItemChangedAsync(item)">
                     @if (ShowIndex)
                     {
-                        <td>@item.Index</td>
+                        <td class="column-center">@item.Index</td>
                     }
                     @RowTemplate!(item)
                 </tr>

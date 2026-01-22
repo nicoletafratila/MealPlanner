@@ -98,7 +98,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 result = new PagedList<UnitModel>(new List<UnitModel>(), new Metadata());
             }
             await SessionStorage!.SetItemAsync(queryParameters);
-            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass;
+            _tableGridClass = result!.Items!.Count == 0 ? CssClasses.GridTemplateEmptyClass : CssClasses.GridTemplateWithItemsClass + " grid-additional-columns";
             StateHasChanged();
             return new GridDataProviderResult<UnitModel> { Data = result!.Items, TotalCount = result.Metadata!.TotalCount };
         }

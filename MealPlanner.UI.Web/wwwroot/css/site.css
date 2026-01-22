@@ -1,6 +1,6 @@
 .card {
-    width: min-content;
-    min-width: 850px;
+    min-width: fit-content;
+    width: inherit;
 }
 
 .card-gridTemplate {
