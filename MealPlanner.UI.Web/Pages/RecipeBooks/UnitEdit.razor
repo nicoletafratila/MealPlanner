@@ -31,7 +31,7 @@
 
                 <div class="form-group mt-3">
                     <label for="unitType" class="col-sm-3">Unit type: </label>
-                    <div class="container vertical">
+                    <div>
                         <InputRadioGroup Name="unitType" @bind-Value="Unit.UnitType">
                             @foreach (var value in Enum.GetValues(typeof(UnitType)))
                             {

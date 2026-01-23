@@ -38,15 +38,29 @@
         border-color: white;
     }
 
-    .table-grid > thead > tr {
-        border-bottom-color: #dee2e6;
-        border-bottom-width: 0px;
+    .table-grid > thead {
+        display: inline-table;
     }
+
+        .table-grid > thead > tr {
+            border-bottom-color: #dee2e6;
+            border-bottom-width: 0px;
+            width: inherit;
+        }
+
+            .table-grid > thead > tr > th {
+                width: 50%;
+            }
 
     .table-grid > :not(caption) > * > * {
         padding: 0.3rem 0.3rem !important;
         background-color: white !important;
         color: black;
+        width: inherit;
+    }
+
+    .table > thead {
+        width: inherit;
     }
 </style>
 
@@ -63,7 +77,7 @@
       Responsive="true"
       FiltersRowCssClass="bg-primary text-white bg-opacity-25"
       HeaderRowCssClass="@HeaderRowCssClass">
-    
+
     @if (Columns != null)
     {
         @Columns

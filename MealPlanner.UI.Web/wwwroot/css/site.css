@@ -8,7 +8,7 @@
     min-width: stretch;
 }
 
-.card-recipe {
+.card-template {
     display: flex;
     flex-direction: column;
     width: 200px !important;
@@ -17,27 +17,27 @@
     border-radius: 5px;
 }
 
-    .card-recipe .card-header {
+    .card-template .card-header {
         flex: 1 1 auto;
         width: 100%;
         height: 150px;
         overflow: hidden;
     }
 
-        .card-recipe .card-header img {
+        .card-template .card-header img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-    .card-recipe .card-body {
+    .card-template .card-body {
         padding: 10px;
         text-align: left;
         font-size: 14px;
         position: relative;
     }
 
-        .card-recipe .card-body .small-icon {
+        .card-template .card-body .small-icon {
             width: 25px;
             height: 25px;
             cursor: pointer;
