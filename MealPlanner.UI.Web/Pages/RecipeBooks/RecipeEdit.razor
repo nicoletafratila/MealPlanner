@@ -3,17 +3,24 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
+<style>
+    .img-recipe {
+        max-width: 200px;
+        max-height: 200px;
+    }
+</style>
+
 @if (Recipe != null)
 {
     <div class="card">
         <div class="card-header">
             <table>
                 <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
+                    <td style="vertical-align: top">
                         <h2 id="headerName">@Recipe.Name</h2>
                     </td>
-                    <td class="col-md-3" style="align-content:flex-end;">
-                        <img class="img-fluid" src="@Recipe.ImageUrl" />
+                    <td style="align-content:flex-end;">
+                        <img class="img-recipe" src="@Recipe.ImageUrl" />
                     </td>
                 </tr>
             </table>
@@ -32,7 +39,20 @@
 
                 <div class="form-group mt-3">
                     <label for="source" class="col-sm-3">Original source: </label>
-                    <InputText id="source" class="form-control" @bind-Value="@Recipe.Source" placeholder="Enter the url for the original source"></InputText>
+                    <div class="input-group">
+                        <InputText id="source"
+                                   class="form-control"
+                                   @bind-Value="@Recipe.Source"
+                                   placeholder="Enter the url for the original source" />
+                        @if (!string.IsNullOrWhiteSpace(Recipe.Source))
+                        {
+                            <span class="input-group-text">
+                                <a href="@Recipe.Source" target="_blank">
+                                    <img src="Images/webIcon.png" alt="icon" class="small-icon">
+                                </a>
+                            </span>
+                        }
+                    </div>
                     <ValidationMessage For="@(() => Recipe.Source)" />
                 </div>
 

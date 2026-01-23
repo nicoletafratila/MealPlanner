@@ -3,17 +3,24 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
+<style>
+    .img-product {
+        max-width: 200px;
+        max-height: 200px;
+    }
+</style>
+
 @if (Product != null)
 {
     <div class="card">
         <div class="card-header">
             <table>
                 <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
+                    <td style="vertical-align: top">
                         <h2 id="headerName">@Product.Name</h2>
                     </td>
-                    <td class="col-md-3" style="align-content:flex-end;">
-                        <img class="img-fluid" src="@Product.ImageUrl" />
+                    <td style="align-content:flex-end;">
+                        <img class="img-product" src="@Product.ImageUrl" />
                     </td>
                 </tr>
             </table>

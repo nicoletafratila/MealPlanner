@@ -37,11 +37,11 @@
         position: relative;
     }
 
-        .card-template .card-body .small-icon {
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-        }
+.small-icon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
 
 .fill-space {
     width: 100%;

@@ -29,10 +29,10 @@
                         <th style="width: 40px"></th>
                     </TableHeader>
                     <RowTemplate Context="category">
-                        <td class="column-center">
+                        <td>
                             @category.Name
                         </td>
-                        <td class="column-center">
+                        <td>
                             @if (category.IsSelected)
                             {
                                 <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>
