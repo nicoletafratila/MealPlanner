@@ -2,6 +2,29 @@
 @using Common.Logging
 @using Common.Models
 
+
+<style>
+    .logs-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        .logs-table th:nth-child(1),
+        .logs-table td:nth-child(1) {
+            width: 3%;
+        }
+
+        .logs-table th:nth-child(2),
+        .logs-table td:nth-child(2) {
+            width: 10%;
+        }
+
+        .logs-table th:nth-child(3),
+        .logs-table td:nth-child(3) {
+            width: 5%;
+        }
+</style>
+
 <p>
     <button class="btn btn-danger" @onclick="async () => await DeleteAllLogsAsync()">Delete All Logs</button>
 </p>
@@ -11,35 +34,35 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@nameof(LogModel.Id)</th>
-                <th>@nameof(LogModel.Timestamp)</th>
-                <th>@nameof(LogModel.Message)</th>
-                <th>@nameof(LogModel.MessageTemplate)</th>
-                <th>@nameof(LogModel.Level)</th>
-                <th>@nameof(LogModel.Exception)</th>
-                <th>@nameof(LogModel.Properties)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var log in logs)
-            {
-                <tr>
-                    <td>@log.Id</td>
-                    <td>@log.Timestamp</td>
-                    <td>@log.Message</td>
-                    <td>@log.MessageTemplate</td>
-                    <td>
-                        <span class="text-@LogEventLevelHelper.GetBootstrapUIClass(log.Level)">
-                            @log.Level
-                        </span>
-                    </td>
-                    <td>@log.Exception</td>
-                    <td>@log.Properties</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="card-body">
+            <table class="table logs-table">
+                <thead>
+                    <tr>
+                        <th>@nameof(LogModel.Id)</th>
+                        <th>@nameof(LogModel.Timestamp)</th>
+                        <th>@nameof(LogModel.Level)</th>
+                        <th>@nameof(LogModel.Exception)</th>
+                        <th>@nameof(LogModel.Properties)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in logs)
+                    {
+                        <tr>
+                            <td>@log.Id</td>
+                            <td>@log.Timestamp</td>
+                            <td>
+                                <span class="text-@LogEventLevelHelper.GetBootstrapUIClass(log.Level)">
+                                    @log.Level
+                                </span>
+                            </td>
+                            <td>@log.Exception</td>
+                            <td>@log.Properties</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
