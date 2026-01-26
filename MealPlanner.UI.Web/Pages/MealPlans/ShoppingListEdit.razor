@@ -106,9 +106,9 @@
                     <TableTemplate Data="@ShoppingList.Products">
                         <TableCaption>Products:</TableCaption>
                         <TableHeader>
+                            <th style="width: 40px"></th>
                             <th></th>
-                            <th></th>
-                            <th style="width: 30px"></th>
+                            <th style ="width: 40px"></th>
                         </TableHeader>
                         <RowTemplate Context="ProductModel">
                             @if (ProductModel != null && ProductModel.Product != null)
@@ -119,9 +119,9 @@
                                 <td style="vertical-align:middle">
                                     <div style="display:flex; align-items: center">
                                         <img src="@ProductModel.Product.ImageUrl" class="img-fluid" width="100" height="80" />
-                                        <p>&nbsp;&nbsp;</p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                         <p>@ProductModel.Product.Name</p>
-                                        <p>&nbsp;&nbsp;</p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                         <p>@ProductModel.Quantity</p>
                                         <p>&nbsp;&nbsp;</p>
                                         <p>@ProductModel.Unit?.Name</p>
