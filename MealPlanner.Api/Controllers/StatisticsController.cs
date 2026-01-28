@@ -1,8 +1,8 @@
-﻿using Common.Models;
+﻿using Common.Api;
+using Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Controllers
 {
@@ -14,18 +14,21 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("favoriterecipes")]
         public async Task<IList<StatisticModel>> SearchFavoriteRecipesAsync([FromQuery] string? categories)
         {
-            Features.Statistics.Queries.SearchRecipes.SearchQuery query = new()
+            var categoryIds = string.IsNullOrWhiteSpace(categories)
+                ? new List<int>()
+                : categories
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
+                    .Where(id => id.HasValue)
+                    .Select(id => id!.Value)
+                    .ToList();
+
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            var query = new Features.Statistics.Queries.SearchRecipes.SearchQuery
             {
-                Categories = new List<RecipeCategoryModel>()
+                Categories = categoryIds,
+                AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
-            if (categories != null && categories.Count() > 0)
-            {
-                foreach (var item in categories?.Split(",")!)
-                {
-                    var category = item.Split('|');
-                    query.Categories?.Add(new RecipeCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
-                }
-            }
 
             return await mediator.Send(query);
         }
@@ -33,19 +36,22 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("favoriteproducts")]
         public async Task<IList<StatisticModel>?> SearchFavoriteProductsAsync([FromQuery] string? categories)
         {
-            Features.Statistics.Queries.SearchProducts.SearchQuery query = new()
+            var categoryIds = string.IsNullOrWhiteSpace(categories)
+                ? new List<int>()
+                : categories
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
+                    .Where(id => id.HasValue)
+                    .Select(id => id!.Value)
+                    .ToList();
+
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            var query = new Features.Statistics.Queries.SearchProducts.SearchQuery
             {
-                Categories = new List<ProductCategoryModel>()
+                Categories = categoryIds,
+                AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 
-            if (categories != null)
-            {
-                foreach (var item in categories!.Split(",")!)
-                {
-                    var category = item.Split('|');
-                    query.Categories?.Add(new ProductCategoryModel { Id = int.Parse(category[0]), Name = category[1] });
-                }
-            }
             return await mediator.Send(query);
         }
     }

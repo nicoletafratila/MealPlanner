@@ -13,8 +13,11 @@ PM> Script-migration
 
 
 
+adauga endpoit ce aduce categorii dupa ids
+foloseste httpClient.GetFromJsonAsync
+performanta in general pe controllere si services, handles
 baza comuna pt clase cu functii
 adauga reteta la meniu cu click dr si selectare mai multe
-user management
+user management - edit user profile
 swagger
 muta pe maui

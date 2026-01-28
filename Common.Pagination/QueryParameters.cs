@@ -10,6 +10,7 @@ namespace Common.Pagination
 
         public QueryParameters()
         {
+            PageNumber = 1;
             PageSize = PageSize > MaxPageSize ? MaxPageSize : PageSize;
         }
 

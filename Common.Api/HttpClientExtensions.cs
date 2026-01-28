@@ -21,7 +21,7 @@ namespace Common.Api
             }
         }
 
-        public static string CleanToken(string? authHeader)
+        public static string GetCleanToken(string? authHeader)
         {
             if (!string.IsNullOrWhiteSpace(authHeader) &&
                 authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme + " ", StringComparison.OrdinalIgnoreCase))

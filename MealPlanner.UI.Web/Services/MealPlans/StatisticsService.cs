@@ -3,7 +3,6 @@ using Common.Constants;
 using Common.Data.DataContext;
 using Common.Models;
 using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services.MealPlans
@@ -16,22 +15,24 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         {
             var query = new Dictionary<string, string?>
             {
-                ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
+                ["categories"] = string.Join(",", categories.Select(i => i.Id.ToString()))
             };
+            
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query!));
-            return JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
+            var url = QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query);
+            return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url);
         }
 
         public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories)
         {
             var query = new Dictionary<string, string?>
             {
-                ["categories"] = string.Join(",", categories.Select(i => i.Id + "|" + i.Name!))
+                ["categories"] = string.Join(",", categories.Select(i => i.Id.ToString()))
             };
+
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query!));
-            return JsonConvert.DeserializeObject<IList<StatisticModel>?>(await response.Content.ReadAsStringAsync());
+            var url = QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query);
+            return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url);
         }
     }
 }

@@ -18,14 +18,18 @@
                 foreach (var item in Statistics)
                 {
                     <div class="col-sm">
-                        <DoughnutChart @ref="item.Chart" Height="400" Class="mb-5" />
+                        <DoughnutChart
+                            @key="item.Title"  
+                            @ref="item.Chart"
+                            Height="400"
+                            Class="mb-5" />
                     </div>
                 }
             }
         </div>
 
         <br />
-        @if (Categories != null && Categories.Metadata != null && Categories.Items != null && Statistics != null && Statistics.Count() > 0)
+        @if (Categories != null && Categories.Metadata != null && Categories.Items != null)
         {
             <Pagination ActivePageNumber="@Categories.Metadata.PageNumber"
                         TotalPages="@Categories.Metadata.TotalPages"

@@ -34,17 +34,20 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         protected override async Task OnInitializedAsync()
         {
             QueryParameters!.PageSize = 3;
+            QueryParameters!.PageNumber = 1;
             await RefreshAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Statistics != null && Statistics.Any())
+            if (Statistics is not null && Statistics.Any())
             {
-                foreach (var item in Statistics)
-                {
-                    await item.Chart!.InitializeAsync(item.ChartData!, item.ChartOptions!);
-                }
+                var tasks = Statistics
+                    .Where(s => s.Chart is not null && s.ChartData is not null && s.ChartOptions is not null)
+                    .Select(s => s.Chart!.InitializeAsync(s.ChartData!, s.ChartOptions!));
+
+                await Task.WhenAll(tasks);
+
                 PreloadService.Hide();
             }
             await base.OnAfterRenderAsync(firstRender);
@@ -53,12 +56,13 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private async Task RefreshAsync()
         {
             Categories = await CategoryService!.SearchAsync(QueryParameters!);
-            if (Categories != null && Categories.Items != null && Categories.Items.Count > 0)
+
+            if (Categories?.Items is { Count: > 0 })
             {
                 PreloadService.Show(SpinnerColor.Primary);
             }
 
-            Statistics = await StatisticsService!.GetFavoriteProductsAsync(Categories?.Items!);
+            Statistics = await StatisticsService!.GetFavoriteProductsAsync(Categories!.Items!);
             foreach (var item in Statistics!)
             {
                 item.GenerateChartData();

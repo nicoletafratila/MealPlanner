@@ -1,11 +1,11 @@
 ﻿using Common.Models;
 using MediatR;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
 {
     public class SearchQuery : IRequest<IList<StatisticModel>>
     {
-        public IList<RecipeCategoryModel>? Categories { get; set; }
+        public IList<int>? Categories { get; set; }
+        public string? AuthToken { get; set; }
     }
 }

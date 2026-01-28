@@ -46,11 +46,12 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("shoppingListProducts")]
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, int shopId)
         {
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
             GetShoppingListProductsQuery query = new()
             {
                 RecipeId = recipeId,
                 ShopId = shopId,
-                AuthToken = HttpClientExtensions.CleanToken(Request.Headers["Authorization"].FirstOrDefault())
+                AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
             return await mediator.Send(query);
         }
@@ -94,10 +95,11 @@ namespace RecipeBook.Api.Controllers
         [HttpDelete]
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
             DeleteCommand command = new()
             {
                 Id = id,
-                AuthToken = HttpClientExtensions.CleanToken(Request.Headers["Authorization"].FirstOrDefault())
+                AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
             return await mediator.Send(command);
         }

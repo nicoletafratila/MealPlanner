@@ -43,24 +43,24 @@ namespace MealPlanner.Api.Repositories
               .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IList<MealPlanRecipe>?> SearchByRecipeCategoryIdAsync(int categoryId)
+        public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<int> categoryIds)
         {
             return await (DbContext as MealPlannerDbContext)!.MealPlanRecipes
                   .Include(x => x.Recipe)
                   .ThenInclude(x => x!.RecipeCategory)
-                  .Where(item => item.Recipe!.RecipeCategoryId == categoryId).ToListAsync();
+                  .Where(item => categoryIds.Contains(item.Recipe!.RecipeCategoryId)).ToListAsync();
         }
 
-        public async Task<IList<KeyValuePair<Product, MealPlan>>?> SearchByProductCategoryIdAsync(int categoryId)
+        public async Task<IList<KeyValuePair<Product, MealPlan>>?> SearchByProductCategoryIdsAsync(IList<int> categoryIds)
         {
             var productPerRecipe = await (DbContext as MealPlannerDbContext)!.RecipeIngredients
-                                         .Where(x => x.Product!.ProductCategoryId == categoryId)
+                                         .Where(x => categoryIds.Contains(x.Product!.ProductCategoryId))
                                          .Select(x => new { x.Product, x.Recipe })
                                          .ToListAsync();
-            var recipedWhereUsed = productPerRecipe.Select(i => i.Recipe?.Id);
+            var recipesWhereUsed = productPerRecipe.Select(i => i.Recipe?.Id);
             var mealPlansPerRecipe = await (DbContext as MealPlannerDbContext)!.MealPlanRecipes
                     .Select(x => new { x.MealPlan, x.Recipe })
-                    .Where(x => recipedWhereUsed.Contains(x.Recipe!.Id)).ToListAsync();
+                    .Where(x => recipesWhereUsed.Contains(x.Recipe!.Id)).ToListAsync();
 
             return productPerRecipe.Join(
                     mealPlansPerRecipe,
