@@ -10,6 +10,7 @@ using RecipeBook.Api.Features.ProductCategory.Commands.Delete;
 using RecipeBook.Api.Features.ProductCategory.Commands.Update;
 using RecipeBook.Api.Features.ProductCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.ProductCategory.Queries.Search;
+using RecipeBook.Api.Features.ProductCategory.Queries.SearchByCategories;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -41,6 +42,16 @@ namespace RecipeBook.Api.Controllers
                     PageSize = int.Parse(pageSize!),
                     PageNumber = int.Parse(pageNumber!)
                 }
+            };
+            return await mediator.Send(query);
+        }
+
+        [HttpGet("searchbycategories")]
+        public async Task<IList<ProductCategoryModel>> SearchAsync([FromQuery] string categoryIds)
+        {
+            SearchByCategoriesQuery query = new()
+            {
+                CategoryIds = categoryIds
             };
             return await mediator.Send(query);
         }

@@ -33,8 +33,13 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         protected override async Task OnInitializedAsync()
         {
-            QueryParameters!.PageSize = 3;
-            QueryParameters!.PageNumber = 1;
+            QueryParameters = new QueryParameters<ProductCategoryModel>()
+            {
+                Filters = new List<FilterItem>(),
+                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                PageSize = 3,
+                PageNumber = 1
+            };
             await RefreshAsync();
         }
 

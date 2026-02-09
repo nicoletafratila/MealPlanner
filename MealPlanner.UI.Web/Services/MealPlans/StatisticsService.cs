@@ -15,9 +15,9 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         {
             var query = new Dictionary<string, string?>
             {
-                ["categories"] = string.Join(",", categories.Select(i => i.Id.ToString()))
+                ["categoryIds"] = string.Join(",", categories.Select(i => i.Id.ToString()))
             };
-            
+
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
             var url = QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query);
             return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url);
@@ -27,7 +27,7 @@ namespace MealPlanner.UI.Web.Services.MealPlans
         {
             var query = new Dictionary<string, string?>
             {
-                ["categories"] = string.Join(",", categories.Select(i => i.Id.ToString()))
+                ["categoryIds"] = string.Join(",", categories.Select(i => i.Id.ToString()))
             };
 
             await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);

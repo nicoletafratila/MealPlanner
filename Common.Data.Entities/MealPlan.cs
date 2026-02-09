@@ -7,32 +7,74 @@ namespace Common.Data.Entities
         public string? Name { get; set; }
         public IList<MealPlanRecipe>? MealPlanRecipes { get; set; }
 
-        public ShoppingList MakeShoppingList(Shop shop)
+        public ShoppingList MakeShoppingList(Shop? shop)
         {
-            var list = new ShoppingList
+            if (shop is null)
             {
-                Name = $"Shopping list details for {Name} in shop {shop.Name}",
-                ShopId = shop.Id
-            };
+                return new ShoppingList();
+            }
 
-            var products = new List<ShoppingListProduct>();
-            foreach (var item in MealPlanRecipes!)
+            if (MealPlanRecipes == null || !MealPlanRecipes.Any())
             {
-                foreach (var i in item.Recipe?.RecipeIngredients!)
+                return new ShoppingList
                 {
-                    var existingProduct = products.FirstOrDefault(x => x.ProductId == i.ProductId);
-                    if (existingProduct == null)
+                    Name = $"Shopping list details for {Name} in shop {shop.Name}",
+                    ShopId = shop.Id,
+                    Products = new List<ShoppingListProduct>()
+                };
+            }
+
+            var productsById = new Dictionary<int, ShoppingListProduct>();
+            foreach (var mealPlanRecipe in MealPlanRecipes)
+            {
+                var recipe = mealPlanRecipe?.Recipe;
+                var ingredients = recipe?.RecipeIngredients;
+                if (ingredients == null)
+                {
+                    continue;
+                }
+
+                foreach (var ingredient in ingredients)
+                {
+                    if (ingredient == null)
                     {
-                        var displaySequence = shop?.GetDisplaySequence(i.Product?.ProductCategory?.Id);
-                        var newProduct = i.ToShoppingListProduct(displaySequence!.Value);
-                        products.Add(newProduct);
+                        continue;
+                    }
+
+                    var productId = ingredient.ProductId;
+                    if (!productsById.TryGetValue(productId, out var existingProduct))
+                    {
+                        var categoryId = ingredient.Product?.ProductCategory?.Id;
+                        var displaySequence = shop.GetDisplaySequence(categoryId!);
+                        
+                        var newProduct = ingredient.ToShoppingListProduct(displaySequence.Value);
+                        productsById.Add(productId, newProduct);
                     }
                     else
-                        existingProduct.Quantity += UnitConverter.Convert(i.Quantity, i.Unit!, existingProduct!.Product!.BaseUnit!);  
+                    {
+                        var baseUnit = existingProduct.Product?.BaseUnit;
+                        var additionalQuantity = UnitConverter.Convert(
+                            ingredient.Quantity,
+                            ingredient.Unit!,   
+                            baseUnit!
+                        );
+                        existingProduct.Quantity += additionalQuantity;
+                    }
                 }
             }
-            list.Products = products;
-            return list;
+
+            foreach (var item in productsById.Values)
+            {
+                item.Product = null;
+                item.Unit = null;
+            }
+
+            return new ShoppingList
+            {
+                Name = $"Shopping list details for {Name} in shop {shop.Name}",
+                ShopId = shop.Id,
+                Products = productsById.Values.ToList()
+            };
         }
     }
 }

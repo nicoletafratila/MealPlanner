@@ -12,8 +12,6 @@ PM> Script-migration
 
 
 
-
-adauga endpoit ce aduce categorii dupa ids
 foloseste httpClient.GetFromJsonAsync
 performanta in general pe controllere si services, handles
 baza comuna pt clase cu functii

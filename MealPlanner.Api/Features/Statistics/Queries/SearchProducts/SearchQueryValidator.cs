@@ -6,7 +6,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
     {
         public SearchQueryValidator()
         {
-            RuleFor(x => x.Categories).NotEmpty().NotNull();
+            RuleFor(x => x.CategoryIds).NotEmpty().NotNull();
         }
     }
 }

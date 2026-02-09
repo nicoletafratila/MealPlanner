@@ -7,8 +7,8 @@ namespace MealPlanner.Api.Repositories
     {
         Task<MealPlan?> GetByIdIncludeRecipesAsync(int id);
         Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<int> categoryIds);
-        Task<IList<KeyValuePair<Product, MealPlan>>?> SearchByProductCategoryIdsAsync(IList<int> categoryIds);
-        Task<IList<MealPlan>?> SearchByRecipeAsync(int recipeId);
+        Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<int> categoryIds);
+        Task<IList<MealPlan>> SearchByRecipeAsync(int recipeId);
         Task<MealPlan?> SearchAsync(string name);
     }
 }

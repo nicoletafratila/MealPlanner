@@ -12,21 +12,12 @@ namespace MealPlanner.Api.Controllers
     public class StatisticsController(ISender mediator) : ControllerBase
     {
         [HttpGet("favoriterecipes")]
-        public async Task<IList<StatisticModel>> SearchFavoriteRecipesAsync([FromQuery] string? categories)
+        public async Task<IList<StatisticModel>> SearchFavoriteRecipesAsync([FromQuery] string? categoryIds)
         {
-            var categoryIds = string.IsNullOrWhiteSpace(categories)
-                ? new List<int>()
-                : categories
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
-                    .Where(id => id.HasValue)
-                    .Select(id => id!.Value)
-                    .ToList();
-
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
             var query = new Features.Statistics.Queries.SearchRecipes.SearchQuery
             {
-                Categories = categoryIds,
+                CategoryIds = categoryIds,
                 AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 
@@ -34,21 +25,12 @@ namespace MealPlanner.Api.Controllers
         }
 
         [HttpGet("favoriteproducts")]
-        public async Task<IList<StatisticModel>?> SearchFavoriteProductsAsync([FromQuery] string? categories)
+        public async Task<IList<StatisticModel>?> SearchFavoriteProductsAsync([FromQuery] string? categoryIds)
         {
-            var categoryIds = string.IsNullOrWhiteSpace(categories)
-                ? new List<int>()
-                : categories
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
-                    .Where(id => id.HasValue)
-                    .Select(id => id!.Value)
-                    .ToList();
-
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
             var query = new Features.Statistics.Queries.SearchProducts.SearchQuery
             {
-                Categories = categoryIds,
+                CategoryIds = categoryIds,
                 AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 

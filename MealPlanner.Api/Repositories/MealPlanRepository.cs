@@ -9,76 +9,106 @@ namespace MealPlanner.Api.Repositories
     {
         public override async Task<MealPlan?> GetByIdAsync(int id)
         {
-            return await (DbContext as MealPlannerDbContext)!.MealPlans
-                    .Include(x => x.MealPlanRecipes)!
-                        .ThenInclude(x => x.Recipe)
-                            .ThenInclude(x => x!.RecipeCategory)
-                    .FirstOrDefaultAsync(x => x.Id == id);
+            var context = (MealPlannerDbContext)DbContext;
+
+            return await context.MealPlans!
+                .Include(mp => mp.MealPlanRecipes)!
+                    .ThenInclude(mpr => mpr.Recipe)
+                        .ThenInclude(r => r!.RecipeCategory)
+                .FirstOrDefaultAsync(mp => mp.Id == id);
         }
 
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(int id)
         {
-            return await (DbContext as MealPlannerDbContext)!.MealPlans
-              .Include(x => x.MealPlanRecipes)!
-                  .ThenInclude(x => x.Recipe)
-                      .ThenInclude(x => x!.RecipeCategory)
-              .Include(x => x.MealPlanRecipes)!
-                  .ThenInclude(x => x.Recipe)
-                      .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Unit)
-              .Include(x => x.MealPlanRecipes)!
-                  .ThenInclude(x => x.Recipe)
-                      .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Product)
-              .Include(x => x.MealPlanRecipes)!
-                  .ThenInclude(x => x.Recipe)
-                      .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Product)
-                             .ThenInclude(x => x!.ProductCategory)
-              .Include(x => x.MealPlanRecipes)!
-                  .ThenInclude(x => x.Recipe)
-                      .ThenInclude(x => x!.RecipeIngredients)!
-                          .ThenInclude(x => x.Product)
-                             .ThenInclude(x => x!.BaseUnit)
-              .FirstOrDefaultAsync(x => x.Id == id);
+            var context = (MealPlannerDbContext)DbContext;
+
+            return await context.MealPlans
+                .AsNoTracking()
+                .Include(mp => mp.MealPlanRecipes)!
+                    .ThenInclude(mpr => mpr.Recipe)
+                        .ThenInclude(r => r!.RecipeCategory)!
+                .Include(mp => mp.MealPlanRecipes)!
+                    .ThenInclude(mpr => mpr.Recipe)
+                        .ThenInclude(r => r!.RecipeIngredients)!
+                            .ThenInclude(ri => ri.Unit)
+                .Include(mp => mp.MealPlanRecipes)!
+                    .ThenInclude(mpr => mpr.Recipe)
+                        .ThenInclude(r => r!.RecipeIngredients)!
+                            .ThenInclude(ri => ri.Product)
+                                .ThenInclude(p => p!.ProductCategory)
+                .Include(mp => mp.MealPlanRecipes)!
+                    .ThenInclude(mpr => mpr.Recipe)
+                        .ThenInclude(r => r!.RecipeIngredients)!
+                            .ThenInclude(ri => ri.Product)
+                                .ThenInclude(p => p!.BaseUnit)
+                .FirstOrDefaultAsync(mp => mp.Id == id);
         }
 
         public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<int> categoryIds)
         {
-            return await (DbContext as MealPlannerDbContext)!.MealPlanRecipes
-                  .Include(x => x.Recipe)
-                  .ThenInclude(x => x!.RecipeCategory)
-                  .Where(item => categoryIds.Contains(item.Recipe!.RecipeCategoryId)).ToListAsync();
+            if (categoryIds == null || categoryIds.Count == 0)
+            {
+                return new List<MealPlanRecipe>();
+            }
+
+            var context = (MealPlannerDbContext)DbContext;
+
+            return await context.MealPlanRecipes
+                .AsNoTracking()
+                .Include(x => x.Recipe)
+                    .ThenInclude(r => r!.RecipeCategory)
+                .Where(mpr => categoryIds.Contains(mpr.Recipe!.RecipeCategoryId))
+                .ToListAsync();
         }
 
-        public async Task<IList<KeyValuePair<Product, MealPlan>>?> SearchByProductCategoryIdsAsync(IList<int> categoryIds)
+        public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<int> categoryIds)
         {
-            var productPerRecipe = await (DbContext as MealPlannerDbContext)!.RecipeIngredients
-                                         .Where(x => categoryIds.Contains(x.Product!.ProductCategoryId))
-                                         .Select(x => new { x.Product, x.Recipe })
-                                         .ToListAsync();
-            var recipesWhereUsed = productPerRecipe.Select(i => i.Recipe?.Id);
-            var mealPlansPerRecipe = await (DbContext as MealPlannerDbContext)!.MealPlanRecipes
-                    .Select(x => new { x.MealPlan, x.Recipe })
-                    .Where(x => recipesWhereUsed.Contains(x.Recipe!.Id)).ToListAsync();
+            if (categoryIds == null || categoryIds.Count == 0)
+            {
+                return new List<KeyValuePair<Product, MealPlan>>();
+            }
 
-            return productPerRecipe.Join(
-                    mealPlansPerRecipe,
-                    product => product.Recipe?.Id,
-                    mealPlan => mealPlan.Recipe?.Id, (product, mealPlan) => new KeyValuePair<Product, MealPlan>(product.Product!, mealPlan.MealPlan!)).ToList();
+            var context = (MealPlannerDbContext)DbContext;
+
+            var query =
+                from ri in context.RecipeIngredients.AsNoTracking()
+                where categoryIds.Contains(ri.Product!.ProductCategoryId)
+                join mr in context.MealPlanRecipes.AsNoTracking()
+                    on ri.RecipeId equals mr.RecipeId
+                select new { ri.Product, mr.MealPlan };
+
+            var results = await query.ToListAsync();
+
+            return results
+                .Select(x => new KeyValuePair<Product, MealPlan>(x.Product!, x.MealPlan!))
+                .ToList();
         }
 
-        public async Task<IList<MealPlan>?> SearchByRecipeAsync(int recipeId)
+        public async Task<IList<MealPlan>> SearchByRecipeAsync(int recipeId)
         {
-            return await (DbContext as MealPlannerDbContext)!.MealPlans
-                    .Where(item => item.MealPlanRecipes!.Any(r => r.RecipeId == recipeId))
-                    .ToListAsync();
+            var context = (MealPlannerDbContext)DbContext;
+
+            return await context.MealPlanRecipes
+                .AsNoTracking()
+                .Where(mpr => mpr.RecipeId == recipeId)
+                .Select(mpr => mpr.MealPlan!)
+                .Distinct()
+                .ToListAsync();
         }
 
         public async Task<MealPlan?> SearchAsync(string name)
         {
-            return await (DbContext as MealPlannerDbContext)!.MealPlans
-                   .FirstOrDefaultAsync(item => item.Name!.ToLower() == name.ToLower());
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            var context = (MealPlannerDbContext)DbContext;
+            var normalizedName = name.ToUpper();
+
+            return await context.MealPlans
+                .AsNoTracking()
+                .FirstOrDefaultAsync(mp => mp.Name!.ToUpper() == normalizedName);
         }
     }
 }

@@ -11,6 +11,7 @@ using RecipeBook.Api.Features.RecipeCategory.Commands.Update;
 using RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll;
 using RecipeBook.Api.Features.RecipeCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.RecipeCategory.Queries.Search;
+using RecipeBook.Api.Features.RecipeCategory.Queries.SearchByCategories;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Controllers
@@ -42,6 +43,16 @@ namespace RecipeBook.Api.Controllers
                     PageSize = int.Parse(pageSize!),
                     PageNumber = int.Parse(pageNumber!)
                 }
+            };
+            return await mediator.Send(query);
+        }
+
+        [HttpGet("searchbycategories")]
+        public async Task<IList<RecipeCategoryModel>> SearchAsync([FromQuery] string categoryIds)
+        {
+            SearchByCategoriesQuery query = new()
+            {
+                CategoryIds = categoryIds
             };
             return await mediator.Send(query);
         }

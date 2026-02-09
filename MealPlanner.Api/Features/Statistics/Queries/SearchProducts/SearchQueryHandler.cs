@@ -2,7 +2,6 @@
 using Common.Api;
 using Common.Constants;
 using Common.Models;
-using Common.Pagination;
 using MealPlanner.Api.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.WebUtilities;
@@ -15,27 +14,25 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
         public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var result = new List<StatisticModel>();
-
-            if (request.Categories == null || request.Categories.Count == 0)
+            if (string.IsNullOrWhiteSpace(request.CategoryIds))
             {
                 return result;
             }
 
-            var categoryIds = request.Categories
-                .Where(id => id > 0)
-                .Distinct()
-                .ToList();
-
-            if (categoryIds.Count == 0)
+            var categories = await LoadCategoriesAsync(request.CategoryIds!, request.AuthToken, cancellationToken);
+            if (categories is null || !categories.Any())
             {
                 return result;
             }
 
-            var categories = await LoadCategoriesAsync(categoryIds, request.AuthToken, cancellationToken);
-            if (categories.Count == 0)
-            {
-                return result;
-            }
+            var categoryIds = string.IsNullOrWhiteSpace(request.CategoryIds)
+               ? new List<int>()
+               : request.CategoryIds
+                   .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                   .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
+                   .Where(id => id.HasValue)
+                   .Select(id => id!.Value)
+                   .ToList();
 
             var mealPlans = await mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds);
 
@@ -108,37 +105,21 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
             return result;
         }
 
-        private async Task<List<ProductCategoryModel>> LoadCategoriesAsync(List<int> categoryIds, string? authToken, CancellationToken cancellationToken)
+        private async Task<IList<ProductCategoryModel>?> LoadCategoriesAsync(string categoryIds, string? authToken, CancellationToken cancellationToken)
         {
-            using (var client = new HttpClient())
+            using var client = new HttpClient();
+            client.EnsureAuthorizationHeader(authToken);
+            client.BaseAddress = recipeBookApiConfig?.BaseUrl;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var query = new Dictionary<string, string?>
             {
-                client.EnsureAuthorizationHeader(authToken);
-                client.BaseAddress = recipeBookApiConfig?.BaseUrl;
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var query = new Dictionary<string, string?>
-                {
-                    [nameof(QueryParameters<ProductCategoryModel>.Filters)] = null,
-                    [nameof(QueryParameters<ProductCategoryModel>.Sorting)] = null,
-                    [nameof(QueryParameters<ProductCategoryModel>.PageSize)] = int.MaxValue.ToString(),
-                    [nameof(QueryParameters<ProductCategoryModel>.PageNumber)] = "1",
-                };
-
-                var controller = recipeBookApiConfig!.Controllers![RecipeBookControllers.ProductCategory];
-                var url = QueryHelpers.AddQueryString($"{controller}/search", query);
-
-                var allCategories = await client.GetFromJsonAsync<PagedList<ProductCategoryModel>>(url, cancellationToken);
-
-                if (allCategories?.Items == null || allCategories.Items.Count == 0)
-                {
-                    return new List<ProductCategoryModel>();
-                }
-
-                var requestedSet = new HashSet<int>(categoryIds);
-                return allCategories.Items
-                    .Where(item => requestedSet.Contains(item.Id))
-                    .ToList();
-            }
+                ["categoryIds"] = categoryIds
+            };
+            var controller = recipeBookApiConfig!.Controllers![RecipeBookControllers.ProductCategory];
+            var url = QueryHelpers.AddQueryString($"{controller}/searchbycategories", query);
+            return await client.GetFromJsonAsync<IList<ProductCategoryModel>>(url, cancellationToken);
         }
     }
 }
