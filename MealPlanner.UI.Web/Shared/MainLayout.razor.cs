@@ -4,39 +4,32 @@ namespace MealPlanner.UI.Web.Shared
 {
     public partial class MainLayout : IMessageComponent
     {
-        public bool IsErrorActive { get; set; }
-        public bool IsInfoActive { get; set; }
-        public string? Message { get; set; }
+        public bool IsErrorActive { get; private set; }
+        public bool IsInfoActive { get; private set; }
+        public string? Message { get; private set; }
 
-        public void ShowError(string message)
+        public void ShowError(string message) => SetMessage(message, isError: true);
+
+        public void ShowInfo(string message) => SetMessage(message, isError: false);
+
+        private void SetMessage(string message, bool isError)
         {
-            IsErrorActive = true;
-            IsInfoActive = false;
+            IsErrorActive = isError;
+            IsInfoActive = !isError;
             Message = message;
             StateHasChanged();
-        }
-
-        public void ShowInfo(string message)
-        {
-            IsErrorActive = false;
-            IsInfoActive = true;
-            Message = message;
-            StateHasChanged();
-        }
-
-        protected override Task OnInitializedAsync()
-        {
-            return base.OnInitializedAsync();
         }
 
         protected void HideError()
         {
             IsErrorActive = false;
+            StateHasChanged();
         }
 
         protected void HideInfo()
         {
             IsInfoActive = false;
+            StateHasChanged();
         }
     }
 }

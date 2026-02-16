@@ -15,16 +15,19 @@ namespace MealPlanner.UI.Web.Shared
         [CascadingParameter]
         private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
 
-        public ApplicationUserEditModel? ApplicationUser { get; set; }
+        public ApplicationUserEditModel? ApplicationUser { get; private set; }
 
         [Inject]
-        public IAuthenticationService? AuthenticationService { get; set; }
+        public IAuthenticationService AuthenticationService { get; set; } = default!;
 
         [Inject]
-        public IApplicationUserService? ApplicationUserService { get; set; }
+        public IApplicationUserService ApplicationUserService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
+
+        [Inject]
+        public ILogger<LoginDisplay> Logger { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -38,19 +41,43 @@ namespace MealPlanner.UI.Web.Shared
             if (string.IsNullOrWhiteSpace(username))
                 return;
 
-            ApplicationUser = await ApplicationUserService!.GetEditAsync(username);
+            try
+            {
+                ApplicationUser = await ApplicationUserService.GetEditAsync(username);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to load ApplicationUser for username '{Username}'", username);
+                MessageComponent?.ShowError("Failed to load user profile.");
+            }
         }
 
         public async Task LogoutAsync()
         {
-            var result = await AuthenticationService!.LogoutAsync();
-            if (result != null && result.Succeeded)
+            try
             {
-                NavigationManager?.NavigateTo("/", forceLoad: true);
+                var result = await AuthenticationService.LogoutAsync();
+
+                if (result?.Succeeded == true)
+                {
+                    NavigationManager.NavigateTo("/", forceLoad: true);
+                }
+                else
+                {
+                    var message = string.IsNullOrWhiteSpace(result?.Message)
+                        ? "Logout failed. Please try again."
+                        : result!.Message!;
+
+                    Logger.LogWarning("Logout failed. Succeeded={Succeeded}, Message={Message}, ErrorCode={ErrorCode}",
+                        result?.Succeeded, result?.Message, result?.ErrorCode);
+
+                    MessageComponent?.ShowError(message);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageComponent?.ShowError(result!.Message!);
+                Logger.LogError(ex, "Unexpected error during logout");
+                MessageComponent?.ShowError("Unexpected error during logout. Please try again.");
             }
         }
     }
