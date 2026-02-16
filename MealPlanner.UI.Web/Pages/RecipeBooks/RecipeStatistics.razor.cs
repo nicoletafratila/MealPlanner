@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             Statistics = await StatisticsService!.GetFavoriteRecipesAsync(Categories!.Items!);
-            foreach (var item in Statistics)
+            foreach (var item in Statistics!)
             {
                 item.GenerateChartData();
             }

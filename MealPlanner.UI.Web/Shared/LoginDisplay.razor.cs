@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using Common.UI;
 using Identity.Shared.Models;
-using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;

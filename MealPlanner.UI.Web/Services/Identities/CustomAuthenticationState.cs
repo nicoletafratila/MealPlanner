@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace MealPlanner.UI.Web
+namespace MealPlanner.UI.Web.Services.Identities
 {
     public class CustomAuthenticationState(ISessionStorageService sessionStorage) : AuthenticationStateProvider
     {

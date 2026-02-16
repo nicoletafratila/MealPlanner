@@ -1,4 +1,4 @@
-﻿using MealPlanner.UI.Web.Services;
+﻿using Common.UI;
 
 namespace MealPlanner.UI.Web.Shared
 {

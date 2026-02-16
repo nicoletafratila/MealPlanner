@@ -3,19 +3,26 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
+<style>
+    .img-profile {
+        max-width: 200px;
+        max-height: 200px;
+    }
+</style>
+
 @if (ApplicationUser != null)
 {
     <div class="card">
         <div class="card-header">
             <table>
                 <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
+                    <td style="vertical-align: top">
                         <h2 id="headerfirstname">@ApplicationUser.FirstName</h2>
                         <br />
                         <h2 id="headerlastname">@ApplicationUser.LastName</h2>
                     </td>
-                    <td class="col-md-3" style="align-content:flex-end;">
-                        <img class="img-fluid" src="@ApplicationUser.ProfilePictureUrl" />
+                    <td style="align-content:flex-end;">
+                        <img class="img-profile" src="@ApplicationUser.ProfilePictureUrl" />
                     </td>
                 </tr>
             </table>

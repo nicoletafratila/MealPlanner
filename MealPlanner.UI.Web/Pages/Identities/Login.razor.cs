@@ -1,5 +1,5 @@
-﻿using Identity.Shared.Models;
-using MealPlanner.UI.Web.Services;
+﻿using Common.UI;
+using Identity.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;

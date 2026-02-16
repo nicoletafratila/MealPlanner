@@ -1,4 +1,4 @@
-﻿namespace MealPlanner.UI.Web.Services
+﻿namespace Common.UI
 {
     public interface IMessageComponent
     {
