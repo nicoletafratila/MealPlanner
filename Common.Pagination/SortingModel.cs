@@ -2,9 +2,9 @@
 
 namespace Common.Pagination
 {
-    public class SortingModel
+    public sealed class SortingModel
     {
-        public required string PropertyName { get; set; }
-        public SortDirection Direction { get; set; }
+        public string PropertyName { get; init; } = default!;
+        public SortDirection Direction { get; init; }
     }
 }

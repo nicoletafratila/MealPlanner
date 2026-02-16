@@ -14,7 +14,6 @@ PM> Script-migration
 
 foloseste httpClient.GetFromJsonAsync
 performanta in general pe controllere si services, handles
-baza comuna pt clase cu functii
 adauga reteta la meniu cu click dr si selectare mai multe
 user management - edit user profile
 swagger

@@ -2,21 +2,25 @@
 
 namespace Common.Api
 {
-    public class TokenProvider(ISessionStorageService sessionStorage)
+    public sealed class TokenProvider(ISessionStorageService sessionStorage)
     {
-        public async Task<string> GetTokenAsync()
+        private readonly ISessionStorageService _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
+        private const string TokenKey = Constants.MealPlanner.AuthToken;
+
+        public async Task<string?> GetTokenAsync()
         {
-            return await sessionStorage.GetItemAsync<string>(Constants.MealPlanner.AuthToken);
+            return await _sessionStorage.GetItemAsync<string?>(TokenKey);
         }
 
         public async Task SetTokenAsync(string token)
         {
-            await sessionStorage.SetItemAsync(Constants.MealPlanner.AuthToken, token);
+            ArgumentException.ThrowIfNullOrEmpty(token);
+            await _sessionStorage.SetItemAsync(TokenKey, token);
         }
 
         public async Task RemoveTokenAsync()
         {
-            await sessionStorage.RemoveItemAsync(Constants.MealPlanner.AuthToken);
+            await _sessionStorage.RemoveItemAsync(TokenKey);
         }
     }
 }
