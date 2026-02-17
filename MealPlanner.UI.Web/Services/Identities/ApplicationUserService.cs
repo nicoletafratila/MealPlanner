@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace MealPlanner.UI.Web.Services.Identities
 {
-    public sealed class ApplicationUserService(
+    public class ApplicationUserService(
         HttpClient httpClient,
         TokenProvider tokenProvider,
         IdentityApiConfig identityApiConfig,

@@ -8,21 +8,47 @@ namespace MealPlanner.UI.Web.Pages
     [Authorize(Roles = "admin")]
     public partial class AuditTrail
     {
-        private IEnumerable<LogModel>? logs;
+        public IEnumerable<LogModel>? Logs;
 
         [Inject]
-        public ILoggerService? LoggerService { get; set; }
+        public ILoggerService LoggerService { get; set; } = default!;
+
+        [Inject]
+        public ILogger<AuditTrail> Logger { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
-            logs = await LoggerService!.GetLogsAsync();
+            await LoadLogsAsync();
+        }
+
+        private async Task LoadLogsAsync()
+        {
+            try
+            {
+                Logs = await LoggerService.GetLogsAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to load audit trail logs.");
+                Logs = [];
+            }
         }
 
         private async Task DeleteAllLogsAsync()
         {
-            await LoggerService!.DeleteLogsAsync();
-            await OnInitializedAsync();
-            StateHasChanged();
+            try
+            {
+                await LoggerService.DeleteLogsAsync();
+                await LoadLogsAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to delete audit trail logs.");
+            }
+            finally
+            {
+                StateHasChanged();
+            }
         }
     }
 }

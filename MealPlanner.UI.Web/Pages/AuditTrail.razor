@@ -28,7 +28,7 @@
 <p>
     <button class="btn btn-danger" @onclick="async () => await DeleteAllLogsAsync()">Delete All Logs</button>
 </p>
-@if (logs == null)
+@if (Logs == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -47,7 +47,7 @@ else
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var log in logs)
+                    @foreach (var log in Logs)
                     {
                         <tr>
                             <td>@log.Id</td>
