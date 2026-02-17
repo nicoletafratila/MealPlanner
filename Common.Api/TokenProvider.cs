@@ -2,7 +2,7 @@
 
 namespace Common.Api
 {
-    public sealed class TokenProvider(ISessionStorageService sessionStorage)
+    public class TokenProvider(ISessionStorageService sessionStorage)
     {
         private readonly ISessionStorageService _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
         private const string TokenKey = Constants.MealPlanner.AuthToken;

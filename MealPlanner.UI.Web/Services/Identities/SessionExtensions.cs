@@ -5,33 +5,44 @@ namespace MealPlanner.UI.Web.Services.Identities
 {
     public static class SessionExtensions
     {
-        public static async Task SetItemAsync<TItem>(this ISessionStorageService sessionStorage, TItem info, string? name = "")
+        private static readonly JsonSerializerSettings JsonSettings = new()
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                name = typeof(TItem).FullName;
-            }
-            var settings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore,
-                TypeNameHandling = TypeNameHandling.None,
-            };
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.None
+        };
 
-            await sessionStorage!.SetItemAsync(name, JsonConvert.SerializeObject(info, settings));
+        private static string GetKey<TItem>(string? name) =>
+            string.IsNullOrWhiteSpace(name)
+                ? (typeof(TItem).FullName ?? typeof(TItem).Name)
+                : name;
+
+        public static async Task SetItemAsync<TItem>(
+            this ISessionStorageService sessionStorage,
+            TItem info,
+            string? name = null)
+        {
+            ArgumentNullException.ThrowIfNull(sessionStorage);
+
+            var key = GetKey<TItem>(name);
+            var json = JsonConvert.SerializeObject(info, JsonSettings);
+
+            await sessionStorage.SetItemAsync(key, json);
         }
 
-        public static async Task<TItem?> GetItemAsync<TItem>(this ISessionStorageService sessionStorage, string? name = "")
+        public static async Task<TItem?> GetItemAsync<TItem>(
+            this ISessionStorageService sessionStorage,
+            string? name = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                name = typeof(TItem).FullName;
-            }
-            var infoJson = await sessionStorage!.GetItemAsync<string>(name);
-            if (string.IsNullOrWhiteSpace(infoJson))
+            ArgumentNullException.ThrowIfNull(sessionStorage);
+
+            var key = GetKey<TItem>(name);
+            var json = await sessionStorage.GetItemAsync<string?>(key);
+
+            if (string.IsNullOrWhiteSpace(json))
                 return default;
 
-            return JsonConvert.DeserializeObject<TItem>(infoJson);
+            return JsonConvert.DeserializeObject<TItem>(json, JsonSettings);
         }
     }
 }

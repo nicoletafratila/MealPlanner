@@ -1,68 +1,149 @@
-﻿using System.Text;
+﻿using System.Text.Json;
 using Common.Api;
 using Common.Constants;
-using Common.Data.DataContext;
 using Common.Models;
 using Identity.Shared.Models;
-using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Services.Identities
 {
-    public class AuthenticationService(HttpClient httpClient, TokenProvider tokenProvider) : IAuthenticationService
+    public class AuthenticationService(
+        HttpClient httpClient,
+        TokenProvider tokenProvider,
+        IdentityApiConfig identityApiConfig,
+        ILogger<AuthenticationService> logger) : IAuthenticationService
     {
-        private readonly IApiConfig _identityApiConfig = ServiceLocator.Current.GetInstance<IdentityApiConfig>();
+        private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        private readonly string _authController =
+            identityApiConfig.Controllers![IdentityControllers.Authentication]
+            ?? throw new ArgumentException("Authentication controller URL is not configured.", nameof(identityApiConfig));
+
+        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
 
         public async Task<CommandResponse?> LoginAsync(LoginModel model)
         {
-            var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/login", modelJson);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>();
-                if (loginResponse != null && loginResponse.Succeeded)
+                using var response = await httpClient.PostAsJsonAsync($"{_authController}/login", model, JsonOptions);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    await tokenProvider.SetTokenAsync(loginResponse!.JwtBearer!);
+                    var error = await response.Content.ReadAsStringAsync();
+                    logger.LogWarning("LoginAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
+                    return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Authentication failed." : error);
+                }
+
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>(JsonOptions);
+                if (loginResponse is null)
+                {
+                    logger.LogError("LoginAsync: response body could not be deserialized into LoginCommandResponse.");
+                    return CommandResponse.Failed("Authentication failed.");
+                }
+
+                if (loginResponse.Succeeded && !string.IsNullOrWhiteSpace(loginResponse.JwtBearer))
+                {
+                    await tokenProvider.SetTokenAsync(loginResponse.JwtBearer);
                     return loginResponse;
                 }
-                else
-                {
-                    return CommandResponse.Failed(loginResponse?.Message ?? "Authentication failed.");
-                }
+
+                logger.LogWarning("LoginAsync did not succeed. Message: {Message}", loginResponse.Message);
+                return CommandResponse.Failed(loginResponse.Message ?? "Authentication failed.");
             }
-            else
+            catch (HttpRequestException ex)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                return CommandResponse.Failed(error);
+                logger.LogError(ex, "HTTP error during LoginAsync.");
+                return CommandResponse.Failed("Network error during authentication.");
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize LoginCommandResponse during LoginAsync.");
+                return CommandResponse.Failed("Invalid response from authentication server.");
             }
         }
 
         public async Task<CommandResponse?> LogoutAsync()
         {
-            var response = await httpClient.PostAsync($"{_identityApiConfig?.Controllers![IdentityControllers.Authentication]}/logout", new StringContent(string.Empty));
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var logoutResponse = await response.Content.ReadFromJsonAsync<CommandResponse>();
-                if (logoutResponse != null && logoutResponse.Succeeded)
+                await EnsureAuthAsync();
+
+                using var response = await httpClient.PostAsync($"{_authController}/logout", content: null);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    logger.LogWarning("LogoutAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
+                    return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Logout failed." : error);
+                }
+
+                var logoutResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions);
+                if (logoutResponse is null)
+                {
+                    logger.LogError("LogoutAsync: response body could not be deserialized into CommandResponse.");
+                    return CommandResponse.Failed("Logout failed.");
+                }
+
+                if (logoutResponse.Succeeded)
                 {
                     await tokenProvider.RemoveTokenAsync();
                     return logoutResponse;
                 }
-                else
-                {
-                    return CommandResponse.Failed(logoutResponse?.Message ?? "Logout failed.");
-                }
+
+                logger.LogWarning("LogoutAsync did not succeed. Message: {Message}", logoutResponse.Message);
+                return CommandResponse.Failed(logoutResponse.Message ?? "Logout failed.");
             }
-            else
+            catch (HttpRequestException ex)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                return CommandResponse.Failed(error);
+                logger.LogError(ex, "HTTP error during LogoutAsync.");
+                return CommandResponse.Failed("Network error during logout.");
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse during LogoutAsync.");
+                return CommandResponse.Failed("Invalid response from authentication server.");
             }
         }
 
-        public Task<CommandResponse?> RegisterAsync(RegistrationModel model)
+        public async Task<CommandResponse?> RegisterAsync(RegistrationModel model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var response = await httpClient.PostAsJsonAsync($"{_authController}/register", model, JsonOptions);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    logger.LogWarning("RegisterAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
+                    return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Registration failed." : error);
+                }
+
+                var registerResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions);
+                if (registerResponse is null)
+                {
+                    logger.LogError("RegisterAsync: response body could not be deserialized into CommandResponse.");
+                    return CommandResponse.Failed("Registration failed.");
+                }
+
+                if (!registerResponse.Succeeded)
+                {
+                    logger.LogWarning("RegisterAsync did not succeed. Message: {Message}", registerResponse.Message);
+                }
+
+                return registerResponse;
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during RegisterAsync.");
+                return CommandResponse.Failed("Network error during registration.");
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse during RegisterAsync.");
+                return CommandResponse.Failed("Invalid response from registration server.");
+            }
         }
     }
 }

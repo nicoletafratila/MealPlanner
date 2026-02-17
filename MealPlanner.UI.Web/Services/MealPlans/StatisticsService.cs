@@ -7,7 +7,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services.MealPlans
 {
-    public sealed class StatisticsService(
+    public class StatisticsService(
         HttpClient httpClient,
         TokenProvider tokenProvider,
         MealPlannerApiConfig mealPlannerApiConfig,

@@ -1,6 +1,6 @@
 ﻿namespace Common.Pagination
 {
-    public sealed class PagedList<T>
+    public class PagedList<T>
     {
         public Metadata Metadata { get; set; } = default!;
         public List<T> Items { get; set; } = new();

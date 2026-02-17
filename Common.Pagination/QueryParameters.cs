@@ -4,7 +4,7 @@ using BlazorBootstrap;
 
 namespace Common.Pagination
 {
-    public sealed class QueryParameters<TItem> : GridSettings
+    public class QueryParameters<TItem> : GridSettings
     {
         private const int MaxPageSize = int.MaxValue;
 

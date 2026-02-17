@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace MealPlanner.UI.Web.Services.MealPlans
 {
-    public sealed class ShopService(
+    public class ShopService(
         HttpClient httpClient,
         TokenProvider tokenProvider,
         MealPlannerApiConfig mealPlannerApiConfig,
