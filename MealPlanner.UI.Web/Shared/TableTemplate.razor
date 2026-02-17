@@ -46,7 +46,14 @@
                     {
                         <td>@item.Index</td>
                     }
-                    @RowTemplate!(item)
+                    @if (RowTemplate is not null)
+                    {
+                        @RowTemplate(item)
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
                 </tr>
             }
         }

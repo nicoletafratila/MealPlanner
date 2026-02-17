@@ -20,13 +20,13 @@ namespace MealPlanner.UI.Web.Shared
             StateHasChanged();
         }
 
-        protected void HideError()
+        public void HideError()
         {
             IsErrorActive = false;
             StateHasChanged();
         }
 
-        protected void HideInfo()
+        public void HideInfo()
         {
             IsInfoActive = false;
             StateHasChanged();
