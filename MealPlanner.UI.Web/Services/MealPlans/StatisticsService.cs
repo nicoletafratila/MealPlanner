@@ -1,38 +1,65 @@
-﻿using Common.Api;
+﻿using System.Text.Json;
+using Common.Api;
 using Common.Constants;
-using Common.Data.DataContext;
 using Common.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services.MealPlans
 {
-    public class StatisticsService(HttpClient httpClient, TokenProvider tokenProvider) : IStatisticsService
+    public sealed class StatisticsService(
+        HttpClient httpClient,
+        TokenProvider tokenProvider,
+        MealPlannerApiConfig mealPlannerApiConfig,
+        ILogger<StatisticsService> logger) : IStatisticsService
     {
-        private readonly IApiConfig _mealPlannerApiConfig = ServiceLocator.Current.GetInstance<MealPlannerApiConfig>();
-
-        public async Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories)
+        private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
         {
-            var query = new Dictionary<string, string?>
-            {
-                ["categoryIds"] = string.Join(",", categories.Select(i => i.Id.ToString()))
-            };
+            PropertyNameCaseInsensitive = true
+        };
 
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var url = QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriterecipes", query);
-            return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url);
+        private readonly string _statisticsController =
+            mealPlannerApiConfig.Controllers![MealPlannerControllers.Statistics]
+            ?? throw new ArgumentException("Statistics controller URL is not configured.", nameof(mealPlannerApiConfig));
+
+        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
+
+        private static Dictionary<string, string?> BuildCategoryQuery<TCategory>(IEnumerable<TCategory> categories, Func<TCategory, int> idSelector)
+        {
+            var ids = categories?.Select(c => idSelector(c).ToString())?.ToArray() ?? Array.Empty<string>();
+            return new Dictionary<string, string?>
+            {
+                ["categoryIds"] = ids.Length == 0 ? null : string.Join(",", ids)
+            };
         }
 
-        public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories)
+        private async Task<IList<StatisticModel>?> GetStatisticsAsync(string relativePath, Dictionary<string, string?> query)
         {
-            var query = new Dictionary<string, string?>
-            {
-                ["categoryIds"] = string.Join(",", categories.Select(i => i.Id.ToString()))
-            };
+            await EnsureAuthAsync();
 
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var url = QueryHelpers.AddQueryString($"{_mealPlannerApiConfig?.Controllers![MealPlannerControllers.Statistics]}/favoriteproducts", query);
-            return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url);
+            var url = QueryHelpers.AddQueryString($"{_statisticsController}/{relativePath}", query);
+
+            try
+            {
+                return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url, JsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize StatisticModel list from endpoint {Endpoint} with query {@Query}", relativePath, query);
+                throw;
+            }
+        }
+
+        public Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories)
+        {
+            var query = BuildCategoryQuery(categories, c => c.Id);
+            return GetStatisticsAsync("favoriterecipes", query);
+        }
+
+        public Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories)
+        {
+            var query = BuildCategoryQuery(categories, c => c.Id);
+            return GetStatisticsAsync("favoriteproducts", query);
         }
     }
 }
