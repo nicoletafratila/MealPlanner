@@ -28,4 +28,9 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Identities\" />
+    <Folder Include="Services\RecipeBooks\" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,4 @@
 ﻿using Bunit;
-using Common.Models;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 
@@ -8,11 +7,6 @@ namespace MealPlanner.UI.Web.Tests.Shared
     [TestFixture]
     public class TableTemplateTests : BunitContext
     {
-        private sealed class TestItem : BaseModel
-        {
-            public string Name { get; set; } = string.Empty;
-        }
-
         private static RenderFragment<TestItem> CreateRowTemplate()
         {
             return item => builder =>
