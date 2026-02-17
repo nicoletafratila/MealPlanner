@@ -1,61 +1,171 @@
-﻿using System.Text;
+﻿using System.Text.Json;
 using Common.Api;
 using Common.Constants;
-using Common.Data.DataContext;
 using Common.Models;
 using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services.RecipeBooks
 {
-    public class ProductService(HttpClient httpClient, TokenProvider tokenProvider) : IProductService
+    public sealed class ProductService(
+        HttpClient httpClient,
+        TokenProvider tokenProvider,
+        RecipeBookApiConfig recipeBookApiConfig,
+        ILogger<ProductService> logger) : IProductService
     {
-        private readonly IApiConfig _recipeBookApiConfig = ServiceLocator.Current.GetInstance<RecipeBookApiConfig>();
+        private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        private readonly string _productController =
+            recipeBookApiConfig.Controllers![RecipeBookControllers.Product]
+            ?? throw new ArgumentException("Product controller URL is not configured.", nameof(recipeBookApiConfig));
+
+        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
 
         public async Task<ProductEditModel?> GetEditAsync(int id)
         {
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            return await httpClient.GetFromJsonAsync<ProductEditModel?>($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Product]}/edit?id={id}");
+            await EnsureAuthAsync();
+
+            var url = QueryHelpers.AddQueryString(
+                $"{_productController}/edit",
+                new Dictionary<string, string?> { ["id"] = id.ToString() });
+
+            try
+            {
+                return await httpClient.GetFromJsonAsync<ProductEditModel?>(url, JsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize ProductEditModel for id {Id}", id);
+                throw;
+            }
         }
 
         public async Task<PagedList<ProductModel>?> SearchAsync(QueryParameters<ProductModel>? queryParameters = null)
         {
             var query = new Dictionary<string, string?>
             {
-                [nameof(QueryParameters<ProductModel>.Filters)] = queryParameters == null || queryParameters?.Filters == null ? null :JsonConvert.SerializeObject(queryParameters?.Filters),
-                [nameof(QueryParameters<ProductModel>.Sorting)] = queryParameters == null || queryParameters?.Filters == null ? null : JsonConvert.SerializeObject(queryParameters?.Sorting),
-                [nameof(QueryParameters<ProductModel>.PageSize)] = queryParameters == null ? int.MaxValue.ToString() : queryParameters.PageSize.ToString(),
-                [nameof(QueryParameters<ProductModel>.PageNumber)] = queryParameters == null ? "1" : queryParameters.PageNumber.ToString()
+                [nameof(QueryParameters<ProductModel>.Filters)] =
+                    queryParameters?.Filters is null
+                        ? null
+                        : JsonSerializer.Serialize(queryParameters.Filters, JsonOptions),
+
+                [nameof(QueryParameters<ProductModel>.Sorting)] =
+                    queryParameters?.Sorting is null
+                        ? null
+                        : JsonSerializer.Serialize(queryParameters.Sorting, JsonOptions),
+
+                [nameof(QueryParameters<ProductModel>.PageSize)] =
+                    (queryParameters?.PageSize ?? int.MaxValue).ToString(),
+
+                [nameof(QueryParameters<ProductModel>.PageNumber)] =
+                    (queryParameters?.PageNumber ?? 1).ToString()
             };
 
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.GetAsync(QueryHelpers.AddQueryString($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Product]}/search", query));
-            return JsonConvert.DeserializeObject<PagedList<ProductModel>?>(await response.Content.ReadAsStringAsync());
+            await EnsureAuthAsync();
+
+            var url = QueryHelpers.AddQueryString($"{_productController}/search", query);
+            using var response = await httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Product SearchAsync failed with status code {StatusCode}", response.StatusCode);
+                response.EnsureSuccessStatusCode();
+            }
+
+            var stream = await response.Content.ReadAsStreamAsync();
+
+            try
+            {
+                return await JsonSerializer.DeserializeAsync<PagedList<ProductModel>?>(stream, JsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize PagedList<ProductModel> for query {@Query}", query);
+                throw;
+            }
         }
 
         public async Task<CommandResponse?> AddAsync(ProductEditModel model)
         {
-            var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.PostAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Product], modelJson);
-            return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
+            await EnsureAuthAsync();
+
+            using var response = await httpClient.PostAsJsonAsync(_productController, model, JsonOptions);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Product AddAsync failed with status code {StatusCode}", response.StatusCode);
+                response.EnsureSuccessStatusCode();
+            }
+
+            var stream = await response.Content.ReadAsStreamAsync();
+
+            try
+            {
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse for Product AddAsync. Model {@Model}", model);
+                throw;
+            }
         }
 
         public async Task<CommandResponse?> UpdateAsync(ProductEditModel model)
         {
-            var modelJson = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.PutAsync(_recipeBookApiConfig?.Controllers![RecipeBookControllers.Product], modelJson);
-            return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
+            await EnsureAuthAsync();
+
+            using var response = await httpClient.PutAsJsonAsync(_productController, model, JsonOptions);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Product UpdateAsync failed with status code {StatusCode}", response.StatusCode);
+                response.EnsureSuccessStatusCode();
+            }
+
+            var stream = await response.Content.ReadAsStreamAsync();
+
+            try
+            {
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse for Product UpdateAsync. Model {@Model}", model);
+                throw;
+            }
         }
 
         public async Task<CommandResponse?> DeleteAsync(int id)
         {
-            await httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
-            var response = await httpClient.DeleteAsync($"{_recipeBookApiConfig?.Controllers![RecipeBookControllers.Product]}?id={id}");
-            return JsonConvert.DeserializeObject<CommandResponse?>(await response.Content.ReadAsStringAsync());
+            await EnsureAuthAsync();
+
+            var url = QueryHelpers.AddQueryString(
+                _productController,
+                new Dictionary<string, string?> { ["id"] = id.ToString() });
+
+            using var response = await httpClient.DeleteAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Product DeleteAsync failed with status code {StatusCode} for id {Id}", response.StatusCode, id);
+                response.EnsureSuccessStatusCode();
+            }
+
+            var stream = await response.Content.ReadAsStreamAsync();
+
+            try
+            {
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse for Product DeleteAsync. Id {Id}", id);
+                throw;
+            }
         }
     }
 }

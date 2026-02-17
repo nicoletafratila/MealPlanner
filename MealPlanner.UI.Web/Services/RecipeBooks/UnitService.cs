@@ -9,17 +9,19 @@ using RecipeBook.Shared.Models;
 namespace MealPlanner.UI.Web.Services.RecipeBooks
 {
     public sealed class UnitService(
-    HttpClient httpClient,
-    TokenProvider tokenProvider,
-    RecipeBookApiConfig recipeBookApiConfig,
-    ILogger<UnitService> logger) : IUnitService
+        HttpClient httpClient,
+        TokenProvider tokenProvider,
+        RecipeBookApiConfig recipeBookApiConfig,
+        ILogger<UnitService> logger) : IUnitService
     {
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
         {
             PropertyNameCaseInsensitive = true
         };
 
-        private readonly string _unitController = recipeBookApiConfig.Controllers![RecipeBookControllers.Unit] ?? throw new ArgumentException("Unit controller URL is not configured.", nameof(recipeBookApiConfig));
+        private readonly string _unitController = 
+            recipeBookApiConfig.Controllers![RecipeBookControllers.Unit]
+            ?? throw new ArgumentException("Unit controller URL is not configured.", nameof(recipeBookApiConfig));
 
         private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
 
