@@ -100,7 +100,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         }
 
         private async Task<GridDataProviderResult<ProductCategoryModel>> DataProviderAsync(
-            GridDataProviderRequest<ProductCategoryModel> request)
+             GridDataProviderRequest<ProductCategoryModel> request)
         {
             var queryParameters = new QueryParameters<ProductCategoryModel>
             {
@@ -123,6 +123,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 ? CssClasses.GridTemplateEmptyClass
                 : CssClasses.GridTemplateWithItemsClass + " grid-additional-columns";
 
+            StateHasChanged();
             return new GridDataProviderResult<ProductCategoryModel>
             {
                 Data = items,
@@ -131,7 +132,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         }
 
         private void ShowError(string message)
-            => MessageComponent?.ShowError(message);
+           => MessageComponent?.ShowError(message);
 
         private void ShowInfo(string message)
             => MessageComponent?.ShowInfo(message);

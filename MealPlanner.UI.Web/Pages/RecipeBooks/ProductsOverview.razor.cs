@@ -123,6 +123,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 ? CssClasses.GridTemplateEmptyHorizontalClass
                 : CssClasses.GridTemplateWithItemsHorizontalClass;
 
+            StateHasChanged();
             return new GridDataProviderResult<ProductModel>
             {
                 Data = items,

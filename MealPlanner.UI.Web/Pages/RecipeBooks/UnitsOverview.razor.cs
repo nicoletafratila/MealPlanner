@@ -120,6 +120,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 ? CssClasses.GridTemplateEmptyClass
                 : CssClasses.GridTemplateWithItemsClass + " grid-additional-columns";
 
+            StateHasChanged();
             return new GridDataProviderResult<UnitModel>
             {
                 Data = items,
