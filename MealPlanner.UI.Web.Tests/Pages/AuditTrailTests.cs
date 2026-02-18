@@ -125,7 +125,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
@@ -139,7 +139,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
             // Arrange
             _loggerServiceMock
                 .Setup(s => s.GetLogsAsync())
-                .ReturnsAsync(new List<LogModel> { CreateLog() });
+                .ReturnsAsync([CreateLog()]);
 
             _loggerServiceMock
                 .Setup(s => s.DeleteLogsAsync())
@@ -153,7 +153,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 

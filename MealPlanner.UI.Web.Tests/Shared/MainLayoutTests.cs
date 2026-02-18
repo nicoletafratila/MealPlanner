@@ -59,11 +59,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowError("Something went wrong"));
 
-            // Assert
-            Assert.That(cut.Instance.IsErrorActive, Is.True);
-            Assert.That(cut.Instance.IsInfoActive, Is.False);
-            Assert.That(cut.Instance.Message, Is.EqualTo("Something went wrong"));
-            Assert.That(cut.Markup, Does.Contain("Something went wrong"));
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(cut.Instance.IsErrorActive, Is.True);
+                Assert.That(cut.Instance.IsInfoActive, Is.False);
+                Assert.That(cut.Instance.Message, Is.EqualTo("Something went wrong"));
+                Assert.That(cut.Markup, Does.Contain("Something went wrong"));
+            });
         }
 
         [Test]
@@ -76,11 +79,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowInfo("Informational message"));
 
-            // Assert
-            Assert.That(cut.Instance.IsErrorActive, Is.False);
-            Assert.That(cut.Instance.IsInfoActive, Is.True);
-            Assert.That(cut.Instance.Message, Is.EqualTo("Informational message"));
-            Assert.That(cut.Markup, Does.Contain("Informational message"));
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(cut.Instance.IsErrorActive, Is.False);
+                Assert.That(cut.Instance.IsInfoActive, Is.True);
+                Assert.That(cut.Instance.Message, Is.EqualTo("Informational message"));
+                Assert.That(cut.Markup, Does.Contain("Informational message"));
+            });
         }
 
         [Test]
@@ -93,10 +99,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.HideError());
 
-            // Assert
-            Assert.That(cut.Instance.IsErrorActive, Is.False);
-            Assert.That(cut.Instance.IsInfoActive, Is.False);
-            Assert.That(cut.Instance.Message, Is.EqualTo("Error message"));
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(cut.Instance.IsErrorActive, Is.False);
+                Assert.That(cut.Instance.IsInfoActive, Is.False);
+                Assert.That(cut.Instance.Message, Is.EqualTo("Error message"));
+            });
         }
 
         [Test]
@@ -109,10 +118,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.HideInfo());
 
-            // Assert
-            Assert.That(cut.Instance.IsInfoActive, Is.False);
-            Assert.That(cut.Instance.IsErrorActive, Is.False);
-            Assert.That(cut.Instance.Message, Is.EqualTo("Info message"));
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(cut.Instance.IsInfoActive, Is.False);
+                Assert.That(cut.Instance.IsErrorActive, Is.False);
+                Assert.That(cut.Instance.Message, Is.EqualTo("Info message"));
+            });
         }
 
         [Test]
@@ -125,10 +137,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowError("Error now"));
 
-            // Assert
-            Assert.That(cut.Instance.IsErrorActive, Is.True);
-            Assert.That(cut.Instance.IsInfoActive, Is.False);
-            Assert.That(cut.Instance.Message, Is.EqualTo("Error now"));
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(cut.Instance.IsErrorActive, Is.True);
+                Assert.That(cut.Instance.IsInfoActive, Is.False);
+                Assert.That(cut.Instance.Message, Is.EqualTo("Error now"));
+            });
         }
 
         [Test]
@@ -141,10 +156,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info now"));
 
-            // Assert
-            Assert.That(cut.Instance.IsErrorActive, Is.False);
-            Assert.That(cut.Instance.IsInfoActive, Is.True);
-            Assert.That(cut.Instance.Message, Is.EqualTo("Info now"));
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(cut.Instance.IsErrorActive, Is.False);
+                Assert.That(cut.Instance.IsInfoActive, Is.True);
+                Assert.That(cut.Instance.Message, Is.EqualTo("Info now"));
+            });
         }
 
         [Test]
@@ -163,153 +181,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 }));
             });
 
-            // Assert: child used the cascaded IMessageComponent to call ShowInfo
-            Assert.That(cut.Instance.IsInfoActive, Is.True);
-            Assert.That(cut.Instance.IsErrorActive, Is.False);
-            Assert.That(cut.Instance.Message, Is.EqualTo(childMessage));
-            Assert.That(cut.Markup, Does.Contain(childMessage));
+            Assert.Multiple(() =>
+            {
+                // Assert: child used the cascaded IMessageComponent to call ShowInfo
+                Assert.That(cut.Instance.IsInfoActive, Is.True);
+                Assert.That(cut.Instance.IsErrorActive, Is.False);
+                Assert.That(cut.Instance.Message, Is.EqualTo(childMessage));
+                Assert.That(cut.Markup, Does.Contain(childMessage));
+            });
         }
     }
-    //    [TestFixture]
-    //    public class MainLayoutTests : BunitContext
-    //    {
-    //        private readonly BunitAuthorizationContext _authContext;
-
-    //        public MainLayoutTests()
-    //        {
-    //            _authContext = AddAuthorization();
-    //            _authContext.SetNotAuthorized(); 
-
-    //            Services.AddScoped<ModalService>();
-    //            Services.AddScoped<ToastService>();
-    //            Services.AddScoped<PreloadService>();
-
-    //            JSInterop.SetupVoid("window.blazorBootstrap.modal.initialize", _ => true);
-
-    //            var authServiceMock = new Mock<IAuthenticationService>(MockBehavior.Loose);
-    //            var userServiceMock = new Mock<IApplicationUserService>(MockBehavior.Loose);
-
-    //            Services.AddSingleton(authServiceMock.Object);
-    //            Services.AddSingleton(userServiceMock.Object);
-    //            Services.AddLogging();
-    //        }
-
-    //        private class MessageConsumer : ComponentBase
-    //        {
-    //            [CascadingParameter(Name = "MessageComponent")]
-    //            public IMessageComponent? MessageComponent { get; set; }
-
-    //            [Parameter]
-    //            public string Message { get; set; } = "Child message";
-
-    //            protected override void OnInitialized()
-    //            {
-    //                MessageComponent?.ShowInfo(Message);
-    //            }
-
-    //            protected override void BuildRenderTree(RenderTreeBuilder builder)
-    //            {
-    //            }
-    //        }
-
-    //        [Test]
-    //        public void ShowError_SetsErrorState_AndMessage_AndClearsInfo()
-    //        {
-    //            var cut = Render<MainLayout>();
-
-    //            cut.Instance.ShowError("Something went wrong");
-
-    //            Assert.That(cut.Instance.IsErrorActive, Is.True);
-    //            Assert.That(cut.Instance.IsInfoActive, Is.False);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo("Something went wrong"));
-    //            Assert.That(cut.Markup, Does.Contain("Something went wrong"));
-    //        }
-
-    //        [Test]
-    //        public void ShowInfo_SetsInfoState_AndMessage_AndClearsError()
-    //        {
-    //            var cut = Render<MainLayout>();
-    //            cut.Instance.ShowError("Old error");
-
-    //            cut.Instance.ShowInfo("Informational message");
-
-    //            Assert.That(cut.Instance.IsErrorActive, Is.False);
-    //            Assert.That(cut.Instance.IsInfoActive, Is.True);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo("Informational message"));
-    //            Assert.That(cut.Markup, Does.Contain("Informational message"));
-    //        }
-
-    //        [Test]
-    //        public void HideError_ClearsErrorFlag_ButKeepsMessage()
-    //        {
-    //            var cut = Render<MainLayout>();
-    //            cut.Instance.ShowError("Error message");
-
-    //            cut.Instance.HideError();
-
-    //            Assert.That(cut.Instance.IsErrorActive, Is.False);
-    //            Assert.That(cut.Instance.IsInfoActive, Is.False);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo("Error message"));
-    //        }
-
-    //        [Test]
-    //        public void HideInfo_ClearsInfoFlag_ButKeepsMessage()
-    //        {
-    //            var cut = Render<MainLayout>();
-    //            cut.Instance.ShowInfo("Info message");
-
-    //            cut.Instance.HideInfo();
-
-    //            Assert.That(cut.Instance.IsInfoActive, Is.False);
-    //            Assert.That(cut.Instance.IsErrorActive, Is.False);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo("Info message"));
-    //        }
-
-    //        [Test]
-    //        public void ShowError_AfterShowInfo_OverridesInfoState()
-    //        {
-    //            var cut = Render<MainLayout>();
-    //            cut.Instance.ShowInfo("Info first");
-
-    //            cut.Instance.ShowError("Error now");
-
-    //            Assert.That(cut.Instance.IsErrorActive, Is.True);
-    //            Assert.That(cut.Instance.IsInfoActive, Is.False);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo("Error now"));
-    //        }
-
-    //        [Test]
-    //        public void ShowInfo_AfterShowError_OverridesErrorState()
-    //        {
-    //            var cut = Render<MainLayout>();
-    //            cut.Instance.ShowError("Error first");
-
-    //            cut.Instance.ShowInfo("Info now");
-
-    //            Assert.That(cut.Instance.IsErrorActive, Is.False);
-    //            Assert.That(cut.Instance.IsInfoActive, Is.True);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo("Info now"));
-    //        }
-
-    //        [Test]
-    //        public void Layout_Cascades_IMessageComponent_ToChildren()
-    //        {
-    //            const string childMessage = "Message from child";
-
-    //            var cut = Render<MainLayout>(parameters =>
-    //            {
-    //                parameters.Add(p => p.Body, (RenderFragment)(builder =>
-    //                {
-    //                    builder.OpenComponent<MessageConsumer>(0);
-    //                    builder.AddAttribute(1, nameof(MessageConsumer.Message), childMessage);
-    //                    builder.CloseComponent();
-    //                }));
-    //            });
-
-    //            Assert.That(cut.Instance.IsInfoActive, Is.True);
-    //            Assert.That(cut.Instance.IsErrorActive, Is.False);
-    //            Assert.That(cut.Instance.Message, Is.EqualTo(childMessage));
-    //            Assert.That(cut.Markup, Does.Contain(childMessage));
-    //        }
-    //    }
 }

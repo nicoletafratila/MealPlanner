@@ -36,9 +36,12 @@ namespace MealPlanner.UI.Web.Tests.Pages
             // Arrange
             var model = CreateModel(_loggerMock.Object);
 
-            // Act/Assert
-            Assert.That(model.RequestId, Is.Null);
-            Assert.That(model.ShowRequestId, Is.False);
+            Assert.Multiple(() =>
+            {
+                // Act/Assert
+                Assert.That(model.RequestId, Is.Null);
+                Assert.That(model.ShowRequestId, Is.False);
+            });
         }
 
         [Test]
@@ -57,9 +60,12 @@ namespace MealPlanner.UI.Web.Tests.Pages
                 // Act
                 model.OnGet();
 
-                // Assert
-                Assert.That(model.RequestId, Is.EqualTo(expectedId));
-                Assert.That(model.ShowRequestId, Is.True);
+                Assert.Multiple(() =>
+                {
+                    // Assert
+                    Assert.That(model.RequestId, Is.EqualTo(expectedId));
+                    Assert.That(model.ShowRequestId, Is.True);
+                });
 
                 _loggerMock.Verify(
                     x => x.Log(
@@ -89,9 +95,12 @@ namespace MealPlanner.UI.Web.Tests.Pages
             // Act
             model.OnGet();
 
-            // Assert
-            Assert.That(model.RequestId, Is.EqualTo("trace-xyz"));
-            Assert.That(model.ShowRequestId, Is.True);
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(model.RequestId, Is.EqualTo("trace-xyz"));
+                Assert.That(model.ShowRequestId, Is.True);
+            });
 
             _loggerMock.Verify(
                 x => x.Log(
