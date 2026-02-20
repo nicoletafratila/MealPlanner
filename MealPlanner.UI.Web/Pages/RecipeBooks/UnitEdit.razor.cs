@@ -11,90 +11,130 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     public partial class UnitEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = default!;
+        private List<BreadcrumbItem> _navItems = new();
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
-        public UnitEditModel? Unit { get; set; }
+
+        public UnitEditModel Unit { get; private set; } = new();
 
         [Inject]
-        public IUnitService? UnitService { get; set; }
+        public IUnitService UnitService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems = new List<BreadcrumbItem>
-            {
-                new BreadcrumbItem{ Text = "Units", Href ="recipebooks/unitsoverview" },
-                new BreadcrumbItem{ Text = "Unit", IsCurrentPage = true },
-            };
+            _navItems =
+            [
+                new BreadcrumbItem { Text = "Units", Href = "recipebooks/unitsoverview" },
+                new BreadcrumbItem { Text = "Unit", IsCurrentPage = true },
+            ];
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            if (!int.TryParse(Id, out var id) || id == 0)
             {
                 Unit = new UnitEditModel();
             }
             else
             {
-                Unit = await UnitService!.GetEditAsync(id);
+                Unit = await UnitService.GetEditAsync(id) ?? new UnitEditModel { Id = id };
             }
         }
 
         private async Task SaveAsync()
         {
-            var response = Unit?.Id == 0 ? await UnitService!.AddAsync(Unit) : await UnitService!.UpdateAsync(Unit!);
-            if (response != null && !response.Succeeded)
+            await SaveCoreAsync(Unit);
+        }
+
+        private async Task SaveCoreAsync(UnitEditModel unit)
+        {
+            Common.Models.CommandResponse? response;
+
+            if (unit.Id == 0)
             {
-                MessageComponent?.ShowError(response.Message!);
+                response = await UnitService.AddAsync(unit);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
-                NavigateToOverview();
+                response = await UnitService.UpdateAsync(unit);
             }
+
+            if (response is null)
+            {
+                ShowError("Save failed. Please try again.");
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Save failed.");
+                return;
+            }
+
+            ShowInfo("Data has been saved successfully");
+            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
         {
-            if (Unit?.Id != 0)
+            if (Unit.Id == 0)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted it cannot be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                var response = await UnitService!.DeleteAsync(Unit!.Id);
-                if (response != null && !response.Succeeded)
-                {
-                    MessageComponent?.ShowError(response.Message!);
-                }
-                else
-                {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigateToOverview();
-                }
+            if (!confirmation)
+                return;
+
+            await DeleteCoreAsync(Unit);
+        }
+
+        private async Task DeleteCoreAsync(UnitEditModel unit)
+        {
+            if (unit.Id == 0)
+                return;
+
+            var response = await UnitService.DeleteAsync(unit.Id);
+            if (response is null)
+            {
+                ShowError("Delete failed. Please try again.");
+                return;
             }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Delete failed.");
+                return;
+            }
+
+            ShowInfo("Data has been deleted successfully");
+            NavigateToOverview();
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("recipebooks/unitsoverview");
+            NavigationManager.NavigateTo("recipebooks/unitsoverview");
         }
+
+        private void ShowError(string message)
+            => MessageComponent?.ShowError(message);
+
+        private void ShowInfo(string message)
+            => MessageComponent?.ShowInfo(message);
     }
 }

@@ -5,14 +5,28 @@ using MealPlanner.UI.Web.Shared;
 namespace MealPlanner.UI.Web.Tests.Shared
 {
     [TestFixture]
-    public class GridTemplateTests : BunitContext
+    public class GridTemplateTests
     {
+        private BunitContext _ctx = null!;
+
         private static readonly GridDataProviderDelegate<TestItem> DefaultProvider = ctx =>
              Task.FromResult(new GridDataProviderResult<TestItem>
              {
                  Data = new List<TestItem>(),
                  TotalCount = 0
              });
+
+        [SetUp]
+        public void SetUp()
+        {
+            _ctx = new BunitContext();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _ctx.Dispose();
+        }
 
         [Test]
         public void RefreshDataAsync_DoesNothing_WhenGridReferenceIsNull()
@@ -28,7 +42,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public void Defaults_AreSet_AsExpected()
         {
             // Arrange: render with minimal valid params (DataProvider required for inner Grid)
-            var cut = Render<GridTemplate<TestItem>>(parameters =>
+            var cut = _ctx.Render<GridTemplate<TestItem>>(parameters =>
             {
                 parameters.Add(p => p.DataProvider, DefaultProvider);
             });
@@ -43,7 +57,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public void Parameters_CanBeOverridden_ViaComponentParameters()
         {
             // Arrange: override parameters; still supply a DataProvider for inner Grid
-            var cut = Render<GridTemplate<TestItem>>(parameters =>
+            var cut = _ctx.Render<GridTemplate<TestItem>>(parameters =>
             {
                 parameters.Add(p => p.DataProvider, DefaultProvider);
                 parameters.Add(p => p.TableGridClass, "custom-table");
@@ -71,7 +85,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 });
             };
 
-            var cut = Render<GridTemplate<TestItem>>(parameters =>
+            var cut = _ctx.Render<GridTemplate<TestItem>>(parameters =>
             {
                 parameters.Add(p => p.DataProvider, provider);
             });

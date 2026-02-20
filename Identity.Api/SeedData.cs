@@ -71,14 +71,14 @@ namespace Identity.Api
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = await userManager.AddClaimsAsync(admin, new Claim[]
-                {
-                    new Claim(JwtClaimTypes.Subject, admin.Id),
-                    new Claim(ClaimTypes.Name, admin.UserName),
-                    new Claim(JwtClaimTypes.GivenName, admin.FirstName),
-                    new Claim(JwtClaimTypes.FamilyName, admin.LastName),
-                    new Claim(JwtClaimTypes.WebSite, "http://admin.com")
-                });
+                result = await userManager.AddClaimsAsync(admin,
+                [
+                    new(JwtClaimTypes.Subject, admin.Id),
+                    new(ClaimTypes.Name, admin.UserName),
+                    new(JwtClaimTypes.GivenName, admin.FirstName),
+                    new(JwtClaimTypes.FamilyName, admin.LastName),
+                    new(JwtClaimTypes.WebSite, "http://admin.com")
+                ]);
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
@@ -119,14 +119,14 @@ namespace Identity.Api
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = await userManager.AddClaimsAsync(member, new Claim[]
-                {
-                    new Claim(JwtClaimTypes.Subject, member.Id),
-                    new Claim(ClaimTypes.Name, member.UserName),
-                    new Claim(JwtClaimTypes.GivenName, member.FirstName),
-                    new Claim(JwtClaimTypes.FamilyName, member.LastName),
-                    new Claim(JwtClaimTypes.WebSite, "http://member.com")
-                });
+                result = await userManager.AddClaimsAsync(member,
+                [
+                    new(JwtClaimTypes.Subject, member.Id),
+                    new(ClaimTypes.Name, member.UserName),
+                    new(JwtClaimTypes.GivenName, member.FirstName),
+                    new(JwtClaimTypes.FamilyName, member.LastName),
+                    new(JwtClaimTypes.WebSite, "http://member.com")
+                ]);
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);

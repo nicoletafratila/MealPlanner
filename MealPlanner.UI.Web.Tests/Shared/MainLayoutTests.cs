@@ -1,7 +1,6 @@
 ﻿using BlazorBootstrap;
 using Bunit;
 using Bunit.TestDoubles;
-using Common.UI;
 using MealPlanner.UI.Web.Services.Identities;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
@@ -11,50 +10,46 @@ using Moq;
 namespace MealPlanner.UI.Web.Tests.Shared
 {
     [TestFixture]
-    public class MainLayoutTests : BunitContext
+    public class MainLayoutTests
     {
-        private readonly BunitAuthorizationContext _authContext;
+        private BunitAuthorizationContext _authContext;
+        private BunitContext _ctx = null!;
 
-        public MainLayoutTests()
+        [SetUp]
+        public void SetUp()
         {
-            _authContext = this.AddAuthorization();
+            _ctx = new BunitContext();
+
+            _authContext = _ctx.AddAuthorization();
             _authContext.SetNotAuthorized();
 
-            Services.AddScoped<ModalService>();
-            Services.AddScoped<ToastService>();
-            Services.AddScoped<PreloadService>();
+            _ctx.Services.AddScoped<ModalService>();
+            _ctx.Services.AddScoped<ToastService>();
+            _ctx.Services.AddScoped<PreloadService>();
 
-            JSInterop.SetupVoid("window.blazorBootstrap.modal.initialize", _ => true);
-            JSInterop.SetupVoid("window.blazorBootstrap.alert.initialize", _ => true); 
+            _ctx.JSInterop.SetupVoid("window.blazorBootstrap.modal.initialize", _ => true);
+            _ctx.JSInterop.SetupVoid("window.blazorBootstrap.alert.initialize", _ => true);
 
             var authServiceMock = new Mock<IAuthenticationService>(MockBehavior.Loose);
             var userServiceMock = new Mock<IApplicationUserService>(MockBehavior.Loose);
 
-            Services.AddSingleton(authServiceMock.Object);
-            Services.AddSingleton(userServiceMock.Object);
+            _ctx.Services.AddSingleton(authServiceMock.Object);
+            _ctx.Services.AddSingleton(userServiceMock.Object);
 
-            Services.AddLogging();
+            _ctx.Services.AddLogging();
         }
 
-        private class MessageConsumer : ComponentBase
+        [TearDown]
+        public void TearDown()
         {
-            [CascadingParameter(Name = "MessageComponent")]
-            public IMessageComponent? MessageComponent { get; set; }
-
-            [Parameter]
-            public string Message { get; set; } = "Child message";
-
-            protected override void OnInitialized()
-            {
-                MessageComponent?.ShowInfo(Message);
-            }
+            _ctx.Dispose();
         }
 
         [Test]
         public async Task ShowError_SetsErrorState_AndMessage_AndClearsInfo()
         {
             // Arrange
-            var cut = Render<MainLayout>();
+            var cut = _ctx.Render<MainLayout>();
 
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowError("Something went wrong"));
@@ -73,7 +68,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task ShowInfo_SetsInfoState_AndMessage_AndClearsError()
         {
             // Arrange
-            var cut = Render<MainLayout>();
+            var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => cut.Instance.ShowError("Old error"));
 
             // Act
@@ -93,7 +88,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task HideError_ClearsErrorFlag_ButKeepsMessage()
         {
             // Arrange
-            var cut = Render<MainLayout>();
+            var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => cut.Instance.ShowError("Error message"));
 
             // Act
@@ -112,7 +107,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task HideInfo_ClearsInfoFlag_ButKeepsMessage()
         {
             // Arrange
-            var cut = Render<MainLayout>();
+            var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info message"));
 
             // Act
@@ -131,7 +126,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task ShowError_AfterShowInfo_OverridesInfoState()
         {
             // Arrange
-            var cut = Render<MainLayout>();
+            var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info first"));
 
             // Act
@@ -150,7 +145,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task ShowInfo_AfterShowError_OverridesErrorState()
         {
             // Arrange
-            var cut = Render<MainLayout>();
+            var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => cut.Instance.ShowError("Error first"));
 
             // Act
@@ -171,7 +166,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Arrange
             const string childMessage = "Message from child";
 
-            var cut = Render<MainLayout>(parameters =>
+            var cut = _ctx.Render<MainLayout>(parameters =>
             {
                 parameters.Add(p => p.Body, (RenderFragment)(builder =>
                 {

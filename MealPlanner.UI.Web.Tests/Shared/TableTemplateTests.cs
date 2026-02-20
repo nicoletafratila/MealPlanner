@@ -1,12 +1,27 @@
 ﻿using Bunit;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MealPlanner.UI.Web.Tests.Shared
 {
     [TestFixture]
-    public class TableTemplateTests : BunitContext
+    public class TableTemplateTests
     {
+        private BunitContext _ctx = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _ctx = new BunitContext();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _ctx.Dispose();
+        }
+
         private static RenderFragment<TestItem> CreateRowTemplate()
         {
             return item => builder =>
@@ -23,7 +38,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             EventCallback<TestItem>? selectedItemChanged = null,
             bool showIndex = false)
         {
-            return Render<TableTemplate<TestItem>>(parameters =>
+            return _ctx.Render<TableTemplate<TestItem>>(parameters =>
             {
                 parameters.Add(p => p.Data, data);
                 parameters.Add(p => p.ShowIndex, showIndex);

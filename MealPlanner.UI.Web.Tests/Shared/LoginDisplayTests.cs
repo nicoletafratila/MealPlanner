@@ -15,7 +15,7 @@ using Moq;
 namespace MealPlanner.UI.Web.Tests.Shared
 {
     [TestFixture]
-    public class LoginDisplayTests : BunitContext
+    public class LoginDisplayTests 
     {
         private Mock<IAuthenticationService> _authServiceMock = null!;
         private Mock<IApplicationUserService> _userServiceMock = null!;
@@ -172,7 +172,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithAuthAndMessageComponent(authState);
-            var nav = Services.GetRequiredService<NavigationManager>() as BunitNavigationManager
+            var nav = _ctx.Services.GetRequiredService<NavigationManager>() as BunitNavigationManager
                       ?? throw new InvalidOperationException("NavigationManager not available");
 
             // Act
