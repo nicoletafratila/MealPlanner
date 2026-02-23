@@ -12,9 +12,9 @@ PM> Script-migration
 
 
 
-foloseste httpClient.GetFromJsonAsync
-performanta in general pe controllere si services, handles
-adauga reteta la meniu cu click dr si selectare mai multe
+
+leaga retete la user
 user management - edit user profile
+adauga reteta la meniu cu click dr si selectare mai multe
 swagger
 muta pe maui

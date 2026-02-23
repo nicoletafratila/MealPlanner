@@ -241,21 +241,28 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task AddRecipeAsync()
         {
             var recipeSelectionModal = ModalService?.Show<RecipeSelection>("Select a recipe");
-            var result = await recipeSelectionModal!.Result;
+            if (recipeSelectionModal is null)
+                return;
 
-            if (result.Confirmed && result?.Data != null)
+            var result = await recipeSelectionModal.Result;
+
+            if (!result.Confirmed || result.Data is null)
             {
-                int recipeId;
-                if (!int.TryParse(result.Data.ToString(), out recipeId))
-                {
-                    MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
-                    return;
-                }
-                var products = await RecipeService!.GetShoppingListProductsAsync(recipeId, ShoppingList!.ShopId);
-                foreach (var item in products!)
-                {
-                    AddProduct(item.Product!, item.Quantity, item.UnitId);
-                }
+                MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
+                return;
+            }
+
+            var recipeIdString = result.Data.ToString();
+            if (!int.TryParse(recipeIdString, out var recipeId))
+            {
+                MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
+                return;
+            }
+
+            var products = await RecipeService!.GetShoppingListProductsAsync(recipeId, ShoppingList!.ShopId);
+            foreach (var item in products!)
+            {
+                AddProduct(item.Product!, item.Quantity, item.UnitId);
             }
         }
 

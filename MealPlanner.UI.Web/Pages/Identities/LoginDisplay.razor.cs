@@ -5,7 +5,7 @@ using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace MealPlanner.UI.Web.Shared
+namespace MealPlanner.UI.Web.Pages.Identities
 {
     public partial class LoginDisplay
     {
