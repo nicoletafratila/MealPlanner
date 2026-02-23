@@ -66,15 +66,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems = new List<BreadcrumbItem>
-            {
+            _navItems =
+            [
                 new() { Text = "Recipes", Href = "recipebooks/recipesoverview" },
                 new() { Text = "Recipe", IsCurrentPage = true },
-            };
+            ];
 
             var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>
             {
-                Filters = new List<FilterItem>(),
+                Filters = [],
                 Sorting =
                 [
                     new SortingModel
@@ -91,7 +91,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var queryParametersProduct = new QueryParameters<ProductCategoryModel>
             {
-                Filters = new List<FilterItem>(),
+                Filters = [],
                 Sorting =
                 [
                     new SortingModel
@@ -187,7 +187,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             if (Recipe.Ingredients == null)
             {
-                Recipe.Ingredients = new List<RecipeIngredientEditModel>();
+                Recipe.Ingredients = [];
             }
 
             var productId = int.Parse(ProductId!);
