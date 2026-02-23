@@ -223,8 +223,6 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var request = new GridDataProviderRequest<RecipeModel>
             {
-                Filters = null,
-                Sorting = null,
                 PageNumber = 1,
                 PageSize = 10
             };
@@ -237,7 +235,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 return await task;
             });
 
-            // Assert: service called with correct paging
+            // Assert
             _recipeServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<RecipeModel>>(q =>
                     q.PageNumber == 1 && q.PageSize == 10)),

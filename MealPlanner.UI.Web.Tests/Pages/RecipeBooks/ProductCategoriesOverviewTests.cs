@@ -214,8 +214,6 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var request = new GridDataProviderRequest<ProductCategoryModel>
             {
-                Filters = null,
-                Sorting = null,
                 PageNumber = 1,
                 PageSize = 10
             };

@@ -16,13 +16,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     {
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
-        private readonly long _maxFileSize = 1024L * 1024L * 1024L * 3L;
+        private readonly long _maxFileSize = 1024L * 1024L * 3L;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
+
         public RecipeEditModel? Recipe { get; set; }
 
         public PagedList<RecipeCategoryModel>? RecipeCategories { get; set; }
@@ -38,26 +39,27 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public string? UnitId { get; set; }
+
         public IList<UnitModel>? Units { get; set; }
         public PagedList<UnitModel>? BaseUnits { get; set; }
 
         [Inject]
-        public IRecipeService? RecipeService { get; set; }
+        public IRecipeService RecipeService { get; set; } = default!;
 
         [Inject]
-        public IRecipeCategoryService? RecipeCategoryService { get; set; }
+        public IRecipeCategoryService RecipeCategoryService { get; set; } = default!;
 
         [Inject]
-        public IProductCategoryService? ProductCategoryService { get; set; }
+        public IProductCategoryService ProductCategoryService { get; set; } = default!;
 
         [Inject]
-        public IProductService? ProductService { get; set; }
+        public IProductService ProductService { get; set; } = default!;
 
         [Inject]
-        public IUnitService? UnitService { get; set; }
+        public IUnitService UnitService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
@@ -66,28 +68,44 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             _navItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Recipes", Href ="recipebooks/recipesoverview" },
-                new BreadcrumbItem{ Text = "Recipe", IsCurrentPage = true },
+                new() { Text = "Recipes", Href = "recipebooks/recipesoverview" },
+                new() { Text = "Recipe", IsCurrentPage = true },
             };
 
-            var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>()
+            var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>
             {
                 Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending } },
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "DisplaySequence",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            RecipeCategories = await RecipeCategoryService!.SearchAsync(queryParametersRecipe);
 
-            var queryParametersProduct = new QueryParameters<ProductCategoryModel>()
+            RecipeCategories = await RecipeCategoryService.SearchAsync(queryParametersRecipe);
+
+            var queryParametersProduct = new QueryParameters<ProductCategoryModel>
             {
                 Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            ProductCategories = await ProductCategoryService!.SearchAsync(queryParametersProduct);
-            BaseUnits = await UnitService!.SearchAsync();
+
+            ProductCategories = await ProductCategoryService.SearchAsync(queryParametersProduct);
+            BaseUnits = await UnitService.SearchAsync();
 
             _ = int.TryParse(Id, out var id);
             if (id == 0)
@@ -96,13 +114,19 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
             else
             {
-                Recipe = await RecipeService!.GetEditAsync(id);
+                Recipe = await RecipeService.GetEditAsync(id);
             }
         }
 
         private async Task SaveAsync()
         {
-            var response = Recipe?.Id == 0 ? await RecipeService!.AddAsync(Recipe) : await RecipeService!.UpdateAsync(Recipe!);
+            if (Recipe is null)
+                return;
+
+            var response = Recipe.Id == 0
+                ? await RecipeService.AddAsync(Recipe)
+                : await RecipeService.UpdateAsync(Recipe);
+
             if (response != null && !response.Succeeded)
             {
                 MessageComponent?.ShowError(response.Message!);
@@ -116,142 +140,158 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteAsync()
         {
-            if (Recipe?.Id != 0)
+            if (Recipe?.Id == 0)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                var response = await RecipeService!.DeleteAsync(Recipe!.Id);
-                if (response != null && !response.Succeeded)
-                {
-                    MessageComponent?.ShowError(response.Message!);
-                }
-                else
-                {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigateToOverview();
-                }
+            if (!confirmation)
+                return;
+
+            var response = await RecipeService.DeleteAsync(Recipe!.Id);
+            if (response != null && !response.Succeeded)
+            {
+                MessageComponent?.ShowError(response.Message!);
+            }
+            else
+            {
+                MessageComponent?.ShowInfo("Data has been deleted successfully");
+                NavigateToOverview();
             }
         }
 
-        private bool CanAddIngredient
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(ProductId) &&
-                       ProductId != "0" &&
-                       UnitId != "0" &&
-                       !string.IsNullOrWhiteSpace(Quantity) &&
-                       double.TryParse(Quantity, out double quantity1) &&
-                       quantity1 > 0;
-            }
-        }
+        private bool CanAddIngredient =>
+            !string.IsNullOrWhiteSpace(ProductId) &&
+            ProductId != "0" &&
+            UnitId != "0" &&
+            !string.IsNullOrWhiteSpace(Quantity) &&
+            double.TryParse(Quantity, out var quantityValue) &&
+            quantityValue > 0;
 
         private void AddIngredient()
         {
-            if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0")
+            if (Recipe is null || string.IsNullOrWhiteSpace(ProductId) || ProductId == "0")
+                return;
+
+            if (Recipe.Ingredients == null)
             {
-                if (Recipe != null)
-                {
-                    if (Recipe.Ingredients == null)
-                    {
-                        Recipe.Ingredients = new List<RecipeIngredientEditModel>();
-                    }
-                    RecipeIngredientEditModel? item = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == int.Parse(ProductId));
-                    if (item != null)
-                    {
-                        if (item.Unit!.Id == int.Parse(UnitId!))
-                        {
-                            item.Quantity += decimal.Parse(Quantity!);
-                        }
-                        else
-                        {
-                            MessageComponent?.ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
-                        }
-                    }
-                    else
-                    {
-                        item = new RecipeIngredientEditModel
-                        {
-                            Index = Recipe.Ingredients.Count + 1,
-                            RecipeId = Recipe.Id,
-                            Product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId)),
-                            Quantity = decimal.Parse(Quantity!),
-                            UnitId = int.Parse(UnitId!),
-                            Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!))
-                        };
-                        Recipe.Ingredients?.Add(item);
-                        Quantity = string.Empty;
-                        UnitId = string.Empty;
-                    }
-                }
+                Recipe.Ingredients = new List<RecipeIngredientEditModel>();
             }
+
+            var productId = int.Parse(ProductId!);
+
+            var existing = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == productId);
+            if (existing != null)
+            {
+                if (existing.Unit!.Id == int.Parse(UnitId!))
+                {
+                    existing.Quantity += decimal.Parse(Quantity!);
+                }
+                else
+                {
+                    MessageComponent?.ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
+                }
+
+                return;
+            }
+
+            var ingredient = new RecipeIngredientEditModel
+            {
+                Index = Recipe.Ingredients.Count + 1,
+                RecipeId = Recipe.Id,
+                Product = Products?.Items?.FirstOrDefault(i => i.Id == productId),
+                Quantity = decimal.Parse(Quantity!),
+                UnitId = int.Parse(UnitId!),
+                Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!))
+            };
+
+            Recipe.Ingredients.Add(ingredient);
+
+            Quantity = string.Empty;
+            UnitId = string.Empty;
         }
 
         private async Task DeleteIngredientAsync(ProductModel item)
         {
-            RecipeIngredientEditModel? itemToDelete = Recipe?.Ingredients?.FirstOrDefault(i => i.Product?.Id == item.Id);
-            if (itemToDelete != null)
+            if (Recipe?.Ingredients is null)
+                return;
+
+            var itemToDelete = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == item.Id);
+            if (itemToDelete is null)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                Recipe?.Ingredients?.Remove(itemToDelete);
-                StateHasChanged();
-            }
+            if (!confirmation)
+                return;
+
+            Recipe.Ingredients.Remove(itemToDelete);
+            StateHasChanged();
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("recipebooks/recipesoverview");
+            NavigationManager.NavigateTo("recipebooks/recipesoverview");
         }
 
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
             var productCategoryId = e.Value?.ToString();
             var filters = new List<FilterItem>();
+
             if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem("ProductCategoryId", productCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
-            };
+                filters.Add(new FilterItem(
+                    "ProductCategoryId",
+                    productCategoryId,
+                    FilterOperator.Equals,
+                    StringComparison.OrdinalIgnoreCase));
+            }
 
-            var queryParameters = new QueryParameters<ProductModel>()
+            var queryParameters = new QueryParameters<ProductModel>
             {
                 Filters = filters,
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            Products = await ProductService!.SearchAsync(queryParameters);
+
+            Products = await ProductService.SearchAsync(queryParameters);
 
             ProductId = string.Empty;
             Quantity = string.Empty;
+
             StateHasChanged();
         }
 
@@ -260,15 +300,31 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var productId = e.Value?.ToString();
             ProductId = productId;
             Quantity = string.Empty;
-            if (!string.IsNullOrWhiteSpace(productId))
+
+            if (string.IsNullOrWhiteSpace(productId))
             {
-                var product = await ProductService!.GetEditAsync(int.Parse(productId));
-                if (product != null)
-                {
-                    var baseUnit = BaseUnits!.Items!.FirstOrDefault(x => x.Id == product.BaseUnitId);
-                    Units = BaseUnits!.Items!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
-                }
+                StateHasChanged();
+                return;
             }
+
+            var product = await ProductService.GetEditAsync(int.Parse(productId));
+            if (product == null || BaseUnits?.Items == null)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            var baseUnit = BaseUnits.Items.FirstOrDefault(x => x.Id == product.BaseUnitId);
+            if (baseUnit == null)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            Units = BaseUnits.Items
+                .Where(x => x.UnitType == baseUnit.UnitType)
+                .ToList();
+
             StateHasChanged();
         }
 
@@ -278,22 +334,22 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 if (e.File != null)
                 {
-                    Stream stream = e.File.OpenReadStream(maxAllowedSize: 1024 * 300);
-                    MemoryStream ms = new();
+                    await using var stream = e.File.OpenReadStream(maxAllowedSize: _maxFileSize);
+                    await using var ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
-                    stream.Close();
                     Recipe!.ImageContent = ms.ToArray();
                 }
+
                 StateHasChanged();
             }
             catch (Exception)
             {
-                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
-                return;
+                MessageComponent?.ShowError(
+                    $"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
             }
         }
 
-        private async Task CheckQuantityAsync(ChangeEventArgs e)
+        private async Task CheckQuantityAsync(ChangeEventArgs _)
         {
             await JS.InvokeVoidAsync("checkQuantity");
         }
