@@ -16,68 +16,87 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Parameter]
         public QueryParameters<ProductCategoryModel>? QueryParameters { get; set; } = new();
 
-        public IList<StatisticModel>? Statistics { get; set; } = new List<StatisticModel>();
-        public PagedList<ProductCategoryModel>? Categories { get; set; }
+        public IList<StatisticModel> Statistics { get; private set; } = [];
+        public PagedList<ProductCategoryModel>? Categories { get; private set; }
 
         [Inject]
-        public IStatisticsService? StatisticsService { get; set; }
+        public IStatisticsService StatisticsService { get; set; } = default!;
 
         [Inject]
-        public IProductCategoryService? CategoryService { get; set; }
+        public IProductCategoryService CategoryService { get; set; } = default!;
 
         [Inject]
         public PreloadService PreloadService { get; set; } = default!;
 
         [Inject]
-        public ISessionStorageService? SessionStorage { get; set; }
+        public ISessionStorageService SessionStorage { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
-            QueryParameters = new QueryParameters<ProductCategoryModel>()
+            QueryParameters = new QueryParameters<ProductCategoryModel>
             {
-                Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Filters = [],
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = 3,
                 PageNumber = 1
             };
+
             await RefreshAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Statistics is not null && Statistics.Any())
+            if (Statistics.Any())
             {
-                var tasks = Statistics
-                    .Where(s => s.Chart is not null && s.ChartData is not null && s.ChartOptions is not null)
-                    .Select(s => s.Chart!.InitializeAsync(s.ChartData!, s.ChartOptions!));
-
-                await Task.WhenAll(tasks);
-
+                await InitializeChartsAsync(Statistics);
                 PreloadService.Hide();
             }
+
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private static Task InitializeChartsAsync(IEnumerable<StatisticModel> statistics)
+        {
+            var tasks = statistics
+                .Where(s => s.Chart is not null && s.ChartData is not null && s.ChartOptions is not null)
+                .Select(s => s.Chart!.InitializeAsync(s.ChartData!, s.ChartOptions!));
+
+            return Task.WhenAll(tasks);
         }
 
         private async Task RefreshAsync()
         {
-            Categories = await CategoryService!.SearchAsync(QueryParameters!);
-
-            if (Categories?.Items is { Count: > 0 })
+            Categories = await CategoryService.SearchAsync(QueryParameters!) ?? new PagedList<ProductCategoryModel>([], new Metadata { PageNumber = 1, PageSize = 1, TotalCount = 0 });
+            if (Categories.Items is { Count: > 0 })
             {
                 PreloadService.Show(SpinnerColor.Primary);
             }
 
-            Statistics = await StatisticsService!.GetFavoriteProductsAsync(Categories!.Items!);
-            foreach (var item in Statistics!)
+            var items = Categories.Items ?? [];
+            var data = await StatisticsService.GetFavoriteProductsAsync(items) ?? [];
+
+            foreach (var item in data)
             {
                 item.GenerateChartData();
             }
+
+            Statistics = data;
             StateHasChanged();
         }
 
         private async Task OnPageChangedAsync(int pageNumber)
         {
-            QueryParameters!.PageNumber = pageNumber;
+            if (QueryParameters is null)
+                return;
+
+            QueryParameters.PageNumber = pageNumber;
             await RefreshAsync();
         }
     }

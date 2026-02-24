@@ -18,20 +18,21 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [Parameter]
         public string? Id { get; set; }
+
         public RecipeCategoryEditModel? RecipeCategory { get; set; }
 
         [Inject]
-        public IRecipeCategoryService? RecipeCategoryService { get; set; }
+        public IRecipeCategoryService RecipeCategoryService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
             _navItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Recipe categories", Href ="recipebooks/recipecategoriesoverview" },
-                new BreadcrumbItem{ Text = "Recipe category", IsCurrentPage = true },
+                new() { Text = "Recipe categories", Href = "recipebooks/recipecategoriesoverview" },
+                new() { Text = "Recipe category", IsCurrentPage = true },
             };
 
             _ = int.TryParse(Id, out var id);
@@ -41,13 +42,21 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
             else
             {
-                RecipeCategory = await RecipeCategoryService!.GetEditAsync(id);
+                RecipeCategory = await RecipeCategoryService.GetEditAsync(id);
             }
         }
 
         private async Task SaveAsync()
         {
-            var response = RecipeCategory?.Id == 0 ? await RecipeCategoryService!.AddAsync(RecipeCategory) : await RecipeCategoryService!.UpdateAsync(RecipeCategory!);
+            if (RecipeCategory is null)
+                return;
+
+            var isNew = RecipeCategory.Id == 0;
+
+            var response = isNew
+                ? await RecipeCategoryService.AddAsync(RecipeCategory)
+                : await RecipeCategoryService.UpdateAsync(RecipeCategory);
+
             if (response != null && !response.Succeeded)
             {
                 MessageComponent?.ShowError(response.Message!);
@@ -61,40 +70,41 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteAsync()
         {
-            if (RecipeCategory?.Id != 0)
+            if (RecipeCategory is null || RecipeCategory.Id == 0)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                var response = await RecipeCategoryService!.DeleteAsync(RecipeCategory!.Id);
-                if (response != null && !response.Succeeded)
-                {
-                    MessageComponent?.ShowError(response.Message!);
-                }
-                else
-                {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigateToOverview();
-                }
+            if (!confirmation)
+                return;
+
+            var response = await RecipeCategoryService.DeleteAsync(RecipeCategory.Id);
+            if (response != null && !response.Succeeded)
+            {
+                MessageComponent?.ShowError(response.Message!);
+            }
+            else
+            {
+                MessageComponent?.ShowInfo("Data has been deleted successfully");
+                NavigateToOverview();
             }
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("recipebooks/recipecategoriesoverview");
+            NavigationManager.NavigateTo("recipebooks/recipecategoriesoverview");
         }
     }
 }

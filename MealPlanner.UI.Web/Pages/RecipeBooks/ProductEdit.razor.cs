@@ -13,131 +13,180 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     public partial class ProductEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = default!;
-        private readonly long _maxFileSize = 1024L * 1024L * 1024L * 3L;
+        private List<BreadcrumbItem> _navItems = [];
+
+        // 3 MB max file size
+        private readonly long _maxFileSize = 1024L * 1024L * 3L;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
-        public ProductEditModel? Product { get; set; }
 
-        public PagedList<ProductCategoryModel>? Categories { get; set; }
-        public PagedList<UnitModel>? Units { get; set; }
+        public ProductEditModel Product { get; set; } = new();
 
-        [Inject]
-        public IProductService? ProductService { get; set; }
+        public PagedList<ProductCategoryModel>? Categories { get; private set; }
+        public PagedList<UnitModel>? Units { get; private set; }
 
         [Inject]
-        public IProductCategoryService? CategoryService { get; set; }
+        public IProductService ProductService { get; set; } = default!;
 
         [Inject]
-        public IUnitService? UnitService { get; set; }
+        public IProductCategoryService CategoryService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public IUnitService UnitService { get; set; } = default!;
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems = new List<BreadcrumbItem>
-            {
-                new BreadcrumbItem{ Text = "Products", Href ="recipebooks/productsoverview" },
-                new BreadcrumbItem{ Text = "Product", IsCurrentPage = true },
-            };
+            _navItems =
+            [
+                new BreadcrumbItem { Text = "Products", Href = "recipebooks/productsoverview" },
+                new BreadcrumbItem { Text = "Product", IsCurrentPage = true },
+            ];
 
-            Units = await UnitService!.SearchAsync();
+            Units = await UnitService.SearchAsync();
 
-            var queryParameters = new QueryParameters<ProductCategoryModel>()
+            var queryParameters = new QueryParameters<ProductCategoryModel>
             {
-                Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Filters = [],
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            Categories = await CategoryService!.SearchAsync(queryParameters);
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            Categories = await CategoryService.SearchAsync(queryParameters);
+
+            if (!int.TryParse(Id, out var id) || id == 0)
             {
                 Product = new ProductEditModel();
             }
             else
             {
-                Product = await ProductService!.GetEditAsync(id);
+                Product = await ProductService.GetEditAsync(id) ?? new ProductEditModel { Id = id };
             }
         }
 
         private async Task SaveAsync()
         {
-            var response = Product?.Id == 0 ? await ProductService!.AddAsync(Product) : await ProductService!.UpdateAsync(Product!);
-            if (response != null && !response.Succeeded)
+            await SaveCoreAsync(Product);
+        }
+
+        private async Task SaveCoreAsync(ProductEditModel product)
+        {
+            Common.Models.CommandResponse? response;
+
+            if (product.Id == 0)
             {
-                MessageComponent?.ShowError(response.Message!);
+                response = await ProductService.AddAsync(product);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
-                NavigateToOverview();
+                response = await ProductService.UpdateAsync(product);
             }
+
+            if (response is null)
+            {
+                ShowError("Save failed. Please try again.");
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Save failed.");
+                return;
+            }
+
+            ShowInfo("Data has been saved successfully");
+            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
         {
-            if (Product?.Id != 0)
+            if (Product.Id == 0)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted it cannot be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                var response = await ProductService!.DeleteAsync(Product!.Id);
-                if (response != null && !response.Succeeded)
-                {
-                    MessageComponent?.ShowError(response.Message!);
-                }
-                else
-                {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigateToOverview();
-                }
+            if (!confirmation)
+                return;
+
+            await DeleteCoreAsync(Product);
+        }
+
+        private async Task DeleteCoreAsync(ProductEditModel product)
+        {
+            if (product.Id == 0)
+                return;
+
+            var response = await ProductService.DeleteAsync(product.Id);
+            if (response is null)
+            {
+                ShowError("Delete failed. Please try again.");
+                return;
             }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Delete failed.");
+                return;
+            }
+
+            ShowInfo("Data has been deleted successfully");
+            NavigateToOverview();
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("recipebooks/productsoverview");
+            NavigationManager.NavigateTo("recipebooks/productsoverview");
         }
+
+        private void ShowError(string message)
+            => MessageComponent?.ShowError(message);
+
+        private void ShowInfo(string message)
+            => MessageComponent?.ShowInfo(message);
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             try
             {
-                if (e.File != null)
+                if (e.File is not null)
                 {
-                    Stream stream = e.File.OpenReadStream(maxAllowedSize: 1024 * 300);
-                    MemoryStream ms = new();
+                    await using var stream = e.File.OpenReadStream(maxAllowedSize: _maxFileSize);
+                    using var ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
-                    stream.Close();
-                    Product!.ImageContent = ms.ToArray();
+                    Product.ImageContent = ms.ToArray();
                 }
+
                 StateHasChanged();
             }
             catch (Exception)
             {
-                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
-                return;
+                ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
             }
         }
     }

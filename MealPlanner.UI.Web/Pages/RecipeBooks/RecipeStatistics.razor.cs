@@ -26,7 +26,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         public IRecipeCategoryService CategoryService { get; set; } = default!;
 
         [Inject]
-        protected PreloadService PreloadService { get; set; } = default!;
+        public PreloadService PreloadService { get; set; } = default!;
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
@@ -93,7 +93,10 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task OnPageChangedAsync(int pageNumber)
         {
-            QueryParameters!.PageNumber = pageNumber;
+            if (QueryParameters is null)
+                return;
+
+            QueryParameters.PageNumber = pageNumber;
             await RefreshAsync();
         }
     }
