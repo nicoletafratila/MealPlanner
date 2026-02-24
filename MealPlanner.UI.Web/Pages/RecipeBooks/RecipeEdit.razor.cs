@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
+using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Services.RecipeBooks;
@@ -114,7 +115,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
             else
             {
-                Recipe = await RecipeService.GetEditAsync(id);
+                Recipe = await RecipeService.GetEditAsync(id)
+                          ?? new RecipeEditModel { Id = id };
             }
         }
 
@@ -123,24 +125,41 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             if (Recipe is null)
                 return;
 
-            var response = Recipe.Id == 0
-                ? await RecipeService.AddAsync(Recipe)
-                : await RecipeService.UpdateAsync(Recipe);
+            await SaveCoreAsync(Recipe);
+        }
 
-            if (response != null && !response.Succeeded)
+        private async Task SaveCoreAsync(RecipeEditModel recipe)
+        {
+            CommandResponse? response;
+
+            if (recipe.Id == 0)
             {
-                MessageComponent?.ShowError(response.Message!);
+                response = await RecipeService.AddAsync(recipe);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
-                NavigateToOverview();
+                response = await RecipeService.UpdateAsync(recipe);
             }
+
+            if (response is null)
+            {
+                ShowError("Save failed. Please try again.");
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Save failed.");
+                return;
+            }
+
+            ShowInfo("Data has been saved successfully");
+            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
         {
-            if (Recipe?.Id == 0)
+            if (Recipe is null || Recipe.Id == 0)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -160,16 +179,29 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             if (!confirmation)
                 return;
 
-            var response = await RecipeService.DeleteAsync(Recipe!.Id);
-            if (response != null && !response.Succeeded)
+            await DeleteCoreAsync(Recipe);
+        }
+
+        private async Task DeleteCoreAsync(RecipeEditModel recipe)
+        {
+            if (recipe.Id == 0)
+                return;
+
+            var response = await RecipeService.DeleteAsync(recipe.Id);
+            if (response is null)
             {
-                MessageComponent?.ShowError(response.Message!);
+                ShowError("Delete failed. Please try again.");
+                return;
             }
-            else
+
+            if (!response.Succeeded)
             {
-                MessageComponent?.ShowInfo("Data has been deleted successfully");
-                NavigateToOverview();
+                ShowError(response.Message ?? "Delete failed.");
+                return;
             }
+
+            ShowInfo("Data has been deleted successfully");
+            NavigateToOverview();
         }
 
         private bool CanAddIngredient =>
@@ -201,7 +233,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 }
                 else
                 {
-                    MessageComponent?.ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
+                    ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
                 }
 
                 return;
@@ -332,19 +364,19 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             try
             {
-                if (e.File != null)
+                if (e.File != null && Recipe != null)
                 {
                     await using var stream = e.File.OpenReadStream(maxAllowedSize: _maxFileSize);
                     await using var ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
-                    Recipe!.ImageContent = ms.ToArray();
+                    Recipe.ImageContent = ms.ToArray();
                 }
 
                 StateHasChanged();
             }
             catch (Exception)
             {
-                MessageComponent?.ShowError(
+                ShowError(
                     $"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
             }
         }
@@ -353,5 +385,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             await JS.InvokeVoidAsync("checkQuantity");
         }
+
+        private void ShowError(string message)
+            => MessageComponent?.ShowError(message);
+
+        private void ShowInfo(string message)
+            => MessageComponent?.ShowInfo(message);
     }
 }

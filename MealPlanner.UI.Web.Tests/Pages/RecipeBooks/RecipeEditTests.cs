@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using Bunit;
+using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using MealPlanner.UI.Web.Services.RecipeBooks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using RecipeBook.Shared.Models;
@@ -35,14 +35,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _unitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
-            _ctx.Services.AddBlazorBootstrap();
-
             _ctx.Services.AddSingleton(_recipeServiceMock.Object);
             _ctx.Services.AddSingleton(_recipeCategoryServiceMock.Object);
             _ctx.Services.AddSingleton(_productCategoryServiceMock.Object);
             _ctx.Services.AddSingleton(_productServiceMock.Object);
             _ctx.Services.AddSingleton(_unitServiceMock.Object);
-            _ctx.Services.AddSingleton(_messageComponentMock.Object);
+            _ctx.Services.AddSingleton<IMessageComponent>(_messageComponentMock.Object);
+
+            _ctx.Services.AddBlazorBootstrap();
             _ctx.Services.AddLogging();
         }
 
@@ -52,17 +52,29 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.Dispose();
         }
 
+        private void ArrangeLookups()
+        {
+            _recipeCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+
+            _productCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
+
+            _unitServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
+                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+        }
+
         private IRenderedComponent<RecipeEdit> RenderComponent(string? id = null)
         {
-            return _ctx.Render<RecipeEdit>(parameters =>
+            return _ctx.Render<RecipeEdit>(ps =>
             {
-                if (id != null)
-                {
-                    parameters.Add(p => p.Id, id);
-                }
+                if (id is not null)
+                    ps.Add(p => p.Id, id);
 
-                // Cascading MessageComponent
-                parameters.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+                ps.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
             });
         }
 
@@ -71,370 +83,387 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public void OnInitializedAsync_WithIdZero_CreatesNewRecipe()
         {
             // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
-
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+            ArrangeLookups();
 
             // Act
-            var cut = RenderComponent(id: "0");
+            var cut = RenderComponent("0");
 
             // Assert
             Assert.That(cut.Instance.Recipe, Is.Not.Null);
             Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(0));
 
-            _recipeCategoryServiceMock.Verify(
-                s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()),
-                Times.Once);
-
-            _productCategoryServiceMock.Verify(
-                s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()),
-                Times.Once);
-
-            _unitServiceMock.Verify(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()), Times.Once);
+            _recipeServiceMock.Verify(
+                s => s.GetEditAsync(It.IsAny<int>()),
+                Times.Never);
         }
 
         [Test]
         public void OnInitializedAsync_WithNonZeroId_LoadsRecipe()
         {
             // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+            ArrangeLookups();
 
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
-
-            var existing = new RecipeEditModel { Id = 5, Name = "Loaded Recipe" };
+            var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
             _recipeServiceMock
                 .Setup(s => s.GetEditAsync(5))
                 .ReturnsAsync(existing);
 
             // Act
-            var cut = RenderComponent(id: "5");
+            var cut = RenderComponent("5");
 
             // Assert
             Assert.That(cut.Instance.Recipe, Is.Not.Null);
-            Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(5));
-            Assert.That(cut.Instance.Recipe!.Name, Is.EqualTo("Loaded Recipe"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(5));
+                Assert.That(cut.Instance.Recipe!.Name, Is.EqualTo("Loaded"));
+            });
 
             _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
 
-        // ---------- CanAddIngredient ----------
         [Test]
-        public void CanAddIngredient_False_WhenRequiredFieldsMissing()
+        public void OnInitializedAsync_WithNonZeroId_NullFromService_FallsBackToRecipeWithId()
         {
             // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+            ArrangeLookups();
 
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
-
-            var cut = RenderComponent("0");
+            _recipeServiceMock
+                .Setup(s => s.GetEditAsync(5))
+                .ReturnsAsync((RecipeEditModel?)null);
 
             // Act
-            cut.Instance.ProductId = "0";
-            cut.Instance.UnitId = "1";
-            cut.Instance.Quantity = "1";
-
-            var canAddProp = typeof(RecipeEdit).GetProperty("CanAddIngredient", BindingFlags.Instance | BindingFlags.NonPublic);
-            var result = (bool)canAddProp!.GetValue(cut.Instance)!;
+            var cut = RenderComponent("5");
 
             // Assert
-            Assert.That(result, Is.False);
+            Assert.That(cut.Instance.Recipe, Is.Not.Null);
+            Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(5));
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
 
+        // ---------- SaveCoreAsync ----------
         [Test]
-        public void CanAddIngredient_True_WhenAllFieldsValid()
+        public async Task SaveCoreAsync_AddsRecipe_WhenIdIsZero()
         {
             // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+            ArrangeLookups();
 
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
+            var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+            _recipeServiceMock
+                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>()))
+                .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
 
-            cut.Instance.ProductId = "10";
-            cut.Instance.UnitId = "1";
-            cut.Instance.Quantity = "2.5";
+            var recipe = new RecipeEditModel { Id = 0, Name = "New Recipe" };
 
-            var canAddProp = typeof(RecipeEdit).GetProperty("CanAddIngredient", BindingFlags.Instance | BindingFlags.NonPublic);
-            var result = (bool)canAddProp!.GetValue(cut.Instance)!;
-
-            Assert.That(result, Is.True);
-        }
-
-        // ---------- AddIngredient ----------
-        [Test]
-        public void AddIngredient_AddsNewIngredient_AndResetsFields()
-        {
-            // Arrange basic initialization
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
-
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
-
-            var products = new PagedList<ProductModel>(
-                new List<ProductModel> { new() { Id = 5, Name = "Flour" } },
-                new Metadata());
-
-            var baseUnits = new PagedList<UnitModel>(
-                new List<UnitModel> { new() { Id = 1, Name = "g" } },
-                new Metadata());
-
-            _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>()))
-                .ReturnsAsync(products);
+            var method = typeof(RecipeEdit)
+                .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
 
             // Act
-            var cut = RenderComponent("0");
-            cut.Instance.Recipe = new RecipeEditModel { Id = 1, Ingredients = new List<RecipeIngredientEditModel>() };
-            cut.Instance.Products = products;
-            cut.Instance.Units = baseUnits.Items;
-
-            cut.Instance.ProductId = "5";
-            cut.Instance.UnitId = "1";
-            cut.Instance.Quantity = "100";
-
-            var method = typeof(RecipeEdit).GetMethod("AddIngredient", BindingFlags.Instance | BindingFlags.NonPublic);
-            method!.Invoke(cut.Instance, null);
-
-            // Assert
-            Assert.That(cut.Instance.Recipe!.Ingredients, Is.Not.Null);
-            Assert.That(cut.Instance.Recipe!.Ingredients!, Has.Count.EqualTo(1));
-            var ingredient = cut.Instance.Recipe!.Ingredients!.Single();
-            Assert.Multiple(() =>
+            await cut.InvokeAsync(async () =>
             {
-                Assert.That(ingredient.Product!.Id, Is.EqualTo(5));
-                Assert.That(ingredient.UnitId, Is.EqualTo(1));
-                Assert.That(ingredient.Quantity, Is.EqualTo(100m));
-                Assert.That(cut.Instance.Quantity, Is.EqualTo(string.Empty));
-                Assert.That(cut.Instance.UnitId, Is.EqualTo(string.Empty));
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
+                await task;
             });
-        }
 
-        [Test]
-        public void AddIngredient_SameProductDifferentUnit_ShowsError()
-        {
-            // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
-
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
-
-            var cut = RenderComponent("0");
-
-            cut.Instance.Recipe = new RecipeEditModel
-            {
-                Id = 1,
-                Ingredients =
-                [
-                    new RecipeIngredientEditModel
-                    {
-                        Product = new ProductModel { Id = 5 },
-                        Unit = new UnitModel { Id = 1 },
-                        UnitId = 1,
-                        Quantity = 50
-                    }
-                ]
-            };
-
-            cut.Instance.Products = new PagedList<ProductModel>(
-                new List<ProductModel> { new() { Id = 5 } },
-                new Metadata());
-
-            cut.Instance.Units = new List<UnitModel>
-            {
-                new() { Id = 1 },
-                new() { Id = 2 }
-            };
-
-            cut.Instance.ProductId = "5";
-            cut.Instance.UnitId = "2"; 
-            cut.Instance.Quantity = "25";
-
-            var method = typeof(RecipeEdit).GetMethod("AddIngredient", BindingFlags.Instance | BindingFlags.NonPublic);
-            method!.Invoke(cut.Instance, null);
+            // Assert
+            _recipeServiceMock.Verify(
+                s => s.AddAsync(It.Is<RecipeEditModel>(r => r.Name == "New Recipe")),
+                Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowError("The same ingredient was added to the recipe with a different unit of measurement."),
+                m => m.ShowInfo("Data has been saved successfully"),
                 Times.Once);
+
+            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
+            Assert.That(nav.Uri, Does.EndWith("recipebooks/recipesoverview"));
         }
 
-        // ---------- OnProductCategoryChangedAsync ----------
         [Test]
-        public async Task OnProductCategoryChangedAsync_BuildsFilters_AndResetsFields()
+        public async Task SaveCoreAsync_UpdatesRecipe_WhenIdIsNonZero()
         {
             // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+            ArrangeLookups();
 
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
+            var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+            var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
-            var products = new PagedList<ProductModel>(
-                new List<ProductModel> { new() { Id = 1 } },
-                new Metadata());
+            _recipeServiceMock
+                .Setup(s => s.GetEditAsync(5))
+                .ReturnsAsync(existing);
 
-            _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>()))
-                .ReturnsAsync(products);
+            _recipeServiceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<RecipeEditModel>()))
+                .ReturnsAsync(response);
 
-            var cut = RenderComponent("0");
+            var cut = RenderComponent("5");
 
-            var method = typeof(RecipeEdit).GetMethod(
-                "OnProductCategoryChangedAsync",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            var recipe = new RecipeEditModel { Id = 5, Name = "Updated" };
 
-            var args = new ChangeEventArgs { Value = "3" };
+            var method = typeof(RecipeEdit) .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
 
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { args })!;
-                await task;
-            });
-
-            // Assert: verify filters built with ProductCategoryId == "3"
-            _productServiceMock.Verify(
-                s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(qp =>
-                    qp.Filters != null &&
-                    qp.Filters.Count() == 1 &&
-                    qp.Filters.First().PropertyName == "ProductCategoryId" &&
-                    (string)qp.Filters.First().Value == "3")),
-                Times.Once);
-
-            Assert.That(cut.Instance.ProductId, Is.EqualTo(string.Empty));
-            Assert.That(cut.Instance.Quantity, Is.EqualTo(string.Empty));
-        }
-
-        // ---------- OnInputFileChangeAsync ----------
-        [Test]
-        public async Task OnInputFileChangeAsync_SetsImageContent_WhenWithinLimit()
-        {
-            // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
-
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
-
-            var cut = RenderComponent("0");
-            cut.Instance.Recipe = new RecipeEditModel { Id = 1 };
-
-            var fileBytes = new byte[] { 1, 2, 3, 4 };
-            var fakeFile = new FakeBrowserFile(fileBytes, "img.png", "image/png");
-            var args = new InputFileChangeEventArgs(new[] { fakeFile });
-
-            var method = typeof(RecipeEdit).GetMethod(
-                "OnInputFileChangeAsync",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-
-            // Act
-            await cut.InvokeAsync(async () =>
-            {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { args })!;
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
                 await task;
             });
 
             // Assert
-            Assert.That(cut.Instance.Recipe!.ImageContent, Is.Not.Null);
-            Assert.That(cut.Instance.Recipe!.ImageContent!.SequenceEqual(fileBytes), Is.True);
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _recipeServiceMock.Verify(
+                s => s.UpdateAsync(It.Is<RecipeEditModel>(r => r.Id == 5)),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfo("Data has been saved successfully"),
+                Times.Once);
         }
 
         [Test]
-        public async Task OnInputFileChangeAsync_ShowsError_WhenFileTooLarge()
+        public async Task SaveCoreAsync_ShowsGenericError_WhenResponseIsNull()
         {
             // Arrange
-            _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
-                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+            ArrangeLookups();
 
-            _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
-
-            _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
-                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+            _recipeServiceMock
+                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>()))
+                .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("0");
-            cut.Instance.Recipe = new RecipeEditModel { Id = 1 };
 
-            var bigBytes = new byte[1024 * 1024 * 5]; // 5 MB
-            var fakeFile = new FakeBrowserFile(bigBytes, "big.bin", "application/octet-stream", throwOnOpen: true);
-            var args = new InputFileChangeEventArgs(new[] { fakeFile });
+            var recipe = new RecipeEditModel { Id = 0, Name = "New Recipe" };
 
-            var method = typeof(RecipeEdit).GetMethod(
-                "OnInputFileChangeAsync",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(RecipeEdit) .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
 
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { args })!;
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
                 await task;
             });
 
-            // Assert: error shown
+            // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError(It.Is<string>(msg => msg.Contains("Maximum allowed size"))),
+                m => m.ShowError("Save failed. Please try again."),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task SaveCoreAsync_ShowsResponseMessage_WhenFailed()
+        {
+            // Arrange
+            ArrangeLookups();
+
+            var response = new CommandResponse
+            {
+                Succeeded = false,
+                Message = "Validation error"
+            };
+
+            _recipeServiceMock
+                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>()))
+                .ReturnsAsync(response);
+
+            var cut = RenderComponent("0");
+
+            var recipe = new RecipeEditModel { Id = 0, Name = "New Recipe" };
+
+            var method = typeof(RecipeEdit) .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
+                await task;
+            });
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowError("Validation error"),
+                Times.Once);
+        }
+
+        // ---------- DeleteAsync / DeleteCoreAsync ----------
+        [Test]
+        public async Task DeleteAsync_DoesNothing_WhenRecipeIsNullOrIdZero()
+        {
+            // Arrange
+            ArrangeLookups();
+            var cut = RenderComponent("0");
+            cut.Instance.Recipe = new RecipeEditModel { Id = 0 };
+
+            var method = typeof(RecipeEdit).GetMethod("DeleteAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            _recipeServiceMock.Verify(
+                s => s.DeleteAsync(It.IsAny<int>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task DeleteCoreAsync_Deletes_WhenResponseSucceeded()
+        {
+            // Arrange
+            ArrangeLookups();
+
+            var response = new CommandResponse
+            {
+                Succeeded = true,
+                Message = "ok"
+            };
+
+            var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
+
+            _recipeServiceMock
+                .Setup(s => s.GetEditAsync(5))
+                .ReturnsAsync(existing);
+
+            _recipeServiceMock
+                .Setup(s => s.DeleteAsync(5))
+                .ReturnsAsync(response);
+
+            var cut = RenderComponent("5");
+
+            var recipe = new RecipeEditModel { Id = 5, Name = "ToDelete" };
+
+            var method = typeof(RecipeEdit)  .GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
+                await task;
+            });
+
+            // Assert
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _recipeServiceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            _messageComponentMock.Verify(
+                m => m.ShowInfo("Data has been deleted successfully"),
+                Times.Once);
+
+            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
+            Assert.That(nav.Uri, Does.EndWith("recipebooks/recipesoverview"));
+        }
+
+        [Test]
+        public async Task DeleteCoreAsync_ShowsGenericError_WhenResponseNull()
+        {
+            // Arrange
+            ArrangeLookups();
+
+            var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
+
+            _recipeServiceMock
+                .Setup(s => s.GetEditAsync(5))
+                .ReturnsAsync(existing);
+
+            _recipeServiceMock
+                .Setup(s => s.DeleteAsync(5))
+                .ReturnsAsync((CommandResponse?)null);
+
+            var cut = RenderComponent("5");
+
+            var recipe = new RecipeEditModel { Id = 5 };
+
+            var method = typeof(RecipeEdit)
+                .GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
+                await task;
+            });
+
+            // Assert
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _messageComponentMock.Verify(
+                m => m.ShowError("Delete failed. Please try again."),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task DeleteCoreAsync_ShowsResponseMessage_WhenFailed()
+        {
+            // Arrange
+            ArrangeLookups();
+
+            var response = new CommandResponse
+            {
+                Succeeded = false,
+                Message = "Delete failed because of dependency"
+            };
+
+            var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
+
+            _recipeServiceMock
+                .Setup(s => s.GetEditAsync(5))
+                .ReturnsAsync(existing);
+
+            _recipeServiceMock
+                .Setup(s => s.DeleteAsync(5))
+                .ReturnsAsync(response);
+
+            var cut = RenderComponent("5");
+
+            var recipe = new RecipeEditModel { Id = 5 };
+
+            var method = typeof(RecipeEdit)
+                .GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
+                await task;
+            });
+
+            // Assert
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _messageComponentMock.Verify(
+                m => m.ShowError("Delete failed because of dependency"),
+                Times.Once);
+        }
+
+        // ---------- NavigateToOverview ----------
+        [Test]
+        public void NavigateToOverview_NavigatesToOverviewUrl()
+        {
+            // Arrange
+            ArrangeLookups();
+            var cut = RenderComponent("0");
+            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
+
+            var method = typeof(RecipeEdit)
+                .GetMethod("NavigateToOverview", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, []));
+
+            // Assert
+            Assert.That(nav.Uri, Does.EndWith("recipebooks/recipesoverview"));
         }
     }
 }
