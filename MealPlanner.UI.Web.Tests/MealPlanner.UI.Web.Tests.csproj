@@ -28,8 +28,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\MealPlans\" />
-  </ItemGroup>
-
 </Project>
