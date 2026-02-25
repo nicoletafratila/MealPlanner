@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 namespace Identity.Api
@@ -16,6 +17,40 @@ namespace Identity.Api
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Identity API",
+                    Version = "v1"
+                });
+
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "Enter 'Bearer {token}'",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = JwtBearerDefaults.AuthenticationScheme
+                    }
+                };
+
+                c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        securityScheme,
+                        new[] { Common.Constants.MealPlanner.ApiScope }
+                    }
+                });
+            });
         }
 
         protected override void RegisterRepositories(IServiceCollection services)
@@ -24,12 +59,12 @@ namespace Identity.Api
                     .AddEntityFrameworkStores<MealPlannerDbContext>()
                     .AddDefaultTokenProviders();
             services.AddIdentityServer()
-                   .AddDeveloperSigningCredential()
-                   .AddInMemoryClients(IdentityConfigs.GetClients())
-                   .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
-                   .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
-                   .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
-                   .AddAspNetIdentity<ApplicationUser>();
+                    .AddDeveloperSigningCredential()
+                    .AddInMemoryClients(IdentityConfigs.GetClients())
+                    .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
+                    .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
+                    .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
+                    .AddAspNetIdentity<ApplicationUser>();
             services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -52,8 +87,8 @@ namespace Identity.Api
                 .AddPolicy(Common.Constants.MealPlanner.PolicyScope, policy =>
                 {
                     policy.AddAuthenticationSchemes(
-                            JwtBearerDefaults.AuthenticationScheme,
-                            IdentityConstants.ApplicationScheme);
+                        JwtBearerDefaults.AuthenticationScheme,
+                        IdentityConstants.ApplicationScheme);
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope);
                 });
@@ -64,17 +99,27 @@ namespace Identity.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity API v1");
+                    c.RoutePrefix = "swagger";
+                });
             }
 
             app.UseSerilogRequestLogging();
             app.UseStaticFiles();
+
             app.UseRouting();
+
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
             });
         }
     }
