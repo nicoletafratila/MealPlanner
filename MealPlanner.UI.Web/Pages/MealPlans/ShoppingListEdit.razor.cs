@@ -24,13 +24,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private ShopEditModel? _shop;
 
         [CascadingParameter]
-        private IModalService? ModalService { get; set; } = default!;
+        private IModalService? ModalService { get; set; }
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
+
         public ShoppingListEditModel? ShoppingList { get; set; }
 
         public PagedList<ProductCategoryModel>? Categories { get; set; }
@@ -46,257 +47,341 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
         public string? UnitId { get; set; }
+
         public IList<UnitModel>? Units { get; set; }
         public PagedList<UnitModel>? BaseUnits { get; set; }
 
         [Inject]
-        public IShoppingListService? ShoppingListService { get; set; }
+        public IShoppingListService ShoppingListService { get; set; } = default!;
 
         [Inject]
-        public IProductCategoryService? ProductCategoryService { get; set; }
+        public IProductCategoryService ProductCategoryService { get; set; } = default!;
 
         [Inject]
-        public IProductService? ProductService { get; set; }
+        public IProductService ProductService { get; set; } = default!;
 
         [Inject]
-        public IShopService? ShopService { get; set; }
+        public IShopService ShopService { get; set; } = default!;
 
         [Inject]
-        public IMealPlanService? MealPlanService { get; set; }
+        public IMealPlanService MealPlanService { get; set; } = default!;
 
         [Inject]
-        public IRecipeService? RecipeService { get; set; }
+        public IRecipeService RecipeService { get; set; } = default!;
 
         [Inject]
-        public IUnitService? UnitService { get; set; }
+        public IUnitService UnitService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems = new List<BreadcrumbItem>
-            {
-                new BreadcrumbItem{ Text = "Shopping lists", Href ="mealplans/shoppinglistsoverview" },
-                new BreadcrumbItem{ Text = "Shopping list", IsCurrentPage = true },
-            };
+            _navItems =
+            [
+                new() { Text = "Shopping lists", Href = "mealplans/shoppinglistsoverview" },
+                new() { Text = "Shopping list", IsCurrentPage = true },
+            ];
 
-            var queryParametersProduct = new QueryParameters<ProductCategoryModel>()
+            var queryParametersProduct = new QueryParameters<ProductCategoryModel>
             {
-                Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Filters = [],
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            Categories = await ProductCategoryService!.SearchAsync(queryParametersProduct);
-            Shops = await ShopService!.SearchAsync();
-            BaseUnits = await UnitService!.SearchAsync();
 
-            _ = int.TryParse(Id, out int id);
+            Categories = await ProductCategoryService.SearchAsync(queryParametersProduct);
+            Shops = await ShopService.SearchAsync();
+            BaseUnits = await UnitService.SearchAsync();
+
+            _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
-                ShoppingList = new ShoppingListEditModel();
-                ShoppingList.Products = new List<ShoppingListProductEditModel>();
+                ShoppingList = new ShoppingListEditModel
+                {
+                    Products = []
+                };
             }
             else
             {
-                ShoppingList = await ShoppingListService!.GetEditAsync(id);
-                await OnShopChangedAsync(new ChangeEventArgs() { Value = ShoppingList!.ShopId });
+                ShoppingList = await ShoppingListService.GetEditAsync(id);
+                if (ShoppingList is not null)
+                {
+                    await OnShopChangedAsync(new ChangeEventArgs { Value = ShoppingList.ShopId });
+                }
             }
         }
 
         private async Task SaveAsync()
         {
-            var response = ShoppingList?.Id == 0 ? await ShoppingListService!.AddAsync(ShoppingList) : await ShoppingListService!.UpdateAsync(ShoppingList!);
-            if (response != null && !response.Succeeded)
+            if (ShoppingList is null)
+                return;
+
+            await SaveCoreAsync(ShoppingList);
+        }
+
+        private async Task SaveCoreAsync(ShoppingListEditModel shoppingList)
+        {
+            CommandResponse? response;
+
+            if (shoppingList.Id == 0)
             {
-                MessageComponent?.ShowError(response.Message!);
+                response = await ShoppingListService.AddAsync(shoppingList);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
-                NavigateToOverview();
+                response = await ShoppingListService.UpdateAsync(shoppingList);
             }
+
+            if (response is null)
+            {
+                ShowError("Save failed. Please try again.");
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Save failed.");
+                return;
+            }
+
+            ShowInfo("Data has been saved successfully");
+            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
         {
-            if (ShoppingList?.Id != 0)
+            if (ShoppingList is null || ShoppingList.Id == 0)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                var response = await ShoppingListService!.DeleteAsync(ShoppingList!.Id);
-                if (response != null && !response.Succeeded)
-                {
-                    MessageComponent?.ShowError(response.Message!);
-                }
-                else
-                {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigateToOverview();
-                }
+            if (!confirmation)
+                return;
+
+            await DeleteCoreAsync(ShoppingList);
+        }
+
+        private async Task DeleteCoreAsync(ShoppingListEditModel shoppingList)
+        {
+            if (shoppingList.Id == 0)
+                return;
+
+            var response = await ShoppingListService.DeleteAsync(shoppingList.Id);
+            if (response is null)
+            {
+                ShowError("Delete failed. Please try again.");
+                return;
             }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Delete failed.");
+                return;
+            }
+
+            ShowInfo("Data has been deleted successfully");
+            NavigateToOverview();
         }
 
         private async Task DeleteProductAsync(ProductModel item)
         {
-            ShoppingListProductEditModel? itemToDelete = ShoppingList?.Products?.FirstOrDefault(i => i.Product?.Id == item.Id);
-            if (itemToDelete != null)
+            var itemToDelete = ShoppingList?.Products?.FirstOrDefault(i => i.Product?.Id == item.Id);
+            if (itemToDelete is null)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                ShoppingList?.Products?.Remove(itemToDelete);
-                ShoppingList?.Products?.SetIndexes();
-                StateHasChanged();
-            }
+            if (!confirmation)
+                return;
+
+            ShoppingList?.Products?.Remove(itemToDelete);
+            ShoppingList?.Products?.SetIndexes();
+            StateHasChanged();
         }
 
-        private bool CanAddProduct
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(ProductId) &&
-                       ProductId != "0" &&
-                       !string.IsNullOrWhiteSpace(Quantity) &&
-                       double.TryParse(Quantity, out _);
-            }
-        }
+        private bool CanAddProduct =>
+            !string.IsNullOrWhiteSpace(ProductId) &&
+            ProductId != "0" &&
+            !string.IsNullOrWhiteSpace(Quantity) &&
+            double.TryParse(Quantity, out _);
 
         private void AddProduct()
         {
-            if (!string.IsNullOrWhiteSpace(ProductId) && ProductId != "0" && UnitId != "0")
+            if (!string.IsNullOrWhiteSpace(ProductId) &&
+                ProductId != "0" &&
+                UnitId != "0")
             {
-                AddProduct(Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId))!, decimal.Parse(Quantity!), int.Parse(UnitId!));
+                var product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId));
+                if (product is null)
+                    return;
+
+                AddProduct(product, decimal.Parse(Quantity!), int.Parse(UnitId!));
             }
         }
 
-        private bool CanAddMealPlan
-        {
-            get
-            {
-                return ShoppingList!.ShopId != 0;
-            }
-        }
+        private bool CanAddMealPlan => ShoppingList?.ShopId != 0;
 
         private async Task AddMealPlanAsync()
         {
-            var mealPlanSelectionModal = ModalService?.Show<MealPlanSelection>("Select a meal plan");
-            var result = await mealPlanSelectionModal!.Result;
-
-            if (result.Confirmed && result?.Data != null)
+            if (!CanAddMealPlan)
             {
-                int mealPlanId;
-                if (!int.TryParse(result.Data.ToString(), out mealPlanId))
-                {
-                    MessageComponent?.ShowError("You must select a meal plan to add to the shopping list.");
-                    return;
-                }
-                var products = await MealPlanService!.GetShoppingListProductsAsync(mealPlanId, ShoppingList!.ShopId);
-                foreach (var item in products!)
-                {
-                    AddProduct(item.Product!, item.Quantity, item.UnitId);
-                }
+                ShowError("You must select a shop first.");
+                return;
             }
-        }
 
-        private bool CanAddRecipe
-        {
-            get
-            {
-                return ShoppingList!.ShopId != 0;
-            }
-        }
-
-        private async Task AddRecipeAsync()
-        {
-            var recipeSelectionModal = ModalService?.Show<RecipeSelection>("Select a recipe");
-            if (recipeSelectionModal is null)
+            var modal = ModalService?.Show<MealPlanSelection>("Select a meal plan");
+            if (modal is null)
                 return;
 
-            var result = await recipeSelectionModal.Result;
+            var result = await modal.Result;
 
             if (!result.Confirmed || result.Data is null)
             {
-                MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
+                ShowError("You must select a meal plan to add to the shopping list.");
+                return;
+            }
+
+            if (!int.TryParse(result.Data.ToString(), out var mealPlanId))
+            {
+                ShowError("You must select a meal plan to add to the shopping list.");
+                return;
+            }
+
+            var products = await MealPlanService.GetShoppingListProductsAsync(mealPlanId, ShoppingList!.ShopId);
+            if (products is null)
+                return;
+
+            foreach (var item in products)
+            {
+                if (item.Product is not null)
+                {
+                    AddProduct(item.Product, item.Quantity, item.UnitId);
+                }
+            }
+        }
+
+        private bool CanAddRecipe => ShoppingList?.ShopId != 0;
+
+        private async Task AddRecipeAsync()
+        {
+            if (!CanAddRecipe)
+            {
+                ShowError("You must select a shop first.");
+                return;
+            }
+
+            var modal = ModalService?.Show<RecipeSelection>("Select a recipe");
+            if (modal is null)
+                return;
+
+            var result = await modal.Result;
+
+            if (!result.Confirmed || result.Data is null)
+            {
+                ShowError("You must select a recipe to add to the shopping list.");
                 return;
             }
 
             var recipeIdString = result.Data.ToString();
             if (!int.TryParse(recipeIdString, out var recipeId))
             {
-                MessageComponent?.ShowError("You must select a recipe to add to the shopping list.");
+                ShowError("You must select a recipe to add to the shopping list.");
                 return;
             }
 
-            var products = await RecipeService!.GetShoppingListProductsAsync(recipeId, ShoppingList!.ShopId);
-            foreach (var item in products!)
+            var products = await RecipeService.GetShoppingListProductsAsync(recipeId, ShoppingList!.ShopId);
+            if (products is null)
+                return;
+
+            foreach (var item in products)
             {
-                AddProduct(item.Product!, item.Quantity, item.UnitId);
+                if (item.Product is not null)
+                {
+                    AddProduct(item.Product, item.Quantity, item.UnitId);
+                }
             }
         }
 
         private void AddProduct(ProductModel product, decimal quantity, int unitId)
         {
-            ShoppingListProductEditModel? item = ShoppingList!.Products!.FirstOrDefault(i => i.Product?.Id == product.Id);
-            UnitModel? unit = BaseUnits!.Items!.FirstOrDefault(i => i.Id == unitId);
+            if (ShoppingList?.Products is null || BaseUnits?.Items is null)
+                return;
+
+            var item = ShoppingList.Products.FirstOrDefault(i => i.Product?.Id == product.Id);
+            var unit = BaseUnits.Items.FirstOrDefault(i => i.Id == unitId);
+            var baseUnit = product.BaseUnit;
+
+            if (unit is null || baseUnit is null)
+            {
+                ShowError("Unit configuration is invalid.");
+                return;
+            }
 
             try
             {
                 if (item != null)
                 {
-                    item.Quantity += UnitConverter.Convert(quantity, unit!, product!.BaseUnit!);
+                    item.Quantity += UnitConverter.Convert(quantity, unit, baseUnit);
                 }
                 else
                 {
+                    var displaySequence = _shop?.GetDisplaySequence(product.ProductCategory?.Id);
+
                     item = new ShoppingListProductEditModel
                     {
                         ShoppingListId = ShoppingList.Id,
                         Collected = false,
                         Product = product,
-                        Quantity = UnitConverter.Convert(quantity, unit!, product!.BaseUnit!),
-                        UnitId = product!.BaseUnit!.Id,
-                        Unit = product!.BaseUnit!,
-                        DisplaySequence = _shop!.DisplaySequence!.FirstOrDefault(i => i.ProductCategory?.Id == product.ProductCategory?.Id)!.Value
+                        Quantity = UnitConverter.Convert(quantity, unit, baseUnit),
+                        UnitId = baseUnit.Id,
+                        Unit = baseUnit,
+                        DisplaySequence = displaySequence != null ? displaySequence.Value : 1
                     };
-                    ShoppingList.Products?.Add(item);
-                    ShoppingList.Products?.SetIndexes();
+
+                    ShoppingList.Products.Add(item);
+                    ShoppingList.Products.SetIndexes();
                     Quantity = string.Empty;
                 }
             }
             catch (Exception ex)
             {
-                MessageComponent?.ShowError(ex.Message);
+                ShowError(ex.Message);
             }
 
             StateHasChanged();
@@ -304,21 +389,25 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo($"mealplans/shoppinglistsoverview");
+            NavigationManager.NavigateTo("mealplans/shoppinglistsoverview");
         }
 
         private async Task CheckboxChangedAsync(ShoppingListProductEditModel model)
         {
             var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
-            if (itemToChange != null)
+
+            if (itemToChange is not null)
             {
                 itemToChange.Collected = !itemToChange.Collected;
             }
 
-            var response = await ShoppingListService!.UpdateAsync(ShoppingList!);
+            if (ShoppingList is null)
+                return;
+
+            var response = await ShoppingListService.UpdateAsync(ShoppingList);
             if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response.Message!);
+                ShowError(response.Message!);
             }
             else
             {
@@ -331,22 +420,36 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             var productCategoryId = e.Value?.ToString();
             var filters = new List<FilterItem>();
+
             if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem("ProductCategoryId", productCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem(
+                    "ProductCategoryId",
+                    productCategoryId,
+                    FilterOperator.Equals,
+                    StringComparison.OrdinalIgnoreCase));
             }
-            ;
-            var queryParameters = new QueryParameters<ProductModel>()
+
+            var queryParameters = new QueryParameters<ProductModel>
             {
                 Filters = filters,
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            Products = await ProductService!.SearchAsync(queryParameters);
+
+            Products = await ProductService.SearchAsync(queryParameters);
 
             ProductId = string.Empty;
             Quantity = string.Empty;
+
             StateHasChanged();
         }
 
@@ -355,44 +458,70 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var productId = e.Value?.ToString();
             ProductId = productId;
             Quantity = string.Empty;
-            if (!string.IsNullOrWhiteSpace(productId))
+
+            if (string.IsNullOrWhiteSpace(productId))
             {
-                var product = await ProductService!.GetEditAsync(int.Parse(productId));
-                if (product != null)
-                {
-                    var baseUnit = BaseUnits!.Items!.FirstOrDefault(x => x.Id == product.BaseUnitId);
-                    Units = BaseUnits!.Items!.Where(x => x.UnitType == baseUnit!.UnitType).ToList();
-                }
+                StateHasChanged();
+                return;
             }
+
+            var product = await ProductService.GetEditAsync(int.Parse(productId));
+            if (product == null || BaseUnits?.Items == null)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            var baseUnit = BaseUnits.Items.FirstOrDefault(x => x.Id == product.BaseUnitId);
+            if (baseUnit == null)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            Units = BaseUnits.Items.Where(x => x.UnitType == baseUnit.UnitType).ToList();
+
             StateHasChanged();
         }
 
         private async Task OnShopChangedAsync(ChangeEventArgs e)
         {
-            var shopId = 0;
-            if (int.TryParse(e.Value?.ToString(), out shopId))
-            {
-                ShoppingList!.ShopId = shopId;
-                _shop = await ShopService!.GetEditAsync(ShoppingList!.ShopId);
+            if (!int.TryParse(e.Value?.ToString(), out var shopId))
+                return;
 
-                if (ShoppingList.Products != null && ShoppingList.Products.Any())
-                {
-                    foreach (var item in ShoppingList.Products)
-                    {
-                        var displaySequence = _shop?.GetDisplaySequence(item.Product?.ProductCategory?.Id)!;
-                        item.DisplaySequence = displaySequence != null ? displaySequence.Value : 1;
-                    }
-                    ShoppingList.Products = ShoppingList.Products.OrderBy(item => item.Collected)
-                                                                 .ThenBy(item => item.DisplaySequence)
-                                                                 .ThenBy(item => item.Product?.Name).ToList();
-                    StateHasChanged();
-                }
+            if (ShoppingList is null)
+                return;
+
+            ShoppingList.ShopId = shopId;
+            _shop = await ShopService.GetEditAsync(ShoppingList.ShopId);
+
+            if (ShoppingList.Products is not { Count: > 0 } || _shop is null)
+                return;
+
+            foreach (var item in ShoppingList.Products)
+            {
+                var displaySequence = _shop.GetDisplaySequence(item.Product?.ProductCategory?.Id);
+                item.DisplaySequence = displaySequence != null ? displaySequence.Value : 1;
             }
+
+            ShoppingList.Products = ShoppingList.Products
+                .OrderBy(item => item.Collected)
+                .ThenBy(item => item.DisplaySequence)
+                .ThenBy(item => item.Product?.Name)
+                .ToList();
+
+            StateHasChanged();
         }
 
-        private async Task CheckQuantityAsync(ChangeEventArgs e)
+        private async Task CheckQuantityAsync(ChangeEventArgs _)
         {
             await JS.InvokeVoidAsync("checkQuantity");
         }
+
+        private void ShowError(string message)
+            => MessageComponent?.ShowError(message);
+
+        private void ShowInfo(string message)
+            => MessageComponent?.ShowInfo(message);
     }
 }
