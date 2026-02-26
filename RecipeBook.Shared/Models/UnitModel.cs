@@ -7,7 +7,7 @@ namespace RecipeBook.Shared.Models
     /// <summary>
     /// Read-only/unit lookup model used across the UI and services.
     /// </summary>
-    public sealed class UnitModel : BaseModel
+    public class UnitModel : BaseModel
     {
         /// <summary>
         /// Database identity for the unit.
