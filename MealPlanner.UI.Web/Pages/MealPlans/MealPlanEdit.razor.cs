@@ -20,18 +20,19 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
-        private Shared.GridTemplate<RecipeModel>? _selectedRecipeGrid = default!;
+        private Shared.GridTemplate<RecipeModel>? _selectedRecipeGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
 
         [CascadingParameter]
-        private IModalService? ModalService { get; set; } = default!;
+        private IModalService? ModalService { get; set; }
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
-        public MealPlanEditModel? MealPlan { get; set; }
+
+        public MealPlanEditModel MealPlan { get; set; } = new();
 
         public PagedList<RecipeCategoryModel>? Categories { get; set; }
 
@@ -41,164 +42,231 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         public RecipeModel? Recipe { get; set; }
 
         [Inject]
-        public IMealPlanService? MealPlanService { get; set; }
+        public IMealPlanService MealPlanService { get; set; } = default!;
 
         [Inject]
-        public IRecipeCategoryService? RecipeCategoryService { get; set; }
+        public IRecipeCategoryService RecipeCategoryService { get; set; } = default!;
 
         [Inject]
-        public IRecipeService? RecipeService { get; set; }
+        public IRecipeService RecipeService { get; set; } = default!;
 
         [Inject]
-        public IShoppingListService? ShoppingListService { get; set; }
+        public IShoppingListService ShoppingListService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
             _navItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Meal plans", Href ="mealplans/mealplansoverview" },
-                new BreadcrumbItem{ Text = "Meal plan", IsCurrentPage = true },
+                new() { Text = "Meal plans", Href = "mealplans/mealplansoverview" },
+                new() { Text = "Meal plan", IsCurrentPage = true },
             };
 
-            var queryParameters = new QueryParameters<RecipeCategoryModel>()
+            var queryParameters = new QueryParameters<RecipeCategoryModel>
             {
-                Filters = new List<FilterItem>(),
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending } },
+                Filters = [],
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "DisplaySequence",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };
-            Categories = await RecipeCategoryService!.SearchAsync(queryParameters);
+
+            Categories = await RecipeCategoryService.SearchAsync(queryParameters);
 
             _ = int.TryParse(Id, out var id);
             if (id == 0)
             {
-                MealPlan = new MealPlanEditModel();
+                MealPlan = new MealPlanEditModel
+                {
+                    Recipes = new List<RecipeModel>()
+                };
             }
             else
             {
-                MealPlan = await MealPlanService!.GetEditAsync(id);
+                MealPlan = await MealPlanService.GetEditAsync(id)
+                           ?? new MealPlanEditModel { Id = id, Recipes = new List<RecipeModel>() };
+
+                MealPlan.Recipes ??= new List<RecipeModel>();
             }
+
             _selectedRecipeGrid = new Shared.GridTemplate<RecipeModel>();
         }
 
         private async Task SaveAsync()
         {
-            var response = MealPlan?.Id == 0 ? await MealPlanService!.AddAsync(MealPlan) : await MealPlanService!.UpdateAsync(MealPlan!);
-            if (response != null && !response.Succeeded)
+            if (MealPlan is null)
+                return;
+
+            await SaveCoreAsync(MealPlan);
+        }
+
+        private async Task SaveCoreAsync(MealPlanEditModel mealPlan)
+        {
+            CommandResponse? response;
+
+            if (mealPlan.Id == 0)
             {
-                MessageComponent?.ShowError(response.Message!);
+                response = await MealPlanService.AddAsync(mealPlan);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
-                NavigateToOverview();
+                response = await MealPlanService.UpdateAsync(mealPlan);
             }
+
+            if (response is null)
+            {
+                ShowError("Save failed. Please try again.");
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Save failed.");
+                return;
+            }
+
+            ShowInfo("Data has been saved successfully");
+            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
         {
-            if (MealPlan?.Id != 0)
+            if (MealPlan is null || MealPlan.Id == 0)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                var response = await MealPlanService!.DeleteAsync(MealPlan!.Id);
-                if (response != null && !response.Succeeded)
-                {
-                    MessageComponent?.ShowError(response.Message!);
-                }
-                else
-                {
-                    MessageComponent?.ShowInfo("Data has been deleted successfully");
-                    NavigateToOverview();
-                }
-            }
+            if (!confirmation)
+                return;
+
+            await DeleteCoreAsync(MealPlan);
         }
 
-        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(GridDataProviderRequest<RecipeModel> request)
+        private async Task DeleteCoreAsync(MealPlanEditModel mealPlan)
         {
-            var data = MealPlan!.Recipes == null ? new List<RecipeModel>() : MealPlan.Recipes;
-            _tableGridClass = data!.Count == 0 ? CssClasses.GridTemplateEmptyHorizontalClass : CssClasses.GridTemplateWithItemsHorizontalClass;
+            if (mealPlan.Id == 0)
+                return;
+
+            var response = await MealPlanService.DeleteAsync(mealPlan.Id);
+            if (response is null)
+            {
+                ShowError("Delete failed. Please try again.");
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                ShowError(response.Message ?? "Delete failed.");
+                return;
+            }
+
+            ShowInfo("Data has been deleted successfully");
+            NavigateToOverview();
+        }
+
+        private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(
+            GridDataProviderRequest<RecipeModel> request)
+        {
+            var data = MealPlan.Recipes ?? new List<RecipeModel>();
+
+            _tableGridClass = data.Count == 0
+                ? CssClasses.GridTemplateEmptyHorizontalClass
+                : CssClasses.GridTemplateWithItemsHorizontalClass;
+
             StateHasChanged();
-            return await Task.FromResult(new GridDataProviderResult<RecipeModel> { Data = data, TotalCount = data.Count });
+
+            return await Task.FromResult(new GridDataProviderResult<RecipeModel>
+            {
+                Data = data,
+                TotalCount = data.Count
+            });
         }
 
-        private bool CanAddRecipe
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(RecipeId) &&
-                       RecipeId != "0";
-            }
-        }
+        private bool CanAddRecipe =>
+            !string.IsNullOrWhiteSpace(RecipeId) &&
+            RecipeId != "0";
 
         private async Task AddRecipeAsync()
         {
-            if (!string.IsNullOrWhiteSpace(RecipeId) && RecipeId != "0")
-            {
-                RecipeModel? item = null;
-                if (MealPlan != null)
-                {
-                    if (MealPlan.Recipes == null)
-                    {
-                        MealPlan.Recipes = new List<RecipeModel>();
-                    }
-                    item = MealPlan.Recipes.FirstOrDefault(i => i.Id == int.Parse(RecipeId));
-                    if (item == null)
-                    {
-                        item = await RecipeService!.GetByIdAsync(int.Parse(RecipeId));
-                        MealPlan.Recipes.Add(item!);
-                        MealPlan.Recipes.SetIndexes();
-                        await _selectedRecipeGrid!.RefreshDataAsync();
-                    }
-                }
+            if (!CanAddRecipe || MealPlan is null)
+                return;
 
+            MealPlan.Recipes ??= new List<RecipeModel>();
+
+            var recipeId = int.Parse(RecipeId!);
+            var existing = MealPlan.Recipes.FirstOrDefault(r => r.Id == recipeId);
+            if (existing is not null)
+            {
                 StateHasChanged();
+                return;
             }
+
+            var recipe = await RecipeService.GetByIdAsync(recipeId);
+            if (recipe is null)
+                return;
+
+            MealPlan.Recipes.Add(recipe);
+            MealPlan.Recipes.SetIndexes();
+
+            if (_selectedRecipeGrid is not null)
+                await _selectedRecipeGrid.RefreshDataAsync();
+
+            StateHasChanged();
         }
 
         private async Task DeleteRecipeAsync(RecipeModel item)
         {
-            RecipeModel? itemToDelete = MealPlan?.Recipes?.FirstOrDefault(i => i.Id == item.Id);
-            if (itemToDelete != null)
+            if (MealPlan?.Recipes is null)
+                return;
+
+            var itemToDelete = MealPlan.Recipes.FirstOrDefault(r => r.Id == item.Id);
+            if (itemToDelete is null)
+                return;
+
+            var options = new ConfirmDialogOptions
             {
-                var options = new ConfirmDialogOptions
-                {
-                    YesButtonText = "OK",
-                    YesButtonColor = ButtonColor.Success,
-                    NoButtonText = "Cancel",
-                    NoButtonColor = ButtonColor.Danger
-                };
-                var confirmation = await _dialog.ShowAsync(
-                        title: "Are you sure you want to delete this?",
-                        message1: "This will delete the record. Once deleted can not be rolled back.",
-                        message2: "Do you want to proceed?",
-                        confirmDialogOptions: options);
+                YesButtonText = "OK",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Cancel",
+                NoButtonColor = ButtonColor.Danger
+            };
 
-                if (!confirmation)
-                    return;
+            var confirmation = await _dialog.ShowAsync(
+                title: "Are you sure you want to delete this?",
+                message1: "This will delete the record. Once deleted can not be rolled back.",
+                message2: "Do you want to proceed?",
+                confirmDialogOptions: options);
 
-                MealPlan?.Recipes?.Remove(itemToDelete);
-                MealPlan?.Recipes?.SetIndexes();
-                await _selectedRecipeGrid!.RefreshDataAsync();
-                StateHasChanged();
-            }
+            if (!confirmation)
+                return;
+
+            MealPlan.Recipes.Remove(itemToDelete);
+            MealPlan.Recipes.SetIndexes();
+
+            if (_selectedRecipeGrid is not null)
+                await _selectedRecipeGrid.RefreshDataAsync();
+
+            StateHasChanged();
         }
 
         private async Task SaveShoppingListAsync()
@@ -206,43 +274,49 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var shopSelectionModal = ModalService?.Show<ShopSelection>("Select a shop");
-            var result = await shopSelectionModal!.Result;
-
-            if (result.Cancelled)
+            var modal = ModalService?.Show<ShopSelection>("Select a shop");
+            if (modal is null)
                 return;
 
-            if (result.Confirmed && result?.Data != null)
-            {
-                if (!int.TryParse(result.Data.ToString(), out int shopId))
-                    return;
+            var result = await modal.Result;
 
-                var addedEntity = await ShoppingListService!.MakeShoppingListAsync(new ShoppingListCreateModel { MealPlanId = MealPlan.Id, ShopId = shopId });
-                if (addedEntity != null && addedEntity?.Id > 0)
-                {
-                    NavigationManager?.NavigateTo($"mealplans/shoppinglistedit/{addedEntity?.Id}");
-                }
-                else
-                {
-                    MessageComponent?.ShowError("There has been an error when saving the shopping list");
-                }
+            if (result.Cancelled || !result.Confirmed || result.Data is null)
+                return;
+
+            if (!int.TryParse(result.Data.ToString(), out var shopId))
+                return;
+
+            var addedEntity = await ShoppingListService.MakeShoppingListAsync(
+                new ShoppingListCreateModel { MealPlanId = MealPlan.Id, ShopId = shopId });
+
+            if (addedEntity is not null && addedEntity.Id > 0)
+            {
+                NavigationManager.NavigateTo($"mealplans/shoppinglistedit/{addedEntity.Id}");
+            }
+            else
+            {
+                ShowError("There has been an error when saving the shopping list");
             }
         }
 
         private async Task ShowRecipeAsync(RecipeModel item)
         {
-            var recipe = await RecipeService!.GetEditAsync(item.Id);
+            var recipe = await RecipeService.GetEditAsync(item.Id);
+            if (recipe is null)
+                return;
+
             var parameters = new Dictionary<string, object>
             {
-                { "Recipe", recipe! },
-                { "RecipeCategory", item.RecipeCategory?.Name! },
+                { "Recipe", recipe },
+                { "RecipeCategory", item.RecipeCategory?.Name ?? string.Empty },
             };
+
             await _offCanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
         }
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("mealplans/mealplansoverview");
+            NavigationManager.NavigateTo("mealplans/mealplansoverview");
         }
 
         private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)
@@ -251,20 +325,39 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             RecipeId = string.Empty;
 
             var filters = new List<FilterItem>();
+
             if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new FilterItem("RecipeCategoryId", recipeCategoryId, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem(
+                    "RecipeCategoryId",
+                    recipeCategoryId,
+                    FilterOperator.Equals,
+                    StringComparison.OrdinalIgnoreCase));
             }
-            ;
-            var queryParameters = new QueryParameters<RecipeModel>()
+
+            var queryParameters = new QueryParameters<RecipeModel>
             {
                 Filters = filters,
-                Sorting = new List<SortingModel>() { new SortingModel() { PropertyName = "Name", Direction = SortDirection.Ascending } },
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "Name",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageNumber = 1,
-                PageSize = int.MaxValue,
+                PageSize = int.MaxValue
             };
-            Recipes = await RecipeService!.SearchAsync(queryParameters);
+
+            Recipes = await RecipeService.SearchAsync(queryParameters);
             StateHasChanged();
         }
+
+        private void ShowError(string message)
+            => MessageComponent?.ShowError(message);
+
+        private void ShowInfo(string message)
+            => MessageComponent?.ShowInfo(message);
     }
 }
