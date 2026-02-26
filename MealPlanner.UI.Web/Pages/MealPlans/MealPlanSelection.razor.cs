@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Blazored.Modal;
-using Blazored.Modal.Services;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services.MealPlans;
@@ -13,29 +12,40 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class MealPlanSelection : IComponent
     {
         [CascadingParameter]
-        private BlazoredModalInstance BlazoredModal { get; set; } = default!;
+        public BlazoredModalInstance? ModalInstance { get; set; }
+
+        public IModalController? ModalController { get; set; }
 
         [Required]
         public string? MealPlanId { get; set; }
 
-        public PagedList<MealPlanModel>? MealPlans { get; set; }
+        public PagedList<MealPlanModel>? MealPlans { get; set; } = new([], new Metadata());
 
         [Inject]
         public IMealPlanService? MealPlanService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            MealPlans = await MealPlanService!.SearchAsync();
+            var result = await MealPlanService.SearchAsync();
+            MealPlans = result ?? new PagedList<MealPlanModel>([], new Metadata());
+        }
+
+        protected override void OnParametersSet()
+        {
+            if (ModalController is null && ModalInstance is not null)
+            {
+                ModalController = new BlazoredModalController(ModalInstance);
+            }
         }
 
         private async Task SaveAsync()
         {
-            await BlazoredModal.CloseAsync(ModalResult.Ok(MealPlanId));
+            await ModalController!.CloseAsync(MealPlanId);
         }
 
         private async Task CancelAsync()
         {
-            await BlazoredModal.CancelAsync();
+            await ModalController!.CancelAsync();
         }
     }
 }
