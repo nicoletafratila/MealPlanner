@@ -14,27 +14,40 @@ namespace MealPlanner.UI.Web.Pages.Identities
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
-        public LoginModel LoginModel = new();
+        public LoginModel LoginModel { get; } = new();
 
         [Inject]
-        public IAuthenticationService? AuthenticationService { get; set; }
+        public IAuthenticationService AuthenticationService { get; set; } = default!;
 
         [Inject]
-        public NavigationManager? NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; } = default!;
 
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 
         private async Task OnLoginAsync()
         {
-            var result = await AuthenticationService!.LoginAsync(LoginModel);
-            if (result != null && result.Succeeded)
+            if (AuthenticationService is null)
             {
-                NavigationManager?.NavigateTo("/", forceLoad: true);
+                ShowError("Authentication service is not available.");
+                return;
+            }
+
+            var result = await AuthenticationService.LoginAsync(LoginModel);
+
+            if (result is null)
+            {
+                ShowError("Login failed. Please try again.");
+                return;
+            }
+
+            if (result.Succeeded)
+            {
+                NavigationManager.NavigateTo("/", forceLoad: true);
             }
             else
             {
-                MessageComponent?.ShowError(result!.Message!);
+                ShowError(result.Message ?? "Login failed. Please try again.");
             }
         }
 
@@ -53,5 +66,8 @@ namespace MealPlanner.UI.Web.Pages.Identities
                 await JS.InvokeVoidAsync("focusElement", "username");
             }
         }
+
+        private void ShowError(string message)
+            => MessageComponent?.ShowError(message);
     }
 }
