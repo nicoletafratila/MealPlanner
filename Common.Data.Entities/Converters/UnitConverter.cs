@@ -9,11 +9,11 @@ namespace Common.Data.Entities.Converters
         {
             switch (fromUnit.UnitType)
             {
-                case UnitType.Mass:
+                case UnitType.Weight:
                     //Mass to Liquid
                     //Mass to Imperial
                     //Mass to Piece
-                    if (toUnit.UnitType == UnitType.Mass)
+                    if (toUnit.UnitType == UnitType.Weight)
                         return MassConverter.Convert(fromValue, fromUnit.Name!.ToEnum<MassUnit>(), toUnit.Name!.ToEnum<MassUnit>());
                     else
                         throw new InvalidOperationException($"Cannot convert from {fromUnit.Name} to {toUnit.Name}");

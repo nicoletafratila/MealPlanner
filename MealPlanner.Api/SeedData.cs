@@ -26,8 +26,8 @@ namespace MealPlanner.Api
                 return;
             }
 
-            context.Units.Add(new Unit { Name = MassUnit.kg.ToString(), UnitType = UnitType.Mass });
-            context.Units.Add(new Unit { Name = MassUnit.gr.ToString(), UnitType = UnitType.Mass });
+            context.Units.Add(new Unit { Name = MassUnit.kg.ToString(), UnitType = UnitType.Weight });
+            context.Units.Add(new Unit { Name = MassUnit.gr.ToString(), UnitType = UnitType.Weight });
 
             context.Units.Add(new Unit { Name = LiquidUnit.l.ToString(), UnitType = UnitType.Liquid });
             context.Units.Add(new Unit { Name = LiquidUnit.ml.ToString(), UnitType = UnitType.Liquid });
