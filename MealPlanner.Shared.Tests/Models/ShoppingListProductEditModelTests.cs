@@ -39,7 +39,7 @@ namespace MealPlanner.Shared.Tests.Models
                 shoppingListId: 1,
                 quantity: 2.5m,
                 unitId: 3,
-                displaySequence: 0);
+                displaySequence: 1);
 
             // Act
             var isValid = TryValidate(model, out var results);
@@ -52,7 +52,7 @@ namespace MealPlanner.Shared.Tests.Models
                 Assert.That(model.ShoppingListId, Is.EqualTo(1));
                 Assert.That(model.Quantity, Is.EqualTo(2.5m));
                 Assert.That(model.UnitId, Is.EqualTo(3));
-                Assert.That(model.DisplaySequence, Is.EqualTo(0));
+                Assert.That(model.DisplaySequence, Is.EqualTo(1));
             });
         }
 
@@ -115,7 +115,7 @@ namespace MealPlanner.Shared.Tests.Models
         }
 
         [Test]
-        public void DisplaySequence_MustBeAtLeastZero()
+        public void DisplaySequence_MustBeGratherThanZero()
         {
             // Arrange: negative
             var model = new ShoppingListProductEditModel
@@ -133,8 +133,18 @@ namespace MealPlanner.Shared.Tests.Models
             Assert.That(isValid, Is.False);
             Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.DisplaySequence))), Is.True);
 
-            // Arrange: zero allowed
+            // Arrange: zero not allowed
             model.DisplaySequence = 0;
+
+            // Act
+            isValid = TryValidate(model, out results);
+
+            // Assert
+            Assert.That(isValid, Is.False);
+            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.DisplaySequence))), Is.True);
+
+            // Arrange: 1 allowed
+            model.DisplaySequence = 1;
 
             // Act
             isValid = TryValidate(model, out results);
