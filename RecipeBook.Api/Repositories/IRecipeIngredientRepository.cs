@@ -2,9 +2,19 @@
 
 namespace RecipeBook.Api.Repositories
 {
-    public interface IRecipeIngredientRepository 
+    /// <summary>
+    /// Repository contract for querying <see cref="RecipeIngredient"/> entities.
+    /// </summary>
+    public interface IRecipeIngredientRepository
     {
-        Task<IReadOnlyList<RecipeIngredient>?> GetAllAsync();
-        Task<IReadOnlyList<RecipeIngredient>?> SearchAsync(int productId);
+        /// <summary>
+        /// Gets all recipe ingredients, typically including related unit or product data.
+        /// </summary>
+        Task<IReadOnlyList<RecipeIngredient>> GetAllAsync();
+
+        /// <summary>
+        /// Gets all recipe ingredients associated with the given product id.
+        /// </summary>
+        Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId);
     }
 }

@@ -4,19 +4,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RecipeBook.Api.Repositories
 {
-    public class RecipeIngredientRepository(MealPlannerDbContext dbContext) : IRecipeIngredientRepository
+    /// <summary>
+    /// Async repository for <see cref="RecipeIngredient"/> entities.
+    /// </summary>
+    public class RecipeIngredientRepository : IRecipeIngredientRepository
     {
-        protected readonly MealPlannerDbContext DbContext = dbContext;
+        private readonly MealPlannerDbContext _dbContext;
 
-        public async Task<IReadOnlyList<RecipeIngredient>?> GetAllAsync()
+        public RecipeIngredientRepository(MealPlannerDbContext dbContext)
         {
-            return await DbContext!.RecipeIngredients
-                        .Include(x => x.Unit).ToListAsync();
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<IReadOnlyList<RecipeIngredient>?> SearchAsync(int productId)
+        /// <summary>
+        /// Gets all recipe ingredients, including their units.
+        /// </summary>
+        public async Task<IReadOnlyList<RecipeIngredient>> GetAllAsync()
         {
-            return await DbContext!.RecipeIngredients.Where(x => x.ProductId == productId).ToListAsync();
+            return await _dbContext.RecipeIngredients
+                .Include(x => x.Unit)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets all recipe ingredients for a given product id.
+        /// </summary>
+        public async Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId)
+        {
+            return await _dbContext.RecipeIngredients
+                .Where(x => x.ProductId == productId)
+                .ToListAsync();
         }
     }
 }
