@@ -26,7 +26,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         protected override async Task OnInitializedAsync()
         {
-            var result = await MealPlanService.SearchAsync();
+            var result = await MealPlanService!.SearchAsync();
             MealPlans = result ?? new PagedList<MealPlanModel>([], new Metadata());
         }
 
