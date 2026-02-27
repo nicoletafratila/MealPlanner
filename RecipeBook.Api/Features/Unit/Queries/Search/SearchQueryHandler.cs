@@ -8,31 +8,60 @@ namespace RecipeBook.Api.Features.Unit.Queries.Search
 {
     public class SearchQueryHandler(IUnitRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<UnitModel>>
     {
+        private readonly IUnitRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
         public async Task<PagedList<UnitModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await repository.GetAllAsync();
-            var results = mapper.Map<IList<UnitModel>>(data);
-
-            if (results != null && request.QueryParameters != null)
+            if (request?.QueryParameters is null)
             {
-                if (request.QueryParameters.Filters != null)
-                {
-                    foreach (var filter in request.QueryParameters.Filters)
-                    {
-                        results = results.Where(filter.ConvertFilterItemToFunc<UnitModel>()).ToList();
-                    }
-                }
-
-                if (request.QueryParameters!.Sorting != null && request.QueryParameters.Sorting.Any())
-                {
-                    var sortingItems = request.QueryParameters.Sorting.Select(QueryParameters<UnitModel>.FromModel).ToList();
-                    results = results.AsQueryable()!.ApplySorting(sortingItems)!.ToList();
-                }
-
-                return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
+                return EmptyResult();
             }
 
-            return new PagedList<UnitModel>(new List<UnitModel>(), new Metadata());
+            var queryParameters = request.QueryParameters;
+
+            var entities = await _repository.GetAllAsync();
+            var models = _mapper.Map<IList<UnitModel>>(entities) ?? [];
+
+            models = ApplyFilters(models, queryParameters);
+            models = ApplySorting(models, queryParameters);
+
+            return models.ToPagedList(queryParameters.PageNumber, queryParameters.PageSize);
         }
+
+        private static IList<UnitModel> ApplyFilters(
+            IList<UnitModel> source,
+            QueryParameters<UnitModel> parameters)
+        {
+            if (parameters.Filters is null || !parameters.Filters.Any())
+                return source;
+
+            var result = source;
+
+            foreach (var filter in parameters.Filters)
+            {
+                var predicate = filter.ConvertFilterItemToFunc<UnitModel>();
+                result = result.Where(predicate).ToList();
+            }
+
+            return result;
+        }
+
+        private static IList<UnitModel> ApplySorting(
+            IList<UnitModel> source,
+            QueryParameters<UnitModel> parameters)
+        {
+            if (parameters.Sorting is null || !parameters.Sorting.Any())
+                return source;
+
+            var sortingItems = parameters.Sorting
+                .Select(QueryParameters<UnitModel>.FromModel)
+                .ToList();
+
+            return source.AsQueryable().ApplySorting(sortingItems)!.ToList();
+        }
+
+        private static PagedList<UnitModel> EmptyResult()
+            => new([], new Metadata());
     }
 }
