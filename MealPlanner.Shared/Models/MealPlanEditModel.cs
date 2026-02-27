@@ -5,17 +5,42 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
+    /// <summary>
+    /// Editable model for creating/updating a meal plan.
+    /// </summary>
     public class MealPlanEditModel : BaseModel
     {
+        /// <summary>
+        /// Database identity (0 for new plans).
+        /// </summary>
         [Required]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Meal plan name (required, max 100 characters).
+        /// </summary>
         [Required]
         [StringLength(100)]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Recipes included in this meal plan.
+        /// Must contain at least one recipe.
+        /// </summary>
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The meal plan requires at least one recipe.")]
-        public IList<RecipeModel>? Recipes { get; set; }
+        public IList<RecipeModel> Recipes { get; set; } = new List<RecipeModel>();
+
+        public MealPlanEditModel()
+        {
+        }
+
+        public MealPlanEditModel(int id, string name)
+        {
+            Id = id;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+
+        public override string ToString() => Name;
     }
 }
