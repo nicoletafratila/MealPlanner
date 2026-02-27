@@ -7,7 +7,7 @@ namespace RecipeBook.Api.Repositories
 {
     public class ProductRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<Product, int>(dbContext), IProductRepository
     {
-        public override async Task<IReadOnlyList<Product>?> GetAllAsync()
+        public override async Task<IReadOnlyList<Product>> GetAllAsync()
         {
             return await (DbContext as MealPlannerDbContext)!.Products
                         .Include(x => x.ProductCategory)
@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Repositories
             return await (DbContext as MealPlannerDbContext)!.Products
                     .Include(x => x.ProductCategory)
                     .Include(x => x.BaseUnit)
-                    .FirstOrDefaultAsync(x => x!.Name!.ToLower() == name.ToLower());
+                    .FirstOrDefaultAsync(x => x!.Name!.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
