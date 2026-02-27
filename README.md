@@ -12,7 +12,7 @@ PM> Script-migration
 
 
 
-
+restul de conversii la unitati
 leaga retete la user
 user management - edit user profile
 adauga reteta la meniu cu click dr si selectare mai multe
