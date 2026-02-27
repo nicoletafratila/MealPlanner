@@ -5,14 +5,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RecipeBook.Api.Repositories
 {
+    /// <summary>
+    /// Async repository for <see cref="RecipeCategory"/> entities.
+    /// </summary>
     public class RecipeCategoryRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
     {
         public async Task UpdateAllAsync(IList<RecipeCategory> entities)
         {
+            ArgumentNullException.ThrowIfNull(entities);
+
+            if (entities.Count == 0)
+                return;
+
             foreach (var entity in entities)
             {
                 DbContext.Entry(entity).State = EntityState.Modified;
             }
+
             await DbContext.SaveChangesAsync();
         }
     }
