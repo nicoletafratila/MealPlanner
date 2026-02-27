@@ -23,11 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="NUnit.Framework" />
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
+    <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Using Include="NUnit.Framework" />
   </ItemGroup>
 
 </Project>
