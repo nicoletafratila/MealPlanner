@@ -4,7 +4,6 @@ using Moq;
 using RecipeBook.Api.Features.Unit.Commands.Update;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
-using UnitEntity = Common.Data.Entities.Unit;
 
 namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 {
@@ -81,7 +80,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(10))
-                .ReturnsAsync((UnitEntity?)null);
+                .ReturnsAsync((Common.Data.Entities.Unit?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -95,8 +94,8 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(10), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<UnitEditModel>(), It.IsAny<UnitEntity>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<UnitEntity>()), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<UnitEditModel>(), It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
         }
 
         [Test]
@@ -112,7 +111,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new UnitEntity
+            var existing = new Common.Data.Entities.Unit
             {
                 Id = 1,
                 Name = "old",
@@ -128,7 +127,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
                .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(It.IsAny<UnitEntity>()))
+                .Setup(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -156,7 +155,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new UnitEntity
+            var existing = new Common.Data.Entities.Unit
             {
                 Id = 2,
                 Name = "old",
@@ -172,7 +171,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(It.IsAny<UnitEntity>()))
+                .Setup(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -187,7 +186,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(2), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<UnitEntity>()), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>()), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
 
             _loggerMock.Verify(
