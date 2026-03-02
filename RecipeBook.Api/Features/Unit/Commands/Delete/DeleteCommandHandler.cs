@@ -28,7 +28,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Delete
                     return CommandResponse.Failed($"Could not find with id {request.Id}.");
                 }
 
-                var ingredients = await _recipeIngredientRepository.GetAllAsync() ?? Array.Empty<Common.Data.Entities.RecipeIngredient>();
+                var ingredients = await _recipeIngredientRepository.GetAllAsync() ?? [];
 
                 if (ingredients.Any(i => i.UnitId == request.Id))
                 {
