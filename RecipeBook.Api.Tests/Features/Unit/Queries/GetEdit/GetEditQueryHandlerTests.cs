@@ -92,7 +92,6 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
                 .Setup(r => r.GetByIdAsync(id))
                 .ReturnsAsync((UnitEntity?)null);
 
-            // Mapper should not be called when entity is null
             var query = new GetEditQuery(id);
 
             // Act

@@ -30,7 +30,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Features\Unit\Commands\" />
+    <Folder Include="Features\Unit\Commands\Delete\" />
+    <Folder Include="Features\Unit\Commands\Add\" />
   </ItemGroup>
 
   <ItemGroup>
