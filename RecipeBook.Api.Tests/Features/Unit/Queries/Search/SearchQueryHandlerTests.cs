@@ -128,7 +128,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.Search
 
             _mapperMock
                 .Setup(m => m.Map<IList<UnitModel>>(entities))
-                .Returns(new List<UnitModel>());
+                .Returns([]);
 
             var qp = new QueryParameters<UnitModel>
             {

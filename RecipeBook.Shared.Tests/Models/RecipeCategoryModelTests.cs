@@ -12,16 +12,16 @@ namespace RecipeBook.Shared.Tests.Models
             var model = new RecipeCategoryModel();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
-                Assert.That(model.DisplaySequence, Is.EqualTo(0));
+                Assert.That(model.DisplaySequence, Is.Zero);
 
                 // From BaseModel
-                Assert.That(model.Index, Is.EqualTo(0));
+                Assert.That(model.Index, Is.Zero);
                 Assert.That(model.IsSelected, Is.False);
-            });
+            }
         }
 
         [Test]
@@ -36,12 +36,12 @@ namespace RecipeBook.Shared.Tests.Models
             var model = new RecipeCategoryModel(id, name, sequence);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.Id, Is.EqualTo(id));
                 Assert.That(model.Name, Is.EqualTo(name));
                 Assert.That(model.DisplaySequence, Is.EqualTo(sequence));
-            });
+            }
         }
 
         [Test]

@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
-                .ReturnsAsync(new PagedList<RecipeModel>(new List<RecipeModel>(), new Metadata()));
+                .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             // Act
             var cut = RenderComponent();
@@ -120,7 +120,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { args })!;
+                var task = (Task)method!.Invoke(cut.Instance, [args])!;
                 await task;
             });
 
@@ -147,8 +147,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task OnRecipeCategoryChangedAsync_WithEmptySelection_LoadsRecipes_WithNoFilter()
         {
             // Arrange
-            var categories = new PagedList<RecipeCategoryModel>(
-                new List<RecipeCategoryModel>(), new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 0 });
+            var categories = new PagedList<RecipeCategoryModel>([], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 0 });
 
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
@@ -169,7 +168,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { args })!;
+                var task = (Task)method!.Invoke(cut.Instance, [args])!;
                 await task;
             });
 
@@ -190,8 +189,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task SaveAsync_UsesModalController_WithRecipeId()
         {
             // Arrange
-            var categories = new PagedList<RecipeCategoryModel>(
-                new List<RecipeCategoryModel>(), new Metadata());
+            var categories = new PagedList<RecipeCategoryModel>([], new Metadata());
 
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
@@ -199,8 +197,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
-                .ReturnsAsync(new PagedList<RecipeModel>(
-                    new List<RecipeModel>(), new Metadata()));
+                .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _modalControllerMock
                 .Setup(m => m.CloseAsync(It.IsAny<object?>()))
@@ -220,7 +217,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
@@ -234,8 +231,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task CancelAsync_UsesModalController_Cancel()
         {
             // Arrange
-            var categories = new PagedList<RecipeCategoryModel>(
-                new List<RecipeCategoryModel>(), new Metadata());
+            var categories = new PagedList<RecipeCategoryModel>([], new Metadata());
 
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
@@ -243,8 +239,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
-                .ReturnsAsync(new PagedList<RecipeModel>(
-                    new List<RecipeModel>(), new Metadata()));
+                .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _modalControllerMock
                 .Setup(m => m.CancelAsync())
@@ -259,7 +254,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 

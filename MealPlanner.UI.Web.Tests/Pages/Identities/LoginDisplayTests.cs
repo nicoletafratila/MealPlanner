@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace MealPlanner.UI.Web.Tests.Shared
+namespace MealPlanner.UI.Web.Tests.Pages.Identities
 {
     [TestFixture]
     public class LoginDisplayTests 

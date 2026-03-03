@@ -36,12 +36,12 @@ namespace RecipeBook.Api.Tests
             // Act
             await SeedData.EnsureSeedDataAsync(scope);
 
-            Assert.Multiple(async () =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(await context.ProductCategories.CountAsync(), Is.EqualTo(31));
                 Assert.That(await context.RecipeCategories.CountAsync(), Is.EqualTo(7));
-            });
+            }
         }
 
         [Test]
@@ -64,11 +64,11 @@ namespace RecipeBook.Api.Tests
             using var scope3 = _provider.CreateScope();
             var context3 = scope3.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
 
-            Assert.Multiple(async () =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(await context3.ProductCategories.CountAsync(), Is.EqualTo(initialProductCount));
                 Assert.That(await context3.RecipeCategories.CountAsync(), Is.EqualTo(initialRecipeCount));
-            });
+            }
         }
     }
 }

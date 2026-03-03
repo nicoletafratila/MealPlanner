@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         private static readonly GridDataProviderDelegate<TestItem> DefaultProvider = ctx =>
              Task.FromResult(new GridDataProviderResult<TestItem>
              {
-                 Data = new List<TestItem>(),
+                 Data = [],
                  TotalCount = 0
              });
 
@@ -47,10 +47,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 parameters.Add(p => p.DataProvider, DefaultProvider);
             });
 
-            // Assert defaults
-            Assert.That(cut.Instance.TableGridClass, Is.EqualTo("table"));
-            Assert.That(cut.Instance.HeaderRowCssClass, Is.EqualTo("bg-primary text-white"));
-            Assert.That(cut.Instance.AllowPaging, Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert defaults
+                Assert.That(cut.Instance.TableGridClass, Is.EqualTo("table"));
+                Assert.That(cut.Instance.HeaderRowCssClass, Is.EqualTo("bg-primary text-white"));
+                Assert.That(cut.Instance.AllowPaging, Is.True);
+            }
         }
 
         [Test]
@@ -65,10 +68,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 parameters.Add(p => p.AllowPaging, false);
             });
 
-            // Assert
-            Assert.That(cut.Instance.TableGridClass, Is.EqualTo("custom-table"));
-            Assert.That(cut.Instance.HeaderRowCssClass, Is.EqualTo("custom-header"));
-            Assert.That(cut.Instance.AllowPaging, Is.False);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(cut.Instance.TableGridClass, Is.EqualTo("custom-table"));
+                Assert.That(cut.Instance.HeaderRowCssClass, Is.EqualTo("custom-header"));
+                Assert.That(cut.Instance.AllowPaging, Is.False);
+            }
         }
 
         [Test]
@@ -77,7 +83,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Arrange: custom provider
             GridDataProviderDelegate<TestItem> provider = async context =>
             {
-                var items = new List<TestItem> { new TestItem { Name = "A" } };
+                var items = new List<TestItem> { new() { Name = "A" } };
                 return await ValueTask.FromResult(new GridDataProviderResult<TestItem>
                 {
                     Data = items,

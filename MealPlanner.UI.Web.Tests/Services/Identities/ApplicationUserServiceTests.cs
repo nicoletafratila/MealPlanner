@@ -144,11 +144,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("ok"));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -172,11 +172,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo(errorBody));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -200,11 +200,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Invalid response from user update endpoint."));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
     }

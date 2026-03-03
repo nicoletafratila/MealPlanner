@@ -47,7 +47,7 @@ namespace RecipeBook.Api.Repositories
                 .Include(x => x.BaseUnit)
                 .FirstOrDefaultAsync(x =>
                     x.Name != null &&
-                    x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    x.Name.ToLower() == name.ToLower());
         }
     }
 }

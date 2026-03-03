@@ -78,12 +78,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             Assert.That(cut.Instance.Product, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Instance.Product.Id, Is.EqualTo(0));
+                Assert.That(cut.Instance.Product.Id, Is.Zero);
                 Assert.That(cut.Instance.Units, Is.SameAs(units));
                 Assert.That(cut.Instance.Categories, Is.SameAs(categories));
-            });
+            }
 
             _productServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -115,12 +115,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             var cut = RenderComponent(id: "5");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.Product.Id, Is.EqualTo(5));
                 Assert.That(cut.Instance.Product.Name, Is.EqualTo("Loaded Product"));
-            });
+            }
 
             _productServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }

@@ -9,6 +9,8 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
     [TestFixture]
     public class CustomAuthenticationStateTests
     {
+        private static readonly string[] roles = ["User", "Manager"];
+
         private static string CreateJwtToken(
             IDictionary<string, object> extraClaims,
             DateTimeOffset? expiresAtUtc = null)
@@ -59,12 +61,12 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             var state = await provider.GetAuthenticationStateAsync();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(state.User.Identity, Is.Not.Null);
                 Assert.That(state.User.Identity!.IsAuthenticated, Is.False);
                 Assert.That(state.User.Claims, Is.Empty);
-            });
+            }
         }
 
         [Test]
@@ -115,7 +117,7 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             var user = state.User;
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(user.Identity, Is.Not.Null);
                 Assert.That(user.Identity!.IsAuthenticated, Is.True);
@@ -124,8 +126,9 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
                 Assert.That(user.FindFirst("sub")?.Value, Is.EqualTo("user-123"));
                 Assert.That(user.FindFirst("name")?.Value, Is.EqualTo("Alice"));
                 Assert.That(user.FindFirst("role")?.Value, Is.EqualTo("Admin"));
-            });
+            }
         }
+
 
         [Test]
         public async Task GetAuthenticationStateAsync_CreatesMultipleClaims_ForArrayClaim()
@@ -136,7 +139,7 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             var token = CreateJwtToken(new Dictionary<string, object>
             {
                 ["name"] = "Bob",
-                ["roles"] = new[] { "User", "Manager" }
+                ["roles"] = roles
             });
 
             sessionStorage
@@ -152,13 +155,13 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             // Assert
             var roleClaims = user.FindAll("roles").Select(c => c.Value).ToList();
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(user.Identity, Is.Not.Null);
                 Assert.That(user.Identity!.IsAuthenticated, Is.True);
                 Assert.That(user.FindFirst("name")?.Value, Is.EqualTo("Bob"));
-                Assert.That(roleClaims, Is.EquivalentTo(new[] { "User", "Manager" }));
-            });
+                Assert.That(roleClaims, Is.EquivalentTo(["User", "Manager"]));
+            }
         }
 
         [Test]

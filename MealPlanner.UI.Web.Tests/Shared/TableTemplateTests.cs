@@ -73,10 +73,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await instance.OnSelectedItemChangedAsync(null!);
 
-            // Assert
-            Assert.That(instance.SelectedItem, Is.Null);
-            Assert.That(itemA.IsSelected, Is.False);
-            Assert.That(callbackItem, Is.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(instance.SelectedItem, Is.Null);
+                Assert.That(itemA.IsSelected, Is.False);
+                Assert.That(callbackItem, Is.Null);
+            }
         }
 
         [Test]
@@ -101,11 +104,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await instance.OnSelectedItemChangedAsync(itemA);
 
-            // Assert
-            Assert.That(instance.SelectedItem, Is.SameAs(itemA));
-            Assert.That(itemA.IsSelected, Is.True);
-            Assert.That(itemB.IsSelected, Is.False);
-            Assert.That(callbackCount, Is.EqualTo(0));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(instance.SelectedItem, Is.SameAs(itemA));
+                Assert.That(itemA.IsSelected, Is.True);
+                Assert.That(itemB.IsSelected, Is.False);
+                Assert.That(callbackCount, Is.Zero);
+            }
         }
 
         [Test]
@@ -131,12 +137,15 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await instance.OnSelectedItemChangedAsync(itemB);
 
-            // Assert
-            Assert.That(instance.SelectedItem, Is.SameAs(itemB));
-            Assert.That(itemA.IsSelected, Is.False);
-            Assert.That(itemB.IsSelected, Is.True);
-            Assert.That(itemC.IsSelected, Is.False);
-            Assert.That(callbackItem, Is.SameAs(itemB));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(instance.SelectedItem, Is.SameAs(itemB));
+                Assert.That(itemA.IsSelected, Is.False);
+                Assert.That(itemB.IsSelected, Is.True);
+                Assert.That(itemC.IsSelected, Is.False);
+                Assert.That(callbackItem, Is.SameAs(itemB));
+            }
         }
 
         [Test]
@@ -156,11 +165,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await instance.OnSelectedItemChangedAsync(items[2]);
 
-            // Assert
-            Assert.That(instance.SelectedItem, Is.SameAs(items[2]));
-            Assert.That(items[0].IsSelected, Is.False);
-            Assert.That(items[1].IsSelected, Is.False);
-            Assert.That(items[2].IsSelected, Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(instance.SelectedItem, Is.SameAs(items[2]));
+                Assert.That(items[0].IsSelected, Is.False);
+                Assert.That(items[1].IsSelected, Is.False);
+                Assert.That(items[2].IsSelected, Is.True);
+            }
         }
     }
 }

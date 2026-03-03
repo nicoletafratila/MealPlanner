@@ -61,7 +61,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             Assert.That(cut.Instance.ProductCategory, Is.Not.Null);
-            Assert.That(cut.Instance.ProductCategory.Id, Is.EqualTo(0));
+            Assert.That(cut.Instance.ProductCategory.Id, Is.Zero);
 
             _productCategoryServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -85,9 +85,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             var cut = RenderComponent(id: "5");
 
-            // Assert
-            Assert.That(cut.Instance.ProductCategory.Id, Is.EqualTo(5));
-            Assert.That(cut.Instance.ProductCategory.Name, Is.EqualTo("Loaded Category"));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(cut.Instance.ProductCategory.Id, Is.EqualTo(5));
+                Assert.That(cut.Instance.ProductCategory.Name, Is.EqualTo("Loaded Category"));
+            }
 
             _productCategoryServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
@@ -129,7 +132,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -143,7 +146,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri.EndsWith("recipebooks/productcategoriesoverview"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("recipebooks/productcategoriesoverview"));
         }
 
         [Test]
@@ -176,7 +179,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -209,7 +212,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -243,7 +246,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -267,7 +270,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
@@ -311,7 +314,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -323,7 +326,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri.EndsWith("recipebooks/productcategoriesoverview"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("recipebooks/productcategoriesoverview"));
         }
 
         [Test]
@@ -354,7 +357,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -399,7 +402,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { category })!;
+                var task = (Task)method!.Invoke(cut.Instance, [category])!;
                 await task;
             });
 
@@ -422,10 +425,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             Assert.That(method, Is.Not.Null);
 
             // Act
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, Array.Empty<object>()));
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, []));
 
             // Assert
-            Assert.That(nav.Uri.EndsWith("recipebooks/productcategoriesoverview"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("recipebooks/productcategoriesoverview"));
         }
     }
 }

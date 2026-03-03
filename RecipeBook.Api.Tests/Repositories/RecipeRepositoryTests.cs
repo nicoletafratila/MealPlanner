@@ -55,20 +55,20 @@ namespace RecipeBook.Api.Tests.Repositories
                 Name = name,
                 RecipeCategoryId = categoryId,
                 RecipeCategory = category,
-                RecipeIngredients = new List<RecipeIngredient>
-        {
-            new()
-            {
-                Quantity = 1,
-                Unit = new Unit { Name = "kg", UnitType = 0 }, // no explicit Id
-                Product = new Product
-                {
-                    Name = "Flour",
-                    BaseUnit = new Unit { Name = "g", UnitType = 0 }, // no explicit Id
-                    ProductCategory = new ProductCategory { Name = "Baking" } // no explicit Id
-                }
-            }
-        }
+                RecipeIngredients =
+                [
+                    new()
+                    {
+                        Quantity = 1,
+                        Unit = new Unit { Name = "kg", UnitType = 0 }, // no explicit Id
+                        Product = new Product
+                        {
+                            Name = "Flour",
+                            BaseUnit = new Unit { Name = "g", UnitType = 0 }, // no explicit Id
+                            ProductCategory = new ProductCategory { Name = "Baking" } // no explicit Id
+                        }
+                    }
+                ]
             };
         }
 
@@ -88,7 +88,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var all = await repo.GetAllAsync();
 
             // Assert
-            Assert.That(all.Count, Is.EqualTo(2));
+            Assert.That(all, Has.Count.EqualTo(2));
             Assert.That(all.All(r => r.RecipeCategory != null), Is.True);
         }
 
@@ -107,8 +107,11 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.That(found!.Name, Is.EqualTo("R1"));
-            Assert.That(found.RecipeCategory, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(found!.Name, Is.EqualTo("R1"));
+                Assert.That(found.RecipeCategory, Is.Not.Null);
+            }
             Assert.That(found.RecipeCategory!.Name, Is.EqualTo("Main"));
         }
 
@@ -129,13 +132,16 @@ namespace RecipeBook.Api.Tests.Repositories
             // Assert
             Assert.That(found, Is.Not.Null);
             Assert.That(found!.RecipeIngredients, Is.Not.Null);
-            Assert.That(found!.RecipeIngredients!.Count, Is.EqualTo(1));
+            Assert.That(found!.RecipeIngredients!, Has.Count.EqualTo(1));
 
             var ingredient = found.RecipeIngredients!.Single();
             Assert.That(ingredient.Product, Is.Not.Null);
-            Assert.That(ingredient.Product!.ProductCategory, Is.Not.Null);
-            Assert.That(ingredient.Product!.BaseUnit, Is.Not.Null);
-            Assert.That(ingredient.Unit, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(ingredient.Product!.ProductCategory, Is.Not.Null);
+                Assert.That(ingredient.Product!.BaseUnit, Is.Not.Null);
+                Assert.That(ingredient.Unit, Is.Not.Null);
+            }
         }
 
         [Test]
@@ -167,7 +173,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var result = await repo.SearchAsync(10);
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(1));
+            Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.Single().Name, Is.EqualTo("R1"));
         }
 
@@ -201,9 +207,12 @@ namespace RecipeBook.Api.Tests.Repositories
             var result1 = await repo.SearchAsync((string)null!);
             var result2 = await repo.SearchAsync("   ");
 
-            // Assert
-            Assert.That(result1, Is.Null);
-            Assert.That(result2, Is.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(result1, Is.Null);
+                Assert.That(result2, Is.Null);
+            }
         }
     }
 }

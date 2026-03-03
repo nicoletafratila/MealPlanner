@@ -11,7 +11,7 @@ namespace MealPlanner.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -23,17 +23,17 @@ namespace MealPlanner.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.Recipes, Is.Not.Null);
-                Assert.That(model.Recipes.Count, Is.EqualTo(0));
+                Assert.That(model.Recipes, Is.Empty);
 
                 Assert.That(isValid, Is.False);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Name))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Recipes))), Is.True);
-            });
+            }
         }
 
         [Test]
@@ -44,18 +44,21 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "Weekly Plan",
-                Recipes = new List<RecipeModel>
-                {
+                Recipes =
+                [
                     new() { Id = 10, Name = "Recipe1" }
-                }
+                ]
             };
 
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
 
         [Test]
@@ -65,19 +68,25 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "",
-                Recipes = new List<RecipeModel> { new() { Id = 1, Name = "R1" } }
+                Recipes = [new() { Id = 1, Name = "R1" }]
             };
 
             // Empty name -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Name))), Is.True);
+            }
 
             // Too long
             model.Name = new string('a', 101);
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Name))), Is.True);
+            }
 
             // Valid length
             model.Name = new string('a', 100);
@@ -92,22 +101,28 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "Test",
-                Recipes = new List<RecipeModel>()
+                Recipes = []
             };
 
             // Empty list -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Recipes))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Recipes))), Is.True);
+            }
 
             // Null list -> invalid
             model.Recipes = null!;
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Recipes))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(MealPlanEditModel.Recipes))), Is.True);
+            }
 
             // One recipe -> valid
-            model.Recipes = new List<RecipeModel> { new() { Id = 1, Name = "R1" } };
+            model.Recipes = [new() { Id = 1, Name = "R1" }];
             isValid = TryValidate(model, out results);
             Assert.That(isValid, Is.True);
         }
@@ -123,11 +138,11 @@ namespace MealPlanner.Shared.Tests.Models
             var model = new MealPlanEditModel(id, name);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.Id, Is.EqualTo(id));
                 Assert.That(model.Name, Is.EqualTo(name));
-            });
+            }
         }
 
         [Test]
@@ -146,7 +161,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "My Plan",
-                Recipes = new List<RecipeModel> { new() { Id = 1, Name = "R1" } }
+                Recipes = [new() { Id = 1, Name = "R1" }]
             };
 
             Assert.That(model.ToString(), Is.EqualTo("My Plan"));

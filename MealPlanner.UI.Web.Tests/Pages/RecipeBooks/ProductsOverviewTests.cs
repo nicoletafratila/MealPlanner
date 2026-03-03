@@ -232,11 +232,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Exactly(2));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Data!.Count, Is.EqualTo(2));
+                Assert.That(result.Data!.Count(), Is.EqualTo(2));
                 Assert.That(result.TotalCount, Is.EqualTo(2));
-            });
+            }
         }
     }
 }

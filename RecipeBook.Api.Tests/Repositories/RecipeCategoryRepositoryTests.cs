@@ -50,8 +50,8 @@ namespace RecipeBook.Api.Tests.Repositories
             var all = await repo.GetAllAsync();
 
             // Assert
-            Assert.That(all.Count, Is.EqualTo(2));
-            Assert.That(all.Select(c => c.Name), Is.EquivalentTo(new[] { "Cat1", "Cat2" }));
+            Assert.That(all, Has.Count.EqualTo(2));
+            Assert.That(all.Select(c => c.Name), Is.EquivalentTo(["Cat1", "Cat2"]));
         }
 
         [Test]
@@ -77,11 +77,11 @@ namespace RecipeBook.Api.Tests.Repositories
             // Assert
             var fromDb = await ctx.RecipeCategories.OrderBy(c => c.Name).ToListAsync();
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(fromDb[0].DisplaySequence, Is.EqualTo(10));
                 Assert.That(fromDb[1].DisplaySequence, Is.EqualTo(20));
-            });
+            }
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var before = await ctx.RecipeCategories.AsNoTracking().FirstAsync();
 
             // Act
-            await repo.UpdateAllAsync(new List<RecipeCategory>());
+            await repo.UpdateAllAsync([]);
 
             // Assert
             var after = await ctx.RecipeCategories.AsNoTracking().FirstAsync();

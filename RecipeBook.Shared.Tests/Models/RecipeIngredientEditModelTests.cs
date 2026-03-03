@@ -9,7 +9,7 @@ namespace RecipeBook.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -17,17 +17,19 @@ namespace RecipeBook.Shared.Tests.Models
         public void DefaultCtor_IsInvalid_BecauseRequiredFieldsMissing()
         {
             // Act
-            var model = new RecipeIngredientEditModel();
+            var model = new RecipeIngredientEditModel
+            {
+                RecipeId = -1
+            };
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.False);
-                // At least RecipeId and UnitId should fail
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.RecipeId))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.UnitId))), Is.True);
-            });
+            }
         }
 
         [Test]
@@ -40,14 +42,14 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.True);
                 Assert.That(results, Is.Empty);
                 Assert.That(model.RecipeId, Is.EqualTo(1));
                 Assert.That(model.Quantity, Is.EqualTo(2.5m));
                 Assert.That(model.UnitId, Is.EqualTo(3));
-            });
+            }
         }
 
         [Test]
@@ -64,9 +66,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.Quantity))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.Quantity))), Is.True);
+            }
 
             // Arrange: zero quantity is allowed by Range(0, int.MaxValue)
             model.Quantity = 0m;
@@ -92,9 +97,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.UnitId))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.UnitId))), Is.True);
+            }
 
             // Arrange: valid unit id
             model.UnitId = 1;

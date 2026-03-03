@@ -92,9 +92,9 @@ namespace Common.Models.Tests
             // Assert
             Assert.That(model.ChartData, Is.Not.Null);
             Assert.That(model.ChartData!.Datasets, Is.Not.Null);
-            Assert.That(model.ChartData.Datasets!.Count, Is.EqualTo(0));
+            Assert.That(model.ChartData.Datasets!.Count, Is.Zero);
             Assert.That(model.ChartData.Labels, Is.Not.Null);
-            Assert.That(model.ChartData.Labels!.Count, Is.EqualTo(0));
+            Assert.That(model.ChartData.Labels!.Count, Is.Zero);
         }
     }
 }

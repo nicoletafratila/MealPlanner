@@ -58,7 +58,7 @@ namespace RecipeBook.Shared.Tests.Converters
             var result = UnitConverter.Convert(value, fromModel, toModel);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Ensure mapper was called correctly
                 _mapperMock.Verify(m => m.Map<Unit>(fromModel), Times.Once);
@@ -71,7 +71,7 @@ namespace RecipeBook.Shared.Tests.Converters
 
                 // Ensure the final result is what the converter returned
                 Assert.That(result, Is.EqualTo(_convertResult));
-            });
+            }
         }
 
         [Test]

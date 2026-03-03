@@ -71,8 +71,11 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Could not find with id 10."));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Could not find with id 10."));
+            }
 
             _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
             _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Never);
@@ -112,8 +115,11 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Unit kg can not be deleted, it is used in products."));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Unit kg can not be deleted, it is used in products."));
+            }
 
             _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
             _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
@@ -196,8 +202,11 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the unit."));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the unit."));
+            }
 
             _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
             _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Once);

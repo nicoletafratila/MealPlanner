@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var cut = RenderWithMessageComponent(null);
 
             Assert.That(cut.Instance.Unit, Is.Not.Null);
-            Assert.That(cut.Instance.Unit.Id, Is.EqualTo(0));
+            Assert.That(cut.Instance.Unit.Id, Is.Zero);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var cut = RenderWithMessageComponent("not-a-number");
 
             Assert.That(cut.Instance.Unit, Is.Not.Null);
-            Assert.That(cut.Instance.Unit.Id, Is.EqualTo(0));
+            Assert.That(cut.Instance.Unit.Id, Is.Zero);
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 
@@ -142,7 +142,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 
@@ -177,7 +177,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 
@@ -204,7 +204,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 
@@ -235,7 +235,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 
@@ -270,7 +270,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 
@@ -300,7 +300,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { unit })!;
+                var task = (Task)method!.Invoke(cut.Instance, [unit])!;
                 await task;
             });
 

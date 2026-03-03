@@ -54,14 +54,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowError("Something went wrong"));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.IsErrorActive, Is.True);
                 Assert.That(cut.Instance.IsInfoActive, Is.False);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Something went wrong"));
                 Assert.That(cut.Markup, Does.Contain("Something went wrong"));
-            });
+            }
         }
 
         [Test]
@@ -74,14 +74,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowInfo("Informational message"));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.IsInfoActive, Is.True);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Informational message"));
                 Assert.That(cut.Markup, Does.Contain("Informational message"));
-            });
+            }
         }
 
         [Test]
@@ -94,13 +94,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.HideError());
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.IsInfoActive, Is.False);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Error message"));
-            });
+            }
         }
 
         [Test]
@@ -113,13 +113,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.HideInfo());
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.IsInfoActive, Is.False);
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Info message"));
-            });
+            }
         }
 
         [Test]
@@ -132,13 +132,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowError("Error now"));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.IsErrorActive, Is.True);
                 Assert.That(cut.Instance.IsInfoActive, Is.False);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Error now"));
-            });
+            }
         }
 
         [Test]
@@ -151,13 +151,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Act
             await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info now"));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.IsInfoActive, Is.True);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Info now"));
-            });
+            }
         }
 
         [Test]
@@ -176,14 +176,14 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 }));
             });
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert: child used the cascaded IMessageComponent to call ShowInfo
                 Assert.That(cut.Instance.IsInfoActive, Is.True);
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.Message, Is.EqualTo(childMessage));
                 Assert.That(cut.Markup, Does.Contain(childMessage));
-            });
+            }
         }
     }
 }

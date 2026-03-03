@@ -73,9 +73,12 @@ namespace RecipeBook.Api.Tests.Repositories
             var all = await repo.GetAllAsync();
 
             // Assert
-            Assert.That(all.Count, Is.EqualTo(2));
-            Assert.That(all.All(p => p.ProductCategory != null), Is.True);
-            Assert.That(all.All(p => p.BaseUnit != null), Is.True);
+            Assert.That(all, Has.Count.EqualTo(2));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(all.All(p => p.ProductCategory != null), Is.True);
+                Assert.That(all.All(p => p.BaseUnit != null), Is.True);
+            }
         }
 
         [Test]
@@ -93,9 +96,12 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.That(found!.Name, Is.EqualTo("P1"));
-            Assert.That(found.ProductCategory, Is.Not.Null);
-            Assert.That(found.BaseUnit, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(found!.Name, Is.EqualTo("P1"));
+                Assert.That(found.ProductCategory, Is.Not.Null);
+                Assert.That(found.BaseUnit, Is.Not.Null);
+            }
         }
 
         // ---------- SearchAsync by category ----------
@@ -114,7 +120,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var result = await repo.SearchAsync(10);
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(1));
+            Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.Single().Name, Is.EqualTo("P1"));
         }
 
@@ -133,7 +139,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(0));
+            Assert.That(result, Is.Empty);
         }
 
         // ---------- SearchAsync by name ----------
@@ -166,9 +172,12 @@ namespace RecipeBook.Api.Tests.Repositories
             var r1 = await repo.SearchAsync((string)null!);
             var r2 = await repo.SearchAsync("   ");
 
-            // Assert
-            Assert.That(r1, Is.Null);
-            Assert.That(r2, Is.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(r1, Is.Null);
+                Assert.That(r2, Is.Null);
+            }
         }
 
         [Test]

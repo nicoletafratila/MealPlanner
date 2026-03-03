@@ -102,11 +102,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             Assert.That(cut.Instance.ShoppingList, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Instance.ShoppingList!.Id, Is.EqualTo(0));
+                Assert.That(cut.Instance.ShoppingList!.Id, Is.Zero);
                 Assert.That(cut.Instance.ShoppingList!.Products, Is.Not.Null);
-            });
+            }
 
             _shoppingListServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -574,11 +574,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                     (string)qp.Filters.First().Value == "3")),
                 Times.Once);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.ProductId, Is.EqualTo(string.Empty));
                 Assert.That(cut.Instance.Quantity, Is.EqualTo(string.Empty));
-            });
+            }
         }
 
         // ---------- CheckQuantityAsync ----------

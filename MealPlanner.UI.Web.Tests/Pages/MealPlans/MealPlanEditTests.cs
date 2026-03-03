@@ -88,8 +88,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             Assert.That(cut.Instance.MealPlan, Is.Not.Null);
-            Assert.That(cut.Instance.MealPlan!.Id, Is.EqualTo(0));
-            Assert.That(cut.Instance.MealPlan!.Recipes, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Instance.MealPlan!.Id, Is.Zero);
+                Assert.That(cut.Instance.MealPlan!.Recipes, Is.Not.Null);
+            }
 
             _mealPlanServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -106,7 +109,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             {
                 Id = 5,
                 Name = "Loaded Meal Plan",
-                Recipes = new List<RecipeModel>()
+                Recipes = []
             };
 
             _mealPlanServiceMock
@@ -118,8 +121,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             Assert.That(cut.Instance.MealPlan, Is.Not.Null);
-            Assert.That(cut.Instance.MealPlan!.Id, Is.EqualTo(5));
-            Assert.That(cut.Instance.MealPlan!.Name, Is.EqualTo("Loaded Meal Plan"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Instance.MealPlan!.Id, Is.EqualTo(5));
+                Assert.That(cut.Instance.MealPlan!.Name, Is.EqualTo("Loaded Meal Plan"));
+            }
 
             _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
@@ -147,7 +153,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
@@ -161,7 +167,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri.EndsWith("mealplans/mealplansoverview"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("mealplans/mealplansoverview"));
         }
 
         [Test]
@@ -195,12 +201,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
             _mealPlanServiceMock.Verify(
                 s => s.UpdateAsync(It.Is<MealPlanEditModel>(m => m.Id == 5)),
                 Times.Once);
@@ -230,7 +236,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
@@ -266,7 +272,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
@@ -291,7 +297,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
@@ -336,7 +342,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
@@ -348,7 +354,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri.EndsWith("mealplans/mealplansoverview"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("mealplans/mealplansoverview"));
         }
 
         [Test]
@@ -380,7 +386,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
@@ -426,12 +432,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { model })!;
+                var task = (Task)method!.Invoke(cut.Instance, [model])!;
                 await task;
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowError("Delete failed because of dependency"),
                 Times.Once);
@@ -483,7 +489,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             var cut = RenderComponent("0");
 
-            cut.Instance.MealPlan.Recipes = new List<RecipeModel>();
+            cut.Instance.MealPlan.Recipes = [];
             cut.Instance.RecipeId = "5";
 
             var method = typeof(MealPlanEdit).GetMethod("AddRecipeAsync", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -492,14 +498,17 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
             // Assert
-            Assert.That(cut.Instance.MealPlan.Recipes!.Count, Is.EqualTo(1));
-            Assert.That(cut.Instance.MealPlan.Recipes![0].Id, Is.EqualTo(5));
-            Assert.That(cut.Instance.MealPlan.Recipes![0].Index, Is.EqualTo(1));
+            Assert.That(cut.Instance.MealPlan.Recipes!, Has.Count.EqualTo(1));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Instance.MealPlan.Recipes![0].Id, Is.EqualTo(5));
+                Assert.That(cut.Instance.MealPlan.Recipes![0].Index, Is.EqualTo(1));
+            }
         }
 
         // ---------- OnRecipeCategoryChangedAsync ----------
@@ -509,9 +518,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             ArrangeCategories();
 
-            var recipes = new PagedList<RecipeModel>(
-                new List<RecipeModel> { new() { Id = 1, Name = "A" } },
-                new Metadata());
+            var recipes = new PagedList<RecipeModel>([new() { Id = 1, Name = "A" }], new Metadata());
 
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
@@ -527,7 +534,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { args })!;
+                var task = (Task)method!.Invoke(cut.Instance, [args])!;
                 await task;
             });
 

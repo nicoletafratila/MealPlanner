@@ -108,11 +108,10 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
             };
 
             var paged = new PagedList<RecipeCategoryModel>(
-                new[]
-                {
+                [
                     new RecipeCategoryModel(),
                     new RecipeCategoryModel()
-                },
+                ],
                 metadata);
 
             var mockHttp = new MockHttpMessageHandler();
@@ -128,8 +127,11 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Items.Count, Is.EqualTo(2));
-            Assert.That(result.Metadata.PageNumber, Is.EqualTo(1));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Items, Has.Count.EqualTo(2));
+                Assert.That(result.Metadata.PageNumber, Is.EqualTo(1));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -177,8 +179,11 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.True);
-            Assert.That(result.Message, Is.EqualTo("ok"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("ok"));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -258,8 +263,8 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
             // Arrange
             var models = new List<RecipeCategoryModel>
             {
-                new RecipeCategoryModel { Id = 1 },
-                new RecipeCategoryModel { Id = 2 }
+                new() { Id = 1 },
+                new() { Id = 2 }
             };
 
             var expectedResponse = new CommandResponse { Succeeded = true };
@@ -291,11 +296,7 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
         public void BulkUpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var models = new List<RecipeCategoryModel>
-            {
-                new RecipeCategoryModel { Id = 1 },
-                new RecipeCategoryModel { Id = 2 }
-            };
+            var models = new List<RecipeCategoryModel> { new() { Id = 1 }, new() { Id = 2 } };
 
             var mockHttp = new MockHttpMessageHandler();
 

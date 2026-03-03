@@ -9,7 +9,7 @@ namespace Identity.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -21,7 +21,7 @@ namespace Identity.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.Username, Is.EqualTo(string.Empty));
                 Assert.That(model.Password, Is.Null);
@@ -29,7 +29,7 @@ namespace Identity.Shared.Tests.Models
 
                 Assert.That(isValid, Is.False);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(LoginModel.Username))), Is.True);
-            });
+            }
         }
 
         [Test]
@@ -47,8 +47,11 @@ namespace Identity.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
 
         [Test]
@@ -64,9 +67,12 @@ namespace Identity.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(LoginModel.Username))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(LoginModel.Username))), Is.True);
+            }
         }
 
         [Test]
@@ -82,9 +88,12 @@ namespace Identity.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert: since Password is not [Required], this is valid
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert: since Password is not [Required], this is valid
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
     }
 }

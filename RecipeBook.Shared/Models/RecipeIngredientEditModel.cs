@@ -12,7 +12,7 @@ namespace RecipeBook.Shared.Models
         /// The parent recipe id this ingredient belongs to.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a recipe for the ingredient.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please select a recipe for the ingredient.")]
         public int RecipeId { get; set; }
 
         /// <summary>

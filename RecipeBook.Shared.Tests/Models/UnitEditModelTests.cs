@@ -10,7 +10,7 @@ namespace RecipeBook.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -22,14 +22,14 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert: Id=0, Name="", UnitType=default, but Required/Range will fail
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
-                Assert.That(model.UnitType, Is.EqualTo(default(UnitType)));
+                Assert.That(model.UnitType, Is.Default);
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Count, Is.GreaterThanOrEqualTo(1));
-            });
+                Assert.That(results, Is.Not.Empty);
+            }
         }
 
         [Test]
@@ -42,14 +42,14 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.True, "Model should be valid.");
                 Assert.That(results, Is.Empty);
                 Assert.That(model.Id, Is.EqualTo(1));
                 Assert.That(model.Name, Is.EqualTo("Kilogram"));
                 Assert.That(model.UnitType, Is.EqualTo(UnitType.Weight));
-            });
+            }
         }
 
         [Test]
@@ -66,9 +66,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert: invalid because Name is empty (Required)
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(UnitEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert: invalid because Name is empty (Required)
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(UnitEditModel.Name))), Is.True);
+            }
 
             // Arrange: too long name (>100 chars)
             model.Name = new string('a', 101);
@@ -76,9 +79,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             isValid = TryValidate(model, out results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(UnitEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(UnitEditModel.Name))), Is.True);
+            }
         }
 
         [Test]
@@ -95,9 +101,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True, "UnitType within 0..3 should be valid.");
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True, "UnitType within 0..3 should be valid.");
+                Assert.That(results, Is.Empty);
+            }
 
             // Arrange: invalid UnitType beyond range
             model.UnitType = (UnitType)5;
@@ -105,9 +114,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             isValid = TryValidate(model, out results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(UnitEditModel.UnitType))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(UnitEditModel.UnitType))), Is.True);
+            }
         }
 
         [Test]

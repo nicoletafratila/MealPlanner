@@ -9,7 +9,7 @@ namespace RecipeBook.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -21,18 +21,18 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.ImageContent, Is.Null);
                 Assert.That(model.ImageUrl, Is.Null);
-                Assert.That(model.BaseUnitId, Is.EqualTo(0));
-                Assert.That(model.ProductCategoryId, Is.EqualTo(0));
+                Assert.That(model.BaseUnitId, Is.Zero);
+                Assert.That(model.ProductCategoryId, Is.Zero);
 
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Count, Is.GreaterThan(0));
-            });
+                Assert.That(results, Is.Not.Empty);
+            }
         }
 
         [Test]
@@ -51,9 +51,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
 
         [Test]
@@ -70,14 +73,20 @@ namespace RecipeBook.Shared.Tests.Models
 
             // Empty name -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.Name))), Is.True);
+            }
 
             // Too long name
             model.Name = new string('a', 101);
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.Name))), Is.True);
+            }
 
             // Valid length
             model.Name = new string('a', 100);
@@ -99,14 +108,20 @@ namespace RecipeBook.Shared.Tests.Models
 
             // Null -> invalid (Required)
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ImageContent))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ImageContent))), Is.True);
+            }
 
             // Too large
             model.ImageContent = new byte[512001];
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ImageContent))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ImageContent))), Is.True);
+            }
 
             // At limit
             model.ImageContent = new byte[512000];
@@ -127,8 +142,11 @@ namespace RecipeBook.Shared.Tests.Models
             };
 
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.BaseUnitId))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.BaseUnitId))), Is.True);
+            }
 
             model.BaseUnitId = 1;
             isValid = TryValidate(model, out results);
@@ -148,8 +166,11 @@ namespace RecipeBook.Shared.Tests.Models
             };
 
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ProductCategoryId))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ProductCategoryId))), Is.True);
+            }
 
             model.ProductCategoryId = 1;
             isValid = TryValidate(model, out results);
@@ -169,13 +190,13 @@ namespace RecipeBook.Shared.Tests.Models
             var model = new ProductEditModel(id, name, baseUnitId, productCategoryId);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.Id, Is.EqualTo(id));
                 Assert.That(model.Name, Is.EqualTo(name));
                 Assert.That(model.BaseUnitId, Is.EqualTo(baseUnitId));
                 Assert.That(model.ProductCategoryId, Is.EqualTo(productCategoryId));
-            });
+            }
         }
 
         [Test]

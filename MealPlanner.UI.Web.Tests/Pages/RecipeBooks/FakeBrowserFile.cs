@@ -2,29 +2,18 @@
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
-    public class FakeBrowserFile : IBrowserFile
+    public class FakeBrowserFile(byte[] data, string name, string contentType, bool throwOnOpen = false) : IBrowserFile
     {
-        private readonly byte[] _data;
-        private readonly long _size;
-        private readonly bool _throwOnOpen;
+        private readonly long _size = data.LongLength;
 
-        public FakeBrowserFile(byte[] data, string name, string contentType, bool throwOnOpen = false)
-        {
-            _data = data;
-            Name = name;
-            ContentType = contentType;
-            _size = data.LongLength;
-            _throwOnOpen = throwOnOpen;
-        }
-
-        public string Name { get; }
+        public string Name { get; } = name;
         public DateTimeOffset LastModified => DateTimeOffset.Now;
         public long Size => _size;
-        public string ContentType { get; }
+        public string ContentType { get; } = contentType;
 
         public Stream OpenReadStream(long maxAllowedSize = 512000, CancellationToken cancellationToken = default)
         {
-            if (_throwOnOpen)
+            if (throwOnOpen)
             {
                 throw new InvalidOperationException("Too big");
             }
@@ -34,7 +23,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 throw new IOException("File too large");
             }
 
-            return new MemoryStream(_data);
+            return new MemoryStream(data);
         }
     }
 }

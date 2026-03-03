@@ -253,12 +253,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 result = await task;
             });
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(result.Data, Is.Empty);
-                Assert.That(result.TotalCount, Is.EqualTo(0));
-            });
+                Assert.That(result.TotalCount, Is.Zero);
+            }
         }
 
         [Test]
@@ -300,9 +300,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 result = await task;
             });
 
-            // Assert
-            Assert.That(result!.Data!.Count, Is.EqualTo(1));
-            Assert.That(result.TotalCount, Is.EqualTo(1));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(result!.Data!.Count(), Is.EqualTo(1));
+                Assert.That(result.TotalCount, Is.EqualTo(1));
+            }
         }
     }
 }

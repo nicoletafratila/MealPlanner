@@ -15,7 +15,7 @@ namespace Identity.Shared.Tests.Models
                 MemberName = nameof(RegistrationModel.ConfirmPassword)
             };
 
-            results = new List<ValidationResult>();
+            results = [];
 
             return Validator.TryValidateProperty(
                 model.ConfirmPassword,
@@ -36,12 +36,15 @@ namespace Identity.Shared.Tests.Models
             // Act
             var isValid = TryValidateConfirmPassword(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(), Is.True);
-            Assert.That(
-                results.First().ErrorMessage,
-                Is.EqualTo("Confirm password is required."));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(), Is.True);
+                Assert.That(
+                    results.First().ErrorMessage,
+                    Is.EqualTo("Confirm password is required."));
+            }
         }
 
         [Test]
@@ -57,12 +60,15 @@ namespace Identity.Shared.Tests.Models
             // Act
             var isValid = TryValidateConfirmPassword(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(), Is.True);
-            Assert.That(
-                results.First().ErrorMessage,
-                Is.EqualTo("Password and confirm password do not match."));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(), Is.True);
+                Assert.That(
+                    results.First().ErrorMessage,
+                    Is.EqualTo("Password and confirm password do not match."));
+            }
         }
 
         [Test]
@@ -78,9 +84,12 @@ namespace Identity.Shared.Tests.Models
             // Act
             var isValid = TryValidateConfirmPassword(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
     }
 }

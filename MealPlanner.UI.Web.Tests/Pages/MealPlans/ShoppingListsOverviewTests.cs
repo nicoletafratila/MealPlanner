@@ -78,10 +78,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             Assert.That(method, Is.Not.Null);
 
             // Act
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, Array.Empty<object>()));
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, []));
 
             // Assert
-            Assert.That(nav.Uri.EndsWith("mealplans/shoppinglistedit/"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("mealplans/shoppinglistedit/"));
         }
 
         [Test]
@@ -97,10 +97,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var list = new ShoppingListModel { Id = 7 };
 
             // Act
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, new object[] { list }));
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [list]));
 
             // Assert
-            Assert.That(nav.Uri.EndsWith("mealplans/shoppinglistedit/7"), Is.True);
+            Assert.That(nav.Uri, Does.EndWith("mealplans/shoppinglistedit/7"));
         }
 
         // ---------- DeleteAsync / DeleteCoreAsync ----------
@@ -116,7 +116,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object?[] { null! })!;
+                var task = (Task)method!.Invoke(cut.Instance, [null!])!;
                 await task;
             });
 
@@ -146,7 +146,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { item })!;
+                var task = (Task)method!.Invoke(cut.Instance, [item])!;
                 await task;
             });
 
@@ -175,7 +175,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { item })!;
+                var task = (Task)method!.Invoke(cut.Instance, [item])!;
                 await task;
             });
 
@@ -209,7 +209,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { item })!;
+                var task = (Task)method!.Invoke(cut.Instance, [item])!;
                 await task;
             });
 
@@ -246,16 +246,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task =
-                    (Task<GridDataProviderResult<ShoppingListModel>>)method!.Invoke(
-                        cut.Instance,
-                        new object[] { request })!;
+                var task = (Task<GridDataProviderResult<ShoppingListModel>>)method!.Invoke(cut.Instance, [request])!;
                 result = await task;
             });
 
-            // Assert
-            Assert.That(result.Data, Is.Empty);
-            Assert.That(result.TotalCount, Is.EqualTo(0));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(result.Data, Is.Empty);
+                Assert.That(result.TotalCount, Is.Zero);
+            }
         }
 
         [Test]
@@ -293,16 +293,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task =
-                    (Task<GridDataProviderResult<ShoppingListModel>>)method!.Invoke(
-                        cut.Instance,
-                        new object[] { request })!;
+                var task = (Task<GridDataProviderResult<ShoppingListModel>>)method!.Invoke(cut.Instance, [request])!;
                 result = await task;
             });
 
-            // Assert
-            Assert.That(result!.Data!.Count, Is.EqualTo(1));
-            Assert.That(result.TotalCount, Is.EqualTo(1));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(result!.Data!.Count(), Is.EqualTo(1));
+                Assert.That(result.TotalCount, Is.EqualTo(1));
+            }
         }
     }
 }

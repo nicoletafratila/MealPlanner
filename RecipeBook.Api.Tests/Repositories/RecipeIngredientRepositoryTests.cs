@@ -55,7 +55,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var all = await repo.GetAllAsync();
 
             // Assert
-            Assert.That(all.Count, Is.EqualTo(2));
+            Assert.That(all, Has.Count.EqualTo(2));
             Assert.That(all.All(i => i.Unit != null), Is.True);
         }
 
@@ -76,7 +76,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var result = await repo.SearchAsync(1);
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result, Has.Count.EqualTo(2));
             Assert.That(result.All(i => i.ProductId == 1), Is.True);
         }
 
@@ -95,7 +95,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(0));
+            Assert.That(result, Is.Empty);
         }
     }
 }

@@ -81,7 +81,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             _mealPlanServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>()))
-                .ReturnsAsync(new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata()));
+                .ReturnsAsync(new PagedList<MealPlanModel>([], new Metadata()));
 
             _modalControllerMock
                 .Setup(m => m.CloseAsync(It.IsAny<object?>()))
@@ -99,7 +99,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             _mealPlanServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>()))
-                .ReturnsAsync(new PagedList<MealPlanModel>(new List<MealPlanModel>(), new Metadata()));
+                .ReturnsAsync(new PagedList<MealPlanModel>([], new Metadata()));
 
             _modalControllerMock
                 .Setup(m => m.CancelAsync())
@@ -130,7 +130,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, Array.Empty<object>())!;
+                var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 

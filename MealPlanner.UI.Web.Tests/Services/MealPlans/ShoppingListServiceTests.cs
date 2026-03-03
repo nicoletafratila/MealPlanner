@@ -125,11 +125,11 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Items, Has.Count.EqualTo(2));
                 Assert.That(result.Metadata.PageNumber, Is.EqualTo(1));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -231,11 +231,11 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("ok"));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

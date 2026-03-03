@@ -36,12 +36,12 @@ namespace MealPlanner.UI.Web.Tests.Pages
             // Arrange
             var model = CreateModel(_loggerMock.Object);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Act/Assert
                 Assert.That(model.RequestId, Is.Null);
                 Assert.That(model.ShowRequestId, Is.False);
-            });
+            }
         }
 
         [Test]
@@ -60,12 +60,12 @@ namespace MealPlanner.UI.Web.Tests.Pages
                 // Act
                 model.OnGet();
 
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     // Assert
                     Assert.That(model.RequestId, Is.EqualTo(expectedId));
                     Assert.That(model.ShowRequestId, Is.True);
-                });
+                }
 
                 _loggerMock.Verify(
                     x => x.Log(
@@ -95,12 +95,12 @@ namespace MealPlanner.UI.Web.Tests.Pages
             // Act
             model.OnGet();
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(model.RequestId, Is.EqualTo("trace-xyz"));
                 Assert.That(model.ShowRequestId, Is.True);
-            });
+            }
 
             _loggerMock.Verify(
                 x => x.Log(

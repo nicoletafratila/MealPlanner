@@ -47,10 +47,13 @@ namespace RecipeBook.Api.Tests.Repositories
             // Act
             var added = await repo.AddAsync(category);
 
-            // Assert
-            Assert.That(added.Id, Is.Not.EqualTo(0));
-            Assert.That(ctx.ProductCategories.Count(), Is.EqualTo(1));
-            Assert.That(ctx.ProductCategories.Single().Name, Is.EqualTo("Dairy"));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(added.Id, Is.Not.Zero);
+                Assert.That(ctx.ProductCategories.Count(), Is.EqualTo(1));
+                Assert.That(ctx.ProductCategories.Single().Name, Is.EqualTo("Dairy"));
+            }
         }
 
         [Test]
@@ -68,8 +71,8 @@ namespace RecipeBook.Api.Tests.Repositories
             var all = await repo.GetAllAsync();
 
             // Assert
-            Assert.That(all.Count, Is.EqualTo(2));
-            Assert.That(all.Select(c => c.Name), Is.EquivalentTo(new[] { "Dairy", "Snacks" }));
+            Assert.That(all, Has.Count.EqualTo(2));
+            Assert.That(all.Select(c => c.Name), Is.EquivalentTo(["Dairy", "Snacks"]));
         }
 
         [Test]

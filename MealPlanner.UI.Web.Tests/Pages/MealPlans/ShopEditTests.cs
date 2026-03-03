@@ -81,7 +81,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             Assert.That(cut.Instance.Shop, Is.Not.Null);
-            Assert.That(cut.Instance.Shop!.Id, Is.EqualTo(0));
+            Assert.That(cut.Instance.Shop!.Id, Is.Zero);
 
             _shopServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -109,11 +109,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             Assert.That(cut.Instance.Shop, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.Shop!.Id, Is.EqualTo(5));
                 Assert.That(cut.Instance.Shop!.Name, Is.EqualTo("Loaded Shop"));
-            });
+            }
 
             _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             Assert.That(cut.Instance.Shop, Is.Not.Null);
-            Assert.That(cut.Instance.Shop!.Id, Is.EqualTo(0)); // constructed with default ctor
+            Assert.That(cut.Instance.Shop!.Id, Is.Zero); // constructed with default ctor
             _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
 
@@ -474,12 +474,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var canMoveFirst = (bool)method!.Invoke(cut.Instance, [seq[0]])!;
             var canMoveSecond = (bool)method!.Invoke(cut.Instance, [seq[1]])!;
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(canMoveFirst, Is.False);
                 Assert.That(canMoveSecond, Is.True);
-            });
+            }
         }
 
         [Test]
@@ -505,12 +505,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var canMoveFirst = (bool)method!.Invoke(cut.Instance, [seq[0]])!;
             var canMoveLast = (bool)method!.Invoke(cut.Instance, [seq[2]])!;
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(canMoveFirst, Is.True);
                 Assert.That(canMoveLast, Is.False);
-            });
+            }
         }
 
         [Test]
@@ -533,13 +533,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             Assert.That(method, Is.Not.Null);
 
             // Act: move middle item up (Value = 2)
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, new object[] { seq[1] }));
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [seq[1]]));
 
             var newSeq = cut.Instance.Shop.DisplaySequence;
 
             // Assert: order should now be (2, 1, 3) by Value,
             // and Index should be reset 1..3 in that order.
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(newSeq[0].Value, Is.EqualTo(2));
                 Assert.That(newSeq[1].Value, Is.EqualTo(1));
@@ -548,7 +548,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Assert.That(newSeq[0].Index, Is.EqualTo(1));
                 Assert.That(newSeq[1].Index, Is.EqualTo(2));
                 Assert.That(newSeq[2].Index, Is.EqualTo(3));
-            });
+            }
         }
 
         [Test]
@@ -571,13 +571,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             Assert.That(method, Is.Not.Null);
 
             // Act: move middle item down (Value = 2)
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, new object[] { seq[1] }));
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [seq[1]]));
 
             var newSeq = cut.Instance.Shop.DisplaySequence;
 
             // Assert: order should now be (1, 3, 2) by Value,
             // and Index should be reset 1..3 in that order.
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(newSeq[0].Value, Is.EqualTo(1));
                 Assert.That(newSeq[1].Value, Is.EqualTo(3));
@@ -586,7 +586,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Assert.That(newSeq[0].Index, Is.EqualTo(1));
                 Assert.That(newSeq[1].Index, Is.EqualTo(2));
                 Assert.That(newSeq[2].Index, Is.EqualTo(3));
-            });
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RecipeBook.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -21,20 +21,20 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.Source, Is.Null);
                 Assert.That(model.ImageContent, Is.Null);
                 Assert.That(model.ImageUrl, Is.Null);
-                Assert.That(model.RecipeCategoryId, Is.EqualTo(0));
+                Assert.That(model.RecipeCategoryId, Is.Zero);
                 Assert.That(model.Ingredients, Is.Not.Null);
-                Assert.That(model.Ingredients.Count, Is.EqualTo(0));
+                Assert.That(model.Ingredients, Is.Empty);
 
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Count, Is.GreaterThan(0));
-            });
+                Assert.That(results, Is.Not.Empty);
+            }
         }
 
         [Test]
@@ -48,18 +48,21 @@ namespace RecipeBook.Shared.Tests.Models
                 Source = "Cookbook",
                 ImageContent = new byte[10],
                 RecipeCategoryId = 2,
-                Ingredients = new List<RecipeIngredientEditModel>
-                {
+                Ingredients =
+                [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-                }
+                ]
             };
 
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
 
         [Test]
@@ -71,22 +74,28 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "",
                 ImageContent = new byte[10],
                 RecipeCategoryId = 1,
-                Ingredients = new List<RecipeIngredientEditModel>
-                {
+                Ingredients =
+                [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-                }
+                ]
             };
 
             // Empty name -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Name))), Is.True);
+            }
 
             // Too long name
             model.Name = new string('a', 101);
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Name))), Is.True);
+            }
 
             // Valid length
             model.Name = new string('a', 100);
@@ -103,17 +112,19 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "Test",
                 ImageContent = new byte[10],
                 RecipeCategoryId = 1,
-                Ingredients = new List<RecipeIngredientEditModel>
-                {
+                Ingredients =
+                [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-                }
+                ],
+                Source = new string('a', 257)
             };
 
-            model.Source = new string('a', 257);
-
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Source))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Source))), Is.True);
+            }
 
             model.Source = new string('a', 256);
             isValid = TryValidate(model, out results);
@@ -129,22 +140,28 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "Test",
                 ImageContent = null,
                 RecipeCategoryId = 1,
-                Ingredients = new List<RecipeIngredientEditModel>
-                {
+                Ingredients =
+                [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-                }
+                ]
             };
 
             // Null -> invalid (Required)
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.ImageContent))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.ImageContent))), Is.True);
+            }
 
             // Too large
             model.ImageContent = new byte[512001];
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.ImageContent))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.ImageContent))), Is.True);
+            }
 
             // At limit
             model.ImageContent = new byte[512000];
@@ -161,15 +178,18 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "Test",
                 ImageContent = new byte[10],
                 RecipeCategoryId = 0, // invalid
-                Ingredients = new List<RecipeIngredientEditModel>
-                {
+                Ingredients =
+                [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-                }
+                ]
             };
 
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.RecipeCategoryId))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.RecipeCategoryId))), Is.True);
+            }
 
             model.RecipeCategoryId = 1;
             isValid = TryValidate(model, out results);
@@ -185,25 +205,31 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "Test",
                 ImageContent = new byte[10],
                 RecipeCategoryId = 1,
-                Ingredients = new List<RecipeIngredientEditModel>()
+                Ingredients = []
             };
 
             // Empty list -> invalid (MinimumCountCollection)
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Ingredients))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Ingredients))), Is.True);
+            }
 
             // Null list -> invalid (Required)
             model.Ingredients = null!;
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Ingredients))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.Ingredients))), Is.True);
+            }
 
             // One ingredient -> valid
-            model.Ingredients = new List<RecipeIngredientEditModel>
-            {
+            model.Ingredients =
+            [
                 new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-            };
+            ];
 
             isValid = TryValidate(model, out results);
             Assert.That(isValid, Is.True);
@@ -218,10 +244,10 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "My Recipe",
                 ImageContent = new byte[10],
                 RecipeCategoryId = 1,
-                Ingredients = new List<RecipeIngredientEditModel>
-                {
+                Ingredients =
+                [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
-                }
+                ]
             };
 
             Assert.That(model.ToString(), Is.EqualTo("My Recipe"));

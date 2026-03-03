@@ -45,12 +45,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             var cut = RenderComponent();
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.Recipe, Is.Null);
                 Assert.That(cut.Instance.RecipeCategory, Is.Null);
-            });
+            }
         }
 
         [Test]
@@ -66,12 +66,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             var cut = RenderComponent(recipe, category);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.Recipe, Is.SameAs(recipe));
                 Assert.That(cut.Instance.RecipeCategory, Is.EqualTo(category));
-            });
+            }
         }
 
         [Test]
@@ -83,21 +83,21 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var cut = RenderComponent(initialRecipe, "Category1");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.Recipe, Is.SameAs(initialRecipe));
                 Assert.That(cut.Instance.RecipeCategory, Is.EqualTo("Category1"));
-            });
+            }
 
             // Act
             cut = RenderComponent(updatedRecipe, "Category2");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.Recipe, Is.SameAs(updatedRecipe));
                 Assert.That(cut.Instance.RecipeCategory, Is.EqualTo("Category2"));
-            });
+            }
         }
     }
 }

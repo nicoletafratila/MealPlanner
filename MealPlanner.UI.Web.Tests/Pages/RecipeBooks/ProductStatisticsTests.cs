@@ -80,15 +80,15 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Assert
             var qp = cut.Instance.QueryParameters;
             Assert.That(qp, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(qp!.PageSize, Is.EqualTo(3));
                 Assert.That(qp.PageNumber, Is.EqualTo(1));
                 Assert.That(qp.Sorting, Is.Not.Null);
-                Assert.That(qp.Sorting!.Count, Is.EqualTo(1));
+                Assert.That(qp.Sorting!.Count(), Is.EqualTo(1));
                 Assert.That(qp.Sorting!.First().PropertyName, Is.EqualTo("Name"));
                 Assert.That(qp.Sorting!.First().Direction, Is.EqualTo(SortDirection.Ascending));
-            });
+            }
         }
 
         [Test]
@@ -124,11 +124,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             Assert.That(cut.Instance.Categories, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.Categories!.Items!, Has.Count.EqualTo(2));
                 Assert.That(cut.Instance.Statistics, Has.Count.EqualTo(2));
-            });
+            }
         }
 
         // ---------- OnPageChangedAsync ----------
@@ -163,7 +163,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { 2 })!;
+                var task = (Task)method!.Invoke(cut.Instance, [2])!;
                 await task;
             });
 
@@ -205,7 +205,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 var method = typeof(ProductStatistics)
                     .GetMethod("OnAfterRenderAsync", BindingFlags.Instance | BindingFlags.NonPublic);
                 Assert.That(method, Is.Not.Null);
-                var task = (Task)method!.Invoke(cut.Instance, new object[] { false })!;
+                var task = (Task)method!.Invoke(cut.Instance, [false])!;
                 await task;
             });
 

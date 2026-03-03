@@ -10,7 +10,7 @@ namespace MealPlanner.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -22,19 +22,16 @@ namespace MealPlanner.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.DisplaySequence, Is.Not.Null);
-                Assert.That(model.DisplaySequence.Count, Is.EqualTo(0));
-
+                Assert.That(model.DisplaySequence, Is.Empty);
                 Assert.That(isValid, Is.False);
-                // Name empty => invalid
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
-                // DisplaySequence empty => MinimumCountCollection fails
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.DisplaySequence))), Is.True);
-            });
+            }
         }
 
         [Test]
@@ -45,18 +42,21 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "My Shop",
-                DisplaySequence = new List<ShopDisplaySequenceEditModel>
-                {
+                DisplaySequence =
+                [
                     new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 10, Name = "Cat1" } }
-                }
+                ]
             };
 
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
 
         [Test]
@@ -66,22 +66,28 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "",
-                DisplaySequence = new List<ShopDisplaySequenceEditModel>
-                {
+                DisplaySequence =
+                [
                     new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
-                }
+                ]
             };
 
             // Empty name -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
+            }
 
             // Too long
             model.Name = new string('a', 101);
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
+            }
 
             // Valid length
             model.Name = new string('a', 100);
@@ -96,25 +102,31 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "Shop",
-                DisplaySequence = new List<ShopDisplaySequenceEditModel>()
+                DisplaySequence = []
             };
 
             // Empty list -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.DisplaySequence))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.DisplaySequence))), Is.True);
+            }
 
             // Null list -> invalid (Required)
             model.DisplaySequence = null!;
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.DisplaySequence))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.DisplaySequence))), Is.True);
+            }
 
             // Valid list
-            model.DisplaySequence = new List<ShopDisplaySequenceEditModel>
-            {
+            model.DisplaySequence =
+            [
                 new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
-            };
+            ];
 
             isValid = TryValidate(model, out results);
             Assert.That(isValid, Is.True);
@@ -134,10 +146,10 @@ namespace MealPlanner.Shared.Tests.Models
             var model = new ShopEditModel(categories);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.DisplaySequence, Is.Not.Null);
-                Assert.That(model.DisplaySequence.Count, Is.EqualTo(2));
+                Assert.That(model.DisplaySequence, Has.Count.EqualTo(2));
 
                 Assert.That(model.DisplaySequence[0].Index, Is.EqualTo(1));
                 Assert.That(model.DisplaySequence[0].Value, Is.EqualTo(1));
@@ -146,7 +158,7 @@ namespace MealPlanner.Shared.Tests.Models
                 Assert.That(model.DisplaySequence[1].Index, Is.EqualTo(2));
                 Assert.That(model.DisplaySequence[1].Value, Is.EqualTo(2));
                 Assert.That(model.DisplaySequence[1].ProductCategory!.Id, Is.EqualTo(2));
-            });
+            }
         }
 
         [Test]
@@ -158,11 +170,11 @@ namespace MealPlanner.Shared.Tests.Models
 
             var model = new ShopEditModel
             {
-                DisplaySequence = new List<ShopDisplaySequenceEditModel>
-                {
+                DisplaySequence =
+                [
                     new() { ShopId = 1, Value = 1, ProductCategory = cat1 },
                     new() { ShopId = 1, Value = 2, ProductCategory = cat2 },
-                }
+                ]
             };
 
             // Act
@@ -172,7 +184,7 @@ namespace MealPlanner.Shared.Tests.Models
             var seqNull = model.GetDisplaySequence(null);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(seq1, Is.Not.Null);
                 Assert.That(seq1!.ProductCategory!.Id, Is.EqualTo(1));
@@ -182,7 +194,7 @@ namespace MealPlanner.Shared.Tests.Models
 
                 Assert.That(seqNone, Is.Null);
                 Assert.That(seqNull, Is.Null);
-            });
+            }
         }
 
         [Test]
@@ -193,10 +205,10 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = null!,
-                DisplaySequence = new List<ShopDisplaySequenceEditModel>
-                {
+                DisplaySequence =
+                [
                     new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
-                }
+                ]
             };
 
             // Act
@@ -204,9 +216,12 @@ namespace MealPlanner.Shared.Tests.Models
             var results = new List<ValidationResult>();
             var isValid = Validator.TryValidateObject(model, context, results, validateAllProperties: true);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.Name))), Is.True);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var command = new DeleteCommand();
 
             // Assert
-            Assert.That(command.Id, Is.EqualTo(0));
+            Assert.That(command.Id, Is.Zero);
         }
 
         [Test]
@@ -32,10 +32,11 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         public void Can_Set_And_Get_Id_Property()
         {
             // Arrange
-            var command = new DeleteCommand();
-
-            // Act
-            command.Id = 42;
+            var command = new DeleteCommand
+            {
+                // Act
+                Id = 42
+            };
 
             // Assert
             Assert.That(command.Id, Is.EqualTo(42));

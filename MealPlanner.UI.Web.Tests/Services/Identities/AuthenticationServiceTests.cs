@@ -84,11 +84,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("ok"));
-            });
+            }
             storageMock.Verify(
                 s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, "jwt-token", It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -120,11 +120,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("invalid credentials"));
-            });
+            }
             storageMock.Verify(
                 s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
@@ -150,11 +150,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo(errorBody));
-            });
+            }
             storageMock.Verify(
                 s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
@@ -193,11 +193,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("logged out"));
-            });
+            }
             storageMock.Verify(
                 s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -226,11 +226,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo(errorBody));
-            });
+            }
             storageMock.Verify(
                 s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()),
                 Times.Never);
@@ -263,11 +263,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("logout failed"));
-            });
+            }
             storageMock.Verify(
                 s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()),
                 Times.Never);
@@ -304,11 +304,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("registered"));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -337,11 +337,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo(errorBody));
-            });
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
     }

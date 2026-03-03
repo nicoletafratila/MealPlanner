@@ -141,8 +141,8 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
 
             var expected = new List<ShoppingListProductEditModel>
             {
-                new ShoppingListProductEditModel(),
-                new ShoppingListProductEditModel()
+                new(),
+                new()
             };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -163,7 +163,7 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Count, Is.EqualTo(expected.Count));
+            Assert.That(result!, Has.Count.EqualTo(expected.Count));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -180,11 +180,10 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
             };
 
             var paged = new PagedList<RecipeModel>(
-                new[]
-                {
+                [
                     new RecipeModel(),
                     new RecipeModel()
-                },
+                ],
                 metadata);
 
             var mockHttp = new MockHttpMessageHandler();
@@ -200,8 +199,11 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Items.Count, Is.EqualTo(2));
-            Assert.That(result.Metadata.PageNumber, Is.EqualTo(1));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Items, Has.Count.EqualTo(2));
+                Assert.That(result.Metadata.PageNumber, Is.EqualTo(1));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -249,8 +251,11 @@ namespace MealPlanner.UI.Web.Tests.Services.RecipeBooks
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.True);
-            Assert.That(result.Message, Is.EqualTo("ok"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("ok"));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

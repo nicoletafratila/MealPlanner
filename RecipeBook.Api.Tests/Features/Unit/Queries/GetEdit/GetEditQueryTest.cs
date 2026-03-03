@@ -12,7 +12,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
             var query = new GetEditQuery();
 
             // Assert
-            Assert.That(query.Id, Is.EqualTo(0));
+            Assert.That(query.Id, Is.Zero);
         }
 
         [Test]
@@ -32,10 +32,11 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
         public void Can_Set_And_Get_Id_Property()
         {
             // Arrange
-            var query = new GetEditQuery();
-
-            // Act
-            query.Id = 42;
+            var query = new GetEditQuery
+            {
+                // Act
+                Id = 42
+            };
 
             // Assert
             Assert.That(query.Id, Is.EqualTo(42));

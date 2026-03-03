@@ -12,15 +12,15 @@ namespace MealPlanner.Shared.Tests.Models
             var model = new ShoppingListCreateModel();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.MealPlanId, Is.EqualTo(0));
-                Assert.That(model.ShopId, Is.EqualTo(0));
+                Assert.That(model.MealPlanId, Is.Zero);
+                Assert.That(model.ShopId, Is.Zero);
 
                 // BaseModel defaults
-                Assert.That(model.Index, Is.EqualTo(0));
+                Assert.That(model.Index, Is.Zero);
                 Assert.That(model.IsSelected, Is.False);
-            });
+            }
         }
 
         [Test]
@@ -34,11 +34,11 @@ namespace MealPlanner.Shared.Tests.Models
             var model = new ShoppingListCreateModel(mealPlanId, shopId);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.MealPlanId, Is.EqualTo(mealPlanId));
                 Assert.That(model.ShopId, Is.EqualTo(shopId));
-            });
+            }
         }
     }
 }

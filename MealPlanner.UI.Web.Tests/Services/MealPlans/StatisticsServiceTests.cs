@@ -97,8 +97,11 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Count, Is.EqualTo(expected.Count));
-            Assert.That(result[0].Title, Is.EqualTo("R1"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!, Has.Count.EqualTo(expected.Count));
+                Assert.That(result[0].Title, Is.EqualTo("R1"));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
             mockHttp.VerifyNoOutstandingRequest();
         }
@@ -162,8 +165,11 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Count, Is.EqualTo(expected.Count));
-            Assert.That(result[1].Title, Is.EqualTo("P2"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!, Has.Count.EqualTo(expected.Count));
+                Assert.That(result[1].Title, Is.EqualTo("P2"));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
             mockHttp.VerifyNoOutstandingRequest();
         }

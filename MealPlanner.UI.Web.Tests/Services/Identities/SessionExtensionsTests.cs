@@ -70,11 +70,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Name, Is.EqualTo("C"));
                 Assert.That(result.Value, Is.EqualTo(3));
-            });
+            }
         }
 
         [Test]
@@ -94,11 +94,11 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Name, Is.EqualTo("D"));
                 Assert.That(result.Value, Is.EqualTo(4));
-            });
+            }
         }
 
         [Test]

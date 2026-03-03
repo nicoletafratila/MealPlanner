@@ -13,16 +13,16 @@ namespace RecipeBook.Shared.Tests.Models
             var unit = new UnitModel();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(unit.Id, Is.EqualTo(0));
+                Assert.That(unit.Id, Is.Zero);
                 Assert.That(unit.Name, Is.EqualTo(string.Empty));
-                Assert.That(unit.UnitType, Is.EqualTo(default(UnitType)));
+                Assert.That(unit.UnitType, Is.Default);
 
                 // From BaseModel
-                Assert.That(unit.Index, Is.EqualTo(0));
+                Assert.That(unit.Index, Is.Zero);
                 Assert.That(unit.IsSelected, Is.False);
-            });
+            }
         }
 
         [Test]
@@ -37,12 +37,12 @@ namespace RecipeBook.Shared.Tests.Models
             var unit = new UnitModel(id, name, type);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(unit.Id, Is.EqualTo(id));
                 Assert.That(unit.Name, Is.EqualTo(name));
                 Assert.That(unit.UnitType, Is.EqualTo(type));
-            });
+            }
         }
 
         [Test]

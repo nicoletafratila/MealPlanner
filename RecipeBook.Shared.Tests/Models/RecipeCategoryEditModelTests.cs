@@ -9,7 +9,7 @@ namespace RecipeBook.Shared.Tests.Models
         private static bool TryValidate(object model, out IList<ValidationResult> results)
         {
             var context = new ValidationContext(model);
-            results = new List<ValidationResult>();
+            results = [];
             return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
         }
 
@@ -21,16 +21,16 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.EqualTo(0));
+                Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
-                Assert.That(model.DisplaySequence, Is.EqualTo(0));
+                Assert.That(model.DisplaySequence, Is.Zero);
 
                 Assert.That(isValid, Is.False);
                 // Name is empty => Required/StringLength should fail
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.Name))), Is.True);
-            });
+            }
         }
 
         [Test]
@@ -47,9 +47,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.True);
-            Assert.That(results, Is.Empty);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
         }
 
         [Test]
@@ -64,14 +67,20 @@ namespace RecipeBook.Shared.Tests.Models
 
             // Empty name -> invalid
             var isValid = TryValidate(model, out var results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.Name))), Is.True);
+            }
 
             // Too long name
             model.Name = new string('a', 101);
             isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.Name))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.Name))), Is.True);
+            }
 
             // Valid length
             model.Name = new string('a', 100);
@@ -93,9 +102,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Act
             var isValid = TryValidate(model, out var results);
 
-            // Assert
-            Assert.That(isValid, Is.False);
-            Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.DisplaySequence))), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeCategoryEditModel.DisplaySequence))), Is.True);
+            }
 
             // Arrange: zero is allowed
             model.DisplaySequence = 0;
@@ -115,12 +127,12 @@ namespace RecipeBook.Shared.Tests.Models
             var model = new RecipeCategoryEditModel(id, name, seq);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.Id, Is.EqualTo(id));
                 Assert.That(model.Name, Is.EqualTo(name));
                 Assert.That(model.DisplaySequence, Is.EqualTo(seq));
-            });
+            }
         }
 
         [Test]

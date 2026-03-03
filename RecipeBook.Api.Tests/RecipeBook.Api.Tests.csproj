@@ -30,6 +30,9 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Features\RecipeCategory\Commands\" />
+    <Folder Include="Features\RecipeCategory\Queries\GetEdit\" />
+    <Folder Include="Features\RecipeCategory\Queries\Search\" />
   </ItemGroup>
 
   <ItemGroup>

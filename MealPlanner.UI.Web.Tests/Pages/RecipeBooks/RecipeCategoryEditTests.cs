@@ -61,7 +61,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             Assert.That(cut.Instance.RecipeCategory, Is.Not.Null);
-            Assert.That(cut.Instance.RecipeCategory.Id, Is.EqualTo(0));
+            Assert.That(cut.Instance.RecipeCategory.Id, Is.Zero);
 
             _recipeCategoryServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -85,12 +85,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Act
             var cut = RenderComponent(id: "5");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 // Assert
                 Assert.That(cut.Instance.RecipeCategory.Id, Is.EqualTo(5));
                 Assert.That(cut.Instance.RecipeCategory.Name, Is.EqualTo("Breakfast"));
-            });
+            }
 
             _recipeCategoryServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }

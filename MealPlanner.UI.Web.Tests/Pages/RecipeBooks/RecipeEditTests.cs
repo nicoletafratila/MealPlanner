@@ -90,7 +90,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             Assert.That(cut.Instance.Recipe, Is.Not.Null);
-            Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(0));
+            Assert.That(cut.Instance.Recipe!.Id, Is.Zero);
 
             _recipeServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<int>()),
@@ -114,11 +114,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             Assert.That(cut.Instance.Recipe, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(5));
                 Assert.That(cut.Instance.Recipe!.Name, Is.EqualTo("Loaded"));
-            });
+            }
 
             _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
         }
