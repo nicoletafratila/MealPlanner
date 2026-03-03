@@ -31,7 +31,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Features\RecipeCategory\Commands\" />
-    <Folder Include="Features\RecipeCategory\Queries\GetEdit\" />
   </ItemGroup>
 
   <ItemGroup>
