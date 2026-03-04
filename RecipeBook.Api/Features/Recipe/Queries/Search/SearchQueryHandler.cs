@@ -8,31 +8,77 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
 {
     public class SearchQueryHandler(IRecipeRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<RecipeModel>>
     {
+        private readonly IRecipeRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
         public async Task<PagedList<RecipeModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await repository.GetAllAsync();
-            var results = mapper.Map<IList<RecipeModel>>(data);
-
-            if (results != null && request.QueryParameters != null)
+            if (request?.QueryParameters is null)
             {
-                if (request.QueryParameters.Filters != null)
-                {
-                    foreach (var filter in request.QueryParameters.Filters)
-                    {
-                        results = results.Where(filter.ConvertFilterItemToFunc<RecipeModel>()).ToList();
-                    }
-                }
-
-                if (request.QueryParameters!.Sorting != null && request.QueryParameters.Sorting.Any())
-                {
-                    var sortingItems = request.QueryParameters.Sorting.Select(QueryParameters<RecipeModel>.FromModel).ToList();
-                    results = results.AsQueryable()!.ApplySorting(sortingItems)!.ToList();
-                }
-
-                return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
+                return EmptyResult();
             }
 
-            return new PagedList<RecipeModel>(new List<RecipeModel>(), new Metadata());
+            var qp = request.QueryParameters;
+
+            var entities = await _repository.GetAllAsync();
+            var models = _mapper.Map<IList<RecipeModel>>(entities) ?? [];
+
+            models = ApplyCategoryFilter(models, request.CategoryId);
+            models = ApplyFilters(models, qp);
+            models = ApplySorting(models, qp);
+
+            return models.ToPagedList(qp.PageNumber, qp.PageSize);
         }
+
+        private static IList<RecipeModel> ApplyCategoryFilter(
+            IList<RecipeModel> source,
+            string? categoryId)
+        {
+            if (string.IsNullOrWhiteSpace(categoryId))
+                return source;
+
+            // Attempt to parse categoryId; if invalid, ignore the filter.
+            if (!int.TryParse(categoryId, out var id))
+                return source;
+
+            return source.Where(r => r.RecipeCategoryId == id.ToString()).ToList();
+        }
+
+        private static IList<RecipeModel> ApplyFilters(
+            IList<RecipeModel> source,
+            QueryParameters<RecipeModel> parameters)
+        {
+            if (parameters.Filters is null || !parameters.Filters.Any())
+                return source;
+
+            var result = source;
+
+            foreach (var filter in parameters.Filters)
+            {
+                var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
+                result = result.Where(predicate).ToList();
+            }
+
+            return result;
+        }
+
+        private static IList<RecipeModel> ApplySorting(
+            IList<RecipeModel> source,
+            QueryParameters<RecipeModel> parameters)
+        {
+            if (parameters.Sorting is null || !parameters.Sorting.Any())
+                return source;
+
+            var sortingItems = parameters.Sorting
+                .Select(QueryParameters<RecipeModel>.FromModel)
+                .ToList();
+
+            return source.AsQueryable()
+                         .ApplySorting(sortingItems)!
+                         .ToList();
+        }
+
+        private static PagedList<RecipeModel> EmptyResult()
+            => new([], new Metadata());
     }
 }
