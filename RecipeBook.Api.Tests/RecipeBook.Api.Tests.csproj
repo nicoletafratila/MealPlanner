@@ -32,7 +32,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Features\RecipeCategory\Commands\Delete\" />
     <Folder Include="Features\RecipeCategory\Commands\Add\" />
-    <Folder Include="Features\RecipeCategory\Commands\Update\" />
   </ItemGroup>
 
   <ItemGroup>
