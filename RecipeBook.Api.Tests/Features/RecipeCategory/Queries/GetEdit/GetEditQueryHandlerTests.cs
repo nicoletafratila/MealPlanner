@@ -130,8 +130,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.GetEdit
                 .ReturnsAsync(entity);
 
             _mapperMock
-                .Setup(m => m.Map<RecipeCategoryEditModel>(entity))
-                .Returns((RecipeCategoryEditModel)null);
+                .Setup(m => m.Map<RecipeCategoryEditModel?>(entity))
+                .Returns(null as RecipeCategoryEditModel);
 
             var query = new GetEditQuery(id);
 
