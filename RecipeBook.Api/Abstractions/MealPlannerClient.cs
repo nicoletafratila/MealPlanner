@@ -29,5 +29,22 @@ namespace RecipeBook.Api.Abstractions
 
             return await _httpClient.GetFromJsonAsync<ShopEditModel>(url, cancellationToken);
         }
+
+        public async Task<IList<MealPlanModel>?> GetMealPlansByRecipeIdAsync(
+            int recipeId,
+            string? authToken,
+            CancellationToken cancellationToken)
+        {
+            _httpClient.EnsureAuthorizationHeader(authToken);
+            _httpClient.BaseAddress = _apiConfig.BaseUrl;
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var controllerPath = _apiConfig.Controllers![MealPlannerControllers.MealPlan];
+            var url = $"{controllerPath}/searchbyid?id={recipeId}";
+
+            return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>(url, cancellationToken);
+        }
     }
 }
