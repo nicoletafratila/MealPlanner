@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RecipeBook.Api.Abstractions;
 using RecipeBook.Api.Repositories;
 using Serilog;
 
@@ -15,6 +16,8 @@ namespace RecipeBook.Api
     {
         protected override void RegisterServices(IServiceCollection services)
         {
+            services.AddHttpClient<IMealPlannerClient, MealPlannerClient>();
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddEndpointsApiExplorer();

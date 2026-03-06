@@ -17,25 +17,51 @@ namespace Common.Data.Entities
 
         public ShoppingList MakeShoppingList(Shop shop)
         {
+            ArgumentNullException.ThrowIfNull(shop);
+
             var list = new ShoppingList
             {
                 Name = $"Shopping list details for {Name} in shop {shop.Name}",
                 ShopId = shop.Id
             };
 
-            var products = new List<ShoppingListProduct>();
-            foreach (var item in RecipeIngredients!)
+            if (RecipeIngredients == null || RecipeIngredients.Count == 0)
             {
+                list.Products = [];
+                return list;
+            }
+
+            var products = new List<ShoppingListProduct>();
+
+            foreach (var item in RecipeIngredients)
+            {
+                if (item == null)
+                    continue;
+
+                if (item.Product == null || item.Product.BaseUnit == null)
+                    continue;
+
                 var existingProduct = products.FirstOrDefault(x => x.ProductId == item.ProductId);
                 if (existingProduct == null)
                 {
-                    var displaySequence = shop?.GetDisplaySequence(item.Product?.ProductCategory?.Id);
-                    var newProduct = item.ToShoppingListProduct(displaySequence!.Value);
+                    var categoryId = item.Product.ProductCategory?.Id;
+                    var displaySequence = shop.GetDisplaySequence(categoryId) != null ? shop.GetDisplaySequence(categoryId)!.Value : 1;
+
+                    var newProduct = item.ToShoppingListProduct(displaySequence);
                     products.Add(newProduct);
                 }
                 else
-                    existingProduct.Quantity += UnitConverter.Convert(item.Quantity, item.Unit!, existingProduct!.Product!.BaseUnit!);
+                {
+                    if (item.Unit == null || existingProduct.Product?.BaseUnit == null)
+                        continue;
+
+                    existingProduct.Quantity += UnitConverter.Convert(
+                        item.Quantity,
+                        item.Unit,
+                        existingProduct.Product.BaseUnit);
+                }
             }
+
             list.Products = products;
             return list;
         }
