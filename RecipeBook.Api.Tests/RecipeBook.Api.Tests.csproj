@@ -30,7 +30,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Features\ProductCategory\Commands\" />
+    <Folder Include="Features\Product\Commands\Add\" />
+    <Folder Include="Features\Product\Commands\Delete\" />
+    <Folder Include="Features\Product\Commands\Update\" />
+    <Folder Include="Features\Product\Queries\GetEdit\" />
+    <Folder Include="Features\Product\Queries\Search\" />
   </ItemGroup>
 
   <ItemGroup>
