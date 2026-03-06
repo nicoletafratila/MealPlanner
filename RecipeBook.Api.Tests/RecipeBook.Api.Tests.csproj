@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Features\ProductCategory\Commands\" />
   </ItemGroup>
 
   <ItemGroup>
