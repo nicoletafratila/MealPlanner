@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                     new RecipeIngredient()
                     {
                         ProductId = 1,
-                        Product = new Product ()
+                        Product = new Common.Data.Entities.Product ()
                         {
                             Id = 1,
                             Name = "B",
@@ -131,7 +131,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                     new RecipeIngredient()
                     {
                         ProductId = 2,
-                        Product = new Product ()
+                        Product = new Common.Data.Entities.Product ()
                         {
                             Id = 2,
                             Name = "A",
