@@ -47,7 +47,7 @@ namespace Common.Data.Entities
                         var categoryId = ingredient.Product?.ProductCategory?.Id;
                         var displaySequence = shop.GetDisplaySequence(categoryId!);
                         
-                        var newProduct = ingredient.ToShoppingListProduct(displaySequence.Value);
+                        var newProduct = ingredient.ToShoppingListProduct(displaySequence!.Value);
                         productsById.Add(productId, newProduct);
                     }
                     else

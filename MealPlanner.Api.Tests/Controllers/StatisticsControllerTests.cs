@@ -44,15 +44,15 @@ namespace MealPlanner.Api.Tests.Controllers
                 new() { Title = "S2" }
             };
 
-            Features.Statistics.Queries.SearchRecipes.SearchQuery? capturedQuery = null;
+            Api.Features.Statistics.Queries.SearchRecipes.SearchQuery? capturedQuery = null;
 
             _senderMock
                 .Setup(m => m.Send(
-                    It.IsAny<Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
+                    It.IsAny<Api.Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
                     It.IsAny<CancellationToken>()))
                 .Callback<IRequest<IList<StatisticModel>>, CancellationToken>((q, _) =>
                 {
-                    capturedQuery = (Features.Statistics.Queries.SearchRecipes.SearchQuery)q;
+                    capturedQuery = (Api.Features.Statistics.Queries.SearchRecipes.SearchQuery)q;
                 })
                 .ReturnsAsync(expectedStats);
 
@@ -62,9 +62,12 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.That(ok!.Value, Is.SameAs(expectedStats));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ok!.Value, Is.SameAs(expectedStats));
 
-            Assert.That(capturedQuery, Is.Not.Null);
+                Assert.That(capturedQuery, Is.Not.Null);
+            });
             Assert.Multiple(() =>
             {
                 Assert.That(capturedQuery!.CategoryIds, Is.EqualTo("1,2"));
@@ -72,7 +75,7 @@ namespace MealPlanner.Api.Tests.Controllers
             });
 
             _senderMock.Verify(m => m.Send(
-                    It.IsAny<Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
+                    It.IsAny<Api.Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -88,15 +91,15 @@ namespace MealPlanner.Api.Tests.Controllers
                 new() { Title = "P1" }
             };
 
-            Features.Statistics.Queries.SearchProducts.SearchQuery? capturedQuery = null;
+            Api.Features.Statistics.Queries.SearchProducts.SearchQuery? capturedQuery = null;
 
             _senderMock
                 .Setup(m => m.Send(
-                    It.IsAny<Features.Statistics.Queries.SearchProducts.SearchQuery>(),
+                    It.IsAny<Api.Features.Statistics.Queries.SearchProducts.SearchQuery>(),
                     It.IsAny<CancellationToken>()))
                 .Callback<IRequest<IList<StatisticModel>?>, CancellationToken>((q, _) =>
                 {
-                    capturedQuery = (Features.Statistics.Queries.SearchProducts.SearchQuery)q;
+                    capturedQuery = (Api.Features.Statistics.Queries.SearchProducts.SearchQuery)q;
                 })
                 .ReturnsAsync(expectedStats);
 
@@ -106,9 +109,12 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.That(ok!.Value, Is.SameAs(expectedStats));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ok!.Value, Is.SameAs(expectedStats));
 
-            Assert.That(capturedQuery, Is.Not.Null);
+                Assert.That(capturedQuery, Is.Not.Null);
+            });
             Assert.Multiple(() =>
             {
                 Assert.That(capturedQuery!.CategoryIds, Is.EqualTo("3,4"));
@@ -116,7 +122,7 @@ namespace MealPlanner.Api.Tests.Controllers
             });
 
             _senderMock.Verify(m => m.Send(
-                    It.IsAny<Features.Statistics.Queries.SearchProducts.SearchQuery>(),
+                    It.IsAny<Api.Features.Statistics.Queries.SearchProducts.SearchQuery>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -128,15 +134,15 @@ namespace MealPlanner.Api.Tests.Controllers
             // no Authorization header
             var expectedStats = new List<StatisticModel>();
 
-            Features.Statistics.Queries.SearchRecipes.SearchQuery? capturedQuery = null;
+            Api.Features.Statistics.Queries.SearchRecipes.SearchQuery? capturedQuery = null;
 
             _senderMock
                 .Setup(m => m.Send(
-                    It.IsAny<Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
+                    It.IsAny<Api.Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
                     It.IsAny<CancellationToken>()))
                 .Callback<IRequest<IList<StatisticModel>>, CancellationToken>((q, _) =>
                 {
-                    capturedQuery = (Features.Statistics.Queries.SearchRecipes.SearchQuery)q;
+                    capturedQuery = (Api.Features.Statistics.Queries.SearchRecipes.SearchQuery)q;
                 })
                 .ReturnsAsync(expectedStats);
 
@@ -146,9 +152,12 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.That(ok!.Value, Is.SameAs(expectedStats));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ok!.Value, Is.SameAs(expectedStats));
 
-            Assert.That(capturedQuery, Is.Not.Null);
+                Assert.That(capturedQuery, Is.Not.Null);
+            });
             Assert.Multiple(() =>
             {
                 Assert.That(capturedQuery!.CategoryIds, Is.Null);
@@ -156,7 +165,7 @@ namespace MealPlanner.Api.Tests.Controllers
             });
 
             _senderMock.Verify(m => m.Send(
-                    It.IsAny<Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
+                    It.IsAny<Api.Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
