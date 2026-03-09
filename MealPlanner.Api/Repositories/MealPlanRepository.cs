@@ -7,11 +7,13 @@ namespace MealPlanner.Api.Repositories
 {
     public class MealPlanRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<MealPlan, int>(dbContext), IMealPlanRepository
     {
+        private MealPlannerDbContext Context =>
+            DbContext as MealPlannerDbContext
+            ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+
         public override async Task<MealPlan?> GetByIdAsync(int id)
         {
-            var context = (MealPlannerDbContext)DbContext;
-
-            return await context.MealPlans!
+            return await Context.MealPlans!
                 .Include(mp => mp.MealPlanRecipes)!
                     .ThenInclude(mpr => mpr.Recipe)
                         .ThenInclude(r => r!.RecipeCategory)
@@ -20,9 +22,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(int id)
         {
-            var context = (MealPlannerDbContext)DbContext;
-
-            return await context.MealPlans
+            return await Context.MealPlans
                 .AsNoTracking()
                 .Include(mp => mp.MealPlanRecipes)!
                     .ThenInclude(mpr => mpr.Recipe)
@@ -46,14 +46,12 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<int> categoryIds)
         {
-            if (categoryIds == null || categoryIds.Count == 0)
+            if (categoryIds is null || categoryIds.Count == 0)
             {
-                return new List<MealPlanRecipe>();
+                return [];
             }
 
-            var context = (MealPlannerDbContext)DbContext;
-
-            return await context.MealPlanRecipes
+            return await Context.MealPlanRecipes
                 .AsNoTracking()
                 .Include(x => x.Recipe)
                     .ThenInclude(r => r!.RecipeCategory)
@@ -63,32 +61,29 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<int> categoryIds)
         {
-            if (categoryIds == null || categoryIds.Count == 0)
+            if (categoryIds is null || categoryIds.Count == 0)
             {
-                return new List<KeyValuePair<Product, MealPlan>>();
+                return [];
             }
 
-            var context = (MealPlannerDbContext)DbContext;
-
             var query =
-                from ri in context.RecipeIngredients.AsNoTracking()
-                where categoryIds.Contains(ri.Product!.ProductCategoryId)
-                join mr in context.MealPlanRecipes.AsNoTracking()
+                from ri in Context.RecipeIngredients.AsNoTracking()
+                where ri.Product != null && categoryIds.Contains(ri.Product.ProductCategoryId)
+                join mr in Context.MealPlanRecipes.AsNoTracking()
                     on ri.RecipeId equals mr.RecipeId
                 select new { ri.Product, mr.MealPlan };
 
             var results = await query.ToListAsync();
 
             return results
+                .Where(x => x.Product != null && x.MealPlan != null)
                 .Select(x => new KeyValuePair<Product, MealPlan>(x.Product!, x.MealPlan!))
                 .ToList();
         }
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(int recipeId)
         {
-            var context = (MealPlannerDbContext)DbContext;
-
-            return await context.MealPlanRecipes
+            return await Context.MealPlanRecipes
                 .AsNoTracking()
                 .Where(mpr => mpr.RecipeId == recipeId)
                 .Select(mpr => mpr.MealPlan!)
@@ -103,12 +98,13 @@ namespace MealPlanner.Api.Repositories
                 return null;
             }
 
-            var context = (MealPlannerDbContext)DbContext;
-            var normalizedName = name.ToUpper();
+            var normalizedName = name.ToUpperInvariant();
 
-            return await context.MealPlans
+            return await Context.MealPlans
                 .AsNoTracking()
-                .FirstOrDefaultAsync(mp => mp.Name!.ToUpper() == normalizedName);
+                .FirstOrDefaultAsync(mp =>
+                    mp.Name != null &&
+                    mp.Name.ToUpperInvariant() == normalizedName);
         }
     }
 }

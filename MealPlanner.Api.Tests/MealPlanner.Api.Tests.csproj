@@ -25,7 +25,6 @@
     <Folder Include="Migrations\" />
     <Folder Include="Features\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

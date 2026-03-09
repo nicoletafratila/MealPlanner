@@ -9,10 +9,16 @@ namespace MealPlanner.Api.Repositories
     {
         public async Task<Shop?> GetByIdIncludeDisplaySequenceAsync(int? id)
         {
-            return await (DbContext as MealPlannerDbContext)!.Shops
-              .Include(x => x.DisplaySequence)!
-              .ThenInclude(x => x.ProductCategory)
-              .FirstOrDefaultAsync(item => item.Id == id);
+            if (id is null)
+                throw new ArgumentNullException(nameof(id));
+
+            var ctx = DbContext as MealPlannerDbContext
+                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+
+            return await ctx.Shops
+                .Include(x => x.DisplaySequence)!
+                    .ThenInclude(x => x.ProductCategory)
+                .FirstOrDefaultAsync(item => item.Id == id);
         }
     }
 }

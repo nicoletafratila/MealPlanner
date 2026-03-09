@@ -9,23 +9,33 @@ namespace MealPlanner.Api.Repositories
     {
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(int id)
         {
-            return await (DbContext as MealPlannerDbContext)!.ShoppingLists
-                 .Include(x => x!.Shop)!
-                 .Include(x => x!.Products)!
-                    .ThenInclude(x => x!.Product)
-                        .ThenInclude(x => x!.ProductCategory)
-                 .Include(x => x!.Products)!
-                    .ThenInclude(x => x!.Product)
-                        .ThenInclude(x => x!.BaseUnit)
-                 .Include(x => x!.Products)!
-                    .ThenInclude(x => x!.Unit)
+            var ctx = DbContext as MealPlannerDbContext
+                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+
+            return await ctx.ShoppingLists
+                .Include(x => x.Shop)
+                .Include(x => x.Products)!
+                    .ThenInclude(p => p.Product)!
+                        .ThenInclude(p => p!.ProductCategory)
+                .Include(x => x.Products)!
+                    .ThenInclude(p => p.Product)!
+                        .ThenInclude(p => p!.BaseUnit)
+                .Include(x => x.Products)!
+                    .ThenInclude(p => p.Unit)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<ShoppingList?> SearchAsync(string name)
         {
-            return await (DbContext as MealPlannerDbContext)!.ShoppingLists
-                   .FirstOrDefaultAsync(x => x!.Name!.ToLower() == name.ToLower());
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name must not be null or empty.", nameof(name));
+
+            var ctx = DbContext as MealPlannerDbContext
+                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+
+            return await ctx.ShoppingLists
+                .FirstOrDefaultAsync(x => x.Name != null &&
+                                          x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
