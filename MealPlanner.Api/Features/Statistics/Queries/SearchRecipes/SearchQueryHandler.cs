@@ -26,7 +26,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
             }
 
             var categoryIds = string.IsNullOrWhiteSpace(request.CategoryIds)
-               ? new List<int>()
+               ? []
                : request.CategoryIds
                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                    .Select(part => int.TryParse(part, out var id) ? (int?)id : null)

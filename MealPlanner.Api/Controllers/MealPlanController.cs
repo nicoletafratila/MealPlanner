@@ -21,81 +21,94 @@ namespace MealPlanner.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class MealPlanController(ISender mediator) : ControllerBase
     {
+        private readonly ISender _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         [HttpGet("edit")]
-        public async Task<MealPlanEditModel> GetEditAsync(int id)
+        public async Task<ActionResult<MealPlanEditModel>> GetEditAsync([FromQuery] int id)
         {
-            GetEditMealPlanQuery query = new()
-            {
-                Id = id
-            };
-            return await mediator.Send(query);
+            var query = new GetEditMealPlanQuery { Id = id };
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("shoppingListProducts")]
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId)
+        public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
+            [FromQuery] int mealPlanId,
+            [FromQuery] int shopId)
         {
-            GetShoppingListProductsQuery query = new()
+            var query = new GetShoppingListProductsQuery
             {
                 MealPlanId = mealPlanId,
-                ShopId= shopId
+                ShopId = shopId
             };
-            return await mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<MealPlanModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sorting, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<ActionResult<PagedList<MealPlanModel>>> SearchAsync(
+            [FromQuery] string? filters,
+            [FromQuery] string? sorting,
+            [FromQuery] string? pageSize,
+            [FromQuery] string? pageNumber)
         {
-            SearchQuery query = new()
+            if (!int.TryParse(pageSize, out var size) || size <= 0 ||
+                !int.TryParse(pageNumber, out var number) || number <= 0)
             {
-                QueryParameters = new QueryParameters<MealPlanModel>()
-                {
-                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters) : null,
-                    Sorting = !string.IsNullOrWhiteSpace(sorting) ? JsonConvert.DeserializeObject<IEnumerable<SortingModel>>(sorting) : null,
-                    PageSize = int.Parse(pageSize!),
-                    PageNumber = int.Parse(pageNumber!)
-                }
+                return BadRequest("pageSize and pageNumber must be positive integers.");
+            }
+
+            var filterItems = !string.IsNullOrWhiteSpace(filters)
+                ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters)
+                : null;
+
+            var sortingItems = !string.IsNullOrWhiteSpace(sorting)
+                ? JsonConvert.DeserializeObject<IEnumerable<SortingModel>>(sorting)
+                : null;
+
+            var qp = new QueryParameters<MealPlanModel>
+            {
+                Filters = filterItems,
+                Sorting = sortingItems,
+                PageSize = size,
+                PageNumber = number
             };
-            return await mediator.Send(query);
+
+            var query = new SearchQuery { QueryParameters = qp };
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("searchbyid")]
-        public async Task<IList<MealPlanModel>> SearchByRecipeIdAsync(int recipeId)
+        public async Task<ActionResult<IList<MealPlanModel>>> SearchByRecipeIdAsync([FromQuery] int recipeId)
         {
-            SearchByRecipeIdQuery query = new()
-            {
-                RecipeId = recipeId
-            };
-            return await mediator.Send(query);
+            var query = new SearchByRecipeIdQuery { RecipeId = recipeId };
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<CommandResponse?> PostAsync(MealPlanEditModel model)
+        public async Task<ActionResult<CommandResponse?>> PostAsync([FromBody] MealPlanEditModel model)
         {
-            AddCommand command = new()
-            {
-                Model = model
-            };
-            return await mediator.Send(command);
+            var command = new AddCommand { Model = model };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
 
         [HttpPut]
-        public async Task<CommandResponse?> PutAsync(MealPlanEditModel model)
+        public async Task<ActionResult<CommandResponse?>> PutAsync([FromBody] MealPlanEditModel model)
         {
-            UpdateCommand command = new()
-            {
-                Model = model
-            };
-            return await mediator.Send(command);
+            var command = new UpdateCommand { Model = model };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
 
         [HttpDelete]
-        public async Task<CommandResponse?> DeleteAsync(int id)
+        public async Task<ActionResult<CommandResponse?>> DeleteAsync([FromQuery] int id)
         {
-            DeleteCommand command = new()
-            {
-                Id = id
-            };
-            return await mediator.Send(command);
+            var command = new DeleteCommand { Id = id };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }

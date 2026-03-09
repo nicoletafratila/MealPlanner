@@ -11,8 +11,11 @@ namespace MealPlanner.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class StatisticsController(ISender mediator) : ControllerBase
     {
+        private readonly ISender _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         [HttpGet("favoriterecipes")]
-        public async Task<IList<StatisticModel>> SearchFavoriteRecipesAsync([FromQuery] string? categoryIds)
+        public async Task<ActionResult<IList<StatisticModel>>> SearchFavoriteRecipesAsync(
+            [FromQuery] string? categoryIds)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
             var query = new Features.Statistics.Queries.SearchRecipes.SearchQuery
@@ -21,11 +24,13 @@ namespace MealPlanner.Api.Controllers
                 AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 
-            return await mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("favoriteproducts")]
-        public async Task<IList<StatisticModel>?> SearchFavoriteProductsAsync([FromQuery] string? categoryIds)
+        public async Task<ActionResult<IList<StatisticModel>?>> SearchFavoriteProductsAsync(
+            [FromQuery] string? categoryIds)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
             var query = new Features.Statistics.Queries.SearchProducts.SearchQuery
@@ -34,7 +39,8 @@ namespace MealPlanner.Api.Controllers
                 AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 
-            return await mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
     }
 }
