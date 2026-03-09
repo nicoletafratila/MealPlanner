@@ -19,60 +19,72 @@ namespace RecipeBook.Api.Controllers
     [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin,member")]
     public class UnitController(ISender mediator) : ControllerBase
     {
+        private readonly ISender _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         [HttpGet("edit")]
-        public async Task<UnitEditModel> GetEditAsync(int id)
+        public async Task<ActionResult<UnitEditModel>> GetEditAsync([FromQuery] int id)
         {
-            GetEditQuery query = new()
-            {
-                Id = id
-            };
-            return await mediator.Send(query);
+            var query = new GetEditQuery(id);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("search")]
-        public async Task<PagedList<UnitModel>> SearchAsync([FromQuery] string? filters, [FromQuery] string? sorting, [FromQuery] string? pageSize, [FromQuery] string? pageNumber)
+        public async Task<ActionResult<PagedList<UnitModel>>> SearchAsync(
+            [FromQuery] string? filters,
+            [FromQuery] string? sorting,
+            [FromQuery] string? pageSize,
+            [FromQuery] string? pageNumber)
         {
-            SearchQuery query = new()
+            if (!int.TryParse(pageSize, out var size) || size <= 0 ||
+                !int.TryParse(pageNumber, out var number) || number <= 0)
             {
-                QueryParameters = new QueryParameters<UnitModel>()
-                {
-                    Filters = !string.IsNullOrWhiteSpace(filters) ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters) : null,
-                    Sorting = !string.IsNullOrWhiteSpace(sorting) ? JsonConvert.DeserializeObject<IEnumerable<SortingModel>>(sorting) : null,
-                    PageSize = int.Parse(pageSize!),
-                    PageNumber = int.Parse(pageNumber!)
-                }
+                return BadRequest("pageSize and pageNumber must be positive integers.");
+            }
+
+            var filterItems = !string.IsNullOrWhiteSpace(filters)
+                ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters)
+                : null;
+
+            var sortingItems = !string.IsNullOrWhiteSpace(sorting)
+                ? JsonConvert.DeserializeObject<IEnumerable<SortingModel>>(sorting)
+                : null;
+
+            var queryParameters = new QueryParameters<UnitModel>
+            {
+                Filters = filterItems,
+                Sorting = sortingItems,
+                PageSize = size,
+                PageNumber = number
             };
-            return await mediator.Send(query);
+
+            var query = new SearchQuery { QueryParameters = queryParameters };
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<CommandResponse?> PostAsync(UnitEditModel model)
+        public async Task<ActionResult<CommandResponse?>> PostAsync([FromBody] UnitEditModel model)
         {
-            AddCommand command = new()
-            {
-                Model = model
-            };              
-            return await mediator.Send(command);
+            var command = new AddCommand { Model = model };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
 
         [HttpPut]
-        public async Task<CommandResponse?> PutAsync(UnitEditModel model)
+        public async Task<ActionResult<CommandResponse?>> PutAsync([FromBody] UnitEditModel model)
         {
-            UpdateCommand command = new()
-            {
-                Model = model
-            };
-            return await mediator.Send(command);
+            var command = new UpdateCommand { Model = model };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
 
         [HttpDelete]
-        public async Task<CommandResponse?> DeleteAsync(int id)
+        public async Task<ActionResult<CommandResponse?>> DeleteAsync([FromQuery] int id)
         {
-            DeleteCommand command = new()
-            {
-                Id = id
-            };
-            return await mediator.Send(command);
+            var command = new DeleteCommand { Id = id };
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }
