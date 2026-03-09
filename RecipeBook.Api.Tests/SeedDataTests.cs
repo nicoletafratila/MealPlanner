@@ -13,9 +13,7 @@ namespace RecipeBook.Api.Tests
         public void SetUp()
         {
             var services = new ServiceCollection();
-
-            services.AddDbContext<MealPlannerDbContext>(options =>
-                options.UseInMemoryDatabase(databaseName: "SeedDataTests_" + TestContext.CurrentContext.Test.ID));
+            services.AddDbContext<MealPlannerDbContext>(options => options.UseInMemoryDatabase(databaseName: "SeedDataTests_" + TestContext.CurrentContext.Test.ID));
 
             _provider = services.BuildServiceProvider();
         }
