@@ -23,11 +23,14 @@ namespace MealPlanner.UI.Web.Services.MealPlans
             mealPlannerApiConfig.Controllers![MealPlannerControllers.ShoppingList]
             ?? throw new ArgumentException("ShoppingList controller URL is not configured.", nameof(mealPlannerApiConfig));
 
-        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
+        private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
+            httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
 
-        public async Task<ShoppingListEditModel?> GetEditAsync(int id)
+        public async Task<ShoppingListEditModel?> GetEditAsync(
+            int id,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString(
                 $"{_shoppingListController}/edit",
@@ -35,7 +38,10 @@ namespace MealPlanner.UI.Web.Services.MealPlans
 
             try
             {
-                return await httpClient.GetFromJsonAsync<ShoppingListEditModel?>(url, JsonOptions);
+                return await httpClient.GetFromJsonAsync<ShoppingListEditModel?>(
+                    url,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -44,7 +50,9 @@ namespace MealPlanner.UI.Web.Services.MealPlans
             }
         }
 
-        public async Task<PagedList<ShoppingListModel>?> SearchAsync(QueryParameters<ShoppingListModel>? queryParameters = null)
+        public async Task<PagedList<ShoppingListModel>?> SearchAsync(
+            QueryParameters<ShoppingListModel>? queryParameters = null,
+            CancellationToken cancellationToken = default)
         {
             var query = new Dictionary<string, string?>
             {
@@ -65,10 +73,10 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                     (queryParameters?.PageNumber ?? 1).ToString()
             };
 
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString($"{_shoppingListController}/search", query);
-            using var response = await httpClient.GetAsync(url);
+            using var response = await httpClient.GetAsync(url, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -76,11 +84,14 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<PagedList<ShoppingListModel>?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<PagedList<ShoppingListModel>?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -89,12 +100,17 @@ namespace MealPlanner.UI.Web.Services.MealPlans
             }
         }
 
-        public async Task<ShoppingListEditModel?> MakeShoppingListAsync(ShoppingListCreateModel model)
+        public async Task<ShoppingListEditModel?> MakeShoppingListAsync(
+            ShoppingListCreateModel model,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             using var response = await httpClient.PostAsJsonAsync(
-                $"{_shoppingListController}/makeShoppingList", model, JsonOptions);
+                $"{_shoppingListController}/makeShoppingList",
+                model,
+                JsonOptions,
+                cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -102,24 +118,36 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<ShoppingListEditModel?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<ShoppingListEditModel?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to deserialize ShoppingListEditModel for MakeShoppingListAsync. Model {@Model}", model);
+                logger.LogError(
+                    ex,
+                    "Failed to deserialize ShoppingListEditModel for MakeShoppingListAsync. Model {@Model}",
+                    model);
                 throw;
             }
         }
 
-        public async Task<CommandResponse?> AddAsync(ShoppingListEditModel model)
+        public async Task<CommandResponse?> AddAsync(
+            ShoppingListEditModel model,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
-            using var response = await httpClient.PostAsJsonAsync(_shoppingListController, model, JsonOptions);
+            using var response = await httpClient.PostAsJsonAsync(
+                _shoppingListController,
+                model,
+                JsonOptions,
+                cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -127,24 +155,36 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to deserialize CommandResponse for ShoppingList AddAsync. Model {@Model}", model);
+                logger.LogError(
+                    ex,
+                    "Failed to deserialize CommandResponse for ShoppingList AddAsync. Model {@Model}",
+                    model);
                 throw;
             }
         }
 
-        public async Task<CommandResponse?> UpdateAsync(ShoppingListEditModel model)
+        public async Task<CommandResponse?> UpdateAsync(
+            ShoppingListEditModel model,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
-            using var response = await httpClient.PutAsJsonAsync(_shoppingListController, model, JsonOptions);
+            using var response = await httpClient.PutAsJsonAsync(
+                _shoppingListController,
+                model,
+                JsonOptions,
+                cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -152,45 +192,61 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to deserialize CommandResponse for ShoppingList UpdateAsync. Model {@Model}", model);
+                logger.LogError(
+                    ex,
+                    "Failed to deserialize CommandResponse for ShoppingList UpdateAsync. Model {@Model}",
+                    model);
                 throw;
             }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id)
+        public async Task<CommandResponse?> DeleteAsync(
+            int id,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString(
                 _shoppingListController,
                 new Dictionary<string, string?> { ["id"] = id.ToString() });
 
-            using var response = await httpClient.DeleteAsync(url);
+            using var response = await httpClient.DeleteAsync(url, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("ShoppingList DeleteAsync failed with status code {StatusCode} for id {Id}",
-                    response.StatusCode, id);
+                logger.LogWarning(
+                    "ShoppingList DeleteAsync failed with status code {StatusCode} for id {Id}",
+                    response.StatusCode,
+                    id);
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to deserialize CommandResponse for ShoppingList DeleteAsync. Id {Id}", id);
+                logger.LogError(
+                    ex,
+                    "Failed to deserialize CommandResponse for ShoppingList DeleteAsync. Id {Id}",
+                    id);
                 throw;
             }
         }

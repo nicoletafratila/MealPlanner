@@ -11,7 +11,6 @@ PM> Script-migration
 
 
 
-add cancelation tokens
 restul de conversii la unitati
 leaga retete la user
 user management - edit user profile

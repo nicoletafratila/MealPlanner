@@ -53,7 +53,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             };
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(5))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Recipe?)null);
 
             // Act
@@ -61,8 +61,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
 
             // Assert
             Assert.That(result, Is.Null);
-            _recipeRepoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(5), Times.Once);
-            _mealPlannerClientMock.Verify(c => c.GetShopAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
+            _recipeRepoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _mealPlannerClientMock.Verify(
+                c => c.GetShopAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -79,7 +83,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             var recipe = new Common.Data.Entities.Recipe();
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(5))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(recipe);
 
             _mealPlannerClientMock
@@ -91,8 +95,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
 
             // Assert
             Assert.That(result, Is.Null);
-            _recipeRepoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(5), Times.Once);
-            _mealPlannerClientMock.Verify(c => c.GetShopAsync(10, "token", It.IsAny<CancellationToken>()), Times.Once);
+            _recipeRepoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _mealPlannerClientMock.Verify(
+                c => c.GetShopAsync(10, "token", It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -144,7 +152,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             };
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(1))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(recipe);
 
             var shopEditModel = new ShopEditModel
@@ -190,8 +198,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 Assert.That(result[1].Index, Is.EqualTo(2));
             }
 
-            _recipeRepoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(1), Times.Once);
-            _mealPlannerClientMock.Verify(c => c.GetShopAsync(2, "token", It.IsAny<CancellationToken>()), Times.Once);
+            _recipeRepoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _mealPlannerClientMock.Verify(
+                c => c.GetShopAsync(2, "token", It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<Shop>(shopEditModel), Times.Once);
             _mapperMock.VerifyAll();
         }
@@ -208,7 +220,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             };
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(1))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -217,7 +229,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             // Assert
             Assert.That(result, Is.Null);
 
-            _recipeRepoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(1), Times.Once);
+            _recipeRepoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()),
+                Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

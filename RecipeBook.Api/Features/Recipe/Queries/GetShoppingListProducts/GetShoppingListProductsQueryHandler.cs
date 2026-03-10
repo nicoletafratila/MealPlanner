@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
 
             try
             {
-                var recipe = await _recipeRepository.GetByIdIncludeIngredientsAsync(request.RecipeId);
+                var recipe = await _recipeRepository.GetByIdIncludeIngredientsAsync(request.RecipeId, cancellationToken);
                 if (recipe is null)
                     return null;
 

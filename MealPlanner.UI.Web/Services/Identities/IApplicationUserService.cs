@@ -5,7 +5,7 @@ namespace MealPlanner.UI.Web.Services.Identities
 {
     public interface IApplicationUserService
     {
-        Task<ApplicationUserEditModel?> GetEditAsync(string name);
-        Task<CommandResponse?> UpdateAsync(ApplicationUserEditModel model);
+        Task<ApplicationUserEditModel?> GetEditAsync(string name, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> UpdateAsync(ApplicationUserEditModel model, CancellationToken cancellationToken = default);
     }
 }

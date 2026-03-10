@@ -63,7 +63,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync((Common.Data.Entities.Recipe?)null);
 
             // Act
@@ -77,9 +77,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Recipe>()), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var recipe = new Common.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(recipe);
 
             _mealPlannerClientMock
@@ -113,9 +113,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Recipe MyRecipe can not be deleted, it is used in meal plans."));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(id, "token", It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Recipe>()), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var recipe = new Common.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(recipe);
 
             _mealPlannerClientMock
@@ -136,7 +136,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
                 .ReturnsAsync([]);
 
             _repoMock
-                .Setup(r => r.DeleteAsync(recipe))
+                .Setup(r => r.DeleteAsync(recipe, CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -146,9 +146,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(id, "token", It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(recipe), Times.Once);
+            _repoMock.Verify(r => r.DeleteAsync(recipe, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var recipe = new Common.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(recipe);
 
             _mealPlannerClientMock
@@ -169,7 +169,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
                 .ReturnsAsync([]);
 
             _repoMock
-                .Setup(r => r.DeleteAsync(recipe))
+                .Setup(r => r.DeleteAsync(recipe, CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -183,9 +183,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the recipe."));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(id, "token", It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(recipe), Times.Once);
+            _repoMock.Verify(r => r.DeleteAsync(recipe, CancellationToken.None), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

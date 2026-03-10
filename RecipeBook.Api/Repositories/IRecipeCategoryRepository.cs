@@ -11,6 +11,6 @@ namespace RecipeBook.Api.Repositories
         /// <summary>
         /// Updates all provided recipe categories in a single save operation.
         /// </summary>
-        Task UpdateAllAsync(IList<RecipeCategory> entities);
+        Task UpdateAllAsync(IList<RecipeCategory> entities, CancellationToken cancellationToken);
     }
 }

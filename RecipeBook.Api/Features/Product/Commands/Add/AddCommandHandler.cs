@@ -26,12 +26,12 @@ namespace RecipeBook.Api.Features.Product.Commands.Add
 
             try
             {
-                var existingItem = await _repository.SearchAsync(request.Model.Name!);
+                var existingItem = await _repository.SearchAsync(request.Model.Name!, cancellationToken);
                 if (existingItem is not null)
                     return CommandResponse.Failed("This product already exists.");
 
                 var mapped = _mapper.Map<Common.Data.Entities.Product>(request.Model);
-                await _repository.AddAsync(mapped);
+                await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();
             }

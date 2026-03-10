@@ -26,14 +26,14 @@ namespace RecipeBook.Api.Features.Product.Commands.Update
 
             try
             {
-                var existingItem = await _repository.GetByIdAsync(request.Model.Id);
+                var existingItem = await _repository.GetByIdAsync(request.Model.Id, cancellationToken);
                 if (existingItem is null)
                 {
                     return CommandResponse.Failed($"Could not find with id {request.Model.Id}");
                 }
 
                 _mapper.Map(request.Model, existingItem);
-                await _repository.UpdateAsync(existingItem);
+                await _repository.UpdateAsync(existingItem, cancellationToken);
 
                 return CommandResponse.Success();
             }

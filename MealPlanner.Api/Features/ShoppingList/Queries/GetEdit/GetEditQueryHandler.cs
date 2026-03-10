@@ -17,7 +17,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Queries.GetEdit
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            var entity = await _repository.GetByIdIncludeProductsAsync(request.Id);
+            var entity = await _repository.GetByIdIncludeProductsAsync(request.Id, cancellationToken);
 
             if (entity is null)
             {

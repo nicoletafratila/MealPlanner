@@ -60,7 +60,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -80,7 +80,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
                 Assert.That(result.Name, Is.EqualTo("My Recipe"));
             }
 
-            _repoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<RecipeEditModel>(entity), Times.Once);
         }
 
@@ -91,7 +93,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
             const int id = 10;
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Recipe?)null);
 
             var query = new GetEditQuery(id);
@@ -107,7 +109,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
                 Assert.That(result.Name, Is.Null.Or.Empty);
             }
 
-            _repoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<RecipeEditModel>(It.IsAny<Common.Data.Entities.Recipe>()), Times.Never);
         }
 
@@ -123,7 +127,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -142,7 +146,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
                 Assert.That(result.Id, Is.EqualTo(id));
             }
 
-            _repoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<RecipeEditModel>(entity), Times.Once);
         }
     }

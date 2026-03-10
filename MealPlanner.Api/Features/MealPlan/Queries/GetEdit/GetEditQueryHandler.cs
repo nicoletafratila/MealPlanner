@@ -9,7 +9,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetEdit
     {
         public async Task<MealPlanEditModel> Handle(GetEditMealPlanQuery request, CancellationToken cancellationToken)
         {
-            var result = await repository.GetByIdAsync(request.Id);
+            var result = await repository.GetByIdAsync(request.Id, cancellationToken);
             return mapper.Map<MealPlanEditModel>(result);
         }
     }

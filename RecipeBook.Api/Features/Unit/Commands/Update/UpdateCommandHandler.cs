@@ -26,7 +26,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Update
 
             try
             {
-                var existingItem = await _repository.GetByIdAsync(request.Model.Id);
+                var existingItem = await _repository.GetByIdAsync(request.Model.Id, cancellationToken);
                 if (existingItem is null)
                 {
                     return CommandResponse.Failed($"Could not find unit with id {request.Model.Id}.");
@@ -34,7 +34,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Update
 
                 _mapper.Map(request.Model, existingItem);
 
-                await _repository.UpdateAsync(existingItem);
+                await _repository.UpdateAsync(existingItem, cancellationToken);
 
                 return CommandResponse.Success();
             }

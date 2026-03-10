@@ -8,25 +8,31 @@ namespace RecipeBook.Api.Repositories
     /// <summary>
     /// Async repository for <see cref="Recipe"/> entities with eager-loading helpers.
     /// </summary>
-    public class RecipeRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<Recipe, int>(dbContext), IRecipeRepository
+    public class RecipeRepository(MealPlannerDbContext dbContext)
+        : BaseAsyncRepository<Recipe, int>(dbContext), IRecipeRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
-        public override async Task<IReadOnlyList<Recipe>> GetAllAsync()
+        public override async Task<IReadOnlyList<Recipe>> GetAllAsync(
+            CancellationToken cancellationToken = default)
         {
             return await Context.Recipes
                 .Include(x => x.RecipeCategory)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public override async Task<Recipe?> GetByIdAsync(int id)
+        public override async Task<Recipe?> GetByIdAsync(
+            int id,
+            CancellationToken cancellationToken = default)
         {
             return await Context.Recipes
                 .Include(x => x.RecipeCategory)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
-        public async Task<Recipe?> GetByIdIncludeIngredientsAsync(int? id)
+        public async Task<Recipe?> GetByIdIncludeIngredientsAsync(
+            int? id,
+            CancellationToken cancellationToken = default)
         {
             if (id is null)
                 return null;
@@ -37,27 +43,31 @@ namespace RecipeBook.Api.Repositories
                 .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Product)!.ThenInclude(p => p!.BaseUnit)
                 .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Product)
                 .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Unit)
-                .FirstOrDefaultAsync(x => x.Id == id.Value);
+                .FirstOrDefaultAsync(x => x.Id == id.Value, cancellationToken);
         }
 
-        public async Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId)
+        public async Task<IReadOnlyList<Recipe>> SearchAsync(
+            int categoryId,
+            CancellationToken cancellationToken = default)
         {
             return await Context.Recipes
                 .Include(x => x.RecipeCategory)
                 .Where(x => x.RecipeCategoryId == categoryId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<Recipe?> SearchAsync(string name)
+        public async Task<Recipe?> SearchAsync(
+            string name,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return null;
 
             return await Context.Recipes
                 .Include(x => x.RecipeCategory)
-                .FirstOrDefaultAsync(x =>
-                    x.Name != null &&
-                    x.Name.ToLower() == name.ToLower());
+                .FirstOrDefaultAsync(
+                    x => x.Name != null && x.Name.ToLower() == name.ToLower(),
+                    cancellationToken);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId
     {
         public async Task<IList<MealPlanModel>> Handle(SearchByRecipeIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await repository.SearchByRecipeAsync(request.RecipeId);
+            var data = await repository.SearchByRecipeAsync(request.RecipeId, cancellationToken);
             var results= mapper.Map<IList<MealPlanModel>>(data).ToList();
             results.SetIndexes();
             return results;

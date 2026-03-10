@@ -5,20 +5,15 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MealPlanner.UI.Web.Services.Identities
 {
-    public class CustomAuthenticationState : AuthenticationStateProvider
+    public class CustomAuthenticationState(ISessionStorageService sessionStorage) : AuthenticationStateProvider
     {
-        private readonly ISessionStorageService _sessionStorage;
+        private readonly ISessionStorageService _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
         private static AuthenticationState AnonymousState => new(new ClaimsPrincipal(new ClaimsIdentity()));
 
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
         {
             PropertyNameCaseInsensitive = true
         };
-
-        public CustomAuthenticationState(ISessionStorageService sessionStorage)
-        {
-            _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
-        }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -68,7 +63,7 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
-        private static IEnumerable<Claim> CreateClaimsFromPayload(Dictionary<string, JsonElement> payload)
+        private static List<Claim> CreateClaimsFromPayload(Dictionary<string, JsonElement> payload)
         {
             var claims = new List<Claim>();
 

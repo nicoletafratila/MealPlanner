@@ -21,22 +21,36 @@ namespace MealPlanner.UI.Web.Services.Identities
             identityApiConfig.Controllers![IdentityControllers.Authentication]
             ?? throw new ArgumentException("Authentication controller URL is not configured.", nameof(identityApiConfig));
 
-        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
+        private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
+            httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
 
-        public async Task<CommandResponse?> LoginAsync(LoginModel model)
+        public async Task<CommandResponse?> LoginAsync(
+            LoginModel model,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                using var response = await httpClient.PostAsJsonAsync($"{_authController}/login", model, JsonOptions);
+                using var response = await httpClient.PostAsJsonAsync(
+                    $"{_authController}/login",
+                    model,
+                    JsonOptions,
+                    cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    logger.LogWarning("LoginAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
-                    return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Authentication failed." : error);
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                    logger.LogWarning(
+                        "LoginAsync failed with status code {StatusCode}. Body: {Body}",
+                        response.StatusCode,
+                        error);
+                    return CommandResponse.Failed(
+                        string.IsNullOrWhiteSpace(error) ? "Authentication failed." : error);
                 }
 
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>(JsonOptions);
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>(
+                    JsonOptions,
+                    cancellationToken);
+
                 if (loginResponse is null)
                 {
                     logger.LogError("LoginAsync: response body could not be deserialized into LoginCommandResponse.");
@@ -45,7 +59,7 @@ namespace MealPlanner.UI.Web.Services.Identities
 
                 if (loginResponse.Succeeded && !string.IsNullOrWhiteSpace(loginResponse.JwtBearer))
                 {
-                    await tokenProvider.SetTokenAsync(loginResponse.JwtBearer);
+                    await tokenProvider.SetTokenAsync(loginResponse.JwtBearer, cancellationToken);
                     return loginResponse;
                 }
 
@@ -64,22 +78,33 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
-        public async Task<CommandResponse?> LogoutAsync()
+        public async Task<CommandResponse?> LogoutAsync(
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                await EnsureAuthAsync();
+                await EnsureAuthAsync(cancellationToken);
 
-                using var response = await httpClient.PostAsync($"{_authController}/logout", content: null);
+                using var response = await httpClient.PostAsync(
+                    $"{_authController}/logout",
+                    content: null,
+                    cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    logger.LogWarning("LogoutAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
-                    return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Logout failed." : error);
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                    logger.LogWarning(
+                        "LogoutAsync failed with status code {StatusCode}. Body: {Body}",
+                        response.StatusCode,
+                        error);
+                    return CommandResponse.Failed(
+                        string.IsNullOrWhiteSpace(error) ? "Logout failed." : error);
                 }
 
-                var logoutResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions);
+                var logoutResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(
+                    JsonOptions,
+                    cancellationToken);
+
                 if (logoutResponse is null)
                 {
                     logger.LogError("LogoutAsync: response body could not be deserialized into CommandResponse.");
@@ -88,7 +113,7 @@ namespace MealPlanner.UI.Web.Services.Identities
 
                 if (logoutResponse.Succeeded)
                 {
-                    await tokenProvider.RemoveTokenAsync();
+                    await tokenProvider.RemoveTokenAsync(cancellationToken);
                     return logoutResponse;
                 }
 
@@ -107,20 +132,33 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
-        public async Task<CommandResponse?> RegisterAsync(RegistrationModel model)
+        public async Task<CommandResponse?> RegisterAsync(
+            RegistrationModel model,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                using var response = await httpClient.PostAsJsonAsync($"{_authController}/register", model, JsonOptions);
+                using var response = await httpClient.PostAsJsonAsync(
+                    $"{_authController}/register",
+                    model,
+                    JsonOptions,
+                    cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    logger.LogWarning("RegisterAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
-                    return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Registration failed." : error);
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                    logger.LogWarning(
+                        "RegisterAsync failed with status code {StatusCode}. Body: {Body}",
+                        response.StatusCode,
+                        error);
+                    return CommandResponse.Failed(
+                        string.IsNullOrWhiteSpace(error) ? "Registration failed." : error);
                 }
 
-                var registerResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions);
+                var registerResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(
+                    JsonOptions,
+                    cancellationToken);
+
                 if (registerResponse is null)
                 {
                     logger.LogError("RegisterAsync: response body could not be deserialized into CommandResponse.");

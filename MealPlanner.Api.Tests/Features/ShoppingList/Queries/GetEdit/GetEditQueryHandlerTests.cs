@@ -60,7 +60,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(id))
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -80,7 +80,9 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
                 Assert.That(result.Name, Is.EqualTo("List1"));
             });
 
-            _repoMock.Verify(r => r.GetByIdIncludeProductsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<ShoppingListEditModel>(entity), Times.Once);
         }
 
@@ -91,7 +93,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             const int id = 10;
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(id))
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
 
             var query = new GetEditQuery(id);
@@ -107,8 +109,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
                 Assert.That(result.Name, Is.Null.Or.Empty);
             });
 
-            _repoMock.Verify(r => r.GetByIdIncludeProductsAsync(id), Times.Once);
-            _mapperMock.Verify(m => m.Map<ShoppingListEditModel>(It.IsAny<Common.Data.Entities.ShoppingList>()), Times.Never);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _mapperMock.Verify(
+                m => m.Map<ShoppingListEditModel>(It.IsAny<Common.Data.Entities.ShoppingList>()),
+                Times.Never);
         }
 
         [Test]
@@ -123,7 +129,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(id))
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -142,7 +148,9 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
                 Assert.That(result.Id, Is.EqualTo(id));
             });
 
-            _repoMock.Verify(r => r.GetByIdIncludeProductsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<ShoppingListEditModel>(entity), Times.Once);
         }
     }

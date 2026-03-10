@@ -22,13 +22,13 @@ namespace RecipeBook.Api.Features.Product.Commands.Delete
 
             try
             {
-                var itemToDelete = await _repository.GetByIdAsync(request.Id);
+                var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
                     return CommandResponse.Failed($"Could not find with id {request.Id}");
                 }
 
-                var ingredients = await _recipeIngredientRepository.SearchAsync(request.Id) ?? [];
+                var ingredients = await _recipeIngredientRepository.SearchAsync(request.Id, cancellationToken) ?? [];
 
                 if (ingredients.Any())
                 {
@@ -36,7 +36,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Delete
                         $"Product '{itemToDelete.Name}' can not be deleted, it is used in recipes.");
                 }
 
-                await _repository.DeleteAsync(itemToDelete);
+                await _repository.DeleteAsync(itemToDelete, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

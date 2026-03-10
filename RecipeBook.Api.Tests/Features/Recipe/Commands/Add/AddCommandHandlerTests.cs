@@ -81,7 +81,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var existing = new Common.Data.Entities.Recipe { Id = 10, Name = "My Recipe", RecipeCategoryId = 1 };
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe"))
+                .Setup(r => r.SearchAsync("My Recipe", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             // Act
@@ -95,9 +95,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This recipe already exists in this category."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("My Recipe"), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("My Recipe", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Recipe>(It.IsAny<RecipeEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Recipe>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Recipe>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("New Recipe"))
+                .Setup(r => r.SearchAsync("New Recipe", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Recipe?)null);
 
             var mappedEntity = new Common.Data.Entities.Recipe
@@ -129,7 +129,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 .Returns(mappedEntity);
 
             _repoMock
-                .Setup(r => r.AddAsync(mappedEntity))
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mappedEntity);
 
             // Act
@@ -139,9 +139,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.SearchAsync("New Recipe"), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("New Recipe", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Recipe>(model), Times.Once);
-            _repoMock.Verify(r => r.AddAsync(mappedEntity), Times.Once);
+            _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("ErrorRecipe"))
+                .Setup(r => r.SearchAsync("ErrorRecipe", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Recipe?)null);
 
             var mappedEntity = new Common.Data.Entities.Recipe
@@ -173,7 +173,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 .Returns(mappedEntity);
 
             _repoMock
-                .Setup(r => r.AddAsync(mappedEntity))
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -187,9 +187,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the recipe."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("ErrorRecipe"), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("ErrorRecipe", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Recipe>(model), Times.Once);
-            _repoMock.Verify(r => r.AddAsync(mappedEntity), Times.Once);
+            _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

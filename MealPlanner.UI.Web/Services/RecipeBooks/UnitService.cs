@@ -19,15 +19,16 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
             PropertyNameCaseInsensitive = true
         };
 
-        private readonly string _unitController = 
+        private readonly string _unitController =
             recipeBookApiConfig.Controllers![RecipeBookControllers.Unit]
             ?? throw new ArgumentException("Unit controller URL is not configured.", nameof(recipeBookApiConfig));
 
-        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
+        private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
+            httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
 
-        public async Task<UnitEditModel?> GetEditAsync(int id)
+        public async Task<UnitEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString(
                 $"{_unitController}/edit",
@@ -38,7 +39,10 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
 
             try
             {
-                return await httpClient.GetFromJsonAsync<UnitEditModel?>(url, JsonOptions);
+                return await httpClient.GetFromJsonAsync<UnitEditModel?>(
+                    url,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -47,7 +51,9 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
             }
         }
 
-        public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null)
+        public async Task<PagedList<UnitModel>?> SearchAsync(
+            QueryParameters<UnitModel>? queryParameters = null,
+            CancellationToken cancellationToken = default)
         {
             var query = new Dictionary<string, string?>
             {
@@ -68,10 +74,11 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                     (queryParameters?.PageNumber ?? 1).ToString()
             };
 
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString($"{_unitController}/search", query);
-            using var response = await httpClient.GetAsync(url);
+
+            using var response = await httpClient.GetAsync(url, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -79,11 +86,14 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<PagedList<UnitModel>?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<PagedList<UnitModel>?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -92,11 +102,17 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
             }
         }
 
-        public async Task<CommandResponse?> AddAsync(UnitEditModel model)
+        public async Task<CommandResponse?> AddAsync(
+            UnitEditModel model,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
-            using var response = await httpClient.PostAsJsonAsync(_unitController, model, JsonOptions);
+            using var response = await httpClient.PostAsJsonAsync(
+                _unitController,
+                model,
+                JsonOptions,
+                cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -104,11 +120,14 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -117,11 +136,17 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
             }
         }
 
-        public async Task<CommandResponse?> UpdateAsync(UnitEditModel model)
+        public async Task<CommandResponse?> UpdateAsync(
+            UnitEditModel model,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
-            using var response = await httpClient.PutAsJsonAsync(_unitController, model, JsonOptions);
+            using var response = await httpClient.PutAsJsonAsync(
+                _unitController,
+                model,
+                JsonOptions,
+                cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -129,11 +154,14 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -142,9 +170,11 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
             }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id)
+        public async Task<CommandResponse?> DeleteAsync(
+            int id,
+            CancellationToken cancellationToken = default)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString(
                 _unitController,
@@ -153,7 +183,7 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                     ["id"] = id.ToString()
                 });
 
-            using var response = await httpClient.DeleteAsync(url);
+            using var response = await httpClient.DeleteAsync(url, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -162,11 +192,14 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                 response.EnsureSuccessStatusCode();
             }
 
-            var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {

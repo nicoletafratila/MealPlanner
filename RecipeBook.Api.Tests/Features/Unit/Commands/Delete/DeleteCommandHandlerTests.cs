@@ -63,7 +63,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var command = new DeleteCommand(id);
 
             _unitRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Unit?)null);
 
             // Act
@@ -77,9 +77,15 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 10."));
             }
 
-            _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Never);
-            _unitRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
+            _unitRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.GetAllAsync(It.IsAny<CancellationToken>()),
+                Times.Never);
+            _unitRepoMock.Verify(
+                r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Unit>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -103,11 +109,11 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             };
 
             _unitRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(unit);
 
             _ingredientRepoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ingredients);
 
             // Act
@@ -121,9 +127,15 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Unit kg can not be deleted, it is used in products."));
             }
 
-            _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
-            _unitRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
+            _unitRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.GetAllAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+            _unitRepoMock.Verify(
+                r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Unit>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -146,15 +158,15 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             };
 
             _unitRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(unit);
 
             _ingredientRepoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ingredients);
 
             _unitRepoMock
-                .Setup(r => r.DeleteAsync(unit))
+                .Setup(r => r.DeleteAsync(unit, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -164,9 +176,15 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
-            _unitRepoMock.Verify(r => r.DeleteAsync(unit), Times.Once);
+            _unitRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.GetAllAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+            _unitRepoMock.Verify(
+                r => r.DeleteAsync(unit, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -186,15 +204,15 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var ingredients = new List<RecipeIngredient>();
 
             _unitRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(unit);
 
             _ingredientRepoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ingredients);
 
             _unitRepoMock
-                .Setup(r => r.DeleteAsync(unit))
+                .Setup(r => r.DeleteAsync(unit, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -208,9 +226,15 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the unit."));
             }
 
-            _unitRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
-            _unitRepoMock.Verify(r => r.DeleteAsync(unit), Times.Once);
+            _unitRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.GetAllAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+            _unitRepoMock.Verify(
+                r => r.DeleteAsync(unit, It.IsAny<CancellationToken>()),
+                Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

@@ -15,7 +15,8 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("favoriterecipes")]
         public async Task<ActionResult<IList<StatisticModel>>> SearchFavoriteRecipesAsync(
-            [FromQuery] string? categoryIds)
+            [FromQuery] string? categoryIds,
+            CancellationToken cancellationToken)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
             var query = new Features.Statistics.Queries.SearchRecipes.SearchQuery
@@ -24,13 +25,14 @@ namespace MealPlanner.Api.Controllers
                 AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }
 
         [HttpGet("favoriteproducts")]
         public async Task<ActionResult<IList<StatisticModel>?>> SearchFavoriteProductsAsync(
-            [FromQuery] string? categoryIds)
+            [FromQuery] string? categoryIds,
+            CancellationToken cancellationToken)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
             var query = new Features.Statistics.Queries.SearchProducts.SearchQuery
@@ -39,7 +41,7 @@ namespace MealPlanner.Api.Controllers
                 AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
             };
 
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }
     }

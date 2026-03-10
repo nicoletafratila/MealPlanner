@@ -5,9 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api.Repositories
 {
-    public class ShoppingListRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<ShoppingList, int>(dbContext), IShoppingListRepository
+    public class ShoppingListRepository(MealPlannerDbContext dbContext)
+        : BaseAsyncRepository<ShoppingList, int>(dbContext), IShoppingListRepository
     {
-        public async Task<ShoppingList?> GetByIdIncludeProductsAsync(int id)
+        public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
+            int id,
+            CancellationToken cancellationToken = default)
         {
             var ctx = DbContext as MealPlannerDbContext
                       ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
@@ -22,10 +25,12 @@ namespace MealPlanner.Api.Repositories
                         .ThenInclude(p => p!.BaseUnit)
                 .Include(x => x.Products)!
                     .ThenInclude(p => p.Unit)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
-        public async Task<ShoppingList?> SearchAsync(string name)
+        public async Task<ShoppingList?> SearchAsync(
+            string name,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name must not be null or empty.", nameof(name));
@@ -34,8 +39,10 @@ namespace MealPlanner.Api.Repositories
                       ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
 
             return await ctx.ShoppingLists
-                .FirstOrDefaultAsync(x => x.Name != null &&
-                                          x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(
+                    x => x.Name != null &&
+                         x.Name.Equals(name, StringComparison.OrdinalIgnoreCase),
+                    cancellationToken);
         }
     }
 }

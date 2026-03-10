@@ -17,7 +17,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetById
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            var entity = await _repository.GetByIdAsync(request.Id);
+            var entity = await _repository.GetByIdAsync(request.Id, cancellationToken);
 
             if (entity is null)
             {

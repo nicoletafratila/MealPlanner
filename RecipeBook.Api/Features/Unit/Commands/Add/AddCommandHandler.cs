@@ -26,7 +26,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Add
 
             try
             {
-                var existingUnits = await _repository.GetAllAsync() ?? [];
+                var existingUnits = await _repository.GetAllAsync(cancellationToken) ?? [];
 
                 var newName = request.Model.Name?.Trim();
                 if (!string.IsNullOrWhiteSpace(newName))
@@ -43,7 +43,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Add
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.Unit>(request.Model);
-                await _repository.AddAsync(mapped);
+                await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();
             }

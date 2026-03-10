@@ -5,9 +5,12 @@ namespace Common.Api
 {
     public static class HttpClientExtensions
     {
-        public static async Task EnsureAuthorizationHeaderAsync(this HttpClient httpClient, TokenProvider tokenProvider)
+        public static async Task EnsureAuthorizationHeaderAsync(
+            this HttpClient httpClient,
+            TokenProvider tokenProvider,
+            CancellationToken cancellationToken = default)
         {
-            var token = await tokenProvider.GetTokenAsync();
+            var token = await tokenProvider.GetTokenAsync(cancellationToken);
             httpClient.EnsureAuthorizationHeader(token);
         }
 
@@ -17,7 +20,8 @@ namespace Common.Api
                 (httpClient.DefaultRequestHeaders.Authorization == null ||
                  httpClient.DefaultRequestHeaders.Authorization.Parameter != token))
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
             }
         }
 
@@ -28,6 +32,7 @@ namespace Common.Api
             {
                 return authHeader.Substring(JwtBearerDefaults.AuthenticationScheme.Length).Trim();
             }
+
             return string.Empty;
         }
     }

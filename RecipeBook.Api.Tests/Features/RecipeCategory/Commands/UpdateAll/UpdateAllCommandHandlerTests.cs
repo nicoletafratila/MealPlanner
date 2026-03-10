@@ -81,11 +81,11 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var existing2 = new Common.Data.Entities.RecipeCategory { Id = 2, Name = "Old2", DisplaySequence = 20 };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1))
+                .Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing1);
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(2))
+                .Setup(r => r.GetByIdAsync(2, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing2);
 
             _mapperMock
@@ -97,10 +97,12 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
                 .Returns(existing2);
 
             _repoMock
-                .Setup(r => r.UpdateAllAsync(It.Is<IList<Common.Data.Entities.RecipeCategory>>(list =>
-                    list.Count == 2 &&
-                    list.Contains(existing1) &&
-                    list.Contains(existing2))))
+                .Setup(r => r.UpdateAllAsync(
+                    It.Is<IList<Common.Data.Entities.RecipeCategory>>(list =>
+                        list.Count == 2 &&
+                        list.Contains(existing1) &&
+                        list.Contains(existing2)),
+                    It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -110,11 +112,13 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdAsync(1), Times.Once);
-            _repoMock.Verify(r => r.GetByIdAsync(2), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(2, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _mapperMock.Verify(m => m.Map(models[1], existing2), Times.Once);
-            _repoMock.Verify(r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>()), Times.Once);
+            _repoMock.Verify(
+                r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -132,11 +136,11 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var existing1 = new Common.Data.Entities.RecipeCategory { Id = 1, Name = "Old1", DisplaySequence = 10 };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1))
+                .Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing1);
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(99))
+                .Setup(r => r.GetByIdAsync(99, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.RecipeCategory?)null);
 
             _mapperMock
@@ -154,10 +158,12 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
                 Assert.That(result.Message, Does.Contain("Could not find with id 99"));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(1), Times.Once);
-            _repoMock.Verify(r => r.GetByIdAsync(99), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(99, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
-            _repoMock.Verify(r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>()), Times.Never);
+            _repoMock.Verify(
+                r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -168,6 +174,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var command = new UpdateAllCommand { Models = models };
 
             // No repo calls expected for GetById/UpdateAll
+
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -175,8 +182,10 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdAsync(It.IsAny<int>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>()), Times.Never);
+            _repoMock.Verify(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repoMock.Verify(
+                r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -193,7 +202,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var existing1 = new Common.Data.Entities.RecipeCategory { Id = 1, Name = "Old1", DisplaySequence = 10 };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1))
+                .Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing1);
 
             _mapperMock
@@ -201,7 +210,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
                 .Returns(existing1);
 
             _repoMock
-                .Setup(r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>()))
+                .Setup(r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -215,9 +224,11 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the Recipe category."));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(1), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
-            _repoMock.Verify(r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>()), Times.Once);
+            _repoMock.Verify(
+                r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

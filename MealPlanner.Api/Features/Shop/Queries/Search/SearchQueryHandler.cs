@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Features.Shop.Queries.Search
     {
         public async Task<PagedList<ShopModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await repository.GetAllAsync();
+            var data = await repository.GetAllAsync(cancellationToken);
             var results = mapper.Map<IList<ShopModel>>(data);
 
             if (results != null && request.QueryParameters != null)

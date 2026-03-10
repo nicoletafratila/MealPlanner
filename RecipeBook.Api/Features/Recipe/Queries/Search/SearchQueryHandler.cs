@@ -20,7 +20,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
 
             var qp = request.QueryParameters;
 
-            var entities = await _repository.GetAllAsync();
+            var entities = await _repository.GetAllAsync(cancellationToken);
             var models = _mapper.Map<IList<RecipeModel>>(entities) ?? [];
 
             models = ApplyCategoryFilter(models, request.CategoryId);

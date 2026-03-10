@@ -22,20 +22,20 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
 
             try
             {
-                var itemToDelete = await _repository.GetByIdAsync(request.Id);
+                var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
                     return CommandResponse.Failed($"Could not find with id {request.Id}.");
                 }
 
-                var products = await _productRepository.GetAllAsync() ?? [];
+                var products = await _productRepository.GetAllAsync(cancellationToken) ?? [];
 
                 if (products.Any(item => item.ProductCategoryId == request.Id))
                 {
                     return CommandResponse.Failed($"Product category '{itemToDelete.Name}' can not be deleted, it is used in products.");
                 }
 
-                await _repository.DeleteAsync(itemToDelete);
+                await _repository.DeleteAsync(itemToDelete, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

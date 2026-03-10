@@ -12,11 +12,11 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
         {
             try
             {
-                var mealPlan = await mealPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId);
+                var mealPlan = await mealPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId, cancellationToken);
                 if (mealPlan == null)
                     return null;
 
-                var shop = await shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId);
+                var shop = await shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId, cancellationToken);
                 if (shop == null)
                     return null;
 

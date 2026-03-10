@@ -11,13 +11,13 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
         {
             try
             {
-                var shops = await repository.GetAllAsync();
+                var shops = await repository.GetAllAsync(cancellationToken);
                 var existingItem = shops?.FirstOrDefault(i => i.Name == request.Model?.Name!);
                 if (existingItem != null)
                     return CommandResponse.Failed("This shop already exists.");
 
                 var mapped = mapper.Map<Common.Data.Entities.Shop>(request.Model);
-                var newItem = await repository.AddAsync(mapped);
+                var newItem = await repository.AddAsync(mapped, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

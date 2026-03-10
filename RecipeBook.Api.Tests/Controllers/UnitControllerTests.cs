@@ -37,7 +37,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .ReturnsAsync(model);
 
             // Act
-            var result = await _controller.GetEditAsync(5);
+            var result = await _controller.GetEditAsync(5, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -51,7 +51,12 @@ namespace RecipeBook.Api.Tests.Controllers
         public async Task SearchAsync_InvalidPageParameters_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.SearchAsync(null, null, "abc", "1");
+            var result = await _controller.SearchAsync(
+                filters: null,
+                sorting: null,
+                pageSize: "abc",
+                pageNumber: "1",
+                cancellationToken: CancellationToken.None);
 
             // Assert
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
@@ -75,7 +80,8 @@ namespace RecipeBook.Api.Tests.Controllers
                 filters: null,
                 sorting: null,
                 pageSize: "10",
-                pageNumber: "2");
+                pageNumber: "2",
+                cancellationToken: CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -83,7 +89,6 @@ namespace RecipeBook.Api.Tests.Controllers
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(paged));
-
                 Assert.That(capturedQuery, Is.Not.Null);
             }
             using (Assert.EnterMultipleScope())
@@ -108,7 +113,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.PostAsync(model);
+            var result = await _controller.PostAsync(model, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -130,7 +135,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.PutAsync(model);
+            var result = await _controller.PutAsync(model, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -151,7 +156,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.DeleteAsync(7);
+            var result = await _controller.DeleteAsync(7, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;

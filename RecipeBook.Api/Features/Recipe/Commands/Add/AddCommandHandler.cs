@@ -26,14 +26,14 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
 
             try
             {
-                var existingItem = await _repository.SearchAsync(request.Model.Name!);
+                var existingItem = await _repository.SearchAsync(request.Model.Name!, cancellationToken);
                 if (existingItem is not null)
                 {
                     return CommandResponse.Failed("This recipe already exists in this category.");
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.Recipe>(request.Model);
-                await _repository.AddAsync(mapped);
+                await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();
             }

@@ -86,7 +86,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             var command = new UpdateCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((RecipeEntity?)null);
 
             // Act
@@ -100,9 +100,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
             }
 
-            _repoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<RecipeEditModel>(), It.IsAny<RecipeEntity>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeEntity>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeEntity>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -127,7 +129,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -135,7 +137,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(existing))
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -145,9 +147,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(existing), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -172,7 +176,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -180,7 +184,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(existing))
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -194,9 +198,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the recipe."));
             }
 
-            _repoMock.Verify(r => r.GetByIdIncludeIngredientsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(existing), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

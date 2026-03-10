@@ -38,19 +38,24 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         public void Ctor_NullDependencies_Throw()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MakeShoppingListCommandHandler(null!, _shoppingListRepoMock.Object, _shopRepoMock.Object, _mapperMock.Object, _loggerMock.Object));
+                _ = new MakeShoppingListCommandHandler(
+                    null!, _shoppingListRepoMock.Object, _shopRepoMock.Object, _mapperMock.Object, _loggerMock.Object));
 
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MakeShoppingListCommandHandler(_mealPlanRepoMock.Object, null!, _shopRepoMock.Object, _mapperMock.Object, _loggerMock.Object));
+                _ = new MakeShoppingListCommandHandler(
+                    _mealPlanRepoMock.Object, null!, _shopRepoMock.Object, _mapperMock.Object, _loggerMock.Object));
 
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MakeShoppingListCommandHandler(_mealPlanRepoMock.Object, _shoppingListRepoMock.Object, null!, _mapperMock.Object, _loggerMock.Object));
+                _ = new MakeShoppingListCommandHandler(
+                    _mealPlanRepoMock.Object, _shoppingListRepoMock.Object, null!, _mapperMock.Object, _loggerMock.Object));
 
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MakeShoppingListCommandHandler(_mealPlanRepoMock.Object, _shoppingListRepoMock.Object, _shopRepoMock.Object, null!, _loggerMock.Object));
+                _ = new MakeShoppingListCommandHandler(
+                    _mealPlanRepoMock.Object, _shoppingListRepoMock.Object, _shopRepoMock.Object, null!, _loggerMock.Object));
 
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MakeShoppingListCommandHandler(_mealPlanRepoMock.Object, _shoppingListRepoMock.Object, _shopRepoMock.Object, _mapperMock.Object, null!));
+                _ = new MakeShoppingListCommandHandler(
+                    _mealPlanRepoMock.Object, _shoppingListRepoMock.Object, _shopRepoMock.Object, _mapperMock.Object, null!));
         }
 
         [Test]
@@ -71,7 +76,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
 
             // Act
@@ -80,9 +85,15 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             // Assert
             Assert.That(result, Is.Null);
 
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1), Times.Once);
-            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(It.IsAny<int?>()), Times.Never);
-            _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>()), Times.Never);
+            _mealPlanRepoMock.Verify(
+                r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _shopRepoMock.Verify(
+                r => r.GetByIdIncludeDisplaySequenceAsync(It.IsAny<int?>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+            _shoppingListRepoMock.Verify(
+                r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -98,11 +109,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var mealPlan = new Common.Data.Entities.MealPlan { Id = 1, Name = "Plan1" };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlan);
 
             _shopRepoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2))
+                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Shop?)null);
 
             // Act
@@ -111,9 +122,15 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             // Assert
             Assert.That(result, Is.Null);
 
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1), Times.Once);
-            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(2), Times.Once);
-            _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>()), Times.Never);
+            _mealPlanRepoMock.Verify(
+                r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _shopRepoMock.Verify(
+                r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _shoppingListRepoMock.Verify(
+                r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -133,23 +150,23 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var mappedEdit = new ShoppingListEditModel { Id = 10, Name = "Generated" };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlan);
 
             _shopRepoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2))
+                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(shop);
 
             _shoppingListRepoMock
-                .Setup(r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>()))
-                .Callback<Common.Data.Entities.ShoppingList>(s =>
+                .Setup(r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()))
+                .Callback<Common.Data.Entities.ShoppingList, CancellationToken>((s, _) =>
                 {
                     Assert.That(s.Name, Is.EqualTo("Shopping list details for Plan1 in shop Shop1"));
                 })
                 .ReturnsAsync(newList);
 
             _shoppingListRepoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(10))
+                .Setup(r => r.GetByIdIncludeProductsAsync(10, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(loadedList);
 
             _mapperMock
@@ -167,10 +184,18 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
                 Assert.That(result.Name, Is.EqualTo("Generated"));
             });
 
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1), Times.Once);
-            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(2), Times.Once);
-            _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>()), Times.Once);
-            _shoppingListRepoMock.Verify(r => r.GetByIdIncludeProductsAsync(10), Times.Once);
+            _mealPlanRepoMock.Verify(
+                r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _shopRepoMock.Verify(
+                r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _shoppingListRepoMock.Verify(
+                r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+            _shoppingListRepoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(10, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map<ShoppingListEditModel>(loadedList), Times.Once);
         }
 
@@ -185,7 +210,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -194,7 +219,9 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             // Assert
             Assert.That(result, Is.Null);
 
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1), Times.Once);
+            _mealPlanRepoMock.Verify(
+                r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()),
+                Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

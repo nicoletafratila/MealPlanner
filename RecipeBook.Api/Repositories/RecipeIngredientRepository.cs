@@ -7,33 +7,31 @@ namespace RecipeBook.Api.Repositories
     /// <summary>
     /// Async repository for <see cref="RecipeIngredient"/> entities.
     /// </summary>
-    public class RecipeIngredientRepository : IRecipeIngredientRepository
+    public class RecipeIngredientRepository(MealPlannerDbContext dbContext) : IRecipeIngredientRepository
     {
-        private readonly MealPlannerDbContext _dbContext;
-
-        public RecipeIngredientRepository(MealPlannerDbContext dbContext)
-        {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        }
+        private readonly MealPlannerDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
         /// <summary>
         /// Gets all recipe ingredients, including their units.
         /// </summary>
-        public async Task<IReadOnlyList<RecipeIngredient>> GetAllAsync()
+        public async Task<IReadOnlyList<RecipeIngredient>> GetAllAsync(
+            CancellationToken cancellationToken = default)
         {
             return await _dbContext.RecipeIngredients
                 .Include(x => x.Unit)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
         /// <summary>
         /// Gets all recipe ingredients for a given product id.
         /// </summary>
-        public async Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId)
+        public async Task<IReadOnlyList<RecipeIngredient>> SearchAsync(
+            int productId,
+            CancellationToken cancellationToken = default)
         {
             return await _dbContext.RecipeIngredients
                 .Where(x => x.ProductId == productId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
     }
 }

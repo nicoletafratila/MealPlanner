@@ -62,7 +62,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
             var command = new DeleteCommand { Id = id };
 
             _categoryRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync((Common.Data.Entities.ProductCategory?)null);
 
             // Act
@@ -76,9 +76,9 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5."));
             }
 
-            _categoryRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.GetAllAsync(), Times.Never);
-            _categoryRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.ProductCategory>()), Times.Never);
+            _categoryRepoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
+            _productRepoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
+            _categoryRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.ProductCategory>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -97,11 +97,11 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
             };
 
             _categoryRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(category);
 
             _productRepoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(products);
 
             // Act
@@ -115,9 +115,9 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Product category 'Dairy' can not be deleted, it is used in products."));
             }
 
-            _categoryRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
-            _categoryRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.ProductCategory>()), Times.Never);
+            _categoryRepoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
+            _productRepoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _categoryRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.ProductCategory>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -135,15 +135,15 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
             };
 
             _categoryRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(category);
 
             _productRepoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(products);
 
             _categoryRepoMock
-                .Setup(r => r.DeleteAsync(category))
+                .Setup(r => r.DeleteAsync(category, CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -153,9 +153,9 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _categoryRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
-            _categoryRepoMock.Verify(r => r.DeleteAsync(category), Times.Once);
+            _categoryRepoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
+            _productRepoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _categoryRepoMock.Verify(r => r.DeleteAsync(category, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -167,18 +167,18 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
 
             var category = new Common.Data.Entities.ProductCategory { Id = id, Name = "Frozen" };
 
-            var products = new List<Common.Data.Entities.Product>(); 
+            var products = new List<Common.Data.Entities.Product>();
 
             _categoryRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(category);
 
             _productRepoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(products);
 
             _categoryRepoMock
-                .Setup(r => r.DeleteAsync(category))
+                .Setup(r => r.DeleteAsync(category, CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -192,9 +192,9 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the product category."));
             }
 
-            _categoryRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.GetAllAsync(), Times.Once);
-            _categoryRepoMock.Verify(r => r.DeleteAsync(category), Times.Once);
+            _categoryRepoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
+            _productRepoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _categoryRepoMock.Verify(r => r.DeleteAsync(category, CancellationToken.None), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

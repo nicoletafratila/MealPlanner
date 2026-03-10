@@ -45,7 +45,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(editModel);
 
             // Act
-            var result = await _controller.GetEditAsync(5);
+            var result = await _controller.GetEditAsync(5, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -76,14 +76,17 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(products);
 
             // Act
-            var result = await _controller.GetShoppingListProductsAsync(3, 7);
+            var result = await _controller.GetShoppingListProductsAsync(3, 7, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.That(ok!.Value, Is.SameAs(products));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ok!.Value, Is.SameAs(products));
 
-            Assert.That(captured, Is.Not.Null);
+                Assert.That(captured, Is.Not.Null);
+            });
             Assert.Multiple(() =>
             {
                 Assert.That(captured!.MealPlanId, Is.EqualTo(3));
@@ -97,7 +100,7 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task SearchAsync_InvalidPageParams_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.SearchAsync(null, null, "abc", "1");
+            var result = await _controller.SearchAsync(null, null, "abc", "1", CancellationToken.None);
 
             // Assert
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
@@ -120,14 +123,17 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(paged);
 
             // Act
-            var result = await _controller.SearchAsync(null, null, "10", "2");
+            var result = await _controller.SearchAsync(null, null, "10", "2", CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.That(ok!.Value, Is.SameAs(paged));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ok!.Value, Is.SameAs(paged));
 
-            Assert.That(captured, Is.Not.Null);
+                Assert.That(captured, Is.Not.Null);
+            });
             Assert.Multiple(() =>
             {
                 Assert.That(captured!.QueryParameters, Is.Not.Null);
@@ -159,14 +165,17 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(models);
 
             // Act
-            var result = await _controller.SearchByRecipeIdAsync(10);
+            var result = await _controller.SearchByRecipeIdAsync(10, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.That(ok!.Value, Is.SameAs(models));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ok!.Value, Is.SameAs(models));
 
-            Assert.That(captured, Is.Not.Null);
+                Assert.That(captured, Is.Not.Null);
+            });
             Assert.That(captured!.RecipeId, Is.EqualTo(10));
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchByRecipeIdQuery>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -184,7 +193,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.PostAsync(model);
+            var result = await _controller.PostAsync(model, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -206,7 +215,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.PutAsync(model);
+            var result = await _controller.PutAsync(model, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -227,7 +236,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.DeleteAsync(9);
+            var result = await _controller.DeleteAsync(9, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;

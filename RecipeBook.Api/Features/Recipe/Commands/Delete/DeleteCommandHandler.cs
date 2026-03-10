@@ -23,7 +23,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
 
             try
             {
-                var itemToDelete = await _repository.GetByIdAsync(request.Id);
+                var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
                     return CommandResponse.Failed($"Could not find with id {request.Id}");
@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
                     return CommandResponse.Failed($"Recipe {itemToDelete.Name} can not be deleted, it is used in meal plans.");
                 }
 
-                await _repository.DeleteAsync(itemToDelete);
+                await _repository.DeleteAsync(itemToDelete, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

@@ -22,14 +22,17 @@ namespace MealPlanner.UI.Web.Services.Identities
             identityApiConfig.Controllers![IdentityControllers.ApplicationUser]
             ?? throw new ArgumentException("ApplicationUser controller URL is not configured.", nameof(identityApiConfig));
 
-        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
+        private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
+            httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
 
-        public async Task<ApplicationUserEditModel?> GetEditAsync(string name)
+        public async Task<ApplicationUserEditModel?> GetEditAsync(
+            string name,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Username must not be empty.", nameof(name));
 
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString(
                 $"{_userController}/edit",
@@ -40,7 +43,10 @@ namespace MealPlanner.UI.Web.Services.Identities
 
             try
             {
-                return await httpClient.GetFromJsonAsync<ApplicationUserEditModel?>(url, JsonOptions);
+                return await httpClient.GetFromJsonAsync<ApplicationUserEditModel?>(
+                    url,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
@@ -49,30 +55,46 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
-        public async Task<CommandResponse?> UpdateAsync(ApplicationUserEditModel model)
+        public async Task<CommandResponse?> UpdateAsync(
+            ApplicationUserEditModel model,
+            CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(model);
 
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
-            using var response = await httpClient.PutAsJsonAsync(_userController, model, JsonOptions);
+            using var response = await httpClient.PutAsJsonAsync(
+                _userController,
+                model,
+                JsonOptions,
+                cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                logger.LogWarning("ApplicationUser UpdateAsync failed with status code {StatusCode}. Body: {Body}", response.StatusCode, error);
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                logger.LogWarning(
+                    "ApplicationUser UpdateAsync failed with status code {StatusCode}. Body: {Body}",
+                    response.StatusCode,
+                    error);
 
-                return CommandResponse.Failed(string.IsNullOrWhiteSpace(error) ? "Update user failed." : error);
+                return CommandResponse.Failed(
+                    string.IsNullOrWhiteSpace(error) ? "Update user failed." : error);
             }
 
             try
             {
-                var stream = await response.Content.ReadAsStreamAsync();
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(stream, JsonOptions);
+                await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to deserialize CommandResponse for ApplicationUser UpdateAsync. Model {@Model}", model);
+                logger.LogError(
+                    ex,
+                    "Failed to deserialize CommandResponse for ApplicationUser UpdateAsync. Model {@Model}",
+                    model);
                 return CommandResponse.Failed("Invalid response from user update endpoint.");
             }
         }

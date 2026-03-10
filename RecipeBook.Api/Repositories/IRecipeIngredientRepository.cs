@@ -10,11 +10,11 @@ namespace RecipeBook.Api.Repositories
         /// <summary>
         /// Gets all recipe ingredients, typically including related unit or product data.
         /// </summary>
-        Task<IReadOnlyList<RecipeIngredient>> GetAllAsync();
+        Task<IReadOnlyList<RecipeIngredient>> GetAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Gets all recipe ingredients associated with the given product id.
         /// </summary>
-        Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId);
+        Task<IReadOnlyList<RecipeIngredient>> SearchAsync(int productId, CancellationToken cancellationToken);
     }
 }

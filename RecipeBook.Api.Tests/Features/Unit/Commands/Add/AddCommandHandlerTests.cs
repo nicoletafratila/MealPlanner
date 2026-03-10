@@ -84,7 +84,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(existingUnits);
 
             // Act
@@ -98,9 +98,9 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This product category already exists."));
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Unit>(It.IsAny<UnitEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Unit>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             var existingUnits = new List<Common.Data.Entities.Unit>(); // no duplicates
 
             _repoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(existingUnits);
 
             var mappedEntity = new Common.Data.Entities.Unit
@@ -134,7 +134,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
                 .Returns(mappedEntity);
 
             _repoMock
-                .Setup(r => r.AddAsync(mappedEntity))
+                .Setup(r => r.AddAsync(mappedEntity, CancellationToken.None))
                 .ReturnsAsync(mappedEntity);
 
             // Act
@@ -144,9 +144,9 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Unit>(model), Times.Once);
-            _repoMock.Verify(r => r.AddAsync(mappedEntity), Times.Once);
+            _repoMock.Verify(r => r.AddAsync(mappedEntity, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             var existingUnits = new List<Common.Data.Entities.Unit>();
 
             _repoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(existingUnits);
 
             var mappedEntity = new Common.Data.Entities.Unit
@@ -180,7 +180,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
                 .Returns(mappedEntity);
 
             _repoMock
-                .Setup(r => r.AddAsync(mappedEntity))
+                .Setup(r => r.AddAsync(mappedEntity, CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -194,9 +194,9 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the product category."));
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Unit>(model), Times.Once);
-            _repoMock.Verify(r => r.AddAsync(mappedEntity), Times.Once);
+            _repoMock.Verify(r => r.AddAsync(mappedEntity, CancellationToken.None), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

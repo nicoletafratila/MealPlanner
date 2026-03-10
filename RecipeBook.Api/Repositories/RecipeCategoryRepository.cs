@@ -8,9 +8,12 @@ namespace RecipeBook.Api.Repositories
     /// <summary>
     /// Async repository for <see cref="RecipeCategory"/> entities.
     /// </summary>
-    public class RecipeCategoryRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
+    public class RecipeCategoryRepository(MealPlannerDbContext dbContext)
+        : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
     {
-        public async Task UpdateAllAsync(IList<RecipeCategory> entities)
+        public async Task UpdateAllAsync(
+            IList<RecipeCategory> entities,
+            CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(entities);
 
@@ -22,7 +25,7 @@ namespace RecipeBook.Api.Repositories
                 DbContext.Entry(entity).State = EntityState.Modified;
             }
 
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

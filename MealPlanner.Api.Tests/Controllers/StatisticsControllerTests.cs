@@ -57,7 +57,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(expectedStats);
 
             // Act
-            var result = await _controller.SearchFavoriteRecipesAsync("1,2");
+            var result = await _controller.SearchFavoriteRecipesAsync("1,2", CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -104,7 +104,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(expectedStats);
 
             // Act
-            var result = await _controller.SearchFavoriteProductsAsync("3,4");
+            var result = await _controller.SearchFavoriteProductsAsync("3,4", CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -147,7 +147,7 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(expectedStats);
 
             // Act
-            var result = await _controller.SearchFavoriteRecipesAsync(null);
+            var result = await _controller.SearchFavoriteRecipesAsync(null, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;

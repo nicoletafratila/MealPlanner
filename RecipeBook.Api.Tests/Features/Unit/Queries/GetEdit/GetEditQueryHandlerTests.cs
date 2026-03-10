@@ -57,7 +57,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
             var mapped = new UnitEditModel { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -77,7 +77,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
                 Assert.That(result.Name, Is.EqualTo("kg"));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<UnitEditModel>(entity), Times.Once);
         }
 
@@ -88,7 +88,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
             const int id = 10;
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync((Common.Data.Entities.Unit?)null);
 
             var query = new GetEditQuery(id);
@@ -104,7 +104,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
                 Assert.That(result.Name, Is.Null.Or.Empty);
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<UnitEditModel>(It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
         }
 
@@ -116,7 +116,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
             var entity = new Common.Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -135,7 +135,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
                 Assert.That(result.Id, Is.EqualTo(id));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<UnitEditModel>(entity), Times.Once);
         }
     }

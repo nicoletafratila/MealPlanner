@@ -79,7 +79,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             var command = new UpdateCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(id))
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
 
             // Act
@@ -93,9 +93,15 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
             });
 
-            _repoMock.Verify(r => r.GetByIdIncludeProductsAsync(id), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ShoppingListEditModel>(), It.IsAny<Common.Data.Entities.ShoppingList>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.ShoppingList>()), Times.Never);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _mapperMock.Verify(
+                m => m.Map(It.IsAny<ShoppingListEditModel>(), It.IsAny<Common.Data.Entities.ShoppingList>()),
+                Times.Never);
+            _repoMock.Verify(
+                r => r.UpdateAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -118,7 +124,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(id))
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -126,7 +132,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(existing))
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -136,9 +142,13 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdIncludeProductsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(existing), Times.Once);
+            _repoMock.Verify(
+                r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -161,7 +171,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeProductsAsync(id))
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -169,7 +179,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(existing))
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -183,9 +193,13 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the meal plan."));
             });
 
-            _repoMock.Verify(r => r.GetByIdIncludeProductsAsync(id), Times.Once);
+            _repoMock.Verify(
+                r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(existing), Times.Once);
+            _repoMock.Verify(
+                r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()),
+                Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

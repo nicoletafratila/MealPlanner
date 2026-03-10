@@ -62,7 +62,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -82,7 +82,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
                 Assert.That(result.Name, Is.EqualTo("Product1"));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<ProductEditModel>(entity), Times.Once);
         }
 
@@ -93,7 +93,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             const int id = 10;
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync((Common.Data.Entities.Product?)null);
 
             var query = new GetEditQuery(id);
@@ -109,7 +109,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
                 Assert.That(result.Name, Is.Null.Or.Empty);
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<ProductEditModel>(It.IsAny<Common.Data.Entities.Product>()), Times.Never);
         }
 
@@ -126,7 +126,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(entity);
 
             _mapperMock
@@ -145,7 +145,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
                 Assert.That(result.Id, Is.EqualTo(id));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<ProductEditModel>(entity), Times.Once);
         }
     }

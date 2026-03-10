@@ -37,7 +37,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(model);
 
-            var result = await _controller.GetEditAsync(5);
+            var result = await _controller.GetEditAsync(5, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task SearchAsync_InvalidPageParams_ReturnsBadRequest()
         {
-            var result = await _controller.SearchAsync(null, null, "abc", "1");
+            var result = await _controller.SearchAsync(null, null, "abc", "1", CancellationToken.None);
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
             _senderMock.Verify(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -65,7 +65,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Callback<IRequest<PagedList<RecipeCategoryModel>>, CancellationToken>((q, _) => captured = (SearchQuery)q)
                 .ReturnsAsync(paged);
 
-            var result = await _controller.SearchAsync(null, null, "10", "2");
+            var result = await _controller.SearchAsync(null, null, "10", "2", CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -97,7 +97,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<SearchByCategoriesQuery>(q => q.CategoryIds == "1,2"), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(list);
 
-            var result = await _controller.SearchByCategoriesAsync("1,2");
+            var result = await _controller.SearchByCategoriesAsync("1,2", CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -116,7 +116,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<AddCommand>(c => c.Model == model), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.PostAsync(model);
+            var result = await _controller.PostAsync(model, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -135,7 +135,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<UpdateCommand>(c => c.Model == model), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.PutAsync(model);
+            var result = await _controller.PutAsync(model, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -157,7 +157,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<UpdateAllCommand>(c => c.Models == models), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.PutAllAsync(models);
+            var result = await _controller.PutAllAsync(models, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -175,7 +175,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == 9), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.DeleteAsync(9);
+            var result = await _controller.DeleteAsync(9, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);

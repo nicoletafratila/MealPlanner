@@ -48,7 +48,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Never);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(It.IsAny<object>()), Times.Never);
         }
 
@@ -70,7 +70,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Never);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(It.IsAny<object>()), Times.Never);
         }
 
@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -122,7 +122,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(entities), Times.Once);
         }
 
@@ -136,7 +136,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync())
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -166,7 +166,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(entities), Times.Once);
         }
     }

@@ -26,7 +26,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Add
 
             try
             {
-                var allCategories = await _repository.GetAllAsync() ?? [];
+                var allCategories = await _repository.GetAllAsync(cancellationToken) ?? [];
 
                 var newName = request.Model.Name?.Trim();
                 if (!string.IsNullOrWhiteSpace(newName))
@@ -42,7 +42,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Add
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.ProductCategory>(request.Model);
-                await _repository.AddAsync(mapped);
+                await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();
             }

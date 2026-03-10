@@ -11,12 +11,12 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
         {
             try
             {
-                var existingItem = await repository.SearchAsync(request.Model?.Name!);
+                var existingItem = await repository.SearchAsync(request.Model?.Name!, cancellationToken);
                 if (existingItem != null)
                     return CommandResponse.Failed("This shopping list already exists.");
 
                 var mapped = mapper.Map<Common.Data.Entities.ShoppingList>(request.Model);
-                var newItem = await repository.AddAsync(mapped);
+                var newItem = await repository.AddAsync(mapped, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

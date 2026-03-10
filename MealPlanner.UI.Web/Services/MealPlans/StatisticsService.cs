@@ -22,44 +22,61 @@ namespace MealPlanner.UI.Web.Services.MealPlans
             mealPlannerApiConfig.Controllers![MealPlannerControllers.Statistics]
             ?? throw new ArgumentException("Statistics controller URL is not configured.", nameof(mealPlannerApiConfig));
 
-        private Task EnsureAuthAsync() => httpClient.EnsureAuthorizationHeaderAsync(tokenProvider);
+        private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
+            httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
 
-        private static Dictionary<string, string?> BuildCategoryQuery<TCategory>(IEnumerable<TCategory> categories, Func<TCategory, int> idSelector)
+        private static Dictionary<string, string?> BuildCategoryQuery<TCategory>(
+            IEnumerable<TCategory> categories,
+            Func<TCategory, int> idSelector)
         {
-            var ids = categories?.Select(c => idSelector(c).ToString())?.ToArray() ?? Array.Empty<string>();
+            var ids = categories?.Select(c => idSelector(c).ToString())?.ToArray() ?? [];
             return new Dictionary<string, string?>
             {
                 ["categoryIds"] = ids.Length == 0 ? null : string.Join(",", ids)
             };
         }
 
-        private async Task<IList<StatisticModel>?> GetStatisticsAsync(string relativePath, Dictionary<string, string?> query)
+        private async Task<IList<StatisticModel>?> GetStatisticsAsync(
+            string relativePath,
+            Dictionary<string, string?> query,
+            CancellationToken cancellationToken)
         {
-            await EnsureAuthAsync();
+            await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString($"{_statisticsController}/{relativePath}", query);
 
             try
             {
-                return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(url, JsonOptions);
+                return await httpClient.GetFromJsonAsync<IList<StatisticModel>>(
+                    url,
+                    JsonOptions,
+                    cancellationToken);
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to deserialize StatisticModel list from endpoint {Endpoint} with query {@Query}", relativePath, query);
+                logger.LogError(
+                    ex,
+                    "Failed to deserialize StatisticModel list from endpoint {Endpoint} with query {@Query}",
+                    relativePath,
+                    query);
                 throw;
             }
         }
 
-        public Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories)
+        public Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(
+            IList<RecipeCategoryModel> categories,
+            CancellationToken cancellationToken = default)
         {
             var query = BuildCategoryQuery(categories, c => c.Id);
-            return GetStatisticsAsync("favoriterecipes", query);
+            return GetStatisticsAsync("favoriterecipes", query, cancellationToken);
         }
 
-        public Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories)
+        public Task<IList<StatisticModel>?> GetFavoriteProductsAsync(
+            IList<ProductCategoryModel> categories,
+            CancellationToken cancellationToken = default)
         {
             var query = BuildCategoryQuery(categories, c => c.Id);
-            return GetStatisticsAsync("favoriteproducts", query);
+            return GetStatisticsAsync("favoriteproducts", query, cancellationToken);
         }
     }
 }

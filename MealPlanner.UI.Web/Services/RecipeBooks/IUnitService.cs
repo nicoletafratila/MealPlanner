@@ -6,10 +6,10 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
 {
     public interface IUnitService
     {
-        Task<UnitEditModel?> GetEditAsync(int id);
-        Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null);
-        Task<CommandResponse?> AddAsync(UnitEditModel model);
-        Task<CommandResponse?> UpdateAsync(UnitEditModel model);
-        Task<CommandResponse?> DeleteAsync(int id);
+        Task<UnitEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default);
+        Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> AddAsync(UnitEditModel model, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> UpdateAsync(UnitEditModel model, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
 }

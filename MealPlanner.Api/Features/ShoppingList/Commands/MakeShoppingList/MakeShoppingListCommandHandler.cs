@@ -27,18 +27,18 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
 
             try
             {
-                var mealPlan = await _mealPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId);
+                var mealPlan = await _mealPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId, cancellationToken);
                 if (mealPlan is null)
                     return null;
 
-                var shop = await _shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId);
+                var shop = await _shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId, cancellationToken);
                 if (shop is null)
                     return null;
 
                 var newList = mealPlan.MakeShoppingList(shop);
 
-                var saved = await _shoppingListRepository.AddAsync(newList);
-                var loaded = await _shoppingListRepository.GetByIdIncludeProductsAsync(saved.Id);
+                var saved = await _shoppingListRepository.AddAsync(newList, cancellationToken);
+                var loaded = await _shoppingListRepository.GetByIdIncludeProductsAsync(saved.Id, cancellationToken);
 
                 return _mapper.Map<ShoppingListEditModel>(loaded);
             }

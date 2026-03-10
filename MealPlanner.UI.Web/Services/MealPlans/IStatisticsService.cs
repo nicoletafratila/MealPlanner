@@ -5,7 +5,12 @@ namespace MealPlanner.UI.Web.Services.MealPlans
 {
     public interface IStatisticsService
     {
-        Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories);
-        Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories);
+        Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(
+            IList<RecipeCategoryModel> categories,
+            CancellationToken cancellationToken = default);
+
+        Task<IList<StatisticModel>?> GetFavoriteProductsAsync(
+            IList<ProductCategoryModel> categories,
+            CancellationToken cancellationToken = default);
     }
 }

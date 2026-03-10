@@ -81,7 +81,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var command = new UpdateCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync((Common.Data.Entities.Product?)null);
 
             // Act
@@ -95,9 +95,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<ProductEditModel>(), It.IsAny<Common.Data.Entities.Product>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Product>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Product>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -132,7 +132,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(existing))
+                .Setup(r => r.UpdateAsync(existing, CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -142,9 +142,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(existing), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(existing, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -179,7 +179,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(existing))
+                .Setup(r => r.UpdateAsync(existing, CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -193,9 +193,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the product."));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(existing), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(existing, CancellationToken.None), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

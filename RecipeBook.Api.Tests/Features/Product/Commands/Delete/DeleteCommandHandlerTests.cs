@@ -62,7 +62,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             var command = new DeleteCommand { Id = id };
 
             _productRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Product?)null);
 
             // Act
@@ -76,9 +76,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
             }
 
-            _productRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.SearchAsync(It.IsAny<int>()), Times.Never);
-            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Product>()), Times.Never);
+            _productRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.SearchAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+            _productRepoMock.Verify(
+                r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Product>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -96,11 +102,11 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             };
 
             _productRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(product);
 
             _ingredientRepoMock
-                .Setup(r => r.SearchAsync(id))
+                .Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ingredients);
 
             // Act
@@ -114,9 +120,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Product 'Milk' can not be deleted, it is used in recipes."));
             }
 
-            _productRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.SearchAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Product>()), Times.Never);
+            _productRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.SearchAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _productRepoMock.Verify(
+                r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Product>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
@@ -129,15 +141,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             var product = new Common.Data.Entities.Product { Id = id, Name = "Bread" };
 
             _productRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(product);
 
             _ingredientRepoMock
-                .Setup(r => r.SearchAsync(id))
+                .Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
             _productRepoMock
-                .Setup(r => r.DeleteAsync(product))
+                .Setup(r => r.DeleteAsync(product, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -147,9 +159,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _productRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.SearchAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.DeleteAsync(product), Times.Once);
+            _productRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.SearchAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _productRepoMock.Verify(
+                r => r.DeleteAsync(product, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
@@ -162,15 +180,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             var product = new Common.Data.Entities.Product { Id = id, Name = "Cheese" };
 
             _productRepoMock
-                .Setup(r => r.GetByIdAsync(id))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(product);
 
             _ingredientRepoMock
-                .Setup(r => r.SearchAsync(id))
+                .Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
             _productRepoMock
-                .Setup(r => r.DeleteAsync(product))
+                .Setup(r => r.DeleteAsync(product, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -184,9 +202,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the product."));
             }
 
-            _productRepoMock.Verify(r => r.GetByIdAsync(id), Times.Once);
-            _ingredientRepoMock.Verify(r => r.SearchAsync(id), Times.Once);
-            _productRepoMock.Verify(r => r.DeleteAsync(product), Times.Once);
+            _productRepoMock.Verify(
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _ingredientRepoMock.Verify(
+                r => r.SearchAsync(id, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _productRepoMock.Verify(
+                r => r.DeleteAsync(product, It.IsAny<CancellationToken>()),
+                Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

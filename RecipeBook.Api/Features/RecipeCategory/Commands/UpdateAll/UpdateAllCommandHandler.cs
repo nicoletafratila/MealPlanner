@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
                     if (category is null)
                         continue;
 
-                    var existingItem = await _repository.GetByIdAsync(category.Id);
+                    var existingItem = await _repository.GetByIdAsync(category.Id, cancellationToken);
                     if (existingItem is null)
                     {
                         errors.AppendLine($"Could not find with id {category.Id}");
@@ -52,7 +52,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
                 if (itemsToUpdate.Count == 0)
                     return CommandResponse.Success();
 
-                await _repository.UpdateAllAsync(itemsToUpdate);
+                await _repository.UpdateAllAsync(itemsToUpdate, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

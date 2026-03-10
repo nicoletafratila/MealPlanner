@@ -11,12 +11,12 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Update
         {
             try
             {
-                var existingItem = await repository.GetByIdAsync(request.Model!.Id);
+                var existingItem = await repository.GetByIdAsync(request.Model!.Id, cancellationToken);
                 if (existingItem == null)
                     return CommandResponse.Failed($"Could not find with id {request.Model?.Id}");
 
                 mapper.Map(request.Model, existingItem);
-                await repository.UpdateAsync(existingItem);
+                await repository.UpdateAsync(existingItem, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)
