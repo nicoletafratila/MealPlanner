@@ -8,31 +8,59 @@ namespace MealPlanner.Api.Features.ShoppingList.Queries.Search
 {
     public class SearchQueryHandler(IShoppingListRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<ShoppingListModel>>
     {
+        private readonly IShoppingListRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
         public async Task<PagedList<ShoppingListModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
-            var data = await repository.GetAllAsync();
-            var results = mapper.Map<IList<ShoppingListModel>>(data);
-
-            if (results != null && request.QueryParameters != null)
+            if (request?.QueryParameters is null)
             {
-                if (request.QueryParameters.Filters != null)
-                {
-                    foreach (var filter in request.QueryParameters.Filters)
-                    {
-                        results = results.Where(filter.ConvertFilterItemToFunc<ShoppingListModel>()).ToList();
-                    }
-                }
-
-                if (request.QueryParameters!.Sorting != null && request.QueryParameters.Sorting.Any())
-                {
-                    var sortingItems = request.QueryParameters.Sorting.Select(QueryParameters<ShoppingListModel>.FromModel).ToList();
-                    results = results.AsQueryable()!.ApplySorting(sortingItems)!.ToList();
-                }
-
-                return results.ToPagedList(request.QueryParameters!.PageNumber, request.QueryParameters.PageSize);
+                return new([], new Metadata());
             }
 
-            return new PagedList<ShoppingListModel>(new List<ShoppingListModel>(), new Metadata());
+            var qp = request.QueryParameters;
+
+            var entities = await _repository.GetAllAsync();
+            var models = _mapper.Map<IList<ShoppingListModel>>(entities) ?? [];
+
+            models = ApplyFilters(models, qp);
+            models = ApplySorting(models, qp);
+
+            return models.ToPagedList(qp.PageNumber, qp.PageSize);
+        }
+
+        private static IList<ShoppingListModel> ApplyFilters(
+            IList<ShoppingListModel> source,
+            QueryParameters<ShoppingListModel> parameters)
+        {
+            if (parameters.Filters is null || !parameters.Filters.Any())
+                return source;
+
+            var result = source;
+
+            foreach (var filter in parameters.Filters)
+            {
+                var predicate = filter.ConvertFilterItemToFunc<ShoppingListModel>();
+                result = result.Where(predicate).ToList();
+            }
+
+            return result;
+        }
+
+        private static IList<ShoppingListModel> ApplySorting(
+            IList<ShoppingListModel> source,
+            QueryParameters<ShoppingListModel> parameters)
+        {
+            if (parameters.Sorting is null || !parameters.Sorting.Any())
+                return source;
+
+            var sortingItems = parameters.Sorting
+                .Select(QueryParameters<ShoppingListModel>.FromModel)
+                .ToList();
+
+            return source.AsQueryable()
+                         .ApplySorting(sortingItems)!
+                         .ToList();
         }
     }
 }

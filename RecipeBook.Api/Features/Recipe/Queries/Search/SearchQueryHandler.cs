@@ -15,7 +15,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
         {
             if (request?.QueryParameters is null)
             {
-                return EmptyResult();
+                return new([], new Metadata());
             }
 
             var qp = request.QueryParameters;
@@ -77,8 +77,5 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
                          .ApplySorting(sortingItems)!
                          .ToList();
         }
-
-        private static PagedList<RecipeModel> EmptyResult()
-            => new([], new Metadata());
     }
 }
