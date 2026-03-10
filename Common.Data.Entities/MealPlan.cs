@@ -20,7 +20,7 @@ namespace Common.Data.Entities
                 {
                     Name = $"Shopping list details for {Name} in shop {shop.Name}",
                     ShopId = shop.Id,
-                    Products = new List<ShoppingListProduct>()
+                    Products = []
                 };
             }
 

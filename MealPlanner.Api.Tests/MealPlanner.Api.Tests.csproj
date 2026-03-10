@@ -29,7 +29,6 @@
     <Folder Include="Features\MealPlan\" />
     <Folder Include="Features\ShoppingList\Commands\Add\" />
     <Folder Include="Features\ShoppingList\Commands\Delete\" />
-    <Folder Include="Features\ShoppingList\Commands\MakeShoppingList\" />
     <Folder Include="Features\Shop\" />
   </ItemGroup>
 

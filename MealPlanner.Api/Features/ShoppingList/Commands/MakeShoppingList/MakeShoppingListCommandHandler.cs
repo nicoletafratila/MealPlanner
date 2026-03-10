@@ -5,24 +5,49 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
 {
-    public class MakeShoppingListCommandHandler(IMealPlanRepository mealPlanRepository, IShoppingListRepository shoppingListRepository, IShopRepository shopRepository, IMapper mapper, ILogger<MakeShoppingListCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, ShoppingListEditModel?>
+    /// <summary>
+    /// Handles generating and persisting a shopping list from a meal plan for a given shop.
+    /// </summary>
+    public class MakeShoppingListCommandHandler(
+        IMealPlanRepository mealPlanRepository,
+        IShoppingListRepository shoppingListRepository,
+        IShopRepository shopRepository,
+        IMapper mapper,
+        ILogger<MakeShoppingListCommandHandler> logger) : IRequestHandler<MakeShoppingListCommand, ShoppingListEditModel?>
     {
+        private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository ?? throw new ArgumentNullException(nameof(mealPlanRepository));
+        private readonly IShoppingListRepository _shoppingListRepository = shoppingListRepository ?? throw new ArgumentNullException(nameof(shoppingListRepository));
+        private readonly IShopRepository _shopRepository = shopRepository ?? throw new ArgumentNullException(nameof(shopRepository));
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly ILogger<MakeShoppingListCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
         public async Task<ShoppingListEditModel?> Handle(MakeShoppingListCommand request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             try
             {
-                var mealPlan = await mealPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId);
-                if (mealPlan == null)
+                var mealPlan = await _mealPlanRepository.GetByIdIncludeRecipesAsync(request.MealPlanId);
+                if (mealPlan is null)
                     return null;
 
-                var shop = await shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId);
-                var data = await shoppingListRepository.AddAsync(mealPlan.MakeShoppingList(shop!));
-                var list = await shoppingListRepository.GetByIdIncludeProductsAsync(data.Id);
-                return mapper.Map<ShoppingListEditModel>(list);
+                var shop = await _shopRepository.GetByIdIncludeDisplaySequenceAsync(request.ShopId);
+                if (shop is null)
+                    return null;
+
+                var newList = mealPlan.MakeShoppingList(shop);
+
+                var saved = await _shoppingListRepository.AddAsync(newList);
+                var loaded = await _shoppingListRepository.GetByIdIncludeProductsAsync(saved.Id);
+
+                return _mapper.Map<ShoppingListEditModel>(loaded);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
+                _logger.LogError(ex,
+                    "Error while making shopping list from MealPlanId {MealPlanId} for ShopId {ShopId}.",
+                    request.MealPlanId, request.ShopId);
+
                 return null;
             }
         }
