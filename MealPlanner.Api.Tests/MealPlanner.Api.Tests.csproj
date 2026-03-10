@@ -27,9 +27,9 @@
 
   <ItemGroup>
     <Folder Include="Features\MealPlan\" />
-    <Folder Include="Features\ShoppingList\" />
+    <Folder Include="Features\ShoppingList\NewFolder1\" />
+    <Folder Include="Features\ShoppingList\NewFolder\" />
     <Folder Include="Features\Shop\" />
-    <Folder Include="Features\Statistics\Queries\SearchProducts\" />
   </ItemGroup>
 
   <ItemGroup>

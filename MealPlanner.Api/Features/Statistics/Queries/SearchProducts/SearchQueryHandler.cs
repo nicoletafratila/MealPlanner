@@ -9,11 +9,19 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
 {
-    public class SearchQueryHandler(IMealPlanRepository mealPlanRepository, RecipeBookApiConfig recipeBookApiConfig) : IRequestHandler<SearchQuery, IList<StatisticModel>>
+    public class SearchQueryHandler(
+        IMealPlanRepository mealPlanRepository,
+        RecipeBookApiConfig recipeBookApiConfig,
+        HttpClient httpClient) : IRequestHandler<SearchQuery, IList<StatisticModel>>
     {
+        private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository ?? throw new ArgumentNullException(nameof(mealPlanRepository));
+        private readonly RecipeBookApiConfig _recipeBookApiConfig = recipeBookApiConfig ?? throw new ArgumentNullException(nameof(recipeBookApiConfig));
+        private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+
         public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
             var result = new List<StatisticModel>();
+
             if (string.IsNullOrWhiteSpace(request.CategoryIds))
             {
                 return result;
@@ -25,18 +33,13 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                 return result;
             }
 
-            var categoryIds = string.IsNullOrWhiteSpace(request.CategoryIds)
-               ? new List<int>()
-               : request.CategoryIds
-                   .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                   .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
-                   .Where(id => id.HasValue)
-                   .Select(id => id!.Value)
-                   .ToList();
+            var categoryIds = ParseCategoryIds(request.CategoryIds);
+            if (categoryIds.Count == 0)
+                return result;
 
-            var mealPlans = await mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds);
+            var mealPlans = await _mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds);
 
-            var mealPlansByCategory = mealPlans!
+            var mealPlansByCategory = mealPlans
                 .Where(mp => mp.Key != null)
                 .GroupBy(mp => mp.Key!.ProductCategoryId)
                 .ToDictionary(g => g.Key, g => g.ToList());
@@ -55,18 +58,18 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                     continue;
                 }
 
-                foreach (var mealPlan in mealPlanWithProducts)
+                foreach (var pair in mealPlanWithProducts)
                 {
-                    var Product = mealPlan.Key!;
-                    var ProductName = Product.Name!;
+                    var product = pair.Key!;
+                    var productName = product.Name ?? string.Empty;
 
-                    if (!model.Data!.TryGetValue(ProductName, out var value))
+                    if (!model.Data!.TryGetValue(productName, out var value))
                     {
-                        model.Data[ProductName] = 1;
+                        model.Data[productName] = 1;
                     }
                     else
                     {
-                        model.Data[ProductName] = value + 1;
+                        model.Data[productName] = value + 1;
                     }
                 }
 
@@ -105,21 +108,39 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
             return result;
         }
 
-        private async Task<IList<ProductCategoryModel>?> LoadCategoriesAsync(string categoryIds, string? authToken, CancellationToken cancellationToken)
+        private static List<int> ParseCategoryIds(string? ids)
         {
-            using var client = new HttpClient();
-            client.EnsureAuthorizationHeader(authToken);
-            client.BaseAddress = recipeBookApiConfig?.BaseUrl;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            if (string.IsNullOrWhiteSpace(ids))
+                return [];
+
+            return ids
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
+                .Where(id => id.HasValue)
+                .Select(id => id!.Value)
+                .ToList();
+        }
+
+        private async Task<IList<ProductCategoryModel>?> LoadCategoriesAsync(
+            string categoryIds,
+            string? authToken,
+            CancellationToken cancellationToken)
+        {
+            _httpClient.EnsureAuthorizationHeader(authToken);
+            _httpClient.BaseAddress = _recipeBookApiConfig.BaseUrl;
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
             var query = new Dictionary<string, string?>
             {
                 ["categoryIds"] = categoryIds
             };
-            var controller = recipeBookApiConfig!.Controllers![RecipeBookControllers.ProductCategory];
+
+            var controller = _recipeBookApiConfig.Controllers![RecipeBookControllers.ProductCategory];
             var url = QueryHelpers.AddQueryString($"{controller}/searchbycategories", query);
-            return await client.GetFromJsonAsync<IList<ProductCategoryModel>>(url, cancellationToken);
+
+            return await _httpClient.GetFromJsonAsync<IList<ProductCategoryModel>>(url, cancellationToken);
         }
     }
 }
