@@ -162,8 +162,11 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.That(found!.Name, Is.EqualTo("Plan1"));
-            Assert.That(found.MealPlanRecipes, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(found!.Name, Is.EqualTo("Plan1"));
+                Assert.That(found.MealPlanRecipes, Is.Not.Null);
+            });
             Assert.That(found.MealPlanRecipes!, Has.Count.EqualTo(1));
             var mpr = found.MealPlanRecipes!.Single();
             using (Assert.EnterMultipleScope())
@@ -235,22 +238,34 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.That(found!.MealPlanRecipes, Is.Not.Null);
-            Assert.That(found.MealPlanRecipes!, Has.Count.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(found!.MealPlanRecipes, Is.Not.Null);
+                Assert.That(found.MealPlanRecipes!, Has.Count.EqualTo(1));
+            });
 
             var mpr = found.MealPlanRecipes!.Single();
             var r = mpr.Recipe;
             Assert.That(r, Is.Not.Null);
-            Assert.That(r!.RecipeIngredients, Is.Not.Null);
-            Assert.That(r.RecipeIngredients!, Has.Count.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(r!.RecipeIngredients, Is.Not.Null);
+                Assert.That(r.RecipeIngredients!, Has.Count.EqualTo(1));
+            });
 
             var ing = r.RecipeIngredients!.Single();
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(ing.Unit, Is.Not.Null);
-                Assert.That(ing.Product, Is.Not.Null);
-                Assert.That(ing.Product!.ProductCategory, Is.Not.Null);
-                Assert.That(ing.Product!.BaseUnit, Is.Not.Null);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ing.Unit, Is.Not.Null);
+                    Assert.That(ing.Product, Is.Not.Null);
+                });
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ing.Product!.ProductCategory, Is.Not.Null);
+                    Assert.That(ing.Product!.BaseUnit, Is.Not.Null);
+                });
             }
         }
 
@@ -308,7 +323,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByRecipeCategoryIdsAsync([5]);
+            var result = await repo.SearchByRecipeCategoryIdsAsync([5], CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -324,7 +339,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act
-            var result = await repo.SearchByRecipeCategoryIdsAsync([]);
+            var result = await repo.SearchByRecipeCategoryIdsAsync([], CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -359,13 +374,16 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByProductCategoryIdsAsync([20]);
+            var result = await repo.SearchByProductCategoryIdsAsync([20], CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
             var kv = result.Single();
-            Assert.That(kv.Key.ProductCategoryId, Is.EqualTo(20));
-            Assert.That(kv.Value.Name, Is.EqualTo("Plan1"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(kv.Key.ProductCategoryId, Is.EqualTo(20));
+                Assert.That(kv.Value.Name, Is.EqualTo("Plan1"));
+            });
         }
 
         [Test]
@@ -375,7 +393,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act
-            var result = await repo.SearchByProductCategoryIdsAsync([]);
+            var result = await repo.SearchByProductCategoryIdsAsync([], CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -488,8 +506,11 @@ namespace MealPlanner.Api.Tests.Repositories
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(r1, Is.Null);
-                Assert.That(r2, Is.Null);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(r1, Is.Null);
+                    Assert.That(r2, Is.Null);
+                });
             }
         }
     }

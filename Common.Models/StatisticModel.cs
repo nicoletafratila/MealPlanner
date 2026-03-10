@@ -7,7 +7,7 @@ namespace Common.Models
     {
         public string? Title { get; set; }
         public string? Label { get; set; }
-        public Dictionary<string, double?>? Data { get; set; } = [];
+        public IDictionary<string, double?> Data { get; set; } = new Dictionary<string, double?>();
         public DoughnutChart? Chart { get; set; }
         public DoughnutChartOptions? ChartOptions { get; set; } = new();
         public ChartData? ChartData { get; set; } = new();

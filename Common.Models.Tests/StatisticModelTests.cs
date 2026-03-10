@@ -83,7 +83,7 @@ namespace Common.Models.Tests
             {
                 Title = "Empty",
                 Label = "None",
-                Data = []
+                Data = new Dictionary<string, double?>()
             };
 
             // Act

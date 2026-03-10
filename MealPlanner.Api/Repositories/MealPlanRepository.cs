@@ -44,7 +44,7 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(mp => mp.Id == id);
         }
 
-        public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<int> categoryIds)
+        public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<int> categoryIds, CancellationToken cancellationToken)
         {
             if (categoryIds is null || categoryIds.Count == 0)
             {
@@ -56,10 +56,10 @@ namespace MealPlanner.Api.Repositories
                 .Include(x => x.Recipe)
                     .ThenInclude(r => r!.RecipeCategory)
                 .Where(mpr => categoryIds.Contains(mpr.Recipe!.RecipeCategoryId))
-                .ToListAsync();
+                .ToListAsync(cancellationToken: cancellationToken);
         }
 
-        public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<int> categoryIds)
+        public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<int> categoryIds, CancellationToken cancellationToken)
         {
             if (categoryIds is null || categoryIds.Count == 0)
             {
@@ -73,7 +73,7 @@ namespace MealPlanner.Api.Repositories
                     on ri.RecipeId equals mr.RecipeId
                 select new { ri.Product, mr.MealPlan };
 
-            var results = await query.ToListAsync();
+            var results = await query.ToListAsync(cancellationToken: cancellationToken);
 
             return results
                 .Where(x => x.Product != null && x.MealPlan != null)
@@ -98,13 +98,11 @@ namespace MealPlanner.Api.Repositories
                 return null;
             }
 
-            var normalizedName = name.ToUpperInvariant();
-
             return await Context.MealPlans
                 .AsNoTracking()
                 .FirstOrDefaultAsync(mp =>
                     mp.Name != null &&
-                    mp.Name.ToUpperInvariant() == normalizedName);
+                    mp.Name.ToLower() == name.ToLower());
         }
     }
 }

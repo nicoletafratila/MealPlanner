@@ -1,60 +1,31 @@
-﻿using System.Text.Json;
-using Common.Api;
-using Common.Constants;
+﻿using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchRecipes;
 using MealPlanner.Api.Repositories;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using RecipeBook.Shared.Models;
-using RichardSzalay.MockHttp;
 
 namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
 {
     [TestFixture]
     public class SearchQueryHandlerTests
     {
-        private const string BaseAddress = "https://api.test/";
-        private const string RecipeCategoryPath = "api/recipecategory";
-
-        private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
-
-        private static RecipeBookApiConfig CreateConfig()
-        {
-            var configuration = new ConfigurationBuilder().Build();
-            var cfg = new RecipeBookApiConfig(configuration)
-            {
-                BaseUrl = new Uri(BaseAddress),
-                Controllers = new Dictionary<string, string>
-                {
-                    [RecipeBookControllers.RecipeCategory] = RecipeCategoryPath
-                }
-            };
-
-            return cfg;
-        }
-
-        private static (SearchQueryHandler handler, Mock<IMealPlanRepository> mealPlanRepoMock, MockHttpMessageHandler mockHttp)
+        private static (SearchQueryHandler handler,
+                        Mock<IMealPlanRepository> mealPlanRepoMock,
+                        Mock<IRecipeBookClient> recipeBookClientMock)
             CreateHandler()
         {
-            var mockHttp = new MockHttpMessageHandler();
-
-            var httpClient = new HttpClient(mockHttp)
-            {
-                BaseAddress = new Uri(BaseAddress)
-            };
-
             var mealPlanRepoMock = new Mock<IMealPlanRepository>(MockBehavior.Strict);
-            var config = CreateConfig();
+            var recipeBookClientMock = new Mock<IRecipeBookClient>(MockBehavior.Strict);
 
-            var handler = new SearchQueryHandler(mealPlanRepoMock.Object, config, httpClient);
-            return (handler, mealPlanRepoMock, mockHttp);
+            var handler = new SearchQueryHandler(mealPlanRepoMock.Object, recipeBookClientMock.Object);
+            return (handler, mealPlanRepoMock, recipeBookClientMock);
         }
 
         [Test]
         public async Task Handle_EmptyCategoryIds_ReturnsEmpty()
         {
             // Arrange
-            var (handler, mealPlanRepoMock, mockHttp) = CreateHandler();
+            var (handler, mealPlanRepoMock, recipeBookClientMock) = CreateHandler();
 
             var query = new SearchQuery
             {
@@ -67,20 +38,24 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
 
             // Assert
             Assert.That(result, Is.Empty);
-            mealPlanRepoMock.Verify(
-                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>()),
+
+            recipeBookClientMock.Verify(
+                c => c.GetCategoriesAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string?>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Never);
 
-            // No HTTP calls expected
-            mockHttp.VerifyNoOutstandingExpectation();
-            mockHttp.VerifyNoOutstandingRequest();
+            mealPlanRepoMock.Verify(
+                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()),
+                Times.Never);
         }
 
         [Test]
         public async Task Handle_NoCategoriesReturned_ReturnsEmpty()
         {
             // Arrange
-            var (handler, mealPlanRepoMock, mockHttp) = CreateHandler();
+            var (handler, mealPlanRepoMock, recipeBookClientMock) = CreateHandler();
 
             var query = new SearchQuery
             {
@@ -88,11 +63,12 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 AuthToken = "test-token"
             };
 
-            // Mock RecipeCategory API returning empty list
-            var url = $"{BaseAddress}{RecipeCategoryPath}/searchbycategories?categoryIds=1%2C2";
-            mockHttp.When(HttpMethod.Get, url)
-                .WithHeaders("Authorization", "Bearer test-token")
-                .Respond("application/json", "[]");
+            recipeBookClientMock
+                .Setup(c => c.GetCategoriesAsync(
+                    "1,2",
+                    "test-token",
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync([]);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -101,15 +77,22 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             Assert.That(result, Is.Empty);
 
             mealPlanRepoMock.Verify(
-                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>()),
+                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()),
                 Times.Never);
+
+            recipeBookClientMock.Verify(
+                c => c.GetCategoriesAsync(
+                    "1,2",
+                    "test-token",
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]
         public async Task Handle_WithData_ComputesStatisticsPerCategory()
         {
             // Arrange
-            var (handler, mealPlanRepoMock, mockHttp) = CreateHandler();
+            var (handler, mealPlanRepoMock, recipeBookClientMock) = CreateHandler();
 
             var query = new SearchQuery
             {
@@ -123,11 +106,12 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 new() { Id = 6, Name = "Dessert" }
             };
 
-            // Mock RecipeCategory API
-            var url = $"{BaseAddress}{RecipeCategoryPath}/searchbycategories?categoryIds=5%2C6";
-            mockHttp.When(HttpMethod.Get, url)
-                .WithHeaders("Authorization", "Bearer test-token")
-                .Respond("application/json", JsonSerializer.Serialize(categories, JsonOptions));
+            recipeBookClientMock
+                .Setup(c => c.GetCategoriesAsync(
+                    "5,6",
+                    "test-token",
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(categories);
 
             // MealPlanRecipes: 3 in Main (R1 * 2, R2 * 1) and 1 in Dessert (D1 * 1)
             var mealPlanRecipes = new List<Common.Data.Entities.MealPlanRecipe>
@@ -171,8 +155,9 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             };
 
             mealPlanRepoMock
-                .Setup(r => r.SearchByRecipeCategoryIdsAsync(It.Is<IList<int>>(ids =>
-                    ids.Count == 2 && ids.Contains(5) && ids.Contains(6))))
+                .Setup(r => r.SearchByRecipeCategoryIdsAsync(
+                    It.Is<IList<int>>(ids => ids.Count == 2 && ids.Contains(5) && ids.Contains(6)),
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlanRecipes);
 
             // Act
@@ -209,8 +194,15 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 });
             }
 
+            recipeBookClientMock.Verify(
+                c => c.GetCategoriesAsync(
+                    "5,6",
+                    "test-token",
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+
             mealPlanRepoMock.Verify(
-                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>()),
+                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
     }

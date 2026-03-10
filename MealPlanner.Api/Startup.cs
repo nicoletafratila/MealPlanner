@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 using Duende.IdentityModel;
+using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +16,8 @@ namespace MealPlanner.Api
     {
         protected override void RegisterServices(IServiceCollection services)
         {
+            services.AddHttpClient<IRecipeBookClient, RecipeBookClient>();
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddEndpointsApiExplorer();

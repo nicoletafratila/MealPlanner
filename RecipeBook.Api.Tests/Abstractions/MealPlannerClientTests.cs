@@ -1,103 +1,104 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Text.Json;
 using Common.Api;
 using Common.Constants;
 using MealPlanner.Shared.Models;
-using Moq;
-using Moq.Protected;
 using RecipeBook.Api.Abstractions;
+using RichardSzalay.MockHttp;
 
 namespace RecipeBook.Api.Tests.Abstractions
 {
     [TestFixture]
     public class MealPlannerClientTests
     {
-        private Mock<IApiConfig> _apiConfigMock = null!;
-        private HttpClient _httpClient = null!;
-        private Mock<HttpMessageHandler> _handlerMock = null!;
-        private MealPlannerClient _client = null!;
+        private const string BaseAddress = "https://mealplanner.test/";
+        private const string ShopPath = "api/shop";
+        private const string MealPlanPath = "api/mealplan";
 
-        [SetUp]
-        public void SetUp()
+        private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
+
+        private static IApiConfig CreateConfig()
         {
-            _apiConfigMock = new Mock<IApiConfig>(MockBehavior.Strict);
+            var configMock = new Moq.Mock<IApiConfig>(Moq.MockBehavior.Strict);
 
-            _apiConfigMock.SetupGet(c => c.BaseUrl)
-                .Returns(new Uri("https://mealplanner.test/"));
+            configMock.SetupGet(c => c.BaseUrl)
+                .Returns(new Uri(BaseAddress));
 
-            _apiConfigMock.SetupGet(c => c.Controllers)
+            configMock.SetupGet(c => c.Controllers)
                 .Returns(new Dictionary<string, string>
                 {
-                    { MealPlannerControllers.Shop, "api/shop" },
-                    { MealPlannerControllers.MealPlan, "api/mealplan" }
+                    { MealPlannerControllers.Shop, ShopPath },
+                    { MealPlannerControllers.MealPlan, MealPlanPath }
                 });
 
-            _handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose); 
-
-            _httpClient = new HttpClient(_handlerMock.Object)
-            {
-                BaseAddress = new Uri("https://mealplanner.test/")
-            };
-
-            _client = new MealPlannerClient(_httpClient, _apiConfigMock.Object);
+            return configMock.Object;
         }
 
-        [TearDown]
-        public void TearDown()
+        private static (MealPlannerClient client, MockHttpMessageHandler mockHttp, IApiConfig config) CreateClient()
         {
-            _httpClient.Dispose();
+            var mockHttp = new MockHttpMessageHandler();
+
+            var httpClient = new HttpClient(mockHttp)
+            {
+                BaseAddress = new Uri(BaseAddress)
+            };
+
+            var config = CreateConfig();
+            var client = new MealPlannerClient(httpClient, config);
+
+            return (client, mockHttp, config);
         }
 
         [Test]
         public void Ctor_NullHttpClient_Throws()
         {
+            var config = CreateConfig();
+
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MealPlannerClient(null!, _apiConfigMock.Object));
+                _ = new MealPlannerClient(null!, config));
         }
 
         [Test]
         public void Ctor_NullApiConfig_Throws()
         {
+            var mockHttp = new MockHttpMessageHandler();
+            var httpClient = new HttpClient(mockHttp)
+            {
+                BaseAddress = new Uri(BaseAddress)
+            };
+
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MealPlannerClient(_httpClient, null!));
+                _ = new MealPlannerClient(httpClient, null!));
         }
 
         [Test]
         public void GetShopAsync_InvalidShopId_Throws()
         {
+            var (client, _, _) = CreateClient();
+
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-                await _client.GetShopAsync(0, "token", CancellationToken.None));
+                await client.GetShopAsync(0, "token", CancellationToken.None));
         }
 
         [Test]
         public async Task GetShopAsync_CallsExpectedUrl_WithAuthHeader()
         {
             // Arrange
+            var (client, mockHttp, _) = CreateClient();
+
             var expectedShop = new ShopEditModel
             {
                 Id = 5,
                 Name = "TestShop"
             };
 
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = JsonContent.Create(expectedShop)
-            };
+            var url = $"{BaseAddress}{ShopPath}/edit?id=5";
 
-            _handlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Get &&
-                        req.RequestUri!.ToString() == "https://mealplanner.test/api/shop/edit?id=5" &&
-                        req.Headers.Authorization != null &&
-                        req.Headers.Authorization.Scheme == "Bearer" &&
-                        req.Headers.Authorization.Parameter == "abc"),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(response);
+            mockHttp.When(HttpMethod.Get, url)
+                .WithHeaders("Authorization", "Bearer abc")
+                .Respond("application/json", JsonSerializer.Serialize(expectedShop, JsonOptions));
 
             // Act
-            var result = await _client.GetShopAsync(5, "abc", CancellationToken.None);
+            var result = await client.GetShopAsync(5, "abc", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -107,48 +108,38 @@ namespace RecipeBook.Api.Tests.Abstractions
                 Assert.That(result.Name, Is.EqualTo("TestShop"));
             }
 
-            _handlerMock.Protected().Verify(
-                "SendAsync",
-                Times.Once(),
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>());
+            mockHttp.VerifyNoOutstandingExpectation();
+            mockHttp.VerifyNoOutstandingRequest();
         }
 
         [Test]
         public void GetMealPlansByRecipeIdAsync_InvalidRecipeId_Throws()
         {
+            var (client, _, _) = CreateClient();
+
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-                await _client.GetMealPlansByRecipeIdAsync(0, "token", CancellationToken.None));
+                await client.GetMealPlansByRecipeIdAsync(0, "token", CancellationToken.None));
         }
 
         [Test]
         public async Task GetMealPlansByRecipeIdAsync_CallsExpectedUrl_AndDeserializesList()
         {
             // Arrange
+            var (client, mockHttp, _) = CreateClient();
+
             var plans = new List<MealPlanModel>
             {
                 new() { Id = 1, Name = "Plan1" }
             };
 
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = JsonContent.Create(plans)
-            };
+            var url = $"{BaseAddress}{MealPlanPath}/searchbyid?id=7";
 
-            _handlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Get &&
-                        req.RequestUri!.ToString() == "https://mealplanner.test/api/mealplan/searchbyid?id=7" &&
-                        req.Headers.Authorization != null &&
-                        req.Headers.Authorization.Scheme == "Bearer" &&
-                        req.Headers.Authorization.Parameter == "tok"),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(response);
+            mockHttp.When(HttpMethod.Get, url)
+                .WithHeaders("Authorization", "Bearer tok")
+                .Respond("application/json", JsonSerializer.Serialize(plans, JsonOptions));
 
             // Act
-            var result = await _client.GetMealPlansByRecipeIdAsync(7, "tok", CancellationToken.None);
+            var result = await client.GetMealPlansByRecipeIdAsync(7, "tok", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -158,11 +149,8 @@ namespace RecipeBook.Api.Tests.Abstractions
                 Assert.That(result[0].Name, Is.EqualTo("Plan1"));
             }
 
-            _handlerMock.Protected().Verify(
-                "SendAsync",
-                Times.Once(),
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>());
+            mockHttp.VerifyNoOutstandingExpectation();
+            mockHttp.VerifyNoOutstandingRequest();
         }
     }
 }

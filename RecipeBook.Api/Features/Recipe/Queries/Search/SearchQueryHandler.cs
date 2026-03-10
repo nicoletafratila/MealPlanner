@@ -37,7 +37,6 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
             if (string.IsNullOrWhiteSpace(categoryId))
                 return source;
 
-            // Attempt to parse categoryId; if invalid, ignore the filter.
             if (!int.TryParse(categoryId, out var id))
                 return source;
 

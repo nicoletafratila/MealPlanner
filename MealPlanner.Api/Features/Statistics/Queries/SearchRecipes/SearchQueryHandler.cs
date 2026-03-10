@@ -1,22 +1,20 @@
-﻿using System.Net.Http.Headers;
-using Common.Api;
-using Common.Constants;
-using Common.Models;
+﻿using Common.Models;
+using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
 using MediatR;
-using Microsoft.AspNetCore.WebUtilities;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
 {
     public class SearchQueryHandler(
         IMealPlanRepository mealPlanRepository,
-        RecipeBookApiConfig recipeBookApiConfig,
-        HttpClient httpClient) : IRequestHandler<SearchQuery, IList<StatisticModel>>
+        IRecipeBookClient recipeBookClient)
+        : IRequestHandler<SearchQuery, IList<StatisticModel>>
     {
-        private readonly IMealPlanRepository _mealPlanRepository = mealPlanRepository ?? throw new ArgumentNullException(nameof(mealPlanRepository));
-        private readonly RecipeBookApiConfig _recipeBookApiConfig = recipeBookApiConfig ?? throw new ArgumentNullException(nameof(recipeBookApiConfig));
-        private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        private readonly IMealPlanRepository _mealPlanRepository =
+            mealPlanRepository ?? throw new ArgumentNullException(nameof(mealPlanRepository));
+
+        private readonly IRecipeBookClient _recipeBookClient =
+            recipeBookClient ?? throw new ArgumentNullException(nameof(recipeBookClient));
 
         public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
@@ -27,17 +25,21 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                 return result;
             }
 
-            var categories = await LoadCategoriesAsync(request.CategoryIds!, request.AuthToken, cancellationToken);
+            var categoryIds = ParseCategoryIds(request.CategoryIds);
+            if (categoryIds.Count == 0)
+            {
+                return result;
+            }
+
+            var categories = await _recipeBookClient
+                .GetCategoriesAsync(request.CategoryIds!, request.AuthToken, cancellationToken);
+
             if (categories is null || !categories.Any())
             {
                 return result;
             }
 
-            var categoryIds = ParseCategoryIds(request.CategoryIds);
-            if (categoryIds.Count == 0)
-                return result;
-
-            var mealPlans = await _mealPlanRepository.SearchByRecipeCategoryIdsAsync(categoryIds);
+            var mealPlans = await _mealPlanRepository.SearchByRecipeCategoryIdsAsync(categoryIds, cancellationToken);
 
             var mealPlansByCategory = mealPlans
                 .Where(mp => mp.Recipe != null)
@@ -97,7 +99,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                     }
 
                     model.Data = filtered
-                        .OrderBy(x => x.Value)
+                        .OrderByDescending(x => x.Value)
                         .ThenBy(x => x.Key)
                         .ToDictionary(x => x.Key, x => x.Value);
                 }
@@ -119,28 +121,6 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                 .Where(id => id.HasValue)
                 .Select(id => id!.Value)
                 .ToList();
-        }
-
-        private async Task<IList<RecipeCategoryModel>?> LoadCategoriesAsync(
-            string categoryIds,
-            string? authToken,
-            CancellationToken cancellationToken)
-        {
-            _httpClient.EnsureAuthorizationHeader(authToken);
-            _httpClient.BaseAddress = _recipeBookApiConfig.BaseUrl;
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var query = new Dictionary<string, string?>
-            {
-                ["categoryIds"] = categoryIds
-            };
-
-            var controller = _recipeBookApiConfig.Controllers![RecipeBookControllers.RecipeCategory];
-            var url = QueryHelpers.AddQueryString($"{controller}/searchbycategories", query);
-
-            return await _httpClient.GetFromJsonAsync<IList<RecipeCategoryModel>>(url, cancellationToken);
         }
     }
 }
