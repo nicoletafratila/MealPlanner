@@ -52,7 +52,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
             Assert.That(all, Has.Count.EqualTo(2));
@@ -73,7 +73,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(1);
+            var result = await repo.SearchAsync(1, CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(2));
@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(999);
+            var result = await repo.SearchAsync(999, CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);

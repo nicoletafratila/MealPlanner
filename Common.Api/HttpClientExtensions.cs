@@ -8,7 +8,7 @@ namespace Common.Api
         public static async Task EnsureAuthorizationHeaderAsync(
             this HttpClient httpClient,
             TokenProvider tokenProvider,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             var token = await tokenProvider.GetTokenAsync(cancellationToken);
             httpClient.EnsureAuthorizationHeader(token);

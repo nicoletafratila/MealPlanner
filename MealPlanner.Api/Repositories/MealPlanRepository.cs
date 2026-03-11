@@ -14,7 +14,7 @@ namespace MealPlanner.Api.Repositories
 
         public override async Task<MealPlan?> GetByIdAsync(
             int id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await Context.MealPlans!
                 .Include(mp => mp.MealPlanRecipes)!
@@ -25,7 +25,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(
             int id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await Context.MealPlans
                 .AsNoTracking()
@@ -92,7 +92,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(
             int recipeId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await Context.MealPlanRecipes
                 .AsNoTracking()
@@ -104,7 +104,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<MealPlan?> SearchAsync(
             string name,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
             {

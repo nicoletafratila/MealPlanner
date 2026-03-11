@@ -15,7 +15,7 @@ namespace RecipeBook.Api.Repositories
         /// Gets all recipe ingredients, including their units.
         /// </summary>
         public async Task<IReadOnlyList<RecipeIngredient>> GetAllAsync(
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await _dbContext.RecipeIngredients
                 .Include(x => x.Unit)
@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Repositories
         /// </summary>
         public async Task<IReadOnlyList<RecipeIngredient>> SearchAsync(
             int productId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await _dbContext.RecipeIngredients
                 .Where(x => x.ProductId == productId)

@@ -13,7 +13,7 @@ namespace RecipeBook.Api.Repositories
     {
         public async Task UpdateAllAsync(
             IList<RecipeCategory> entities,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entities);
 

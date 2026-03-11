@@ -11,18 +11,18 @@ namespace Common.Data.Repository
     {
         protected readonly DbContext DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
-        public virtual async Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
+        public virtual async Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken)
         {
             // Use the FindAsync overload that accepts a CancellationToken
             return await DbContext.Set<T>().FindAsync([id!], cancellationToken);
         }
 
-        public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await DbContext.Set<T>().ToListAsync(cancellationToken);
         }
 
-        public virtual async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
@@ -31,7 +31,7 @@ namespace Common.Data.Repository
             return entity;
         }
 
-        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
@@ -39,7 +39,7 @@ namespace Common.Data.Repository
             await DbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
 

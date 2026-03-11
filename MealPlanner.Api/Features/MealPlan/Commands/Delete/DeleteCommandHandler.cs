@@ -10,13 +10,13 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Delete
         {
             try
             {
-                var itemToDelete = await repository.GetByIdAsync(request.Id);
+                var itemToDelete = await repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete == null)
                 {
                     return CommandResponse.Failed($"Could not find with id {request.Id}");
                 }
 
-                await repository.DeleteAsync(itemToDelete!);
+                await repository.DeleteAsync(itemToDelete!, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)

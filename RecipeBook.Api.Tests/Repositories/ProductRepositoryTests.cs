@@ -70,7 +70,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
             Assert.That(all, Has.Count.EqualTo(2));
@@ -92,7 +92,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(p1.Id);
+            var found = await repo.GetByIdAsync(p1.Id, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -117,7 +117,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(10);
+            var result = await repo.SearchAsync(10, CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -135,7 +135,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(999);
+            var result = await repo.SearchAsync(999, CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -155,7 +155,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("milk");
+            var result = await repo.SearchAsync("milk", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -169,8 +169,8 @@ namespace RecipeBook.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act
-            var r1 = await repo.SearchAsync((string)null!);
-            var r2 = await repo.SearchAsync("   ");
+            var r1 = await repo.SearchAsync((string)null!, CancellationToken.None);
+            var r2 = await repo.SearchAsync("   ", CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
@@ -191,7 +191,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("Juice");
+            var result = await repo.SearchAsync("Juice", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Null);

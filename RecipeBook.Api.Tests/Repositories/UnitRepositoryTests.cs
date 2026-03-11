@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Tests.Repositories
             };
 
             // Act
-            var added = await repo.AddAsync(unit);
+            var added = await repo.AddAsync(unit, CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
@@ -71,7 +71,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
             Assert.That(all, Has.Count.EqualTo(2));
@@ -89,7 +89,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(unit.Id);
+            var found = await repo.GetByIdAsync(unit.Id, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -111,7 +111,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            await repo.DeleteAsync(unit);
+            await repo.DeleteAsync(unit, CancellationToken.None);
 
             // Assert
             Assert.That(ctx.Set<Unit>().Any(), Is.False);

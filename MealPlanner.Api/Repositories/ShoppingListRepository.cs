@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Repositories
     {
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
             int id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             var ctx = DbContext as MealPlannerDbContext
                       ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
@@ -30,7 +30,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<ShoppingList?> SearchAsync(
             string name,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name must not be null or empty.", nameof(name));

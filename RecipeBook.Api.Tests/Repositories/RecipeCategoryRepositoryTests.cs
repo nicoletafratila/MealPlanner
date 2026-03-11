@@ -47,7 +47,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
             Assert.That(all, Has.Count.EqualTo(2));
@@ -72,7 +72,7 @@ namespace RecipeBook.Api.Tests.Repositories
             categories[1].DisplaySequence = 20;
 
             // Act
-            await repo.UpdateAllAsync(categories);
+            await repo.UpdateAllAsync(categories, CancellationToken.None);
 
             // Assert
             var fromDb = await ctx.RecipeCategories.OrderBy(c => c.Name).ToListAsync();
@@ -97,7 +97,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var before = await ctx.RecipeCategories.AsNoTracking().FirstAsync();
 
             // Act
-            await repo.UpdateAllAsync([]);
+            await repo.UpdateAllAsync([], CancellationToken.None);
 
             // Assert
             var after = await ctx.RecipeCategories.AsNoTracking().FirstAsync();
@@ -111,7 +111,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await repo.UpdateAllAsync(null!);
+                await repo.UpdateAllAsync(null!, CancellationToken.None);
             });
         }
     }

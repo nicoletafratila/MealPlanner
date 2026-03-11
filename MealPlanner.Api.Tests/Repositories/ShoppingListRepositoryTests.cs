@@ -117,7 +117,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeProductsAsync(1);
+            var found = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -149,7 +149,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeProductsAsync(999);
+            var found = await repo.GetByIdIncludeProductsAsync(999, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Null);
@@ -168,7 +168,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("weekly");
+            var result = await repo.SearchAsync("weekly", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -185,7 +185,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("does-not-exist");
+            var result = await repo.SearchAsync("does-not-exist", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Null);
@@ -200,8 +200,8 @@ namespace MealPlanner.Api.Tests.Repositories
             // Act / Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync(""));
-                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   "));
+                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("", CancellationToken.None));
+                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   ", CancellationToken.None));
             }
         }
     }

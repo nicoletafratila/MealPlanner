@@ -45,7 +45,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var category = new ProductCategory { Name = "Dairy" };
 
             // Act
-            var added = await repo.AddAsync(category);
+            var added = await repo.AddAsync(category, CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
@@ -68,7 +68,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
             Assert.That(all, Has.Count.EqualTo(2));
@@ -86,7 +86,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(cat.Id);
+            var found = await repo.GetByIdAsync(cat.Id, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -104,7 +104,7 @@ namespace RecipeBook.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            await repo.DeleteAsync(cat);
+            await repo.DeleteAsync(cat, CancellationToken.None);
 
             // Assert
             Assert.That(ctx.ProductCategories.Any(), Is.False);

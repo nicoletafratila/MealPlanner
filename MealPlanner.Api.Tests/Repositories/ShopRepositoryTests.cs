@@ -86,7 +86,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeDisplaySequenceAsync(1);
+            var found = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -112,7 +112,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeDisplaySequenceAsync(999);
+            var found = await repo.GetByIdIncludeDisplaySequenceAsync(999, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Null);
@@ -126,7 +126,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Act / Assert
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await repo.GetByIdIncludeDisplaySequenceAsync(null));
+                await repo.GetByIdIncludeDisplaySequenceAsync(null, CancellationToken.None));
         }
     }
 }

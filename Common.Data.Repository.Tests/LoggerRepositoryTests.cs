@@ -29,7 +29,7 @@ namespace Common.Data.Repository.Tests
             _provider.Dispose();
         }
 
-        private ILoggerRepository CreateRepository(out MealPlannerDbContext context)
+        private LoggerRepository CreateRepository(out MealPlannerDbContext context)
         {
             context = _provider.GetRequiredService<MealPlannerDbContext>();
             return new LoggerRepository(context);
@@ -48,11 +48,14 @@ namespace Common.Data.Repository.Tests
             };
 
             // Act
-            var added = await repo.AddAsync(log);
+            var added = await repo.AddAsync(log, CancellationToken.None);
 
-            // Assert
-            Assert.That(added.Id, Is.Not.EqualTo(0));
-            Assert.That(ctx.Set<Log>().Count(), Is.EqualTo(1));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(added.Id, Is.Not.Zero);
+                Assert.That(ctx.Set<Log>().Count(), Is.EqualTo(1));
+            }
         }
 
         [Test]
@@ -66,10 +69,10 @@ namespace Common.Data.Repository.Tests
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
-            Assert.That(all.Count, Is.EqualTo(2));
+            Assert.That(all, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -83,7 +86,7 @@ namespace Common.Data.Repository.Tests
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(log.Id);
+            var found = await repo.GetByIdAsync(log.Id, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -101,7 +104,7 @@ namespace Common.Data.Repository.Tests
             await ctx.SaveChangesAsync();
 
             // Act
-            await repo.DeleteAsync(log);
+            await repo.DeleteAsync(log, CancellationToken.None);
 
             // Assert
             Assert.That(ctx.Set<Log>().Any(), Is.False);

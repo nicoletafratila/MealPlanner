@@ -13,7 +13,7 @@ namespace Common.Data.Repository.Tests
         {
             var services = new ServiceCollection();
 
-            services.AddDbContext<TestDbContext>(options => 
+            services.AddDbContext<TestDbContext>(options =>
                 options.UseInMemoryDatabase("BaseAsyncRepositoryTests_" + TestContext.CurrentContext.Test.ID));
 
             _provider = services.BuildServiceProvider();
@@ -43,12 +43,15 @@ namespace Common.Data.Repository.Tests
             };
 
             // Act
-            var added = await repo.AddAsync(entity);
+            var added = await repo.AddAsync(entity, CancellationToken.None);
 
-            // Assert
-            Assert.That(added.Id, Is.Not.EqualTo(0));
-            Assert.That(ctx.TestEntities.Count(), Is.EqualTo(1));
-            Assert.That(ctx.TestEntities.Single().Name, Is.EqualTo("Entity1"));
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(added.Id, Is.Not.Zero);
+                Assert.That(ctx.TestEntities.Count(), Is.EqualTo(1));
+                Assert.That(ctx.TestEntities.Single().Name, Is.EqualTo("Entity1"));
+            }
         }
 
         [Test]
@@ -62,12 +65,15 @@ namespace Common.Data.Repository.Tests
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(entity.Id);
+            var found = await repo.GetByIdAsync(entity.Id, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.That(found!.Id, Is.EqualTo(entity.Id));
-            Assert.That(found.Name, Is.EqualTo("Entity1"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(found!.Id, Is.EqualTo(entity.Id));
+                Assert.That(found.Name, Is.EqualTo("Entity1"));
+            }
         }
 
         [Test]
@@ -77,7 +83,7 @@ namespace Common.Data.Repository.Tests
             var repo = CreateRepository(out _);
 
             // Act
-            var found = await repo.GetByIdAsync(999);
+            var found = await repo.GetByIdAsync(999, CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Null);
@@ -95,11 +101,11 @@ namespace Common.Data.Repository.Tests
             await ctx.SaveChangesAsync();
 
             // Act
-            var all = await repo.GetAllAsync();
+            var all = await repo.GetAllAsync(CancellationToken.None);
 
             // Assert
             Assert.That(all, Is.Not.Null);
-            Assert.That(all.Count, Is.EqualTo(2));
+            Assert.That(all, Has.Count.EqualTo(2));
             Assert.That(all.Select(e => e.Name), Is.EquivalentTo(["E1", "E2"]));
         }
 
@@ -116,7 +122,7 @@ namespace Common.Data.Repository.Tests
             entity.Name = "New";
 
             // Act
-            await repo.UpdateAsync(entity);
+            await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
             var fromDb = await ctx.TestEntities.FindAsync(entity.Id);
@@ -135,7 +141,7 @@ namespace Common.Data.Repository.Tests
             await ctx.SaveChangesAsync();
 
             // Act
-            await repo.DeleteAsync(entity);
+            await repo.DeleteAsync(entity, CancellationToken.None);
 
             // Assert
             Assert.That(ctx.TestEntities.Any(), Is.False);
@@ -148,7 +154,7 @@ namespace Common.Data.Repository.Tests
 
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await repo.AddAsync(null!);
+                await repo.AddAsync(null!, CancellationToken.None);
             });
         }
 
@@ -159,7 +165,7 @@ namespace Common.Data.Repository.Tests
 
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await repo.UpdateAsync(null!);
+                await repo.UpdateAsync(null!, CancellationToken.None);
             });
         }
 
@@ -170,7 +176,7 @@ namespace Common.Data.Repository.Tests
 
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                await repo.DeleteAsync(null!);
+                await repo.DeleteAsync(null!, CancellationToken.None);
             });
         }
     }

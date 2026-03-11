@@ -14,7 +14,7 @@ namespace RecipeBook.Api.Repositories
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
         public override async Task<IReadOnlyList<Product>> GetAllAsync(
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await Context.Products
                 .Include(x => x.ProductCategory)
@@ -24,7 +24,7 @@ namespace RecipeBook.Api.Repositories
 
         public override async Task<Product?> GetByIdAsync(
             int id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await Context.Products
                 .Include(x => x.ProductCategory)
@@ -34,7 +34,7 @@ namespace RecipeBook.Api.Repositories
 
         public async Task<IReadOnlyList<Product>> SearchAsync(
             int categoryId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return await Context.Products
                 .Include(x => x.ProductCategory)
@@ -45,7 +45,7 @@ namespace RecipeBook.Api.Repositories
 
         public async Task<Product?> SearchAsync(
             string name,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return null;

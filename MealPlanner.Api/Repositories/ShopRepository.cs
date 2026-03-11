@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Repositories
     {
         public async Task<Shop?> GetByIdIncludeDisplaySequenceAsync(
             int? id,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (id is null)
                 throw new ArgumentNullException(nameof(id));
