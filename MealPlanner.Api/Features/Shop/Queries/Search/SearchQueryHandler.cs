@@ -15,7 +15,7 @@ namespace MealPlanner.Api.Features.Shop.Queries.Search
         {
             if (request?.QueryParameters is null)
             {
-                return EmptyResult();
+                return new([], new Metadata());
             }
 
             var qp = request.QueryParameters;
@@ -62,8 +62,5 @@ namespace MealPlanner.Api.Features.Shop.Queries.Search
                          .ApplySorting(sortingItems)!
                          .ToList();
         }
-
-        private static PagedList<ShopModel> EmptyResult()
-            => new([], new Metadata());
     }
 }
