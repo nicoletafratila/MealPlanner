@@ -4,24 +4,35 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.ShoppingList.Commands.Delete
 {
+    /// <summary>
+    /// Handles deletion of a shopping list.
+    /// </summary>
     public class DeleteCommandHandler(IShoppingListRepository repository, ILogger<DeleteCommandHandler> logger) : IRequestHandler<DeleteCommand, CommandResponse?>
     {
+        private readonly IShoppingListRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly ILogger<DeleteCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
         public async Task<CommandResponse?> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             try
             {
-                var itemToDelete = await repository.GetByIdAsync(request.Id, cancellationToken);
-                if (itemToDelete == null)
+                var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
+                if (itemToDelete is null)
                 {
                     return CommandResponse.Failed($"Could not find with id {request.Id}");
                 }
 
-                await repository.DeleteAsync(itemToDelete!, cancellationToken);
+                await _repository.DeleteAsync(itemToDelete, cancellationToken);
                 return CommandResponse.Success();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
+                _logger.LogError(ex,
+                    "An error occurred when deleting the shopping list with id {Id}.",
+                    request.Id);
+
                 return CommandResponse.Failed("An error occurred when deleting the shopping list.");
             }
         }
