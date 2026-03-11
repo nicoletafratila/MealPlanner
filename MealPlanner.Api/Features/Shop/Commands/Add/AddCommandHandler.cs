@@ -5,24 +5,46 @@ using MediatR;
 
 namespace MealPlanner.Api.Features.Shop.Commands.Add
 {
-    public class AddCommandHandler(IShopRepository repository, IMapper mapper, ILogger<AddCommandHandler> logger) : IRequestHandler<AddCommand, CommandResponse?>
+    /// <summary>
+    /// Handles adding a new shop.
+    /// </summary>
+    public class AddCommandHandler(
+        IShopRepository repository,
+        IMapper mapper,
+        ILogger<AddCommandHandler> logger) : IRequestHandler<AddCommand, CommandResponse?>
     {
+        private readonly IShopRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly ILogger<AddCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
         public async Task<CommandResponse?> Handle(AddCommand request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
+            if (request.Model is null)
+                throw new ArgumentNullException(nameof(request), "Model cannot be null.");
+
             try
             {
-                var shops = await repository.GetAllAsync(cancellationToken);
-                var existingItem = shops?.FirstOrDefault(i => i.Name == request.Model?.Name!);
-                if (existingItem != null)
+                var shops = await _repository.GetAllAsync(cancellationToken);
+                var name = request.Model.Name ?? string.Empty;
+
+                var existingItem = shops?
+                    .FirstOrDefault(i =>
+                        !string.IsNullOrWhiteSpace(i.Name) &&
+                        i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+                if (existingItem is not null)
                     return CommandResponse.Failed("This shop already exists.");
 
-                var mapped = mapper.Map<Common.Data.Entities.Shop>(request.Model);
-                var newItem = await repository.AddAsync(mapped, cancellationToken);
+                var mapped = _mapper.Map<Common.Data.Entities.Shop>(request.Model);
+                await _repository.AddAsync(mapped, cancellationToken);
+
                 return CommandResponse.Success();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred when saving the shop '{Name}'.", request.Model.Name);
                 return CommandResponse.Failed("An error occurred when saving the shop.");
             }
         }
