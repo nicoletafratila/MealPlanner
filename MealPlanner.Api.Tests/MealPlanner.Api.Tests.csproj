@@ -27,7 +27,9 @@
 
   <ItemGroup>
     <Folder Include="Features\MealPlan\" />
-    <Folder Include="Features\Shop\" />
+    <Folder Include="Features\Shop\Commands\Add\" />
+    <Folder Include="Features\Shop\Commands\Delete\" />
+    <Folder Include="Features\Shop\Commands\Update\" />
   </ItemGroup>
 
   <ItemGroup>
