@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\MealPlan\Commands\Add\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
     <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
