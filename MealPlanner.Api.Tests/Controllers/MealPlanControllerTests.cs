@@ -41,7 +41,7 @@ namespace MealPlanner.Api.Tests.Controllers
             var editModel = new MealPlanEditModel { Id = 5, Name = "Plan1" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditMealPlanQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
 
             // Act
@@ -52,7 +52,7 @@ namespace MealPlanner.Api.Tests.Controllers
             Assert.That(ok, Is.Not.Null);
             Assert.That(ok!.Value, Is.SameAs(editModel));
 
-            _senderMock.Verify(m => m.Send(It.IsAny<GetEditMealPlanQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+            _senderMock.Verify(m => m.Send(It.IsAny<GetEditQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]

@@ -28,7 +28,7 @@ namespace MealPlanner.Api.Controllers
             [FromQuery] int id,
             CancellationToken cancellationToken)
         {
-            var query = new GetEditMealPlanQuery { Id = id };
+            var query = new GetEditQuery { Id = id };
             var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }
