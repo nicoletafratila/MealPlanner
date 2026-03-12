@@ -103,32 +103,41 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             // Arrange
             var query = new GetShoppingListProductsQuery { MealPlanId = 1, ShopId = 2 };
 
-            var category = new ProductCategory { Id = 100, Name = "Cat" };
             var baseUnit = new Unit { Id = 1, Name = "kg" };
-            var product = new Product
+            var product1 = new Product
             {
                 Id = 5,
                 Name = "Flour",
-                ProductCategory = category,
+                ProductCategory = new ProductCategory { Id = 100, Name = "Cat1" },
                 BaseUnit = baseUnit
             };
-
-            var ingredient = new RecipeIngredient
+            var product2 = new Product
+            {
+                Id = 6,
+                Name = "Egg",
+                ProductCategory = new ProductCategory { Id = 101, Name = "Cat2" },
+                BaseUnit = baseUnit
+            };
+            var ingredient1 = new RecipeIngredient
             {
                 ProductId = 5,
-                Product = product,
-                Quantity = 2m,
+                Product = product1,
+                Quantity = 2,
                 Unit = baseUnit
             };
-
+            var ingredient2 = new RecipeIngredient
+            {
+                ProductId = 6,
+                Product = product2,
+                Quantity = 4,
+                Unit = baseUnit
+            };
             var recipe = new Recipe
             {
                 Name = "Cake",
-                RecipeIngredients = [ingredient]
+                RecipeIngredients = [ingredient1, ingredient2]
             };
-
-            var shop = new Common.Data.Entities.Shop { Id = 2, Name = "Shop1" };
-
+            var shop = new Common.Data.Entities.Shop { Id = 2, Name = "Shop1", DisplaySequence = [new ShopDisplaySequence() { Value = 2, ProductCategoryId = 100 }, new ShopDisplaySequence() { Value = 1, ProductCategoryId = 101 }] };
             var mealPlan = new Common.Data.Entities.MealPlan() { Id = 1, Name = "Plan1" };
             mealPlan.MealPlanRecipes =
             [
@@ -148,16 +157,35 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
                 .ReturnsAsync(shop);
 
             _mapperMock
-                .Setup(m => m.Map<ShoppingListProductEditModel>(It.IsAny<ShoppingListProduct>()))
-                .Returns<ShoppingListProduct>(p => new ShoppingListProductEditModel
+                .Setup(m => m.Map<ShoppingListProduct, ShoppingListProductEditModel>(
+                    It.IsAny<ShoppingListProduct>()))
+                .Returns((ShoppingListProduct src) =>
                 {
-                    Product = p.Product is null ? null : new ProductModel
+                    return src.ProductId switch
                     {
-                        Id = p.ProductId,
-                        Name = p.Product.Name!
-                    },
-                    Collected = p.Collected,
-                    DisplaySequence = p.DisplaySequence
+                        5 => new ShoppingListProductEditModel
+                        {
+                            Collected = src.Collected,
+                            DisplaySequence = src.DisplaySequence,
+                            Quantity = ingredient1.Quantity,
+                            Product = new ProductModel
+                            {
+                                Id = product1.Id,
+                                Name = product1.Name!,
+                            },
+                        },
+                        6 => new ShoppingListProductEditModel
+                        {
+                            Collected = src.Collected,
+                            DisplaySequence = src.DisplaySequence,
+                            Quantity = ingredient2.Quantity,
+                            Product = new ProductModel
+                            {
+                                Id = product2.Id,
+                                Name = product2.Name!,
+                            },
+                        }
+                    };
                 });
 
             // Act
@@ -167,18 +195,23 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Has.Count.EqualTo(2));
 
-            // Sorted: not collected first, then by DisplaySequence, then Name → "A" then "B"
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result[0].Product!.Name, Is.EqualTo("A"));
-                Assert.That(result[1].Product!.Name, Is.EqualTo("B"));
-                Assert.That(result[0].Index, Is.EqualTo(1));
-                Assert.That(result[1].Index, Is.EqualTo(2));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(result[0].Product!.Name, Is.EqualTo(product2.Name));
+                    Assert.That(result[0].Quantity, Is.EqualTo(ingredient2.Quantity));
+                    Assert.That(result[0].Index, Is.EqualTo(1));
+
+                    Assert.That(result[1].Product!.Name, Is.EqualTo(product1.Name));
+                    Assert.That(result[1].Quantity, Is.EqualTo(ingredient1.Quantity));
+                    Assert.That(result[1].Index, Is.EqualTo(2));
+                });
             }
 
             _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);
             _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<ShoppingListProductEditModel>(It.IsAny<Common.Data.Entities.ShoppingListProduct>()), Times.Exactly(2));
+            _mapperMock.Verify(m => m.Map<ShoppingListProduct, ShoppingListProductEditModel>(It.IsAny<ShoppingListProduct>()), Times.Exactly(2));
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Data.Entities;
 using Common.Models;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -39,7 +40,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
                     return Array.Empty<ShoppingListProductEditModel>();
 
                 var results = products
-                    .Select(_mapper.Map<ShoppingListProductEditModel>)
+                    .Select(_mapper.Map<ShoppingListProduct, ShoppingListProductEditModel>)
                     .OrderBy(item => item.Collected)
                     .ThenBy(item => item.DisplaySequence)
                     .ThenBy(item => item.Product?.Name)
