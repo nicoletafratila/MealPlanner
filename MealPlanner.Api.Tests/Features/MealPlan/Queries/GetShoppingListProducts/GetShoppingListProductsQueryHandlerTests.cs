@@ -184,7 +184,8 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
                                 Id = product2.Id,
                                 Name = product2.Name!,
                             },
-                        }
+                        },
+                        _ => throw new NotImplementedException()
                     };
                 });
 

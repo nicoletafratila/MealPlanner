@@ -28,7 +28,6 @@
   <ItemGroup>
     <Folder Include="Features\MealPlan\Commands\Add\" />
     <Folder Include="Features\MealPlan\Commands\Delete\" />
-    <Folder Include="Features\MealPlan\Commands\Update\" />
   </ItemGroup>
 
   <ItemGroup>
