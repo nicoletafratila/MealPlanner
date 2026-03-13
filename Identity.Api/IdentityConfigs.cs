@@ -6,50 +6,61 @@ namespace Identity.Api
 {
     public static class IdentityConfigs
     {
-        private const string CLIENTID = "mealplanner_client";
+        private const string ClientId = "mealplanner_client";
+        private const string ApiName = Common.Constants.MealPlanner.ApiScope;
+        private const string ApiDisplayName = "MealPlanner API";
+        private static readonly string SigningKey = Common.Constants.MealPlanner.SigningKey;
 
         public static IEnumerable<Client> GetClients() =>
-            new List<Client>
-            {
+            [
                 new Client
                 {
-                    ClientId = CLIENTID,
+                    ClientId = ClientId,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    ClientSecrets = { new Secret(Common.Constants.MealPlanner.SigningKey.Sha256()) },
-                    AllowedScopes = { 
-                        Common.Constants.MealPlanner.ApiScope, 
-                        IdentityServerConstants.StandardScopes.OpenId, 
-                        IdentityServerConstants.StandardScopes.Profile, 
-                        "roles" 
+                    ClientSecrets =
+                    {
+                        new Secret(SigningKey.Sha256())
+                    },
+                    AllowedScopes =
+                    {
+                        ApiName,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "roles"
                     }
                 }
-            };
+            ];
 
         public static IEnumerable<ApiScope> GetApiScopes() =>
-            new List<ApiScope>
-            {
-                new ApiScope(Common.Constants.MealPlanner.ApiScope, "MealPlanner API")
+            [
+                new ApiScope(ApiName, ApiDisplayName)
                 {
-                    UserClaims = { ClaimTypes.Role, ClaimTypes.Name }
+                    UserClaims =
+                    {
+                        ClaimTypes.Role,
+                        ClaimTypes.Name
+                    }
                 }
-            };
+            ];
 
         public static IEnumerable<ApiResource> GetApiResources() =>
-            new List<ApiResource>
-            {
-                new ApiResource(Common.Constants.MealPlanner.ApiScope, "MealPlanner API")
+            [
+                new ApiResource(ApiName, ApiDisplayName)
                 {
-                    Scopes = { Common.Constants.MealPlanner.ApiScope },
-                    UserClaims = { ClaimTypes.Role, ClaimTypes.Name }
+                    Scopes = { ApiName },
+                    UserClaims =
+                    {
+                        ClaimTypes.Role,
+                        ClaimTypes.Name
+                    }
                 }
-            };
+            ];
 
         public static IEnumerable<IdentityResource> GetIdentityResources() =>
-            new List<IdentityResource>
-            {
+            [
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource("roles", new[] { ClaimTypes.Role })
-            };
+                new("roles", [ClaimTypes.Role])
+            ];
     }
 }

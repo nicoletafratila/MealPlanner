@@ -8,145 +8,131 @@ namespace Identity.Api
 {
     public static class SeedData
     {
+        private const string AdminRoleName = "admin";
+        private const string MemberRoleName = "member";
+        private const string DefaultPassword = "Test123!";
+
         public static async Task EnsureSeedDataAsync(IServiceScope scope)
         {
-            var context = scope.ServiceProvider.GetService<MealPlannerDbContext>();
-            context?.Database.EnsureCreated();
-            await SeedRolesAsync(scope);
-            await SeedUsersAsync(scope);
-        }
+            var context = scope.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
+            context.Database.EnsureCreated();
 
-        private static async Task SeedRolesAsync(IServiceScope scope)
-        {
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var admin = await roleManager.FindByIdAsync("admin");
-            if (admin == null)
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            await SeedRolesAsync(roleManager);
+            await SeedUsersAsync(userManager);
+        }
+
+        private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            await EnsureRoleAsync(roleManager, AdminRoleName);
+            await EnsureRoleAsync(roleManager, MemberRoleName);
+        }
+
+        private static async Task EnsureRoleAsync(RoleManager<IdentityRole> roleManager, string roleName)
+        {
+            if (await roleManager.RoleExistsAsync(roleName))
             {
-                admin = new IdentityRole
-                {
-                    Id = "admin",
-                    Name = "admin"
-                };
-                var result = await roleManager.CreateAsync(admin);
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
+                return;
             }
 
-            var member = await roleManager.FindByIdAsync("member");
-            if (member == null)
+            var role = new IdentityRole
             {
-                member = new IdentityRole
-                {
-                    Id = "member",
-                    Name = "member"
-                };
-                var result = await roleManager.CreateAsync(member);
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
+                Name = roleName,
+                NormalizedName = roleName.ToUpperInvariant()
+            };
+
+            var result = await roleManager.CreateAsync(role);
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.First().Description);
             }
         }
 
-        private static async Task SeedUsersAsync(IServiceScope scope)
+        private static async Task SeedUsersAsync(UserManager<ApplicationUser> userManager)
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var admin = await userManager.FindByNameAsync("admin");
-            if (admin == null)
+            await EnsureUserAsync(
+                userManager,
+                userName: "admin",
+                email: "admin@mealplanner.com",
+                firstName: "Admin",
+                lastName: "Admin",
+                website: "http://admin.com",
+                roleName: AdminRoleName);
+
+            await EnsureUserAsync(
+                userManager,
+                userName: "member",
+                email: "member@mealplanner.com",
+                firstName: "Member first name",
+                lastName: "Member last name",
+                website: "http://member.com",
+                roleName: MemberRoleName);
+        }
+
+        private static async Task EnsureUserAsync(
+            UserManager<ApplicationUser> userManager,
+            string userName,
+            string email,
+            string firstName,
+            string lastName,
+            string website,
+            string roleName)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            if (user == null)
             {
-                admin = new ApplicationUser
+                user = new ApplicationUser
                 {
-                    UserName = "admin",
-                    Email = "admin@mealplanner.com",
+                    UserName = userName,
+                    Email = email,
                     EmailConfirmed = true,
-                    FirstName = "Admin",
-                    LastName = "Admin",
+                    FirstName = firstName,
+                    LastName = lastName,
                     IsActive = true
                 };
-                var result = await userManager.CreateAsync(admin, "Test123!");
-                if (!result.Succeeded)
+
+                var createResult = await userManager.CreateAsync(user, DefaultPassword);
+                if (!createResult.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new Exception(createResult.Errors.First().Description);
                 }
 
-                result = await userManager.AddClaimsAsync(admin,
+                var claimsResult = await userManager.AddClaimsAsync(user,
                 [
-                    new(JwtClaimTypes.Subject, admin.Id),
-                    new(ClaimTypes.Name, admin.UserName),
-                    new(JwtClaimTypes.GivenName, admin.FirstName),
-                    new(JwtClaimTypes.FamilyName, admin.LastName),
-                    new(JwtClaimTypes.WebSite, "http://admin.com")
+                    new(JwtClaimTypes.Subject, user.Id),
+                    new(ClaimTypes.Name, user.UserName!),
+                    new(JwtClaimTypes.GivenName, user.FirstName),
+                    new(JwtClaimTypes.FamilyName, user.LastName),
+                    new(JwtClaimTypes.WebSite, website)
                 ]);
-                if (!result.Succeeded)
+
+                if (!claimsResult.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new Exception(claimsResult.Errors.First().Description);
                 }
 
-                if (!await userManager.IsInRoleAsync(admin, "admin"))
-                {
-                    var roleResult = await userManager.AddToRoleAsync(admin, "admin");
-                    if (!roleResult.Succeeded)
-                    {
-                        throw new Exception(roleResult.Errors.First().Description);
-                    }
-                    await userManager.AddClaimAsync(admin, new Claim(ClaimTypes.Role, "admin"));
-                }
-
-                Serilog.Log.Debug("Admin created");
+                Serilog.Log.Debug("{UserName} created", userName);
             }
             else
             {
-                Serilog.Log.Debug("Admin already exists");
+                Serilog.Log.Debug("{UserName} already exists", userName);
             }
 
-            var member = await userManager.FindByNameAsync("member");
-            if (member == null)
+            if (!await userManager.IsInRoleAsync(user, roleName))
             {
-                member = new ApplicationUser
+                var roleResult = await userManager.AddToRoleAsync(user, roleName);
+                if (!roleResult.Succeeded)
                 {
-                    UserName = "member",
-                    Email = "member@mealplanner.com",
-                    EmailConfirmed = true,
-                    FirstName = "Member first name",
-                    LastName = "Member last name",
-                    IsActive = true
-                };
-                var result = await userManager.CreateAsync(member, "Test123!");
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new Exception(roleResult.Errors.First().Description);
                 }
 
-                result = await userManager.AddClaimsAsync(member,
-                [
-                    new(JwtClaimTypes.Subject, member.Id),
-                    new(ClaimTypes.Name, member.UserName),
-                    new(JwtClaimTypes.GivenName, member.FirstName),
-                    new(JwtClaimTypes.FamilyName, member.LastName),
-                    new(JwtClaimTypes.WebSite, "http://member.com")
-                ]);
-                if (!result.Succeeded)
+                var roleClaimResult = await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, roleName));
+                if (!roleClaimResult.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new Exception(roleClaimResult.Errors.First().Description);
                 }
-
-                if (!await userManager.IsInRoleAsync(member, "member"))
-                {
-                    var roleResult = await userManager.AddToRoleAsync(member, "member");
-                    if (!roleResult.Succeeded)
-                    {
-                        throw new Exception(roleResult.Errors.First().Description);
-                    }
-                    await userManager.AddClaimAsync(member, new Claim(ClaimTypes.Role, "member"));
-                }
-
-                Serilog.Log.Debug("Member created");
-            }
-            else
-            {
-                Serilog.Log.Debug("Member already exists");
             }
         }
     }
