@@ -1,5 +1,4 @@
-﻿using Common.Data.Entities;
-using Common.Models;
+﻿using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;

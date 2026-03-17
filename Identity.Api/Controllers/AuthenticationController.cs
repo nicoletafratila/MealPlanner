@@ -14,51 +14,64 @@ namespace Identity.Api.Controllers
     [ApiController]
     public class AuthenticationController(ISender mediator) : ControllerBase
     {
+        private readonly ISender _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         [HttpPost("login")]
         public async Task<CommandResponse?> LoginAsync(
-            LoginModel model,
+            [FromBody] LoginModel model,
             CancellationToken cancellationToken)
         {
-            LoginCommand command = new() { Model = model };
-            if (await mediator.Send(command, cancellationToken) is LoginCommandResponse response && response.Succeeded)
+            var command = new LoginCommand { Model = model };
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            if (result is not LoginCommandResponse loginResponse || !loginResponse.Succeeded)
             {
-                var claimObjects = response.Claims?.Select(c => new Claim(c.Key, c.Value));
-                var identity = new ClaimsIdentity(claimObjects, IdentityConstants.ApplicationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(
-                    IdentityConstants.ApplicationScheme,
-                    principal,
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = false, // Change to true for "Remember Me"
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
-                    });
-
-                return response;
+                return CommandResponse.Failed("Invalid credentials.");
             }
 
-            return CommandResponse.Failed("Invalid credentials.");
+            var claimObjects = (loginResponse.Claims ?? Enumerable.Empty<KeyValuePair<string, string>>())
+                .Select(c => new Claim(c.Key, c.Value));
+
+            var identity = new ClaimsIdentity(claimObjects, IdentityConstants.ApplicationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(
+                IdentityConstants.ApplicationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    // For now, always non-persistent; you can wire RememberLogin here later
+                    IsPersistent = false,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
+                });
+
+            return loginResponse;
         }
 
         [HttpPost("logout")]
         public async Task<CommandResponse?> LogoutAsync(
             CancellationToken cancellationToken)
         {
-            LogoutCommand command = new();
-            return await mediator.Send(command, cancellationToken);
+            var command = new LogoutCommand();
+            return await _mediator.Send(command, cancellationToken);
         }
 
+        /// <summary>
+        /// NOTE: As implemented, this just forwards to the same LoginCommand.
+        /// If you add a proper RegistrationCommand later, wire it here.
+        /// </summary>
         [HttpPost("register")]
         public async Task<CommandResponse?> RegisterAsync(
-            LoginModel model,
+            [FromBody] LoginModel model,
             CancellationToken cancellationToken)
         {
-            LoginCommand command = new()
+            var command = new LoginCommand
             {
                 Model = model
             };
-            return await mediator.Send(command, cancellationToken);
+
+            return await _mediator.Send(command, cancellationToken);
         }
     }
 }
