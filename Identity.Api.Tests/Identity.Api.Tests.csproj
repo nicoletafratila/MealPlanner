@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Duende.IdentityModel" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.14" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.14" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
     <ProjectReference Include="..\Identity.Api\Identity.Api.csproj" />
   </ItemGroup>
 
@@ -36,7 +38,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Features\ApplicationUser\Commands\Update\" />
-    <Folder Include="Features\ApplicationUser\Queries\GetEdit\" />
   </ItemGroup>
 
 </Project>

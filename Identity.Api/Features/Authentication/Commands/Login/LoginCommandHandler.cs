@@ -9,29 +9,55 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
-    public class LoginCommandHandler(UserManager<Common.Data.Entities.ApplicationUser> userManager, SignInManager<Common.Data.Entities.ApplicationUser> signInManager, ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse?>
+    /// <summary>
+    /// Handles user login and JWT issuance.
+    /// </summary>
+    public class LoginCommandHandler(
+        UserManager<Common.Data.Entities.ApplicationUser> userManager,
+        SignInManager<Common.Data.Entities.ApplicationUser> signInManager,
+        ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse?>
     {
+        private readonly UserManager<Common.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        private readonly SignInManager<Common.Data.Entities.ApplicationUser> _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+        private readonly ILogger<LoginCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
         public async Task<CommandResponse?> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
+            if (request.Model is null)
+                throw new ArgumentNullException(nameof(request), "Model cannot be null.");
+
             try
             {
-                var user = await userManager.FindByNameAsync(request!.Model!.Username!);
-                if (user == null)
+                var username = request.Model.Username ?? string.Empty;
+                var password = request.Model.Password ?? string.Empty;
+
+                var user = await _userManager.FindByNameAsync(username);
+                if (user is null)
                     return CommandResponse.Failed("Invalid credentials");
 
-                var roles = await userManager.GetRolesAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
 
-                var result = await signInManager.PasswordSignInAsync(request!.Model!.Username!, request!.Model!.Password!, isPersistent: false, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(
+                    username,
+                    password,
+                    isPersistent: request.Model.RememberLogin,
+                    lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     var claims = GetClaims(user, roles);
                     var token = GenerateJwtToken(claims);
+
                     return new LoginCommandResponse
                     {
                         Message = "Login successful.",
                         Succeeded = true,
                         JwtBearer = token,
-                        Claims = claims.Select(x => new KeyValuePair<string, string>(x.Type, x.Value)).ToList(),
+                        Claims = claims
+                            .Select(c => new KeyValuePair<string, string>(c.Type, c.Value))
+                            .ToList()
                     };
                 }
 
@@ -42,12 +68,14 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
+                _logger.LogError(ex,
+                    "An error occurred when authenticating the user '{Username}'.",
+                    request.Model.Username);
                 return CommandResponse.Failed("An error occurred when authenticating the user.");
             }
         }
 
-        private string GenerateJwtToken(IList<Claim> claims)
+        private static string GenerateJwtToken(IList<Claim> claims)
         {
             var expiration = DateTimeOffset.UtcNow.AddHours(1);
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey));
@@ -63,17 +91,17 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private IList<Claim> GetClaims(Common.Data.Entities.ApplicationUser user, IList<string> roles)
+        private static IList<Claim> GetClaims(Common.Data.Entities.ApplicationUser user, IList<string> roles)
         {
-            return new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user!.UserName!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user!.UserName !),
-                new Claim(ClaimTypes.Role, string.Join(",", roles)),
-                new Claim(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope),
-            };
+            return
+            [
+                new(JwtRegisteredClaimNames.Sub, user.UserName!),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Name, user.UserName!),
+                new(ClaimTypes.Role, string.Join(",", roles)),
+                new(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope),
+            ];
         }
     }
 }
