@@ -5,14 +5,9 @@ namespace Identity.Api.Tests.Controllers
     /// <summary>
     /// Minimal IServiceProvider stub to return IAuthenticationService.
     /// </summary>
-    public sealed class ServiceProviderStub : IServiceProvider
+    public sealed class ServiceProviderStub(IAuthenticationService authService) : IServiceProvider
     {
-        private readonly IAuthenticationService _authService;
-
-        public ServiceProviderStub(IAuthenticationService authService)
-        {
-            _authService = authService;
-        }
+        private readonly IAuthenticationService _authService = authService;
 
         public object? GetService(Type serviceType)
         {

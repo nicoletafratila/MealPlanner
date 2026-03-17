@@ -78,7 +78,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var loaded = new UnitEditModel { Id = id };
 
             _unitServiceMock
-                .Setup(s => s.GetEditAsync(id))
+                .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(loaded);
 
             var cut = RenderWithMessageComponent(id.ToString());
@@ -94,7 +94,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var unit = new UnitEditModel { Id = 0 };
 
             _unitServiceMock
-                .Setup(s => s.AddAsync(unit))
+                .Setup(s => s.AddAsync(unit, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent();
@@ -112,8 +112,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _unitServiceMock.Verify(s => s.AddAsync(unit), Times.Once);
-            _messageMock.Verify(m => m.ShowInfo("Data has been saved successfully"), Times.Once);
+            _unitServiceMock.Verify(s => s.AddAsync(unit, CancellationToken.None), Times.Once);
+            _messageMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
             Assert.That(nav.Uri, Does.EndWith("recipebooks/unitsoverview"));
@@ -125,10 +125,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var unit = new UnitEditModel { Id = 10 };
 
             _unitServiceMock
-               .Setup(s => s.GetEditAsync(unit.Id))
+               .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
                .ReturnsAsync(unit);
             _unitServiceMock
-                .Setup(s => s.UpdateAsync(unit))
+                .Setup(s => s.UpdateAsync(unit, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent("10");
@@ -146,8 +146,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _unitServiceMock.Verify(s => s.UpdateAsync(unit), Times.Once);
-            _messageMock.Verify(m => m.ShowInfo("Data has been saved successfully"), Times.Once);
+            _unitServiceMock.Verify(s => s.UpdateAsync(unit, CancellationToken.None), Times.Once);
+            _messageMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
             Assert.That(nav.Uri, Does.EndWith("recipebooks/unitsoverview"));
@@ -160,10 +160,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var response = new CommandResponse { Succeeded = false, Message = "save failed" };
 
             _unitServiceMock
-               .Setup(s => s.GetEditAsync(unit.Id))
+               .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
                .ReturnsAsync(unit);
             _unitServiceMock
-                .Setup(s => s.UpdateAsync(unit))
+                .Setup(s => s.UpdateAsync(unit, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent("10");
@@ -181,7 +181,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowError("save failed"), Times.Once);
+            _messageMock.Verify(m => m.ShowErrorAsync("save failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var unit = new UnitEditModel { Id = 0 };
 
             _unitServiceMock
-                .Setup(s => s.AddAsync(unit))
+                .Setup(s => s.AddAsync(unit, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderWithMessageComponent();
@@ -208,7 +208,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowError("Save failed. Please try again."), Times.Once);
+            _messageMock.Verify(m => m.ShowErrorAsync("Save failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- DeleteCoreAsync ----------
@@ -218,10 +218,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var unit = new UnitEditModel { Id = 7 };
 
             _unitServiceMock
-                .Setup(s => s.GetEditAsync(unit.Id))
+                .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(unit);
             _unitServiceMock
-                .Setup(s => s.DeleteAsync(unit.Id))
+                .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent("7");
@@ -239,8 +239,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _unitServiceMock.Verify(s => s.DeleteAsync(unit.Id), Times.Once);
-            _messageMock.Verify(m => m.ShowInfo("Data has been deleted successfully"), Times.Once);
+            _unitServiceMock.Verify(s => s.DeleteAsync(unit.Id, CancellationToken.None), Times.Once);
+            _messageMock.Verify(m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
             Assert.That(nav.Uri, Does.EndWith("recipebooks/unitsoverview"));
@@ -253,10 +253,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var response = new CommandResponse { Succeeded = false, Message = "delete failed" };
 
             _unitServiceMock
-               .Setup(s => s.GetEditAsync(unit.Id))
+               .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
                .ReturnsAsync(unit);
             _unitServiceMock
-                .Setup(s => s.DeleteAsync(unit.Id))
+                .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent("7");
@@ -274,7 +274,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowError("delete failed"), Times.Once);
+            _messageMock.Verify(m => m.ShowErrorAsync("delete failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -283,10 +283,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var unit = new UnitEditModel { Id = 7 };
 
             _unitServiceMock
-               .Setup(s => s.GetEditAsync(unit.Id))
+               .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
                .ReturnsAsync(unit);
             _unitServiceMock
-                .Setup(s => s.DeleteAsync(unit.Id))
+                .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderWithMessageComponent("7");
@@ -304,7 +304,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowError("Delete failed. Please try again."), Times.Once);
+            _messageMock.Verify(m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
     }
 }

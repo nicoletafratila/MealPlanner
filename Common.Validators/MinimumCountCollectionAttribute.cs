@@ -1,20 +1,46 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace Common.Validators
 {
-    public class MinimumCountCollectionAttribute(int count) : ValidationAttribute
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+    public sealed class MinimumCountCollectionAttribute : ValidationAttribute
     {
-        readonly int _count = count;
+        private readonly int _minCount;
+
+        public MinimumCountCollectionAttribute(int minCount)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(minCount);
+
+            _minCount = minCount;
+        }
 
         public override bool IsValid(object? value)
         {
             if (value == null)
                 return false;
 
-            if (value is IEnumerable<object> collection && collection.Count() < _count)
+            if (value is string)
                 return false;
 
-            return true;
+            if (value is ICollection collection)
+                return collection.Count >= _minCount;
+
+            if (value is not IEnumerable enumerable)
+                return false;
+
+            var count = 0;
+            foreach (var _ in enumerable)
+            {
+                count++;
+                if (count >= _minCount)
+                    return true;
+            }
+
+            return false;
         }
+
+        public override string FormatErrorMessage(string name)
+            => ErrorMessage ?? $"{name} must contain at least {_minCount} item(s).";
     }
 }

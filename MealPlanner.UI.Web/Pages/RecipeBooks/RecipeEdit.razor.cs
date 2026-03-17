@@ -143,17 +143,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             if (response is null)
             {
-                ShowError("Save failed. Please try again.");
+                await ShowErrorAsync("Save failed. Please try again.");
                 return;
             }
 
             if (!response.Succeeded)
             {
-                ShowError(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? "Save failed.");
                 return;
             }
 
-            ShowInfo("Data has been saved successfully");
+            await ShowInfoAsync("Data has been saved successfully");
             NavigateToOverview();
         }
 
@@ -190,17 +190,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var response = await RecipeService.DeleteAsync(recipe.Id);
             if (response is null)
             {
-                ShowError("Delete failed. Please try again.");
+                await ShowErrorAsync("Delete failed. Please try again.");
                 return;
             }
 
             if (!response.Succeeded)
             {
-                ShowError(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? "Delete failed.");
                 return;
             }
 
-            ShowInfo("Data has been deleted successfully");
+            await ShowInfoAsync("Data has been deleted successfully");
             NavigateToOverview();
         }
 
@@ -212,7 +212,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             double.TryParse(Quantity, out var quantityValue) &&
             quantityValue > 0;
 
-        private void AddIngredient()
+        private async Task AddIngredientAsync()
         {
             if (Recipe is null || string.IsNullOrWhiteSpace(ProductId) || ProductId == "0")
                 return;
@@ -233,7 +233,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 }
                 else
                 {
-                    ShowError("The same ingredient was added to the recipe with a different unit of measurement.");
+                    await ShowErrorAsync("The same ingredient was added to the recipe with a different unit of measurement.");
                 }
 
                 return;
@@ -376,8 +376,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
             catch (Exception)
             {
-                ShowError(
-                    $"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
+                await ShowErrorAsync($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
             }
         }
 
@@ -386,10 +385,10 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             await JS.InvokeVoidAsync("checkQuantity");
         }
 
-        private void ShowError(string message)
-            => MessageComponent?.ShowError(message);
+        private async Task ShowErrorAsync(string message)
+            => await MessageComponent!.ShowErrorAsync(message);
 
-        private void ShowInfo(string message)
-            => MessageComponent?.ShowInfo(message);
+        private async Task ShowInfoAsync(string message)
+            => await MessageComponent!.ShowInfoAsync(message);
     }
 }

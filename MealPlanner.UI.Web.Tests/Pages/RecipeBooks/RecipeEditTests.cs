@@ -55,15 +55,15 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         private void ArrangeLookups()
         {
             _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
 
             _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
 
             _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
         }
 
@@ -93,7 +93,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             Assert.That(cut.Instance.Recipe!.Id, Is.Zero);
 
             _recipeServiceMock.Verify(
-                s => s.GetEditAsync(It.IsAny<int>()),
+                s => s.GetEditAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
             _recipeServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             // Act
@@ -120,7 +120,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 Assert.That(cut.Instance.Recipe!.Name, Is.EqualTo("Loaded"));
             }
 
-            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             ArrangeLookups();
 
             _recipeServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync((RecipeEditModel?)null);
 
             // Act
@@ -139,7 +139,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Assert
             Assert.That(cut.Instance.Recipe, Is.Not.Null);
             Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(5));
-            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
         }
 
         // ---------- SaveCoreAsync ----------
@@ -152,7 +152,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
             _recipeServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
@@ -172,11 +172,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _recipeServiceMock.Verify(
-                s => s.AddAsync(It.Is<RecipeEditModel>(r => r.Name == "New Recipe")),
+                s => s.AddAsync(It.Is<RecipeEditModel>(r => r.Name == "New Recipe"), CancellationToken.None),
                 Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been saved successfully"),
+                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -194,18 +194,18 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
             _recipeServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _recipeServiceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<RecipeEditModel>()))
+                .Setup(s => s.UpdateAsync(It.IsAny<RecipeEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
 
             var recipe = new RecipeEditModel { Id = 5, Name = "Updated" };
 
-            var method = typeof(RecipeEdit) .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(RecipeEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             // Act
@@ -216,13 +216,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _recipeServiceMock.Verify(
-                s => s.UpdateAsync(It.Is<RecipeEditModel>(r => r.Id == 5)),
+                s => s.UpdateAsync(It.Is<RecipeEditModel>(r => r.Id == 5), CancellationToken.None),
                 Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been saved successfully"),
+                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -233,14 +233,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             ArrangeLookups();
 
             _recipeServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>(), CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("0");
 
             var recipe = new RecipeEditModel { Id = 0, Name = "New Recipe" };
 
-            var method = typeof(RecipeEdit) .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(RecipeEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             // Act
@@ -252,7 +252,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Save failed. Please try again."),
+                m => m.ShowErrorAsync("Save failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -269,14 +269,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _recipeServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<RecipeEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
 
             var recipe = new RecipeEditModel { Id = 0, Name = "New Recipe" };
 
-            var method = typeof(RecipeEdit) .GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(RecipeEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             // Act
@@ -288,7 +288,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Validation error"),
+                m => m.ShowErrorAsync("Validation error", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -313,7 +313,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _recipeServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>()),
+                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -332,18 +332,18 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
             _recipeServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _recipeServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
 
             var recipe = new RecipeEditModel { Id = 5, Name = "ToDelete" };
 
-            var method = typeof(RecipeEdit)  .GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(RecipeEdit).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             // Act
@@ -354,10 +354,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
-            _recipeServiceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
+            _recipeServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -373,11 +373,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
             _recipeServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _recipeServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("5");
@@ -396,9 +396,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -417,11 +417,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var existing = new RecipeEditModel { Id = 5, Name = "Loaded" };
 
             _recipeServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _recipeServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -440,9 +440,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _recipeServiceMock.Verify(s => s.GetEditAsync(5), Times.Once); 
+            _recipeServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed because of dependency"),
+                m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 

@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.JSInterop.SetupVoid("window.blazorBootstrap.confirmDialog.show", _ => true);
 
             _serviceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
 
             _sessionStorageMock
@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             cut.InvokeAsync(() =>
             {
-                var m = typeof(ProductCategoriesOverview).GetMethod( "New", BindingFlags.Instance | BindingFlags.NonPublic);
+                var m = typeof(ProductCategoriesOverview).GetMethod("New", BindingFlags.Instance | BindingFlags.NonPublic);
                 Assert.That(m, Is.Not.Null);
                 m!.Invoke(cut.Instance, []);
             });
@@ -91,7 +91,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var navManager = _ctx.Services.GetRequiredService<NavigationManager>();
             var cut = RenderWithMessageComponent();
 
-            var method = typeof(ProductCategoriesOverview).GetMethod( "Update", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(ProductCategoriesOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             var model = new ProductCategoryModel { Id = 42 };
@@ -108,16 +108,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var category = new ProductCategoryModel { Id = 5 };
 
             _serviceMock
-                .Setup(s => s.DeleteAsync(category.Id))
+                .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
                 .ReturnsAsync(new Common.Models.CommandResponse { Succeeded = true });
 
             _serviceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
 
             var cut = RenderWithMessageComponent();
 
-            var method = typeof(ProductCategoriesOverview).GetMethod( "DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(ProductCategoriesOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null, "DeleteCoreAsync method not found via reflection.");
 
             await cut.InvokeAsync(async () =>
@@ -126,8 +126,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowInfo("Data has been deleted successfully"), Times.Once);
-            _serviceMock.Verify(s => s.DeleteAsync(category.Id), Times.Once);
+            _messageMock.Verify(m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
+            _serviceMock.Verify(s => s.DeleteAsync(category.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -141,12 +141,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _serviceMock
-                .Setup(s => s.DeleteAsync(category.Id))
+                .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent();
 
-            var method = typeof(ProductCategoriesOverview).GetMethod( "DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(ProductCategoriesOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             await cut.InvokeAsync(async () =>
@@ -155,8 +155,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowError("delete failed"), Times.Once);
-            _serviceMock.Verify(s => s.DeleteAsync(category.Id), Times.Once);
+            _messageMock.Verify(m => m.ShowErrorAsync("delete failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
+            _serviceMock.Verify(s => s.DeleteAsync(category.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -165,12 +165,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var category = new ProductCategoryModel { Id = 9 };
 
             _serviceMock
-                .Setup(s => s.DeleteAsync(category.Id))
+                .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
                 .ReturnsAsync((Common.Models.CommandResponse?)null);
 
             var cut = RenderWithMessageComponent();
 
-            var method = typeof(ProductCategoriesOverview).GetMethod( "DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(ProductCategoriesOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
             await cut.InvokeAsync(async () =>
@@ -180,7 +180,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             _messageMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -204,7 +204,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var paged = new PagedList<ProductCategoryModel>(items, metadata);
 
             _serviceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(paged);
 
             var cut = RenderWithMessageComponent();
@@ -227,7 +227,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _serviceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<ProductCategoryModel>>(q =>
-                    q.PageNumber == 1 && q.PageSize == 10)),
+                    q.PageNumber == 1 && q.PageSize == 10), CancellationToken.None),
                 Times.Exactly(2));
 
             _sessionStorageMock.Verify(

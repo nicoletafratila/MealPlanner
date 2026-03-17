@@ -83,17 +83,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await MealPlanService.DeleteAsync(item.Id);
             if (response is null)
             {
-                ShowError("Delete failed. Please try again.");
+                await ShowErrorAsync("Delete failed. Please try again.");
                 return;
             }
 
             if (!response.Succeeded)
             {
-                ShowError(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? "Delete failed.");
                 return;
             }
 
-            ShowInfo("Data has been deleted successfully");
+            await ShowInfoAsync("Data has been deleted successfully");
 
             if (_mealPlansGrid is not null)
                 await _mealPlansGrid.RefreshDataAsync();
@@ -132,10 +132,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             };
         }
 
-        private void ShowError(string message)
-            => MessageComponent?.ShowError(message);
+        private async Task ShowErrorAsync(string message)
+            => await MessageComponent!.ShowErrorAsync(message);
 
-        private void ShowInfo(string message)
-            => MessageComponent?.ShowInfo(message);
+        private async Task ShowInfoAsync(string message)
+            => await MessageComponent!.ShowInfoAsync(message);
     }
 }

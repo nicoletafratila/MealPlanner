@@ -41,7 +41,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.Services.AddScoped<PreloadService>();
 
             _unitServiceMock
-               .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
+               .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
 
             _sessionStorageMock
@@ -115,11 +115,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var unit = new UnitModel { Id = 5 };
 
             _unitServiceMock
-                .Setup(s => s.DeleteAsync(unit.Id))
+                .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true, Message = "ok" });
 
             _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
 
             _sessionStorageMock
@@ -140,10 +140,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
-            _unitServiceMock.Verify(s => s.DeleteAsync(unit.Id), Times.Once);
+            _unitServiceMock.Verify(s => s.DeleteAsync(unit.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var response = new CommandResponse { Succeeded = false, Message = "delete failed" };
 
             _unitServiceMock
-                .Setup(s => s.DeleteAsync(unit.Id))
+                .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent();
@@ -170,7 +170,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _messageComponentMock.Verify(m => m.ShowError("delete failed"), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("delete failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- DataProviderAsync ----------
@@ -194,7 +194,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var paged = new PagedList<UnitModel>(items, metadata);
 
             _unitServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                 .ReturnsAsync(paged);
 
             _sessionStorageMock
@@ -221,7 +221,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _unitServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<UnitModel>>(q =>
-                    q.PageNumber == 1 && q.PageSize == 10)),
+                    q.PageNumber == 1 && q.PageSize == 10), CancellationToken.None),
                 Times.Exactly(2));
 
             _sessionStorageMock.Verify(

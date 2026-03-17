@@ -32,7 +32,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _shoppingListServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShoppingListModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShoppingListModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ShoppingListModel>([], new Metadata()));
 
             _ctx.Services.AddSingleton(_shoppingListServiceMock.Object);
@@ -122,7 +122,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _shoppingListServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>()),
+                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
             _shoppingListServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -151,9 +151,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shoppingListServiceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            _shoppingListServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -162,7 +162,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         {
             // Arrange
             _shoppingListServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent();
@@ -181,7 +181,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -196,7 +196,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shoppingListServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -215,7 +215,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed because of dependency"),
+                m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -225,7 +225,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         {
             // Arrange: override default setup
             _shoppingListServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShoppingListModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShoppingListModel>>(), CancellationToken.None))
                 .ReturnsAsync((PagedList<ShoppingListModel>?)null);
 
             var cut = RenderComponent();
@@ -272,7 +272,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 new Metadata { TotalCount = 1, PageNumber = 1, PageSize = 10 });
 
             _shoppingListServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShoppingListModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShoppingListModel>>(), CancellationToken.None))
                 .ReturnsAsync(paged);
 
             var cut = RenderComponent();

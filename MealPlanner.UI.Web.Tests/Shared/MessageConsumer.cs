@@ -11,9 +11,9 @@ namespace MealPlanner.UI.Web.Tests.Shared
         [Parameter]
         public string Message { get; set; } = "Child message";
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            MessageComponent?.ShowInfo(Message);
+            await MessageComponent!.ShowInfoAsync(Message);
         }
     }
 }

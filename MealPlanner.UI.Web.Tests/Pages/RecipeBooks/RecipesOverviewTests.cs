@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.JSInterop.SetupVoid("window.blazorBootstrap.dropdown.initialize", _ => true);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _sessionStorageMock
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var recipe = new RecipeModel { Id = 5 };
 
             _recipeServiceMock
-                .Setup(s => s.DeleteAsync(recipe.Id))
+                .Setup(s => s.DeleteAsync(recipe.Id, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true, Message = "ok" });
 
             var cut = RenderWithMessageComponent();
@@ -132,10 +132,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
-            _recipeServiceMock.Verify(s => s.DeleteAsync(recipe.Id), Times.Once);
+            _recipeServiceMock.Verify(s => s.DeleteAsync(recipe.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var response = new CommandResponse { Succeeded = false, Message = "delete failed" };
 
             _recipeServiceMock
-                .Setup(s => s.DeleteAsync(recipe.Id))
+                .Setup(s => s.DeleteAsync(recipe.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent();
@@ -162,8 +162,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _messageComponentMock.Verify(m => m.ShowError("delete failed"), Times.Once);
-            _recipeServiceMock.Verify(s => s.DeleteAsync(recipe.Id), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("delete failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
+            _recipeServiceMock.Verify(s => s.DeleteAsync(recipe.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var recipe = new RecipeModel { Id = 9 };
 
             _recipeServiceMock
-                .Setup(s => s.DeleteAsync(recipe.Id))
+                .Setup(s => s.DeleteAsync(recipe.Id, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderWithMessageComponent();
@@ -189,7 +189,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _messageComponentMock.Verify(m => m.ShowError("Delete failed. Please try again."), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- DataProviderAsync ----------
@@ -213,7 +213,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var paged = new PagedList<RecipeModel>(items, metadata);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
                 .ReturnsAsync(paged);
 
             var cut = RenderWithMessageComponent();
@@ -238,7 +238,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Assert
             _recipeServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<RecipeModel>>(q =>
-                    q.PageNumber == 1 && q.PageSize == 10)),
+                    q.PageNumber == 1 && q.PageSize == 10), CancellationToken.None),
                 Times.Exactly(2));
 
             _sessionStorageMock.Verify(

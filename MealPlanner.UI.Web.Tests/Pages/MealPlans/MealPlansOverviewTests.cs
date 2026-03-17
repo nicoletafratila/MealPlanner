@@ -32,7 +32,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _mealPlanServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<MealPlanModel>([], new Metadata()));
 
             _ctx.Services.AddSingleton(_mealPlanServiceMock.Object);
@@ -124,7 +124,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _mealPlanServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>()),
+                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -135,7 +135,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -153,9 +153,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -164,7 +164,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         {
             // Arrange
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent();
@@ -183,7 +183,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -198,7 +198,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -217,7 +217,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed because of dependency"),
+                m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -228,7 +228,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         {
             // Arrange: override default
             _mealPlanServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>(), CancellationToken.None))
                 .ReturnsAsync((PagedList<MealPlanModel>?)null);
 
             var cut = RenderComponent();
@@ -275,7 +275,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 new Metadata { TotalCount = 1, PageNumber = 1, PageSize = 10 });
 
             _mealPlanServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<MealPlanModel>>(), CancellationToken.None))
                 .ReturnsAsync(paged);
 
             var cut = RenderComponent();

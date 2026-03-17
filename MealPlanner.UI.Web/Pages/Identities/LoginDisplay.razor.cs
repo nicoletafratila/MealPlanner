@@ -48,7 +48,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Failed to load ApplicationUser for username '{Username}'", username);
-                MessageComponent?.ShowError("Failed to load user profile.");
+                MessageComponent?.ShowErrorAsync("Failed to load user profile.");
             }
         }
 
@@ -71,13 +71,13 @@ namespace MealPlanner.UI.Web.Pages.Identities
                     Logger.LogWarning("Logout failed. Succeeded={Succeeded}, Message={Message}, ErrorCode={ErrorCode}",
                         result?.Succeeded, result?.Message, result?.ErrorCode);
 
-                    MessageComponent?.ShowError(message);
+                    await MessageComponent!.ShowErrorAsync(message);
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Unexpected error during logout");
-                MessageComponent?.ShowError("Unexpected error during logout. Please try again.");
+                await MessageComponent!.ShowErrorAsync("Unexpected error during logout. Please try again.");
             }
         }
     }

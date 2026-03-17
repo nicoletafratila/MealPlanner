@@ -61,7 +61,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         private void ArrangeCategories()
         {
             _recipeCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
         }
 
@@ -95,7 +95,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             }
 
             _mealPlanServiceMock.Verify(
-                s => s.GetEditAsync(It.IsAny<int>()),
+                s => s.GetEditAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -113,7 +113,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             // Act
@@ -127,7 +127,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Assert.That(cut.Instance.MealPlan!.Name, Is.EqualTo("Loaded Meal Plan"));
             }
 
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
         }
 
         // ---------- SaveCoreAsync ----------
@@ -140,7 +140,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
             _mealPlanServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
@@ -159,11 +159,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _mealPlanServiceMock.Verify(
-                s => s.AddAsync(It.Is<MealPlanEditModel>(m => m.Name == "New Plan")),
+                s => s.AddAsync(It.Is<MealPlanEditModel>(m => m.Name == "New Plan"), CancellationToken.None),
                 Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been saved successfully"),
+                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -184,11 +184,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mealPlanServiceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>()))
+                .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -206,13 +206,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _mealPlanServiceMock.Verify(
-                s => s.UpdateAsync(It.Is<MealPlanEditModel>(m => m.Id == 5)),
+                s => s.UpdateAsync(It.Is<MealPlanEditModel>(m => m.Id == 5), CancellationToken.None),
                 Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been saved successfully"),
+                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -223,7 +223,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             ArrangeCategories();
 
             _mealPlanServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>(), CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("0");
@@ -242,7 +242,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Save failed. Please try again."),
+                m => m.ShowErrorAsync("Save failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -259,7 +259,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
@@ -278,7 +278,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Validation error"),
+                m => m.ShowErrorAsync("Validation error", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -303,7 +303,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _mealPlanServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>()),
+                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -325,11 +325,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -347,10 +347,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
-            _mealPlanServiceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -369,11 +369,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("5");
@@ -391,9 +391,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -415,11 +415,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -437,9 +437,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed because of dependency"),
+                m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -484,7 +484,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var recipe = new RecipeModel { Id = 5, Name = "R1" };
 
             _recipeServiceMock
-                .Setup(s => s.GetByIdAsync(5))
+                .Setup(s => s.GetByIdAsync(5, CancellationToken.None))
                 .ReturnsAsync(recipe);
 
             var cut = RenderComponent("0");
@@ -521,7 +521,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var recipes = new PagedList<RecipeModel>([new() { Id = 1, Name = "A" }], new Metadata());
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
                 .ReturnsAsync(recipes);
 
             var cut = RenderComponent("0");
@@ -544,7 +544,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                     qp.Filters != null &&
                     qp.Filters.Count() == 1 &&
                     qp.Filters.First().PropertyName == "RecipeCategoryId" &&
-                    (string)qp.Filters.First().Value == "3")),
+                    (string)qp.Filters.First().Value == "3"), CancellationToken.None),
                 Times.Once);
 
             Assert.That(cut.Instance.RecipeId, Is.EqualTo(string.Empty));

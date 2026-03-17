@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.JSInterop.SetupVoid("window.blazorBootstrap.confirmDialog.show", _ => true);
 
             _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductModel>([], new Metadata()));
 
             _sessionStorageMock
@@ -108,7 +108,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var product = new ProductModel { Id = 5 };
 
             _productServiceMock
-                .Setup(s => s.DeleteAsync(product.Id))
+                .Setup(s => s.DeleteAsync(product.Id, CancellationToken.None))
                 .ReturnsAsync(new Common.Models.CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent();
@@ -123,10 +123,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
-            _productServiceMock.Verify(s => s.DeleteAsync(product.Id), Times.Once);
+            _productServiceMock.Verify(s => s.DeleteAsync(product.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _productServiceMock
-                .Setup(s => s.DeleteAsync(product.Id))
+                .Setup(s => s.DeleteAsync(product.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent();
@@ -154,8 +154,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageComponentMock.Verify(m => m.ShowError("delete failed"), Times.Once);
-            _productServiceMock.Verify(s => s.DeleteAsync(product.Id), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("delete failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
+            _productServiceMock.Verify(s => s.DeleteAsync(product.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var product = new ProductModel { Id = 9 };
 
             _productServiceMock
-                .Setup(s => s.DeleteAsync(product.Id))
+                .Setup(s => s.DeleteAsync(product.Id, CancellationToken.None))
                 .ReturnsAsync((Common.Models.CommandResponse?)null);
 
             var cut = RenderWithMessageComponent();
@@ -179,7 +179,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -203,7 +203,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var paged = new PagedList<ProductModel>(items, metadata);
 
             _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
                 .ReturnsAsync(paged);
 
             var cut = RenderWithMessageComponent();
@@ -225,7 +225,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _productServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(q =>
-                    q.PageNumber == 1 && q.PageSize == 10)),
+                    q.PageNumber == 1 && q.PageSize == 10), CancellationToken.None),
                 Times.Exactly(2));
 
             _sessionStorageMock.Verify(

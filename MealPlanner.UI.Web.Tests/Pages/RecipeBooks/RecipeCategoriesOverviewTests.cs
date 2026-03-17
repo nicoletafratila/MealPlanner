@@ -39,7 +39,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.JSInterop.SetupVoid("window.blazorBootstrap.confirmDialog.show", _ => true);
 
             _serviceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
         }
 
@@ -99,7 +99,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var category = new RecipeCategoryModel { Id = 5 };
 
             _serviceMock
-                .Setup(s => s.DeleteAsync(category.Id))
+                .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
                 .ReturnsAsync(new Common.Models.CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent();
@@ -113,8 +113,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowInfo("Data has been deleted successfully"), Times.Once);
-            _serviceMock.Verify(s => s.DeleteAsync(category.Id), Times.Once);
+            _messageMock.Verify(m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
+            _serviceMock.Verify(s => s.DeleteAsync(category.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _serviceMock
-                .Setup(s => s.DeleteAsync(category.Id))
+                .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent();
@@ -142,7 +142,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowError("delete failed"), Times.Once);
+            _messageMock.Verify(m => m.ShowErrorAsync("delete failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- SaveAsync ----------
@@ -156,12 +156,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _serviceMock
-              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
               .ReturnsAsync(new PagedList<RecipeCategoryModel>(
                   categories, new Metadata()));
 
             _serviceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<IList<RecipeCategoryModel>>()))
+                .Setup(s => s.UpdateAsync(It.IsAny<IList<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new Common.Models.CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent();
@@ -175,8 +175,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageMock.Verify(m => m.ShowInfo("Data has been saved successfully"), Times.Once);
-            _serviceMock.Verify(s => s.UpdateAsync(It.IsAny<IList<RecipeCategoryModel>>()), Times.Once);
+            _messageMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
+            _serviceMock.Verify(s => s.UpdateAsync(It.IsAny<IList<RecipeCategoryModel>>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- MoveUp / MoveDown ----------
@@ -191,7 +191,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _serviceMock
-              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
               .ReturnsAsync(new PagedList<RecipeCategoryModel>(
                   categories, new Metadata()));
 
@@ -221,7 +221,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _serviceMock
-              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
               .ReturnsAsync(new PagedList<RecipeCategoryModel>(
                   categories, new Metadata()));
 

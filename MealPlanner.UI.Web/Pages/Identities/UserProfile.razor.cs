@@ -50,11 +50,11 @@ namespace MealPlanner.UI.Web.Pages.Identities
             var response = await ApplicationUserService!.UpdateAsync(ApplicationUser!);
             if (response != null && !response.Succeeded)
             {
-                MessageComponent?.ShowError(response.Message!);
+                await MessageComponent!.ShowErrorAsync(response.Message!);
             }
             else
             {
-                MessageComponent?.ShowInfo("Data has been saved successfully");
+                await MessageComponent!.ShowInfoAsync("Data has been saved successfully");
                 NavigateToOverview();
             }
         }
@@ -80,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
             catch (Exception)
             {
-                MessageComponent?.ShowError($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
+                await MessageComponent!.ShowErrorAsync($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
                 return;
             }
         }

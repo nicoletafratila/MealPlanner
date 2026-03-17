@@ -15,7 +15,7 @@ using Moq;
 namespace MealPlanner.UI.Web.Tests.Pages.Identities
 {
     [TestFixture]
-    public class LoginDisplayTests 
+    public class LoginDisplayTests
     {
         private Mock<IAuthenticationService> _authServiceMock = null!;
         private Mock<IApplicationUserService> _userServiceMock = null!;
@@ -93,7 +93,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var authState = CreateAuthState(isAuthenticated: false, name: null);
 
             _userServiceMock
-                .Setup(s => s.GetEditAsync(It.IsAny<string>()))
+                .Setup(s => s.GetEditAsync(It.IsAny<string>(), CancellationToken.None))
                 .Throws(new Exception("Should not be called"));
 
             // Act
@@ -101,7 +101,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             Assert.That(cut.Instance.ApplicationUser, Is.Null);
-            _userServiceMock.Verify(s => s.GetEditAsync(It.IsAny<string>()), Times.Never);
+            _userServiceMock.Verify(s => s.GetEditAsync(It.IsAny<string>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             var userModel = new ApplicationUserEditModel();
             _userServiceMock
-                .Setup(s => s.GetEditAsync(username))
+                .Setup(s => s.GetEditAsync(username, CancellationToken.None))
                 .ReturnsAsync(userModel);
 
             // Act
@@ -122,7 +122,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             Assert.That(cut.Instance.ApplicationUser, Is.SameAs(userModel));
-            _userServiceMock.Verify(s => s.GetEditAsync(username), Times.Once);
+            _userServiceMock.Verify(s => s.GetEditAsync(username, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var authState = CreateAuthState(isAuthenticated: true, name: username);
 
             _userServiceMock
-                .Setup(s => s.GetEditAsync(username))
+                .Setup(s => s.GetEditAsync(username, CancellationToken.None))
                 .ThrowsAsync(new Exception("boom"));
 
             // Act
@@ -141,7 +141,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert: UI message
             _messageComponentMock.Verify(
-                m => m.ShowError("Failed to load user profile."),
+                m => m.ShowErrorAsync("Failed to load user profile.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
 
             // Assert: logging (basic check on LogError call)
@@ -164,11 +164,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var authState = CreateAuthState(isAuthenticated: true, name: "test.user");
 
             _userServiceMock
-                .Setup(s => s.GetEditAsync(It.IsAny<string>()))
+                .Setup(s => s.GetEditAsync(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(new ApplicationUserEditModel());
 
             _authServiceMock
-                .Setup(s => s.LogoutAsync())
+                .Setup(s => s.LogoutAsync(CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithAuthAndMessageComponent(authState);
@@ -180,7 +180,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             Assert.That(nav.Uri, Is.EqualTo("http://localhost/"));
-            _authServiceMock.Verify(s => s.LogoutAsync(), Times.Once);
+            _authServiceMock.Verify(s => s.LogoutAsync(CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var authState = CreateAuthState(isAuthenticated: true, name: username);
 
             _userServiceMock
-                .Setup(s => s.GetEditAsync(It.IsAny<string>()))
+                .Setup(s => s.GetEditAsync(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(new ApplicationUserEditModel());
 
             var response = new CommandResponse
@@ -202,7 +202,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             };
 
             _authServiceMock
-                .Setup(s => s.LogoutAsync())
+                .Setup(s => s.LogoutAsync(CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderWithAuthAndMessageComponent(authState);
@@ -212,7 +212,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Logout failed: test"),
+                m => m.ShowErrorAsync("Logout failed: test", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
 
             _loggerMock.Verify(
@@ -235,11 +235,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var authState = CreateAuthState(isAuthenticated: true, name: username);
 
             _userServiceMock
-                .Setup(s => s.GetEditAsync(It.IsAny<string>()))
+                .Setup(s => s.GetEditAsync(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(new ApplicationUserEditModel());
 
             _authServiceMock
-                .Setup(s => s.LogoutAsync())
+                .Setup(s => s.LogoutAsync(CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderWithAuthAndMessageComponent(authState);
@@ -249,7 +249,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Logout failed. Please try again."),
+                m => m.ShowErrorAsync("Logout failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -262,11 +262,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var authState = CreateAuthState(isAuthenticated: true, name: username);
 
             _userServiceMock
-                .Setup(s => s.GetEditAsync(It.IsAny<string>()))
+                .Setup(s => s.GetEditAsync(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(new ApplicationUserEditModel());
 
             _authServiceMock
-                .Setup(s => s.LogoutAsync())
+                .Setup(s => s.LogoutAsync(CancellationToken.None))
                 .ThrowsAsync(new Exception("boom"));
 
             var cut = RenderWithAuthAndMessageComponent(authState);
@@ -276,7 +276,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Unexpected error during logout. Please try again."),
+                m => m.ShowErrorAsync("Unexpected error during logout. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
 
             _loggerMock.Verify(

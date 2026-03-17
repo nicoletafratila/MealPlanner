@@ -62,7 +62,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             };
 
             _authServiceMock
-                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>()))
+                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>(), CancellationToken.None))
                 .ReturnsAsync(result);
 
             var cut = RenderComponent();
@@ -98,7 +98,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             };
 
             _authServiceMock
-                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>()))
+                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>(), CancellationToken.None))
                 .ReturnsAsync(result);
 
             var cut = RenderComponent();
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Invalid credentials"),
+                m => m.ShowErrorAsync("Invalid credentials", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -124,7 +124,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
         {
             // Arrange
             _authServiceMock
-                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>()))
+                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>(), CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent();
@@ -141,7 +141,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Login failed. Please try again."),
+                m => m.ShowErrorAsync("Login failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -156,7 +156,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             };
 
             _authServiceMock
-                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>()))
+                .Setup(s => s.LoginAsync(It.IsAny<LoginModel>(), CancellationToken.None))
                 .ReturnsAsync(result);
 
             var cut = RenderComponent();
@@ -178,7 +178,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _authServiceMock.Verify(
-                s => s.LoginAsync(It.IsAny<LoginModel>()),
+                s => s.LoginAsync(It.IsAny<LoginModel>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -205,7 +205,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _authServiceMock.Verify(
-                s => s.LoginAsync(It.IsAny<LoginModel>()),
+                s => s.LoginAsync(It.IsAny<LoginModel>(), CancellationToken.None),
                 Times.Never);
         }
 

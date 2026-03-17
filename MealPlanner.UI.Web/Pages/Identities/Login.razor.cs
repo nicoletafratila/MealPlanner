@@ -29,7 +29,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
         {
             if (AuthenticationService is null)
             {
-                ShowError("Authentication service is not available.");
+                await ShowErrorAsync("Authentication service is not available.");
                 return;
             }
 
@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
             if (result is null)
             {
-                ShowError("Login failed. Please try again.");
+                await ShowErrorAsync("Login failed. Please try again.");
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
             else
             {
-                ShowError(result.Message ?? "Login failed. Please try again.");
+                await ShowErrorAsync(result.Message ?? "Login failed. Please try again.");
             }
         }
 
@@ -67,7 +67,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
         }
 
-        private void ShowError(string message)
-            => MessageComponent?.ShowError(message);
+        private async Task ShowErrorAsync(string message)
+            => await MessageComponent!.ShowErrorAsync(message);
     }
 }

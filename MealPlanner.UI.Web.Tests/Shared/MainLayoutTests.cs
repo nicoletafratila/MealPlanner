@@ -52,7 +52,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             var cut = _ctx.Render<MainLayout>();
 
             // Act
-            await cut.InvokeAsync(() => cut.Instance.ShowError("Something went wrong"));
+            await cut.InvokeAsync(() => cut.Instance.ShowErrorAsync("Something went wrong"));
 
             using (Assert.EnterMultipleScope())
             {
@@ -69,10 +69,10 @@ namespace MealPlanner.UI.Web.Tests.Shared
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
-            await cut.InvokeAsync(() => cut.Instance.ShowError("Old error"));
+            await cut.InvokeAsync(() => cut.Instance.ShowErrorAsync("Old error"));
 
             // Act
-            await cut.InvokeAsync(() => cut.Instance.ShowInfo("Informational message"));
+            await cut.InvokeAsync(() => cut.Instance.ShowInfoAsync("Informational message"));
 
             using (Assert.EnterMultipleScope())
             {
@@ -89,10 +89,10 @@ namespace MealPlanner.UI.Web.Tests.Shared
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
-            await cut.InvokeAsync(() => cut.Instance.ShowError("Error message"));
+            await cut.InvokeAsync(() => cut.Instance.ShowErrorAsync("Error message"));
 
             // Act
-            await cut.InvokeAsync(() => cut.Instance.HideError());
+            await cut.InvokeAsync(() => cut.Instance.HideErrorAsync());
 
             using (Assert.EnterMultipleScope())
             {
@@ -108,10 +108,10 @@ namespace MealPlanner.UI.Web.Tests.Shared
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
-            await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info message"));
+            await cut.InvokeAsync(() => cut.Instance.ShowInfoAsync("Info message"));
 
             // Act
-            await cut.InvokeAsync(() => cut.Instance.HideInfo());
+            await cut.InvokeAsync(() => cut.Instance.HideInfoAsync());
 
             using (Assert.EnterMultipleScope())
             {
@@ -127,10 +127,10 @@ namespace MealPlanner.UI.Web.Tests.Shared
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
-            await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info first"));
+            await cut.InvokeAsync(() => cut.Instance.ShowInfoAsync("Info first"));
 
             // Act
-            await cut.InvokeAsync(() => cut.Instance.ShowError("Error now"));
+            await cut.InvokeAsync(() => cut.Instance.ShowErrorAsync("Error now"));
 
             using (Assert.EnterMultipleScope())
             {
@@ -146,10 +146,10 @@ namespace MealPlanner.UI.Web.Tests.Shared
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
-            await cut.InvokeAsync(() => cut.Instance.ShowError("Error first"));
+            await cut.InvokeAsync(() => cut.Instance.ShowErrorAsync("Error first"));
 
             // Act
-            await cut.InvokeAsync(() => cut.Instance.ShowInfo("Info now"));
+            await cut.InvokeAsync(() => cut.Instance.ShowInfoAsync("Info now"));
 
             using (Assert.EnterMultipleScope())
             {

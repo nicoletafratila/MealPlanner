@@ -82,7 +82,7 @@
                             @if (IsErrorActive)
                             {
                                 <div>
-                                    <Alert Color="AlertColor.Danger" Dismissable="true" OnClose="HideError">
+                                    <Alert Color="AlertColor.Danger" Dismissable="true" OnClose="HideErrorAsync">
                                         <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>
                                         @Message
                                     </Alert>
@@ -91,7 +91,7 @@
                             @if (IsInfoActive)
                             {
                                 <div>
-                                    <Alert Color="AlertColor.Success" Dismissable="true" OnClose="HideInfo">
+                                    <Alert Color="AlertColor.Success" Dismissable="true" OnClose="HideInfoAsync">
                                         <Icon Name="IconName.CheckCircleFill" class="me-2"></Icon>
                                         @Message
                                     </Alert>

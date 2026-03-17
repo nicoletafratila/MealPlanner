@@ -146,17 +146,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (response is null)
             {
-                ShowError("Save failed. Please try again.");
+                await ShowErrorAsync("Save failed. Please try again.");
                 return;
             }
 
             if (!response.Succeeded)
             {
-                ShowError(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? "Save failed.");
                 return;
             }
 
-            ShowInfo("Data has been saved successfully");
+            await ShowInfoAsync("Data has been saved successfully");
             NavigateToOverview();
         }
 
@@ -193,17 +193,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await ShoppingListService.DeleteAsync(shoppingList.Id);
             if (response is null)
             {
-                ShowError("Delete failed. Please try again.");
+                await ShowErrorAsync("Delete failed. Please try again.");
                 return;
             }
 
             if (!response.Succeeded)
             {
-                ShowError(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? "Delete failed.");
                 return;
             }
 
-            ShowInfo("Data has been deleted successfully");
+            await ShowInfoAsync("Data has been deleted successfully");
             NavigateToOverview();
         }
 
@@ -241,7 +241,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             !string.IsNullOrWhiteSpace(Quantity) &&
             double.TryParse(Quantity, out _);
 
-        private void AddProduct()
+        private async Task AddProductAsync()
         {
             if (!string.IsNullOrWhiteSpace(ProductId) &&
                 ProductId != "0" &&
@@ -251,7 +251,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 if (product is null)
                     return;
 
-                AddProduct(product, decimal.Parse(Quantity!), int.Parse(UnitId!));
+                await AddProductAsync(product, decimal.Parse(Quantity!), int.Parse(UnitId!));
             }
         }
 
@@ -261,7 +261,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             if (!CanAddMealPlan)
             {
-                ShowError("You must select a shop first.");
+                await ShowErrorAsync("You must select a shop first.");
                 return;
             }
 
@@ -273,13 +273,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (!result.Confirmed || result.Data is null)
             {
-                ShowError("You must select a meal plan to add to the shopping list.");
+                await ShowErrorAsync("You must select a meal plan to add to the shopping list.");
                 return;
             }
 
             if (!int.TryParse(result.Data.ToString(), out var mealPlanId))
             {
-                ShowError("You must select a meal plan to add to the shopping list.");
+                await ShowErrorAsync("You must select a meal plan to add to the shopping list.");
                 return;
             }
 
@@ -291,7 +291,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             {
                 if (item.Product is not null)
                 {
-                    AddProduct(item.Product, item.Quantity, item.UnitId);
+                    await AddProductAsync(item.Product, item.Quantity, item.UnitId);
                 }
             }
         }
@@ -302,7 +302,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             if (!CanAddRecipe)
             {
-                ShowError("You must select a shop first.");
+                await ShowErrorAsync("You must select a shop first.");
                 return;
             }
 
@@ -314,14 +314,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (!result.Confirmed || result.Data is null)
             {
-                ShowError("You must select a recipe to add to the shopping list.");
+                await ShowErrorAsync("You must select a recipe to add to the shopping list.");
                 return;
             }
 
             var recipeIdString = result.Data.ToString();
             if (!int.TryParse(recipeIdString, out var recipeId))
             {
-                ShowError("You must select a recipe to add to the shopping list.");
+                await ShowErrorAsync("You must select a recipe to add to the shopping list.");
                 return;
             }
 
@@ -333,12 +333,12 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             {
                 if (item.Product is not null)
                 {
-                    AddProduct(item.Product, item.Quantity, item.UnitId);
+                    await AddProductAsync(item.Product, item.Quantity, item.UnitId);
                 }
             }
         }
 
-        private void AddProduct(ProductModel product, decimal quantity, int unitId)
+        private async Task AddProductAsync(ProductModel product, decimal quantity, int unitId)
         {
             if (ShoppingList?.Products is null || BaseUnits?.Items is null)
                 return;
@@ -349,7 +349,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (unit is null || baseUnit is null)
             {
-                ShowError("Unit configuration is invalid.");
+                await ShowErrorAsync("Unit configuration is invalid.");
                 return;
             }
 
@@ -381,7 +381,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
             catch (Exception ex)
             {
-                ShowError(ex.Message);
+                await ShowErrorAsync(ex.Message);
             }
 
             StateHasChanged();
@@ -407,7 +407,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await ShoppingListService.UpdateAsync(ShoppingList);
             if (response != null && !response.Succeeded)
             {
-                ShowError(response.Message!);
+                await ShowErrorAsync(response.Message!);
             }
             else
             {
@@ -518,10 +518,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             await JS.InvokeVoidAsync("checkQuantity");
         }
 
-        private void ShowError(string message)
-            => MessageComponent?.ShowError(message);
+        private async Task ShowErrorAsync(string message)
+            => await MessageComponent!.ShowErrorAsync(message);
 
-        private void ShowInfo(string message)
-            => MessageComponent?.ShowInfo(message);
+        private async Task ShowInfoAsync(string message)
+            => await MessageComponent!.ShowInfoAsync(message);
     }
 }

@@ -48,7 +48,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         private void ArrangeCategories()
         {
             _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
         }
 
@@ -73,7 +73,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 new Metadata());
 
             _productCategoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(categories);
 
             // Act
@@ -84,7 +84,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             Assert.That(cut.Instance.Shop!.Id, Is.Zero);
 
             _shopServiceMock.Verify(
-                s => s.GetEditAsync(It.IsAny<int>()),
+                s => s.GetEditAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -101,7 +101,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             // Act
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Assert.That(cut.Instance.Shop!.Name, Is.EqualTo("Loaded Shop"));
             }
 
-            _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             ArrangeCategories();
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync((ShopEditModel?)null);
 
             // Act
@@ -134,7 +134,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Assert
             Assert.That(cut.Instance.Shop, Is.Not.Null);
             Assert.That(cut.Instance.Shop!.Id, Is.Zero); // constructed with default ctor
-            _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
         }
 
         // ---------- SaveCoreAsync ----------
@@ -147,7 +147,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
             _shopServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<ShopEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<ShopEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
@@ -166,11 +166,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _shopServiceMock.Verify(
-                s => s.AddAsync(It.Is<ShopEditModel>(m => m.Name == "New Shop")),
+                s => s.AddAsync(It.Is<ShopEditModel>(m => m.Name == "New Shop"), CancellationToken.None),
                 Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been saved successfully"),
+                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -192,11 +192,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _shopServiceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<ShopEditModel>()))
+                .Setup(s => s.UpdateAsync(It.IsAny<ShopEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -214,13 +214,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _shopServiceMock.Verify(
-                s => s.UpdateAsync(It.Is<ShopEditModel>(m => m.Id == 5)),
+                s => s.UpdateAsync(It.Is<ShopEditModel>(m => m.Id == 5), CancellationToken.None),
                 Times.Once);
 
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been saved successfully"),
+                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -231,7 +231,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             ArrangeCategories();
 
             _shopServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<ShopEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<ShopEditModel>(), CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("0");
@@ -250,7 +250,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Save failed. Please try again."),
+                m => m.ShowErrorAsync("Save failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -267,7 +267,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shopServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<ShopEditModel>()))
+                .Setup(s => s.AddAsync(It.IsAny<ShopEditModel>(), CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("0");
@@ -286,7 +286,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowError("Validation error"),
+                m => m.ShowErrorAsync("Validation error", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -311,7 +311,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _shopServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>()),
+                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -330,11 +330,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _shopServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -352,10 +352,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
-            _shopServiceMock.Verify(s => s.DeleteAsync(5), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
+            _shopServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowInfo("Data has been deleted successfully"),
+                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -375,11 +375,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _shopServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent("5");
@@ -397,9 +397,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed. Please try again."),
+                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
@@ -422,11 +422,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             };
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(5))
+                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _shopServiceMock
-                .Setup(s => s.DeleteAsync(5))
+                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent("5");
@@ -444,9 +444,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(5), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
-                m => m.ShowError("Delete failed because of dependency"),
+                m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 
