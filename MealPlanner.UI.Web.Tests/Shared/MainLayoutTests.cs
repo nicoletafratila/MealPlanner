@@ -85,7 +85,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         }
 
         [Test]
-        public async Task HideError_ClearsErrorFlag_ButKeepsMessage()
+        public async Task HideError_ClearsFlags_AndMessage()
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
@@ -99,12 +99,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 // Assert
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.IsInfoActive, Is.False);
-                Assert.That(cut.Instance.Message, Is.EqualTo("Error message"));
+                Assert.That(cut.Instance.Message, Is.Null);
+                Assert.That(cut.Instance.HasMessage, Is.False);
             }
         }
 
         [Test]
-        public async Task HideInfo_ClearsInfoFlag_ButKeepsMessage()
+        public async Task HideInfo_ClearsFlags_AndMessage()
         {
             // Arrange
             var cut = _ctx.Render<MainLayout>();
@@ -118,7 +119,8 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 // Assert
                 Assert.That(cut.Instance.IsInfoActive, Is.False);
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
-                Assert.That(cut.Instance.Message, Is.EqualTo("Info message"));
+                Assert.That(cut.Instance.Message, Is.Null);
+                Assert.That(cut.Instance.HasMessage, Is.False);
             }
         }
 
