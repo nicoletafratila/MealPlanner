@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.14" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.14" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit" Version="4.2.2" />
     <PackageReference Include="NUnit.Analyzers" Version="4.4.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
@@ -36,8 +37,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Features\ApplicationUser\Commands\Update\" />
     <Folder Include="Features\ApplicationUser\Queries\GetEdit\" />
-    <Folder Include="Features\Authentication\Commands\Login\" />
-    <Folder Include="Features\Authentication\Commands\Logout\" />
   </ItemGroup>
 
 </Project>
