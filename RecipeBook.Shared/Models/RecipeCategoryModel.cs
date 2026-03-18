@@ -5,7 +5,7 @@ namespace RecipeBook.Shared.Models
     /// <summary>
     /// Lightweight model representing a recipe category.
     /// </summary>
-    public sealed class RecipeCategoryModel : BaseModel
+    public class RecipeCategoryModel : BaseModel
     {
         /// <summary>
         /// Database identity.

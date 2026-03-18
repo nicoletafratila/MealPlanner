@@ -7,7 +7,7 @@ namespace MealPlanner.Shared.Models
     /// <summary>
     /// Editable display sequence entry for a product category in a shop.
     /// </summary>
-    public sealed class ShopDisplaySequenceEditModel : BaseModel
+    public class ShopDisplaySequenceEditModel : BaseModel
     {
         /// <summary>
         /// Parent shop id.

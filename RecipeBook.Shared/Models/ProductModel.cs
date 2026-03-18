@@ -5,7 +5,7 @@ namespace RecipeBook.Shared.Models
     /// <summary>
     /// Lightweight product model used for lists, selections, and display.
     /// </summary>
-    public sealed class ProductModel : BaseModel
+    public class ProductModel : BaseModel
     {
         /// <summary>
         /// Database identity.

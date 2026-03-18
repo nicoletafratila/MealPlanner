@@ -5,7 +5,7 @@ namespace MealPlanner.Shared.Models
     /// <summary>
     /// Lightweight model representing a shop.
     /// </summary>
-    public sealed class ShopModel : BaseModel
+    public class ShopModel : BaseModel
     {
         /// <summary>
         /// Database identity.

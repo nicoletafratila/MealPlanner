@@ -140,7 +140,8 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
             {
                 PageNumber = 1,
                 PageSize = 10,
-                TotalCount = 2
+                TotalCount = 2,
+                TotalPages = 1
             };
 
             var paged = new PagedList<MealPlanModel>(

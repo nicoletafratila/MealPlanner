@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Common.Validators
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public sealed class MinimumCountCollectionAttribute : ValidationAttribute
+    public class MinimumCountCollectionAttribute : ValidationAttribute
     {
         private readonly int _minCount;
 

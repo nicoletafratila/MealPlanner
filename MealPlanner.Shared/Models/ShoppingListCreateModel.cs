@@ -5,7 +5,7 @@ namespace MealPlanner.Shared.Models
     /// <summary>
     /// Model for creating a shopping list from a meal plan and a shop.
     /// </summary>
-    public sealed class ShoppingListCreateModel : BaseModel
+    public class ShoppingListCreateModel : BaseModel
     {
         /// <summary>
         /// The source meal plan id used to generate the shopping list.
