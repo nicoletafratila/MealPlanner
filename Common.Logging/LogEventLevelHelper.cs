@@ -6,28 +6,31 @@ namespace Common.Logging
     {
         public static string GetBootstrapUIClass(string value)
         {
+            ArgumentNullException.ThrowIfNull(value);
+
             var level = StringToEnum(value);
-            return level switch
+            return GetBootstrapUIClass(level);
+        }
+
+        public static string GetBootstrapUIClass(LogEventLevel level)
+            => level switch
             {
                 LogEventLevel.Verbose or LogEventLevel.Debug or LogEventLevel.Information => "info",
                 LogEventLevel.Warning => "warning",
                 LogEventLevel.Error or LogEventLevel.Fatal => "danger",
-                _ => throw new Exception("not valid logeventlevel")
+                _ => throw new ArgumentOutOfRangeException(nameof(level), level, "Not a valid LogEventLevel.")
             };
-        }
 
         public static LogEventLevel StringToEnum(string value)
         {
-            return value switch
+            ArgumentNullException.ThrowIfNull(value);
+
+            if (Enum.TryParse<LogEventLevel>(value, ignoreCase: true, out var level))
             {
-                "Verbose" => LogEventLevel.Verbose,
-                "Debug" => LogEventLevel.Debug,
-                "Information" => LogEventLevel.Information,
-                "Warning" => LogEventLevel.Warning,
-                "Error" => LogEventLevel.Error,
-                "Fatal" => LogEventLevel.Fatal,
-                _ => throw new Exception("not valid logeventlevel")
-            };
+                return level;
+            }
+
+            throw new ArgumentException($"Value '{value}' is not a valid LogEventLevel.", nameof(value));
         }
     }
 }
