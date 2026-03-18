@@ -8,7 +8,9 @@ namespace Common.Models
         public bool IsSuccess => Succeeded;
 
         public bool Succeeded { get; set; }
+
         public string? Message { get; set; }
+
         public string? ErrorCode { get; set; }
 
         public CommandResponse()
@@ -22,10 +24,8 @@ namespace Common.Models
             ErrorCode = errorCode;
         }
 
-        public static CommandResponse Success(string? message = null)
-            => new CommandResponse(true, message);
+        public static CommandResponse Success(string? message = null) => new(true, message);
 
-        public static CommandResponse Failed(string error, string? errorCode = null)
-            => new CommandResponse(false, error, errorCode);
+        public static CommandResponse Failed(string error, string? errorCode = null) => new(false, error, errorCode);
     }
 }

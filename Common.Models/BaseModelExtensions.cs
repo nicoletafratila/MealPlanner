@@ -4,9 +4,17 @@
     {
         public static void SetIndexes<T>(this IList<T> models) where T : BaseModel
         {
-            foreach (var item in models)
+            ArgumentNullException.ThrowIfNull(models);
+
+            for (var i = 0; i < models.Count; i++)
             {
-                item.Index = models.IndexOf(item) + 1;
+                var item = models[i];
+                if (item is null)
+                {
+                    continue; 
+                }
+
+                item.Index = i + 1;
             }
         }
     }
