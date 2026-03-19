@@ -5,7 +5,12 @@ using AutoMapper;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class ShopToEditShopModelResolver(IMapper mapper) : IMemberValueResolver<Shop, ShopEditModel, IList<ShopDisplaySequence>?, IList<ShopDisplaySequenceEditModel>>
+    public class ShopToEditShopModelResolver(IMapper mapper)
+        : IMemberValueResolver<
+            Shop,
+            ShopEditModel,
+            IList<ShopDisplaySequence>?,
+            IList<ShopDisplaySequenceEditModel>>
     {
         public IList<ShopDisplaySequenceEditModel> Resolve(
             Shop source,

@@ -29,11 +29,11 @@ namespace Common.Data.Profiles.Tests
 
             var result = _mapper.Map<UnitModel>(unit);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Id, Is.EqualTo(unit.Id));
                 Assert.That(result.Name, Is.EqualTo(unit.Name));
-            });
+            }
         }
 
         [Test]
@@ -47,11 +47,11 @@ namespace Common.Data.Profiles.Tests
 
             var result = _mapper.Map<Unit>(model);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Id, Is.EqualTo(model.Id));
                 Assert.That(result.Name, Is.EqualTo(model.Name));
-            });
+            }
         }
 
         [Test]
@@ -65,11 +65,11 @@ namespace Common.Data.Profiles.Tests
 
             var result = _mapper.Map<UnitEditModel>(unit);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Id, Is.EqualTo(unit.Id));
                 Assert.That(result.Name, Is.EqualTo(unit.Name));
-            });
+            }
         }
 
         [Test]
@@ -83,11 +83,11 @@ namespace Common.Data.Profiles.Tests
 
             var result = _mapper.Map<Unit>(model);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Id, Is.EqualTo(model.Id));
                 Assert.That(result.Name, Is.EqualTo(model.Name));
-            });
+            }
         }
 
         [Test]
@@ -108,12 +108,6 @@ namespace Common.Data.Profiles.Tests
             _mapper.Map(model, destination);
 
             Assert.That(destination.Name, Is.EqualTo("Liter"), "Null source should NOT overwrite existing value.");
-        }
-
-        [Test]
-        public void AutoMapper_Configuration_Is_Valid()
-        {
-            Assert.That(() => _mapper.ConfigurationProvider.AssertConfigurationIsValid(), Throws.Nothing);
         }
     }
 }

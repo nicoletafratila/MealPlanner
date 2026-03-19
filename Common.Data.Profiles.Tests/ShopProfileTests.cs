@@ -6,7 +6,7 @@ using MealPlanner.Shared.Models;
 namespace Common.Data.Profiles.Tests
 {
     [TestFixture]
-    public class ShopProfileWithFakeResolverTests
+    public class ShopProfileTests
     {
         private IMapper _mapper = null!;
         private FakeShopToEditShopModelResolver _fakeResolver = null!;

@@ -2,15 +2,18 @@
 using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 
-namespace Common.Data.Profiles.Resolvers
+namespace Common.Data.Profiles.Tests
 {
-    public class ShoppingListToEditShoppingListModelResolver(IMapper mapper)
+    public class FakeShoppingListToEditShoppingListResolver
         : IMemberValueResolver<
             ShoppingList,
             ShoppingListEditModel,
             IList<ShoppingListProduct>?,
             IList<ShoppingListProductEditModel>>
     {
+        public bool WasCalled { get; private set; }
+        public IList<ShoppingListProductEditModel> ReturnedValue { get; set; } = [];
+
         public IList<ShoppingListProductEditModel> Resolve(
             ShoppingList source,
             ShoppingListEditModel destination,
@@ -18,15 +21,8 @@ namespace Common.Data.Profiles.Resolvers
             IList<ShoppingListProductEditModel>? destValue,
             ResolutionContext context)
         {
-            if (source.Products == null || source.Products.Count == 0)
-                return [];
-
-            return source.Products
-                .Select(p => mapper.Map<ShoppingListProductEditModel>(p))
-                .OrderBy(i => i.Collected)
-                .ThenBy(i => i.DisplaySequence)
-                .ThenBy(i => i.Product?.Name)
-                .ToList();
+            WasCalled = true;
+            return ReturnedValue;
         }
     }
 }
