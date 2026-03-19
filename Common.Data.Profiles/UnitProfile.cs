@@ -9,10 +9,20 @@ namespace Common.Data.Profiles
         public UnitProfile()
         {
             CreateMap<Unit, UnitModel>()
-               .ReverseMap();
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, value) => value != null));
+
+            CreateMap<UnitModel, Unit>()
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, value) => value != null));
 
             CreateMap<Unit, UnitEditModel>()
-               .ReverseMap();
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, value) => value != null));
+
+            CreateMap<UnitEditModel, Unit>()
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, value) => value != null));
         }
     }
 }

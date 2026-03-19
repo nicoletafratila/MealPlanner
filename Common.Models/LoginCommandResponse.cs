@@ -1,6 +1,6 @@
 ﻿namespace Common.Models
 {
-    public sealed class LoginCommandResponse : CommandResponse
+    public class LoginCommandResponse : CommandResponse
     {
         public string? Username { get; set; }
 

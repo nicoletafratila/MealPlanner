@@ -6,7 +6,6 @@ using MealPlanner.UI.Web.Pages.Identities;
 using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Client;
 using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.Identities
