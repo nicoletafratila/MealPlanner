@@ -9,6 +9,7 @@ namespace Common.Data.Profiles
         public ProductProfile()
         {
             CreateMap<Product, ProductModel>()
+                .ConstructUsing(_ => new ProductModel())
                 .IgnoreBaseModelMembers()
                 .ForMember(
                     m => m.ImageUrl,
@@ -21,6 +22,7 @@ namespace Common.Data.Profiles
                 .ForMember(d => d.ProductCategory, o => o.Ignore());
 
             CreateMap<Product, ProductEditModel>()
+                .ConstructUsing(_ => new ProductEditModel())
                 .IgnoreBaseModelMembers()
                 .ForMember(
                     m => m.ImageUrl,

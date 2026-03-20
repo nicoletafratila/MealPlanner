@@ -29,7 +29,7 @@ namespace MealPlanner.Shared.Models
         /// </summary>
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The meal plan requires at least one recipe.")]
-        public IList<RecipeModel> Recipes { get; set; } = new List<RecipeModel>();
+        public IList<RecipeModel>? Recipes { get; set; } = [];
 
         public MealPlanEditModel()
         {
