@@ -29,13 +29,13 @@
             var list = recipe.MakeShoppingList(shop);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(list.Name, Is.EqualTo("Shopping list details for TestRecipe in shop MyShop"));
                 Assert.That(list.ShopId, Is.EqualTo(10));
                 Assert.That(list.Products, Is.Not.Null);
                 Assert.That(list.Products, Is.Empty);
-            });
+            }
         }
 
         [Test]
@@ -74,12 +74,12 @@
             // Assert
             Assert.That(list.Products, Has.Count.EqualTo(1));
             var p = list.Products[0];
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(p.ProductId, Is.EqualTo(5));
                 Assert.That(p.Quantity, Is.EqualTo(2m));
                 Assert.That(p.DisplaySequence, Is.EqualTo(3));
-            });
+            }
         }
 
         [Test]

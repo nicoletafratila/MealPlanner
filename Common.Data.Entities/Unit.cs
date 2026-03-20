@@ -2,9 +2,11 @@
 
 namespace Common.Data.Entities
 {
-    public class Unit : Entity<int>
+    public sealed class Unit : Entity<int>
     {
-        public string? Name { get; set; }
+        public string? Name { get; set; } = string.Empty;
         public UnitType UnitType { get; set; }
+
+        public override string ToString() => $"{Name} ({UnitType})";
     }
 }
