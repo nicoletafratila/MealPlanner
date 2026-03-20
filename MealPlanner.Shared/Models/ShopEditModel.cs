@@ -29,7 +29,7 @@ namespace MealPlanner.Shared.Models
         /// </summary>
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The shop requires at least product category order.")]
-        public IList<ShopDisplaySequenceEditModel> DisplaySequence { get; set; } = new List<ShopDisplaySequenceEditModel>();
+        public IList<ShopDisplaySequenceEditModel>? DisplaySequence { get; set; } = [];
 
         public ShopEditModel()
         {
@@ -40,7 +40,7 @@ namespace MealPlanner.Shared.Models
         /// </summary>
         public ShopEditModel(IList<ProductCategoryModel>? categories)
         {
-            DisplaySequence = new List<ShopDisplaySequenceEditModel>();
+            DisplaySequence = [];
 
             if (categories is null)
                 return;

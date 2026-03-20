@@ -9,9 +9,9 @@ namespace Common.Data.Profiles.Resolvers
             ShoppingList,
             ShoppingListEditModel,
             IList<ShoppingListProduct>?,
-            IList<ShoppingListProductEditModel>>
+            IList<ShoppingListProductEditModel>?>
     {
-        public IList<ShoppingListProductEditModel> Resolve(
+        public IList<ShoppingListProductEditModel>? Resolve(
             ShoppingList source,
             ShoppingListEditModel destination,
             IList<ShoppingListProduct>? sourceValue,

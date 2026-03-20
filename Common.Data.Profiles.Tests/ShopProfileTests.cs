@@ -128,7 +128,7 @@ namespace Common.Data.Profiles.Tests
                 // Assert
                 Assert.That(_fakeResolver.WasCalled, Is.True);
                 Assert.That(result.DisplaySequence, Has.Count.EqualTo(1));
-                Assert.That(result.DisplaySequence[0].Value, Is.EqualTo(99));
+                Assert.That(result.DisplaySequence![0].Value, Is.EqualTo(99));
             }
         }
 

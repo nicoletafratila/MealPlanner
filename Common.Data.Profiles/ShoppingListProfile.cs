@@ -21,7 +21,7 @@ namespace Common.Data.Profiles
                 .ForMember(dest => dest.IsSelected, opt => opt.Ignore())
                 .ForMember(
                     dest => dest.Products,
-                    opt => opt.MapFrom<ShoppingListToEditShoppingListModelResolver, IList<ShoppingListProduct>>(src => src.Products!)
+                    opt => opt.MapFrom<ShoppingListToEditShoppingListModelResolver, IList<ShoppingListProduct>?>(src => src.Products!)
                 )
                 .ReverseMap()
                 .ForMember(

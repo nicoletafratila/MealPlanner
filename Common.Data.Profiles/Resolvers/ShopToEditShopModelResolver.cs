@@ -10,9 +10,9 @@ namespace Common.Data.Profiles.Resolvers
             Shop,
             ShopEditModel,
             IList<ShopDisplaySequence>?,
-            IList<ShopDisplaySequenceEditModel>>
+            IList<ShopDisplaySequenceEditModel>?>
     {
-        public IList<ShopDisplaySequenceEditModel> Resolve(
+        public IList<ShopDisplaySequenceEditModel>? Resolve(
             Shop source,
             ShopEditModel destination,
             IList<ShopDisplaySequence>? sourceValue,

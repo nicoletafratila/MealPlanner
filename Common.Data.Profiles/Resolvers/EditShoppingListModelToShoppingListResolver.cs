@@ -8,7 +8,7 @@ namespace Common.Data.Profiles.Resolvers
         : IMemberValueResolver<
             ShoppingListEditModel,
             ShoppingList,
-            IList<ShoppingListProductEditModel>,
+            IList<ShoppingListProductEditModel>?,
             IList<ShoppingListProduct>?>
     {
         public IList<ShoppingListProduct>? Resolve(

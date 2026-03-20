@@ -128,7 +128,7 @@ namespace Common.Data.Profiles.Tests
             {
                 Assert.That(_fakeResolver.WasCalled, Is.True);
                 Assert.That(result.Products, Has.Count.EqualTo(1));
-                Assert.That(result.Products[0].DisplaySequence, Is.EqualTo(7));
+                Assert.That(result.Products![0].DisplaySequence, Is.EqualTo(7));
                 Assert.That(result.Products[0].Product!.Name, Is.EqualTo("InjectedForward"));
             }
         }

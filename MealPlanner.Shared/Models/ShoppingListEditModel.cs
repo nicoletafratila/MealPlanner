@@ -34,7 +34,7 @@ namespace MealPlanner.Shared.Models
         /// </summary>
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one product.")]
-        public IList<ShoppingListProductEditModel> Products { get; set; } = new List<ShoppingListProductEditModel>();
+        public IList<ShoppingListProductEditModel>? Products { get; set; } = [];
 
         public ShoppingListEditModel()
         {
