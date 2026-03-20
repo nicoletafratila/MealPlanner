@@ -12,18 +12,19 @@ namespace Common.Data.Profiles
             CreateMap<RecipeIngredient, RecipeIngredientEditModel>()
                 .IgnoreBaseModelMembers()
                 .ReverseMap()
-                .ForMember(data => data.Recipe, opt => opt.Ignore())
-                .ForMember(data => data.Product, opt => opt.Ignore())
-                .ForMember(data => data.Unit, opt => opt.Ignore()); 
+                .ForMember(d => d.Recipe, o => o.Ignore())
+                .ForMember(d => d.Product, o => o.Ignore())
+                .ForMember(d => d.Unit, o => o.Ignore());
 
             CreateMap<RecipeIngredient, ShoppingListProductEditModel>()
                 .IgnoreBaseModelMembers()
-                .ForMember(data => data.Collected, opt => opt.Ignore())
-                .ForMember(data => data.DisplaySequence, opt => opt.Ignore())
+                .ForMember(d => d.ShoppingListId, o => o.Ignore())
+                .ForMember(d => d.Collected, o => o.Ignore())
+                .ForMember(d => d.DisplaySequence, o => o.Ignore())
                 .ReverseMap()
-                .ForMember(data => data.Recipe, opt => opt.Ignore())
-                .ForMember(data => data.Product, opt => opt.Ignore())
-                .ForMember(data => data.Unit, opt => opt.Ignore());
+                .ForMember(d => d.Recipe, o => o.Ignore())
+                .ForMember(d => d.Product, o => o.Ignore())
+                .ForMember(d => d.Unit, o => o.Ignore());
         }
     }
 }
