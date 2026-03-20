@@ -121,7 +121,7 @@
 
                 var productItem = result.Products!.Single();
                 Assert.That(productItem.ProductId, Is.EqualTo(product.Id));
-                Assert.That(productItem.Quantity, Is.EqualTo(0.150m)); // 100 + 50 (same units)
+                Assert.That(productItem.Quantity, Is.EqualTo(150m)); // 100 + 50 (same units)
                 Assert.That(productItem.DisplaySequence, Is.EqualTo(7));
                 Assert.That(productItem.Collected, Is.False);
 

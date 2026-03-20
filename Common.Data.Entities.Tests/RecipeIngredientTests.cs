@@ -35,7 +35,7 @@
                 Assert.That(result.ProductId, Is.EqualTo(product.Id));
                 Assert.That(result.Product, Is.SameAs(product));
 
-                Assert.That(result.Quantity, Is.EqualTo(0.005m));
+                Assert.That(result.Quantity, Is.EqualTo(5m));
 
                 Assert.That(result.UnitId, Is.EqualTo(baseUnit.Id));
                 Assert.That(result.Unit, Is.SameAs(baseUnit));
