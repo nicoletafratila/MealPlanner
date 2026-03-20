@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
 using Common.Data.Profiles.Resolvers;
+using Common.Data.Profiles.Tests.FakeResolvers;
 using MealPlanner.Shared.Models;
 using RecipeBook.Shared.Models;
 

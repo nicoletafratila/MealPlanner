@@ -9,9 +9,12 @@ namespace Common.Data.Profiles
         public ShopDisplaySequenceProfile()
         {
             CreateMap<ShopDisplaySequence, ShopDisplaySequenceEditModel>()
-               .ReverseMap()
-               .ForMember(data => data.Shop, opt => opt.Ignore())
-               .ForMember(data => data.ProductCategory, opt => opt.Ignore());
+                .IgnoreBaseModelMembers()
+                .ForMember(dest => dest.ProductCategory, opt => opt.MapFrom(src => src.ProductCategory));
+
+            CreateMap<ShopDisplaySequenceEditModel, ShopDisplaySequence>()
+                .ForMember(dest => dest.Shop, opt => opt.Ignore())
+                .ForMember(dest => dest.ProductCategory, opt => opt.Ignore());
         }
     }
 }

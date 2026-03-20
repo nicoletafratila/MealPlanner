@@ -11,9 +11,11 @@ namespace Common.Data.Profiles
         public MealPlanProfile()
         {
             CreateMap<MealPlan, MealPlanModel>()
+                .IgnoreBaseModelMembers()
                 .ReverseMap();
 
             CreateMap<MealPlan, MealPlanEditModel>()
+                .IgnoreBaseModelMembers()
                .ForMember(model => model.Recipes, opt => opt.MapFrom<MealPlanToEditMealPlanModelResolver, IList<MealPlanRecipe>?>(data => data.MealPlanRecipes))
                .ReverseMap()
                .ForMember(data => data.MealPlanRecipes, opt => opt.MapFrom<EditMealPlanModelToMealPlanResolver, IList<RecipeModel>?>(model => model.Recipes));

@@ -9,9 +9,11 @@ namespace Common.Data.Profiles
         public RecipeCategoryProfile()
         {
             CreateMap<RecipeCategory, RecipeCategoryModel>()
-               .ReverseMap();
+                .IgnoreBaseModelMembers()
+                .ReverseMap();
 
             CreateMap<RecipeCategory, RecipeCategoryEditModel>()
+                .IgnoreBaseModelMembers()
                 .ReverseMap();
         }
     }

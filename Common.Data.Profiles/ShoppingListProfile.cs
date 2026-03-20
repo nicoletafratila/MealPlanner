@@ -10,15 +10,13 @@ namespace Common.Data.Profiles
         public ShoppingListProfile()
         {
             CreateMap<ShoppingList, ShoppingListModel>()
-                .ForMember(dest => dest.Index, opt => opt.Ignore())
-                .ForMember(dest => dest.IsSelected, opt => opt.Ignore())
+                .IgnoreBaseModelMembers()
                 .ReverseMap()
                 .ForMember(dest => dest.Products, opt => opt.Ignore())
                 .ForMember(dest => dest.Shop, opt => opt.Ignore());
 
             CreateMap<ShoppingList, ShoppingListEditModel>()
-                .ForMember(dest => dest.Index, opt => opt.Ignore())
-                .ForMember(dest => dest.IsSelected, opt => opt.Ignore())
+                .IgnoreBaseModelMembers()
                 .ForMember(
                     dest => dest.Products,
                     opt => opt.MapFrom<ShoppingListToEditShoppingListModelResolver, IList<ShoppingListProduct>?>(src => src.Products!)

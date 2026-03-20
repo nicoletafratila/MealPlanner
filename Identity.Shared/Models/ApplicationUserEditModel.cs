@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Common.Models;
 
 namespace Identity.Shared.Models
 {
     /// <summary>
     /// Editable model for managing application user profile and status.
     /// </summary>
-    public class ApplicationUserEditModel
+    public class ApplicationUserEditModel : BaseModel
     {
         /// <summary>
         /// Unique user identifier (e.g., GUID or external provider id).

@@ -9,10 +9,11 @@ namespace Common.Data.Profiles
         public ShoppingListProductProfile()
         {
             CreateMap<ShoppingListProduct, ShoppingListProductEditModel>()
-               .ReverseMap()
-               .ForMember(data => data.ShoppingList, opt => opt.Ignore())
-               .ForMember(data => data.Product, opt => opt.Ignore())
-               .ForMember(data => data.Unit, opt => opt.Ignore());
+                .IgnoreBaseModelMembers()
+                .ReverseMap()
+                .ForMember(dest => dest.ShoppingList, opt => opt.Ignore())
+                .ForMember(dest => dest.Product, opt => opt.Ignore())
+                .ForMember(dest => dest.Unit, opt => opt.Ignore());
         }
     }
 }

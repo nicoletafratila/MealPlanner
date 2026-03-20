@@ -9,6 +9,7 @@ namespace Common.Data.Profiles
         public LogProfile()
         {
             CreateMap<Log, LogModel>()
+                .IgnoreBaseModelMembers()
                .ReverseMap();
         }
     }

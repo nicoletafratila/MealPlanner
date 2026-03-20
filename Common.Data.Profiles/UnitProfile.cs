@@ -9,6 +9,7 @@ namespace Common.Data.Profiles
         public UnitProfile()
         {
             CreateMap<Unit, UnitModel>()
+                .IgnoreBaseModelMembers()
                 .ForAllMembers(opt =>
                     opt.Condition((src, dest, value) => value != null));
 
@@ -17,6 +18,7 @@ namespace Common.Data.Profiles
                     opt.Condition((src, dest, value) => value != null));
 
             CreateMap<Unit, UnitEditModel>()
+                .IgnoreBaseModelMembers()
                 .ForAllMembers(opt =>
                     opt.Condition((src, dest, value) => value != null));
 

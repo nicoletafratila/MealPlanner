@@ -2,7 +2,7 @@
 using Common.Data.Entities;
 using MealPlanner.Shared.Models;
 
-namespace Common.Data.Profiles.Tests
+namespace Common.Data.Profiles.Tests.FakeResolvers
 {
     public class FakeShoppingListToEditShoppingListResolver
         : IMemberValueResolver<

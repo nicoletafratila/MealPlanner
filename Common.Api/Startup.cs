@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blazored.SessionStorage;
 using Common.Data.DataContext;
-using Common.Data.Entities;
 using Common.Data.Profiles;
 using Common.Data.Repository;
 using Common.Logging;

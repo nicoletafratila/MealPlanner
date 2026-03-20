@@ -1,6 +1,6 @@
 ﻿namespace Common.Models
 {
-    public class LogModel
+    public class LogModel : BaseModel
     {
         public int Id { get; set; }
 
