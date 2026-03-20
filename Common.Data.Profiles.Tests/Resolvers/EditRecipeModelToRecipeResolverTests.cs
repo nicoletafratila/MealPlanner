@@ -114,7 +114,7 @@ namespace Common.Data.Profiles.Tests.Resolvers
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Has.Count.EqualTo(1));
-                Assert.That(result[0].Quantity, Is.EqualTo(2));
+                Assert.That(result![0].Quantity, Is.EqualTo(2));
                 Assert.That(result[0].UnitId, Is.EqualTo(4));
                 Assert.That(result[0].ProductId, Is.EqualTo(99));
             }

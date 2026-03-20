@@ -2,15 +2,18 @@
 using Common.Data.Entities;
 using RecipeBook.Shared.Models;
 
-namespace Common.Data.Profiles.Resolvers
+namespace Common.Data.Profiles.Tests.FakeResolvers
 {
-    public class EditRecipeModelToRecipeResolver(IMapper mapper)
-        : IMemberValueResolver<
+    public class FakeEditRecipeModelToRecipeResolver
+         : IMemberValueResolver<
             RecipeEditModel,
             Recipe,
             IList<RecipeIngredientEditModel>?,
             IList<RecipeIngredient>?>
     {
+        public bool WasCalled { get; private set; }
+        public IList<RecipeIngredient>? ReturnedValue { get; set; }
+
         public IList<RecipeIngredient>? Resolve(
             RecipeEditModel source,
             Recipe destination,
@@ -18,12 +21,9 @@ namespace Common.Data.Profiles.Resolvers
             IList<RecipeIngredient>? destValue,
             ResolutionContext context)
         {
-            if (source.Ingredients == null || source.Ingredients.Count == 0)
-                return [];
-
-            return source.Ingredients
-                         .Select(i => mapper.Map<RecipeIngredient>(i))
-                         .ToList();
+            WasCalled = true;
+            return ReturnedValue;
         }
     }
+
 }
