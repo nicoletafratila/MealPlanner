@@ -2,27 +2,29 @@
 
 namespace Common.Data.Entities.Converters
 {
-    public class MassConverter 
+    public static class MassConverter
     {
-        public static Dictionary<MassUnit, decimal> conversions = new Dictionary<MassUnit, decimal>()
-        {
-            { MassUnit.kg, 1 },
-            { MassUnit.gr, 1000 }
-        };
+        private static readonly Dictionary<MassUnit, decimal> FactorsToKg =
+            new()
+            {
+                { MassUnit.kg, 1m },
+                { MassUnit.gr, 0.001m }
+            };
 
         public static decimal Convert(decimal fromValue, MassUnit fromUnit, MassUnit toUnit)
         {
-            decimal workingValue;
+            if (fromUnit == toUnit)
+                return fromValue;
 
-            if (fromUnit == MassUnit.kg)
-                workingValue = fromValue;
-            else
-                workingValue = fromValue / conversions[fromUnit];
+            if (!FactorsToKg.TryGetValue(fromUnit, out var fromFactor))
+                throw new NotSupportedException($"Conversion from mass unit '{fromUnit}' is not supported.");
 
-            if (toUnit == MassUnit.kg)
-                workingValue = workingValue * conversions[toUnit];
+            if (!FactorsToKg.TryGetValue(toUnit, out var toFactor))
+                throw new NotSupportedException($"Conversion to mass unit '{toUnit}' is not supported.");
 
-            return workingValue;
+            // to kg, then to target
+            var valueInKg = fromValue * fromFactor;
+            return valueInKg / toFactor;
         }
     }
 }

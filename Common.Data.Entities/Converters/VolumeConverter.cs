@@ -2,28 +2,29 @@
 
 namespace Common.Data.Entities.Converters
 {
-    public class VolumeConverter
+    public static class VolumeConverter
     {
-        public static Dictionary<VolumeUnit, decimal> conversions = new Dictionary<VolumeUnit, decimal>()
-        {
-            { VolumeUnit.tsp, 1 },
-            { VolumeUnit.tbsp, 0.333333m },
-            { VolumeUnit.cup, 0.020833m }
-        };
+        private static readonly Dictionary<VolumeUnit, decimal> FactorsToTsp =
+            new()
+            {
+                { VolumeUnit.tsp, 1m },
+                { VolumeUnit.tbsp, 3m },   // 1 tbsp = 3 tsp
+                { VolumeUnit.cup, 48m }    // 1 cup = 48 tsp (16 tbsp * 3 tsp)
+            };
 
         public static decimal Convert(decimal fromValue, VolumeUnit fromUnit, VolumeUnit toUnit)
         {
-            decimal workingValue;
+            if (fromUnit == toUnit)
+                return fromValue;
 
-            if (fromUnit == VolumeUnit.tsp)
-                workingValue = fromValue;
-            else
-                workingValue = fromValue / conversions[fromUnit];
+            if (!FactorsToTsp.TryGetValue(fromUnit, out var fromFactor))
+                throw new NotSupportedException($"Conversion from volume unit '{fromUnit}' is not supported.");
 
-            if (toUnit == VolumeUnit.tsp)
-                workingValue = workingValue * conversions[toUnit];
+            if (!FactorsToTsp.TryGetValue(toUnit, out var toFactor))
+                throw new NotSupportedException($"Conversion to volume unit '{toUnit}' is not supported.");
 
-            return workingValue;
+            var valueInTsp = fromValue * fromFactor;
+            return valueInTsp / toFactor;
         }
     }
 }
