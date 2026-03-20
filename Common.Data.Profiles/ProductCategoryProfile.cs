@@ -10,7 +10,7 @@ namespace Common.Data.Profiles
         {
             CreateMap<ProductCategory, ProductCategoryModel>()
                 .IgnoreBaseModelMembers()
-               .ReverseMap();
+                .ReverseMap();
 
             CreateMap<ProductCategory, ProductCategoryEditModel>()
                 .IgnoreBaseModelMembers()

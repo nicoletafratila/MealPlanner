@@ -10,14 +10,18 @@ namespace Common.Data.Profiles
         {
             CreateMap<ApplicationUser, ApplicationUserEditModel>()
                 .IgnoreBaseModelMembers()
-                .ForMember(model => model.UserId, opt => opt.MapFrom(data => data.Id))
-                .ForMember(model => model.Username, opt => opt.MapFrom(data => data.UserName))
-                .ForMember(model => model.FirstName, opt => opt.MapFrom(data => data.FirstName))
-                .ForMember(model => model.LastName, opt => opt.MapFrom(data => data.LastName))
-                .ForMember(model => model.ProfilePictureUrl, opt => opt.MapFrom(data => $"data:image/jpg;base64,{Convert.ToBase64String(data!.ProfilePicture!)}"))
-                .ForMember(model => model.PhoneNumber, opt => opt.MapFrom(data => data.PhoneNumber))
-                .ForMember(model => model.EmailAddress, opt => opt.MapFrom(data => data.Email))
-                .ForMember(model => model.IsActive, opt => opt.MapFrom(data => data.IsActive))
+                .ForMember(m => m.UserId, o => o.MapFrom(s => s.Id))
+                .ForMember(m => m.Username, o => o.MapFrom(s => s.UserName))
+                .ForMember(m => m.FirstName, o => o.MapFrom(s => s.FirstName))
+                .ForMember(m => m.LastName, o => o.MapFrom(s => s.LastName))
+                .ForMember(
+                    m => m.ProfilePictureUrl,
+                    o => o.MapFrom(s =>
+                        $"data:image/jpg;base64,{Convert.ToBase64String(s.ProfilePicture ?? Array.Empty<byte>())}"
+                    ))
+                .ForMember(m => m.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber))
+                .ForMember(m => m.EmailAddress, o => o.MapFrom(s => s.Email))
+                .ForMember(m => m.IsActive, o => o.MapFrom(s => s.IsActive))
                 .ReverseMap();
         }
     }

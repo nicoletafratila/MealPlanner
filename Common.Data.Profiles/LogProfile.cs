@@ -10,7 +10,7 @@ namespace Common.Data.Profiles
         {
             CreateMap<Log, LogModel>()
                 .IgnoreBaseModelMembers()
-               .ReverseMap();
+                .ReverseMap();
         }
     }
 }

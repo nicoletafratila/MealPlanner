@@ -10,18 +10,26 @@ namespace Common.Data.Profiles
         {
             CreateMap<Product, ProductModel>()
                 .IgnoreBaseModelMembers()
-               .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
-               .ReverseMap()
-               .ForMember(data => data.ImageContent, opt => opt.Ignore())
-               .ForMember(data => data.BaseUnit, opt => opt.Ignore())
-               .ForMember(data => data.ProductCategory, opt => opt.Ignore());
+                .ForMember(
+                    m => m.ImageUrl,
+                    o => o.MapFrom(src =>
+                        $"data:image/jpg;base64,{Convert.ToBase64String(src.ImageContent ?? Array.Empty<byte>())}")
+                )
+                .ReverseMap()
+                .ForMember(d => d.ImageContent, o => o.Ignore())
+                .ForMember(d => d.BaseUnit, o => o.Ignore())
+                .ForMember(d => d.ProductCategory, o => o.Ignore());
 
             CreateMap<Product, ProductEditModel>()
                 .IgnoreBaseModelMembers()
-                .ForMember(model => model.ImageUrl, opt => opt.MapFrom(data => string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(data.ImageContent!))))
+                .ForMember(
+                    m => m.ImageUrl,
+                    o => o.MapFrom(src =>
+                        $"data:image/jpg;base64,{Convert.ToBase64String(src.ImageContent ?? Array.Empty<byte>())}")
+                )
                 .ReverseMap()
-                .ForMember(data => data.BaseUnit, opt => opt.Ignore())
-                .ForMember(data => data.ProductCategory, opt => opt.Ignore());
+                .ForMember(d => d.BaseUnit, o => o.Ignore())
+                .ForMember(d => d.ProductCategory, o => o.Ignore());
         }
     }
 }
