@@ -9,8 +9,7 @@ namespace Common.Data.Profiles.Resolvers
             RecipeEditModel,
             Recipe,
             IList<RecipeIngredientEditModel>?,
-            IList<RecipeIngredient>?
-        >
+            IList<RecipeIngredient>?>
     {
         public IList<RecipeIngredient>? Resolve(
             RecipeEditModel source,
