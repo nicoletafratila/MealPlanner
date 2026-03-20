@@ -2,14 +2,14 @@
 
 namespace Common.Data.Entities
 {
-    public class MealPlan : Entity<int>
+    public sealed class MealPlan : Entity<int>
     {
         public string? Name { get; set; }
-        public IList<MealPlanRecipe>? MealPlanRecipes { get; set; }
+
+        public IList<MealPlanRecipe>? MealPlanRecipes { get; set; } = [];
 
         public MealPlan()
         {
-                
         }
 
         public ShoppingList MakeShoppingList(Shop? shop)
@@ -30,6 +30,7 @@ namespace Common.Data.Entities
             }
 
             var productsById = new Dictionary<int, ShoppingListProduct>();
+
             foreach (var mealPlanRecipe in MealPlanRecipes)
             {
                 var recipe = mealPlanRecipe?.Recipe;
@@ -42,27 +43,37 @@ namespace Common.Data.Entities
                 foreach (var ingredient in ingredients)
                 {
                     if (ingredient == null)
-                    {
                         continue;
-                    }
+
+                    if (ingredient.Product is null)
+                        throw new InvalidOperationException("Ingredient.Product must not be null.");
+
+                    if (ingredient.Product.BaseUnit is null)
+                        throw new InvalidOperationException("Ingredient.Product.BaseUnit must not be null.");
+
+                    if (ingredient.Unit is null)
+                        throw new InvalidOperationException("Ingredient.Unit must not be null.");
 
                     var productId = ingredient.ProductId;
+
                     if (!productsById.TryGetValue(productId, out var existingProduct))
                     {
-                        var categoryId = ingredient.Product?.ProductCategory?.Id;
-                        var displaySequence = shop.GetDisplaySequence(categoryId!);
-                        
-                        var newProduct = ingredient.ToShoppingListProduct(displaySequence!.Value);
+                        var categoryId = ingredient.Product.ProductCategory?.Id;
+                        var displaySequence = shop.GetDisplaySequence(categoryId);
+                        var sequenceValue = displaySequence?.Value ?? 0;
+
+                        var newProduct = ingredient.ToShoppingListProduct(sequenceValue);
                         productsById.Add(productId, newProduct);
                     }
                     else
                     {
-                        var baseUnit = existingProduct.Product?.BaseUnit;
+                        var baseUnit = existingProduct.Product?.BaseUnit ?? ingredient.Product.BaseUnit;
+
                         var additionalQuantity = UnitConverter.Convert(
                             ingredient.Quantity,
-                            ingredient.Unit!,   
-                            baseUnit!
-                        );
+                            ingredient.Unit,
+                            baseUnit);
+
                         existingProduct.Quantity += additionalQuantity;
                     }
                 }

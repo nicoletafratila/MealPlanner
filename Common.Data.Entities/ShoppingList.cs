@@ -10,7 +10,7 @@ namespace Common.Data.Entities
         public Shop? Shop { get; set; }
         public int ShopId { get; set; }
 
-        public IList<ShoppingListProduct> Products { get; set; } = [];
+        public IList<ShoppingListProduct>? Products { get; set; } = [];
 
         public override string ToString() => $"{Name} (Id: {Id}, ShopId: {ShopId})";
     }
