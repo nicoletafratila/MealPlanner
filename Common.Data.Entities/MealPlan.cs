@@ -7,6 +7,11 @@ namespace Common.Data.Entities
         public string? Name { get; set; }
         public IList<MealPlanRecipe>? MealPlanRecipes { get; set; }
 
+        public MealPlan()
+        {
+                
+        }
+
         public ShoppingList MakeShoppingList(Shop? shop)
         {
             if (shop is null)

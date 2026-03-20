@@ -10,8 +10,7 @@ namespace Common.Data.Profiles.Resolvers
             MealPlanEditModel,
             MealPlan,
             IList<RecipeModel>?,
-            IList<MealPlanRecipe>?
-        >
+            IList<MealPlanRecipe>?>
     {
         public IList<MealPlanRecipe>? Resolve(
             MealPlanEditModel source,

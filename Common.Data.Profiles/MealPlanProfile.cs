@@ -15,10 +15,17 @@ namespace Common.Data.Profiles
                 .ReverseMap();
 
             CreateMap<MealPlan, MealPlanEditModel>()
+                .ConstructUsing(_ => new MealPlanEditModel())
                 .IgnoreBaseModelMembers()
-               .ForMember(model => model.Recipes, opt => opt.MapFrom<MealPlanToEditMealPlanModelResolver, IList<MealPlanRecipe>?>(data => data.MealPlanRecipes))
-               .ReverseMap()
-               .ForMember(data => data.MealPlanRecipes, opt => opt.MapFrom<EditMealPlanModelToMealPlanResolver, IList<RecipeModel>?>(model => model.Recipes));
+                .ForMember(
+                    m => m.Recipes,
+                    o => o.MapFrom<MealPlanToEditMealPlanModelResolver, IList<MealPlanRecipe>?>(s => s.MealPlanRecipes)
+                )
+                .ReverseMap()
+                .ForMember(
+                    d => d.MealPlanRecipes,
+                    o => o.MapFrom<EditMealPlanModelToMealPlanResolver, IList<RecipeModel>?>(src => src.Recipes)
+                );
         }
     }
 }
