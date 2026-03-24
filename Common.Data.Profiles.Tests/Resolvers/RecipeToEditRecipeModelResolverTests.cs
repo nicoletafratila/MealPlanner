@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
 using Common.Data.Profiles.Resolvers;
-using Moq;
 using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Tests.Resolvers
@@ -9,80 +8,111 @@ namespace Common.Data.Profiles.Tests.Resolvers
     [TestFixture]
     public class RecipeToEditRecipeModelResolverTests
     {
-        [Test]
-        public void Resolve_Maps_And_Orders_Correctly()
+        private IMapper _mapper;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-
-            var ingredient1 = new RecipeIngredient
+            var config = new MapperConfiguration(cfg =>
             {
-                Product = new Product { Name = "Banana", ProductCategory = new ProductCategory { Name = "Fruit" } }
-            };
-            var ingredient2 = new RecipeIngredient
-            {
-                Product = new Product { Name = "Apple", ProductCategory = new ProductCategory { Name = "Fruit" } }
-            };
-            var ingredient3 = new RecipeIngredient
-            {
-                Product = new Product { Name = "Carrot", ProductCategory = new ProductCategory { Name = "Vegetable" } }
-            };
+                cfg.CreateMap<ProductCategory, ProductCategoryModel>();
+                cfg.CreateMap<Product, ProductModel>();
 
-            var sourceIngredients = new List<RecipeIngredient> { ingredient1, ingredient2, ingredient3 };
+                cfg.CreateMap<RecipeIngredient, RecipeIngredientEditModel>();
 
-            var mapped1 = new RecipeIngredientEditModel { Product = new ProductModel { Name = "Banana", ProductCategory = new ProductCategoryModel { Name = "Fruit" } } };
-            var mapped2 = new RecipeIngredientEditModel { Product = new ProductModel { Name = "Apple", ProductCategory = new ProductCategoryModel { Name = "Fruit" } } };
-            var mapped3 = new RecipeIngredientEditModel { Product = new ProductModel { Name = "Carrot", ProductCategory = new ProductCategoryModel { Name = "Vegetable" } } };
+                cfg.CreateMap<Recipe, RecipeEditModel>()
+                    .ForMember(
+                        d => d.Ingredients,
+                        opt => opt.MapFrom<
+                            RecipeToEditRecipeModelResolver,
+                            IList<RecipeIngredient>?>(src => src.RecipeIngredients)
+                    );
+            });
 
-            mapperMock.Setup(m => m.Map<RecipeIngredientEditModel>(ingredient1)).Returns(mapped1);
-            mapperMock.Setup(m => m.Map<RecipeIngredientEditModel>(ingredient2)).Returns(mapped2);
-            mapperMock.Setup(m => m.Map<RecipeIngredientEditModel>(ingredient3)).Returns(mapped3);
-
-            var resolver = new RecipeToEditRecipeModelResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            // Act
-            var result = resolver.Resolve(
-                new Recipe(),
-                new RecipeEditModel(),
-                sourceIngredients,
-                null,
-                context);
-
-            // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-
-                // Order: by category name, then product name
-                Assert.That(result![0].Product!.Name, Is.EqualTo("Apple"));
-                Assert.That(result[1].Product!.Name, Is.EqualTo("Banana"));
-                Assert.That(result[2].Product!.Name, Is.EqualTo("Carrot"));
-
-                // Ensure indexes assigned: 1, 2, 3
-                Assert.That(result[0].Index, Is.EqualTo(1));
-                Assert.That(result[1].Index, Is.EqualTo(2));
-                Assert.That(result[2].Index, Is.EqualTo(3));
-            }
-
-            mapperMock.VerifyAll();
+            _mapper = config.CreateMapper();
         }
 
         [Test]
-        public void Resolve_Returns_Empty_When_SourceValue_Null_Or_Empty()
+        public void Map_WhenSourceIngredientsNull_ReturnsEmptyList()
         {
-            // Arrange
-            var resolver = new RecipeToEditRecipeModelResolver(Mock.Of<IMapper>());
-            var context = default(ResolutionContext);
+            var recipe = new Recipe
+            {
+                Id = 1,
+                Name = "Test",
+                RecipeIngredients = null
+            };
 
-            // Act
-            var empty = resolver.Resolve(new Recipe(), new RecipeEditModel(), null, null, context);
-            var emptyList = resolver.Resolve(new Recipe(), new RecipeEditModel(), [], null, context);
+            var result = _mapper.Map<RecipeEditModel>(recipe);
+
+            Assert.That(result.Ingredients, Is.Not.Null);
+            Assert.That(result.Ingredients, Is.Empty);
+        }
+
+        [Test]
+        public void Map_WhenSourceIngredientsEmpty_ReturnsEmptyList()
+        {
+            var recipe = new Recipe
+            {
+                Id = 1,
+                Name = "Test",
+                RecipeIngredients = []
+            };
+
+            var result = _mapper.Map<RecipeEditModel>(recipe);
+
+            Assert.That(result.Ingredients, Is.Not.Null);
+            Assert.That(result.Ingredients, Is.Empty);
+        }
+
+        [Test]
+        public void Map_MapsIngredients_OrdersByCategoryThenProductName_AndSetsIndexes()
+        {
+            var catA = new ProductCategory { Id = 1, Name = "Category A" };
+            var catB = new ProductCategory { Id = 2, Name = "Category B" };
+
+            var recipe = new Recipe
+            {
+                Id = 1,
+                Name = "Complex Recipe",
+                RecipeIngredients =
+                [
+                    new RecipeIngredient
+                    {
+                        Product = new Product { Id = 10, Name = "Zeta", ProductCategory = catB }
+                    },
+                    new RecipeIngredient
+                    {
+                        Product = new Product { Id = 11, Name = "Alpha", ProductCategory = catB }
+                    },
+                    new RecipeIngredient
+                    {
+                        Product = new Product { Id = 12, Name = "Beta", ProductCategory = catA }
+                    },
+                    new RecipeIngredient
+                    {
+                        Product = null   
+                    }
+                ]
+            };
+
+            var result = _mapper.Map<RecipeEditModel>(recipe);
+
+            var names = result.Ingredients!.Select(i => i.Product?.Name ?? "").ToList();
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(empty, Is.Empty);
-                Assert.That(emptyList, Is.Empty);
+                // Expected order:
+                // 1. Category A → Beta
+                // 2. Category B → Alpha
+                // 3. Category B → Zeta
+                // 4. null product → ""
+                Assert.That(names, Is.EqualTo([ "", "Beta", "Alpha", "Zeta"]).AsCollection);
+
+                // Indexes must be 1..N
+                Assert.That(
+                    result.Ingredients!.Select(i => i.Index),
+                    Is.EqualTo(Enumerable.Range(1, result.Ingredients!.Count)).AsCollection
+                );
             }
         }
     }

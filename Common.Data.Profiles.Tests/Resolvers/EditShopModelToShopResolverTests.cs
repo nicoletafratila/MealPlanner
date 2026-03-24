@@ -2,98 +2,90 @@
 using Common.Data.Entities;
 using Common.Data.Profiles.Resolvers;
 using MealPlanner.Shared.Models;
-using Moq;
 
 namespace Common.Data.Profiles.Tests.Resolvers
 {
     [TestFixture]
     public class EditShopModelToShopResolverTests
     {
-        [Test]
-        public void Resolve_Maps_Orders_Correctly()
+        private IMapper _mapper;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-
-            var sourceSequences = new List<ShopDisplaySequenceEditModel>
+            var config = new MapperConfiguration(cfg =>
             {
-                new() { Value = 30 },
-                new() { Value = 10 },
-                new() { Value = 20 }
-            };
+                cfg.CreateMap<ShopDisplaySequenceEditModel, ShopDisplaySequence>();
 
-            var mapped1 = new ShopDisplaySequence { Value = 30 };
-            var mapped2 = new ShopDisplaySequence { Value = 10 };
-            var mapped3 = new ShopDisplaySequence { Value = 20 };
+                cfg.CreateMap<ShopEditModel, Shop>()
+                    .ForMember(
+                        d => d.DisplaySequence,
+                        opt => opt.MapFrom<
+                            EditShopModelToShopResolver,
+                            IList<ShopDisplaySequenceEditModel>?>(src => src.DisplaySequence)
+                    );
+            });
 
-            mapperMock.Setup(m => m.Map<ShopDisplaySequence>(sourceSequences[0]))
-                      .Returns(mapped1);
-            mapperMock.Setup(m => m.Map<ShopDisplaySequence>(sourceSequences[1]))
-                      .Returns(mapped2);
-            mapperMock.Setup(m => m.Map<ShopDisplaySequence>(sourceSequences[2]))
-                      .Returns(mapped3);
-
-            var resolver = new EditShopModelToShopResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            var editShop = new ShopEditModel
-            {
-                DisplaySequence = sourceSequences
-            };
-
-            // Act
-            var result = resolver.Resolve(
-                source: editShop,
-                destination: new Shop(),
-                sourceValue: sourceSequences,
-                destValue: null,
-                context: context);
-
-            // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-
-                // Ordered by Value ascending
-                Assert.That(result![0].Value, Is.EqualTo(10));
-                Assert.That(result[1].Value, Is.EqualTo(20));
-                Assert.That(result[2].Value, Is.EqualTo(30));
-            }
-
-            mapperMock.VerifyAll();
+            _mapper = config.CreateMapper();
         }
 
         [Test]
-        public void Resolve_Returns_Empty_When_SourceValue_Null_Or_Empty()
+        public void Map_WhenDisplaySequenceIsNull_ReturnsEmptyList()
         {
-            // Arrange
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            var resolver = new EditShopModelToShopResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
+            var model = new ShopEditModel
+            {
+                Id = 1,
+                Name = "Test Shop",
+                DisplaySequence = null
+            };
 
-            // Act
-            var empty = resolver.Resolve(
-                new ShopEditModel { DisplaySequence = null },
-                new Shop(),
-                null,
-                null,
-                context);
+            var result = _mapper.Map<Shop>(model);
 
-            var emptyList = resolver.Resolve(
-                new ShopEditModel { DisplaySequence = [] },
-                new Shop(),
-                [],
-                null,
-                context);
+            Assert.That(result.DisplaySequence, Is.Not.Null);
+            Assert.That(result.DisplaySequence, Is.Empty);
+        }
+
+        [Test]
+        public void Map_WhenDisplaySequenceEmpty_ReturnsEmptyList()
+        {
+            var model = new ShopEditModel
+            {
+                Id = 1,
+                Name = "Test Shop",
+                DisplaySequence = []
+            };
+
+            var result = _mapper.Map<Shop>(model);
+
+            Assert.That(result.DisplaySequence, Is.Not.Null);
+            Assert.That(result.DisplaySequence, Is.Empty);
+        }
+
+        [Test]
+        public void Map_MapsItems_OrdersByValue()
+        {
+            var model = new ShopEditModel
+            {
+                Id = 1,
+                Name = "Shop",
+                DisplaySequence =
+                [
+                    new ShopDisplaySequenceEditModel { Value = 20, Index = 3 },
+                    new ShopDisplaySequenceEditModel { Value = 5,  Index = 1 },
+                    new ShopDisplaySequenceEditModel { Value = 10, Index = 2 }
+                ]
+            };
+
+            var result = _mapper.Map<Shop>(model);
 
             using (Assert.EnterMultipleScope())
             {
-                // Assert
-                Assert.That(empty, Is.Empty);
-                Assert.That(emptyList, Is.Empty);
-            }
+                Assert.That(result.DisplaySequence, Is.Not.Null);
+                Assert.That(result.DisplaySequence!, Has.Count.EqualTo(3));
 
-            mapperMock.VerifyNoOtherCalls();
+                // Ordered by Value ascending
+                Assert.That(result.DisplaySequence!.Select(s => s.Value), Is.EqualTo([5, 10, 20]).AsCollection);
+            }
         }
     }
 }

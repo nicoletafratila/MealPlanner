@@ -2,7 +2,6 @@
 using Common.Data.Entities;
 using Common.Data.Profiles.Resolvers;
 using MealPlanner.Shared.Models;
-using Moq;
 using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Tests.Resolvers
@@ -10,120 +9,116 @@ namespace Common.Data.Profiles.Tests.Resolvers
     [TestFixture]
     public class ShoppingListToEditShoppingListModelResolverTests
     {
-        [Test]
-        public void Resolve_Maps_And_Orders_Correctly()
+        private IMapper _mapper;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-
-            var sourceProducts = new List<ShoppingListProduct>
+            var config = new MapperConfiguration(cfg =>
             {
-                new()
-                {
-                    Collected = true,
-                    DisplaySequence = 5,
-                    Product = new Product { Name = "Bananas" }
-                },
-                new()
-                {
-                    Collected = false,
-                    DisplaySequence = 2,
-                    Product = new Product { Name = "Apples" }
-                },
-                new()
-                {
-                    Collected = false,
-                    DisplaySequence = 2,
-                    Product = new Product { Name = "Avocado" }
-                }
-            };
+                cfg.CreateMap<Product, ProductModel>();
+                cfg.CreateMap<ShoppingListProduct, ShoppingListProductEditModel>();
 
-            var mapped1 = new ShoppingListProductEditModel
-            {
-                Collected = true,
-                DisplaySequence = 5,
-                Product = new ProductModel { Name = "Bananas" }
-            };
+                cfg.CreateMap<ShoppingList, ShoppingListEditModel>()
+                    .ForMember(
+                        d => d.Products,
+                        opt => opt.MapFrom<
+                            ShoppingListToEditShoppingListModelResolver,
+                            IList<ShoppingListProduct>?>(src => src.Products)
+                    );
+            });
 
-            var mapped2 = new ShoppingListProductEditModel
-            {
-                Collected = false,
-                DisplaySequence = 2,
-                Product = new ProductModel { Name = "Apples" }
-            };
-
-            var mapped3 = new ShoppingListProductEditModel
-            {
-                Collected = false,
-                DisplaySequence = 2,
-                Product = new ProductModel { Name = "Avocado" }
-            };
-
-            mapperMock.Setup(m => m.Map<ShoppingListProductEditModel>(sourceProducts[0]))
-                      .Returns(mapped1);
-            mapperMock.Setup(m => m.Map<ShoppingListProductEditModel>(sourceProducts[1]))
-                      .Returns(mapped2);
-            mapperMock.Setup(m => m.Map<ShoppingListProductEditModel>(sourceProducts[2]))
-                      .Returns(mapped3);
-
-            var resolver = new ShoppingListToEditShoppingListModelResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            var model = new ShoppingList { Products = sourceProducts };
-
-            // Act
-            var result = resolver.Resolve(
-                source: model,
-                destination: new ShoppingListEditModel(),
-                sourceValue: sourceProducts,
-                destValue: null,
-                context: context);
-
-            // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-
-                // Expected ordering:
-                // 1. Collected = false
-                // 2. DisplaySequence ascending
-                // 3. Product.Name alphabetical
-                Assert.That(result![0].Product!.Name, Is.EqualTo("Apples"));
-                Assert.That(result[1].Product!.Name, Is.EqualTo("Avocado"));
-                Assert.That(result[2].Product!.Name, Is.EqualTo("Bananas"));
-            }
-
-            mapperMock.VerifyAll();
+            _mapper = config.CreateMapper();
         }
 
         [Test]
-        public void Resolve_Returns_Empty_When_SourceValue_Null_Or_Empty()
+        public void Map_WhenProductsNull_ReturnsEmptyList()
         {
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            var resolver = new ShoppingListToEditShoppingListModelResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
+            var list = new ShoppingList
+            {
+                Id = 1,
+                Name = "Test list",
+                Products = null
+            };
 
-            var empty1 = resolver.Resolve(
-                new ShoppingList { Products = null },
-                new ShoppingListEditModel(),
-                null,
-                null,
-                context);
+            var result = _mapper.Map<ShoppingListEditModel>(list);
 
-            var empty2 = resolver.Resolve(
-                new ShoppingList { Products = [] },
-                new ShoppingListEditModel(),
-                [],
-                null,
-                context);
+            Assert.That(result.Products, Is.Not.Null);
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void Map_WhenProductsEmpty_ReturnsEmptyList()
+        {
+            var list = new ShoppingList
+            {
+                Id = 1,
+                Name = "Test list",
+                Products = []
+            };
+
+            var result = _mapper.Map<ShoppingListEditModel>(list);
+
+            Assert.That(result.Products, Is.Not.Null);
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void Map_MapsProducts_OrdersByCollected_ThenDisplaySequence_ThenProductName()
+        {
+            var list = new ShoppingList
+            {
+                Id = 1,
+                Name = "Daily items",
+                Products =
+                [
+                    new ShoppingListProduct
+                    {
+                        Collected = true,
+                        DisplaySequence = 5,
+                        Product = new Product { Name = "Bananas" }
+                    },
+                    new ShoppingListProduct
+                    {
+                        Collected = false,
+                        DisplaySequence = 10,
+                        Product = new Product { Name = "Apples" }
+                    },
+                    new ShoppingListProduct
+                    {
+                        Collected = false,
+                        DisplaySequence = 3,
+                        Product = new Product { Name = "Zucchini" }
+                    },
+                    new ShoppingListProduct
+                    {
+                        Collected = true,
+                        DisplaySequence = 1,
+                        Product = new Product { Name = "Avocado" }
+                    }
+                ]
+            };
+
+            var result = _mapper.Map<ShoppingListEditModel>(list);
+
+            var orderedNames = result.Products!.Select(p => p.Product?.Name).ToList();
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(empty1, Is.Empty);
-                Assert.That(empty2, Is.Empty);
-            }
+                // Expected ordering:
+                // 1) Collected = false → (Zucchini (3), Apples (10))
+                // 2) Collected = true  → (Avocado (1), Bananas (5))
+                Assert.That(
+                    orderedNames,
+                    Is.EqualTo(["Zucchini", "Apples", "Avocado", "Bananas"]).AsCollection
+                );
 
-            mapperMock.VerifyNoOtherCalls();
+                // DisplaySequence sorted within same Collected group
+                Assert.That(
+                    result.Products!.Select(p => p.DisplaySequence),
+                    Is.EqualTo([3, 10, 1, 5]).AsCollection
+                );
+            }
         }
     }
 }

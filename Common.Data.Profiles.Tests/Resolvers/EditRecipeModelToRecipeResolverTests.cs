@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.Entities;
 using Common.Data.Profiles.Resolvers;
-using Moq;
 using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Tests.Resolvers
@@ -9,117 +8,122 @@ namespace Common.Data.Profiles.Tests.Resolvers
     [TestFixture]
     public class EditRecipeModelToRecipeResolverTests
     {
-        [Test]
-        public void Resolve_Maps_Ingredients_In_Order()
+        private IMapper _mapper;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-
-            var sourceIngredients = new List<RecipeIngredientEditModel>
+            var config = new MapperConfiguration(cfg =>
             {
-                new() { Index = 1, Quantity = 5, UnitId = 3, Product = new ProductModel { Id= 10 } },
-                new() { Index = 2, Quantity = 1, UnitId = 4, Product = new ProductModel { Id = 20 } },
-                new() { Index = 3, Quantity = 3, UnitId = 5, Product = new ProductModel { Id = 30 } }
-            };
+                cfg.CreateMap<UnitModel, Unit>();
+                cfg.CreateMap<ProductModel, Product>();
 
-            var mapped1 = new RecipeIngredient { Quantity = 5, UnitId = 3, ProductId = 10 };
-            var mapped2 = new RecipeIngredient { Quantity = 1, UnitId = 4, ProductId = 20 };
-            var mapped3 = new RecipeIngredient { Quantity = 3, UnitId = 5, ProductId = 30 };
+                cfg.CreateMap<RecipeIngredientEditModel, RecipeIngredient>();
 
-            mapperMock.Setup(m => m.Map<RecipeIngredient>(sourceIngredients[0])).Returns(mapped1);
-            mapperMock.Setup(m => m.Map<RecipeIngredient>(sourceIngredients[1])).Returns(mapped2);
-            mapperMock.Setup(m => m.Map<RecipeIngredient>(sourceIngredients[2])).Returns(mapped3);
+                cfg.CreateMap<RecipeEditModel, Recipe>()
+                    .ForMember(
+                        d => d.RecipeIngredients,
+                        opt => opt.MapFrom<
+                            EditRecipeModelToRecipeResolver,
+                            IList<RecipeIngredientEditModel>?>(src => src.Ingredients)
+                    );
+            });
 
-            var resolver = new EditRecipeModelToRecipeResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            var editRecipe = new RecipeEditModel
-            {
-                Ingredients = sourceIngredients
-            };
-
-            // Act
-            var result = resolver.Resolve(
-                source: editRecipe,
-                destination: new Recipe(),
-                sourceValue: sourceIngredients,
-                destValue: null,
-                context: context
-            );
-
-            // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(result, Has.Count.EqualTo(3));
-                Assert.That(result![0].Quantity, Is.EqualTo(5));
-                Assert.That(result[1].Quantity, Is.EqualTo(1));
-                Assert.That(result[2].Quantity, Is.EqualTo(3));
-            }
-
-            mapperMock.VerifyAll();
+            _mapper = config.CreateMapper();
         }
 
         [Test]
-        public void Resolve_Returns_Empty_When_SourceValue_Null_Or_Empty()
+        public void Map_WhenIngredientsNull_ReturnsEmptyList()
         {
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            var resolver = new EditRecipeModelToRecipeResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            var modelNull = new RecipeEditModel { Ingredients = null };
-            var modelEmpty = new RecipeEditModel { Ingredients = [] };
-
-            var empty = resolver.Resolve(modelNull, new Recipe(), null, null, context);
-            var emptyList = resolver.Resolve(modelEmpty, new Recipe(), [], null, context);
-
-            using (Assert.EnterMultipleScope())
+            var model = new RecipeEditModel
             {
-                Assert.That(empty, Is.Empty);
-                Assert.That(emptyList, Is.Empty);
-            }
+                Id = 1,
+                Name = "Test",
+                Ingredients = null
+            };
 
-            mapperMock.VerifyNoOtherCalls();
+            var result = _mapper.Map<Recipe>(model);
+
+            Assert.That(result.RecipeIngredients, Is.Not.Null);
+            Assert.That(result.RecipeIngredients, Is.Empty);
         }
 
         [Test]
-        public void Resolve_Maps_Ingredient_Values_Correctly()
+        public void Map_WhenIngredientsEmpty_ReturnsEmptyList()
         {
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-
-            var sourceList = new List<RecipeIngredientEditModel>
+            var model = new RecipeEditModel
             {
-                new() { Index = 10, Quantity = 2, UnitId = 4, Product = new ProductModel { Id = 99 } }
+                Id = 1,
+                Name = "Test",
+                Ingredients = []
             };
 
-            var mapped = new RecipeIngredient
+            var result = _mapper.Map<Recipe>(model);
+
+            Assert.That(result.RecipeIngredients, Is.Not.Null);
+            Assert.That(result.RecipeIngredients, Is.Empty);
+        }
+
+        [Test]
+        public void Map_MapsIngredientCoreFields()
+        {
+            var model = new RecipeEditModel
             {
-                Quantity = 2,
-                UnitId = 4,
-                ProductId = 99
+                Id = 1,
+                Name = "Milkshake",
+                Ingredients =
+                [
+                    new RecipeIngredientEditModel
+                    {
+                        RecipeId = 5,
+                        Quantity = 2.5m,
+                        UnitId = 3
+                    }
+                ]
             };
 
-            mapperMock.Setup(m => m.Map<RecipeIngredient>(sourceList[0]))
-                      .Returns(mapped);
-
-            var resolver = new EditRecipeModelToRecipeResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            var editRecipe = new RecipeEditModel
-            {
-                Ingredients = sourceList
-            };
-
-            var result = resolver.Resolve(editRecipe, new Recipe(), sourceList, null, context);
+            var result = _mapper.Map<Recipe>(model);
+            var ingredient = result.RecipeIngredients!.Single();
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result, Has.Count.EqualTo(1));
-                Assert.That(result![0].Quantity, Is.EqualTo(2));
-                Assert.That(result[0].UnitId, Is.EqualTo(4));
-                Assert.That(result[0].ProductId, Is.EqualTo(99));
+                Assert.That(ingredient.RecipeId, Is.EqualTo(5));
+                Assert.That(ingredient.Quantity, Is.EqualTo(2.5m));
+                Assert.That(ingredient.UnitId, Is.EqualTo(3));
             }
+        }
 
-            mapperMock.VerifyAll();
+        [Test]
+        public void Map_MapsOptionalUnitAndProduct()
+        {
+            var model = new RecipeEditModel
+            {
+                Id = 1,
+                Name = "Smoothie",
+                Ingredients =
+                [
+                    new RecipeIngredientEditModel
+                    {
+                        RecipeId = 10,
+                        Quantity = 1m,
+                        UnitId = 2,
+                        Unit = new UnitModel { Id = 2, Name = "Cup" },
+                        Product = new ProductModel { Id = 7, Name = "Strawberries" }
+                    }
+                ]
+            };
+
+            var result = _mapper.Map<Recipe>(model);
+            var ing = result.RecipeIngredients!.Single();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(ing.Unit, Is.Not.Null);
+                Assert.That(ing.Unit!.Name, Is.EqualTo("Cup"));
+
+                Assert.That(ing.Product, Is.Not.Null);
+                Assert.That(ing.Product!.Name, Is.EqualTo("Strawberries"));
+            }
         }
     }
 }

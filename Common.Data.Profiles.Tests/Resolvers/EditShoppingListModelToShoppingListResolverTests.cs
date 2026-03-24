@@ -2,7 +2,6 @@
 using Common.Data.Entities;
 using Common.Data.Profiles.Resolvers;
 using MealPlanner.Shared.Models;
-using Moq;
 using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Tests.Resolvers
@@ -10,103 +9,98 @@ namespace Common.Data.Profiles.Tests.Resolvers
     [TestFixture]
     public class EditShoppingListModelToShoppingListResolverTests
     {
-        [Test]
-        public void Resolve_Maps_All_Items()
+        private IMapper _mapper;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-
-            var sourceProducts = new List<ShoppingListProductEditModel>
+            var config = new MapperConfiguration(cfg =>
             {
-                new()
-                {
-                    Collected = false,
-                    DisplaySequence = 1,
-                    Product = new ProductModel { Name = "Apples" }
-                },
-                new()
-                {
-                    Collected = true,
-                    DisplaySequence = 2,
-                    Product = new ProductModel { Name = "Bananas" }
-                }
-            };
+                cfg.CreateMap<ShoppingListProductEditModel, ShoppingListProduct>();
+                cfg.CreateMap<ProductModel, Product>();
 
-            var mapped1 = new ShoppingListProduct
-            {
-                Collected = false,
-                DisplaySequence = 1,
-                Product = new Product { Name = "Apples" }
-            };
+                cfg.CreateMap<ShoppingListEditModel, ShoppingList>()
+                    .ForMember(
+                        d => d.Products,
+                        opt => opt.MapFrom<
+                            EditShoppingListModelToShoppingListResolver,
+                            IList<ShoppingListProductEditModel>?>(src => src.Products)
+                    );
+            });
 
-            var mapped2 = new ShoppingListProduct
-            {
-                Collected = true,
-                DisplaySequence = 2,
-                Product = new Product { Name = "Bananas" }
-            };
-
-            mapperMock.Setup(m => m.Map<ShoppingListProduct>(sourceProducts[0]))
-                      .Returns(mapped1);
-            mapperMock.Setup(m => m.Map<ShoppingListProduct>(sourceProducts[1]))
-                      .Returns(mapped2);
-
-            var resolver = new EditShoppingListModelToShoppingListResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
-
-            var editModel = new ShoppingListEditModel
-            {
-                Products = sourceProducts
-            };
-
-            // Act
-            var result = resolver.Resolve(
-                source: editModel,
-                destination: new ShoppingList(),
-                sourceValue: sourceProducts,
-                destValue: null,
-                context: context);
-
-            // Assert
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(result, Has.Count.EqualTo(2));
-
-                Assert.That(result![0].Product!.Name, Is.EqualTo("Apples"));
-                Assert.That(result[1].Product!.Name, Is.EqualTo("Bananas"));
-            }
-
-            mapperMock.VerifyAll();
+            _mapper = config.CreateMapper();
         }
 
         [Test]
-        public void Resolve_Returns_Empty_When_SourceProducts_Null_Or_Empty()
+        public void Map_WhenProductsNull_ReturnsEmptyList()
         {
-            var mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            var resolver = new EditShoppingListModelToShoppingListResolver(mapperMock.Object);
-            var context = default(ResolutionContext);
+            var model = new ShoppingListEditModel
+            {
+                Id = 1,
+                Name = "Test Shopping List",
+                Products = null
+            };
 
-            var empty1 = resolver.Resolve(
-                new ShoppingListEditModel { Products = null },
-                new ShoppingList(),
-                null,
-                null,
-                context);
+            var result = _mapper.Map<ShoppingList>(model);
 
-            var empty2 = resolver.Resolve(
-                new ShoppingListEditModel { Products = [] },
-                new ShoppingList(),
-                [],
-                null,
-                context);
+            Assert.That(result.Products, Is.Not.Null);
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void Map_WhenProductsEmpty_ReturnsEmptyList()
+        {
+            var model = new ShoppingListEditModel
+            {
+                Id = 1,
+                Name = "Test Shopping List",
+                Products = []
+            };
+
+            var result = _mapper.Map<ShoppingList>(model);
+
+            Assert.That(result.Products, Is.Not.Null);
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void Map_MapsAllProducts()
+        {
+            var model = new ShoppingListEditModel
+            {
+                Id = 1,
+                Name = "Groceries",
+                Products =
+                [
+                    new ShoppingListProductEditModel
+                    {
+                        Product = new ProductModel { Id = 10 },
+                        Quantity = 2,
+                        IsSelected = false
+                    },
+                    new ShoppingListProductEditModel
+                    {
+                        Product = new ProductModel{ Id = 20 },
+                        Quantity = 5,
+                        IsSelected = true
+                    }
+                ]
+            };
+
+            var result = _mapper.Map<ShoppingList>(model);
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(empty1, Is.Empty);
-                Assert.That(empty2, Is.Empty);
-            }
+                Assert.That(result.Products!, Has.Count.EqualTo(2));
 
-            mapperMock.VerifyNoOtherCalls();
+                Assert.That(result.Products![0].ProductId, Is.EqualTo(10));
+                Assert.That(result.Products[0].Quantity, Is.EqualTo(2));
+                Assert.That(result.Products[0].Collected, Is.False);
+
+                Assert.That(result.Products[1].ProductId, Is.EqualTo(20));
+                Assert.That(result.Products[1].Quantity, Is.EqualTo(5));
+                Assert.That(result.Products[1].Collected, Is.False);
+            }
         }
     }
 }

@@ -11,8 +11,8 @@ namespace Common.Data.Profiles.Tests.Resolvers
     {
         private IMapper _mapper;
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        [SetUp]
+        public void SetUp()
         {
             var config = new MapperConfiguration(cfg =>
             {
