@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class ShopToEditShopModelResolver(IMapper mapper)
+    public class ShopToEditShopModelResolver()
         : IMemberValueResolver<
             Shop,
             ShopEditModel,
@@ -23,7 +23,7 @@ namespace Common.Data.Profiles.Resolvers
                 return [];
 
             var results = sourceValue
-                .Select(s => mapper.Map<ShopDisplaySequenceEditModel>(s))
+                .Select(s => context.Mapper.Map<ShopDisplaySequenceEditModel>(s))
                 .OrderBy(i => i.Value)
                 .ToList();
 

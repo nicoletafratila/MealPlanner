@@ -4,7 +4,7 @@ using RecipeBook.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class EditRecipeModelToRecipeResolver(IMapper mapper)
+    public class EditRecipeModelToRecipeResolver()
         : IMemberValueResolver<
             RecipeEditModel,
             Recipe,
@@ -22,7 +22,7 @@ namespace Common.Data.Profiles.Resolvers
                 return [];
 
             return source.Ingredients
-                         .Select(i => mapper.Map<RecipeIngredient>(i))
+                         .Select(i => context.Mapper.Map<RecipeIngredient>(i))
                          .ToList();
         }
     }

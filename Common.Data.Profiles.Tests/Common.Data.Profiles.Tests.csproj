@@ -9,6 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resolvers\EditRecipeModelToRecipeResolverTests.cs" />
+    <Compile Remove="Resolvers\EditShopModelToShopResolverTests.cs" />
+    <Compile Remove="Resolvers\EditShoppingListModelToShoppingListResolverTests.cs" />
+    <Compile Remove="Resolvers\RecipeToEditRecipeModelResolverTests.cs" />
+    <Compile Remove="Resolvers\ShoppingListToEditShoppingListModelResolverTests.cs" />
+    <Compile Remove="Resolvers\ShopToEditShopModelResolverTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="coverlet.collector" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>

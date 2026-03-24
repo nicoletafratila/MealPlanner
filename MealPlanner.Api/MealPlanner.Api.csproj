@@ -16,12 +16,16 @@
 
   <ItemGroup>
     <Compile Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <Compile Remove="Logs\**" />
     <Compile Remove="Migrations\**" />
     <Content Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="Migrations\**" />
     <EmbeddedResource Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
+    <None Remove="Logs\**" />
     <None Remove="Migrations\**" />
   </ItemGroup>
 

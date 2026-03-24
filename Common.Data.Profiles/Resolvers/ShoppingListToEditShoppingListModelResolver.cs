@@ -4,7 +4,7 @@ using MealPlanner.Shared.Models;
 
 namespace Common.Data.Profiles.Resolvers
 {
-    public class ShoppingListToEditShoppingListModelResolver(IMapper mapper)
+    public class ShoppingListToEditShoppingListModelResolver()
         : IMemberValueResolver<
             ShoppingList,
             ShoppingListEditModel,
@@ -22,7 +22,7 @@ namespace Common.Data.Profiles.Resolvers
                 return [];
 
             return source.Products
-                .Select(p => mapper.Map<ShoppingListProductEditModel>(p))
+                .Select(p => context.Mapper.Map<ShoppingListProductEditModel>(p))
                 .OrderBy(i => i.Collected)
                 .ThenBy(i => i.DisplaySequence)
                 .ThenBy(i => i.Product?.Name)

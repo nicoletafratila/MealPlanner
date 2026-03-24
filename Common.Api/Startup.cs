@@ -2,6 +2,7 @@
 using Blazored.SessionStorage;
 using Common.Data.DataContext;
 using Common.Data.Profiles;
+using Common.Data.Profiles.Resolvers;
 using Common.Data.Repository;
 using Common.Logging;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,15 @@ namespace Common.Api
                 c.AddProfile<ApplicationUserProfile>();
             });
             services.AddSingleton(s => config.CreateMapper());
-            
+            services.AddTransient<EditMealPlanModelToMealPlanResolver>();
+            services.AddTransient<EditRecipeModelToRecipeResolver>();
+            services.AddTransient<EditShopModelToShopResolver>();
+            services.AddTransient<EditShoppingListModelToShoppingListResolver>();
+            services.AddTransient<MealPlanToEditMealPlanModelResolver>();
+            services.AddTransient<RecipeToEditRecipeModelResolver>();
+            services.AddTransient<ShoppingListToEditShoppingListModelResolver>();
+            services.AddTransient<ShopToEditShopModelResolver>();
+
             services.AddScoped<TokenProvider>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
