@@ -28,19 +28,22 @@ namespace Common.Data.DataContext.Tests
 
             using var context = new MealPlannerDbContext(options);
 
-            Assert.That(context.MealPlans, Is.Not.Null);
-            Assert.That(context.MealPlanRecipes, Is.Not.Null);
-            Assert.That(context.Recipes, Is.Not.Null);
-            Assert.That(context.RecipeIngredients, Is.Not.Null);
-            Assert.That(context.Products, Is.Not.Null);
-            Assert.That(context.ProductCategories, Is.Not.Null);
-            Assert.That(context.RecipeCategories, Is.Not.Null);
-            Assert.That(context.Units, Is.Not.Null);
-            Assert.That(context.ShoppingLists, Is.Not.Null);
-            Assert.That(context.ShoppingListProducts, Is.Not.Null);
-            Assert.That(context.Shops, Is.Not.Null);
-            Assert.That(context.ShopDisplaySequences, Is.Not.Null);
-            Assert.That(context.Logs, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(context.MealPlans, Is.Not.Null);
+                Assert.That(context.MealPlanRecipes, Is.Not.Null);
+                Assert.That(context.Recipes, Is.Not.Null);
+                Assert.That(context.RecipeIngredients, Is.Not.Null);
+                Assert.That(context.Products, Is.Not.Null);
+                Assert.That(context.ProductCategories, Is.Not.Null);
+                Assert.That(context.RecipeCategories, Is.Not.Null);
+                Assert.That(context.Units, Is.Not.Null);
+                Assert.That(context.ShoppingLists, Is.Not.Null);
+                Assert.That(context.ShoppingListProducts, Is.Not.Null);
+                Assert.That(context.Shops, Is.Not.Null);
+                Assert.That(context.ShopDisplaySequences, Is.Not.Null);
+                Assert.That(context.Logs, Is.Not.Null);
+            });
         }
 
         [Test]
@@ -56,8 +59,11 @@ namespace Common.Data.DataContext.Tests
             var quantityProp = entityType!.FindProperty(nameof(RecipeIngredient.Quantity));
             Assert.That(quantityProp, Is.Not.Null, "Quantity property not found on RecipeIngredient.");
 
-            Assert.That(quantityProp!.GetPrecision(), Is.EqualTo(18));
-            Assert.That(quantityProp.GetScale(), Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(quantityProp!.GetPrecision(), Is.EqualTo(18));
+                Assert.That(quantityProp.GetScale(), Is.EqualTo(2));
+            });
         }
 
         [Test]
@@ -73,8 +79,11 @@ namespace Common.Data.DataContext.Tests
             var quantityProp = entityType!.FindProperty(nameof(ShoppingListProduct.Quantity));
             Assert.That(quantityProp, Is.Not.Null, "Quantity property not found on ShoppingListProduct.");
 
-            Assert.That(quantityProp!.GetPrecision(), Is.EqualTo(18));
-            Assert.That(quantityProp.GetScale(), Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(quantityProp!.GetPrecision(), Is.EqualTo(18));
+                Assert.That(quantityProp.GetScale(), Is.EqualTo(2));
+            });
         }
     }
 }

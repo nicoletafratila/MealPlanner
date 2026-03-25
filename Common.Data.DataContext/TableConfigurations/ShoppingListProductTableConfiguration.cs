@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Common.Data.DataContext.TableConfigurations
 {
-    public class ShoppingListProductTableConfiguration : IEntityTypeConfiguration<ShoppingListProduct>
+    public sealed class ShoppingListProductTableConfiguration
+        : IEntityTypeConfiguration<ShoppingListProduct>
     {
-        public void Configure(EntityTypeBuilder<ShoppingListProduct> modelBuilder)
+        public void Configure(EntityTypeBuilder<ShoppingListProduct> builder)
         {
-            modelBuilder.HasKey(t => new { t.ShoppingListId, t.ProductId });
+            builder.HasKey(t => new { t.ShoppingListId, t.ProductId });
         }
     }
 }

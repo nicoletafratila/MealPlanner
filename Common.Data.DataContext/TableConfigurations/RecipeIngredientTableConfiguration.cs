@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Common.Data.DataContext.TableConfigurations
 {
-    public class RecipeIngredientTableConfiguration : IEntityTypeConfiguration<RecipeIngredient>
+    public sealed class RecipeIngredientTableConfiguration
+        : IEntityTypeConfiguration<RecipeIngredient>
     {
-        public void Configure(EntityTypeBuilder<RecipeIngredient> modelBuilder)
+        public void Configure(EntityTypeBuilder<RecipeIngredient> builder)
         {
-            modelBuilder.HasKey(t => new { t.RecipeId, t.ProductId });
+            builder.HasKey(x => new { x.RecipeId, x.ProductId });
         }
     }
 }

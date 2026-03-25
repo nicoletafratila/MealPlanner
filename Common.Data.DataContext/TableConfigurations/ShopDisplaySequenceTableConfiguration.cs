@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Common.Data.DataContext.TableConfigurations
 {
-    public class ShopDisplaySequenceTableConfiguration : IEntityTypeConfiguration<ShopDisplaySequence>
+    public sealed class ShopDisplaySequenceTableConfiguration
+        : IEntityTypeConfiguration<ShopDisplaySequence>
     {
-        public void Configure(EntityTypeBuilder<ShopDisplaySequence> modelBuilder)
+        public void Configure(EntityTypeBuilder<ShopDisplaySequence> builder)
         {
-            modelBuilder.HasKey(t => new { t.ShopId, t.ProductCategoryId });
+            builder.HasKey(x => new { x.ShopId, x.ProductCategoryId });
         }
     }
 }
