@@ -1,12 +1,18 @@
-﻿using Common.Data.Entities;
+﻿using System.Reflection;
+using Common.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Common.Data.DataContext
 {
-    public class MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public sealed class MealPlannerDbContext
+        : IdentityDbContext<ApplicationUser>
     {
+        public MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
         public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
         public DbSet<Recipe> Recipes => Set<Recipe>();
@@ -24,10 +30,16 @@ namespace Common.Data.DataContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<RecipeIngredient>().Property(b => b.Quantity).HasPrecision(18, 2);
-            modelBuilder.Entity<ShoppingListProduct>().Property(b => b.Quantity).HasPrecision(18, 2);
+            modelBuilder.Entity<RecipeIngredient>()
+                .Property(b => b.Quantity)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<ShoppingListProduct>()
+                .Property(b => b.Quantity)
+                .HasPrecision(18, 2);
         }
     }
 }
