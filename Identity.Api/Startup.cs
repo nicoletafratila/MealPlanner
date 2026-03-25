@@ -59,7 +59,6 @@ namespace Identity.Api
                     .AddEntityFrameworkStores<MealPlannerDbContext>()
                     .AddDefaultTokenProviders();
             services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
                     .AddInMemoryClients(IdentityConfigs.GetClients())
                     .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
                     .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())

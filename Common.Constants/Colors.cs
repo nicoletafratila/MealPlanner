@@ -12,13 +12,33 @@ namespace Common.Constants
                 return colors;
             }
 
+            var darkest = Color.DarkOliveGreen;
+
+            // Lightest color: baseColor lightened, but not all the way to white
+            const float maxLightenFactor = 0.7f;
+            var lightest = ChangeColorBrightness(baseColor, maxLightenFactor);
+
+            if (counter == 1)
+            {
+                // Single bucket -> just use darkest allowed color
+                colors.Add($"#{darkest.R:X2}{darkest.G:X2}{darkest.B:X2}");
+                return colors;
+            }
+
             for (var index = 0; index < counter; index++)
             {
-                // 1.0 → lightest (closest to white), ~1/counter → closest to baseColor
-                var brightnessFactor = 1.0f - (index * 1.0f / counter);
-                var adjustedColor = ChangeColorBrightness(baseColor, brightnessFactor);
-                var colorHex = $"#{adjustedColor.R:X2}{adjustedColor.G:X2}{adjustedColor.B:X2}";
-                colors.Add(colorHex);
+                // t=0 -> darkest (most used), t=1 -> lightest (least used)
+                var t = (float)index / (counter - 1);
+
+                int r = (int)Math.Round(darkest.R + (lightest.R - darkest.R) * t);
+                int g = (int)Math.Round(darkest.G + (lightest.G - darkest.G) * t);
+                int b = (int)Math.Round(darkest.B + (lightest.B - darkest.B) * t);
+
+                r = Math.Clamp(r, 0, 255);
+                g = Math.Clamp(g, 0, 255);
+                b = Math.Clamp(b, 0, 255);
+
+                colors.Add($"#{r:X2}{g:X2}{b:X2}");
             }
 
             return colors;
@@ -26,7 +46,6 @@ namespace Common.Constants
 
         private static Color ChangeColorBrightness(Color color, float correctionFactor)
         {
-            // clamp to expected range
             correctionFactor = Math.Clamp(correctionFactor, -1f, 1f);
 
             float red = color.R;
@@ -35,7 +54,6 @@ namespace Common.Constants
 
             if (correctionFactor < 0)
             {
-                // Darken
                 correctionFactor = 1 + correctionFactor;
                 red *= correctionFactor;
                 green *= correctionFactor;
@@ -43,7 +61,6 @@ namespace Common.Constants
             }
             else
             {
-                // Lighten
                 red = (255 - red) * correctionFactor + red;
                 green = (255 - green) * correctionFactor + green;
                 blue = (255 - blue) * correctionFactor + blue;
