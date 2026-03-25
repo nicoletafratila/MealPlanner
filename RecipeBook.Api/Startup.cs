@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using Common.Api;
 using Duende.IdentityModel;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +17,8 @@ namespace RecipeBook.Api
     {
         protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddHttpClient<IMealPlannerClient, MealPlannerClient>();
+            services.AddHttpClient<IMealPlannerClient, MealPlannerClient>()
+                .ConfigureHttpClient(ConfigureMealPlannerClient); ;
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -128,6 +130,13 @@ namespace RecipeBook.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ConfigureMealPlannerClient(IServiceProvider serviceProvider, HttpClient httpClient)
+        {
+            var clientConfig = serviceProvider.GetRequiredService<MealPlannerApiConfig>();
+            httpClient.BaseAddress = clientConfig.BaseUrl;
+            httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
         }
     }
 }

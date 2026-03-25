@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using Common.Api;
 using Duende.IdentityModel;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
@@ -16,7 +17,8 @@ namespace MealPlanner.Api
     {
         protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddHttpClient<IRecipeBookClient, RecipeBookClient>();
+            services.AddHttpClient<IRecipeBookClient, RecipeBookClient>()
+                .ConfigureHttpClient(ConfigureRecipeBookClient); 
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -124,6 +126,13 @@ namespace MealPlanner.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ConfigureRecipeBookClient(IServiceProvider serviceProvider, HttpClient httpClient)
+        {
+            var clientConfig = serviceProvider.GetRequiredService<RecipeBookApiConfig>();
+            httpClient.BaseAddress = clientConfig.BaseUrl;
+            httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
         }
     }
 }

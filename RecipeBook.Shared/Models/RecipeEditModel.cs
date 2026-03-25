@@ -52,7 +52,7 @@ namespace RecipeBook.Shared.Models
         /// </summary>
         [Required]
         [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one ingredient.")]
-        public IList<RecipeIngredientEditModel>? Ingredients { get; set; } = new List<RecipeIngredientEditModel>();
+        public IList<RecipeIngredientEditModel>? Ingredients { get; set; } = [];
 
         public RecipeEditModel()
         {
