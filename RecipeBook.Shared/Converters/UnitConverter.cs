@@ -7,7 +7,7 @@ namespace RecipeBook.Shared.Converters
 {
     public static class UnitConverter
     {
-        private static Func<IMapper> _mapperFactory = () => ServiceLocator.Current.GetInstance<IMapper>();
+        private static Func<IMapper> _mapperFactory = () => ServiceLocator.GetInstance<IMapper>();
         private static Func<decimal, Unit, Unit, decimal> _convertCore = (value, from, to) => Common.Data.Entities.Converters.UnitConverter.Convert(value, from, to);
 
         public static void ConfigureMapperFactory(Func<IMapper> mapperFactory)

@@ -2,36 +2,45 @@
 
 namespace Common.Data.DataContext
 {
-    public class ServiceLocator
+    public static class ServiceLocator
     {
-        private static ServiceProvider? _currentServiceProvider;
+        private static IServiceProvider? _currentServiceProvider;
 
-        public ServiceLocator(ServiceProvider currentServiceProvider)
+        public static bool IsInitialized => _currentServiceProvider != null;
+
+        public static void SetLocatorProvider(IServiceProvider serviceProvider)
         {
-            _currentServiceProvider = currentServiceProvider;
+            _currentServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public static ServiceLocator Current
+        public static IServiceProvider Current => _currentServiceProvider ?? throw new InvalidOperationException("ServiceLocator is not initialized. Call SetLocatorProvider(...) first.");
+
+        public static object GetInstance(Type serviceType)
         {
-            get
+            ArgumentNullException.ThrowIfNull(serviceType);
+            return Current.GetRequiredService(serviceType);
+        }
+
+        public static TService GetInstance<TService>()
+            where TService : notnull
+        {
+            return Current.GetRequiredService<TService>();
+        }
+
+        public static TService? TryGetInstance<TService>()
+        {
+            var provider = _currentServiceProvider;
+            if (provider is null)
             {
-                return new ServiceLocator(_currentServiceProvider!);
+                return default;
             }
+
+            return provider.GetService<TService>();
         }
 
-        public static void SetLocatorProvider(ServiceProvider serviceProvider)
+        public static void Reset()
         {
-            _currentServiceProvider = serviceProvider;
-        }
-
-        public object GetInstance(Type serviceType)
-        {
-            return _currentServiceProvider!.GetService(serviceType)!;
-        }
-
-        public TService GetInstance<TService>()
-        {
-            return _currentServiceProvider!.GetService<TService>()!;
+            _currentServiceProvider = null;
         }
     }
 }
