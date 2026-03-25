@@ -7,12 +7,22 @@ namespace Common.Api
         public Uri? BaseUrl { get; set; }
         public int Timeout { get; set; }
         public virtual string? Name => string.Empty;
-        public Dictionary<string, string>? Controllers { get; set; }
+        public Dictionary<string, string>? Controllers { get; set; } = [];
 
         public ApiConfig(IConfiguration configuration)
         {
             ArgumentNullException.ThrowIfNull(configuration);
-            configuration.Bind(Name!, this);
+
+            var sectionName = Name;
+
+            if (string.IsNullOrWhiteSpace(sectionName))
+            {
+                configuration.Bind(this);
+            }
+            else
+            {
+                configuration.GetSection(sectionName).Bind(this);
+            }
         }
     }
 }
