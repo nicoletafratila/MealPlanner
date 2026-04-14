@@ -23,6 +23,10 @@ namespace MealPlanner.Shared.Models
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
+        public DateTime? CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+
         /// <summary>
         /// Recipes included in this meal plan.
         /// Must contain at least one recipe.

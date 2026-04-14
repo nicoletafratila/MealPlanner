@@ -33,6 +33,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Update
                 }
 
                 _mapper.Map(request.Model, existingItem);
+                existingItem.UpdatedAt = DateTime.Now;
                 await _repository.UpdateAsync(existingItem, cancellationToken);
 
                 return CommandResponse.Success();

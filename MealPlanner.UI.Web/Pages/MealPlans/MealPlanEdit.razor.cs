@@ -58,11 +58,11 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems = new List<BreadcrumbItem>
-            {
+            _navItems =
+            [
                 new() { Text = "Meal plans", Href = "mealplans/mealplansoverview" },
                 new() { Text = "Meal plan", IsCurrentPage = true },
-            };
+            ];
 
             var queryParameters = new QueryParameters<RecipeCategoryModel>
             {
@@ -86,15 +86,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             {
                 MealPlan = new MealPlanEditModel
                 {
-                    Recipes = new List<RecipeModel>()
+                    Recipes = [],
+                    Name = GetMenuName(),
                 };
             }
             else
             {
-                MealPlan = await MealPlanService.GetEditAsync(id)
-                           ?? new MealPlanEditModel { Id = id, Recipes = new List<RecipeModel>() };
-
-                MealPlan.Recipes ??= new List<RecipeModel>();
+                MealPlan = await MealPlanService.GetEditAsync(id) ?? new MealPlanEditModel { Id = id, Recipes = [] };
+                MealPlan.Recipes ??= [];
             }
 
             _selectedRecipeGrid = new Shared.GridTemplate<RecipeModel>();
@@ -187,7 +186,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task<GridDataProviderResult<RecipeModel>> RecipesDataProviderAsync(
             GridDataProviderRequest<RecipeModel> request)
         {
-            var data = MealPlan.Recipes ?? new List<RecipeModel>();
+            var data = MealPlan.Recipes ?? [];
 
             _tableGridClass = data.Count == 0
                 ? CssClasses.GridTemplateEmptyHorizontalClass
@@ -211,7 +210,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (!CanAddRecipe || MealPlan is null)
                 return;
 
-            MealPlan.Recipes ??= new List<RecipeModel>();
+            MealPlan.Recipes ??= [];
 
             var recipeId = int.Parse(RecipeId!);
             var existing = MealPlan.Recipes.FirstOrDefault(r => r.Id == recipeId);
@@ -359,5 +358,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task ShowInfoAsync(string message)
             => await MessageComponent!.ShowInfoAsync(message);
+
+        private static string GetMenuName()
+        {
+            var now = DateTime.Now;
+            var calendar = System.Globalization.CultureInfo.InvariantCulture.Calendar;
+            int week = calendar.GetWeekOfYear(now, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return $"{Resources.MealPlansOverview.MenuName} {now.Year}/{week}";
+        }
     }
 }

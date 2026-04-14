@@ -59,9 +59,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Pages\MealPlans\Resources\MealPlansOverview.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MealPlansOverview.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="wwwroot\css\site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\MealPlansOverview.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MealPlansOverview.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

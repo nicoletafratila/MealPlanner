@@ -35,6 +35,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Add
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.MealPlan>(request.Model);
+                mapped.CreatedAt = DateTime.Now;
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();
