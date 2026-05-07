@@ -9,6 +9,7 @@ using MealPlanner.UI.Web.Services.MealPlans;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
 {
@@ -19,6 +20,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ShoppingListModel>? _shoppingListsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
+        private bool showCopiedMessage;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -31,6 +33,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
+
+        [Inject]
+        public IJSRuntime JS { get; set; } = default!;
 
         protected override void OnInitialized()
         {
@@ -130,6 +135,33 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 Data = items,
                 TotalCount = result.Metadata?.TotalCount ?? 0
             };
+        }
+
+        private async Task Export(ShoppingListModel model)
+        {
+            var text = string.Empty;
+
+            if (model != null)
+            {
+                var data = await ShoppingListService.GetEditAsync(model.Id);
+                if (data is not null && data.Products != null && data.Products.Any())
+                {
+                    text = string.Join(
+                        Environment.NewLine,
+                        data.Products.Select(p => p.Product!.Name + " - " + p.Quantity + " " + p.Unit!.Name)
+                    );
+                }
+            }
+
+            await JS.InvokeVoidAsync("copyTextToClipboard", text);
+
+            showCopiedMessage = true;
+            StateHasChanged();
+
+            await Task.Delay(2000);
+
+            showCopiedMessage = false;
+            StateHasChanged();
         }
 
         private async Task ShowErrorAsync(string message)

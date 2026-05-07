@@ -22,6 +22,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private ShopEditModel? _shop;
+        private bool showCopiedMessage;
 
         [CascadingParameter]
         private IModalService? ModalService { get; set; }
@@ -390,6 +391,29 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private void NavigateToOverview()
         {
             NavigationManager.NavigateTo("mealplans/shoppinglistsoverview");
+        }
+
+        private async Task Export()
+        {
+            var text = string.Empty;
+
+            if (ShoppingList != null && ShoppingList.Products != null && ShoppingList.Products.Any())
+            {
+                text = string.Join(
+                    Environment.NewLine,
+                    ShoppingList.Products.Select(p => p.Product!.Name + " - " + p.Quantity + " " + p.Unit!.Name)
+                );
+            }
+
+            await JS.InvokeVoidAsync("copyTextToClipboard", text);
+
+            showCopiedMessage = true;
+            StateHasChanged();
+
+            await Task.Delay(2000);
+
+            showCopiedMessage = false;
+            StateHasChanged();
         }
 
         private async Task CheckboxChangedAsync(ShoppingListProductEditModel model)

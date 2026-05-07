@@ -12,9 +12,8 @@ PM> Script-migration
 
 
 
-exporta lista
+
 adauga automat la ultimul meniu dupa data
 leaga retete la user
 user management - edit user profile
-adauga reteta la meniu cu click dr si selectare mai multe
 muta pe maui

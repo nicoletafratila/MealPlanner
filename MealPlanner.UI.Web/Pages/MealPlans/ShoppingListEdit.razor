@@ -3,15 +3,27 @@
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
+
 @if (ShoppingList != null)
 {
     <div class="card">
         <div class="card-header">
             <table>
-                <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
-                        <h2 id="headerName">@ShoppingList.Name</h2>
+                <tr>
+                    <td style="width: 100%;">
+                        <h2 id="headerName" class="d-inline">@ShoppingList.Name</h2>
                     </td>
+                    <td style="white-space: nowrap;">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export()">Export</button>
+                    </td>
+                    @if (showCopiedMessage)
+                    {
+                        <td>
+                            <div class="alert alert-success position-fixed bottom-0 end-0 m-3 py-1 px-2">
+                                Copied to clipboard
+                            </div>
+                        </td>
+                    }
                 </tr>
             </table>
         </div>
@@ -108,7 +120,7 @@
                         <TableHeader>
                             <th style="width: 40px"></th>
                             <th></th>
-                            <th style ="width: 40px"></th>
+                            <th style="width: 40px"></th>
                         </TableHeader>
                         <RowTemplate Context="ProductModel">
                             @if (ProductModel != null && ProductModel.Product != null)
