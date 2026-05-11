@@ -1,9 +1,11 @@
 ﻿using BlazorBootstrap;
 using Blazored.SessionStorage;
 using Common.Constants;
+using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Services.Identities;
+using MealPlanner.UI.Web.Services.MealPlans;
 using MealPlanner.UI.Web.Services.RecipeBooks;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [Inject]
         public IRecipeService RecipeService { get; set; } = default!;
+
+        [Inject]
+        public IMealPlanService MealPlanService { get; set; } = default!;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
@@ -106,7 +111,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 Filters = request.Filters,
                 Sorting = request.Sorting?
                     .Select(QueryParameters<RecipeModel>.ToModel)
-                    .ToList(),
+                    .ToList()!,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
             };
@@ -128,6 +133,37 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 Data = items,
                 TotalCount = result.Metadata?.TotalCount ?? 0
             };
+        }
+
+        private async Task AddToMealPlanAsync(RecipeModel recipe)
+        {
+            if (recipe is null)
+                return;
+
+            var mealPlan = await MealPlanService.GetCurrentAsync();
+            if (mealPlan is null)
+                return;
+
+            var mealPlanToAdd = await MealPlanService.GetEditAsync(mealPlan.Id);
+            if (mealPlanToAdd is null)
+                return;
+
+            mealPlanToAdd.Recipes ??= [];
+
+            var existing = mealPlanToAdd.Recipes.FirstOrDefault(r => r.Id == recipe.Id);
+            if (existing is not null)
+                return;
+
+            mealPlanToAdd.Recipes.Add(recipe);
+            mealPlanToAdd.Recipes.SetIndexes();
+
+            var response = await MealPlanService.UpdateAsync(mealPlanToAdd);
+            if (response is null)
+            {
+                await ShowErrorAsync("Save failed. Please try again.");
+                return;
+            }
+            await ShowInfoAsync("Recipe has been added successfully");
         }
 
         private async Task ShowErrorAsync(string message)

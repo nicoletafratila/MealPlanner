@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
+using BlazorBootstrap;
 using Common.Api;
 using Common.Constants;
 using Common.Models;
@@ -51,6 +53,22 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                 logger.LogError(ex, "Failed to deserialize MealPlanEditModel for id {MealPlanId}", id);
                 throw;
             }
+        }
+
+        public async Task<MealPlanModel?> GetCurrentAsync(CancellationToken cancellationToken = default)
+        {
+            var queryParameters = new QueryParameters<MealPlanModel>
+            {
+                Filters = CreateMealPlanFilter,
+                Sorting = [],
+                PageNumber = 1,
+                PageSize = int.MaxValue,
+            };
+
+            var result = await SearchAsync(queryParameters, cancellationToken)
+                         ?? new PagedList<MealPlanModel>([], new Metadata());
+
+            return result.Items.Count != 0 ? result.Items.OrderByDescending(x => x.CreatedAt).FirstOrDefault() : null;
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(
@@ -250,6 +268,27 @@ namespace MealPlanner.UI.Web.Services.MealPlans
                     "Failed to deserialize CommandResponse for DeleteAsync. Id {Id}",
                     id);
                 throw;
+            }
+        }
+
+        private static List<FilterItem> CreateMealPlanFilter
+        {
+            get
+            {
+                var filters = new List<FilterItem>();
+
+                var today = DateTime.Today;
+                var firstDayOfWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+
+                int diff = (7 + (today.DayOfWeek - firstDayOfWeek)) % 7;
+
+                var weekStart = today.AddDays(-diff).Date;
+                var weekEnd = weekStart.AddDays(7);
+
+                filters.Add(new FilterItem(nameof(MealPlanEditModel.CreatedAt), weekStart.ToString(), FilterOperator.GreaterThanOrEquals, StringComparison.OrdinalIgnoreCase));
+                filters.Add(new FilterItem(nameof(MealPlanEditModel.CreatedAt), weekEnd.ToString(), FilterOperator.LessThan, StringComparison.OrdinalIgnoreCase));
+
+                return filters;
             }
         }
     }

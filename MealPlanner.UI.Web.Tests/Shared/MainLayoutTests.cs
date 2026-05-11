@@ -1,7 +1,9 @@
 ﻿using BlazorBootstrap;
 using Bunit;
 using Bunit.TestDoubles;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
+using MealPlanner.UI.Web.Services.MealPlans;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
     {
         private BunitAuthorizationContext _authContext;
         private BunitContext _ctx = null!;
+        private Mock<IMealPlanService> _mealPlanServiceMock = null!;
 
         [SetUp]
         public void SetUp()
@@ -32,9 +35,11 @@ namespace MealPlanner.UI.Web.Tests.Shared
 
             var authServiceMock = new Mock<IAuthenticationService>(MockBehavior.Loose);
             var userServiceMock = new Mock<IApplicationUserService>(MockBehavior.Loose);
+            _mealPlanServiceMock = new Mock<IMealPlanService>(MockBehavior.Loose);
 
             _ctx.Services.AddSingleton(authServiceMock.Object);
             _ctx.Services.AddSingleton(userServiceMock.Object);
+            _ctx.Services.AddSingleton(_mealPlanServiceMock.Object);
 
             _ctx.Services.AddLogging();
         }
@@ -159,6 +164,71 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 Assert.That(cut.Instance.IsErrorActive, Is.False);
                 Assert.That(cut.Instance.IsInfoActive, Is.True);
                 Assert.That(cut.Instance.Message, Is.EqualTo("Info now"));
+            }
+        }
+
+        // ---------- Current meal plan banner ----------
+
+        [Test]
+        public async Task OnInitializedAsync_WhenMealPlanExists_ShowsMealPlanNameAsLink()
+        {
+            // Arrange
+            var plan = new MealPlanModel { Id = 3, Name = "Week 20 Menu" };
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(plan);
+
+            // Act
+            var cut = _ctx.Render<MainLayout>();
+            await cut.InvokeAsync(() => Task.CompletedTask); // flush async init
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("Week 20 Menu"));
+                Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/3"));
+                Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
+            }
+        }
+
+        [Test]
+        public async Task OnInitializedAsync_WhenAuthenticatedAndNoMealPlan_ShowsCreateMessage()
+        {
+            // Arrange
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((MealPlanModel?)null);
+
+            // Act
+            var cut = _ctx.Render<MainLayout>();
+            await cut.InvokeAsync(() => Task.CompletedTask);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Contain("You have not created a menu for this week yet"));
+                Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/"));
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+            }
+        }
+
+        [Test]
+        public void OnInitializedAsync_WhenApiThrows_ShowsNeitherMessage()
+        {
+            // Arrange
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new HttpRequestException("Unauthorized"));
+
+            // Act
+            var cut = _ctx.Render<MainLayout>();
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
             }
         }
 

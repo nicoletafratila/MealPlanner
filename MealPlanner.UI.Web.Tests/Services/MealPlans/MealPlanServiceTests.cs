@@ -95,6 +95,23 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
             mockHttp.VerifyNoOutstandingRequest();
         }
 
+        [Test]
+        public void GetEditAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/edit*")
+                .Respond(HttpStatusCode.NotFound);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetEditAsync(1));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
         // ---------- GetShoppingListProductsAsync ----------
         [Test]
         public async Task GetShoppingListProductsAsync_ReturnsList()
@@ -128,6 +145,101 @@ namespace MealPlanner.UI.Web.Tests.Services.MealPlans
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!, Has.Count.EqualTo(expected.Count));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void GetShoppingListProductsAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/shoppingListProducts*")
+                .Respond(HttpStatusCode.InternalServerError);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(
+                async () => await service.GetShoppingListProductsAsync(1, 1));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- GetCurrentAsync ----------
+        [Test]
+        public async Task GetCurrentAsync_ReturnsFirstItem_WhenMealPlanFound()
+        {
+            // Arrange
+            var expected = new MealPlanModel { Id = 99, Name = "This week" };
+            var paged = new PagedList<MealPlanModel>(
+                [expected, new MealPlanModel { Id = 100 }],
+                new Metadata { TotalCount = 2 });
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.GetCurrentAsync();
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Id, Is.EqualTo(expected.Id));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task GetCurrentAsync_ReturnsNull_WhenNoMealPlanFound()
+        {
+            // Arrange
+            var paged = new PagedList<MealPlanModel>([], new Metadata { TotalCount = 0 });
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.GetCurrentAsync();
+
+            // Assert
+            Assert.That(result, Is.Null);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task GetCurrentAsync_SendsCreatedAtWeekRangeFilters()
+        {
+            // Arrange
+            var paged = new PagedList<MealPlanModel>([], new Metadata());
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/search*")
+                .With(m =>
+                {
+                    var query = Uri.UnescapeDataString(m.RequestUri!.Query);
+                    // Two CreatedAt filters must be present (>= weekStart and < weekEnd)
+                    var firstIndex = query.IndexOf("CreatedAt", StringComparison.OrdinalIgnoreCase);
+                    var lastIndex = query.LastIndexOf("CreatedAt", StringComparison.OrdinalIgnoreCase);
+                    return firstIndex >= 0 && firstIndex != lastIndex;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            await service.GetCurrentAsync();
+
+            // Assert
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

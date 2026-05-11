@@ -12,8 +12,7 @@ PM> Script-migration
 
 
 
-
-adauga automat la ultimul meniu dupa data
+fa sa dispara banner-ul de info dupa cateva sec
 leaga retete la user
 user management - edit user profile
 muta pe maui

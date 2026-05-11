@@ -6,6 +6,7 @@ using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
+using MealPlanner.UI.Web.Services.MealPlans;
 using MealPlanner.UI.Web.Services.RecipeBooks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
         private BunitContext _ctx = null!;
         private Mock<IRecipeService> _recipeServiceMock = null!;
+        private Mock<IMealPlanService> _mealPlanServiceMock = null!;
         private Mock<ISessionStorageService> _sessionStorageMock = null!;
         private Mock<IMessageComponent> _messageComponentMock = null!;
 
@@ -30,10 +32,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx = new BunitContext();
 
             _recipeServiceMock = new Mock<IRecipeService>(MockBehavior.Strict);
+            _mealPlanServiceMock = new Mock<IMealPlanService>(MockBehavior.Loose);
             _sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Strict);
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _ctx.Services.AddSingleton(_recipeServiceMock.Object);
+            _ctx.Services.AddSingleton(_mealPlanServiceMock.Object);
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);
 
             _ctx.Services.AddScoped<BreadcrumbService>();
@@ -56,6 +60,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             _ctx.Dispose();
             _recipeServiceMock.Reset();
+            _mealPlanServiceMock.Reset();
             _sessionStorageMock.Reset();
             _messageComponentMock.Reset();
         }

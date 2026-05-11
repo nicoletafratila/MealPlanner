@@ -8,6 +8,8 @@ namespace MealPlanner.UI.Web.Services.MealPlans
     {
         Task<MealPlanEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default);
 
+        Task<MealPlanModel?> GetCurrentAsync(CancellationToken cancellationToken = default);
+
         Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(
             int mealPlanId,
             int shopId,

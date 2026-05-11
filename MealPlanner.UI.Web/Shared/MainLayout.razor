@@ -26,6 +26,19 @@
         font-size: 1.1rem;
         font-weight: 500;
         text-align: left;
+        width: 230px;
+    }
+
+    .current-menu-cell {
+        text-align: center;
+        vertical-align: bottom;
+        white-space: nowrap;
+    }
+
+    .current-menu-link {
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin: 0;
     }
 </style>
 
@@ -42,8 +55,10 @@
                 <td class="image-column">
                     <img src="Images\logo.jpg" alt="Logo Image" class="logo-image" />
                 </td>
-                <td>
+                <td style="width: 375px;">
                     <p class="logo-text">Recipes & Meal planner</p>
+                </td>
+                <td>
                 </td>
                 <td>
                 </td>
@@ -54,7 +69,21 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <p class="motto-text">Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!</p>
+                    <p class="motto-text" style="width: 475px;">Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!</p>
+                </td>
+                <td class="current-menu-cell">
+                    @if (_currentMealPlan is not null)
+                    {
+                        <p class="current-menu-link">
+                            This week's menu: <a href="mealplans/mealplanedit/@_currentMealPlan.Id">@_currentMealPlan.Name</a>
+                        </p>
+                    }
+                    else if (_isAuthenticated)
+                    {
+                        <p class="current-menu-link">
+                            You have not created a menu for this week yet. Click <a href="mealplans/mealplanedit/">here</a> to create one.
+                        </p>
+                    }
                 </td>
                 <td class="login-cell">
                     <LoginDisplay />

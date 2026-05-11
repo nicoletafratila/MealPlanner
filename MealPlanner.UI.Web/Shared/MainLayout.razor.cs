@@ -1,10 +1,30 @@
 ﻿using Common.UI;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Services.MealPlans;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared
 {
     public partial class MainLayout : LayoutComponentBase, IMessageComponent
     {
+        private MealPlanModel? _currentMealPlan;
+        private bool _isAuthenticated;
+
+        [Inject]
+        public IMealPlanService MealPlanService { get; set; } = default!;
+
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                _currentMealPlan = await MealPlanService.GetCurrentAsync();
+                _isAuthenticated = true;
+            }
+            catch
+            {
+            }
+        }
+
         public bool IsErrorActive { get; private set; }
         public bool IsInfoActive { get; private set; }
         public bool IsWarningActive { get; private set; }
