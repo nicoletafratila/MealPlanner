@@ -1,4 +1,5 @@
 ﻿using Common.Constants.Units;
+using Common.Data.Entities.Converters.Resources;
 
 namespace Common.Data.Entities.Converters
 {
@@ -17,10 +18,10 @@ namespace Common.Data.Entities.Converters
                 return fromValue;
 
             if (!FactorsToKg.TryGetValue(fromUnit, out var fromFactor))
-                throw new NotSupportedException($"Conversion from mass unit '{fromUnit}' is not supported.");
+                throw new NotSupportedException(string.Format(ConverterMessages.MassConversionFromNotSupported, fromUnit));
 
             if (!FactorsToKg.TryGetValue(toUnit, out var toFactor))
-                throw new NotSupportedException($"Conversion to mass unit '{toUnit}' is not supported.");
+                throw new NotSupportedException(string.Format(ConverterMessages.MassConversionToNotSupported, toUnit));
 
             // to kg, then to target
             var valueInKg = fromValue * fromFactor;

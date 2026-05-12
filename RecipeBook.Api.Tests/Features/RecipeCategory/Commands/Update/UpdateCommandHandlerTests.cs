@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Update
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+                Assert.That(result.Message, Is.EqualTo("Could not find with id 5."));
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);

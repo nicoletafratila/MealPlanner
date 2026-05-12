@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.Unit.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Unit.Commands.Add
@@ -38,7 +39,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Add
 
                     if (duplicate != null)
                     {
-                        return CommandResponse.Failed("This product category already exists.");
+                        return CommandResponse.Failed(UnitMessages.UnitAlreadyExists);
                     }
                 }
 
@@ -50,7 +51,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Add
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when adding a unit.");
-                return CommandResponse.Failed("An error occurred when saving the product category.");
+                return CommandResponse.Failed(UnitMessages.SaveFailed);
             }
         }
     }

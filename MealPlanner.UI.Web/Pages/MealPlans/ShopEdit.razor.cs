@@ -36,8 +36,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             _navItems =
             [
-                new BreadcrumbItem { Text = "Shops", Href = "mealplans/shopsoverview" },
-                new BreadcrumbItem { Text = "Shop", IsCurrentPage = true },
+                new BreadcrumbItem { Text = Resources.ShopEdit.BreadcrumbShops, Href = "mealplans/shopsoverview" },
+                new BreadcrumbItem { Text = Resources.ShopEdit.BreadcrumbShop, IsCurrentPage = true },
             ];
 
             _ = int.TryParse(Id, out var id);
@@ -73,17 +73,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (response is null)
             {
-                await ShowErrorAsync("Save failed. Please try again.");
+                await ShowErrorAsync(Resources.ShopEdit.SaveFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? Resources.ShopEdit.SaveFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been saved successfully");
+            await ShowInfoAsync(Resources.ShopEdit.SaveSucceeded);
             NavigateToOverview();
         }
 
@@ -94,16 +94,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.ShopEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.ShopEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.ShopEdit.DeleteDialogTitle,
+                message1: Resources.ShopEdit.DeleteDialogMessage1,
+                message2: Resources.ShopEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -120,17 +120,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await ShopService.DeleteAsync(shop.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.ShopEdit.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.ShopEdit.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.ShopEdit.DeleteSucceeded);
             NavigateToOverview();
         }
 

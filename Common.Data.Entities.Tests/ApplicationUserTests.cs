@@ -63,7 +63,7 @@ namespace Common.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(display, Is.Not.Null);
-                Assert.That(display!.Name, Is.EqualTo("First Name"));
+                Assert.That(display!.Name, Is.EqualTo("FirstName"));
 
                 Assert.That(regex, Is.Not.Null);
                 Assert.That(regex!.Pattern, Is.EqualTo(@"^[a-zA-Z\s]*$"));
@@ -85,7 +85,7 @@ namespace Common.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(display, Is.Not.Null);
-                Assert.That(display!.Name, Is.EqualTo("Last Name"));
+                Assert.That(display!.Name, Is.EqualTo("LastName"));
 
                 Assert.That(regex, Is.Not.Null);
                 Assert.That(regex!.Pattern, Is.EqualTo(@"^[a-zA-Z\s]*$"));

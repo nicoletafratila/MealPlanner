@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.Unit.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Unit.Commands.Delete
@@ -25,7 +26,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Delete
                 var itemToDelete = await _unitRepository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}.");
+                    return CommandResponse.Failed(string.Format(UnitMessages.NotFoundById, request.Id));
                 }
 
                 var ingredients = await _recipeIngredientRepository.GetAllAsync(cancellationToken) ?? [];
@@ -33,7 +34,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Delete
                 if (ingredients.Any(i => i.UnitId == request.Id))
                 {
                     return CommandResponse.Failed(
-                        $"Unit {itemToDelete.Name} can not be deleted, it is used in products.");
+                        string.Format(UnitMessages.UnitUsedInProducts, itemToDelete.Name));
                 }
 
                 await _unitRepository.DeleteAsync(itemToDelete, cancellationToken);
@@ -42,7 +43,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when deleting the unit with id {Id}.", request.Id);
-                return CommandResponse.Failed("An error occurred when deleting the unit.");
+                return CommandResponse.Failed(UnitMessages.DeleteFailed);
             }
         }
     }

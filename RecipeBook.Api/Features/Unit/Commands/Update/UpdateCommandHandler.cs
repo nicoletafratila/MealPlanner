@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.Unit.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Unit.Commands.Update
@@ -29,7 +30,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Update
                 var existingItem = await _repository.GetByIdAsync(request.Model.Id, cancellationToken);
                 if (existingItem is null)
                 {
-                    return CommandResponse.Failed($"Could not find unit with id {request.Model.Id}.");
+                    return CommandResponse.Failed(string.Format(UnitMessages.NotFoundUnitById, request.Model.Id));
                 }
 
                 _mapper.Map(request.Model, existingItem);
@@ -41,7 +42,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Update
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when updating the unit with id {Id}.", request.Model.Id);
-                return CommandResponse.Failed("An error occurred when saving the product category.");
+                return CommandResponse.Failed(UnitMessages.SaveFailed);
             }
         }
     }

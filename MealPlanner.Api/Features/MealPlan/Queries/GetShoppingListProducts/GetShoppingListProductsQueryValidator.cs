@@ -11,11 +11,11 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
         {
             RuleFor(x => x.MealPlanId)
                 .GreaterThan(0)
-                .WithMessage("MealPlanId must be greater than zero.");
+                .WithMessage(Resources.MealPlanMessages.MealPlanIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)
                 .GreaterThan(0)
-                .WithMessage("ShopId must be greater than zero.");
+                .WithMessage(Resources.MealPlanMessages.ShopIdGreaterThanZero);
         }
     }
 }

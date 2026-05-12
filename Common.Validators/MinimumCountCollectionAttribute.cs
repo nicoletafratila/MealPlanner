@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using Common.Validators.Resources;
 
 namespace Common.Validators
 {
@@ -41,6 +42,6 @@ namespace Common.Validators
         }
 
         public override string FormatErrorMessage(string name)
-            => ErrorMessage ?? $"{name} must contain at least {_minCount} item(s).";
+            => ErrorMessage ?? string.Format(ValidatorMessages.MinimumCountError, name, _minCount);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Common.Data.Entities.Converters;
+using Common.Data.Entities.Resources;
 
 namespace Common.Data.Entities
 {
@@ -27,7 +28,7 @@ namespace Common.Data.Entities
             {
                 return new ShoppingList
                 {
-                    Name = $"Shopping list details for {Name} in shop {shop.Name}",
+                    Name = string.Format(EntityMessages.ShoppingListNameFormat, Name, shop.Name),
                     ShopId = shop.Id,
                     Products = []
                 };
@@ -50,13 +51,13 @@ namespace Common.Data.Entities
                         continue;
 
                     if (ingredient.Product is null)
-                        throw new InvalidOperationException("Ingredient.Product must not be null.");
+                        throw new InvalidOperationException(EntityMessages.IngredientProductMustNotBeNull);
 
                     if (ingredient.Product.BaseUnit is null)
-                        throw new InvalidOperationException("Ingredient.Product.BaseUnit must not be null.");
+                        throw new InvalidOperationException(EntityMessages.IngredientProductBaseUnitMustNotBeNull);
 
                     if (ingredient.Unit is null)
-                        throw new InvalidOperationException("Ingredient.Unit must not be null.");
+                        throw new InvalidOperationException(EntityMessages.IngredientUnitMustNotBeNull);
 
                     var productId = ingredient.ProductId;
 
@@ -91,7 +92,7 @@ namespace Common.Data.Entities
 
             return new ShoppingList
             {
-                Name = $"Shopping list details for {Name} in shop {shop.Name}",
+                Name = string.Format(EntityMessages.ShoppingListNameFormat, Name, shop.Name),
                 ShopId = shop.Id,
                 Products = productsById.Values.ToList()
             };

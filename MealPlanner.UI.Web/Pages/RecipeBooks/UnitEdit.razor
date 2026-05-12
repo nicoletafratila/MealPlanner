@@ -24,13 +24,13 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="name" class="col-sm-3">Unit name: </label>
+                    <label for="name" class="col-sm-3">@Resources.UnitEdit.LabelUnitName</label>
                     <InputText id="name" class="form-control" @bind-Value="@Unit.Name" placeholder="Enter unit name" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => Unit.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="unitType" class="col-sm-3">Unit type: </label>
+                    <label for="unitType" class="col-sm-3">@Resources.UnitEdit.LabelUnitType</label>
                     <div>
                         <InputRadioGroup Name="unitType" @bind-Value="Unit.UnitType">
                             @foreach (var value in Enum.GetValues(typeof(UnitType)))
@@ -44,9 +44,9 @@
                 </div>
 
                 <div class="col mt-3">
-                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">Back to overview</button>
+                    <button class="btn btn-primary btn-sm" type="submit">@Resources.UnitEdit.SaveButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.UnitEdit.DeleteButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.UnitEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

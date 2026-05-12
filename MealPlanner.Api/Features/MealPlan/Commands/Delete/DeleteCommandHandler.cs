@@ -21,7 +21,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Delete
                 var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}");
+                    return CommandResponse.Failed(string.Format(Resources.MealPlanMessages.NotFound, request.Id));
                 }
 
                 await _repository.DeleteAsync(itemToDelete, cancellationToken);
@@ -33,7 +33,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Delete
                     "An error occurred when deleting the meal plan with id {Id}.",
                     request.Id);
 
-                return CommandResponse.Failed("An error occurred when deleting the meal plan.");
+                return CommandResponse.Failed(Resources.MealPlanMessages.DeleteError);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Update
         {
             RuleFor(x => x.Model)
                 .NotNull()
-                .WithMessage("Model is required.");
+                .WithMessage(Resources.MealPlanMessages.ModelRequired);
         }
     }
 }

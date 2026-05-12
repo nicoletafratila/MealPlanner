@@ -31,7 +31,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Add
                 var existingItem = await _repository.SearchAsync(name, cancellationToken);
                 if (existingItem is not null)
                 {
-                    return CommandResponse.Failed("This meal plan already exists.");
+                    return CommandResponse.Failed(Resources.MealPlanMessages.AlreadyExists);
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.MealPlan>(request.Model);
@@ -46,7 +46,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Add
                     "An error occurred when saving the meal plan '{Name}'.",
                     request.Model.Name);
 
-                return CommandResponse.Failed("An error occurred when saving the meal plan.");
+                return CommandResponse.Failed(Resources.MealPlanMessages.SaveError);
             }
         }
     }

@@ -8,7 +8,7 @@
 
 <div class="modal-body">
     <div class="modal-title">
-        <h5>Please select the shop for which you would like to have the list:</h5>
+        <h5>@Resources.ShopSelection.Title</h5>
     </div>
 
     <div class="col">
@@ -30,8 +30,8 @@
             </div>
 
             <div class="col mt-3">
-                <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                <button class="btn btn-danger btn-sm" @onclick="async ()=> await CancelAsync()">Cancel</button>
+                <button class="btn btn-primary btn-sm" type="submit">@Resources.ShopSelection.SaveButton</button>
+                <button class="btn btn-danger btn-sm" @onclick="async ()=> await CancelAsync()">@Resources.ShopSelection.CancelButton</button>
             </div>
         </EditForm>
     </div>

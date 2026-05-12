@@ -26,11 +26,11 @@
 </style>
 
 <p>
-    <button class="btn btn-danger" @onclick="async () => await DeleteAllLogsAsync()">Delete All Logs</button>
+    <button class="btn btn-danger" @onclick="async () => await DeleteAllLogsAsync()">@Resources.AuditTrail.DeleteAllLogsButton</button>
 </p>
 @if (Logs == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@Resources.AuditTrail.Loading</em></p>
 }
 else
 {

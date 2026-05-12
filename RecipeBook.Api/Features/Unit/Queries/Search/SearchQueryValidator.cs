@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.Unit.Resources;
 
 namespace RecipeBook.Api.Features.Unit.Queries.Search
 {
@@ -11,7 +12,7 @@ namespace RecipeBook.Api.Features.Unit.Queries.Search
         {
             RuleFor(x => x.QueryParameters)
                 .NotNull()
-                .WithMessage("Query parameters are required.");
+                .WithMessage(UnitMessages.QueryParametersRequired);
         }
     }
 }

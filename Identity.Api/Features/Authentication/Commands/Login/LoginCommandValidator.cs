@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Identity.Api.Features.Authentication.Resources;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
@@ -11,16 +12,16 @@ namespace Identity.Api.Features.Authentication.Commands.Login
         {
             RuleFor(x => x.Model)
                 .NotNull()
-                .WithMessage("Model is required.")
+                .WithMessage(AuthenticationMessages.ModelRequired)
                 .DependentRules(() =>
                 {
                     RuleFor(x => x.Model!.Username)
                         .NotEmpty()
-                        .WithMessage("Username is required.");
+                        .WithMessage(AuthenticationMessages.UsernameRequired);
 
                     RuleFor(x => x.Model!.Password)
                         .NotEmpty()
-                        .WithMessage("Password is required.");
+                        .WithMessage(AuthenticationMessages.PasswordRequired);
                 });
         }
     }

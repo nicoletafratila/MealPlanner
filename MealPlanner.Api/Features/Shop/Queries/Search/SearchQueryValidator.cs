@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.Shop.Queries.Search
         {
             RuleFor(x => x.QueryParameters)
                 .NotNull()
-                .WithMessage("QueryParameters is required.");
+                .WithMessage(Resources.ShopMessages.QueryParametersRequired);
         }
     }
 }

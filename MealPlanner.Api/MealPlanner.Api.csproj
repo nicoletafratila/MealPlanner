@@ -38,6 +38,57 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\MealPlan\Resources\MealPlanMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MealPlanMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\Shop\Resources\ShopMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShopMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\ShoppingList\Resources\ShoppingListMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShoppingListMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\Statistics\Resources\StatisticsMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StatisticsMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Controllers\Resources\ControllerMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControllerMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Features\MealPlan\Resources\MealPlanMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MealPlanMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\Shop\Resources\ShopMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShopMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\ShoppingList\Resources\ShoppingListMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShoppingListMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\Statistics\Resources\StatisticsMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StatisticsMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controllers\Resources\ControllerMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ControllerMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="microsoft.entityframeworkcore.design" Version="9.0.8">

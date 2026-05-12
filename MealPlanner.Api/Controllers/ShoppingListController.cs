@@ -1,6 +1,7 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
 using Common.Pagination;
+using MealPlanner.Api.Controllers.Resources;
 using MealPlanner.Api.Features.ShoppingList.Commands.Add;
 using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
@@ -43,7 +44,7 @@ namespace MealPlanner.Api.Controllers
             if (!int.TryParse(pageSize, out var size) || size <= 0 ||
                 !int.TryParse(pageNumber, out var number) || number <= 0)
             {
-                return BadRequest("pageSize and pageNumber must be positive integers.");
+                return BadRequest(ControllerMessages.InvalidPageParameters);
             }
 
             var filterItems = !string.IsNullOrWhiteSpace(filters)

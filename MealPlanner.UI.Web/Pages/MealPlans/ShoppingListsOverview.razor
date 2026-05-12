@@ -26,7 +26,7 @@
 @if (showCopiedMessage)
 {
     <div class="alert alert-success position-fixed bottom-0 end-0 m-3 py-1 px-2">
-        Copied to clipboard
+        @Resources.ShoppingListsOverview.CopiedToClipboard
     </div>
 }
 
@@ -35,10 +35,10 @@
         <table>
             <tr>
                 <td style="width: 100%;">
-                    <h2>Shopping lists</h2>
+                    <h2>@Resources.ShoppingListsOverview.PageTitle</h2>
                 </td>
                 <td style="white-space: nowrap;">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.ShoppingListsOverview.NewButton</button>
                 </td>
             </tr>
         </table>
@@ -47,16 +47,16 @@
     <div class="card-body">
         <GridTemplate TItem="ShoppingListModel" @ref="_shoppingListsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
-                <GridColumn TItem="ShoppingListModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="ShoppingListModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Name
                     </div>
                 </GridColumn>
                 <GridColumn TItem="ShoppingListModel" Filterable="false">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export(context)">Export</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export(context)">@Resources.ShoppingListsOverview.ExportButton</button>
                 </GridColumn>
                 <GridColumn TItem="ShoppingListModel" Filterable="false">
                     <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>

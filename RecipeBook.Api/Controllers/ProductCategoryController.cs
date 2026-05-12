@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RecipeBook.Api.Controllers.Resources;
 using RecipeBook.Api.Features.ProductCategory.Commands.Add;
 using RecipeBook.Api.Features.ProductCategory.Commands.Delete;
 using RecipeBook.Api.Features.ProductCategory.Commands.Update;
@@ -43,7 +44,7 @@ namespace RecipeBook.Api.Controllers
             if (!int.TryParse(pageSize, out var size) || size <= 0 ||
                 !int.TryParse(pageNumber, out var number) || number <= 0)
             {
-                return BadRequest("pageSize and pageNumber must be positive integers.");
+                return BadRequest(ControllerMessages.InvalidPaginationParameters);
             }
 
             var filterItems = !string.IsNullOrWhiteSpace(filters)

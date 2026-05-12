@@ -83,8 +83,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             _navItems =
             [
-                new() { Text = "Shopping lists", Href = "mealplans/shoppinglistsoverview" },
-                new() { Text = "Shopping list", IsCurrentPage = true },
+                new() { Text = Resources.ShoppingListEdit.BreadcrumbShoppingLists, Href = "mealplans/shoppinglistsoverview" },
+                new() { Text = Resources.ShoppingListEdit.BreadcrumbShoppingList, IsCurrentPage = true },
             ];
 
             var queryParametersProduct = new QueryParameters<ProductCategoryModel>
@@ -147,17 +147,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (response is null)
             {
-                await ShowErrorAsync("Save failed. Please try again.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.SaveFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? Resources.ShoppingListEdit.SaveFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been saved successfully");
+            await ShowInfoAsync(Resources.ShoppingListEdit.SaveSucceeded);
             NavigateToOverview();
         }
 
@@ -168,16 +168,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.ShoppingListEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.ShoppingListEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.ShoppingListEdit.DeleteDialogTitle,
+                message1: Resources.ShoppingListEdit.DeleteDialogMessage1,
+                message2: Resources.ShoppingListEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -194,17 +194,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await ShoppingListService.DeleteAsync(shoppingList.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.ShoppingListEdit.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.ShoppingListEdit.DeleteSucceeded);
             NavigateToOverview();
         }
 
@@ -216,16 +216,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.ShoppingListEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.ShoppingListEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.ShoppingListEdit.DeleteDialogTitle,
+                message1: Resources.ShoppingListEdit.DeleteDialogMessage1,
+                message2: Resources.ShoppingListEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -262,7 +262,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             if (!CanAddMealPlan)
             {
-                await ShowErrorAsync("You must select a shop first.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectShopFirst);
                 return;
             }
 
@@ -274,13 +274,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (!result.Confirmed || result.Data is null)
             {
-                await ShowErrorAsync("You must select a meal plan to add to the shopping list.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectMealPlan);
                 return;
             }
 
             if (!int.TryParse(result.Data.ToString(), out var mealPlanId))
             {
-                await ShowErrorAsync("You must select a meal plan to add to the shopping list.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectMealPlan);
                 return;
             }
 
@@ -303,7 +303,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             if (!CanAddRecipe)
             {
-                await ShowErrorAsync("You must select a shop first.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectShopFirst);
                 return;
             }
 
@@ -315,14 +315,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (!result.Confirmed || result.Data is null)
             {
-                await ShowErrorAsync("You must select a recipe to add to the shopping list.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectRecipe);
                 return;
             }
 
             var recipeIdString = result.Data.ToString();
             if (!int.TryParse(recipeIdString, out var recipeId))
             {
-                await ShowErrorAsync("You must select a recipe to add to the shopping list.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectRecipe);
                 return;
             }
 
@@ -350,7 +350,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (unit is null || baseUnit is null)
             {
-                await ShowErrorAsync("Unit configuration is invalid.");
+                await ShowErrorAsync(Resources.ShoppingListEdit.InvalidUnitConfiguration);
                 return;
             }
 

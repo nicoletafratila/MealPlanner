@@ -32,7 +32,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
         {
             _navItems = new List<BreadcrumbItem>
             {
-                new BreadcrumbItem{ Text = "Home", Href ="recipebooks/recipesoverview" }
+                new BreadcrumbItem{ Text = Resources.UserProfile.BreadcrumbHome, Href ="recipebooks/recipesoverview" }
             };
 
             if (string.IsNullOrWhiteSpace(Name))
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
             else
             {
-                await MessageComponent!.ShowInfoAsync("Data has been saved successfully");
+                await MessageComponent!.ShowInfoAsync(Resources.UserProfile.SaveSucceeded);
                 NavigateToOverview();
             }
         }

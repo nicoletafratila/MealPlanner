@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.RecipeCategory.Resources;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
 {
@@ -11,9 +12,9 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
         {
             RuleFor(x => x.Models)
                 .NotNull()
-                .WithMessage("Models collection is required.")
+                .WithMessage(RecipeCategoryMessages.ModelsRequired)
                 .NotEmpty()
-                .WithMessage("Models collection cannot be empty.");
+                .WithMessage(RecipeCategoryMessages.ModelsNotEmpty);
         }
     }
 }

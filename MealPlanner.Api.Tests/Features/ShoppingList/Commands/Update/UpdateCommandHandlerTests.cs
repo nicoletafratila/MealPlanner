@@ -190,7 +190,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             Assert.Multiple(() =>
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the meal plan."));
+                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shopping list."));
             });
 
             _repoMock.Verify(

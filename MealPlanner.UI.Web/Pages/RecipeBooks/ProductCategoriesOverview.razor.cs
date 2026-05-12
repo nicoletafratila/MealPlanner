@@ -36,7 +36,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             _navItems =
             [
-                new BreadcrumbItem { Text = "Home", Href = "recipebooks/recipesoverview" }
+                new BreadcrumbItem { Text = Resources.ProductCategoriesOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
             ];
         }
 
@@ -60,16 +60,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.ProductCategoriesOverview.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.ProductCategoriesOverview.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted it cannot be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.ProductCategoriesOverview.DeleteDialogTitle,
+                message1: Resources.ProductCategoriesOverview.DeleteDialogMessage1,
+                message2: Resources.ProductCategoriesOverview.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -83,17 +83,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var response = await ProductCategoriesService.DeleteAsync(item.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.ProductCategoriesOverview.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.ProductCategoriesOverview.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.ProductCategoriesOverview.DeleteSucceeded);
 
             if (_categoriesGrid is not null)
                 await _categoriesGrid.RefreshDataAsync();

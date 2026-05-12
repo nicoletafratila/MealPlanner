@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Common.Data.Entities.Converters;
+using Common.Data.Entities.Resources;
 
 namespace Common.Data.Entities
 {
@@ -22,13 +23,13 @@ namespace Common.Data.Entities
         public ShoppingListProduct ToShoppingListProduct(int displaySequence)
         {
             if (Product is null)
-                throw new InvalidOperationException("Product must be set before converting to ShoppingListProduct.");
+                throw new InvalidOperationException(EntityMessages.ProductMustBeSet);
 
             if (Product.BaseUnit is null)
-                throw new InvalidOperationException("Product.BaseUnit must be set before converting to ShoppingListProduct.");
+                throw new InvalidOperationException(EntityMessages.ProductBaseUnitMustBeSet);
 
             if (Unit is null)
-                throw new InvalidOperationException("Unit must be set before converting to ShoppingListProduct.");
+                throw new InvalidOperationException(EntityMessages.UnitMustBeSet);
 
             var convertedQuantity = UnitConverter.Convert(Quantity, Unit, Product.BaseUnit);
 

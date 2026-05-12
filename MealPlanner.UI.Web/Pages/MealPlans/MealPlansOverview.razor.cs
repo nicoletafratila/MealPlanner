@@ -36,7 +36,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             _navItems =
             [
-                new BreadcrumbItem { Text = "Home", Href = "recipebooks/recipesoverview" }
+                new BreadcrumbItem { Text = Resources.MealPlansOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
             ];
         }
 
@@ -60,16 +60,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.MealPlansOverview.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.MealPlansOverview.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.MealPlansOverview.DeleteDialogTitle,
+                message1: Resources.MealPlansOverview.DeleteDialogMessage1,
+                message2: Resources.MealPlansOverview.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -83,17 +83,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await MealPlanService.DeleteAsync(item.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.MealPlansOverview.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.MealPlansOverview.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.MealPlansOverview.DeleteSucceeded);
 
             if (_mealPlansGrid is not null)
                 await _mealPlansGrid.RefreshDataAsync();

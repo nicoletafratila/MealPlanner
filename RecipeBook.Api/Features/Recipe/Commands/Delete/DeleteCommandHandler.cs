@@ -1,6 +1,7 @@
 ﻿using Common.Models;
 using MediatR;
 using RecipeBook.Api.Abstractions;
+using RecipeBook.Api.Features.Recipe.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.Delete
@@ -26,13 +27,13 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
                 var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}");
+                    return CommandResponse.Failed(string.Format(RecipeMessages.NotFoundById, request.Id));
                 }
 
                 var mealPlans = await _mealPlannerClient.GetMealPlansByRecipeIdAsync(request.Id, request.AuthToken, cancellationToken);
                 if (mealPlans is not null && mealPlans.Count > 0)
                 {
-                    return CommandResponse.Failed($"Recipe {itemToDelete.Name} can not be deleted, it is used in meal plans.");
+                    return CommandResponse.Failed(string.Format(RecipeMessages.RecipeUsedInMealPlans, itemToDelete.Name));
                 }
 
                 await _repository.DeleteAsync(itemToDelete, cancellationToken);
@@ -41,7 +42,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when deleting the recipe with id {Id}.", request.Id);
-                return CommandResponse.Failed("An error occurred when deleting the recipe.");
+                return CommandResponse.Failed(RecipeMessages.DeleteFailed);
             }
         }
     }

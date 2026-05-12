@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.RecipeCategory.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
@@ -25,7 +26,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
                 var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}.");
+                    return CommandResponse.Failed(string.Format(RecipeCategoryMessages.NotFoundById, request.Id));
                 }
 
                 var recipes = await _recipeRepository.GetAllAsync(cancellationToken) ?? [];
@@ -33,7 +34,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
                 if (recipes.Any(r => r.RecipeCategoryId == request.Id))
                 {
                     return CommandResponse.Failed(
-                        $"Recipe category {itemToDelete.Name} can not be deleted, it is used in recipes.");
+                        string.Format(RecipeCategoryMessages.RecipeCategoryUsedInRecipes, itemToDelete.Name));
                 }
 
                 await _repository.DeleteAsync(itemToDelete, cancellationToken);
@@ -42,7 +43,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when deleting the recipe category with id {Id}.", request.Id);
-                return CommandResponse.Failed("An error occurred when deleting the recipe category.");
+                return CommandResponse.Failed(RecipeCategoryMessages.DeleteFailed);
             }
         }
     }

@@ -29,7 +29,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Update
                 var existingItem = await _repository.GetByIdIncludeProductsAsync(request.Model.Id, cancellationToken);
                 if (existingItem is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Model.Id}");
+                    return CommandResponse.Failed(string.Format(Resources.ShoppingListMessages.NotFound, request.Model.Id));
                 }
 
                 _mapper.Map(request.Model, existingItem);
@@ -43,7 +43,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Update
                     "An error occurred when saving the shopping list with id {Id}.",
                     request.Model.Id);
 
-                return CommandResponse.Failed("An error occurred when saving the meal plan.");
+                return CommandResponse.Failed(Resources.ShoppingListMessages.SaveError);
             }
         }
     }

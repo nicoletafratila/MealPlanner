@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.Unit.Resources;
 
 namespace RecipeBook.Api.Features.Unit.Commands.Add
 {
@@ -11,7 +12,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Add
         {
             RuleFor(x => x.Model)
                 .NotNull()
-                .WithMessage("Model is required.");
+                .WithMessage(UnitMessages.ModelRequired);
         }
     }
 }

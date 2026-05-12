@@ -26,6 +26,66 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\Recipe\Resources\RecipeMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\Product\Resources\ProductMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\ProductCategory\Resources\ProductCategoryMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductCategoryMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\RecipeCategory\Resources\RecipeCategoryMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeCategoryMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\Unit\Resources\UnitMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UnitMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Controllers\Resources\ControllerMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControllerMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Features\Recipe\Resources\RecipeMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\Product\Resources\ProductMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\ProductCategory\Resources\ProductCategoryMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductCategoryMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\RecipeCategory\Resources\RecipeCategoryMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeCategoryMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\Unit\Resources\UnitMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controllers\Resources\ControllerMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ControllerMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />

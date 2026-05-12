@@ -22,10 +22,10 @@
         <table>
             <tr>
                 <td style="width: 100%;">
-                    <h2>Product categories</h2>
+                    <h2>@Resources.ProductCategoriesOverview.PageTitle</h2>
                 </td>
                 <td style="white-space: nowrap;">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.ProductCategoriesOverview.NewButton</button>
                 </td>
             </tr>
         </table>
@@ -34,10 +34,10 @@
     <div class="card-body">
         <GridTemplate TItem="ProductCategoryModel" @ref="_categoriesGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
-                <GridColumn TItem="ProductCategoryModel" HeaderText="#" PropertyName="Index" Filterable="false" Sortable="false">
+                <GridColumn TItem="ProductCategoryModel" HeaderText="@Resources.ProductCategoriesOverview.HeaderIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="ProductCategoryModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="ProductCategoryModel" HeaderText="@Resources.ProductCategoriesOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Name
                     </div>

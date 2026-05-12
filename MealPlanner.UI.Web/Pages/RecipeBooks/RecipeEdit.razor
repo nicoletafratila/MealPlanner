@@ -1,4 +1,4 @@
-﻿@page "/recipebooks/recipeedit"
+@page "/recipebooks/recipeedit"
 @page "/recipebooks/recipeedit/{id}"
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
@@ -32,13 +32,13 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="name" class="col-sm-3">Recipe name: </label>
+                    <label for="name" class="col-sm-3">@Resources.RecipeEdit.LabelRecipeName</label>
                     <InputText id="name" class="form-control" @bind-Value="@Recipe.Name" placeholder="Enter recipe name" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => Recipe.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="source" class="col-sm-3">Original source: </label>
+                    <label for="source" class="col-sm-3">@Resources.RecipeEdit.LabelOriginalSource</label>
                     <div class="input-group">
                         <InputText id="source"
                                    class="form-control"
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
+                    <label for="recipeCategory" class="col-sm-3">@Resources.RecipeEdit.LabelRecipeCategory</label>
                     <InputSelect id="recipeCategory" class="form-select" @bind-Value="@Recipe.RecipeCategoryId">
                         <option selected value="0">Choose...</option>
                         @if (RecipeCategories != null && RecipeCategories.Items != null && RecipeCategories.Items.Any())
@@ -72,13 +72,13 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="image" class="col-sm-3">Select image: </label>
+                    <label for="image" class="col-sm-3">@Resources.RecipeEdit.LabelSelectImage</label>
                     <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" accept="image/png, image/jpeg, image/gif" />
                     <ValidationMessage For="@(() => Recipe.ImageContent)" />
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="ingredientCategory" class="col-sm-3">Ingredient category: </label>
+                    <label for="ingredientCategory" class="col-sm-3">@Resources.RecipeEdit.LabelIngredientCategory</label>
                     <select id="ingredientCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
                         <option selected value="0">Choose...</option>
                         @if (ProductCategories != null && ProductCategories.Items != null && ProductCategories.Items.Any())
@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="ingredient" class="col-sm-3">Ingredient: </label>
+                    <label for="ingredient" class="col-sm-3">@Resources.RecipeEdit.LabelIngredient</label>
                     <select id="ingredient" class="form-select" @onchange="OnProductChangedAsync">
                         <option selected value="0">Choose...</option>
                         @if (Products != null && Products!.Items!.Any())
@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="unit" class="col-sm-3">Unit of measurement: </label>
+                    <label for="unit" class="col-sm-3">@Resources.RecipeEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
                         <option selected value="0">Choose...</option>
                         @if (Units != null && Units.Any())
@@ -121,10 +121,10 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="quantity" class="col-sm-3">Quantity: </label>
+                    <label for="quantity" class="col-sm-3">@Resources.RecipeEdit.LabelQuantity</label>
                     <div class="input-group">
                         <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
-                        <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">Add</button>
+                        <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">@Resources.RecipeEdit.AddButton</button>
                     </div>
                     <ValidationMessage For="@(() => Quantity)" />
                 </div>
@@ -134,7 +134,7 @@
                 <div class="col">
                     <ValidationMessage For="@(() => Recipe.Ingredients)" />
                     <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true" ColumnCount="6">
-                        <TableCaption>List of ingredients:</TableCaption>
+                        <TableCaption>@Resources.RecipeEdit.ListOfIngredients</TableCaption>
                         <TableHeader>
                             <th></th>
                             <th></th>
@@ -163,9 +163,9 @@
                     </TableTemplate>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
-                <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">Back to overview</button>
+                <button type="submit" class="btn btn-primary btn-sm">@Resources.RecipeEdit.SaveButton</button>
+                <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.RecipeEdit.DeleteButton</button>
+                <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.RecipeEdit.BackToOverviewButton</button>
             </EditForm>
         </div>
     </div>

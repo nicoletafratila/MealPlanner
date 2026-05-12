@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.ProductCategory.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
@@ -25,14 +26,14 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
                 var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}.");
+                    return CommandResponse.Failed(string.Format(ProductCategoryMessages.NotFoundById, request.Id));
                 }
 
                 var products = await _productRepository.GetAllAsync(cancellationToken) ?? [];
 
                 if (products.Any(item => item.ProductCategoryId == request.Id))
                 {
-                    return CommandResponse.Failed($"Product category '{itemToDelete.Name}' can not be deleted, it is used in products.");
+                    return CommandResponse.Failed(string.Format(ProductCategoryMessages.ProductCategoryUsedInProducts, itemToDelete.Name));
                 }
 
                 await _repository.DeleteAsync(itemToDelete, cancellationToken);
@@ -41,7 +42,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when deleting the product category with id {Id}.", request.Id);
-                return CommandResponse.Failed("An error occurred when deleting the product category.");
+                return CommandResponse.Failed(ProductCategoryMessages.DeleteFailed);
             }
         }
     }

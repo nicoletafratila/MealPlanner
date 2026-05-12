@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetEdit
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Id must be greater than zero.");
+                .WithMessage(Resources.MealPlanMessages.IdGreaterThanZero);
         }
     }
 }

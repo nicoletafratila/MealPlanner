@@ -9,10 +9,10 @@
             <table>
                 <tr>
                     <td style="width: 100%;">
-                        <h2>Recipe categories</h2>
+                        <h2>@Resources.RecipeCategoriesOverview.PageTitle</h2>
                     </td>
                     <td style="white-space: nowrap;">
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.RecipeCategoriesOverview.NewButton</button>
                     </td>
                 </tr>
             </table>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="col mt-3">
-        <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await SaveAsync()">Save</button>
+        <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await SaveAsync()">@Resources.RecipeCategoriesOverview.SaveButton</button>
     </div>
 </div>
 

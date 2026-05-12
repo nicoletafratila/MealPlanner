@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId
         {
             RuleFor(x => x.RecipeId)
                 .GreaterThan(0)
-                .WithMessage("RecipeId must be greater than zero.");
+                .WithMessage(Resources.MealPlanMessages.RecipeIdGreaterThanZero);
         }
     }
 }

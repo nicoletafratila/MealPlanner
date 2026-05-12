@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Identity.Api.Features.ApplicationUser.Resources;
 
 namespace Identity.Api.Features.ApplicationUser.Queries.GetEdit
 {
@@ -12,7 +13,7 @@ namespace Identity.Api.Features.ApplicationUser.Queries.GetEdit
             RuleFor(x => x.Name)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage("Name (username) is required.");
+                .WithMessage(ApplicationUserMessages.NameRequired);
         }
     }
 }

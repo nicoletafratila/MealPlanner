@@ -69,8 +69,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             _navItems =
             [
-                new() { Text = "Recipes", Href = "recipebooks/recipesoverview" },
-                new() { Text = "Recipe", IsCurrentPage = true },
+                new() { Text = Resources.RecipeEdit.BreadcrumbRecipes, Href = "recipebooks/recipesoverview" },
+                new() { Text = Resources.RecipeEdit.BreadcrumbRecipe, IsCurrentPage = true },
             ];
 
             var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>
@@ -143,17 +143,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             if (response is null)
             {
-                await ShowErrorAsync("Save failed. Please try again.");
+                await ShowErrorAsync(Resources.RecipeEdit.SaveFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? Resources.RecipeEdit.SaveFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been saved successfully");
+            await ShowInfoAsync(Resources.RecipeEdit.SaveSucceeded);
             NavigateToOverview();
         }
 
@@ -164,16 +164,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.RecipeEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.RecipeEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.RecipeEdit.DeleteDialogTitle,
+                message1: Resources.RecipeEdit.DeleteDialogMessage1,
+                message2: Resources.RecipeEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -190,17 +190,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var response = await RecipeService.DeleteAsync(recipe.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.RecipeEdit.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.RecipeEdit.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.RecipeEdit.DeleteSucceeded);
             NavigateToOverview();
         }
 
@@ -233,7 +233,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 }
                 else
                 {
-                    await ShowErrorAsync("The same ingredient was added to the recipe with a different unit of measurement.");
+                    await ShowErrorAsync(Resources.RecipeEdit.DuplicateIngredientError);
                 }
 
                 return;
@@ -266,16 +266,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.RecipeEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.RecipeEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.RecipeEdit.DeleteDialogTitle,
+                message1: Resources.RecipeEdit.DeleteDialogMessage1,
+                message2: Resources.RecipeEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -376,7 +376,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
             catch (Exception)
             {
-                await ShowErrorAsync($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
+                await ShowErrorAsync(string.Format(Resources.RecipeEdit.FileSizeExceeded, _maxFileSize / (1024 * 1024)));
             }
         }
 

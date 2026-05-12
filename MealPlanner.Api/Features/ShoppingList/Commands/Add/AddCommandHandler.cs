@@ -30,7 +30,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
 
                 var existingItem = await _repository.SearchAsync(name, cancellationToken);
                 if (existingItem is not null)
-                    return CommandResponse.Failed("This shopping list already exists.");
+                    return CommandResponse.Failed(Resources.ShoppingListMessages.AlreadyExists);
 
                 var mapped = _mapper.Map<Common.Data.Entities.ShoppingList>(request.Model);
                 await _repository.AddAsync(mapped, cancellationToken);
@@ -42,7 +42,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
                 _logger.LogError(ex,
                     "An error occurred when saving the shopping list '{Name}'.",
                     request.Model.Name);
-                return CommandResponse.Failed("An error occurred when saving the shopping list.");
+                return CommandResponse.Failed(Resources.ShoppingListMessages.SaveError);
             }
         }
     }

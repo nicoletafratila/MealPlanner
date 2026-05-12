@@ -42,7 +42,7 @@
     }
 </style>
 
-<PageTitle>Meal planner</PageTitle>
+<PageTitle>@Resources.MainLayout.PageTitle</PageTitle>
 
 <MudContainer Class="page-container">
     <MudPaper Class="banner">
@@ -56,7 +56,7 @@
                     <img src="Images\logo.jpg" alt="Logo Image" class="logo-image" />
                 </td>
                 <td style="width: 375px;">
-                    <p class="logo-text">Recipes & Meal planner</p>
+                    <p class="logo-text">@Resources.MainLayout.LogoText</p>
                 </td>
                 <td>
                 </td>
@@ -69,19 +69,19 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <p class="motto-text" style="width: 475px;">Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!</p>
+                    <p class="motto-text" style="width: 475px;">@Resources.MainLayout.Motto</p>
                 </td>
                 <td class="current-menu-cell">
                     @if (_currentMealPlan is not null)
                     {
                         <p class="current-menu-link">
-                            This week's menu: <a href="mealplans/mealplanedit/@_currentMealPlan.Id">@_currentMealPlan.Name</a>
+                            @Resources.MainLayout.CurrentMenuLabel <a href="mealplans/mealplanedit/@_currentMealPlan.Id">@_currentMealPlan.Name</a>
                         </p>
                     }
                     else if (_isAuthenticated)
                     {
                         <p class="current-menu-link">
-                            You have not created a menu for this week yet. Click <a href="mealplans/mealplanedit/">here</a> to create one.
+                            @Resources.MainLayout.NoMenuYetPrefix<a href="mealplans/mealplanedit/">here</a>@Resources.MainLayout.NoMenuYetSuffix
                         </p>
                     }
                 </td>
@@ -89,10 +89,10 @@
                     <LoginDisplay />
                 </td>
                 <td class="contact-cell">
-                    <a href="contactus/">Contact us</a>
+                    <a href="contactus/">@Resources.MainLayout.ContactUs</a>
                 </td>
                 <td class="about-cell">
-                    <a href="https://linkedin.com/in/claudia-nicoleta-fratila" target="_blank">About me</a>
+                    <a href="https://linkedin.com/in/claudia-nicoleta-fratila" target="_blank">@Resources.MainLayout.AboutMe</a>
                 </td>
             </tr>
         </table>

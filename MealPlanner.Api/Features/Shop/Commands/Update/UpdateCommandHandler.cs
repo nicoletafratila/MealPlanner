@@ -29,7 +29,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Update
                 var existingItem = await _repository.GetByIdIncludeDisplaySequenceAsync(request.Model.Id, cancellationToken);
                 if (existingItem is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Model.Id}");
+                    return CommandResponse.Failed(string.Format(Resources.ShopMessages.NotFound, request.Model.Id));
                 }
 
                 _mapper.Map(request.Model, existingItem);
@@ -43,7 +43,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Update
                     "An error occurred when saving the shop with id {Id}.",
                     request.Model.Id);
 
-                return CommandResponse.Failed("An error occurred when saving the shop.");
+                return CommandResponse.Failed(Resources.ShopMessages.SaveError);
             }
         }
     }

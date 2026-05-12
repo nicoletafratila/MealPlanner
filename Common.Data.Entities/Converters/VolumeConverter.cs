@@ -1,4 +1,5 @@
 ﻿using Common.Constants.Units;
+using Common.Data.Entities.Converters.Resources;
 
 namespace Common.Data.Entities.Converters
 {
@@ -18,10 +19,10 @@ namespace Common.Data.Entities.Converters
                 return fromValue;
 
             if (!FactorsToTsp.TryGetValue(fromUnit, out var fromFactor))
-                throw new NotSupportedException($"Conversion from volume unit '{fromUnit}' is not supported.");
+                throw new NotSupportedException(string.Format(ConverterMessages.VolumeConversionFromNotSupported, fromUnit));
 
             if (!FactorsToTsp.TryGetValue(toUnit, out var toFactor))
-                throw new NotSupportedException($"Conversion to volume unit '{toUnit}' is not supported.");
+                throw new NotSupportedException(string.Format(ConverterMessages.VolumeConversionToNotSupported, toUnit));
 
             var valueInTsp = fromValue * fromFactor;
             return valueInTsp / toFactor;

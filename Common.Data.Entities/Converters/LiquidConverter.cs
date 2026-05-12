@@ -1,4 +1,5 @@
 ﻿using Common.Constants.Units;
+using Common.Data.Entities.Converters.Resources;
 
 namespace Common.Data.Entities.Converters
 {
@@ -17,10 +18,10 @@ namespace Common.Data.Entities.Converters
                 return fromValue;
 
             if (!FactorsToL.TryGetValue(fromUnit, out var fromFactor))
-                throw new NotSupportedException($"Conversion from liquid unit '{fromUnit}' is not supported.");
+                throw new NotSupportedException(string.Format(ConverterMessages.LiquidConversionFromNotSupported, fromUnit));
 
             if (!FactorsToL.TryGetValue(toUnit, out var toFactor))
-                throw new NotSupportedException($"Conversion to liquid unit '{toUnit}' is not supported.");
+                throw new NotSupportedException(string.Format(ConverterMessages.LiquidConversionToNotSupported, toUnit));
 
             var valueInL = fromValue * fromFactor;
             return valueInL / toFactor;

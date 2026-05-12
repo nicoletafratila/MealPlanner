@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.Recipe.Resources;
 
 namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
 {
@@ -11,11 +12,11 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
         {
             RuleFor(x => x.RecipeId)
                 .GreaterThan(0)
-                .WithMessage("RecipeId must be greater than zero.");
+                .WithMessage(RecipeMessages.RecipeIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)
                 .GreaterThan(0)
-                .WithMessage("ShopId must be greater than zero.");
+                .WithMessage(RecipeMessages.ShopIdGreaterThanZero);
         }
     }
 }

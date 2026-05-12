@@ -32,13 +32,13 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="name" class="col-sm-3">Meal plan name: </label>
+                    <label for="name" class="col-sm-3">@Resources.MealPlanEdit.LabelMealPlanName</label>
                     <InputText id="name" class="form-control" @bind-Value="@MealPlan.Name" placeholder="Enter meal plan name" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => MealPlan.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="recipeCategory" class="col-sm-3">Recipe category: </label>
+                    <label for="recipeCategory" class="col-sm-3">@Resources.MealPlanEdit.LabelRecipeCategory</label>
                     <select id="recipeCategory" class="form-select" @onchange="OnRecipeCategoryChangedAsync">
                         <option selected value="0">Choose...</option>
                         @if (Categories != null && Categories.Items != null && Categories.Items.Any())
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="recipe" class="col-sm-3">Recipe: </label>
+                    <label for="recipe" class="col-sm-3">@Resources.MealPlanEdit.LabelRecipe</label>
                     <div class="input-group">
                         <InputSelect id="recipe" class="form-select" @bind-Value="@RecipeId">
                             <option selected value="0">Choose...</option>
@@ -64,7 +64,7 @@
                                 }
                             }
                         </InputSelect>
-                        <button class="btn btn-primary" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add</button>
+                        <button class="btn btn-primary" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.MealPlanEdit.AddButton</button>
                     </div>
                 </div>
 
@@ -109,10 +109,10 @@
                         </Columns>
                     </GridTemplate>
 
-                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await SaveShoppingListAsync()">Make shopping list</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">Back to overview</button>
+                    <button class="btn btn-primary btn-sm" type="submit">@Resources.MealPlanEdit.SaveButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.MealPlanEdit.DeleteButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await SaveShoppingListAsync()">@Resources.MealPlanEdit.MakeShoppingListButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">@Resources.MealPlanEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

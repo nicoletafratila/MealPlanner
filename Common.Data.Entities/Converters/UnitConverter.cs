@@ -1,5 +1,6 @@
 ﻿using Common.Constants;
 using Common.Constants.Units;
+using Common.Data.Entities.Converters.Resources;
 
 namespace Common.Data.Entities.Converters
 {
@@ -11,7 +12,7 @@ namespace Common.Data.Entities.Converters
             ArgumentNullException.ThrowIfNull(toUnit);
 
             if (fromUnit.UnitType != toUnit.UnitType)
-                throw new InvalidOperationException( $"Cannot convert from unit type {fromUnit.UnitType} to {toUnit.UnitType}.");
+                throw new InvalidOperationException(string.Format(ConverterMessages.UnitTypeMismatch, fromUnit.UnitType, toUnit.UnitType));
 
             return fromUnit.UnitType switch
             {
@@ -35,7 +36,7 @@ namespace Common.Data.Entities.Converters
 
                 UnitType.Piece => fromValue, // identity
 
-                _ => throw new NotSupportedException($"Unit type '{fromUnit.UnitType}' is not supported.")
+                _ => throw new NotSupportedException(string.Format(ConverterMessages.UnitTypeNotSupported, fromUnit.UnitType))
             };
         }
     }

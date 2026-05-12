@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
         {
             RuleFor(x => x.CategoryIds)
                 .NotEmpty()
-                .WithMessage("CategoryIds is required.");
+                .WithMessage(Resources.StatisticsMessages.CategoryIdsRequired);
         }
     }
 }

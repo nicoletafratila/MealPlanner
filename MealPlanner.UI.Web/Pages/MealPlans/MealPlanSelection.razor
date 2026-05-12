@@ -8,7 +8,7 @@
 
 <div class="modal-body">
     <div class="modal-title">
-        <h5>Please select the meal plan you would like to add to the list:</h5>
+        <h5>@Resources.MealPlanSelection.Title</h5>
     </div>
 
     <div class="col">
@@ -30,8 +30,8 @@
             </div>
 
             <div class="col mt-3">
-                <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                <button class="btn btn-danger btn-sm" @onclick="async ()=> await CancelAsync()">Cancel</button>
+                <button class="btn btn-primary btn-sm" type="submit">@Resources.MealPlanSelection.SaveButton</button>
+                <button class="btn btn-danger btn-sm" @onclick="async ()=> await CancelAsync()">@Resources.MealPlanSelection.CancelButton</button>
             </div>
         </EditForm>
     </div>

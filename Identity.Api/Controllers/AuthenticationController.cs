@@ -41,7 +41,6 @@ namespace Identity.Api.Controllers
                 principal,
                 new AuthenticationProperties
                 {
-                    // For now, always non-persistent; you can wire RememberLogin here later
                     IsPersistent = false,
                     ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
                 });
@@ -57,10 +56,6 @@ namespace Identity.Api.Controllers
             return await _mediator.Send(command, cancellationToken);
         }
 
-        /// <summary>
-        /// NOTE: As implemented, this just forwards to the same LoginCommand.
-        /// If you add a proper RegistrationCommand later, wire it here.
-        /// </summary>
         [HttpPost("register")]
         public async Task<CommandResponse?> RegisterAsync(
             [FromBody] LoginModel model,

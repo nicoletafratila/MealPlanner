@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.RecipeCategory.Resources;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Queries.GetEdit
 {
@@ -11,7 +12,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Queries.GetEdit
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Id must be greater than zero.");
+                .WithMessage(RecipeCategoryMessages.IdGreaterThanZero);
         }
     }
 }

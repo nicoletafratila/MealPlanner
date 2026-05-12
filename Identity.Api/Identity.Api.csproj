@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
 	  <TargetFramework>net9.0</TargetFramework>
@@ -25,6 +25,39 @@
 
   <ItemGroup>
     <None Remove="tempkey.jwk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Features\Authentication\Resources\AuthenticationMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AuthenticationMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Features\ApplicationUser\Resources\ApplicationUserMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApplicationUserMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Controllers\Resources\ControllerMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControllerMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Features\Authentication\Resources\AuthenticationMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AuthenticationMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Features\ApplicationUser\Resources\ApplicationUserMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationUserMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controllers\Resources\ControllerMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ControllerMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

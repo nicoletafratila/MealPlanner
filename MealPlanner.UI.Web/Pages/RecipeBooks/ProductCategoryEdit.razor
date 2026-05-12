@@ -22,15 +22,15 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="name" class="col-sm-3">Product category name: </label>
+                    <label for="name" class="col-sm-3">@Resources.ProductCategoryEdit.LabelProductCategoryName</label>
                     <InputText id="name" class="form-control" @bind-Value="@ProductCategory.Name" placeholder="Enter product category name" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => ProductCategory.Name)" />
                 </div>
 
                 <div class="col mt-3">
-                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">Back to overview</button>
+                    <button class="btn btn-primary btn-sm" type="submit">@Resources.ProductCategoryEdit.SaveButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.ProductCategoryEdit.DeleteButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.ProductCategoryEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

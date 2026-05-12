@@ -8,10 +8,10 @@
         <table>
             <tr>
                 <td style="width: 100%;">
-                    <h2>Products</h2>
+                    <h2>@Resources.ProductsOverview.PageTitle</h2>
                 </td>
                 <td style="white-space: nowrap;">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.ProductsOverview.NewButton</button>
                 </td>
             </tr>
         </table>
@@ -20,7 +20,7 @@
     <div class="card-body">
         <GridTemplate TItem="ProductModel" @ref="_productsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
-                <GridColumn TItem="ProductModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="ProductModel" HeaderText="@Resources.ProductsOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div class="card-template">
                         <div class="card-header" style="padding: 0px;">
                             <img src="@context.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="() => Update(context)" />
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </GridColumn>
-                <GridColumn TItem="ProductModel" HeaderText="Category" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
+                <GridColumn TItem="ProductModel" HeaderText="@Resources.ProductsOverview.HeaderCategory" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
             </Columns>
         </GridTemplate>
     </div>

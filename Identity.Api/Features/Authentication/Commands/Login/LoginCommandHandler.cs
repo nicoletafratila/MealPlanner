@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Common.Models;
 using Duende.IdentityModel;
+using Identity.Api.Features.Authentication.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -26,7 +27,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             ArgumentNullException.ThrowIfNull(request);
 
             if (request.Model is null)
-                throw new ArgumentNullException(nameof(request), "Model cannot be null.");
+                throw new ArgumentNullException(nameof(request), AuthenticationMessages.ModelCannotBeNull);
 
             try
             {
@@ -35,7 +36,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
 
                 var user = await _userManager.FindByNameAsync(username);
                 if (user is null)
-                    return CommandResponse.Failed("Invalid credentials");
+                    return CommandResponse.Failed(AuthenticationMessages.InvalidCredentials);
 
                 var roles = await _userManager.GetRolesAsync(user);
 
@@ -52,7 +53,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
 
                     return new LoginCommandResponse
                     {
-                        Message = "Login successful.",
+                        Message = AuthenticationMessages.LoginSuccessful,
                         Succeeded = true,
                         JwtBearer = token,
                         Claims = claims
@@ -62,16 +63,16 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 }
 
                 if (result.IsLockedOut)
-                    return CommandResponse.Failed("User is locked out");
+                    return CommandResponse.Failed(AuthenticationMessages.UserLockedOut);
 
-                return CommandResponse.Failed("User/password not found.");
+                return CommandResponse.Failed(AuthenticationMessages.UserPasswordNotFound);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex,
                     "An error occurred when authenticating the user '{Username}'.",
                     request.Model.Username);
-                return CommandResponse.Failed("An error occurred when authenticating the user.");
+                return CommandResponse.Failed(AuthenticationMessages.AuthenticationError);
             }
         }
 

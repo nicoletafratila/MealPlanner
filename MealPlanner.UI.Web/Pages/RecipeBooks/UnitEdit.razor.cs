@@ -31,8 +31,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             _navItems =
             [
-                new BreadcrumbItem { Text = "Units", Href = "recipebooks/unitsoverview" },
-                new BreadcrumbItem { Text = "Unit", IsCurrentPage = true },
+                new BreadcrumbItem { Text = Resources.UnitEdit.BreadcrumbUnits, Href = "recipebooks/unitsoverview" },
+                new BreadcrumbItem { Text = Resources.UnitEdit.BreadcrumbUnit, IsCurrentPage = true },
             ];
 
             if (!int.TryParse(Id, out var id) || id == 0)
@@ -65,17 +65,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             if (response is null)
             {
-                await ShowErrorAsync("Save failed. Please try again.");
+                await ShowErrorAsync(Resources.UnitEdit.SaveFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? Resources.UnitEdit.SaveFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been saved successfully");
+            await ShowInfoAsync(Resources.UnitEdit.SaveSucceeded);
             NavigateToOverview();
         }
 
@@ -86,16 +86,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.UnitEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.UnitEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted it cannot be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.UnitEdit.DeleteDialogTitle,
+                message1: Resources.UnitEdit.DeleteDialogMessage1,
+                message2: Resources.UnitEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -112,17 +112,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var response = await UnitService.DeleteAsync(unit.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.UnitEdit.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.UnitEdit.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.UnitEdit.DeleteSucceeded);
             NavigateToOverview();
         }
 

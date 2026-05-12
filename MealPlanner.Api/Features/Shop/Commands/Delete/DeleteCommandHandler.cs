@@ -21,7 +21,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Delete
                 var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}");
+                    return CommandResponse.Failed(string.Format(Resources.ShopMessages.NotFound, request.Id));
                 }
 
                 await _repository.DeleteAsync(itemToDelete, cancellationToken);
@@ -33,7 +33,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Delete
                     "An error occurred when deleting the shop with id {Id}.",
                     request.Id);
 
-                return CommandResponse.Failed("An error occurred when deleting the shop.");
+                return CommandResponse.Failed(Resources.ShopMessages.DeleteError);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Common.Data.Entities.Converters;
+using Common.Data.Entities.Resources;
 
 namespace Common.Data.Entities
 {
@@ -21,7 +22,7 @@ namespace Common.Data.Entities
 
             var list = new ShoppingList
             {
-                Name = $"Shopping list details for {Name} in shop {shop.Name}",
+                Name = string.Format(EntityMessages.ShoppingListNameFormat, Name, shop.Name),
                 ShopId = shop.Id
             };
 

@@ -35,7 +35,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
                         i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
                 if (existingItem is not null)
-                    return CommandResponse.Failed("This shop already exists.");
+                    return CommandResponse.Failed(Resources.ShopMessages.AlreadyExists);
 
                 var mapped = _mapper.Map<Common.Data.Entities.Shop>(request.Model);
                 await _repository.AddAsync(mapped, cancellationToken);
@@ -45,7 +45,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when saving the shop '{Name}'.", request.Model.Name);
-                return CommandResponse.Failed("An error occurred when saving the shop.");
+                return CommandResponse.Failed(Resources.ShopMessages.SaveError);
             }
         }
     }

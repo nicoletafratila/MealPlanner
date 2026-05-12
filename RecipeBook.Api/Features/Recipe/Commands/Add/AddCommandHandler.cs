@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.Recipe.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.Add
@@ -29,7 +30,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
                 var existingItem = await _repository.SearchAsync(request.Model.Name!, cancellationToken);
                 if (existingItem is not null)
                 {
-                    return CommandResponse.Failed("This recipe already exists in this category.");
+                    return CommandResponse.Failed(RecipeMessages.RecipeAlreadyExists);
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.Recipe>(request.Model);
@@ -40,7 +41,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when saving the recipe with name {Name}.", request.Model.Name);
-                return CommandResponse.Failed("An error occurred when saving the recipe.");
+                return CommandResponse.Failed(RecipeMessages.SaveFailed);
             }
         }
     }

@@ -33,21 +33,21 @@
     <Authorized>
         <div class="profile-actions">
             <a href="identities/userprofile/@context.User!.Identity!.Name">
-                Hello,
+                @Resources.LoginDisplay.Hello
                 @if (ApplicationUser != null)
                 {
                     <img class="profile-icon me-2" src="@ApplicationUser!.ProfilePictureUrl" />
                 }
                 @context.User!.Identity!.Name!
             </a>
-            <button class="nav-link btn btn-link" @onclick="LogoutAsync">Log out</button>
+            <button class="nav-link btn btn-link" @onclick="LogoutAsync">@Resources.LoginDisplay.LogOutButton</button>
         </div>
     </Authorized>
         <NotAuthorized>
-            <a href="identities/register">Register</a>
-            <a href="identities/login">Log in</a>
+            <a href="identities/register">@Resources.LoginDisplay.RegisterLink</a>
+            <a href="identities/login">@Resources.LoginDisplay.LogInLink</a>
         </NotAuthorized>
         <Authorizing>
-            Please wait, we are checking your authorization status...
+            @Resources.LoginDisplay.AuthorizingMessage
         </Authorizing>
     </AuthorizeView>

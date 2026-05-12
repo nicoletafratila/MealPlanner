@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.Product.Resources;
 
 namespace RecipeBook.Api.Features.Product.Commands.Delete
 {
@@ -11,7 +12,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Delete
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Id must be greater than zero.");
+                .WithMessage(ProductMessages.IdGreaterThanZero);
         }
     }
 }

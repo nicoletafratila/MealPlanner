@@ -60,8 +60,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             _navItems =
             [
-                new() { Text = "Meal plans", Href = "mealplans/mealplansoverview" },
-                new() { Text = "Meal plan", IsCurrentPage = true },
+                new() { Text = Resources.MealPlanEdit.BreadcrumbMealPlans, Href = "mealplans/mealplansoverview" },
+                new() { Text = Resources.MealPlanEdit.BreadcrumbMealPlan, IsCurrentPage = true },
             ];
 
             var queryParameters = new QueryParameters<RecipeCategoryModel>
@@ -122,17 +122,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (response is null)
             {
-                await ShowErrorAsync("Save failed. Please try again.");
+                await ShowErrorAsync(Resources.MealPlanEdit.SaveFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? Resources.MealPlanEdit.SaveFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been saved successfully");
+            await ShowInfoAsync(Resources.MealPlanEdit.SaveSucceeded);
             NavigateToOverview();
         }
 
@@ -143,16 +143,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.MealPlanEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.MealPlanEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.MealPlanEdit.DeleteDialogTitle,
+                message1: Resources.MealPlanEdit.DeleteDialogMessage1,
+                message2: Resources.MealPlanEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -169,17 +169,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var response = await MealPlanService.DeleteAsync(mealPlan.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.MealPlanEdit.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.MealPlanEdit.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.MealPlanEdit.DeleteSucceeded);
             NavigateToOverview();
         }
 
@@ -244,16 +244,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.MealPlanEdit.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.MealPlanEdit.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted can not be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.MealPlanEdit.DeleteDialogTitle,
+                message1: Resources.MealPlanEdit.DeleteDialogMessage1,
+                message2: Resources.MealPlanEdit.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -294,7 +294,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
             else
             {
-                await ShowErrorAsync("There has been an error when saving the shopping list");
+                await ShowErrorAsync(Resources.MealPlanEdit.ShoppingListSaveError);
             }
         }
 

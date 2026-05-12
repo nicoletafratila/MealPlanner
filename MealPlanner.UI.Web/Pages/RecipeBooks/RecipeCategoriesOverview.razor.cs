@@ -29,7 +29,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             _navItems =
             [
-                new BreadcrumbItem { Text = "Home", Href = "recipebooks/recipesoverview" }
+                new BreadcrumbItem { Text = Resources.RecipeCategoriesOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
             ];
 
             await RefreshAsync();
@@ -55,16 +55,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var options = new ConfirmDialogOptions
             {
-                YesButtonText = "OK",
+                YesButtonText = Resources.RecipeCategoriesOverview.DialogYesButton,
                 YesButtonColor = ButtonColor.Success,
-                NoButtonText = "Cancel",
+                NoButtonText = Resources.RecipeCategoriesOverview.DialogNoButton,
                 NoButtonColor = ButtonColor.Danger
             };
 
             var confirmation = await _dialog.ShowAsync(
-                title: "Are you sure you want to delete this?",
-                message1: "This will delete the record. Once deleted it cannot be rolled back.",
-                message2: "Do you want to proceed?",
+                title: Resources.RecipeCategoriesOverview.DeleteDialogTitle,
+                message1: Resources.RecipeCategoriesOverview.DeleteDialogMessage1,
+                message2: Resources.RecipeCategoriesOverview.DeleteDialogMessage2,
                 confirmDialogOptions: options);
 
             if (!confirmation)
@@ -78,17 +78,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var response = await RecipeCategoriesService.DeleteAsync(item.Id);
             if (response is null)
             {
-                await ShowErrorAsync("Delete failed. Please try again.");
+                await ShowErrorAsync(Resources.RecipeCategoriesOverview.DeleteFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Delete failed.");
+                await ShowErrorAsync(response.Message ?? Resources.RecipeCategoriesOverview.DeleteFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been deleted successfully");
+            await ShowInfoAsync(Resources.RecipeCategoriesOverview.DeleteSucceeded);
             await RefreshAsync();
         }
 
@@ -96,24 +96,24 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             if (Categories is null || Categories.Count == 0)
             {
-                await ShowErrorAsync("There are no categories to save.");
+                await ShowErrorAsync(Resources.RecipeCategoriesOverview.NoCategoriesMessage);
                 return;
             }
 
             var response = await RecipeCategoriesService.UpdateAsync(Categories);
             if (response is null)
             {
-                await ShowErrorAsync("Save failed. Please try again.");
+                await ShowErrorAsync(Resources.RecipeCategoriesOverview.SaveFailedMessage);
                 return;
             }
 
             if (!response.Succeeded)
             {
-                await ShowErrorAsync(response.Message ?? "Save failed.");
+                await ShowErrorAsync(response.Message ?? Resources.RecipeCategoriesOverview.SaveFailed);
                 return;
             }
 
-            await ShowInfoAsync("Data has been saved successfully");
+            await ShowInfoAsync(Resources.RecipeCategoriesOverview.SaveSucceeded);
             await RefreshAsync();
         }
 

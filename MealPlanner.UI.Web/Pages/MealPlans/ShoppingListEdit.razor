@@ -14,13 +14,13 @@
                         <h2 id="headerName" class="d-inline">@ShoppingList.Name</h2>
                     </td>
                     <td style="white-space: nowrap;">
-                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export()">Export</button>
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export()">@Resources.ShoppingListEdit.ExportButton</button>
                     </td>
                     @if (showCopiedMessage)
                     {
                         <td>
                             <div class="alert alert-success position-fixed bottom-0 end-0 m-3 py-1 px-2">
-                                Copied to clipboard
+                                @Resources.ShoppingListEdit.CopiedToClipboard
                             </div>
                         </td>
                     }
@@ -34,13 +34,13 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="name" class="col-sm-3">Shopping list name: </label>
+                    <label for="name" class="col-sm-3">@Resources.ShoppingListEdit.LabelShoppingListName</label>
                     <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => ShoppingList.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="Shop" class="col-sm-3">Shop: </label>
+                    <label for="Shop" class="col-sm-3">@Resources.ShoppingListEdit.LabelShop</label>
                     <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
                         <option selected value="0">Choose...</option>
                         @if (Shops?.Items != null && Shops.Items.Any())
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="ProductCategory" class="col-sm-3">Product category: </label>
+                    <label for="ProductCategory" class="col-sm-3">@Resources.ShoppingListEdit.LabelProductCategory</label>
                     <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
                         <option selected value="0">Choose...</option>
                         @if (Categories != null && Categories.Items != null && Categories.Items.Any())
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="Product" class="col-sm-3">Product: </label>
+                    <label for="Product" class="col-sm-3">@Resources.ShoppingListEdit.LabelProduct</label>
                     <select id="Product" class="form-select" @onchange="OnProductChangedAsync">
                         <option selected value="0">Choose...</option>
                         @if (Products != null && Products!.Items!.Any())
@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="unit" class="col-sm-3">Unit of measurement: </label>
+                    <label for="unit" class="col-sm-3">@Resources.ShoppingListEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
                         <option selected value="0">Choose...</option>
                         @if (Units != null && Units.Any())
@@ -104,10 +104,10 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="quantity" class="col-sm-3">Quantity: </label>
+                    <label for="quantity" class="col-sm-3">@Resources.ShoppingListEdit.LabelQuantity</label>
                     <div class="input-group">
                         <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
-                        <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">Add</button>
+                        <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
                     </div>
                     <ValidationMessage For="@(() => Quantity)" />
                 </div>
@@ -116,7 +116,7 @@
 
                 <div class="card-body">
                     <TableTemplate Data="@ShoppingList.Products">
-                        <TableCaption>Products:</TableCaption>
+                        <TableCaption>@Resources.ShoppingListEdit.TableCaptionProducts</TableCaption>
                         <TableHeader>
                             <th style="width: 40px"></th>
                             <th></th>
@@ -144,12 +144,12 @@
                         </RowTemplate>
                     </TableTemplate>
 
-                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
+                    <button type="submit" class="btn btn-primary btn-sm">@Resources.ShoppingListEdit.SaveButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.ShoppingListEdit.DeleteButton</button>
 
-                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">Add meal plan</button>
-                    <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">Add recipe</button>
-                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="NavigateToOverview">Back to overview</button>
+                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">@Resources.ShoppingListEdit.AddMealPlanButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.ShoppingListEdit.AddRecipeButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="NavigateToOverview">@Resources.ShoppingListEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

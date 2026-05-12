@@ -21,7 +21,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Delete
                 var itemToDelete = await _repository.GetByIdAsync(request.Id, cancellationToken);
                 if (itemToDelete is null)
                 {
-                    return CommandResponse.Failed($"Could not find with id {request.Id}");
+                    return CommandResponse.Failed(string.Format(Resources.ShoppingListMessages.NotFound, request.Id));
                 }
 
                 await _repository.DeleteAsync(itemToDelete, cancellationToken);
@@ -33,7 +33,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Delete
                     "An error occurred when deleting the shopping list with id {Id}.",
                     request.Id);
 
-                return CommandResponse.Failed("An error occurred when deleting the shopping list.");
+                return CommandResponse.Failed(Resources.ShoppingListMessages.DeleteError);
             }
         }
     }

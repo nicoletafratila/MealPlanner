@@ -12,7 +12,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
             // Require CategoryIds to be provided and non-empty
             RuleFor(x => x.CategoryIds)
                 .NotEmpty()
-                .WithMessage("CategoryIds is required.");
+                .WithMessage(Resources.StatisticsMessages.CategoryIdsRequired);
         }
     }
 }

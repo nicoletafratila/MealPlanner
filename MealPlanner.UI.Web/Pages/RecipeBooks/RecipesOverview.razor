@@ -10,10 +10,10 @@
         <table>
             <tr>
                 <td style="width: 100%;">
-                    <h2>Recipes</h2>
+                    <h2>@Resources.RecipesOverview.PageTitle</h2>
                 </td>
                 <td style="white-space: nowrap;">
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">New</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.RecipesOverview.NewButton</button>
                 </td>
             </tr>
         </table>
@@ -22,7 +22,7 @@
     <div class="card-body">
         <GridTemplate TItem="RecipeModel" @ref="_recipesGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
-                <GridColumn TItem="RecipeModel" HeaderText="Name" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div class="card-template">
                         <div class="card-header" style="position: relative; padding: 0;">
                             <img src="@context.ImageUrl"
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </GridColumn>
-                <GridColumn TItem="RecipeModel" HeaderText="Category" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
+                <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderCategory" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
             </Columns>
         </GridTemplate>
     </div>

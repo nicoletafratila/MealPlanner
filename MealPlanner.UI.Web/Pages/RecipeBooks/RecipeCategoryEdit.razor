@@ -22,15 +22,15 @@
                 <ValidationSummary />
 
                 <div class="form-group">
-                    <label for="name" class="col-sm-3">Recipe category name: </label>
+                    <label for="name" class="col-sm-3">@Resources.RecipeCategoryEdit.LabelRecipeCategoryName</label>
                     <InputText id="name" class="form-control" @bind-Value="@RecipeCategory.Name" placeholder="Enter recipe category name" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => RecipeCategory.Name)" />
                 </div>
 
                 <div class="col mt-3">
-                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">Delete</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">Back to overview</button>
+                    <button class="btn btn-primary btn-sm" type="submit">@Resources.RecipeCategoryEdit.SaveButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.RecipeCategoryEdit.DeleteButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.RecipeCategoryEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

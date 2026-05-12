@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Identity.Api.Controllers.Resources;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
 using Identity.Shared.Models;
@@ -25,7 +26,7 @@ namespace Identity.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(username))
             {
-                return BadRequest("Username is required.");
+                return BadRequest(ControllerMessages.UsernameRequired);
             }
 
             var query = new GetEditQuery
@@ -39,7 +40,7 @@ namespace Identity.Api.Controllers
             // but you might want to surface 404 in the API:
             if (string.IsNullOrWhiteSpace(result.Username))
             {
-                return NotFound($"User '{username}' was not found.");
+                return NotFound(string.Format(ControllerMessages.UserNotFound, username));
             }
 
             return Ok(result);
@@ -55,7 +56,7 @@ namespace Identity.Api.Controllers
         {
             if (model == null)
             {
-                return BadRequest("Model is required.");
+                return BadRequest(ControllerMessages.ModelRequired);
             }
 
             var command = new UpdateCommand
@@ -66,7 +67,7 @@ namespace Identity.Api.Controllers
             var response = await _mediator.Send(command, cancellationToken);
 
             if (response is null)
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error.");
+                return StatusCode(StatusCodes.Status500InternalServerError, ControllerMessages.UnknownError);
 
             if (!response.Succeeded)
                 return BadRequest(response);

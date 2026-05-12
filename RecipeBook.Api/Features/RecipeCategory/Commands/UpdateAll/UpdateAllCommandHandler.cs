@@ -2,6 +2,7 @@
 using AutoMapper;
 using Common.Models;
 using MediatR;
+using RecipeBook.Api.Features.RecipeCategory.Resources;
 using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
@@ -38,7 +39,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
                     var existingItem = await _repository.GetByIdAsync(category.Id, cancellationToken);
                     if (existingItem is null)
                     {
-                        errors.AppendLine($"Could not find with id {category.Id}");
+                        errors.AppendLine(string.Format(RecipeCategoryMessages.NotFoundById, category.Id));
                         continue;
                     }
 
@@ -58,7 +59,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred when saving the recipe categories.");
-                return CommandResponse.Failed("An error occurred when saving the Recipe category.");
+                return CommandResponse.Failed(RecipeCategoryMessages.SaveFailed);
             }
         }
     }

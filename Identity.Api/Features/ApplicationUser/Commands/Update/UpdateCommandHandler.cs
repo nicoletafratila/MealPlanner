@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.Models;
+using Identity.Api.Features.ApplicationUser.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -22,13 +23,13 @@ namespace Identity.Api.Features.ApplicationUser.Commands.Update
             ArgumentNullException.ThrowIfNull(request);
 
             if (request.Model is null || string.IsNullOrWhiteSpace(request.Model.UserId))
-                return CommandResponse.Failed($"Could not find a user with id = {request?.Model?.UserId}");
+                return CommandResponse.Failed(string.Format(ApplicationUserMessages.UserNotFoundWithId, request?.Model?.UserId));
 
             try
             {
                 var existingItem = await _userManager.FindByIdAsync(request.Model.UserId);
                 if (existingItem is null)
-                    return CommandResponse.Failed($"Could not find a user with id = {request.Model.UserId}");
+                    return CommandResponse.Failed(string.Format(ApplicationUserMessages.UserNotFoundWithId, request.Model.UserId));
 
                 _mapper.Map(request.Model, existingItem);
 
@@ -45,7 +46,7 @@ namespace Identity.Api.Features.ApplicationUser.Commands.Update
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating the user {UserId}", request.Model.UserId);
-                return CommandResponse.Failed("An error occurred while updating the user.");
+                return CommandResponse.Failed(ApplicationUserMessages.UpdateUserError);
             }
         }
     }
