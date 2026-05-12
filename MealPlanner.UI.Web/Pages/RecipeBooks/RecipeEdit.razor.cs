@@ -34,11 +34,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         public string? ProductId { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "The quantity for the ingredient must be a positive number.")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "QuantityPositiveNumber")]
         public string? Quantity { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
         public string? UnitId { get; set; }
 
         public IList<UnitModel>? Units { get; set; }

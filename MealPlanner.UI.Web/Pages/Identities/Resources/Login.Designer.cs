@@ -104,5 +104,23 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("UsernameLabel", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string PlaceholderUsername {
+            get {
+                return ResourceManager.GetString("PlaceholderUsername", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string PlaceholderPassword {
+            get {
+                return ResourceManager.GetString("PlaceholderPassword", resourceCulture);
+            }
+        }
     }
 }

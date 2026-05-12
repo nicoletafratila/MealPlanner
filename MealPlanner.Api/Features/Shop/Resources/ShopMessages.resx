@@ -52,4 +52,7 @@
   <data name="QueryParametersRequired" xml:space="preserve">
     <value>QueryParameters is required.</value>
   </data>
+  <data name="ModelCannotBeNull" xml:space="preserve">
+    <value>Model cannot be null.</value>
+  </data>
 </root>

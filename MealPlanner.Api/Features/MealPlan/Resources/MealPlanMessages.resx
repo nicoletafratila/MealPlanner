@@ -61,4 +61,7 @@
   <data name="ShopIdGreaterThanZero" xml:space="preserve">
     <value>ShopId must be greater than zero.</value>
   </data>
+  <data name="ModelCannotBeNull" xml:space="preserve">
+    <value>Model cannot be null.</value>
+  </data>
 </root>

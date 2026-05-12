@@ -86,5 +86,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Choose....
+        /// </summary>
+        internal static string ChooseOption {
+            get {
+                return ResourceManager.GetString("ChooseOption", resourceCulture);
+            }
+        }
     }
 }

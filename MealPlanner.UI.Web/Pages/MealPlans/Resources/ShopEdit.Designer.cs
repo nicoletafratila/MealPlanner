@@ -230,5 +230,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter shop name.
+        /// </summary>
+        internal static string PlaceholderShopName {
+            get {
+                return ResourceManager.GetString("PlaceholderShopName", resourceCulture);
+            }
+        }
     }
 }

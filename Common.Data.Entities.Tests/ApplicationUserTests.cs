@@ -67,7 +67,8 @@ namespace Common.Data.Entities.Tests
 
                 Assert.That(regex, Is.Not.Null);
                 Assert.That(regex!.Pattern, Is.EqualTo(@"^[a-zA-Z\s]*$"));
-                Assert.That(regex.ErrorMessage, Is.EqualTo("First Name must be alpha characters only."));
+                Assert.That(regex.ErrorMessageResourceName, Is.EqualTo("FirstNameAlphaOnly"));
+                Assert.That(regex.ErrorMessageResourceType?.FullName, Is.EqualTo("Common.Data.Entities.Resources.EntityMessages"));
             }
         }
 
@@ -89,7 +90,8 @@ namespace Common.Data.Entities.Tests
 
                 Assert.That(regex, Is.Not.Null);
                 Assert.That(regex!.Pattern, Is.EqualTo(@"^[a-zA-Z\s]*$"));
-                Assert.That(regex.ErrorMessage, Is.EqualTo("Last Name must be alpha characters only."));
+                Assert.That(regex.ErrorMessageResourceName, Is.EqualTo("LastNameAlphaOnly"));
+                Assert.That(regex.ErrorMessageResourceType?.FullName, Is.EqualTo("Common.Data.Entities.Resources.EntityMessages"));
             }
         }
 

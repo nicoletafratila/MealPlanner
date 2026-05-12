@@ -27,10 +27,10 @@
             <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true" ColumnCount="4">
                 <TableCaption>@Resources.RecipePreview.ListOfIngredients</TableCaption>
                 <TableHeader>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>Category</th>
+                    <th>@Resources.RecipePreview.ColumnName</th>
+                    <th>@Resources.RecipePreview.ColumnQuantity</th>
+                    <th>@Resources.RecipePreview.ColumnUnit</th>
+                    <th>@Resources.RecipePreview.ColumnCategory</th>
                 </TableHeader>
                 <RowTemplate Context="RecipeIngredient">
                     <td>@RecipeIngredient.Product?.Name</td>

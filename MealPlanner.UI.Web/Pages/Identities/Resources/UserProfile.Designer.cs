@@ -149,5 +149,50 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("UsernameLabel", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;..
+        /// </summary>
+        internal static string FileSizeExceeded {
+            get {
+                return ResourceManager.GetString("FileSizeExceeded", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to First name.
+        /// </summary>
+        internal static string PlaceholderFirstName {
+            get {
+                return ResourceManager.GetString("PlaceholderFirstName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Last name.
+        /// </summary>
+        internal static string PlaceholderLastName {
+            get {
+                return ResourceManager.GetString("PlaceholderLastName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number.
+        /// </summary>
+        internal static string PlaceholderPhoneNumber {
+            get {
+                return ResourceManager.GetString("PlaceholderPhoneNumber", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string PlaceholderEmail {
+            get {
+                return ResourceManager.GetString("PlaceholderEmail", resourceCulture);
+            }
+        }
     }
 }

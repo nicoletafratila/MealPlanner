@@ -80,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
             catch (Exception)
             {
-                await MessageComponent!.ShowErrorAsync($"File size exceeds the limit. Maximum allowed size is <strong>{_maxFileSize / (1024 * 1024)} MB</strong>.");
+                await MessageComponent!.ShowErrorAsync(string.Format(Resources.UserProfile.FileSizeExceeded, _maxFileSize / (1024 * 1024)));
                 return;
             }
         }

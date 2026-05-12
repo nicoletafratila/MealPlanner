@@ -33,7 +33,7 @@
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">@Resources.ProductEdit.LabelProductName</label>
-                    <InputText id="name" class="form-control" @bind-Value="@Product.Name" placeholder="Enter product name" oninput="updateHeader()"></InputText>
+                    <InputText id="name" class="form-control" @bind-Value="@Product.Name" placeholder="@Resources.ProductEdit.PlaceholderProductName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => Product.Name)" />
                 </div>
 
@@ -46,7 +46,7 @@
                 <div class="form-group mt-3">
                     <label for="productCategory" class="col-sm-3">@Resources.ProductEdit.LabelProductCategory</label>
                     <InputSelect id="productCategory" class="form-select" @bind-Value="@Product.ProductCategoryId">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.ProductEdit.ChooseOption</option>
                         @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                         {
                             @foreach (var category in Categories.Items!)
@@ -61,7 +61,7 @@
                 <div class="form-group mt-3">
                     <label for="unit" class="col-sm-3">@Resources.ProductEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@Product.BaseUnitId">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.ProductEdit.ChooseOption</option>
                         @if (Units != null && Units.Items != null && Units.Items.Any())
                         {
                             @foreach (var unit in Units.Items!)

@@ -88,4 +88,7 @@
   <data name="DeleteSucceeded" xml:space="preserve">
     <value>Data has been deleted successfully</value>
   </data>
+  <data name="PlaceholderShopName" xml:space="preserve">
+    <value>Enter shop name</value>
+  </data>
 </root>

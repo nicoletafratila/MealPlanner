@@ -45,4 +45,16 @@
 	<data name="ListOfIngredients" xml:space="preserve">
 		<value>List of ingredients:</value>
 	</data>
+	<data name="ColumnName" xml:space="preserve">
+		<value>Name</value>
+	</data>
+	<data name="ColumnQuantity" xml:space="preserve">
+		<value>Quantity</value>
+	</data>
+	<data name="ColumnUnit" xml:space="preserve">
+		<value>Unit</value>
+	</data>
+	<data name="ColumnCategory" xml:space="preserve">
+		<value>Category</value>
+	</data>
 </root>

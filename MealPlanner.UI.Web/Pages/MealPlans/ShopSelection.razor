@@ -18,7 +18,7 @@
 
             <div class="form-group mt-3">
                 <InputSelect id="Shop" class="form-select" @bind-Value="@ShopId">
-                    <option selected value="0">Choose...</option>
+                    <option selected value="0">@Resources.ShopSelection.ChooseOption</option>
                     @if (Shops != null && Shops.Items != null && Shops.Items.Any())
                     {
                         @foreach (var item in Shops.Items)

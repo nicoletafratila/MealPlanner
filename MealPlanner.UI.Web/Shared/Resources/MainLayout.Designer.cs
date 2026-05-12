@@ -124,6 +124,15 @@ namespace MealPlanner.UI.Web.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to here.
+        /// </summary>
+        internal static string NoMenuYetLinkText {
+            get {
+                return ResourceManager.GetString("NoMenuYetLinkText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Meal planner.
         /// </summary>
         internal static string PageTitle {

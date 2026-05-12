@@ -87,4 +87,10 @@
 	<data name="DeleteSucceeded" xml:space="preserve">
 		<value>Data has been deleted successfully</value>
 	</data>
+	<data name="ColumnName" xml:space="preserve">
+		<value>Name</value>
+	</data>
+	<data name="EditButton" xml:space="preserve">
+		<value>Edit</value>
+	</data>
 </root>

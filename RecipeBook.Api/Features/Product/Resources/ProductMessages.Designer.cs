@@ -131,5 +131,14 @@ namespace RecipeBook.Api.Features.Product.Resources {
                 return ResourceManager.GetString("SaveFailed", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Model cannot be null.
+        /// </summary>
+        internal static string ModelCannotBeNull {
+            get {
+                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
+            }
+        }
     }
 }

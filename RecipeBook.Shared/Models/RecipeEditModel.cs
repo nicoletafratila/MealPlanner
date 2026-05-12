@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
 using Common.Validators;
+using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -32,7 +33,7 @@ namespace RecipeBook.Shared.Models
         /// Raw image content (required, up to 500 KB).
         /// </summary>
         [Required]
-        [MaxLength(512000, ErrorMessage = "The image provided is too large.")]
+        [MaxLength(512000, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ImageTooLarge), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public byte[]? ImageContent { get; set; }
 
         /// <summary>
@@ -44,14 +45,14 @@ namespace RecipeBook.Shared.Models
         /// Selected recipe category id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the recipe.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public int RecipeCategoryId { get; set; }
 
         /// <summary>
         /// Ingredient lines; must contain at least one item.
         /// </summary>
         [Required]
-        [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one ingredient.")]
+        [MinimumCountCollection(1, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeRequiresIngredients), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public IList<RecipeIngredientEditModel>? Ingredients { get; set; } = [];
 
         public RecipeEditModel()

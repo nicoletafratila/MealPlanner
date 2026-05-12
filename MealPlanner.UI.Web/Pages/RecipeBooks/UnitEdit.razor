@@ -25,7 +25,7 @@
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">@Resources.UnitEdit.LabelUnitName</label>
-                    <InputText id="name" class="form-control" @bind-Value="@Unit.Name" placeholder="Enter unit name" oninput="updateHeader()"></InputText>
+                    <InputText id="name" class="form-control" @bind-Value="@Unit.Name" placeholder="@Resources.UnitEdit.PlaceholderUnitName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => Unit.Name)" />
                 </div>
 

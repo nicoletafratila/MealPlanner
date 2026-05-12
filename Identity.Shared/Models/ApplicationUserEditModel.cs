@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using Identity.Shared.Resources;
 
 namespace Identity.Shared.Models
 {
@@ -23,13 +24,13 @@ namespace Identity.Shared.Models
         /// <summary>
         /// First name (letters and spaces only).
         /// </summary>
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "First Name must be alpha characters only.")]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessageResourceName = nameof(IdentitySharedMessages.FirstNameAlphaOnly), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string? FirstName { get; set; }
 
         /// <summary>
         /// Last name (letters and spaces only).
         /// </summary>
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Last Name must be alpha characters only.")]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessageResourceName = nameof(IdentitySharedMessages.LastNameAlphaOnly), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string? LastName { get; set; }
 
         public string? ProfilePictureUrl { get; set; }
@@ -42,7 +43,7 @@ namespace Identity.Shared.Models
         /// Email address (required, must be valid format).
         /// </summary>
         [Required]
-        [EmailAddress(ErrorMessage = "Email address is not valid.")]
+        [EmailAddress(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressInvalid), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string EmailAddress { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }

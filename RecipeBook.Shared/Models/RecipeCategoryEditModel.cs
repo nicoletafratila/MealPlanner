@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -25,7 +26,7 @@ namespace RecipeBook.Shared.Models
         /// Display order in lists/menus. 0 or greater.
         /// </summary>
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "Please select the display sequence for the category.")]
+        [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.CategoryDisplaySequenceRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public int DisplaySequence { get; set; }
 
         public RecipeCategoryEditModel()

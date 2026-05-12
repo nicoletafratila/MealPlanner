@@ -102,4 +102,10 @@
 	<data name="FileSizeExceeded" xml:space="preserve">
 		<value>File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;.</value>
 	</data>
+	<data name="PlaceholderProductName" xml:space="preserve">
+		<value>Enter product name</value>
+	</data>
+	<data name="ChooseOption" xml:space="preserve">
+		<value>Choose...</value>
+	</data>
 </root>

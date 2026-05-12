@@ -33,7 +33,7 @@
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">@Resources.RecipeEdit.LabelRecipeName</label>
-                    <InputText id="name" class="form-control" @bind-Value="@Recipe.Name" placeholder="Enter recipe name" oninput="updateHeader()"></InputText>
+                    <InputText id="name" class="form-control" @bind-Value="@Recipe.Name" placeholder="@Resources.RecipeEdit.PlaceholderRecipeName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => Recipe.Name)" />
                 </div>
 
@@ -43,7 +43,7 @@
                         <InputText id="source"
                                    class="form-control"
                                    @bind-Value="@Recipe.Source"
-                                   placeholder="Enter the url for the original source" />
+                                   placeholder="@Resources.RecipeEdit.PlaceholderOriginalSource" />
                         @if (!string.IsNullOrWhiteSpace(Recipe.Source))
                         {
                             <span class="input-group-text">
@@ -59,7 +59,7 @@
                 <div class="form-group mt-3">
                     <label for="recipeCategory" class="col-sm-3">@Resources.RecipeEdit.LabelRecipeCategory</label>
                     <InputSelect id="recipeCategory" class="form-select" @bind-Value="@Recipe.RecipeCategoryId">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.RecipeEdit.ChooseOption</option>
                         @if (RecipeCategories != null && RecipeCategories.Items != null && RecipeCategories.Items.Any())
                         {
                             @foreach (var item in RecipeCategories.Items)
@@ -80,7 +80,7 @@
                 <div class="form-group mt-3">
                     <label for="ingredientCategory" class="col-sm-3">@Resources.RecipeEdit.LabelIngredientCategory</label>
                     <select id="ingredientCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.RecipeEdit.ChooseOption</option>
                         @if (ProductCategories != null && ProductCategories.Items != null && ProductCategories.Items.Any())
                         {
                             @foreach (var item in ProductCategories.Items)
@@ -94,7 +94,7 @@
                 <div class="form-group mt-3">
                     <label for="ingredient" class="col-sm-3">@Resources.RecipeEdit.LabelIngredient</label>
                     <select id="ingredient" class="form-select" @onchange="OnProductChangedAsync">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.RecipeEdit.ChooseOption</option>
                         @if (Products != null && Products!.Items!.Any())
                         {
                             @foreach (var item in Products?.Items!)
@@ -108,7 +108,7 @@
                 <div class="form-group mt-3">
                     <label for="unit" class="col-sm-3">@Resources.RecipeEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.RecipeEdit.ChooseOption</option>
                         @if (Units != null && Units.Any())
                         {
                             @foreach (var unit in Units!)
@@ -123,7 +123,7 @@
                 <div class="form-group mt-3">
                     <label for="quantity" class="col-sm-3">@Resources.RecipeEdit.LabelQuantity</label>
                     <div class="input-group">
-                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
+                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.RecipeEdit.PlaceholderQuantity"></InputText>
                         <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">@Resources.RecipeEdit.AddButton</button>
                     </div>
                     <ValidationMessage For="@(() => Quantity)" />

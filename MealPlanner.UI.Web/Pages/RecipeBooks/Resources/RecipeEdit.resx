@@ -123,4 +123,22 @@
 	<data name="FileSizeExceeded" xml:space="preserve">
 		<value>File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;.</value>
 	</data>
+	<data name="PlaceholderRecipeName" xml:space="preserve">
+		<value>Enter recipe name</value>
+	</data>
+	<data name="PlaceholderOriginalSource" xml:space="preserve">
+		<value>Enter the url for the original source</value>
+	</data>
+	<data name="PlaceholderQuantity" xml:space="preserve">
+		<value>Enter the quantity for the product</value>
+	</data>
+	<data name="ChooseOption" xml:space="preserve">
+		<value>Choose...</value>
+	</data>
+	<data name="QuantityPositiveNumber" xml:space="preserve">
+		<value>The quantity for the ingredient must be a positive number.</value>
+	</data>
+	<data name="SelectUnitOfMeasurement" xml:space="preserve">
+		<value>Please select a unit of measurement for the ingredient.</value>
+	</data>
 </root>

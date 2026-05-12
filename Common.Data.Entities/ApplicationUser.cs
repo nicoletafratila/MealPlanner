@@ -6,11 +6,11 @@ namespace Common.Data.Entities
     public sealed class ApplicationUser : IdentityUser
     {
         [Display(Name = nameof(FirstName))]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "First Name must be alpha characters only.")]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessageResourceName = nameof(Resources.EntityMessages.FirstNameAlphaOnly), ErrorMessageResourceType = typeof(Resources.EntityMessages))]
         public string? FirstName { get; set; }
 
         [Display(Name = nameof(LastName))]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Last Name must be alpha characters only.")]
+        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessageResourceName = nameof(Resources.EntityMessages.LastNameAlphaOnly), ErrorMessageResourceType = typeof(Resources.EntityMessages))]
         public string? LastName { get; set; }
 
         public byte[]? ProfilePicture { get; set; }

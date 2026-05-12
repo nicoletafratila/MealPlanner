@@ -97,4 +97,16 @@
   <data name="ShoppingListSaveError" xml:space="preserve">
     <value>There has been an error when saving the shopping list</value>
   </data>
+  <data name="SelectShopModalTitle" xml:space="preserve">
+    <value>Select a shop</value>
+  </data>
+  <data name="RecipeDetailsOffcanvasTitle" xml:space="preserve">
+    <value>Recipe details</value>
+  </data>
+  <data name="PlaceholderMealPlanName" xml:space="preserve">
+    <value>Enter meal plan name</value>
+  </data>
+  <data name="ChooseOption" xml:space="preserve">
+    <value>Choose...</value>
+  </data>
 </root>

@@ -55,4 +55,7 @@
   <data name="DeleteFailed" xml:space="preserve">
     <value>An error occurred when deleting the product.</value>
   </data>
+  <data name="ModelCannotBeNull" xml:space="preserve">
+    <value>Model cannot be null.</value>
+  </data>
 </root>

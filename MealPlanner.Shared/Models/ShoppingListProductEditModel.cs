@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using MealPlanner.Shared.Resources;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
@@ -13,21 +14,21 @@ namespace MealPlanner.Shared.Models
         /// Parent shopping list id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a shopping list for the product.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public int ShoppingListId { get; set; }
 
         /// <summary>
         /// Quantity for the product. Must be a positive number (0 or greater).
         /// </summary>
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
+        [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ProductQuantityPositive), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public decimal Quantity { get; set; }
 
         /// <summary>
         /// Selected unit id for this product.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the product.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.UnitRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public int UnitId { get; set; }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace MealPlanner.Shared.Models
         /// Used to control ordering/display of products in the list.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "The display index for the product category must be a positive number.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.DisplayIndexPositive), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public int DisplaySequence { get; set; }
 
         /// <summary>

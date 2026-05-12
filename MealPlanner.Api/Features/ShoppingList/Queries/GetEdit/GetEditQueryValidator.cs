@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MealPlanner.Api.Features.ShoppingList.Resources;
 
 namespace MealPlanner.Api.Features.ShoppingList.Queries.GetEdit
 {
@@ -11,7 +12,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Queries.GetEdit
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Id must be greater than zero.");
+                .WithMessage(ShoppingListMessages.IdGreaterThanZero);
         }
     }
 }

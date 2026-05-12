@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Api.Features.RecipeCategory.Resources;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Queries.SearchByCategories
 {
@@ -11,9 +12,9 @@ namespace RecipeBook.Api.Features.RecipeCategory.Queries.SearchByCategories
         {
             RuleFor(x => x.CategoryIds)
                 .NotNull()
-                .WithMessage("CategoryIds is required.")
+                .WithMessage(RecipeCategoryMessages.CategoryIdsRequired)
                 .NotEmpty()
-                .WithMessage("CategoryIds cannot be empty.");
+                .WithMessage(RecipeCategoryMessages.CategoryIdsNotEmpty);
         }
     }
 }

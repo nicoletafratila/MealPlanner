@@ -58,7 +58,16 @@
   <data name="RecipeCategoryUsedInRecipes" xml:space="preserve">
     <value>Recipe category {0} can not be deleted, it is used in recipes.</value>
   </data>
+  <data name="CategoryIdsNotEmpty" xml:space="preserve">
+    <value>CategoryIds cannot be empty.</value>
+  </data>
+  <data name="CategoryIdsRequired" xml:space="preserve">
+    <value>CategoryIds is required.</value>
+  </data>
   <data name="DeleteFailed" xml:space="preserve">
     <value>An error occurred when deleting the recipe category.</value>
+  </data>
+  <data name="ModelCannotBeNull" xml:space="preserve">
+    <value>Model cannot be null.</value>
   </data>
 </root>

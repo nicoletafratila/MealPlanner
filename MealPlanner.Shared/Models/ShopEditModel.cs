@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
 using Common.Validators;
+using MealPlanner.Shared.Resources;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
@@ -28,7 +29,7 @@ namespace MealPlanner.Shared.Models
         /// Must contain at least one entry.
         /// </summary>
         [Required]
-        [MinimumCountCollection(1, ErrorMessage = "The shop requires at least product category order.")]
+        [MinimumCountCollection(1, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShopRequiresCategoryOrder), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public IList<ShopDisplaySequenceEditModel>? DisplaySequence { get; set; } = [];
 
         public ShopEditModel()

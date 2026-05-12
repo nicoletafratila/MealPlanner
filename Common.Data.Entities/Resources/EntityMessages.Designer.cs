@@ -61,6 +61,15 @@ namespace Common.Data.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to First Name must be alpha characters only..
+        /// </summary>
+        internal static string FirstNameAlphaOnly {
+            get {
+                return ResourceManager.GetString("FirstNameAlphaOnly", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Ingredient.Product.BaseUnit must not be null..
         /// </summary>
         internal static string IngredientProductBaseUnitMustNotBeNull {
@@ -105,6 +114,15 @@ namespace Common.Data.Entities.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Last Name must be alpha characters only..
+        /// </summary>
+        internal static string LastNameAlphaOnly {
+            get {
+                return ResourceManager.GetString("LastNameAlphaOnly", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Shopping list details for {0} in shop {1}.
         /// </summary>

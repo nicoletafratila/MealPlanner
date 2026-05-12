@@ -41,7 +41,7 @@
     <value>Password is required.</value>
   </data>
   <data name="InvalidCredentials" xml:space="preserve">
-    <value>Invalid credentials</value>
+    <value>Invalid credentials.</value>
   </data>
   <data name="UserLockedOut" xml:space="preserve">
     <value>User is locked out</value>

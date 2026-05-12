@@ -221,5 +221,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter unit name.
+        /// </summary>
+        internal static string PlaceholderUnitName {
+            get {
+                return ResourceManager.GetString("PlaceholderUnitName", resourceCulture);
+            }
+        }
     }
 }

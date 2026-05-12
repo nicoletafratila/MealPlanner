@@ -35,14 +35,14 @@
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">@Resources.ShoppingListEdit.LabelShoppingListName</label>
-                    <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="Enter shopping list name" oninput="updateHeader()"></InputText>
+                    <InputText id="name" class="form-control" @bind-Value="@ShoppingList.Name" placeholder="@Resources.ShoppingListEdit.PlaceholderShoppingListName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => ShoppingList.Name)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="Shop" class="col-sm-3">@Resources.ShoppingListEdit.LabelShop</label>
                     <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
                         @if (Shops?.Items != null && Shops.Items.Any())
                         {
                             @foreach (var item in Shops.Items)
@@ -63,7 +63,7 @@
                 <div class="form-group mt-3">
                     <label for="ProductCategory" class="col-sm-3">@Resources.ShoppingListEdit.LabelProductCategory</label>
                     <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
                         @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                         {
                             @foreach (var item in Categories.Items)
@@ -77,7 +77,7 @@
                 <div class="form-group mt-3">
                     <label for="Product" class="col-sm-3">@Resources.ShoppingListEdit.LabelProduct</label>
                     <select id="Product" class="form-select" @onchange="OnProductChangedAsync">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
                         @if (Products != null && Products!.Items!.Any())
                         {
                             @foreach (var item in Products?.Items!)
@@ -91,7 +91,7 @@
                 <div class="form-group mt-3">
                     <label for="unit" class="col-sm-3">@Resources.ShoppingListEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
-                        <option selected value="0">Choose...</option>
+                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
                         @if (Units != null && Units.Any())
                         {
                             @foreach (var unit in Units!)
@@ -106,7 +106,7 @@
                 <div class="form-group mt-3">
                     <label for="quantity" class="col-sm-3">@Resources.ShoppingListEdit.LabelQuantity</label>
                     <div class="input-group">
-                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="Enter the quantity for the product"></InputText>
+                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.ShoppingListEdit.PlaceholderQuantity"></InputText>
                         <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
                     </div>
                     <ValidationMessage For="@(() => Quantity)" />

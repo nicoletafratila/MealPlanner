@@ -212,5 +212,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter recipe category name.
+        /// </summary>
+        internal static string PlaceholderRecipeCategoryName {
+            get {
+                return ResourceManager.GetString("PlaceholderRecipeCategoryName", resourceCulture);
+            }
+        }
     }
 }

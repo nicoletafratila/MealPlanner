@@ -311,5 +311,59 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter recipe name.
+        /// </summary>
+        internal static string PlaceholderRecipeName {
+            get {
+                return ResourceManager.GetString("PlaceholderRecipeName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the url for the original source.
+        /// </summary>
+        internal static string PlaceholderOriginalSource {
+            get {
+                return ResourceManager.GetString("PlaceholderOriginalSource", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the quantity for the product.
+        /// </summary>
+        internal static string PlaceholderQuantity {
+            get {
+                return ResourceManager.GetString("PlaceholderQuantity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Choose....
+        /// </summary>
+        internal static string ChooseOption {
+            get {
+                return ResourceManager.GetString("ChooseOption", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The quantity for the ingredient must be a positive number.
+        /// </summary>
+        public static string QuantityPositiveNumber {
+            get {
+                return ResourceManager.GetString("QuantityPositiveNumber", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a unit of measurement for the ingredient.
+        /// </summary>
+        public static string SelectUnitOfMeasurement {
+            get {
+                return ResourceManager.GetString("SelectUnitOfMeasurement", resourceCulture);
+            }
+        }
     }
 }

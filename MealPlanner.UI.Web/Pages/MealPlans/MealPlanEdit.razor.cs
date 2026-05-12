@@ -273,7 +273,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (MealPlan is null || MealPlan.Recipes is null || !MealPlan.Recipes.Any())
                 return;
 
-            var modal = ModalService?.Show<ShopSelection>("Select a shop");
+            var modal = ModalService?.Show<ShopSelection>(Resources.MealPlanEdit.SelectShopModalTitle);
             if (modal is null)
                 return;
 
@@ -310,7 +310,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 { "RecipeCategory", item.RecipeCategory?.Name ?? string.Empty },
             };
 
-            await _offCanvas.ShowAsync<RecipePreview>(title: "Recipe details", parameters: parameters);
+            await _offCanvas.ShowAsync<RecipePreview>(title: Resources.MealPlanEdit.RecipeDetailsOffcanvasTitle, parameters: parameters);
         }
 
         private void NavigateToOverview()

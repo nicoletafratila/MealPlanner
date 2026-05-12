@@ -73,7 +73,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             Assert.Multiple(() =>
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Invalid credentials"));
+                Assert.That(result.Message, Is.EqualTo("Invalid credentials."));
             });
 
             _userManagerMock.Verify(m => m.FindByNameAsync("user"), Times.Once);

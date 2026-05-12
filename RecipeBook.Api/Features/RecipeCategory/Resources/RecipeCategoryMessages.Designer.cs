@@ -61,6 +61,24 @@ namespace RecipeBook.Api.Features.RecipeCategory.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CategoryIds cannot be empty..
+        /// </summary>
+        internal static string CategoryIdsNotEmpty {
+            get {
+                return ResourceManager.GetString("CategoryIdsNotEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to CategoryIds is required..
+        /// </summary>
+        internal static string CategoryIdsRequired {
+            get {
+                return ResourceManager.GetString("CategoryIdsRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred when deleting the recipe category..
         /// </summary>
         internal static string DeleteFailed {
@@ -147,6 +165,15 @@ namespace RecipeBook.Api.Features.RecipeCategory.Resources {
         internal static string SaveFailed {
             get {
                 return ResourceManager.GetString("SaveFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Model cannot be null.
+        /// </summary>
+        internal static string ModelCannotBeNull {
+            get {
+                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
             }
         }
     }

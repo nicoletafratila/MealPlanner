@@ -23,7 +23,7 @@
             {
                 <TableTemplate Data="@Categories" ShowIndex="true" ColumnCount="4">
                     <TableHeader>
-                        <th>Name</th>
+                        <th>@Resources.RecipeCategoriesOverview.ColumnName</th>
                         <th style="width: 80px"></th>
                         <th style="width: 40px"></th>
                         <th style="width: 40px"></th>
@@ -39,7 +39,7 @@
                                 <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(category)" disabled="@(!CanMoveDown(category))">&#9660;</button>
                             }
                         </td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">Edit</button></td>
+                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">@Resources.RecipeCategoriesOverview.EditButton</button></td>
                         <td><button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(category)"></button></td>
                     </RowTemplate>
                 </TableTemplate>

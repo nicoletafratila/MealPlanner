@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
 using Common.Validators;
+using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.Shared.Models
 {
@@ -33,7 +34,7 @@ namespace MealPlanner.Shared.Models
         /// Must contain at least one item.
         /// </summary>
         [Required]
-        [MinimumCountCollection(1, ErrorMessage = "The recipe requires at least one product.")]
+        [MinimumCountCollection(1, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListRequiresProducts), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public IList<ShoppingListProductEditModel>? Products { get; set; } = [];
 
         public ShoppingListEditModel()

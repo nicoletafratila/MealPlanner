@@ -23,7 +23,7 @@
 
                 <div class="form-group">
                     <label for="name" class="col-sm-3">@Resources.RecipeCategoryEdit.LabelRecipeCategoryName</label>
-                    <InputText id="name" class="form-control" @bind-Value="@RecipeCategory.Name" placeholder="Enter recipe category name" oninput="updateHeader()"></InputText>
+                    <InputText id="name" class="form-control" @bind-Value="@RecipeCategory.Name" placeholder="@Resources.RecipeCategoryEdit.PlaceholderRecipeCategoryName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => RecipeCategory.Name)" />
                 </div>
 

@@ -74,4 +74,7 @@
 	<data name="AboutMe" xml:space="preserve">
 		<value>About me</value>
 	</data>
+	<data name="NoMenuYetLinkText" xml:space="preserve">
+		<value>here</value>
+	</data>
 </root>

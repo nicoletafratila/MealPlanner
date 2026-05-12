@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -25,7 +26,7 @@ namespace RecipeBook.Shared.Models
         /// Raw image content (required, up to 500 KB).
         /// </summary>
         [Required]
-        [MaxLength(512000, ErrorMessage = "The image provided is too large.")]
+        [MaxLength(512000, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ImageTooLarge), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public byte[]? ImageContent { get; set; }
 
         /// <summary>
@@ -37,14 +38,14 @@ namespace RecipeBook.Shared.Models
         /// Base unit id for this product (e.g., kg, liter).
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the product.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductUnitRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public int BaseUnitId { get; set; }
 
         /// <summary>
         /// Product category id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a category for the product.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public int ProductCategoryId { get; set; }
 
         public ProductEditModel()

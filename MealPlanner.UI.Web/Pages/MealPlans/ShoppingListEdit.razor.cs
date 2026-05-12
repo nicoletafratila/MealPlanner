@@ -42,11 +42,11 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         public PagedList<ShopModel>? Shops { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "The quantity for the product must be a positive number.")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(Resources.ShoppingListEdit), ErrorMessageResourceName = "QuantityPositiveNumber")]
         public string? Quantity { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a unit of measurement for the ingredient.")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Resources.ShoppingListEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
         public string? UnitId { get; set; }
 
         public IList<UnitModel>? Units { get; set; }
@@ -266,7 +266,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            var modal = ModalService?.Show<MealPlanSelection>("Select a meal plan");
+            var modal = ModalService?.Show<MealPlanSelection>(Resources.ShoppingListEdit.SelectMealPlanModalTitle);
             if (modal is null)
                 return;
 
@@ -307,7 +307,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            var modal = ModalService?.Show<RecipeSelection>("Select a recipe");
+            var modal = ModalService?.Show<RecipeSelection>(Resources.ShoppingListEdit.SelectRecipeModalTitle);
             if (modal is null)
                 return;
 

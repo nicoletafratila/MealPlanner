@@ -19,7 +19,7 @@
             <div class="form-group mt-3">
                 <label for="recipeCategory">@Resources.RecipeSelection.LabelRecipeCategory</label>
                 <select id="recipeCategory" class="form-select" @onchange="OnRecipeCategoryChangedAsync">
-                    <option selected value="0">Choose...</option>
+                    <option selected value="0">@Resources.RecipeSelection.ChooseOption</option>
                     @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                     {
                         @foreach (var item in Categories.Items)
@@ -33,7 +33,7 @@
             <div class="form-group mt-3">
                 <label for="recipeCategory">@Resources.RecipeSelection.LabelRecipe</label>
                 <InputSelect id="recipe" class="form-select" @bind-Value="@RecipeId">
-                    <option selected value="0">Choose...</option>
+                    <option selected value="0">@Resources.RecipeSelection.ChooseOption</option>
                     @if (Recipes != null && Recipes.Items!.Any())
                     {
                         @foreach (var item in Recipes.Items!)

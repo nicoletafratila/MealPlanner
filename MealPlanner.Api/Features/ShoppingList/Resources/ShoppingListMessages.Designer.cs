@@ -140,5 +140,14 @@ namespace MealPlanner.Api.Features.ShoppingList.Resources {
                 return ResourceManager.GetString("ShopIdGreaterThanZero", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Model cannot be null.
+        /// </summary>
+        internal static string ModelCannotBeNull {
+            get {
+                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
+            }
+        }
     }
 }

@@ -93,4 +93,7 @@
 	<data name="DeleteSucceeded" xml:space="preserve">
 		<value>Data has been deleted successfully</value>
 	</data>
+	<data name="PlaceholderUnitName" xml:space="preserve">
+		<value>Enter unit name</value>
+	</data>
 </root>

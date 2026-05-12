@@ -257,5 +257,41 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShoppingListSaveError", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select a shop.
+        /// </summary>
+        internal static string SelectShopModalTitle {
+            get {
+                return ResourceManager.GetString("SelectShopModalTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe details.
+        /// </summary>
+        internal static string RecipeDetailsOffcanvasTitle {
+            get {
+                return ResourceManager.GetString("RecipeDetailsOffcanvasTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter meal plan name.
+        /// </summary>
+        internal static string PlaceholderMealPlanName {
+            get {
+                return ResourceManager.GetString("PlaceholderMealPlanName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Choose....
+        /// </summary>
+        internal static string ChooseOption {
+            get {
+                return ResourceManager.GetString("ChooseOption", resourceCulture);
+            }
+        }
     }
 }

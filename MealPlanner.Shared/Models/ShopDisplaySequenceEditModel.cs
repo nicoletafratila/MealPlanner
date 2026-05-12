@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using MealPlanner.Shared.Resources;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
@@ -19,7 +20,7 @@ namespace MealPlanner.Shared.Models
         /// Display index for the product category (0 or greater).
         /// </summary>
         [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "The display index for the product category must be a positive number.")]
+        [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.DisplayIndexPositive), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public int Value { get; set; }
 
         /// <summary>

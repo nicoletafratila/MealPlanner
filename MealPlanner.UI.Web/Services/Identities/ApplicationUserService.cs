@@ -78,7 +78,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                     error);
 
                 return CommandResponse.Failed(
-                    string.IsNullOrWhiteSpace(error) ? "Update user failed." : error);
+                    string.IsNullOrWhiteSpace(error) ? Resources.ApplicationUserServiceMessages.UpdateUserFailed : error);
             }
 
             try
@@ -95,7 +95,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                     ex,
                     "Failed to deserialize CommandResponse for ApplicationUser UpdateAsync. Model {@Model}",
                     model);
-                return CommandResponse.Failed("Invalid response from user update endpoint.");
+                return CommandResponse.Failed(Resources.ApplicationUserServiceMessages.InvalidResponseUserUpdate);
             }
         }
     }

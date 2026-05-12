@@ -140,5 +140,14 @@ namespace RecipeBook.Api.Features.Unit.Resources {
                 return ResourceManager.GetString("UnitUsedInProducts", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Model cannot be null.
+        /// </summary>
+        internal static string ModelCannotBeNull {
+            get {
+                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
+            }
+        }
     }
 }

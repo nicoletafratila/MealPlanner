@@ -41,25 +41,25 @@
 
                 <div class="form-group mt-3">
                     <label for="firstname" class="col-sm-3">@Resources.UserProfile.FirstNameLabel</label>
-                    <InputText id="firstname" class="form-control" @bind-Value="@ApplicationUser.FirstName" placeholder="First name" oninput="updateHeader()"></InputText>
+                    <InputText id="firstname" class="form-control" @bind-Value="@ApplicationUser.FirstName" placeholder="@Resources.UserProfile.PlaceholderFirstName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => ApplicationUser.FirstName)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="lastname" class="col-sm-3">@Resources.UserProfile.LastNameLabel</label>
-                    <InputText id="lastname" class="form-control" @bind-Value="@ApplicationUser.LastName" placeholder="Last name" oninput="updateHeader()"></InputText>
+                    <InputText id="lastname" class="form-control" @bind-Value="@ApplicationUser.LastName" placeholder="@Resources.UserProfile.PlaceholderLastName" oninput="updateHeader()"></InputText>
                     <ValidationMessage For="@(() => ApplicationUser.LastName)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="phonenumber" class="col-sm-3">@Resources.UserProfile.PhoneNumberLabel</label>
-                    <InputText id="phonenumber" class="form-control" @bind-Value="@ApplicationUser.PhoneNumber" placeholder="Phone number"></InputText>
+                    <InputText id="phonenumber" class="form-control" @bind-Value="@ApplicationUser.PhoneNumber" placeholder="@Resources.UserProfile.PlaceholderPhoneNumber"></InputText>
                     <ValidationMessage For="@(() => ApplicationUser.PhoneNumber)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="email" class="col-sm-3">@Resources.UserProfile.EmailLabel</label>
-                    <InputText id="email" class="form-control" @bind-Value="@ApplicationUser.EmailAddress" placeholder="Email"></InputText>
+                    <InputText id="email" class="form-control" @bind-Value="@ApplicationUser.EmailAddress" placeholder="@Resources.UserProfile.PlaceholderEmail"></InputText>
                     <ValidationMessage For="@(() => ApplicationUser.EmailAddress)" />
                 </div>
 

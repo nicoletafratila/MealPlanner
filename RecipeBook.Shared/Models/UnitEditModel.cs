@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Common.Constants.Units;
 using Common.Models;
+using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -23,7 +24,7 @@ namespace RecipeBook.Shared.Models
         /// The category/type of this unit (Weight, Volume, etc.).
         /// </summary>
         [Required]
-        [Range(0, 3, ErrorMessage = "UnitType must be between 0 and 3.")]
+        [Range(0, 3, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.UnitTypeRange), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public UnitType UnitType { get; set; }
 
         public UnitEditModel()

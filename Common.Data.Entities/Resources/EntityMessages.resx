@@ -31,6 +31,12 @@
   <resheader name="version"><value>1.3</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FirstNameAlphaOnly" xml:space="preserve">
+    <value>First Name must be alpha characters only.</value>
+  </data>
+  <data name="LastNameAlphaOnly" xml:space="preserve">
+    <value>Last Name must be alpha characters only.</value>
+  </data>
   <data name="ShoppingListNameFormat" xml:space="preserve">
     <value>Shopping list details for {0} in shop {1}</value>
   </data>

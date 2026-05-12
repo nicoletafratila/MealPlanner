@@ -69,4 +69,19 @@
   <data name="SaveSucceeded" xml:space="preserve">
     <value>Data has been saved successfully</value>
   </data>
+  <data name="FileSizeExceeded" xml:space="preserve">
+    <value>File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;.</value>
+  </data>
+  <data name="PlaceholderFirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="PlaceholderLastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="PlaceholderPhoneNumber" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="PlaceholderEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
 </root>

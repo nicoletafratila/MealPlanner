@@ -44,7 +44,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                         response.StatusCode,
                         error);
                     return CommandResponse.Failed(
-                        string.IsNullOrWhiteSpace(error) ? "Authentication failed." : error);
+                        string.IsNullOrWhiteSpace(error) ? Resources.AuthenticationServiceMessages.AuthenticationFailed : error);
                 }
 
                 var loginResponse = await response.Content.ReadFromJsonAsync<LoginCommandResponse>(
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                 if (loginResponse is null)
                 {
                     logger.LogError("LoginAsync: response body could not be deserialized into LoginCommandResponse.");
-                    return CommandResponse.Failed("Authentication failed.");
+                    return CommandResponse.Failed(Resources.AuthenticationServiceMessages.AuthenticationFailed);
                 }
 
                 if (loginResponse.Succeeded && !string.IsNullOrWhiteSpace(loginResponse.JwtBearer))
@@ -64,17 +64,17 @@ namespace MealPlanner.UI.Web.Services.Identities
                 }
 
                 logger.LogWarning("LoginAsync did not succeed. Message: {Message}", loginResponse.Message);
-                return CommandResponse.Failed(loginResponse.Message ?? "Authentication failed.");
+                return CommandResponse.Failed(loginResponse.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed);
             }
             catch (HttpRequestException ex)
             {
                 logger.LogError(ex, "HTTP error during LoginAsync.");
-                return CommandResponse.Failed("Network error during authentication.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorAuthentication);
             }
             catch (JsonException ex)
             {
                 logger.LogError(ex, "Failed to deserialize LoginCommandResponse during LoginAsync.");
-                return CommandResponse.Failed("Invalid response from authentication server.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseAuthentication);
             }
         }
 
@@ -98,7 +98,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                         response.StatusCode,
                         error);
                     return CommandResponse.Failed(
-                        string.IsNullOrWhiteSpace(error) ? "Logout failed." : error);
+                        string.IsNullOrWhiteSpace(error) ? Resources.AuthenticationServiceMessages.LogoutFailed : error);
                 }
 
                 var logoutResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(
@@ -108,7 +108,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                 if (logoutResponse is null)
                 {
                     logger.LogError("LogoutAsync: response body could not be deserialized into CommandResponse.");
-                    return CommandResponse.Failed("Logout failed.");
+                    return CommandResponse.Failed(Resources.AuthenticationServiceMessages.LogoutFailed);
                 }
 
                 if (logoutResponse.Succeeded)
@@ -118,17 +118,17 @@ namespace MealPlanner.UI.Web.Services.Identities
                 }
 
                 logger.LogWarning("LogoutAsync did not succeed. Message: {Message}", logoutResponse.Message);
-                return CommandResponse.Failed(logoutResponse.Message ?? "Logout failed.");
+                return CommandResponse.Failed(logoutResponse.Message ?? Resources.AuthenticationServiceMessages.LogoutFailed);
             }
             catch (HttpRequestException ex)
             {
                 logger.LogError(ex, "HTTP error during LogoutAsync.");
-                return CommandResponse.Failed("Network error during logout.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorLogout);
             }
             catch (JsonException ex)
             {
                 logger.LogError(ex, "Failed to deserialize CommandResponse during LogoutAsync.");
-                return CommandResponse.Failed("Invalid response from authentication server.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseAuthentication);
             }
         }
 
@@ -152,7 +152,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                         response.StatusCode,
                         error);
                     return CommandResponse.Failed(
-                        string.IsNullOrWhiteSpace(error) ? "Registration failed." : error);
+                        string.IsNullOrWhiteSpace(error) ? Resources.AuthenticationServiceMessages.RegistrationFailed : error);
                 }
 
                 var registerResponse = await response.Content.ReadFromJsonAsync<CommandResponse>(
@@ -162,7 +162,7 @@ namespace MealPlanner.UI.Web.Services.Identities
                 if (registerResponse is null)
                 {
                     logger.LogError("RegisterAsync: response body could not be deserialized into CommandResponse.");
-                    return CommandResponse.Failed("Registration failed.");
+                    return CommandResponse.Failed(Resources.AuthenticationServiceMessages.RegistrationFailed);
                 }
 
                 if (!registerResponse.Succeeded)
@@ -175,12 +175,12 @@ namespace MealPlanner.UI.Web.Services.Identities
             catch (HttpRequestException ex)
             {
                 logger.LogError(ex, "HTTP error during RegisterAsync.");
-                return CommandResponse.Failed("Network error during registration.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorRegistration);
             }
             catch (JsonException ex)
             {
                 logger.LogError(ex, "Failed to deserialize CommandResponse during RegisterAsync.");
-                return CommandResponse.Failed("Invalid response from registration server.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseRegistration);
             }
         }
     }

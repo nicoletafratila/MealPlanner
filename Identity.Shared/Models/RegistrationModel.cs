@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using Identity.Shared.Resources;
 
 namespace Identity.Shared.Models
 {
     public class RegistrationModel : LoginModel
     {
-        [Required(ErrorMessage = "Confirm password is required.")]
+        [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.ConfirmPasswordRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Password and confirm password do not match.")]
+        [Compare("Password", ErrorMessageResourceName = nameof(IdentitySharedMessages.ConfirmPasswordMismatch), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string ConfirmPassword { get; set; } = string.Empty;
     }
 }
