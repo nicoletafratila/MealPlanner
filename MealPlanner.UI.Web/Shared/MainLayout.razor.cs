@@ -9,6 +9,7 @@ namespace MealPlanner.UI.Web.Shared
     {
         private MealPlanModel? _currentMealPlan;
         private bool _isAuthenticated;
+        private CancellationTokenSource? _autoDismissCts;
 
         [Inject]
         public IMealPlanService MealPlanService { get; set; } = default!;
@@ -70,16 +71,35 @@ namespace MealPlanner.UI.Web.Shared
                 return;
             }
 
+            _autoDismissCts?.Cancel();
+            _autoDismissCts?.Dispose();
+            _autoDismissCts = null;
+
             IsErrorActive = level == MessageLevel.Error;
             IsWarningActive = level == MessageLevel.Warning;
             IsInfoActive = level == MessageLevel.Info;
             Message = message;
 
             await InvokeAsync(StateHasChanged);
+
+            if (level == MessageLevel.Info)
+            {
+                _autoDismissCts = new CancellationTokenSource();
+                var token = _autoDismissCts.Token;
+                _ = Task.Delay(5000, token).ContinueWith(async t =>
+                {
+                    if (!t.IsCanceled)
+                        await HideMessageAsync();
+                }, TaskScheduler.Default);
+            }
         }
 
         public Task HideMessageAsync()
         {
+            _autoDismissCts?.Cancel();
+            _autoDismissCts?.Dispose();
+            _autoDismissCts = null;
+
             IsErrorActive = false;
             IsInfoActive = false;
             IsWarningActive = false;
