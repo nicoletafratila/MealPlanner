@@ -34,4 +34,7 @@
   <data name="CategoryIdsRequired" xml:space="preserve">
     <value>CategoryIds is required.</value>
   </data>
+  <data name="UserIdRequired" xml:space="preserve">
+    <value>User id is required.</value>
+  </data>
 </root>

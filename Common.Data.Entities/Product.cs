@@ -4,7 +4,10 @@ namespace Common.Data.Entities
 {
     public sealed class Product : Entity<int>
     {
+        public string? UserId { get; set; }
+
         public string? Name { get; set; }
+
         public byte[]? ImageContent { get; set; }
 
         [ForeignKey(nameof(BaseUnitId))]

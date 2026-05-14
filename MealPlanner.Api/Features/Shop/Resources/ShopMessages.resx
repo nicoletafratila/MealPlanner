@@ -55,4 +55,7 @@
   <data name="ModelCannotBeNull" xml:space="preserve">
     <value>Model cannot be null.</value>
   </data>
+  <data name="UserIdRequired" xml:space="preserve">
+    <value>User id is required.</value>
+  </data>
 </root>

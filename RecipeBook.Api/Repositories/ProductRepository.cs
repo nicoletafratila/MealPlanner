@@ -13,6 +13,17 @@ namespace RecipeBook.Api.Repositories
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
+        public async Task<IReadOnlyList<Product>> GetAllByUserAsync(
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            return await Context.Products
+                .Include(x => x.ProductCategory)
+                .Include(x => x.BaseUnit)
+                .Where(x => x.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
         public override async Task<IReadOnlyList<Product>> GetAllAsync(
             CancellationToken cancellationToken)
         {
@@ -45,6 +56,7 @@ namespace RecipeBook.Api.Repositories
 
         public async Task<Product?> SearchAsync(
             string name,
+            string userId,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -54,7 +66,7 @@ namespace RecipeBook.Api.Repositories
                 .Include(x => x.ProductCategory)
                 .Include(x => x.BaseUnit)
                 .FirstOrDefaultAsync(
-                    x => x.Name != null && x.Name.ToLower() == name.ToLower(),
+                    x => x.UserId == userId && x.Name != null && x.Name.ToLower() == name.ToLower(),
                     cancellationToken);
         }
     }

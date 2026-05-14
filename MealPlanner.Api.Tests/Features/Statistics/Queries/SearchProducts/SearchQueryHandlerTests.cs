@@ -1,4 +1,5 @@
-﻿using MealPlanner.Api.Abstractions;
+﻿using Common.Api;
+using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchProducts;
 using MealPlanner.Api.Repositories;
 using Moq;
@@ -12,12 +13,14 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
         private static (SearchQueryHandler handler,
                         Mock<IMealPlanRepository> repoMock,
                         Mock<IRecipeBookClient> recipeClientMock)
-            CreateHandler()
+            CreateHandler(string userId = "user1")
         {
             var repoMock = new Mock<IMealPlanRepository>(MockBehavior.Strict);
             var recipeClientMock = new Mock<IRecipeBookClient>(MockBehavior.Strict);
+            var currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
+            currentUserMock.Setup(s => s.UserId).Returns(userId);
 
-            var handler = new SearchQueryHandler(repoMock.Object, recipeClientMock.Object);
+            var handler = new SearchQueryHandler(repoMock.Object, recipeClientMock.Object, currentUserMock.Object);
             return (handler, repoMock, recipeClientMock);
         }
 
@@ -49,6 +52,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             repoMock.Verify(r =>
                     r.SearchByProductCategoryIdsAsync(
                         It.IsAny<IList<int>>(),
+                        It.IsAny<string>(),
                         It.IsAny<CancellationToken>()),
                 Times.Never);
         }
@@ -81,6 +85,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             repoMock.Verify(r =>
                     r.SearchByProductCategoryIdsAsync(
                         It.IsAny<IList<int>>(),
+                        It.IsAny<string>(),
                         It.IsAny<CancellationToken>()),
                 Times.Never);
 
@@ -137,6 +142,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                 .Setup(r => r.SearchByProductCategoryIdsAsync(
                     It.Is<IList<int>>(ids =>
                         ids.Count == 2 && ids.Contains(20) && ids.Contains(21)),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(pairs);
 
@@ -185,6 +191,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             repoMock.Verify(r =>
                     r.SearchByProductCategoryIdsAsync(
                         It.IsAny<IList<int>>(),
+                        It.IsAny<string>(),
                         It.IsAny<CancellationToken>()),
                 Times.Once);
         }

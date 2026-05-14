@@ -8,5 +8,6 @@ namespace RecipeBook.Api.Repositories
     /// </summary>
     public interface IProductCategoryRepository : IAsyncRepository<ProductCategory, int>
     {
+        Task<IReadOnlyList<ProductCategory>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
     }
 }

@@ -108,6 +108,7 @@ namespace MealPlanner.Api.Tests.Repositories
             {
                 Id = mealPlanId,
                 Name = mealPlanName,
+                UserId = "user1",
                 MealPlanRecipes =
                 [
                     new()
@@ -323,7 +324,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByRecipeCategoryIdsAsync([5], CancellationToken.None);
+            var result = await repo.SearchByRecipeCategoryIdsAsync([5], "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -339,7 +340,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act
-            var result = await repo.SearchByRecipeCategoryIdsAsync([], CancellationToken.None);
+            var result = await repo.SearchByRecipeCategoryIdsAsync([], "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -374,7 +375,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByProductCategoryIdsAsync([20], CancellationToken.None);
+            var result = await repo.SearchByProductCategoryIdsAsync([20], "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -393,7 +394,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act
-            var result = await repo.SearchByProductCategoryIdsAsync([], CancellationToken.None);
+            var result = await repo.SearchByProductCategoryIdsAsync([], "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -427,7 +428,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByRecipeAsync(10, CancellationToken.None);
+            var result = await repo.SearchByRecipeAsync(10, "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -453,7 +454,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByRecipeAsync(999, CancellationToken.None);
+            var result = await repo.SearchByRecipeAsync(999, "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Empty);
@@ -466,13 +467,13 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = new MealPlan { Id = 1, Name = "Weekly" };
-            var p2 = new MealPlan { Id = 2, Name = "Other" };
+            var p1 = new MealPlan { Id = 1, Name = "Weekly", UserId = "user1" };
+            var p2 = new MealPlan { Id = 2, Name = "Other", UserId = "user1" };
             ctx.MealPlans.AddRange(p1, p2);
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("weekly", CancellationToken.None);
+            var result = await repo.SearchAsync("weekly", "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -485,11 +486,11 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Weekly" });
+            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Weekly", UserId = "user1" });
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("does-not-exist", CancellationToken.None);
+            var result = await repo.SearchAsync("does-not-exist", "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Null);
@@ -501,8 +502,8 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out _);
 
-            var r1 = await repo.SearchAsync(null!, CancellationToken.None);
-            var r2 = await repo.SearchAsync("   ", CancellationToken.None);
+            var r1 = await repo.SearchAsync(null!, "user1", CancellationToken.None);
+            var r2 = await repo.SearchAsync("   ", "user1", CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {

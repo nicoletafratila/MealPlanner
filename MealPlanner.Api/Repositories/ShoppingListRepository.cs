@@ -8,14 +8,24 @@ namespace MealPlanner.Api.Repositories
     public class ShoppingListRepository(MealPlannerDbContext dbContext)
         : BaseAsyncRepository<ShoppingList, int>(dbContext), IShoppingListRepository
     {
+        private MealPlannerDbContext Ctx =>
+            DbContext as MealPlannerDbContext
+            ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+
+        public async Task<IReadOnlyList<ShoppingList>> GetAllByUserAsync(
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            return await Ctx.ShoppingLists
+                .Where(sl => sl.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
             int id,
             CancellationToken cancellationToken)
         {
-            var ctx = DbContext as MealPlannerDbContext
-                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
-
-            return await ctx.ShoppingLists
+            return await Ctx.ShoppingLists
                 .Include(x => x.Shop)
                 .Include(x => x.Products)!
                     .ThenInclude(p => p.Product)!
@@ -30,17 +40,16 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<ShoppingList?> SearchAsync(
             string name,
+            string userId,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name must not be null or empty.", nameof(name));
 
-            var ctx = DbContext as MealPlannerDbContext
-                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
-
-            return await ctx.ShoppingLists
+            return await Ctx.ShoppingLists
                 .FirstOrDefaultAsync(
-                    x => x.Name != null &&
+                    x => x.UserId == userId &&
+                         x.Name != null &&
                          x.Name.Equals(name, StringComparison.OrdinalIgnoreCase),
                     cancellationToken);
         }

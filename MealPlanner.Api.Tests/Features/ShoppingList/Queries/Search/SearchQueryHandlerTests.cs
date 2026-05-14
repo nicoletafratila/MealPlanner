@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using Common.Pagination;
 using MealPlanner.Api.Features.ShoppingList.Queries.Search;
 using MealPlanner.Api.Repositories;
@@ -12,6 +13,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
     {
         private Mock<IShoppingListRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchQueryHandler _handler = null!;
         private static readonly int[] expected = [1, 2];
 
@@ -20,65 +22,70 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         {
             _repoMock = new Mock<IShoppingListRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            _handler = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
+
+            _handler = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object);
         }
 
         [Test]
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<System.ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(null!, _mapperMock.Object));
+                _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<System.ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(_repoMock.Object, null!));
+                _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<System.ArgumentNullException>(() =>
+                _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
         [Test]
         public async Task Handle_NullRequest_ReturnsEmptyPagedList()
         {
-            // Act
             var result = await _handler.Handle(null!, CancellationToken.None);
 
             Assert.Multiple(() =>
             {
-                // Assert
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(0));
             });
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_NullQueryParameters_ReturnsEmptyPagedList()
         {
-            // Arrange
             var query = new SearchQuery
             {
                 QueryParameters = null
             };
 
-            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.Multiple(() =>
             {
-                // Assert
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(0));
             });
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
-            // Arrange
             var entities = new List<Common.Data.Entities.ShoppingList>
             {
                 new() { Id = 1, Name = "List1" },
@@ -92,7 +99,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -112,10 +119,8 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
                 QueryParameters = qp
             };
 
-            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            // Assert
             Assert.That(result.Items, Has.Count.EqualTo(2));
             Assert.Multiple(() =>
             {
@@ -123,21 +128,20 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             });
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(entities), Times.Once);
         }
 
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            // Arrange
             var entities = new List<Common.Data.Entities.ShoppingList>
             {
                 new() { Id = 1, Name = "List1" }
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -157,17 +161,15 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
                 QueryParameters = qp
             };
 
-            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.Multiple(() =>
             {
-                // Assert
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(0));
             });
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(entities), Times.Once);
         }
     }

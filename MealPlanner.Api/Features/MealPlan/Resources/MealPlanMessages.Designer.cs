@@ -97,6 +97,15 @@ namespace MealPlanner.Api.Features.MealPlan.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model cannot be null..
+        /// </summary>
+        internal static string ModelCannotBeNull {
+            get {
+                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model is required..
         /// </summary>
         internal static string ModelRequired {
@@ -149,13 +158,13 @@ namespace MealPlanner.Api.Features.MealPlan.Resources {
                 return ResourceManager.GetString("ShopIdGreaterThanZero", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Model cannot be null.
+        ///   Looks up a localized string similar to User id is required..
         /// </summary>
-        internal static string ModelCannotBeNull {
+        internal static string UserIdRequired {
             get {
-                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
+                return ResourceManager.GetString("UserIdRequired", resourceCulture);
             }
         }
     }

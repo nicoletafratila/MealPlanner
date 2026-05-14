@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Add;
@@ -12,6 +13,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
     {
         private Mock<IRecipeCategoryRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private Mock<ILogger<AddCommandHandler>> _loggerMock = null!;
         private AddCommandHandler _handler = null!;
 
@@ -20,11 +22,15 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         {
             _repoMock = new Mock<IRecipeCategoryRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<AddCommandHandler>>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
 
             _handler = new AddCommandHandler(
                 _repoMock.Object,
                 _mapperMock.Object,
+                _currentUserMock.Object,
                 _loggerMock.Object);
         }
 
@@ -32,21 +38,28 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(null!, _mapperMock.Object, _loggerMock.Object));
+                _ = new AddCommandHandler(null!, _mapperMock.Object, _currentUserMock.Object, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
+                _ = new AddCommandHandler(_repoMock.Object, null!, _currentUserMock.Object, _loggerMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullLogger_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!));
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object, null!));
         }
 
         [Test]
@@ -68,7 +81,6 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         [Test]
         public async Task Handle_DuplicateName_ReturnsFailedResponse_AndDoesNotAdd()
         {
-            // Arrange
             var model = new RecipeCategoryEditModel
             {
                 Id = 0,
@@ -84,13 +96,11 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -98,15 +108,14 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This Recipe category already exists."));
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.RecipeCategory>(It.IsAny<RecipeCategoryEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.RecipeCategory>(), CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.RecipeCategory>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_SuccessfulAdd_ReturnsSuccess()
         {
-            // Arrange
             var model = new RecipeCategoryEditModel
             {
                 Id = 0,
@@ -117,7 +126,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
             var mappedEntity = new Common.Data.Entities.RecipeCategory
@@ -132,25 +141,22 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
                 .Returns(mappedEntity);
 
             _repoMock
-                .Setup(r => r.AddAsync(mappedEntity, CancellationToken.None))
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mappedEntity);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.RecipeCategory>(model), Times.Once);
-            _repoMock.Verify(r => r.AddAsync(mappedEntity, CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
-            // Arrange
             var model = new RecipeCategoryEditModel
             {
                 Id = 0,
@@ -161,7 +167,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
             var mappedEntity = new Common.Data.Entities.RecipeCategory
@@ -176,13 +182,11 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
                 .Returns(mappedEntity);
 
             _repoMock
-                .Setup(r => r.AddAsync(mappedEntity, CancellationToken.None))
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -190,9 +194,9 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the Recipe category."));
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.RecipeCategory>(model), Times.Once);
-            _repoMock.Verify(r => r.AddAsync(mappedEntity, CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

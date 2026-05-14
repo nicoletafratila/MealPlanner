@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Api;
 using Common.Models;
 using MealPlanner.Api.Repositories;
 using MediatR;
@@ -11,10 +12,12 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
     public class AddCommandHandler(
         IShopRepository repository,
         IMapper mapper,
+        ICurrentUserService currentUserService,
         ILogger<AddCommandHandler> logger) : IRequestHandler<AddCommand, CommandResponse?>
     {
         private readonly IShopRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly ICurrentUserService _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
         private readonly ILogger<AddCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(AddCommand request, CancellationToken cancellationToken)
@@ -26,7 +29,11 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
 
             try
             {
-                var shops = await _repository.GetAllAsync(cancellationToken);
+                var userId = _currentUserService.UserId;
+                if (string.IsNullOrEmpty(userId))
+                    return CommandResponse.Failed(Resources.ShopMessages.UserIdRequired);
+
+                var shops = await _repository.GetAllByUserAsync(userId, cancellationToken);
                 var name = request.Model.Name ?? string.Empty;
 
                 var existingItem = shops?
@@ -38,6 +45,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
                     return CommandResponse.Failed(Resources.ShopMessages.AlreadyExists);
 
                 var mapped = _mapper.Map<Common.Data.Entities.Shop>(request.Model);
+                mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

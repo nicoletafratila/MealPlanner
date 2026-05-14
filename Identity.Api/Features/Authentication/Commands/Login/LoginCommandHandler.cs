@@ -96,9 +96,8 @@ namespace Identity.Api.Features.Authentication.Commands.Login
         {
             return
             [
-                new(JwtRegisteredClaimNames.Sub, user.UserName!),
+                new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(ClaimTypes.NameIdentifier, user.Id),
                 new(ClaimTypes.Name, user.UserName!),
                 new(ClaimTypes.Role, string.Join(",", roles)),
                 new(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope),

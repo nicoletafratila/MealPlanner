@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Product.Commands.Add;
@@ -12,6 +13,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
     {
         private Mock<IProductRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private Mock<ILogger<AddCommandHandler>> _loggerMock = null!;
         private AddCommandHandler _handler = null!;
 
@@ -20,11 +22,15 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
         {
             _repoMock = new Mock<IProductRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<AddCommandHandler>>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
 
             _handler = new AddCommandHandler(
                 _repoMock.Object,
                 _mapperMock.Object,
+                _currentUserMock.Object,
                 _loggerMock.Object);
         }
 
@@ -32,21 +38,28 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(null!, _mapperMock.Object, _loggerMock.Object));
+                _ = new AddCommandHandler(null!, _mapperMock.Object, _currentUserMock.Object, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
+                _ = new AddCommandHandler(_repoMock.Object, null!, _currentUserMock.Object, _loggerMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullLogger_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!));
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object, null!));
         }
 
         [Test]
@@ -68,7 +81,6 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
         [Test]
         public async Task Handle_ExistingProduct_ReturnsFailedResponse_AndDoesNotAdd()
         {
-            // Arrange
             var model = new ProductEditModel
             {
                 Id = 0,
@@ -82,13 +94,11 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var existing = new Common.Data.Entities.Product { Id = 10, Name = "Milk", ProductCategoryId = 2 };
 
             _repoMock
-                .Setup(r => r.SearchAsync("Milk", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -96,7 +106,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This product already exists."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("Milk", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Product>(It.IsAny<ProductEditModel>()), Times.Never);
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -104,7 +114,6 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
         [Test]
         public async Task Handle_NewProduct_AddsAndReturnsSuccess()
         {
-            // Arrange
             var model = new ProductEditModel
             {
                 Id = 0,
@@ -116,7 +125,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("Bread", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Product?)null);
 
             var mappedEntity = new Common.Data.Entities.Product
@@ -135,14 +144,12 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mappedEntity);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.SearchAsync("Bread", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -150,7 +157,6 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
         [Test]
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
-            // Arrange
             var model = new ProductEditModel
             {
                 Id = 0,
@@ -162,7 +168,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("ErrorProduct", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.Product?)null);
 
             var mappedEntity = new Common.Data.Entities.Product
@@ -181,10 +187,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -192,7 +196,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the product."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("ErrorProduct", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 

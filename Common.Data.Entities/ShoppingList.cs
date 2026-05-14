@@ -4,6 +4,8 @@ namespace Common.Data.Entities
 {
     public sealed class ShoppingList : Entity<int>
     {
+        public string? UserId { get; set; }
+
         public string? Name { get; set; }
 
         [ForeignKey(nameof(ShopId))]

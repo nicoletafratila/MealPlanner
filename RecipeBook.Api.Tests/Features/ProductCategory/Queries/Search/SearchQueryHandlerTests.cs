@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using Common.Pagination;
 using Moq;
 using RecipeBook.Api.Features.ProductCategory.Queries.Search;
@@ -12,6 +13,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
     {
         private Mock<IProductCategoryRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchQueryHandler _handler = null!;
 
         [SetUp]
@@ -19,65 +21,70 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         {
             _repoMock = new Mock<IProductCategoryRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            _handler = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
+
+            _handler = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object);
         }
 
         [Test]
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<System.ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(null!, _mapperMock.Object));
+                _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<System.ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(_repoMock.Object, null!));
+                _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<System.ArgumentNullException>(() =>
+                _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
         [Test]
         public async Task Handle_NullRequest_ReturnsEmptyPagedList()
         {
-            // Act
             var result = await _handler.Handle(null!, CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
-                // Assert
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_NullQueryParameters_ReturnsEmptyPagedList()
         {
-            // Arrange
             var query = new SearchQuery
             {
                 QueryParameters = null
             };
 
-            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
-                // Assert
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
-            // Arrange
             var entities = new List<Common.Data.Entities.ProductCategory>
             {
                 new() { Id = 1, Name = "Cat1" },
@@ -91,7 +98,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -111,10 +118,8 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 QueryParameters = qp
             };
 
-            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            // Assert
             Assert.That(result.Items, Has.Count.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
@@ -122,21 +127,20 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(entities), Times.Once);
         }
 
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            // Arrange
             var entities = new List<Common.Data.Entities.ProductCategory>
             {
                 new() { Id = 1, Name = "Cat1" }
             };
 
             _repoMock
-                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -156,17 +160,15 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
                 QueryParameters = qp
             };
 
-            // Act
             var result = await _handler.Handle(query, CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
-                // Assert
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
 
-            _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductCategoryModel>>(entities), Times.Once);
         }
     }

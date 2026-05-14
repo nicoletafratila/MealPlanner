@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Api;
 using Common.Models;
 using MediatR;
 using RecipeBook.Api.Features.RecipeCategory.Resources;
@@ -12,10 +13,12 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Add
     public class AddCommandHandler(
         IRecipeCategoryRepository repository,
         IMapper mapper,
+        ICurrentUserService currentUserService,
         ILogger<AddCommandHandler> logger) : IRequestHandler<AddCommand, CommandResponse?>
     {
         private readonly IRecipeCategoryRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly ICurrentUserService _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
         private readonly ILogger<AddCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(AddCommand request, CancellationToken cancellationToken)
@@ -27,7 +30,11 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Add
 
             try
             {
-                var allCategories = await _repository.GetAllAsync(cancellationToken) ?? [];
+                var userId = _currentUserService.UserId;
+                if (string.IsNullOrEmpty(userId))
+                    return CommandResponse.Failed(RecipeCategoryMessages.UserIdRequired);
+
+                var allCategories = await _repository.GetAllByUserAsync(userId, cancellationToken) ?? [];
 
                 var newName = request.Model.Name?.Trim();
                 if (!string.IsNullOrWhiteSpace(newName))
@@ -43,6 +50,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Add
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.RecipeCategory>(request.Model);
+                mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

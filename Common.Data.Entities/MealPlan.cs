@@ -5,6 +5,8 @@ namespace Common.Data.Entities
 {
     public sealed class MealPlan : Entity<int>
     {
+        public string? UserId { get; set; }
+
         public string? Name { get; set; }
 
         public DateTime? CreatedAt { get; set; }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Api;
 using Common.Pagination;
 using MediatR;
 using RecipeBook.Api.Repositories;
@@ -6,10 +7,11 @@ using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Features.Recipe.Queries.Search
 {
-    public class SearchQueryHandler(IRecipeRepository repository, IMapper mapper) : IRequestHandler<SearchQuery, PagedList<RecipeModel>>
+    public class SearchQueryHandler(IRecipeRepository repository, IMapper mapper, ICurrentUserService currentUserService) : IRequestHandler<SearchQuery, PagedList<RecipeModel>>
     {
         private readonly IRecipeRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly ICurrentUserService _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
 
         public async Task<PagedList<RecipeModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
@@ -19,8 +21,11 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
             }
 
             var qp = request.QueryParameters;
+            var userId = _currentUserService.UserId;
+            if (string.IsNullOrEmpty(userId))
+                return new([], new Metadata());
 
-            var entities = await _repository.GetAllAsync(cancellationToken);
+            var entities = await _repository.GetAllByUserAsync(userId, cancellationToken);
             var models = _mapper.Map<IList<RecipeModel>>(entities) ?? [];
 
             models = ApplyCategoryFilter(models, request.CategoryId);

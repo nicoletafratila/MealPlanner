@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -12,6 +13,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
     {
         private Mock<IMealPlanRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private Mock<ILogger<AddCommandHandler>> _loggerMock = null!;
         private AddCommandHandler _handler = null!;
 
@@ -20,11 +22,15 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
         {
             _repoMock = new Mock<IMealPlanRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<AddCommandHandler>>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
 
             _handler = new AddCommandHandler(
                 _repoMock.Object,
                 _mapperMock.Object,
+                _currentUserMock.Object,
                 _loggerMock.Object);
         }
 
@@ -32,21 +38,28 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(null!, _mapperMock.Object, _loggerMock.Object));
+                _ = new AddCommandHandler(null!, _mapperMock.Object, _currentUserMock.Object, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
+                _ = new AddCommandHandler(_repoMock.Object, null!, _currentUserMock.Object, _loggerMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullLogger_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!));
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object, null!));
         }
 
         [Test]
@@ -75,7 +88,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             var existing = new Common.Data.Entities.MealPlan { Id = 10, Name = "Plan1" };
 
             _repoMock
-                .Setup(r => r.SearchAsync("Plan1", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             // Act
@@ -89,7 +102,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This meal plan already exists."));
             });
 
-            _repoMock.Verify(r => r.SearchAsync("Plan1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.MealPlan>(It.IsAny<MealPlanEditModel>()), Times.Never);
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -102,7 +115,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("NewPlan", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("NewPlan", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
 
             var mappedEntity = new Common.Data.Entities.MealPlan { Id = 5, Name = "NewPlan" };
@@ -122,7 +135,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.SearchAsync("NewPlan", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("NewPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.MealPlan>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -135,7 +148,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("ErrorPlan", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
 
             var mappedEntity = new Common.Data.Entities.MealPlan { Id = 7, Name = "ErrorPlan" };
@@ -159,7 +172,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the meal plan."));
             });
 
-            _repoMock.Verify(r => r.SearchAsync("ErrorPlan", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.MealPlan>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 

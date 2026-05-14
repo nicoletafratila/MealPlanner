@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -11,6 +12,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
     {
         private Mock<IMealPlanRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchByRecipeIdQueryHandler _handler = null!;
 
         [SetUp]
@@ -18,21 +20,32 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         {
             _repoMock = new Mock<IMealPlanRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
-            _handler = new SearchByRecipeIdQueryHandler(_repoMock.Object, _mapperMock.Object);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
+
+            _handler = new SearchByRecipeIdQueryHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object);
         }
 
         [Test]
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new SearchByRecipeIdQueryHandler(null!, _mapperMock.Object));
+                _ = new SearchByRecipeIdQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new SearchByRecipeIdQueryHandler(_repoMock.Object, null!));
+                _ = new SearchByRecipeIdQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new SearchByRecipeIdQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
         [Test]
@@ -62,7 +75,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             };
 
             _repoMock
-                .Setup(r => r.SearchByRecipeAsync(recipeId, It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchByRecipeAsync(recipeId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -77,7 +90,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             Assert.That(result[0].Index, Is.EqualTo(1));
             Assert.That(result[1].Index, Is.EqualTo(2));
 
-            _repoMock.Verify(r => r.SearchByRecipeAsync(recipeId, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchByRecipeAsync(recipeId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<MealPlanModel>>(entities), Times.Once);
         }
 
@@ -94,7 +107,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             };
 
             _repoMock
-                .Setup(r => r.SearchByRecipeAsync(recipeId, It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchByRecipeAsync(recipeId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(entities);
 
             _mapperMock
@@ -107,7 +120,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             // Assert
             Assert.That(result, Is.Empty);
 
-            _repoMock.Verify(r => r.SearchByRecipeAsync(recipeId, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchByRecipeAsync(recipeId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<MealPlanModel>>(entities), Times.Once);
         }
     }

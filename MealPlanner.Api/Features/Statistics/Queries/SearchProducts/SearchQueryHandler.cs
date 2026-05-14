@@ -1,4 +1,5 @@
-﻿using Common.Models;
+﻿using Common.Api;
+using Common.Models;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
 using MediatR;
@@ -7,7 +8,8 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
 {
     public class SearchQueryHandler(
         IMealPlanRepository mealPlanRepository,
-        IRecipeBookClient recipeBookClient)
+        IRecipeBookClient recipeBookClient,
+        ICurrentUserService currentUserService)
         : IRequestHandler<SearchQuery, IList<StatisticModel>>
     {
         private readonly IMealPlanRepository _mealPlanRepository =
@@ -15,6 +17,9 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
 
         private readonly IRecipeBookClient _recipeBookClient =
             recipeBookClient ?? throw new ArgumentNullException(nameof(recipeBookClient));
+
+        private readonly ICurrentUserService _currentUserService =
+            currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
 
         public async Task<IList<StatisticModel>> Handle(SearchQuery request, CancellationToken cancellationToken)
         {
@@ -38,7 +43,11 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                 return result;
             }
 
-            var mealPlans = await _mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds, cancellationToken);
+            var userId = _currentUserService.UserId;
+            if (string.IsNullOrEmpty(userId))
+                return result;
+
+            var mealPlans = await _mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds, userId, cancellationToken);
 
             var mealPlansByCategory = mealPlans
                 .Where(mp => mp.Key != null)

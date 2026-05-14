@@ -2,6 +2,8 @@
 {
     public sealed class Shop : Entity<int>
     {
+        public string? UserId { get; set; }
+
         public string? Name { get; set; }
 
         public IList<ShopDisplaySequence>? DisplaySequence { get; set; } = [];

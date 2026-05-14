@@ -11,6 +11,17 @@ namespace RecipeBook.Api.Repositories
     public class RecipeCategoryRepository(MealPlannerDbContext dbContext)
         : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
     {
+        private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
+
+        public async Task<IReadOnlyList<RecipeCategory>> GetAllByUserAsync(
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            return await Context.RecipeCategories
+                .Where(c => c.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task UpdateAllAsync(
             IList<RecipeCategory> entities,
             CancellationToken cancellationToken)

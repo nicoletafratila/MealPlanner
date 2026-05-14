@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Common.Api;
 using MealPlanner.Api.Features.ShoppingList.Commands.Add;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -12,6 +13,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
     {
         private Mock<IShoppingListRepository> _repoMock = null!;
         private Mock<IMapper> _mapperMock = null!;
+        private Mock<ICurrentUserService> _currentUserMock = null!;
         private Mock<ILogger<AddCommandHandler>> _loggerMock = null!;
         private AddCommandHandler _handler = null!;
 
@@ -20,11 +22,15 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         {
             _repoMock = new Mock<IShoppingListRepository>(MockBehavior.Strict);
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
+            _currentUserMock = new Mock<ICurrentUserService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<AddCommandHandler>>(MockBehavior.Loose);
+
+            _currentUserMock.Setup(s => s.UserId).Returns("user1");
 
             _handler = new AddCommandHandler(
                 _repoMock.Object,
                 _mapperMock.Object,
+                _currentUserMock.Object,
                 _loggerMock.Object);
         }
 
@@ -32,21 +38,28 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(null!, _mapperMock.Object, _loggerMock.Object));
+                _ = new AddCommandHandler(null!, _mapperMock.Object, _currentUserMock.Object, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
+                _ = new AddCommandHandler(_repoMock.Object, null!, _currentUserMock.Object, _loggerMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullCurrentUserService_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullLogger_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, null!));
+                _ = new AddCommandHandler(_repoMock.Object, _mapperMock.Object, _currentUserMock.Object, null!));
         }
 
         [Test]
@@ -68,30 +81,21 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         [Test]
         public async Task Handle_ExistingList_ReturnsFailedResponse_AndDoesNotAdd()
         {
-            // Arrange
-            var model = new ShoppingListEditModel
-            {
-                Id = 0,
-                Name = "Weekly"
-            };
-
+            var model = new ShoppingListEditModel { Id = 0, Name = "Weekly" };
             var command = new AddCommand { Model = model };
-
             var existing = new Common.Data.Entities.ShoppingList { Id = 10, Name = "Weekly" };
 
             _repoMock
-                .Setup(r => r.SearchAsync("Weekly", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Weekly", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.False);
             Assert.That(result.Message, Is.EqualTo("This shopping list already exists."));
 
-            _repoMock.Verify(r => r.SearchAsync("Weekly", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("Weekly", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.ShoppingList>(It.IsAny<ShoppingListEditModel>()), Times.Never);
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -99,24 +103,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         [Test]
         public async Task Handle_NewList_AddsAndReturnsSuccess()
         {
-            // Arrange
-            var model = new ShoppingListEditModel
-            {
-                Id = 0,
-                Name = "NewList"
-            };
-
+            var model = new ShoppingListEditModel { Id = 0, Name = "NewList" };
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("NewList", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("NewList", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
 
-            var mappedEntity = new Common.Data.Entities.ShoppingList
-            {
-                Id = 5,
-                Name = "NewList"
-            };
+            var mappedEntity = new Common.Data.Entities.ShoppingList { Id = 5, Name = "NewList" };
 
             _mapperMock
                 .Setup(m => m.Map<Common.Data.Entities.ShoppingList>(model))
@@ -126,14 +120,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
                 .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mappedEntity);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.SearchAsync("NewList", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("NewList", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.ShoppingList>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -141,24 +133,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         [Test]
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
-            // Arrange
-            var model = new ShoppingListEditModel
-            {
-                Id = 0,
-                Name = "ErrorList"
-            };
-
+            var model = new ShoppingListEditModel { Id = 0, Name = "ErrorList" };
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("ErrorList", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("ErrorList", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
 
-            var mappedEntity = new Common.Data.Entities.ShoppingList
-            {
-                Id = 7,
-                Name = "ErrorList"
-            };
+            var mappedEntity = new Common.Data.Entities.ShoppingList { Id = 7, Name = "ErrorList" };
 
             _mapperMock
                 .Setup(m => m.Map<Common.Data.Entities.ShoppingList>(model))
@@ -168,15 +150,13 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
                 .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.False);
             Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shopping list."));
 
-            _repoMock.Verify(r => r.SearchAsync("ErrorList", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("ErrorList", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Common.Data.Entities.ShoppingList>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 

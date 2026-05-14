@@ -1,4 +1,4 @@
-﻿using Common.Data.DataContext;
+using Common.Data.DataContext;
 using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -101,12 +101,10 @@ namespace MealPlanner.Api.Tests.Repositories
         [Test]
         public async Task GetByIdIncludeProductsAsync_ReturnsShoppingList_WithShopProductsAndNavigationProps()
         {
-            // Arrange
             var repo = CreateRepository(out var ctx);
 
             var list = CreateShoppingListGraph(1, "Weekly", "MyShop");
 
-            // Add graph
             ctx.ProductCategories.Add(list.Products![0].Product!.ProductCategory!);
             ctx.Units.Add(list.Products[0].Product!.BaseUnit!);
             ctx.Units.Add(list.Products[0].Unit!);
@@ -116,10 +114,8 @@ namespace MealPlanner.Api.Tests.Repositories
 
             await ctx.SaveChangesAsync();
 
-            // Act
             var found = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
 
-            // Assert
             Assert.That(found, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -141,17 +137,14 @@ namespace MealPlanner.Api.Tests.Repositories
         [Test]
         public async Task GetByIdIncludeProductsAsync_UnknownId_ReturnsNull()
         {
-            // Arrange
             var repo = CreateRepository(out var ctx);
 
             var list = CreateShoppingListGraph(1, "Existing", "Shop");
             ctx.ShoppingLists.Add(list);
             await ctx.SaveChangesAsync();
 
-            // Act
             var found = await repo.GetByIdIncludeProductsAsync(999, CancellationToken.None);
 
-            // Assert
             Assert.That(found, Is.Null);
         }
 
@@ -159,18 +152,15 @@ namespace MealPlanner.Api.Tests.Repositories
         [Test]
         public async Task SearchAsync_ByName_ReturnsMatchingList_CaseInsensitive()
         {
-            // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var l1 = new ShoppingList { Id = 1, Name = "Weekly" };
-            var l2 = new ShoppingList { Id = 2, Name = "Other" };
+            var l1 = new ShoppingList { Id = 1, Name = "Weekly", UserId = "user1" };
+            var l2 = new ShoppingList { Id = 2, Name = "Other", UserId = "user1" };
             ctx.ShoppingLists.AddRange(l1, l2);
             await ctx.SaveChangesAsync();
 
-            // Act
-            var result = await repo.SearchAsync("weekly", CancellationToken.None);
+            var result = await repo.SearchAsync("weekly", "user1", CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Id, Is.EqualTo(1));
         }
@@ -178,30 +168,25 @@ namespace MealPlanner.Api.Tests.Repositories
         [Test]
         public async Task SearchAsync_UnknownName_ReturnsNull()
         {
-            // Arrange
             var repo = CreateRepository(out var ctx);
 
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "Weekly" });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "Weekly", UserId = "user1" });
             await ctx.SaveChangesAsync();
 
-            // Act
-            var result = await repo.SearchAsync("does-not-exist", CancellationToken.None);
+            var result = await repo.SearchAsync("does-not-exist", "user1", CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public void SearchAsync_EmptyOrWhitespaceName_Throws()
         {
-            // Arrange
             var repo = CreateRepository(out _);
 
-            // Act / Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("", CancellationToken.None));
-                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   ", CancellationToken.None));
+                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("", "user1", CancellationToken.None));
+                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   ", "user1", CancellationToken.None));
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Api;
 using Common.Models;
 using MediatR;
 using RecipeBook.Api.Features.Recipe.Resources;
@@ -12,10 +13,12 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
     public class AddCommandHandler(
         IRecipeRepository repository,
         IMapper mapper,
+        ICurrentUserService currentUserService,
         ILogger<AddCommandHandler> logger) : IRequestHandler<AddCommand, CommandResponse?>
     {
         private readonly IRecipeRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly ICurrentUserService _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
         private readonly ILogger<AddCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(AddCommand request, CancellationToken cancellationToken)
@@ -27,13 +30,18 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
 
             try
             {
-                var existingItem = await _repository.SearchAsync(request.Model.Name!, cancellationToken);
+                var userId = _currentUserService.UserId;
+                if (string.IsNullOrEmpty(userId))
+                    return CommandResponse.Failed(RecipeMessages.UserIdRequired);
+
+                var existingItem = await _repository.SearchAsync(request.Model.Name!, userId, cancellationToken);
                 if (existingItem is not null)
                 {
                     return CommandResponse.Failed(RecipeMessages.RecipeAlreadyExists);
                 }
 
                 var mapped = _mapper.Map<Common.Data.Entities.Recipe>(request.Model);
+                mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

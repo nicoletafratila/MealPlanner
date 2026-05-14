@@ -30,7 +30,8 @@ namespace Common.Api
             });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
-            services.AddSingleton<HttpContextAccessor>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             var config = new MapperConfiguration(c =>
             {
                 c.AddProfile<ProductProfile>();

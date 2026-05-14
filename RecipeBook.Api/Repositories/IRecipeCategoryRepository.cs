@@ -8,6 +8,8 @@ namespace RecipeBook.Api.Repositories
     /// </summary>
     public interface IRecipeCategoryRepository : IAsyncRepository<RecipeCategory, int>
     {
+        Task<IReadOnlyList<RecipeCategory>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
+
         /// <summary>
         /// Updates all provided recipe categories in a single save operation.
         /// </summary>

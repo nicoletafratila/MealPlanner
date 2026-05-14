@@ -12,6 +12,15 @@ namespace MealPlanner.Api.Repositories
             DbContext as MealPlannerDbContext
             ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
 
+        public async Task<IReadOnlyList<MealPlan>> GetAllByUserAsync(
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            return await Context.MealPlans
+                .Where(mp => mp.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
         public override async Task<MealPlan?> GetByIdAsync(
             int id,
             CancellationToken cancellationToken)
@@ -51,6 +60,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(
             IList<int> categoryIds,
+            string userId,
             CancellationToken cancellationToken)
         {
             if (categoryIds is null || categoryIds.Count == 0)
@@ -62,12 +72,14 @@ namespace MealPlanner.Api.Repositories
                 .AsNoTracking()
                 .Include(x => x.Recipe)
                     .ThenInclude(r => r!.RecipeCategory)
-                .Where(mpr => categoryIds.Contains(mpr.Recipe!.RecipeCategoryId))
+                .Where(mpr => categoryIds.Contains(mpr.Recipe!.RecipeCategoryId)
+                              && mpr.MealPlan!.UserId == userId)
                 .ToListAsync(cancellationToken);
         }
 
         public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(
             IList<int> categoryIds,
+            string userId,
             CancellationToken cancellationToken)
         {
             if (categoryIds is null || categoryIds.Count == 0)
@@ -80,6 +92,7 @@ namespace MealPlanner.Api.Repositories
                 where ri.Product != null && categoryIds.Contains(ri.Product.ProductCategoryId)
                 join mr in Context.MealPlanRecipes.AsNoTracking()
                     on ri.RecipeId equals mr.RecipeId
+                where mr.MealPlan!.UserId == userId
                 select new { ri.Product, mr.MealPlan };
 
             var results = await query.ToListAsync(cancellationToken);
@@ -92,11 +105,12 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(
             int recipeId,
+            string userId,
             CancellationToken cancellationToken)
         {
             return await Context.MealPlanRecipes
                 .AsNoTracking()
-                .Where(mpr => mpr.RecipeId == recipeId)
+                .Where(mpr => mpr.RecipeId == recipeId && mpr.MealPlan!.UserId == userId)
                 .Select(mpr => mpr.MealPlan!)
                 .Distinct()
                 .ToListAsync(cancellationToken);
@@ -104,6 +118,7 @@ namespace MealPlanner.Api.Repositories
 
         public async Task<MealPlan?> SearchAsync(
             string name,
+            string userId,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -114,7 +129,7 @@ namespace MealPlanner.Api.Repositories
             return await Context.MealPlans
                 .AsNoTracking()
                 .FirstOrDefaultAsync(
-                    mp => mp.Name != null && mp.Name.ToLower() == name.ToLower(),
+                    mp => mp.UserId == userId && mp.Name != null && mp.Name.ToLower() == name.ToLower(),
                     cancellationToken);
         }
     }

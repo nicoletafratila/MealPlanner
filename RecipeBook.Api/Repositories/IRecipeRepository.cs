@@ -8,6 +8,8 @@ namespace RecipeBook.Api.Repositories
     /// </summary>
     public interface IRecipeRepository : IAsyncRepository<Recipe, int>
     {
+        Task<IReadOnlyList<Recipe>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
+
         /// <summary>
         /// Gets a recipe by id including its category and ingredients graph, or null if not found.
         /// </summary>
@@ -19,8 +21,8 @@ namespace RecipeBook.Api.Repositories
         Task<IReadOnlyList<Recipe>> SearchAsync(int categoryId, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Finds a recipe by name (case-insensitive), or null if not found.
+        /// Finds a recipe by name (case-insensitive) scoped to a user, or null if not found.
         /// </summary>
-        Task<Recipe?> SearchAsync(string name, CancellationToken cancellationToken);
+        Task<Recipe?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
     }
 }

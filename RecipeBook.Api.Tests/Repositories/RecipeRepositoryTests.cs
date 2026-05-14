@@ -186,11 +186,13 @@ namespace RecipeBook.Api.Tests.Repositories
 
             var r1 = CreateRecipeGraph(1, "My Recipe", 10, "Main");
             var r2 = CreateRecipeGraph(2, "Other", 20, "Dessert");
+            r1.UserId = "user1";
+            r2.UserId = "user1";
             ctx.Recipes.AddRange(r1, r2);
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync("my recipe", CancellationToken.None);
+            var result = await repo.SearchAsync("my recipe", "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -204,8 +206,8 @@ namespace RecipeBook.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act
-            var result1 = await repo.SearchAsync((string)null!, CancellationToken.None);
-            var result2 = await repo.SearchAsync("   ", CancellationToken.None);
+            var result1 = await repo.SearchAsync((string)null!, "user1", CancellationToken.None);
+            var result2 = await repo.SearchAsync("   ", "user1", CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
