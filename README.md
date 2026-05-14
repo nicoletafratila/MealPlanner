@@ -14,6 +14,6 @@ PM> Script-migration
 
 
 
-user management - edit user profile
+lista cu user, filtru is active si dezactiveaza la edit
 cand se inregistreaza un user sa i se puna categories default
 muta pe maui

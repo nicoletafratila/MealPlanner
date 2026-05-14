@@ -4,6 +4,7 @@ using Blazored.SessionStorage;
 using Common.Api;
 using Common.Constants;
 using Common.Models;
+using Common.Pagination;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,6 +59,89 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             var logger = Mock.Of<ILogger<ApplicationUserService>>();
 
             return new ApplicationUserService(httpClient, tokenProvider, config, logger);
+        }
+
+        // ---------- SearchAsync ----------
+
+        [Test]
+        public async Task SearchAsync_ReturnsDeserializedPagedList_AndSendsAuthHeader()
+        {
+            const string token = "my-jwt-token";
+            var expected = new PagedList<ApplicationUserModel>(
+                [new() { UserId = "1", Username = "alice" }],
+                new Metadata { TotalCount = 1, PageSize = 10, PageNumber = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/search*")
+                .With(m =>
+                {
+                    var auth = m.Headers.Authorization;
+                    var query = m.RequestUri!.Query;
+                    return auth is not null
+                           && auth.Scheme == JwtBearerDefaults.AuthenticationScheme
+                           && auth.Parameter == token
+                           && query.Contains("PageSize=")
+                           && query.Contains("PageNumber=");
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expected, JsonOptions));
+
+            var service = CreateService(mockHttp, token: token);
+
+            var result = await service.SearchAsync(new QueryParameters<ApplicationUserModel>
+            {
+                PageNumber = 1,
+                PageSize = 10
+            });
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Items, Has.Count.EqualTo(1));
+                Assert.That(result.Items[0].Username, Is.EqualTo("alice"));
+                Assert.That(result.Metadata.TotalCount, Is.EqualTo(1));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_DefaultParameters_UsesMaxPageSize()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/search*")
+                .With(m => m.RequestUri!.Query.Contains($"PageSize={int.MaxValue}"))
+                .Respond("application/json", JsonSerializer.Serialize(
+                    new PagedList<ApplicationUserModel>([], new Metadata()), JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void SearchAsync_OnNonSuccessStatusCode_Throws()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/search*")
+                .Respond(HttpStatusCode.Forbidden);
+
+            var service = CreateService(mockHttp);
+
+            Assert.ThrowsAsync<HttpRequestException>(async () =>
+                await service.SearchAsync(new QueryParameters<ApplicationUserModel>
+                {
+                    PageNumber = 1,
+                    PageSize = 10
+                }));
+
+            mockHttp.VerifyNoOutstandingExpectation();
         }
 
         // ---------- GetEditAsync ----------

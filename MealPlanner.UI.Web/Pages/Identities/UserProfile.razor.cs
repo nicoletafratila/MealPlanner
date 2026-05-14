@@ -11,7 +11,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
     [Authorize]
     public partial class UserProfile
     {
-        private ConfirmDialog _dialog = default!;
         private List<BreadcrumbItem> _navItems = default!;
         private readonly long _maxFileSize = 1024L * 1024L * 1024L * 3L;
 
@@ -61,7 +60,7 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
         private void NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("recipebooks/recipesoverview");
+            NavigationManager?.NavigateTo("identities/usersoverview");
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)

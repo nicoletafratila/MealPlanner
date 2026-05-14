@@ -58,7 +58,7 @@ namespace MealPlanner.Api.Controllers
             var qp = new QueryParameters<ShoppingListModel>
             {
                 Filters = filterItems,
-                Sorting = sortingItems,
+                Sorting = sortingItems!,
                 PageSize = size,
                 PageNumber = number
             };

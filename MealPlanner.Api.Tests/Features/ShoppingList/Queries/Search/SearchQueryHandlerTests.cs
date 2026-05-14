@@ -55,11 +55,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         {
             var result = await _handler.Handle(null!, CancellationToken.None);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Items, Is.Empty);
-                Assert.That(result.Metadata.TotalCount, Is.EqualTo(0));
-            });
+                Assert.That(result.Metadata.TotalCount, Is.Zero);
+            }
             _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(It.IsAny<object>()), Times.Never);
         }
@@ -74,11 +74,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Items, Is.Empty);
-                Assert.That(result.Metadata.TotalCount, Is.EqualTo(0));
-            });
+                Assert.That(result.Metadata.TotalCount, Is.Zero);
+            }
             _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(It.IsAny<object>()), Times.Never);
         }
@@ -122,11 +122,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.That(result.Items, Has.Count.EqualTo(2));
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(expected));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
-            });
+            }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(entities), Times.Once);
@@ -163,11 +163,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Items, Is.Empty);
-                Assert.That(result.Metadata.TotalCount, Is.EqualTo(0));
-            });
+                Assert.That(result.Metadata.TotalCount, Is.Zero);
+            }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ShoppingListModel>>(entities), Times.Once);

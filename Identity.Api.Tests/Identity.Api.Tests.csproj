@@ -8,6 +8,14 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CS8625</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CS8625</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="ozdb5mid.wlo~" />
     <None Remove="qkgdnkc4.xq4~" />

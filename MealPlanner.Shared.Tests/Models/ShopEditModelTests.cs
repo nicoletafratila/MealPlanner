@@ -151,7 +151,7 @@ namespace MealPlanner.Shared.Tests.Models
                 Assert.That(model.DisplaySequence, Is.Not.Null);
                 Assert.That(model.DisplaySequence, Has.Count.EqualTo(2));
 
-                Assert.That(model.DisplaySequence[0].Index, Is.EqualTo(1));
+                Assert.That(model.DisplaySequence![0].Index, Is.EqualTo(1));
                 Assert.That(model.DisplaySequence[0].Value, Is.EqualTo(1));
                 Assert.That(model.DisplaySequence[0].ProductCategory!.Id, Is.EqualTo(1));
 

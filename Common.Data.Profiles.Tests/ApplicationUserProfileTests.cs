@@ -73,6 +73,56 @@ namespace Common.Data.Profiles.Tests
         }
 
         [Test]
+        public void ApplicationUser_To_ApplicationUserModel_Maps_Properties()
+        {
+            var entity = new ApplicationUser
+            {
+                Id = "abc123",
+                UserName = "testuser",
+                FirstName = "John",
+                LastName = "Doe",
+                Email = "test@example.com",
+                IsActive = true
+            };
+
+            var result = _mapper.Map<ApplicationUserModel>(entity);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.UserId, Is.EqualTo("abc123"));
+                Assert.That(result.Username, Is.EqualTo("testuser"));
+                Assert.That(result.FirstName, Is.EqualTo("John"));
+                Assert.That(result.LastName, Is.EqualTo("Doe"));
+                Assert.That(result.EmailAddress, Is.EqualTo("test@example.com"));
+                Assert.That(result.IsActive, Is.True);
+                Assert.That(result.Index, Is.Zero);
+                Assert.That(result.IsSelected, Is.False);
+            }
+        }
+
+        [Test]
+        public void ApplicationUser_To_ApplicationUserModel_NullOptionalFields_MapsToNull()
+        {
+            var entity = new ApplicationUser
+            {
+                Id = "u1",
+                UserName = "minimal"
+            };
+
+            var result = _mapper.Map<ApplicationUserModel>(entity);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.UserId, Is.EqualTo("u1"));
+                Assert.That(result.Username, Is.EqualTo("minimal"));
+                Assert.That(result.FirstName, Is.Null);
+                Assert.That(result.LastName, Is.Null);
+                Assert.That(result.EmailAddress, Is.Null);
+                Assert.That(result.IsActive, Is.False);
+            }
+        }
+
+        [Test]
         public void ApplicationUserEditModel_To_ApplicationUser_Maps_Properties()
         {
             var model = new ApplicationUserEditModel

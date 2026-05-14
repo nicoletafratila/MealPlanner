@@ -107,7 +107,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 Filters = request.Filters,
                 Sorting = request.Sorting?
                     .Select(QueryParameters<ShopModel>.ToModel)
-                    .ToList(),
+                    .ToList()!,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
             };

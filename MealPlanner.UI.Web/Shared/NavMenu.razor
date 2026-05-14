@@ -61,6 +61,11 @@
             @if ((context.User.IsInRole("admin")))
             {
                 <div class="nav-item px-3">
+                    <MudNavLink class="nav-link" href="identities/usersoverview">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Users
+                    </MudNavLink>
+                </div>
+                <div class="nav-item px-3">
                     <MudNavLink class="nav-link" href="audittrail">
                         <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.AuditTrail
                     </MudNavLink>

@@ -88,6 +88,15 @@ namespace Identity.Api.Features.ApplicationUser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to QueryParameters is required..
+        /// </summary>
+        internal static string QueryParametersRequired {
+            get {
+                return ResourceManager.GetString("QueryParametersRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while updating the user..
         /// </summary>
         internal static string UpdateUserError {

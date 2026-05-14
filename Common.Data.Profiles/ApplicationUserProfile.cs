@@ -8,6 +8,15 @@ namespace Common.Data.Profiles
     {
         public ApplicationUserProfile()
         {
+            CreateMap<ApplicationUser, ApplicationUserModel>()
+                .IgnoreBaseModelMembers()
+                .ForMember(m => m.UserId, o => o.MapFrom(s => s.Id))
+                .ForMember(m => m.Username, o => o.MapFrom(s => s.UserName))
+                .ForMember(m => m.FirstName, o => o.MapFrom(s => s.FirstName))
+                .ForMember(m => m.LastName, o => o.MapFrom(s => s.LastName))
+                .ForMember(m => m.EmailAddress, o => o.MapFrom(s => s.Email))
+                .ForMember(m => m.IsActive, o => o.MapFrom(s => s.IsActive));
+
             CreateMap<ApplicationUser, ApplicationUserEditModel>()
                 .IgnoreBaseModelMembers()
                 .ForMember(m => m.UserId, o => o.MapFrom(s => s.Id))

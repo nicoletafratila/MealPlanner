@@ -59,7 +59,7 @@ namespace RecipeBook.Api.Controllers
             var qp = new QueryParameters<RecipeCategoryModel>
             {
                 Filters = filterItems,
-                Sorting = sortingItems,
+                Sorting = sortingItems!,
                 PageSize = size,
                 PageNumber = number
             };

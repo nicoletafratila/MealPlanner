@@ -59,6 +59,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Pages\Identities\Resources\UsersOverview.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UsersOverview.resx</DependentUpon>
+    </Compile>
     <Compile Update="Shared\Resources\MainLayout.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -199,6 +204,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AuditTrail.resx</DependentUpon>
     </Compile>
+    <Compile Update="Shared\Resources\NavMenu.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NavMenu.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -208,6 +218,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Pages\Identities\Resources\UsersOverview.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UsersOverview.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Shared\Resources\MainLayout.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MainLayout.Designer.cs</LastGenOutput>
@@ -319,6 +333,10 @@
     <EmbeddedResource Update="Pages\Resources\AuditTrail.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AuditTrail.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Shared\Resources\NavMenu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NavMenu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

@@ -1,7 +1,9 @@
 ﻿using Common.Models;
+using Common.Pagination;
 using Identity.Api.Controllers;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
+using Identity.Api.Features.ApplicationUser.Queries.Search;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +30,83 @@ namespace Identity.Api.Tests.Controllers
                 }
             };
         }
+
+        #region SearchAsync
+
+        [Test]
+        public async Task SearchAsync_InvalidPageSize_ReturnsBadRequest()
+        {
+            var result = await _controller.SearchAsync(null, null, "0", "1", CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task SearchAsync_InvalidPageNumber_ReturnsBadRequest()
+        {
+            var result = await _controller.SearchAsync(null, null, "10", "abc", CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task SearchAsync_ValidParameters_ReturnsOkWithPagedList()
+        {
+            var pagedList = new PagedList<ApplicationUserModel>(
+                [new() { UserId = "1", Username = "alice" }],
+                new Metadata { TotalCount = 1, PageSize = 10, PageNumber = 1 });
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(pagedList);
+
+            var result = await _controller.SearchAsync(null, null, "10", "1", CancellationToken.None);
+
+            var ok = result.Result as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+            var returned = ok!.Value as PagedList<ApplicationUserModel>;
+            Assert.That(returned, Is.Not.Null);
+            Assert.That(returned!.Items, Has.Count.EqualTo(1));
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task SearchAsync_ValidParameters_BuildsQueryParametersCorrectly()
+        {
+            SearchQuery? capturedQuery = null;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()))
+                .Callback<IRequest<PagedList<ApplicationUserModel>>, CancellationToken>(
+                    (q, _) => capturedQuery = (SearchQuery)q)
+                .ReturnsAsync(new PagedList<ApplicationUserModel>([], new Metadata()));
+
+            await _controller.SearchAsync(null, null, "5", "2", CancellationToken.None);
+
+            Assert.That(capturedQuery, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(capturedQuery!.QueryParameters!.PageSize, Is.EqualTo(5));
+                Assert.That(capturedQuery.QueryParameters.PageNumber, Is.EqualTo(2));
+                Assert.That(capturedQuery.QueryParameters.Filters, Is.Null);
+                Assert.That(capturedQuery.QueryParameters.Sorting, Is.Null);
+            }
+        }
+
+        #endregion
 
         #region GetEditAsync
 

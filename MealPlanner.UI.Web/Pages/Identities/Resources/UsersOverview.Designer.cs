@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Identity.Api.Controllers.Resources {
+namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Identity.Api.Controllers.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ControllerMessages {
+    internal class UsersOverview {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ControllerMessages() {
+        internal UsersOverview() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Identity.Api.Controllers.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Identity.Api.Controllers.Resources.ControllerMessages", typeof(ControllerMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MealPlanner.UI.Web.Pages.Identities.Resources.UsersOverview", typeof(UsersOverview).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,74 @@ namespace Identity.Api.Controllers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pageSize and pageNumber must be positive integers..
+        ///   Looks up a localized string similar to Home.
         /// </summary>
-        internal static string InvalidPaginationParameters {
+        internal static string BreadcrumbHome {
             get {
-                return ResourceManager.GetString("InvalidPaginationParameters", resourceCulture);
+                return ResourceManager.GetString("BreadcrumbHome", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Model is required..
+        ///   Looks up a localized string similar to Active.
         /// </summary>
-        internal static string ModelRequired {
+        internal static string ColumnActive {
             get {
-                return ResourceManager.GetString("ModelRequired", resourceCulture);
+                return ResourceManager.GetString("ColumnActive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown error..
+        ///   Looks up a localized string similar to Email.
         /// </summary>
-        internal static string UnknownError {
+        internal static string ColumnEmail {
             get {
-                return ResourceManager.GetString("UnknownError", resourceCulture);
+                return ResourceManager.GetString("ColumnEmail", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username is required..
+        ///   Looks up a localized string similar to First name.
         /// </summary>
-        internal static string UsernameRequired {
+        internal static string ColumnFirstName {
             get {
-                return ResourceManager.GetString("UsernameRequired", resourceCulture);
+                return ResourceManager.GetString("ColumnFirstName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User &apos;{0}&apos; was not found..
+        ///   Looks up a localized string similar to #.
         /// </summary>
-        internal static string UserNotFound {
+        internal static string ColumnIndex {
             get {
-                return ResourceManager.GetString("UserNotFound", resourceCulture);
+                return ResourceManager.GetString("ColumnIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last name.
+        /// </summary>
+        internal static string ColumnLastName {
+            get {
+                return ResourceManager.GetString("ColumnLastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string ColumnUsername {
+            get {
+                return ResourceManager.GetString("ColumnUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        internal static string PageTitle {
+            get {
+                return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
     }

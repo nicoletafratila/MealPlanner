@@ -1,0 +1,59 @@
+@page "/identities/usersoverview"
+@using Identity.Shared.Models
+
+<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+
+<style>
+    .grid-additional-columns th:nth-child(1),
+    .grid-additional-columns td:nth-child(1) {
+        width: 40px;
+        max-width: 40px;
+    }
+
+    .grid-additional-columns th:nth-child(6),
+    .grid-additional-columns td:nth-child(6) {
+        width: 80px;
+        max-width: 80px;
+        text-align: center;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <h2>@Resources.UsersOverview.PageTitle</h2>
+    </div>
+
+    <div class="card-body">
+        <GridTemplate TItem="ApplicationUserModel" @ref="_usersGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+            <Columns>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
+                    @context.Index
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnUsername" PropertyName="Username" SortString="Username" SortKeySelector="item => item.Username" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <div style="cursor: pointer;" @onclick="() => Update(context)">
+                        @context.Username
+                    </div>
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnFirstName" PropertyName="FirstName" SortString="FirstName" SortKeySelector="item => item.FirstName">
+                    @context.FirstName
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnLastName" PropertyName="LastName" SortString="LastName" SortKeySelector="item => item.LastName">
+                    @context.LastName
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnEmail" PropertyName="EmailAddress" SortString="EmailAddress" SortKeySelector="item => item.EmailAddress">
+                    @context.EmailAddress
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnActive" PropertyName="IsActive">
+                    @if (context.IsActive)
+                    {
+                        <span class="badge bg-success">&#10003;</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">&ndash;</span>
+                    }
+                </GridColumn>
+            </Columns>
+        </GridTemplate>
+    </div>
+</div>

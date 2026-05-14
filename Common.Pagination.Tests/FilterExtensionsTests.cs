@@ -141,7 +141,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Name).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { "Joanna" }));
+            Assert.That(result, Is.EquivalentTo(["Joanna"]));
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Name).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { "Alice", "alex" }));
+            Assert.That(result, Is.EquivalentTo(["Alice", "alex"]));
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Name).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { "Alice", "Nice" }));
+            Assert.That(result, Is.EquivalentTo(["Alice", "Nice"]));
         }
 
         [Test]
@@ -207,7 +207,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Name).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { "Bob" }));
+            Assert.That(result, Is.EquivalentTo(["Bob"]));
         }
 
         [Test]
@@ -229,7 +229,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Id).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { 5 }));
+            Assert.That(result, Is.EquivalentTo([5]));
         }
 
         [Test]
@@ -251,7 +251,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Id).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { 3, 5 }));
+            Assert.That(result, Is.EquivalentTo([3, 5]));
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Id).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { 1 }));
+            Assert.That(result, Is.EquivalentTo([1]));
         }
 
         [Test]
@@ -295,7 +295,7 @@ namespace Common.Pagination.Tests
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
             var result = data.Where(predicate).Select(x => x.Id).ToArray();
 
-            Assert.That(result, Is.EquivalentTo(new[] { 1, 3 }));
+            Assert.That(result, Is.EquivalentTo([1, 3]));
         }
 
         [Test]

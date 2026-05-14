@@ -2,6 +2,7 @@
 using Common.Api;
 using Common.Constants;
 using Common.Models;
+using Common.Pagination;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -24,6 +25,56 @@ namespace MealPlanner.UI.Web.Services.Identities
 
         private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
             httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
+
+        public async Task<PagedList<ApplicationUserModel>?> SearchAsync(
+            QueryParameters<ApplicationUserModel>? queryParameters = null,
+            CancellationToken cancellationToken = default)
+        {
+            var query = new Dictionary<string, string?>
+            {
+                [nameof(QueryParameters<ApplicationUserModel>.Filters)] =
+                    queryParameters?.Filters is null
+                        ? null
+                        : JsonSerializer.Serialize(queryParameters.Filters, JsonOptions),
+
+                [nameof(QueryParameters<ApplicationUserModel>.Sorting)] =
+                    queryParameters?.Sorting is null
+                        ? null
+                        : JsonSerializer.Serialize(queryParameters.Sorting, JsonOptions),
+
+                [nameof(QueryParameters<ApplicationUserModel>.PageSize)] =
+                    (queryParameters?.PageSize ?? int.MaxValue).ToString(),
+
+                [nameof(QueryParameters<ApplicationUserModel>.PageNumber)] =
+                    (queryParameters?.PageNumber ?? 1).ToString()
+            };
+
+            await EnsureAuthAsync(cancellationToken);
+
+            var url = QueryHelpers.AddQueryString($"{_userController}/search", query);
+            using var response = await httpClient.GetAsync(url, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("ApplicationUser SearchAsync failed with status code {StatusCode}", response.StatusCode);
+                response.EnsureSuccessStatusCode();
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
+            try
+            {
+                return await JsonSerializer.DeserializeAsync<PagedList<ApplicationUserModel>?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize PagedList<ApplicationUserModel>");
+                throw;
+            }
+        }
 
         public async Task<ApplicationUserEditModel?> GetEditAsync(
             string name,
