@@ -13,7 +13,7 @@ PM> Script-migration
 
 
 
-incearca iar cu db gol, coloane sunt schimbate
+
 user management - edit user profile
 cand se inregistreaza un user sa i se puna categories default
 muta pe maui
