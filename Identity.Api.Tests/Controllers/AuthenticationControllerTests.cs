@@ -3,6 +3,7 @@ using Common.Models;
 using Identity.Api.Controllers;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
+using Identity.Api.Features.Authentication.Commands.Register;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -167,16 +168,18 @@ namespace Identity.Api.Tests.Controllers
         public async Task RegisterAsync_ForwardsToMediator_AndReturnsResult()
         {
             // Arrange
-            var model = new LoginModel
+            var model = new RegistrationModel
             {
                 Username = "newuser",
-                Password = "pwd"
+                Password = "Test123!",
+                ConfirmPassword = "Test123!",
+                EmailAddress = "newuser@example.com"
             };
 
             var response = CommandResponse.Success();
 
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             // Act
@@ -187,7 +190,7 @@ namespace Identity.Api.Tests.Controllers
 
             _mediatorMock.Verify(
                 m => m.Send(
-                    It.Is<LoginCommand>(c => c.Model == model),
+                    It.Is<RegisterCommand>(c => c.Model == model),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }

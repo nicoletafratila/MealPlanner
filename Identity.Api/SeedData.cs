@@ -58,7 +58,6 @@ namespace Identity.Api
                 email: "admin@mealplanner.com",
                 firstName: "Admin",
                 lastName: "Admin",
-                website: "http://admin.com",
                 roleName: AdminRoleName);
 
             await EnsureUserAsync(
@@ -67,7 +66,6 @@ namespace Identity.Api
                 email: "member@mealplanner.com",
                 firstName: "Member first name",
                 lastName: "Member last name",
-                website: "http://member.com",
                 roleName: MemberRoleName);
         }
 
@@ -77,7 +75,6 @@ namespace Identity.Api
             string email,
             string firstName,
             string lastName,
-            string website,
             string roleName)
         {
             var user = await userManager.FindByNameAsync(userName);
@@ -105,7 +102,6 @@ namespace Identity.Api
                     new(ClaimTypes.Name, user.UserName!),
                     new(JwtClaimTypes.GivenName, user.FirstName),
                     new(JwtClaimTypes.FamilyName, user.LastName),
-                    new(JwtClaimTypes.WebSite, website)
                 ]);
 
                 if (!claimsResult.Succeeded)

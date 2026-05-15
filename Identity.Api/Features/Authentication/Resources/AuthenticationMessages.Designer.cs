@@ -149,5 +149,50 @@ namespace Identity.Api.Features.Authentication.Resources {
                 return ResourceManager.GetString("UserNotActive", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Username is already taken..
+        /// </summary>
+        internal static string UsernameAlreadyTaken {
+            get {
+                return ResourceManager.GetString("UsernameAlreadyTaken", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Email address is already registered..
+        /// </summary>
+        internal static string EmailAlreadyTaken {
+            get {
+                return ResourceManager.GetString("EmailAlreadyTaken", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Registration successful. You can now log in..
+        /// </summary>
+        internal static string RegistrationSuccessful {
+            get {
+                return ResourceManager.GetString("RegistrationSuccessful", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred during registration..
+        /// </summary>
+        internal static string RegistrationError {
+            get {
+                return ResourceManager.GetString("RegistrationError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Email address is required..
+        /// </summary>
+        internal static string EmailRequired {
+            get {
+                return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
     }
 }

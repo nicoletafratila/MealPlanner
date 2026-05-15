@@ -13,11 +13,15 @@
                     <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductCategories
                 </MudNavLink>
             </div>
-            <div class="nav-item px-3">
-                <MudNavLink class="nav-link" href="recipebooks/unitsoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductUnits
-                </MudNavLink>
-            </div>
+            @if ((context.User.IsInRole("admin")))
+            {
+
+                <div class="nav-item px-3">
+                    <MudNavLink class="nav-link" href="recipebooks/unitsoverview">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductUnits
+                    </MudNavLink>
+                </div>
+            }
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/productsoverview">
                     <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Products

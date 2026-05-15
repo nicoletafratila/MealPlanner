@@ -1,1 +1,86 @@
-﻿
+@page "/identities/register"
+
+<style>
+    .register-background {
+        background-image: url('images/loginbackground.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 800px;
+        text-align: center;
+    }
+
+    .register-form {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        align-content: center;
+        text-align: left;
+        max-width: 450px;
+        width: 100%;
+        margin: 3rem auto;
+    }
+
+    .col-sm-3 {
+        width: auto;
+    }
+</style>
+
+<div class="register-background">
+    <EditForm Model="RegistrationModel" OnValidSubmit="OnRegisterAsync" class="register-form">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <h4 class="mb-3">@Resources.Register.PageTitle</h4>
+
+        <div class="form-group">
+            <label for="username" class="col-sm-3">@Resources.Register.UsernameLabel</label>
+            <InputText id="username" class="form-control" @bind-Value="@RegistrationModel.Username" placeholder="@Resources.Register.PlaceholderUsername"></InputText>
+            <ValidationMessage For="@(() => RegistrationModel.Username)" />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="firstname" class="col-sm-3">@Resources.Register.FirstNameLabel</label>
+            <InputText id="firstname" class="form-control" @bind-Value="@RegistrationModel.FirstName" placeholder="@Resources.Register.PlaceholderFirstName"></InputText>
+            <ValidationMessage For="@(() => RegistrationModel.FirstName)" />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="lastname" class="col-sm-3">@Resources.Register.LastNameLabel</label>
+            <InputText id="lastname" class="form-control" @bind-Value="@RegistrationModel.LastName" placeholder="@Resources.Register.PlaceholderLastName"></InputText>
+            <ValidationMessage For="@(() => RegistrationModel.LastName)" />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="phonenumber" class="col-sm-3">@Resources.Register.PhoneNumberLabel</label>
+            <InputText id="phonenumber" class="form-control" @bind-Value="@RegistrationModel.PhoneNumber" placeholder="@Resources.Register.PlaceholderPhoneNumber"></InputText>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="email" class="col-sm-3">@Resources.Register.EmailLabel</label>
+            <InputText id="email" class="form-control" @bind-Value="@RegistrationModel.EmailAddress" placeholder="@Resources.Register.PlaceholderEmail"></InputText>
+            <ValidationMessage For="@(() => RegistrationModel.EmailAddress)" />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="password" class="col-sm-3">@Resources.Register.PasswordLabel</label>
+            <PasswordInput id="password" class="form-control" @bind-Value="@RegistrationModel.Password" placeholder="@Resources.Register.PlaceholderPassword"></PasswordInput>
+            <ValidationMessage For="@(() => RegistrationModel.Password)" />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="confirmpassword" class="col-sm-3">@Resources.Register.ConfirmPasswordLabel</label>
+            <PasswordInput id="confirmpassword" class="form-control" @bind-Value="@RegistrationModel.ConfirmPassword" placeholder="@Resources.Register.PlaceholderConfirmPassword"></PasswordInput>
+            <ValidationMessage For="@(() => RegistrationModel.ConfirmPassword)" />
+        </div>
+
+        <div class="mt-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm">@Resources.Register.RegisterButton</button>
+            <button type="button" class="btn btn-secondary btn-sm" @onclick="NavigateToLogin">@Resources.Register.BackToLoginLink</button>
+        </div>
+    </EditForm>
+</div>

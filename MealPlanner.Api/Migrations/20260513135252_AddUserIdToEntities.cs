@@ -40,7 +40,7 @@ namespace MealPlanner.Api.Migrations
                     name: "UserId",
                     table: "RecipeCategories",
                     type: "nvarchar(max)",
-                    nullable: false,
+                    nullable: true,
                     defaultValue: "");
 
             if (!migrationBuilder.ColumnExists<MealPlannerDbContext>("UserId", "Products"))
@@ -56,7 +56,7 @@ namespace MealPlanner.Api.Migrations
                     name: "UserId",
                     table: "ProductCategories",
                     type: "nvarchar(max)",
-                    nullable: false,
+                    nullable: true,
                     defaultValue: "");
 
             if (!migrationBuilder.ColumnExists<MealPlannerDbContext>("UserId", "MealPlans"))
@@ -74,9 +74,7 @@ namespace MealPlanner.Api.Migrations
                     UPDATE [Shops]             SET [UserId] = @adminId WHERE [UserId] = '';
                     UPDATE [ShoppingLists]     SET [UserId] = @adminId WHERE [UserId] = '';
                     UPDATE [Recipes]           SET [UserId] = @adminId WHERE [UserId] = '';
-                    UPDATE [RecipeCategories]  SET [UserId] = @adminId WHERE [UserId] = '';
                     UPDATE [Products]          SET [UserId] = @adminId WHERE [UserId] = '';
-                    UPDATE [ProductCategories] SET [UserId] = @adminId WHERE [UserId] = '';
                     UPDATE [MealPlans]         SET [UserId] = @adminId WHERE [UserId] = '';
                 END
                 """);

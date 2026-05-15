@@ -15,18 +15,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\Authentication\Commands\Register\**" />
     <Compile Remove="keys\**" />
     <Compile Remove="Pages\**" />
     <Compile Remove="wwwroot\**" />
-    <Content Remove="Features\Authentication\Commands\Register\**" />
     <Content Remove="keys\**" />
     <Content Remove="Pages\**" />
     <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="Features\Authentication\Commands\Register\**" />
     <EmbeddedResource Remove="keys\**" />
     <EmbeddedResource Remove="Pages\**" />
-    <None Remove="Features\Authentication\Commands\Register\**" />
     <None Remove="keys\**" />
     <None Remove="Pages\**" />
   </ItemGroup>

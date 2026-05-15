@@ -2,6 +2,7 @@
 using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
+using Identity.Api.Features.Authentication.Commands.Register;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -58,14 +59,10 @@ namespace Identity.Api.Controllers
 
         [HttpPost("register")]
         public async Task<CommandResponse?> RegisterAsync(
-            [FromBody] LoginModel model,
+            [FromBody] RegistrationModel model,
             CancellationToken cancellationToken)
         {
-            var command = new LoginCommand
-            {
-                Model = model
-            };
-
+            var command = new RegisterCommand { Model = model };
             return await _mediator.Send(command, cancellationToken);
         }
     }

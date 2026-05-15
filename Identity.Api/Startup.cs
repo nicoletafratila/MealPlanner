@@ -2,6 +2,7 @@
 using System.Text;
 using Common.Data.DataContext;
 using Common.Data.Entities;
+using Common.Data.Repository;
 using Duende.IdentityModel;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,6 +56,11 @@ namespace Identity.Api
 
         protected override void RegisterRepositories(IServiceCollection services)
         {
+            services.AddScoped<IAsyncRepository<ProductCategory, int>>(sp =>
+                new BaseAsyncRepository<ProductCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
+            services.AddScoped<IAsyncRepository<RecipeCategory, int>>(sp =>
+                new BaseAsyncRepository<RecipeCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<MealPlannerDbContext>()
                     .AddDefaultTokenProviders();
