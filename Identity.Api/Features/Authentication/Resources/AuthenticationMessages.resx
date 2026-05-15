@@ -58,4 +58,7 @@
   <data name="ModelCannotBeNull" xml:space="preserve">
     <value>Model cannot be null.</value>
   </data>
+  <data name="UserNotActive" xml:space="preserve">
+    <value>Your account is not active. Please contact an administrator.</value>
+  </data>
 </root>

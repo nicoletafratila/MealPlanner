@@ -10,10 +10,9 @@
         max-width: 40px;
     }
 
-    .grid-additional-columns th:nth-child(6),
-    .grid-additional-columns td:nth-child(6) {
-        width: 80px;
-        max-width: 80px;
+    .grid-additional-columns th:nth-child(7),
+    .grid-additional-columns td:nth-child(7) {
+        width: auto;
         text-align: center;
     }
 </style>
@@ -42,6 +41,9 @@
                 </GridColumn>
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnEmail" PropertyName="EmailAddress" SortString="EmailAddress" SortKeySelector="item => item.EmailAddress">
                     @context.EmailAddress
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnPhoneNumber" PropertyName="PhoneNumber" SortString="PhoneNumber" SortKeySelector="item => item.PhoneNumber">
+                    @context.PhoneNumber
                 </GridColumn>
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnActive" PropertyName="IsActive">
                     @if (context.IsActive)

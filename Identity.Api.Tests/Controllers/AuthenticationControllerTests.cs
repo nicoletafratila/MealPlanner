@@ -106,7 +106,7 @@ namespace Identity.Api.Tests.Controllers
                 Password = "wrong"
             };
 
-            var failedResponse = CommandResponse.Failed("Invalid credentials");
+            var failedResponse = CommandResponse.Failed("Invalid credentials.");
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))

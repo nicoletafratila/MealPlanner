@@ -69,6 +69,13 @@
                     <ValidationMessage For="@(() => ApplicationUser.ProfilePicture)" />
                 </div>
 
+                <AuthorizeView Roles="admin" Context="authContext">
+                    <div class="form-group mt-3">
+                        <label class="col-sm-3" style="width: 5%">@Resources.UserProfile.IsActiveLabel</label>
+                        <InputCheckbox id="isactive" class="form-check-input" @bind-Value="@ApplicationUser.IsActive" />
+                    </div>
+                </AuthorizeView>
+
                 <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary btn-sm">@Resources.UserProfile.SaveButton</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.UserProfile.BackToOverviewButton</button>

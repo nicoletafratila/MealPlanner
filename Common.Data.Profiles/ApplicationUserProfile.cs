@@ -15,6 +15,7 @@ namespace Common.Data.Profiles
                 .ForMember(m => m.FirstName, o => o.MapFrom(s => s.FirstName))
                 .ForMember(m => m.LastName, o => o.MapFrom(s => s.LastName))
                 .ForMember(m => m.EmailAddress, o => o.MapFrom(s => s.Email))
+                .ForMember(m => m.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber))
                 .ForMember(m => m.IsActive, o => o.MapFrom(s => s.IsActive));
 
             CreateMap<ApplicationUser, ApplicationUserEditModel>()

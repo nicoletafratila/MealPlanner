@@ -140,5 +140,14 @@ namespace Identity.Api.Features.Authentication.Resources {
                 return ResourceManager.GetString("UserPasswordNotFound", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your account is not active. Please contact an administrator..
+        /// </summary>
+        internal static string UserNotActive {
+            get {
+                return ResourceManager.GetString("UserNotActive", resourceCulture);
+            }
+        }
     }
 }

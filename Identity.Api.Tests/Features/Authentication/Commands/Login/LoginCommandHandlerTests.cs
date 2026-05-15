@@ -83,10 +83,40 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         }
 
         [Test]
+        public async Task Handle_UserNotActive_ReturnsUserNotActiveMessage()
+        {
+            // Arrange
+            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = false };
+            var command = new LoginCommand
+            {
+                Model = new LoginModel { Username = "user", Password = "pwd" }
+            };
+
+            _userManagerMock
+                .Setup(m => m.FindByNameAsync("user"))
+                .ReturnsAsync(user);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Your account is not active. Please contact an administrator."));
+            });
+
+            _signInManagerMock.Verify(
+                s => s.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                Times.Never);
+        }
+
+        [Test]
         public async Task Handle_SuccessfulLogin_ReturnsLoginCommandResponse()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "pwd", RememberLogin = true }
@@ -129,7 +159,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         public async Task Handle_LockedOut_ReturnsLockedOutMessage()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "pwd" }
@@ -167,7 +197,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         public async Task Handle_InvalidPassword_ReturnsUserPasswordNotFound()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "wrong" }

@@ -84,4 +84,7 @@
   <data name="PlaceholderEmail" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="IsActiveLabel" xml:space="preserve">
+    <value>Active: </value>
+  </data>
 </root>

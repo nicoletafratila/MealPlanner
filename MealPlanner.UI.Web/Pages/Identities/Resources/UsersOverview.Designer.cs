@@ -86,6 +86,15 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("ColumnEmail", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number.
+        /// </summary>
+        internal static string ColumnPhoneNumber {
+            get {
+                return ResourceManager.GetString("ColumnPhoneNumber", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to First name.

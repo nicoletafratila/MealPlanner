@@ -194,5 +194,14 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("PlaceholderEmail", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Active: .
+        /// </summary>
+        internal static string IsActiveLabel {
+            get {
+                return ResourceManager.GetString("IsActiveLabel", resourceCulture);
+            }
+        }
     }
 }

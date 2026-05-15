@@ -38,6 +38,9 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 if (user is null)
                     return CommandResponse.Failed(AuthenticationMessages.InvalidCredentials);
 
+                if (!user.IsActive)
+                    return CommandResponse.Failed(AuthenticationMessages.UserNotActive);
+
                 var roles = await _userManager.GetRolesAsync(user);
 
                 var result = await _signInManager.PasswordSignInAsync(

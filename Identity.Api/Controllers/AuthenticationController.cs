@@ -2,7 +2,6 @@
 using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
-using Identity.Api.Features.Authentication.Resources;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -28,7 +27,7 @@ namespace Identity.Api.Controllers
 
             if (result is not LoginCommandResponse loginResponse || !loginResponse.Succeeded)
             {
-                return CommandResponse.Failed(AuthenticationMessages.InvalidCredentials);
+                return CommandResponse.Failed(result!.Message!);
             }
 
             var claimObjects = (loginResponse.Claims ?? Enumerable.Empty<KeyValuePair<string, string>>())
