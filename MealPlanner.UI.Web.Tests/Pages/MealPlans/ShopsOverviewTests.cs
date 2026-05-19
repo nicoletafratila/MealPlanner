@@ -28,12 +28,20 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _ctx = new BunitContext();
 
             _shopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
-            _sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Loose);
+            _sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Strict);
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _shopServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ShopModel>([], new Metadata()));
+
+            _sessionStorageMock
+                .Setup(s => s.GetItemAsync<string>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
+
+            _sessionStorageMock
+                .Setup(s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
 
             _ctx.Services.AddSingleton(_shopServiceMock.Object);
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);

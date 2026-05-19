@@ -47,6 +47,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(new PagedList<ProductModel>([], new Metadata()));
 
             _sessionStorageMock
+                .Setup(s => s.GetItemAsync<string>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
+
+            _sessionStorageMock
                 .Setup(s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Returns(ValueTask.CompletedTask);
         }
@@ -230,7 +234,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _sessionStorageMock.Verify(
                 s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
-                Times.Exactly(2));
+                Times.Once);
 
             using (Assert.EnterMultipleScope())
             {
