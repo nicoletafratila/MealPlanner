@@ -73,6 +73,7 @@
       AutoHidePaging="true"
       Class="@(!string.IsNullOrEmpty(TableGridClass) ? TableGridClass : "")"
       DataProvider="@DataProvider"
+      SettingsProvider="@SettingsProvider"
       PageSizeSelectorVisible="true"
       PageSizeSelectorItems="@(new int[] { 5, 10, 20, 50 })"
       Responsive="true"

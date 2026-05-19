@@ -38,12 +38,12 @@
     </div>
 
     <div class="card-body">
-        <GridTemplate TItem="UnitModel" @ref="_unitsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+        <GridTemplate TItem="UnitModel" @key="@_gridKey" @ref="_unitsGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
                 <GridColumn TItem="UnitModel" HeaderText="@Resources.UnitsOverview.HeaderIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="UnitModel" HeaderText="@Resources.UnitsOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="UnitModel" HeaderText="@Resources.UnitsOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Name
                     </div>

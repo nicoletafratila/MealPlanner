@@ -23,12 +23,12 @@
     </div>
 
     <div class="card-body">
-        <GridTemplate TItem="ApplicationUserModel" @ref="_usersGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+        <GridTemplate TItem="ApplicationUserModel" @key="@_gridKey" @ref="_usersGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnUsername" PropertyName="Username" SortString="Username" SortKeySelector="item => item.Username" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnUsername" PropertyName="Username" SortString="Username" SortKeySelector="item => item.Username" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Username
                     </div>

@@ -24,6 +24,9 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public bool AllowPaging { get; set; } = true;
 
+        [Parameter]
+        public GridSettingsProviderDelegate? SettingsProvider { get; set; }
+
         private Grid<TItem>? gridTemplateReference;
 
         public async Task RefreshDataAsync()

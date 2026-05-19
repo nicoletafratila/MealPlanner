@@ -45,12 +45,12 @@
     </div>
 
     <div class="card-body">
-        <GridTemplate TItem="ShoppingListModel" @ref="_shoppingListsGrid" DataProvider="DataProviderAsync" TableGridClass="@_tableGridClass">
+        <GridTemplate TItem="ShoppingListModel" @key="@_gridKey" @ref="_shoppingListsGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
                 <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="SortDirection.Ascending" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Name
                     </div>

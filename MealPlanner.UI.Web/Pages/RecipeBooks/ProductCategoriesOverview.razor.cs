@@ -19,6 +19,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ProductCategoryModel>? _categoriesGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
+        private SortDirection _nameSortDirection = SortDirection.Ascending;
+        private int _gridKey = 0;
+        private bool _firstLoad = true;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -39,6 +42,25 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 new BreadcrumbItem { Text = Resources.ProductCategoriesOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
             ];
         }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (!firstRender) return;
+
+            var stored = await SessionStorage.GetItemAsync<QueryParameters<ProductCategoryModel>>();
+            var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
+            var direction = nameSort?.Direction ?? SortDirection.Ascending;
+
+            if (direction != _nameSortDirection)
+            {
+                _nameSortDirection = direction;
+                _gridKey++;
+                StateHasChanged();
+            }
+        }
+
+        private async Task<GridSettings?> SettingsProviderAsync()
+            => await SessionStorage.GetItemAsync<QueryParameters<ProductCategoryModel>>();
 
         private void New()
         {
@@ -112,12 +134,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 PageSize = request.PageSize
             };
 
+            var isFirstLoad = _firstLoad;
+            _firstLoad = false;
+
             var result = await ProductCategoriesService.SearchAsync(queryParameters)
                          ?? new PagedList<ProductCategoryModel>([], new Metadata());
 
             var items = result.Items ?? [];
 
-            await SessionStorage.SetItemAsync(queryParameters);
+            if (!isFirstLoad)
+                await SessionStorage.SetItemAsync(queryParameters);
 
             _tableGridClass = items.Count == 0
                 ? CssClasses.GridTemplateEmptyClass
