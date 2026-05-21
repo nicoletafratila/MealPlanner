@@ -68,7 +68,37 @@
     <value>Email address is already registered.</value>
   </data>
   <data name="RegistrationSuccessful" xml:space="preserve">
-    <value>Registration successful. You can now log in.</value>
+    <value>Registration successful. Please check your email to confirm your account.</value>
+  </data>
+  <data name="EmailConfirmationSuccess" xml:space="preserve">
+    <value>Your email has been confirmed. You can now log in.</value>
+  </data>
+  <data name="EmailConfirmationFailed" xml:space="preserve">
+    <value>Email confirmation failed. The link may be invalid or expired.</value>
+  </data>
+  <data name="EmailConfirmationInvalid" xml:space="preserve">
+    <value>Invalid email confirmation link.</value>
+  </data>
+  <data name="EmailConfirmation_Subject" xml:space="preserve">
+    <value>Confirm your email address</value>
+  </data>
+  <data name="EmailConfirmation_Title" xml:space="preserve">
+    <value>Confirm your email</value>
+  </data>
+  <data name="EmailConfirmation_Heading" xml:space="preserve">
+    <value>Confirm your email address</value>
+  </data>
+  <data name="EmailConfirmation_Body" xml:space="preserve">
+    <value>Thank you for registering. Please confirm your email address by clicking the button below.</value>
+  </data>
+  <data name="EmailConfirmation_ButtonText" xml:space="preserve">
+    <value>Confirm email address</value>
+  </data>
+  <data name="EmailConfirmation_FallbackText" xml:space="preserve">
+    <value>If the button does not work, copy and paste the following link into your browser:</value>
+  </data>
+  <data name="EmailConfirmation_FooterText" xml:space="preserve">
+    <value>If you did not create an account, you can safely ignore this email.</value>
   </data>
   <data name="RegistrationError" xml:space="preserve">
     <value>An error occurred during registration.</value>

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Common.Data.Entities;
 using Common.Data.Repository;
 using Identity.Api.Features.Authentication.Commands.Register;
+using Identity.Api.Services;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
         private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IAsyncRepository<ProductCategory, int>> _productCategoryRepoMock = null!;
         private Mock<IAsyncRepository<RecipeCategory, int>> _recipeCategoryRepoMock = null!;
+        private Mock<IEmailService> _emailServiceMock = null!;
         private Mock<ILogger<RegisterCommandHandler>> _loggerMock = null!;
         private RegisterCommandHandler _handler = null!;
 
@@ -27,12 +29,14 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _productCategoryRepoMock = new Mock<IAsyncRepository<ProductCategory, int>>(MockBehavior.Loose);
             _recipeCategoryRepoMock = new Mock<IAsyncRepository<RecipeCategory, int>>(MockBehavior.Loose);
+            _emailServiceMock = new Mock<IEmailService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<RegisterCommandHandler>>(MockBehavior.Loose);
 
             _handler = new RegisterCommandHandler(
                 _userManagerMock.Object,
                 _productCategoryRepoMock.Object,
                 _recipeCategoryRepoMock.Object,
+                _emailServiceMock.Object,
                 _loggerMock.Object);
         }
 
@@ -173,6 +177,14 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
                 .Setup(m => m.AddClaimsAsync(It.IsAny<Common.Data.Entities.ApplicationUser>(), It.IsAny<IEnumerable<Claim>>()))
                 .ReturnsAsync(IdentityResult.Success);
 
+            _userManagerMock
+                .Setup(m => m.GenerateEmailConfirmationTokenAsync(It.IsAny<Common.Data.Entities.ApplicationUser>()))
+                .ReturnsAsync("confirmation-token");
+
+            _emailServiceMock
+                .Setup(e => e.SendEmailConfirmationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
             _productCategoryRepoMock
                 .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(productTemplates);
@@ -195,7 +207,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
             Assert.Multiple(() =>
             {
                 Assert.That(result!.Succeeded, Is.True);
-                Assert.That(result.Message, Is.EqualTo("Registration successful. You can now log in."));
+                Assert.That(result.Message, Is.EqualTo("Registration successful. Please check your email to confirm your account."));
             });
 
             // Only null-UserId (seeded) templates get copied — 2 products, 2 recipes
@@ -209,6 +221,16 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock.Verify(
                 m => m.AddToRoleAsync(It.IsAny<Common.Data.Entities.ApplicationUser>(), "member"),
+                Times.Once);
+
+            _userManagerMock.Verify(
+                m => m.CreateAsync(
+                    It.Is<Common.Data.Entities.ApplicationUser>(u => !u.IsActive && !u.EmailConfirmed),
+                    It.IsAny<string>()),
+                Times.Once);
+
+            _emailServiceMock.Verify(
+                e => e.SendEmailConfirmationAsync("newuser@example.com", It.IsAny<string>(), "confirmation-token", It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 

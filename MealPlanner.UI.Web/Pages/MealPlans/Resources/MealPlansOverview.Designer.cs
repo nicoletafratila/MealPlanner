@@ -142,5 +142,11 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ColumnName", resourceCulture);
             }
         }
+
+        internal static string ColumnCreatedAt {
+            get {
+                return ResourceManager.GetString("ColumnCreatedAt", resourceCulture);
+            }
+        }
     }
 }

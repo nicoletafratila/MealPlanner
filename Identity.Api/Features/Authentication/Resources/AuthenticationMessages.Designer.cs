@@ -70,7 +70,115 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid credentials.
+        ///   Looks up a localized string similar to Email address is already registered..
+        /// </summary>
+        internal static string EmailAlreadyTaken {
+            get {
+                return ResourceManager.GetString("EmailAlreadyTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thank you for registering. Please confirm your email address by clicking the button below..
+        /// </summary>
+        internal static string EmailConfirmation_Body {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm email address.
+        /// </summary>
+        internal static string EmailConfirmation_ButtonText {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_ButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If the button does not work, copy and paste the following link into your browser:.
+        /// </summary>
+        internal static string EmailConfirmation_FallbackText {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_FallbackText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you did not create an account, you can safely ignore this email..
+        /// </summary>
+        internal static string EmailConfirmation_FooterText {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_FooterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm your email address.
+        /// </summary>
+        internal static string EmailConfirmation_Heading {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm your email address.
+        /// </summary>
+        internal static string EmailConfirmation_Subject {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_Subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm your email.
+        /// </summary>
+        internal static string EmailConfirmation_Title {
+            get {
+                return ResourceManager.GetString("EmailConfirmation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email confirmation failed. The link may be invalid or expired..
+        /// </summary>
+        internal static string EmailConfirmationFailed {
+            get {
+                return ResourceManager.GetString("EmailConfirmationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid email confirmation link..
+        /// </summary>
+        internal static string EmailConfirmationInvalid {
+            get {
+                return ResourceManager.GetString("EmailConfirmationInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your email has been confirmed. You can now log in..
+        /// </summary>
+        internal static string EmailConfirmationSuccess {
+            get {
+                return ResourceManager.GetString("EmailConfirmationSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email address is required..
+        /// </summary>
+        internal static string EmailRequired {
+            get {
+                return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid credentials..
         /// </summary>
         internal static string InvalidCredentials {
             get {
@@ -115,11 +223,38 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred during registration..
+        /// </summary>
+        internal static string RegistrationError {
+            get {
+                return ResourceManager.GetString("RegistrationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration successful. Please check your email to confirm your account..
+        /// </summary>
+        internal static string RegistrationSuccessful {
+            get {
+                return ResourceManager.GetString("RegistrationSuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User is locked out.
         /// </summary>
         internal static string UserLockedOut {
             get {
                 return ResourceManager.GetString("UserLockedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username is already taken..
+        /// </summary>
+        internal static string UsernameAlreadyTaken {
+            get {
+                return ResourceManager.GetString("UsernameAlreadyTaken", resourceCulture);
             }
         }
         
@@ -133,15 +268,6 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User/password not found..
-        /// </summary>
-        internal static string UserPasswordNotFound {
-            get {
-                return ResourceManager.GetString("UserPasswordNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Your account is not active. Please contact an administrator..
         /// </summary>
         internal static string UserNotActive {
@@ -149,49 +275,13 @@ namespace Identity.Api.Features.Authentication.Resources {
                 return ResourceManager.GetString("UserNotActive", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Username is already taken..
+        ///   Looks up a localized string similar to User/password not found..
         /// </summary>
-        internal static string UsernameAlreadyTaken {
+        internal static string UserPasswordNotFound {
             get {
-                return ResourceManager.GetString("UsernameAlreadyTaken", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Email address is already registered..
-        /// </summary>
-        internal static string EmailAlreadyTaken {
-            get {
-                return ResourceManager.GetString("EmailAlreadyTaken", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Registration successful. You can now log in..
-        /// </summary>
-        internal static string RegistrationSuccessful {
-            get {
-                return ResourceManager.GetString("RegistrationSuccessful", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to An error occurred during registration..
-        /// </summary>
-        internal static string RegistrationError {
-            get {
-                return ResourceManager.GetString("RegistrationError", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Email address is required..
-        /// </summary>
-        internal static string EmailRequired {
-            get {
-                return ResourceManager.GetString("EmailRequired", resourceCulture);
+                return ResourceManager.GetString("UserPasswordNotFound", resourceCulture);
             }
         }
     }

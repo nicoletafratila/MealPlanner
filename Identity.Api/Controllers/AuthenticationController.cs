@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Common.Models;
+using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
 using Identity.Api.Features.Authentication.Commands.Register;
@@ -13,9 +14,10 @@ namespace Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController(ISender mediator) : ControllerBase
+    public class AuthenticationController(ISender mediator, IConfiguration configuration) : ControllerBase
     {
         private readonly ISender _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        private readonly IConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
         [HttpPost("login")]
         public async Task<CommandResponse?> LoginAsync(
@@ -64,6 +66,21 @@ namespace Identity.Api.Controllers
         {
             var command = new RegisterCommand { Model = model };
             return await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmailAsync(
+            [FromQuery] string userId,
+            [FromQuery] string token,
+            CancellationToken cancellationToken)
+        {
+            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
+            var command = new ConfirmEmailCommand { UserId = userId, Token = token };
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return result?.Succeeded == true
+                ? Redirect($"{uiBaseUrl}/identities/login?emailConfirmed=true")
+                : Redirect($"{uiBaseUrl}/identities/login?emailConfirmationFailed=true");
         }
     }
 }

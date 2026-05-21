@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Common.Models;
 using Identity.Api.Controllers;
+using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
 using Identity.Api.Features.Authentication.Commands.Register;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Moq;
 
 namespace Identity.Api.Tests.Controllers
@@ -18,6 +20,7 @@ namespace Identity.Api.Tests.Controllers
     public class AuthenticationControllerTests
     {
         private Mock<ISender> _mediatorMock = null!;
+        private Mock<IConfiguration> _configurationMock = null!;
         private AuthenticationController _controller = null!;
         private DefaultHttpContext _httpContext = null!;
 
@@ -25,8 +28,10 @@ namespace Identity.Api.Tests.Controllers
         public void SetUp()
         {
             _mediatorMock = new Mock<ISender>(MockBehavior.Strict);
+            _configurationMock = new Mock<IConfiguration>(MockBehavior.Loose);
+            _configurationMock.Setup(c => c["MealPlannerWeb:BaseUrl"]).Returns("https://localhost:7093");
 
-            _controller = new AuthenticationController(_mediatorMock.Object);
+            _controller = new AuthenticationController(_mediatorMock.Object, _configurationMock.Object);
 
             _httpContext = new DefaultHttpContext();
 
@@ -193,6 +198,68 @@ namespace Identity.Api.Tests.Controllers
                     It.Is<RegisterCommand>(c => c.Model == model),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task ConfirmEmailAsync_SucceededResult_RedirectsToLoginWithConfirmedParam()
+        {
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ConfirmEmailCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(CommandResponse.Success());
+
+            var result = await _controller.ConfirmEmailAsync("user-id", "token", CancellationToken.None);
+
+            var redirect = result as RedirectResult;
+            Assert.That(redirect, Is.Not.Null);
+            Assert.That(redirect!.Url, Is.EqualTo("https://localhost:7093/identities/login?emailConfirmed=true"));
+        }
+
+        [Test]
+        public async Task ConfirmEmailAsync_FailedResult_RedirectsToLoginWithFailedParam()
+        {
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ConfirmEmailCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(CommandResponse.Failed("Invalid token."));
+
+            var result = await _controller.ConfirmEmailAsync("user-id", "bad-token", CancellationToken.None);
+
+            var redirect = result as RedirectResult;
+            Assert.That(redirect, Is.Not.Null);
+            Assert.That(redirect!.Url, Is.EqualTo("https://localhost:7093/identities/login?emailConfirmationFailed=true"));
+        }
+
+        [Test]
+        public async Task ConfirmEmailAsync_NullResult_RedirectsToLoginWithFailedParam()
+        {
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ConfirmEmailCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((CommandResponse?)null);
+
+            var result = await _controller.ConfirmEmailAsync("user-id", "token", CancellationToken.None);
+
+            var redirect = result as RedirectResult;
+            Assert.That(redirect, Is.Not.Null);
+            Assert.That(redirect!.Url, Is.EqualTo("https://localhost:7093/identities/login?emailConfirmationFailed=true"));
+        }
+
+        [Test]
+        public async Task ConfirmEmailAsync_SendsCommandWithCorrectUserIdAndToken()
+        {
+            ConfirmEmailCommand? captured = null;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ConfirmEmailCommand>(), It.IsAny<CancellationToken>()))
+                .Callback<IRequest<CommandResponse?>, CancellationToken>((cmd, _) => captured = (ConfirmEmailCommand)cmd)
+                .ReturnsAsync(CommandResponse.Success());
+
+            await _controller.ConfirmEmailAsync("abc-123", "my-token", CancellationToken.None);
+
+            Assert.That(captured, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(captured!.UserId, Is.EqualTo("abc-123"));
+                Assert.That(captured.Token, Is.EqualTo("my-token"));
+            });
         }
     }
 }

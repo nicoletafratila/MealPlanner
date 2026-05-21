@@ -18,6 +18,8 @@ namespace Identity.Api
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient<Identity.Api.Services.IEmailService, Identity.Api.Services.SmtpEmailService>();
+            services.AddSingleton<Identity.Api.Services.ISmtpClientFactory, Identity.Api.Services.SmtpClientFactory>();
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

@@ -4,6 +4,7 @@ using Common.Data.Repository;
 using Common.Models;
 using Duende.IdentityModel;
 using Identity.Api.Features.Authentication.Resources;
+using Identity.Api.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,6 +14,7 @@ namespace Identity.Api.Features.Authentication.Commands.Register
         UserManager<Common.Data.Entities.ApplicationUser> userManager,
         IAsyncRepository<ProductCategory, int> productCategoryRepository,
         IAsyncRepository<RecipeCategory, int> recipeCategoryRepository,
+        IEmailService emailService,
         ILogger<RegisterCommandHandler> logger) : IRequestHandler<RegisterCommand, CommandResponse?>
     {
         private const string MemberRoleName = "member";
@@ -40,11 +42,11 @@ namespace Identity.Api.Features.Authentication.Commands.Register
                 {
                     UserName = model.Username,
                     Email = model.EmailAddress,
-                    EmailConfirmed = true,
+                    EmailConfirmed = false,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     PhoneNumber = model.PhoneNumber,
-                    IsActive = true
+                    IsActive = false
                 };
 
                 var createResult = await userManager.CreateAsync(user, model.Password!);
@@ -66,6 +68,16 @@ namespace Identity.Api.Features.Authentication.Commands.Register
                 ]);
 
                 await SeedUserCategoriesAsync(user.Id, cancellationToken);
+
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                try
+                {
+                    await emailService.SendEmailConfirmationAsync(user.Email!, user.Id, token, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed to send confirmation email to {Email}", user.Email);
+                }
 
                 logger.LogDebug("User {Username} registered successfully", user.UserName);
                 return CommandResponse.Success(AuthenticationMessages.RegistrationSuccessful);

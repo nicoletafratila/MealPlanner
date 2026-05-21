@@ -33,7 +33,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
             if (result.Succeeded)
             {
                 await MessageComponent!.ShowInfoAsync(result.Message ?? Resources.Register.RegisterSucceeded);
-                NavigationManager.NavigateTo("identities/login");
             }
             else
             {

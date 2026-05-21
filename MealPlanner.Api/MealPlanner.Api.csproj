@@ -36,6 +36,8 @@
     <Compile Include="Migrations\20260414152727_Update_MealPlans_AddDates.Designer.cs" />
     <Compile Include="Migrations\20260513135252_AddUserIdToEntities.cs" />
     <Compile Include="Migrations\20260513135252_AddUserIdToEntities.Designer.cs" />
+    <Compile Include="Migrations\20260521091647_AddUserIdIndexes.cs" />
+    <Compile Include="Migrations\20260521091647_AddUserIdIndexes.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 

@@ -51,13 +51,17 @@ namespace Common.Pagination
                 model.PropertyName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase) ?? throw new InvalidOperationException($"Property '{model.PropertyName}' not found in type {typeof(TItem).Name}.");
 
-            if (!typeof(IComparable).IsAssignableFrom(property.PropertyType))
+            var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+            if (!typeof(IComparable).IsAssignableFrom(underlyingType))
             {
                 throw new InvalidOperationException($"Property '{property.Name}' on type '{typeof(TItem).Name}' does not implement IComparable.");
             }
 
             var memberAccess = Expression.Property(parameter, property);
-            var body = Expression.Convert(memberAccess, typeof(IComparable));
+            Expression body = Nullable.GetUnderlyingType(property.PropertyType) != null
+                ? Expression.Convert(Expression.Convert(memberAccess, typeof(object)), typeof(IComparable))
+                : Expression.Convert(memberAccess, typeof(IComparable));
             var lambda = Expression.Lambda<Func<TItem, IComparable>>(body, parameter);
 
             return new SortingItem<TItem>(property.Name, lambda, model.Direction);

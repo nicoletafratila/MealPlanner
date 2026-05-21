@@ -69,7 +69,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             });
 
             // Assert
-            Assert.That(nav.Uri, Is.EqualTo("http://localhost/identities/login"));
+            Assert.That(nav.Uri, Is.EqualTo("http://localhost/"));
         }
 
         [Test]
