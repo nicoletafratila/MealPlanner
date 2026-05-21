@@ -7,9 +7,3 @@ PM> EntityFrameworkCore\Add-Migration InitialCreate
 PM> dotnet ef migrations add Update_MealPlans_AddDates --project MealPlanner.Api
 PM> Update-database "InitialCreate"
 PM> Script-migration
-
-
-
-
-message la logger
-uniq emails

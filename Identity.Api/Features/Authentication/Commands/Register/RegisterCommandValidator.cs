@@ -22,7 +22,9 @@ namespace Identity.Api.Features.Authentication.Commands.Register
 
                     RuleFor(x => x.Model!.EmailAddress)
                         .NotEmpty()
-                        .WithMessage(AuthenticationMessages.EmailRequired);
+                        .WithMessage(AuthenticationMessages.EmailRequired)
+                        .EmailAddress()
+                        .WithMessage(AuthenticationMessages.EmailInvalid);
                 });
         }
     }

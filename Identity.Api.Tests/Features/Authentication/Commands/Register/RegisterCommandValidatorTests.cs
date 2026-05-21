@@ -80,6 +80,24 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
         }
 
         [Test]
+        public void EmailAddress_Invalid_HasValidationError()
+        {
+            var command = new RegisterCommand
+            {
+                Model = new RegistrationModel
+                {
+                    Username = "user",
+                    Password = "Test123!",
+                    EmailAddress = "not-an-email"
+                }
+            };
+
+            var result = _validator.TestValidate(command);
+
+            result.ShouldHaveValidationErrorFor(x => x.Model!.EmailAddress);
+        }
+
+        [Test]
         public void ValidModel_HasNoValidationErrors()
         {
             var command = new RegisterCommand

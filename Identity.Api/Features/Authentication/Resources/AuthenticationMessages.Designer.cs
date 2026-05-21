@@ -176,6 +176,12 @@ namespace Identity.Api.Features.Authentication.Resources {
                 return ResourceManager.GetString("EmailRequired", resourceCulture);
             }
         }
+
+        internal static string EmailInvalid {
+            get {
+                return ResourceManager.GetString("EmailInvalid", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Invalid credentials..
