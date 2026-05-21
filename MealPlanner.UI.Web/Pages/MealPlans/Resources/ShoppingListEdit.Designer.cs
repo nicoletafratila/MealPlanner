@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class ShoppingListEdit {
@@ -111,6 +111,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         internal static string BreadcrumbShoppingLists {
             get {
                 return ResourceManager.GetString("BreadcrumbShoppingLists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose....
+        /// </summary>
+        internal static string ChooseOption {
+            get {
+                return ResourceManager.GetString("ChooseOption", resourceCulture);
             }
         }
         
@@ -304,6 +313,33 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter the quantity for the product.
+        /// </summary>
+        internal static string PlaceholderQuantity {
+            get {
+                return ResourceManager.GetString("PlaceholderQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter shopping list name.
+        /// </summary>
+        internal static string PlaceholderShoppingListName {
+            get {
+                return ResourceManager.GetString("PlaceholderShoppingListName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The quantity for the product must be a positive number..
+        /// </summary>
+        internal static string QuantityPositiveNumber {
+            get {
+                return ResourceManager.GetString("QuantityPositiveNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string SaveButton {
@@ -340,15 +376,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Products:.
-        /// </summary>
-        internal static string TableCaptionProducts {
-            get {
-                return ResourceManager.GetString("TableCaptionProducts", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Select a meal plan.
         /// </summary>
         internal static string SelectMealPlanModalTitle {
@@ -356,7 +383,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SelectMealPlanModalTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select a recipe.
         /// </summary>
@@ -365,49 +392,22 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SelectRecipeModalTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Enter shopping list name.
+        ///   Looks up a localized string similar to Please select a unit of measurement for the ingredient..
         /// </summary>
-        internal static string PlaceholderShoppingListName {
-            get {
-                return ResourceManager.GetString("PlaceholderShoppingListName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Enter the quantity for the product.
-        /// </summary>
-        internal static string PlaceholderQuantity {
-            get {
-                return ResourceManager.GetString("PlaceholderQuantity", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Choose....
-        /// </summary>
-        internal static string ChooseOption {
-            get {
-                return ResourceManager.GetString("ChooseOption", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to The quantity for the product must be a positive number.
-        /// </summary>
-        public static string QuantityPositiveNumber {
-            get {
-                return ResourceManager.GetString("QuantityPositiveNumber", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Please select a unit of measurement for the ingredient.
-        /// </summary>
-        public static string SelectUnitOfMeasurement {
+        internal static string SelectUnitOfMeasurement {
             get {
                 return ResourceManager.GetString("SelectUnitOfMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Products:.
+        /// </summary>
+        internal static string TableCaptionProducts {
+            get {
+                return ResourceManager.GetString("TableCaptionProducts", resourceCulture);
             }
         }
     }

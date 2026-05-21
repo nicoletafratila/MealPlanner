@@ -30,6 +30,16 @@ namespace Identity.Api.Tests.Services
             "<p>{{EmailConfirmation_FooterText}}</p>" +
             "</body></html>";
 
+        private const string ResetTemplateContent =
+            "<html><head><title>{{PasswordReset_Title}}</title></head><body>" +
+            "<h2>{{PasswordReset_Heading}}</h2>" +
+            "<p>{{PasswordReset_Body}}</p>" +
+            "<a href='{{ResetUrl}}'>{{PasswordReset_ButtonText}}</a>" +
+            "<p>{{PasswordReset_FallbackText}}</p>" +
+            "<a href='{{ResetUrl}}'>{{ResetUrl}}</a>" +
+            "<p>{{PasswordReset_FooterText}}</p>" +
+            "</body></html>";
+
         [SetUp]
         public void SetUp()
         {
@@ -37,6 +47,7 @@ namespace Identity.Api.Tests.Services
             var templateDir = Path.Combine(_tempDir, "EmailTemplates");
             Directory.CreateDirectory(templateDir);
             File.WriteAllText(Path.Combine(templateDir, "EmailConfirmation.html"), TemplateContent);
+            File.WriteAllText(Path.Combine(templateDir, "PasswordReset.html"), ResetTemplateContent);
 
             _emailSectionMock = new Mock<IConfigurationSection>(MockBehavior.Loose);
             _emailSectionMock.Setup(s => s["From"]).Returns("noreply@mealplanner.com");
@@ -186,6 +197,109 @@ namespace Identity.Api.Tests.Services
         public async Task SendEmailConfirmationAsync_CallsSendMailAsync()
         {
             await _service.SendEmailConfirmationAsync("user@test.com", "user-id", "token");
+
+            _smtpClientMock.Verify(
+                c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_SendsToCorrectRecipient()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
+
+            Assert.That(captured!.To[0].Address, Is.EqualTo("user@test.com"));
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_SetsFromAddressFromConfig()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
+
+            Assert.That(captured!.From!.Address, Is.EqualTo("noreply@mealplanner.com"));
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_SetsSubjectFromResources()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
+
+            Assert.That(captured!.Subject, Is.EqualTo("Reset your password"));
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_BodyContainsResetUrl()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
+
+            var expectedUrl = "https://localhost:5001/api/authentication/reset-password-redirect?userId=user-id&token=token";
+            Assert.That(captured!.Body, Does.Contain(expectedUrl));
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_UrlEncodesToken()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "tok+en/with special=chars");
+
+            Assert.That(captured!.Body, Does.Contain("token=tok%2Ben%2Fwith%20special%3Dchars"));
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_BodyContainsNoUnreplacedPlaceholders()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
+
+            Assert.That(captured!.Body, Does.Not.Contain("{{"));
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_CreatesSmtpClientWithConfiguredHostAndPort()
+        {
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
+
+            _smtpClientFactoryMock.Verify(f => f.Create("smtp.example.com", 587), Times.Once);
+        }
+
+        [Test]
+        public async Task SendPasswordResetAsync_CallsSendMailAsync()
+        {
+            await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
 
             _smtpClientMock.Verify(
                 c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()),

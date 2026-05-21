@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class RecipePreview {
@@ -61,6 +61,42 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        internal static string ColumnCategory {
+            get {
+                return ResourceManager.GetString("ColumnCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string ColumnName {
+            get {
+                return ResourceManager.GetString("ColumnName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity.
+        /// </summary>
+        internal static string ColumnQuantity {
+            get {
+                return ResourceManager.GetString("ColumnQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit.
+        /// </summary>
+        internal static string ColumnUnit {
+            get {
+                return ResourceManager.GetString("ColumnUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of ingredients:.
         /// </summary>
         internal static string ListOfIngredients {
@@ -75,42 +111,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         internal static string RecipeCategory {
             get {
                 return ResourceManager.GetString("RecipeCategory", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        internal static string ColumnName {
-            get {
-                return ResourceManager.GetString("ColumnName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Quantity.
-        /// </summary>
-        internal static string ColumnQuantity {
-            get {
-                return ResourceManager.GetString("ColumnQuantity", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Unit.
-        /// </summary>
-        internal static string ColumnUnit {
-            get {
-                return ResourceManager.GetString("ColumnUnit", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Category.
-        /// </summary>
-        internal static string ColumnCategory {
-            get {
-                return ResourceManager.GetString("ColumnCategory", resourceCulture);
             }
         }
     }

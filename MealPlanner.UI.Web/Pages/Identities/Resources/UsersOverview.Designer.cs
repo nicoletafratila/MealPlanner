@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class UsersOverview {
@@ -86,15 +86,6 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("ColumnEmail", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Phone number.
-        /// </summary>
-        internal static string ColumnPhoneNumber {
-            get {
-                return ResourceManager.GetString("ColumnPhoneNumber", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to First name.
@@ -120,6 +111,15 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         internal static string ColumnLastName {
             get {
                 return ResourceManager.GetString("ColumnLastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number.
+        /// </summary>
+        internal static string ColumnPhoneNumber {
+            get {
+                return ResourceManager.GetString("ColumnPhoneNumber", resourceCulture);
             }
         }
         

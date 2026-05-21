@@ -8,5 +8,7 @@ namespace MealPlanner.UI.Web.Services.Identities
         Task<CommandResponse?> LoginAsync(LoginModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> RegisterAsync(RegistrationModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> LogoutAsync(CancellationToken cancellationToken = default);
+        Task<CommandResponse?> ForgotPasswordAsync(ForgotPasswordModel model, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> ResetPasswordAsync(ResetPasswordModel model, CancellationToken cancellationToken = default);
     }
 }

@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Shared.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MainLayout {
@@ -106,6 +106,15 @@ namespace MealPlanner.UI.Web.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to here.
+        /// </summary>
+        internal static string NoMenuYetLinkText {
+            get {
+                return ResourceManager.GetString("NoMenuYetLinkText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have not created a menu for this week yet. Click .
         /// </summary>
         internal static string NoMenuYetPrefix {
@@ -123,15 +132,6 @@ namespace MealPlanner.UI.Web.Shared.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to here.
-        /// </summary>
-        internal static string NoMenuYetLinkText {
-            get {
-                return ResourceManager.GetString("NoMenuYetLinkText", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Meal planner.
         /// </summary>

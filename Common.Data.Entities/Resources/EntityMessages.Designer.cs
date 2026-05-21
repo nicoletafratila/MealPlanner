@@ -19,7 +19,7 @@ namespace Common.Data.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class EntityMessages {
@@ -68,7 +68,7 @@ namespace Common.Data.Entities.Resources {
                 return ResourceManager.GetString("FirstNameAlphaOnly", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ingredient.Product.BaseUnit must not be null..
         /// </summary>
@@ -97,6 +97,15 @@ namespace Common.Data.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Name must be alpha characters only..
+        /// </summary>
+        internal static string LastNameAlphaOnly {
+            get {
+                return ResourceManager.GetString("LastNameAlphaOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Product.BaseUnit must be set before converting to ShoppingListProduct..
         /// </summary>
         internal static string ProductBaseUnitMustBeSet {
@@ -114,15 +123,6 @@ namespace Common.Data.Entities.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Last Name must be alpha characters only..
-        /// </summary>
-        internal static string LastNameAlphaOnly {
-            get {
-                return ResourceManager.GetString("LastNameAlphaOnly", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Shopping list details for {0} in shop {1}.
         /// </summary>

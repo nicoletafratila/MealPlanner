@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MealPlanEdit {
@@ -93,6 +93,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         internal static string BreadcrumbMealPlans {
             get {
                 return ResourceManager.GetString("BreadcrumbMealPlans", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose....
+        /// </summary>
+        internal static string ChooseOption {
+            get {
+                return ResourceManager.GetString("ChooseOption", resourceCulture);
             }
         }
         
@@ -214,6 +223,24 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter meal plan name.
+        /// </summary>
+        internal static string PlaceholderMealPlanName {
+            get {
+                return ResourceManager.GetString("PlaceholderMealPlanName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe details.
+        /// </summary>
+        internal static string RecipeDetailsOffcanvasTitle {
+            get {
+                return ResourceManager.GetString("RecipeDetailsOffcanvasTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string SaveButton {
@@ -250,15 +277,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There has been an error when saving the shopping list.
-        /// </summary>
-        internal static string ShoppingListSaveError {
-            get {
-                return ResourceManager.GetString("ShoppingListSaveError", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Select a shop.
         /// </summary>
         internal static string SelectShopModalTitle {
@@ -266,31 +284,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SelectShopModalTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Recipe details.
+        ///   Looks up a localized string similar to There has been an error when saving the shopping list.
         /// </summary>
-        internal static string RecipeDetailsOffcanvasTitle {
+        internal static string ShoppingListSaveError {
             get {
-                return ResourceManager.GetString("RecipeDetailsOffcanvasTitle", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Enter meal plan name.
-        /// </summary>
-        internal static string PlaceholderMealPlanName {
-            get {
-                return ResourceManager.GetString("PlaceholderMealPlanName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Choose....
-        /// </summary>
-        internal static string ChooseOption {
-            get {
-                return ResourceManager.GetString("ChooseOption", resourceCulture);
+                return ResourceManager.GetString("ShoppingListSaveError", resourceCulture);
             }
         }
     }

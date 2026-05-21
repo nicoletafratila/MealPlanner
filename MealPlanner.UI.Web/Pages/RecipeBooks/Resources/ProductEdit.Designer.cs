@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class ProductEdit {
@@ -84,6 +84,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         internal static string BreadcrumbProducts {
             get {
                 return ResourceManager.GetString("BreadcrumbProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose....
+        /// </summary>
+        internal static string ChooseOption {
+            get {
+                return ResourceManager.GetString("ChooseOption", resourceCulture);
             }
         }
         
@@ -214,6 +223,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter product name.
+        /// </summary>
+        internal static string PlaceholderProductName {
+            get {
+                return ResourceManager.GetString("PlaceholderProductName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string SaveButton {
@@ -246,24 +264,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         internal static string SaveSucceeded {
             get {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Enter product name.
-        /// </summary>
-        internal static string PlaceholderProductName {
-            get {
-                return ResourceManager.GetString("PlaceholderProductName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Choose....
-        /// </summary>
-        internal static string ChooseOption {
-            get {
-                return ResourceManager.GetString("ChooseOption", resourceCulture);
             }
         }
     }

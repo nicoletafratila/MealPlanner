@@ -19,7 +19,7 @@ namespace RecipeBook.Api.Features.Unit.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class UnitMessages {
@@ -75,6 +75,15 @@ namespace RecipeBook.Api.Features.Unit.Resources {
         internal static string IdGreaterThanZero {
             get {
                 return ResourceManager.GetString("IdGreaterThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model cannot be null..
+        /// </summary>
+        internal static string ModelCannotBeNull {
+            get {
+                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
             }
         }
         
@@ -138,15 +147,6 @@ namespace RecipeBook.Api.Features.Unit.Resources {
         internal static string UnitUsedInProducts {
             get {
                 return ResourceManager.GetString("UnitUsedInProducts", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Model cannot be null.
-        /// </summary>
-        internal static string ModelCannotBeNull {
-            get {
-                return ResourceManager.GetString("ModelCannotBeNull", resourceCulture);
             }
         }
     }

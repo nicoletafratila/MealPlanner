@@ -67,6 +67,11 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
         }
 
+        private void NavigateToForgotPassword()
+        {
+            NavigationManager.NavigateTo("identities/forgot-password");
+        }
+
         private async Task ShowErrorAsync(string message)
             => await MessageComponent!.ShowErrorAsync(message);
     }

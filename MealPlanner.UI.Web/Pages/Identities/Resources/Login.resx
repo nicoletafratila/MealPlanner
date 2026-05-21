@@ -60,4 +60,7 @@
   <data name="PlaceholderPassword" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="ForgotPasswordButton" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
 </root>

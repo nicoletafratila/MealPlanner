@@ -2,9 +2,11 @@
 using Common.Models;
 using Identity.Api.Controllers;
 using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
+using Identity.Api.Features.Authentication.Commands.ForgotPassword;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
 using Identity.Api.Features.Authentication.Commands.Register;
+using Identity.Api.Features.Authentication.Commands.ResetPassword;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -260,6 +262,65 @@ namespace Identity.Api.Tests.Controllers
                 Assert.That(captured!.UserId, Is.EqualTo("abc-123"));
                 Assert.That(captured.Token, Is.EqualTo("my-token"));
             });
+        }
+
+        [Test]
+        public async Task ForgotPasswordAsync_ForwardsToMediator_AndReturnsResult()
+        {
+            var model = new ForgotPasswordModel { EmailAddress = "user@example.com" };
+            var response = CommandResponse.Success();
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ForgotPasswordCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            var result = await _controller.ForgotPasswordAsync(model, CancellationToken.None);
+
+            Assert.That(result, Is.SameAs(response));
+
+            _mediatorMock.Verify(
+                m => m.Send(
+                    It.Is<ForgotPasswordCommand>(c => c.Model == model),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public void ResetPasswordRedirect_ReturnsRedirectToUiWithEncodedToken()
+        {
+            var result = _controller.ResetPasswordRedirect("user-id", "tok+en/special=chars");
+
+            var redirect = result as RedirectResult;
+            Assert.That(redirect, Is.Not.Null);
+            Assert.That(redirect!.Url, Is.EqualTo(
+                "https://localhost:7093/identities/reset-password?userId=user-id&token=tok%2Ben%2Fspecial%3Dchars"));
+        }
+
+        [Test]
+        public async Task ResetPasswordAsync_ForwardsToMediator_AndReturnsResult()
+        {
+            var model = new ResetPasswordModel
+            {
+                UserId = "user-id",
+                Token = "token",
+                NewPassword = "Pass123!",
+                ConfirmPassword = "Pass123!"
+            };
+            var response = CommandResponse.Success();
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ResetPasswordCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            var result = await _controller.ResetPasswordAsync(model, CancellationToken.None);
+
+            Assert.That(result, Is.SameAs(response));
+
+            _mediatorMock.Verify(
+                m => m.Send(
+                    It.Is<ResetPasswordCommand>(c => c.Model == model),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

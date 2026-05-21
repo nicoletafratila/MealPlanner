@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Login {
@@ -70,6 +70,15 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forgot password?.
+        /// </summary>
+        internal static string ForgotPasswordButton {
+            get {
+                return ResourceManager.GetString("ForgotPasswordButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         internal static string LoginButton {
@@ -97,14 +106,14 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username: .
+        ///   Looks up a localized string similar to Password.
         /// </summary>
-        internal static string UsernameLabel {
+        internal static string PlaceholderPassword {
             get {
-                return ResourceManager.GetString("UsernameLabel", resourceCulture);
+                return ResourceManager.GetString("PlaceholderPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
@@ -113,13 +122,13 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("PlaceholderUsername", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Password.
+        ///   Looks up a localized string similar to Username: .
         /// </summary>
-        internal static string PlaceholderPassword {
+        internal static string UsernameLabel {
             get {
-                return ResourceManager.GetString("PlaceholderPassword", resourceCulture);
+                return ResourceManager.GetString("UsernameLabel", resourceCulture);
             }
         }
     }

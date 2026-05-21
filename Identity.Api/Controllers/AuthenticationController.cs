@@ -1,9 +1,11 @@
 ﻿using System.Security.Claims;
 using Common.Models;
 using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
+using Identity.Api.Features.Authentication.Commands.ForgotPassword;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
 using Identity.Api.Features.Authentication.Commands.Register;
+using Identity.Api.Features.Authentication.Commands.ResetPassword;
 using Identity.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -65,6 +67,34 @@ namespace Identity.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new RegisterCommand { Model = model };
+            return await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<CommandResponse?> ForgotPasswordAsync(
+            [FromBody] ForgotPasswordModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new ForgotPasswordCommand { Model = model };
+            return await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpGet("reset-password-redirect")]
+        public IActionResult ResetPasswordRedirect(
+            [FromQuery] string userId,
+            [FromQuery] string token)
+        {
+            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
+            var encodedToken = Uri.EscapeDataString(token);
+            return Redirect($"{uiBaseUrl}/identities/reset-password?userId={userId}&token={encodedToken}");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<CommandResponse?> ResetPasswordAsync(
+            [FromBody] ResetPasswordModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new ResetPasswordCommand { Model = model };
             return await _mediator.Send(command, cancellationToken);
         }
 

@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class UserProfile {
@@ -88,11 +88,29 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;..
+        /// </summary>
+        internal static string FileSizeExceeded {
+            get {
+                return ResourceManager.GetString("FileSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First name: .
         /// </summary>
         internal static string FirstNameLabel {
             get {
                 return ResourceManager.GetString("FirstNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active: .
+        /// </summary>
+        internal static string IsActiveLabel {
+            get {
+                return ResourceManager.GetString("IsActiveLabel", resourceCulture);
             }
         }
         
@@ -111,6 +129,42 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         internal static string PhoneNumberLabel {
             get {
                 return ResourceManager.GetString("PhoneNumberLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string PlaceholderEmail {
+            get {
+                return ResourceManager.GetString("PlaceholderEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First name.
+        /// </summary>
+        internal static string PlaceholderFirstName {
+            get {
+                return ResourceManager.GetString("PlaceholderFirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last name.
+        /// </summary>
+        internal static string PlaceholderLastName {
+            get {
+                return ResourceManager.GetString("PlaceholderLastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number.
+        /// </summary>
+        internal static string PlaceholderPhoneNumber {
+            get {
+                return ResourceManager.GetString("PlaceholderPhoneNumber", resourceCulture);
             }
         }
         
@@ -147,60 +201,6 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         internal static string UsernameLabel {
             get {
                 return ResourceManager.GetString("UsernameLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;..
-        /// </summary>
-        internal static string FileSizeExceeded {
-            get {
-                return ResourceManager.GetString("FileSizeExceeded", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to First name.
-        /// </summary>
-        internal static string PlaceholderFirstName {
-            get {
-                return ResourceManager.GetString("PlaceholderFirstName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Last name.
-        /// </summary>
-        internal static string PlaceholderLastName {
-            get {
-                return ResourceManager.GetString("PlaceholderLastName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Phone number.
-        /// </summary>
-        internal static string PlaceholderPhoneNumber {
-            get {
-                return ResourceManager.GetString("PlaceholderPhoneNumber", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Email.
-        /// </summary>
-        internal static string PlaceholderEmail {
-            get {
-                return ResourceManager.GetString("PlaceholderEmail", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Active: .
-        /// </summary>
-        internal static string IsActiveLabel {
-            get {
-                return ResourceManager.GetString("IsActiveLabel", resourceCulture);
             }
         }
     }

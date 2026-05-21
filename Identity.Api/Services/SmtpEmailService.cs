@@ -40,5 +40,40 @@ namespace Identity.Api.Services
             await client.SendMailAsync(message, cancellationToken);
             logger.LogDebug("Confirmation email sent to {Email}", toEmail);
         }
+
+        public async Task SendPasswordResetAsync(string toEmail, string userId, string token, CancellationToken cancellationToken = default)
+        {
+            var emailSettings = configuration.GetSection("Email");
+            var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:5001";
+
+            var encodedToken = Uri.EscapeDataString(token);
+            var resetUrl = $"{baseUrl}/api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}";
+
+            var templatePath = Path.Combine(environment.ContentRootPath, "EmailTemplates", "PasswordReset.html");
+            var body = (await File.ReadAllTextAsync(templatePath, cancellationToken))
+                .Replace("{{ResetUrl}}", resetUrl)
+                .Replace("{{PasswordReset_Title}}", AuthenticationMessages.PasswordReset_Title)
+                .Replace("{{PasswordReset_Heading}}", AuthenticationMessages.PasswordReset_Heading)
+                .Replace("{{PasswordReset_Body}}", AuthenticationMessages.PasswordReset_Body)
+                .Replace("{{PasswordReset_ButtonText}}", AuthenticationMessages.PasswordReset_ButtonText)
+                .Replace("{{PasswordReset_FallbackText}}", AuthenticationMessages.PasswordReset_FallbackText)
+                .Replace("{{PasswordReset_FooterText}}", AuthenticationMessages.PasswordReset_FooterText);
+
+            using var message = new MailMessage
+            {
+                From = new MailAddress(emailSettings["From"]!),
+                Subject = AuthenticationMessages.PasswordReset_Subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+            message.To.Add(toEmail);
+
+            using var client = smtpClientFactory.Create(emailSettings["Host"]!, int.Parse(emailSettings["Port"]!));
+            client.EnableSsl = bool.Parse(emailSettings["EnableSsl"] ?? "true");
+            client.Credentials = new NetworkCredential(emailSettings["Username"], emailSettings["Password"]);
+
+            await client.SendMailAsync(message, cancellationToken);
+            logger.LogDebug("Password reset email sent to {Email}", toEmail);
+        }
     }
 }

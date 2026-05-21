@@ -19,7 +19,7 @@ namespace Identity.Api.Features.Authentication.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AuthenticationMessages {
@@ -169,6 +169,15 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email address is not valid..
+        /// </summary>
+        internal static string EmailInvalid {
+            get {
+                return ResourceManager.GetString("EmailInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email address is required..
         /// </summary>
         internal static string EmailRequired {
@@ -176,10 +185,22 @@ namespace Identity.Api.Features.Authentication.Resources {
                 return ResourceManager.GetString("EmailRequired", resourceCulture);
             }
         }
-
-        internal static string EmailInvalid {
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If an account with that email exists, a password reset link has been sent..
+        /// </summary>
+        internal static string ForgotPasswordEmailSent {
             get {
-                return ResourceManager.GetString("EmailInvalid", resourceCulture);
+                return ResourceManager.GetString("ForgotPasswordEmailSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while processing your request..
+        /// </summary>
+        internal static string ForgotPasswordError {
+            get {
+                return ResourceManager.GetString("ForgotPasswordError", resourceCulture);
             }
         }
         
@@ -220,11 +241,119 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New password is required..
+        /// </summary>
+        internal static string NewPasswordRequired {
+            get {
+                return ResourceManager.GetString("NewPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password is required..
         /// </summary>
         internal static string PasswordRequired {
             get {
                 return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have requested to reset your password. Click the button below to set a new password..
+        /// </summary>
+        internal static string PasswordReset_Body {
+            get {
+                return ResourceManager.GetString("PasswordReset_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset password.
+        /// </summary>
+        internal static string PasswordReset_ButtonText {
+            get {
+                return ResourceManager.GetString("PasswordReset_ButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If the button does not work, copy and paste the following link into your browser:.
+        /// </summary>
+        internal static string PasswordReset_FallbackText {
+            get {
+                return ResourceManager.GetString("PasswordReset_FallbackText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you did not request a password reset, you can safely ignore this email..
+        /// </summary>
+        internal static string PasswordReset_FooterText {
+            get {
+                return ResourceManager.GetString("PasswordReset_FooterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset your password.
+        /// </summary>
+        internal static string PasswordReset_Heading {
+            get {
+                return ResourceManager.GetString("PasswordReset_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset your password.
+        /// </summary>
+        internal static string PasswordReset_Subject {
+            get {
+                return ResourceManager.GetString("PasswordReset_Subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset your password.
+        /// </summary>
+        internal static string PasswordReset_Title {
+            get {
+                return ResourceManager.GetString("PasswordReset_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred during password reset..
+        /// </summary>
+        internal static string PasswordResetError {
+            get {
+                return ResourceManager.GetString("PasswordResetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password reset failed. The link may be invalid or expired..
+        /// </summary>
+        internal static string PasswordResetFailed {
+            get {
+                return ResourceManager.GetString("PasswordResetFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been reset successfully..
+        /// </summary>
+        internal static string PasswordResetSuccessful {
+            get {
+                return ResourceManager.GetString("PasswordResetSuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords do not match..
+        /// </summary>
+        internal static string PasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordsDoNotMatch", resourceCulture);
             }
         }
         

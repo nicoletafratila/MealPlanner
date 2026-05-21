@@ -344,5 +344,149 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             }
             mockHttp.VerifyNoOutstandingExpectation();
         }
+
+        // ---------- ForgotPasswordAsync ----------
+        [Test]
+        public async Task ForgotPasswordAsync_Succeeds_ReturnsResponse()
+        {
+            var model = new ForgotPasswordModel { EmailAddress = "user@example.com" };
+            var serverResponse = new CommandResponse { Succeeded = true, Message = "If an account exists, a link was sent." };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/forgot-password")
+                .Respond("application/json", JsonSerializer.Serialize(serverResponse, JsonOptions));
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ForgotPasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("If an account exists, a link was sent."));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ForgotPasswordAsync_NonSuccessStatusCode_ReturnsFailure()
+        {
+            var model = new ForgotPasswordModel { EmailAddress = "user@example.com" };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/forgot-password")
+                .Respond(HttpStatusCode.InternalServerError, "text/plain", "server error");
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ForgotPasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ForgotPasswordAsync_NullDeserializationResult_ReturnsFailure()
+        {
+            var model = new ForgotPasswordModel { EmailAddress = "user@example.com" };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/forgot-password")
+                .Respond("application/json", "null");
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ForgotPasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- ResetPasswordAsync ----------
+        [Test]
+        public async Task ResetPasswordAsync_Succeeds_ReturnsResponse()
+        {
+            var model = new ResetPasswordModel
+            {
+                UserId = "user-id",
+                Token = "reset-token",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+            var serverResponse = new CommandResponse { Succeeded = true, Message = "Password reset successfully." };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/reset-password")
+                .Respond("application/json", JsonSerializer.Serialize(serverResponse, JsonOptions));
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ResetPasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("Password reset successfully."));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ResetPasswordAsync_NonSuccessStatusCode_ReturnsFailure()
+        {
+            var model = new ResetPasswordModel
+            {
+                UserId = "user-id",
+                Token = "bad-token",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/reset-password")
+                .Respond(HttpStatusCode.BadRequest, "text/plain", "invalid token");
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ResetPasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ResetPasswordAsync_NullDeserializationResult_ReturnsFailure()
+        {
+            var model = new ResetPasswordModel
+            {
+                UserId = "user-id",
+                Token = "reset-token",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/reset-password")
+                .Respond("application/json", "null");
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ResetPasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
     }
 }

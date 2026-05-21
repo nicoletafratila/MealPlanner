@@ -183,5 +183,73 @@ namespace MealPlanner.UI.Web.Services.Identities
                 return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseRegistration);
             }
         }
+
+        public async Task<CommandResponse?> ForgotPasswordAsync(
+            ForgotPasswordModel model,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using var response = await httpClient.PostAsJsonAsync(
+                    $"{_authController}/forgot-password",
+                    model,
+                    JsonOptions,
+                    cancellationToken);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                    logger.LogWarning("ForgotPasswordAsync failed with status {StatusCode}. Body: {Body}", response.StatusCode, error);
+                    return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
+                return result ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during ForgotPasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse during ForgotPasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+            }
+        }
+
+        public async Task<CommandResponse?> ResetPasswordAsync(
+            ResetPasswordModel model,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using var response = await httpClient.PostAsJsonAsync(
+                    $"{_authController}/reset-password",
+                    model,
+                    JsonOptions,
+                    cancellationToken);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                    logger.LogWarning("ResetPasswordAsync failed with status {StatusCode}. Body: {Body}", response.StatusCode, error);
+                    return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
+                return result ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during ResetPasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse during ResetPasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+            }
+        }
     }
 }

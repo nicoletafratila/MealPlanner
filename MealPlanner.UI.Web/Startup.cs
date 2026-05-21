@@ -5,8 +5,6 @@ using MealPlanner.UI.Web.Services.MealPlans;
 using MealPlanner.UI.Web.Services.RecipeBooks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.MSSqlServer;
 
 namespace MealPlanner.UI.Web
 {
@@ -55,42 +53,6 @@ namespace MealPlanner.UI.Web
         {
             ConfigureServices(builder.Services);
 
-            var currentDir = Directory.GetCurrentDirectory();
-            var logsDirectory = Path.Combine(currentDir, "Logs");
-            Directory.CreateDirectory(logsDirectory);
-
-            var fileLoggerFilePath = Path.Combine(logsDirectory, "logs.log");
-            var connectionString = Configuration.GetConnectionString("MealPlanner");
-
-            builder.Host.UseSerilog((ctx, lc) =>
-            {
-                lc.MinimumLevel.Error()
-                  .Enrich.FromLogContext()
-                  .ReadFrom.Configuration(ctx.Configuration)
-                  .WriteTo.Console(
-                      restrictedToMinimumLevel: LogEventLevel.Error,
-                      outputTemplate:
-                          "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
-                  .WriteTo.File(
-                      fileLoggerFilePath,
-                      restrictedToMinimumLevel: LogEventLevel.Error,
-                      rollingInterval: RollingInterval.Hour,
-                      encoding: System.Text.Encoding.UTF8);
-
-                if (!string.IsNullOrWhiteSpace(connectionString))
-                {
-                    lc.WriteTo.MSSqlServer(
-                        connectionString,
-                        sinkOptions: new MSSqlServerSinkOptions
-                        {
-                            TableName = "Logs",
-                            SchemaName = "dbo",
-                            // AutoCreateSqlTable = true
-                        },
-                        restrictedToMinimumLevel: LogEventLevel.Error);
-                }
-            });
-
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddBlazoredModal();
@@ -117,7 +79,6 @@ namespace MealPlanner.UI.Web
             app.MapControllers();
             app.MapDefaultControllerRoute();
 
-            // app.MapRazorPages().RequireAuthorization();
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
 
