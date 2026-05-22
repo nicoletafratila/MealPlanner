@@ -22,6 +22,17 @@ namespace RecipeBook.Api.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<IReadOnlyList<RecipeCategory>> GetByIdsAsync(
+            IList<int> ids,
+            CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(ids);
+
+            return await Context.RecipeCategories
+                .Where(c => ids.Contains(c.Id))
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task UpdateAllAsync(
             IList<RecipeCategory> entities,
             CancellationToken cancellationToken)

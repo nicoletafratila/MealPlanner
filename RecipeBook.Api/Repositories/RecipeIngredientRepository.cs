@@ -30,6 +30,7 @@ namespace RecipeBook.Api.Repositories
             CancellationToken cancellationToken)
         {
             return await _dbContext.RecipeIngredients
+                .Include(x => x.Unit)
                 .Where(x => x.ProductId == productId)
                 .ToListAsync(cancellationToken);
         }

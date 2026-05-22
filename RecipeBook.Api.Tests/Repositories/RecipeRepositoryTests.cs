@@ -179,7 +179,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
         // ---------- SearchAsync by name ----------
         [Test]
-        public async Task SearchAsync_ByName_ReturnsMatchingRecipe_CaseInsensitive()
+        public async Task SearchAsync_ByName_ReturnsMatchingRecipe()
         {
             // Arrange
             var repo = CreateRepository(out var ctx);

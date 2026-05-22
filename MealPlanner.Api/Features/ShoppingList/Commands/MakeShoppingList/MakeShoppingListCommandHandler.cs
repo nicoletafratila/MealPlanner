@@ -46,9 +46,23 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
                 newList.UserId = userId;
 
                 var saved = await _shoppingListRepository.AddAsync(newList, cancellationToken);
-                var loaded = await _shoppingListRepository.GetByIdIncludeProductsAsync(saved.Id, cancellationToken);
 
-                return _mapper.Map<ShoppingListEditModel>(loaded);
+                var ingredientsByProductId = (mealPlan.MealPlanRecipes ?? [])
+                    .SelectMany(mpr => mpr.Recipe?.RecipeIngredients ?? [])
+                    .Where(i => i.Product != null)
+                    .GroupBy(i => i.ProductId)
+                    .ToDictionary(g => g.Key, g => g.First());
+
+                foreach (var slProduct in saved.Products ?? [])
+                {
+                    if (ingredientsByProductId.TryGetValue(slProduct.ProductId, out var ingredient))
+                    {
+                        slProduct.Product = ingredient.Product;
+                        slProduct.Unit = ingredient.Product!.BaseUnit;
+                    }
+                }
+
+                return _mapper.Map<ShoppingListEditModel>(saved);
             }
             catch (Exception ex)
             {

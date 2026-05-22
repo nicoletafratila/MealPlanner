@@ -18,6 +18,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
         private BunitContext _ctx = null!;
         private Mock<IApplicationUserService> _appUserServiceMock = null!;
         private Mock<IMessageComponent> _messageComponentMock = null!;
+        private BunitAuthorizationContext _authContext = null!;
 
         [SetUp]
         public void SetUp()
@@ -31,7 +32,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             _ctx.Services.AddSingleton(_messageComponentMock.Object);
             _ctx.Services.AddLogging();
 
-            _ctx.AddAuthorization();
+            _authContext = _ctx.AddAuthorization();
             _ctx.Services.AddScoped<BreadcrumbService>();
             _ctx.Services.AddScoped<ModalService>();
             _ctx.Services.AddScoped<PreloadService>();
@@ -105,8 +106,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
         // ---------- SaveAsync ----------
 
         [Test]
-        public async Task SaveAsync_Success_ShowsInfoAndNavigatesToOverview()
+        public async Task SaveAsync_Success_AsAdmin_ShowsInfoAndNavigatesToUsersOverview()
         {
+            _authContext.SetRoles("admin");
+
             _appUserServiceMock
                 .Setup(s => s.UpdateAsync(It.IsAny<ApplicationUserEditModel>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
@@ -126,6 +129,30 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
                 Times.Once);
 
             Assert.That(nav.Uri, Does.Contain("usersoverview").IgnoreCase);
+        }
+
+        [Test]
+        public async Task SaveAsync_Success_AsMember_ShowsInfoAndNavigatesToRecipesOverview()
+        {
+            _appUserServiceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<ApplicationUserEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderWithName("testuser");
+            var method = GetMethod("SaveAsync");
+            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
+
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            Assert.That(nav.Uri, Does.Contain("recipesoverview").IgnoreCase);
         }
 
         [Test]
@@ -154,8 +181,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
         }
 
         [Test]
-        public async Task SaveAsync_NullResponse_ShowsInfoAndNavigatesToOverview()
+        public async Task SaveAsync_NullResponse_AsAdmin_ShowsInfoAndNavigatesToUsersOverview()
         {
+            _authContext.SetRoles("admin");
+
             _appUserServiceMock
                 .Setup(s => s.UpdateAsync(It.IsAny<ApplicationUserEditModel>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((CommandResponse?)null);
@@ -180,8 +209,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
         // ---------- NavigateToOverview ----------
 
         [Test]
-        public void NavigateToOverview_NavigatesToUsersOverview()
+        public void NavigateToOverview_AsAdmin_NavigatesToUsersOverview()
         {
+            _authContext.SetRoles("admin");
+
             var cut = RenderWithName("testuser");
             var method = GetMethod("NavigateToOverview");
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
@@ -189,6 +220,18 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             cut.InvokeAsync(() => method.Invoke(cut.Instance, [])).GetAwaiter().GetResult();
 
             Assert.That(nav.Uri, Does.Contain("usersoverview").IgnoreCase);
+        }
+
+        [Test]
+        public void NavigateToOverview_AsMember_NavigatesToRecipesOverview()
+        {
+            var cut = RenderWithName("testuser");
+            var method = GetMethod("NavigateToOverview");
+            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
+
+            cut.InvokeAsync(() => method.Invoke(cut.Instance, [])).GetAwaiter().GetResult();
+
+            Assert.That(nav.Uri, Does.Contain("recipesoverview").IgnoreCase);
         }
 
         // ---------- NavigateToChangePassword ----------

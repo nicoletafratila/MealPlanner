@@ -10,6 +10,8 @@ namespace RecipeBook.Api.Repositories
     {
         Task<IReadOnlyList<RecipeCategory>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
 
+        Task<IReadOnlyList<RecipeCategory>> GetByIdsAsync(IList<int> ids, CancellationToken cancellationToken);
+
         /// <summary>
         /// Updates all provided recipe categories in a single save operation.
         /// </summary>

@@ -28,6 +28,17 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
 
             try
             {
+                var ids = request.Models
+                    .Where(m => m is not null)
+                    .Select(m => m!.Id)
+                    .ToList();
+
+                if (ids.Count == 0)
+                    return CommandResponse.Success();
+
+                var existingItems = await _repository.GetByIdsAsync(ids, cancellationToken);
+                var existingById = existingItems.ToDictionary(e => e.Id);
+
                 var errors = new StringBuilder();
                 var itemsToUpdate = new List<Common.Data.Entities.RecipeCategory>();
 
@@ -36,8 +47,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
                     if (category is null)
                         continue;
 
-                    var existingItem = await _repository.GetByIdAsync(category.Id, cancellationToken);
-                    if (existingItem is null)
+                    if (!existingById.TryGetValue(category.Id, out var existingItem))
                     {
                         errors.AppendLine(string.Format(RecipeCategoryMessages.NotFoundById, category.Id));
                         continue;

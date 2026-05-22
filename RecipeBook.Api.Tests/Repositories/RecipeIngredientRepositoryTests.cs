@@ -65,10 +65,13 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
+            var unit = new Unit { Name = "kg", UnitType = 0 };
+            ctx.Units.Add(unit);
+
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = 1, Quantity = 1 },
-                new RecipeIngredient { RecipeId = 2, ProductId = 1, Quantity = 2 },
-                new RecipeIngredient { RecipeId = 3, ProductId = 2, Quantity = 3 });
+                new RecipeIngredient { RecipeId = 1, ProductId = 1, Unit = unit, Quantity = 1 },
+                new RecipeIngredient { RecipeId = 2, ProductId = 1, Unit = unit, Quantity = 2 },
+                new RecipeIngredient { RecipeId = 3, ProductId = 2, Unit = unit, Quantity = 3 });
 
             await ctx.SaveChangesAsync();
 
@@ -78,6 +81,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Assert
             Assert.That(result, Has.Count.EqualTo(2));
             Assert.That(result.All(i => i.ProductId == 1), Is.True);
+            Assert.That(result.All(i => i.Unit != null), Is.True);
         }
 
         [Test]

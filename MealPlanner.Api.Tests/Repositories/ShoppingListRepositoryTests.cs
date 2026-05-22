@@ -150,7 +150,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
         // ---------- SearchAsync by name ----------
         [Test]
-        public async Task SearchAsync_ByName_ReturnsMatchingList_CaseInsensitive()
+        public async Task SearchAsync_ByName_ReturnsMatchingList()
         {
             var repo = CreateRepository(out var ctx);
 

@@ -26,6 +26,7 @@ namespace Common.Api
             {
                 //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.EnableSensitiveDataLogging();
             });
 

@@ -56,6 +56,7 @@ namespace MealPlanner.UI.Web
         {
             ConfigureServices(builder.Services);
 
+            builder.Services.AddMemoryCache();
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddBlazoredModal();

@@ -81,12 +81,10 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var existing2 = new Common.Data.Entities.RecipeCategory { Id = 2, Name = "Old2", DisplaySequence = 20 };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(existing1);
-
-            _repoMock
-                .Setup(r => r.GetByIdAsync(2, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(existing2);
+                .Setup(r => r.GetByIdsAsync(
+                    It.Is<IList<int>>(ids => ids.Contains(1) && ids.Contains(2)),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Common.Data.Entities.RecipeCategory> { existing1, existing2 });
 
             _mapperMock
                 .Setup(m => m.Map(models[0], existing1))
@@ -112,8 +110,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.GetByIdAsync(2, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _mapperMock.Verify(m => m.Map(models[1], existing2), Times.Once);
             _repoMock.Verify(
@@ -136,12 +133,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var existing1 = new Common.Data.Entities.RecipeCategory { Id = 1, Name = "Old1", DisplaySequence = 10 };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(existing1);
-
-            _repoMock
-                .Setup(r => r.GetByIdAsync(99, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.RecipeCategory?)null);
+                .Setup(r => r.GetByIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Common.Data.Entities.RecipeCategory> { existing1 });
 
             _mapperMock
                 .Setup(m => m.Map(models[0], existing1))
@@ -158,8 +151,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
                 Assert.That(result.Message, Does.Contain("Could not find with id 99"));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.GetByIdAsync(99, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _repoMock.Verify(
                 r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
@@ -202,8 +194,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var existing1 = new Common.Data.Entities.RecipeCategory { Id = 1, Name = "Old1", DisplaySequence = 10 };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(existing1);
+                .Setup(r => r.GetByIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Common.Data.Entities.RecipeCategory> { existing1 });
 
             _mapperMock
                 .Setup(m => m.Map(models[0], existing1))
@@ -224,7 +216,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the Recipe category."));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdsAsync(It.IsAny<IList<int>>(), It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _repoMock.Verify(
                 r => r.UpdateAllAsync(It.IsAny<IList<Common.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),

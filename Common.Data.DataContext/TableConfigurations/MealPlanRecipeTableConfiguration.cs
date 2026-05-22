@@ -10,6 +10,7 @@ namespace Common.Data.DataContext.TableConfigurations
         public void Configure(EntityTypeBuilder<MealPlanRecipe> builder)
         {
             builder.HasKey(x => new { x.MealPlanId, x.RecipeId });
+            builder.HasIndex(x => x.RecipeId);
         }
     }
 }

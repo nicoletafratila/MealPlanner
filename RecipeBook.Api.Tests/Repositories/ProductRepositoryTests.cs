@@ -144,7 +144,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
         // ---------- SearchAsync by name ----------
         [Test]
-        public async Task SearchAsync_ByName_ReturnsMatchingProduct_CaseInsensitive()
+        public async Task SearchAsync_ByName_ReturnsMatchingProduct()
         {
             // Arrange
             var repo = CreateRepository(out var ctx);

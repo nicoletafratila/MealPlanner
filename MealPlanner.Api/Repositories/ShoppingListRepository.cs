@@ -50,7 +50,7 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(
                     x => x.UserId == userId &&
                          x.Name != null &&
-                         x.Name.Equals(name, StringComparison.OrdinalIgnoreCase),
+                         x.Name.ToLower() == name.ToLower(),
                     cancellationToken);
         }
     }

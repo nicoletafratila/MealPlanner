@@ -4,6 +4,8 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Services.RecipeBooks
@@ -12,6 +14,7 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
         HttpClient httpClient,
         TokenProvider tokenProvider,
         RecipeBookApiConfig recipeBookApiConfig,
+        IMemoryCache cache,
         ILogger<UnitService> logger) : IUnitService
     {
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
@@ -22,6 +25,15 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
         private readonly string _unitController =
             recipeBookApiConfig.Controllers![RecipeBookControllers.Unit]
             ?? throw new ArgumentException("Unit controller URL is not configured.", nameof(recipeBookApiConfig));
+
+        private static CancellationTokenSource _cacheToken = new();
+
+        private static void InvalidateCache()
+        {
+            var old = Interlocked.Exchange(ref _cacheToken, new CancellationTokenSource());
+            old.Cancel();
+            old.Dispose();
+        }
 
         private Task EnsureAuthAsync(CancellationToken cancellationToken) =>
             httpClient.EnsureAuthorizationHeaderAsync(tokenProvider, cancellationToken);
@@ -74,6 +86,11 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                     (queryParameters?.PageNumber ?? 1).ToString()
             };
 
+            var cacheKey = $"units:{JsonSerializer.Serialize(query, JsonOptions)}";
+
+            if (cache.TryGetValue(cacheKey, out PagedList<UnitModel>? cached))
+                return cached;
+
             await EnsureAuthAsync(cancellationToken);
 
             var url = QueryHelpers.AddQueryString($"{_unitController}/search", query);
@@ -88,9 +105,10 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
 
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
+            PagedList<UnitModel>? result;
             try
             {
-                return await JsonSerializer.DeserializeAsync<PagedList<UnitModel>?>(
+                result = await JsonSerializer.DeserializeAsync<PagedList<UnitModel>?>(
                     stream,
                     JsonOptions,
                     cancellationToken);
@@ -100,6 +118,13 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                 logger.LogError(ex, "Failed to deserialize PagedList<UnitModel> for query {@Query}", query);
                 throw;
             }
+
+            var entryOptions = new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromMinutes(30))
+                .AddExpirationToken(new CancellationChangeToken(_cacheToken.Token));
+
+            cache.Set(cacheKey, result, entryOptions);
+            return result;
         }
 
         public async Task<CommandResponse?> AddAsync(
@@ -124,10 +149,13 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                var result = await JsonSerializer.DeserializeAsync<CommandResponse?>(
                     stream,
                     JsonOptions,
                     cancellationToken);
+
+                InvalidateCache();
+                return result;
             }
             catch (JsonException ex)
             {
@@ -158,10 +186,13 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                var result = await JsonSerializer.DeserializeAsync<CommandResponse?>(
                     stream,
                     JsonOptions,
                     cancellationToken);
+
+                InvalidateCache();
+                return result;
             }
             catch (JsonException ex)
             {
@@ -196,10 +227,13 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
 
             try
             {
-                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                var result = await JsonSerializer.DeserializeAsync<CommandResponse?>(
                     stream,
                     JsonOptions,
                     cancellationToken);
+
+                InvalidateCache();
+                return result;
             }
             catch (JsonException ex)
             {

@@ -462,7 +462,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
         // ---------- SearchAsync by name ----------
         [Test]
-        public async Task SearchAsync_ByName_ReturnsMatchingMealPlan_CaseInsensitive()
+        public async Task SearchAsync_ByName_ReturnsMatchingMealPlan()
         {
             // Arrange
             var repo = CreateRepository(out var ctx);

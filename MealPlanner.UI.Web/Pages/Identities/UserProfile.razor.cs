@@ -4,6 +4,7 @@ using Identity.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace MealPlanner.UI.Web.Pages.Identities
@@ -16,6 +17,9 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter]
+        private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
 
         [Parameter]
         public string? Name { get; set; }
@@ -54,13 +58,18 @@ namespace MealPlanner.UI.Web.Pages.Identities
             else
             {
                 await MessageComponent!.ShowInfoAsync(Resources.UserProfile.SaveSucceeded);
-                NavigateToOverview();
+                await NavigateToOverview();
             }
         }
 
-        private void NavigateToOverview()
+        private async Task NavigateToOverview()
         {
-            NavigationManager?.NavigateTo("identities/usersoverview");
+            var authState = await AuthenticationStateTask;
+            var destination = authState.User.IsInRole("admin")
+                ? "identities/usersoverview"
+                : "recipebooks/recipesoverview";
+
+            NavigationManager?.NavigateTo(destination);
         }
 
         private void NavigateToChangePassword()

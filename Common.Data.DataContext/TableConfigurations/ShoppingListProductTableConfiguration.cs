@@ -10,6 +10,7 @@ namespace Common.Data.DataContext.TableConfigurations
         public void Configure(EntityTypeBuilder<ShoppingListProduct> builder)
         {
             builder.HasKey(t => new { t.ShoppingListId, t.ProductId });
+            builder.HasIndex(t => t.ProductId);
         }
     }
 }

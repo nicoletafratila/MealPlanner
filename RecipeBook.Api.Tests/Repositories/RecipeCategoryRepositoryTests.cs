@@ -114,5 +114,69 @@ namespace RecipeBook.Api.Tests.Repositories
                 await repo.UpdateAllAsync(null!, CancellationToken.None);
             });
         }
+
+        // ---------- GetByIdsAsync ----------
+        [Test]
+        public async Task GetByIdsAsync_ReturnsOnlyMatchingCategories()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.AddRange(
+                new RecipeCategory { Id = 1, Name = "Cat1", DisplaySequence = 1 },
+                new RecipeCategory { Id = 2, Name = "Cat2", DisplaySequence = 2 },
+                new RecipeCategory { Id = 3, Name = "Cat3", DisplaySequence = 3 });
+
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetByIdsAsync([1, 3], CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.Select(c => c.Id), Is.EquivalentTo(new[] { 1, 3 }));
+        }
+
+        [Test]
+        public async Task GetByIdsAsync_EmptyIds_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Cat1", DisplaySequence = 1 });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetByIdsAsync([], CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public async Task GetByIdsAsync_SomeIdsNotFound_ReturnsOnlyExisting()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Cat1", DisplaySequence = 1 });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetByIdsAsync([1, 99], CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.Single().Id, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GetByIdsAsync_NullIds_ThrowsArgumentNullException()
+        {
+            var repo = CreateRepository(out _);
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await repo.GetByIdsAsync(null!, CancellationToken.None));
+        }
     }
 }
