@@ -1,4 +1,4 @@
-﻿@page "/identities/userprofile"
+@page "/identities/userprofile"
 @page "/identities/userprofile/{name}"
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
@@ -78,6 +78,7 @@
 
                 <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary btn-sm">@Resources.UserProfile.SaveButton</button>
+                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToChangePassword">@Resources.UserProfile.ChangePasswordButton</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.UserProfile.BackToOverviewButton</button>
                 </div>
             </EditForm>

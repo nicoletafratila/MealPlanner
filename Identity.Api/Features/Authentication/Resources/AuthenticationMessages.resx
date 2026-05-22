@@ -151,4 +151,19 @@
   <data name="PasswordReset_FooterText" xml:space="preserve">
     <value>If you did not request a password reset, you can safely ignore this email.</value>
   </data>
+  <data name="UserIdRequired" xml:space="preserve">
+    <value>User ID is required.</value>
+  </data>
+  <data name="CurrentPasswordRequired" xml:space="preserve">
+    <value>Current password is required.</value>
+  </data>
+  <data name="ChangePasswordSuccess" xml:space="preserve">
+    <value>Your password has been changed successfully.</value>
+  </data>
+  <data name="ChangePasswordError" xml:space="preserve">
+    <value>An error occurred while changing the password.</value>
+  </data>
+  <data name="ChangePasswordFailed" xml:space="preserve">
+    <value>Password change failed.</value>
+  </data>
 </root>

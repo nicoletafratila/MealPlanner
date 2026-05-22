@@ -1,4 +1,4 @@
-﻿using BlazorBootstrap;
+using BlazorBootstrap;
 using Common.UI;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
@@ -61,6 +61,11 @@ namespace MealPlanner.UI.Web.Pages.Identities
         private void NavigateToOverview()
         {
             NavigationManager?.NavigateTo("identities/usersoverview");
+        }
+
+        private void NavigateToChangePassword()
+        {
+            NavigationManager?.NavigateTo($"identities/change-password?userId={ApplicationUser?.UserId}&name={ApplicationUser?.Username}");
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MealPlanner.UI.Web.Services.Identities.Resources {
+namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     using System;
     
     
@@ -19,17 +19,17 @@ namespace MealPlanner.UI.Web.Services.Identities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AuthenticationServiceMessages {
+    internal class ChangePassword {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AuthenticationServiceMessages() {
+        internal ChangePassword() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace MealPlanner.UI.Web.Services.Identities.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MealPlanner.UI.Web.Services.Identities.Resources.AuthenticationServiceMessages", typeof(AuthenticationServiceMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MealPlanner.UI.Web.Pages.Identities.Resources.ChangePassword", typeof(ChangePassword).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,16 +61,16 @@ namespace MealPlanner.UI.Web.Services.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Authentication failed..
+        ///   Looks up a localized string similar to Back.
         /// </summary>
-        internal static string AuthenticationFailed {
+        internal static string BackButton {
             get {
-                return ResourceManager.GetString("AuthenticationFailed", resourceCulture);
+                return ResourceManager.GetString("BackButton", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to change password. Please try again..
+        ///   Looks up a localized string similar to An error occurred while changing the password..
         /// </summary>
         internal static string ChangePasswordFailed {
             get {
@@ -79,83 +79,92 @@ namespace MealPlanner.UI.Web.Services.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to send password reset link. Please try again..
+        ///   Looks up a localized string similar to Password changed successfully..
         /// </summary>
-        internal static string ForgotPasswordFailed {
+        internal static string ChangePasswordSucceeded {
             get {
-                return ResourceManager.GetString("ForgotPasswordFailed", resourceCulture);
+                return ResourceManager.GetString("ChangePasswordSucceeded", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid response from authentication server..
+        ///   Looks up a localized string similar to Confirm new password: .
         /// </summary>
-        internal static string InvalidResponseAuthentication {
+        internal static string ConfirmNewPasswordLabel {
             get {
-                return ResourceManager.GetString("InvalidResponseAuthentication", resourceCulture);
+                return ResourceManager.GetString("ConfirmNewPasswordLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid response from registration server..
+        ///   Looks up a localized string similar to Current password: .
         /// </summary>
-        internal static string InvalidResponseRegistration {
+        internal static string CurrentPasswordLabel {
             get {
-                return ResourceManager.GetString("InvalidResponseRegistration", resourceCulture);
+                return ResourceManager.GetString("CurrentPasswordLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logout failed..
+        ///   Looks up a localized string similar to Invalid link. Please return to your profile and try again..
         /// </summary>
-        internal static string LogoutFailed {
+        internal static string InvalidLink {
             get {
-                return ResourceManager.GetString("LogoutFailed", resourceCulture);
+                return ResourceManager.GetString("InvalidLink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Network error during authentication..
+        ///   Looks up a localized string similar to New password: .
         /// </summary>
-        internal static string NetworkErrorAuthentication {
+        internal static string NewPasswordLabel {
             get {
-                return ResourceManager.GetString("NetworkErrorAuthentication", resourceCulture);
+                return ResourceManager.GetString("NewPasswordLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Network error during logout..
+        ///   Looks up a localized string similar to Change Password.
         /// </summary>
-        internal static string NetworkErrorLogout {
+        internal static string PageTitle {
             get {
-                return ResourceManager.GetString("NetworkErrorLogout", resourceCulture);
+                return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Network error during registration..
+        ///   Looks up a localized string similar to Confirm new password.
         /// </summary>
-        internal static string NetworkErrorRegistration {
+        internal static string PlaceholderConfirmNewPassword {
             get {
-                return ResourceManager.GetString("NetworkErrorRegistration", resourceCulture);
+                return ResourceManager.GetString("PlaceholderConfirmNewPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registration failed..
+        ///   Looks up a localized string similar to Current password.
         /// </summary>
-        internal static string RegistrationFailed {
+        internal static string PlaceholderCurrentPassword {
             get {
-                return ResourceManager.GetString("RegistrationFailed", resourceCulture);
+                return ResourceManager.GetString("PlaceholderCurrentPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to reset password. Please try again..
+        ///   Looks up a localized string similar to New password.
         /// </summary>
-        internal static string ResetPasswordFailed {
+        internal static string PlaceholderNewPassword {
             get {
-                return ResourceManager.GetString("ResetPasswordFailed", resourceCulture);
+                return ResourceManager.GetString("PlaceholderNewPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Password.
+        /// </summary>
+        internal static string SubmitButton {
+            get {
+                return ResourceManager.GetString("SubmitButton", resourceCulture);
             }
         }
     }

@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="Blazored.Modal" Version="7.3.1" />
     <PackageReference Include="bootstrap-dialog" Version="3.3.4.1" />
     <PackageReference Include="MudBlazor" Version="9.2.0" />
@@ -214,10 +215,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>LoginDisplay.resx</DependentUpon>
     </Compile>
-    <Compile Update="Pages\Identities\Resources\AccessDenied.Designer.cs">
+    <Compile Update="Pages\Identities\Resources\ChangePassword.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>AccessDenied.resx</DependentUpon>
+      <DependentUpon>ChangePassword.resx</DependentUpon>
     </Compile>
     <Compile Update="Pages\Identities\Resources\UserProfile.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -367,9 +368,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LoginDisplay.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Identities\Resources\AccessDenied.resx">
+    <EmbeddedResource Update="Pages\Identities\Resources\ChangePassword.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AccessDenied.Designer.cs</LastGenOutput>
+      <LastGenOutput>ChangePassword.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\Identities\Resources\UserProfile.resx">
       <Generator>ResXFileCodeGenerator</Generator>

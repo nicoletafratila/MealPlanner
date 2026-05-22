@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Common.Models;
+using Identity.Api.Features.Authentication.Commands.ChangePassword;
 using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Identity.Api.Features.Authentication.Commands.ForgotPassword;
 using Identity.Api.Features.Authentication.Commands.Login;
@@ -95,6 +96,15 @@ namespace Identity.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new ResetPasswordCommand { Model = model };
+            return await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpPost("change-password")]
+        public async Task<CommandResponse?> ChangePasswordAsync(
+            [FromBody] ChangePasswordModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new ChangePasswordCommand { Model = model };
             return await _mediator.Send(command, cancellationToken);
         }
 

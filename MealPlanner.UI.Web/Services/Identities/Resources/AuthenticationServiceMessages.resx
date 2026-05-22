@@ -69,4 +69,7 @@
   <data name="ResetPasswordFailed" xml:space="preserve">
     <value>Failed to reset password. Please try again.</value>
   </data>
+  <data name="ChangePasswordFailed" xml:space="preserve">
+    <value>Failed to change password. Please try again.</value>
+  </data>
 </root>

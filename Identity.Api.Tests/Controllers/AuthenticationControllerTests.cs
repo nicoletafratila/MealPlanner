@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Common.Models;
 using Identity.Api.Controllers;
+using Identity.Api.Features.Authentication.Commands.ChangePassword;
 using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Identity.Api.Features.Authentication.Commands.ForgotPassword;
 using Identity.Api.Features.Authentication.Commands.Login;
@@ -319,6 +320,33 @@ namespace Identity.Api.Tests.Controllers
             _mediatorMock.Verify(
                 m => m.Send(
                     It.Is<ResetPasswordCommand>(c => c.Model == model),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task ChangePasswordAsync_ForwardsToMediator_AndReturnsResult()
+        {
+            var model = new ChangePasswordModel
+            {
+                UserId = "user-id",
+                CurrentPassword = "OldPass123!",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+            var response = CommandResponse.Success();
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ChangePasswordCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            var result = await _controller.ChangePasswordAsync(model, CancellationToken.None);
+
+            Assert.That(result, Is.SameAs(response));
+
+            _mediatorMock.Verify(
+                m => m.Send(
+                    It.Is<ChangePasswordCommand>(c => c.Model == model),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }

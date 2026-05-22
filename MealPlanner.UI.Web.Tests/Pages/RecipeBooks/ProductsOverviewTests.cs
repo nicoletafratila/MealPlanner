@@ -200,7 +200,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var metadata = new Metadata
             {
                 PageNumber = 1,
-                PageSize = 10,
+                PageSize = 20,
                 TotalCount = 2
             };
 
@@ -218,7 +218,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var request = new GridDataProviderRequest<ProductModel>
             {
                 PageNumber = 1,
-                PageSize = 10
+                PageSize = 20
             };
 
             var result = await cut.InvokeAsync(async () =>
@@ -229,12 +229,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _productServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(q =>
-                    q.PageNumber == 1 && q.PageSize == 10), CancellationToken.None),
+                    q.PageNumber == 1 && q.PageSize == 20), CancellationToken.None),
                 Times.Exactly(2));
 
             _sessionStorageMock.Verify(
                 s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
-                Times.Once);
+                Times.Exactly(2));
 
             using (Assert.EnterMultipleScope())
             {

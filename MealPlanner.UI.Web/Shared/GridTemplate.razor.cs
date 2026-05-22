@@ -25,9 +25,21 @@ namespace MealPlanner.UI.Web.Shared
         public bool AllowPaging { get; set; } = true;
 
         [Parameter]
+        public int PageSize { get; set; } = 10;
+
+        [Parameter]
+        public int[] PageSizeSelectorItems { get; set; } = [5, 10, 20, 50];
+
+        [Parameter]
         public GridSettingsProviderDelegate? SettingsProvider { get; set; }
 
         private Grid<TItem>? gridTemplateReference;
+
+        private async Task<GridSettings?> SettingsProviderWrapperAsync()
+        {
+            var settings = SettingsProvider != null ? await SettingsProvider() : null;
+            return settings ?? new GridSettings { PageNumber = 1, PageSize = PageSize };
+        }
 
         public async Task RefreshDataAsync()
         {

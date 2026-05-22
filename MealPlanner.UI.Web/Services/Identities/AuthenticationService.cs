@@ -251,5 +251,42 @@ namespace MealPlanner.UI.Web.Services.Identities
                 return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
             }
         }
+
+        public async Task<CommandResponse?> ChangePasswordAsync(
+            ChangePasswordModel model,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await EnsureAuthAsync(cancellationToken);
+
+                using var response = await httpClient.PostAsJsonAsync(
+                    $"{_authController}/change-password",
+                    model,
+                    JsonOptions,
+                    cancellationToken);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                    logger.LogWarning("ChangePasswordAsync failed with status {StatusCode}. Body: {Body}", response.StatusCode, error);
+                    return CommandResponse.Failed(
+                        string.IsNullOrWhiteSpace(error) ? Resources.AuthenticationServiceMessages.ChangePasswordFailed : error);
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
+                return result ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during ChangePasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse during ChangePasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed);
+            }
+        }
     }
 }

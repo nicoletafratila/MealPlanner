@@ -87,4 +87,7 @@
   <data name="IsActiveLabel" xml:space="preserve">
     <value>Active: </value>
   </data>
+  <data name="ChangePasswordButton" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
 </root>

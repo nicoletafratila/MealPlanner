@@ -9,5 +9,3 @@ PM> Update-database "InitialCreate"
 PM> Script-migration
 
 
-
-change pass on profile

@@ -2,11 +2,13 @@
 using Common.UI;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MealPlanner.UI.Web.Pages.Identities
 {
+    [AllowAnonymous]
     public partial class LoginDisplay
     {
         [CascadingParameter(Name = "MessageComponent")]

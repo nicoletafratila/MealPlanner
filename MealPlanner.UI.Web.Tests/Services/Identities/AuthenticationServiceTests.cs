@@ -488,5 +488,86 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             Assert.That(result!.Succeeded, Is.False);
             mockHttp.VerifyNoOutstandingExpectation();
         }
+
+        // ---------- ChangePasswordAsync ----------
+        [Test]
+        public async Task ChangePasswordAsync_Succeeds_ReturnsResponse()
+        {
+            var model = new ChangePasswordModel
+            {
+                UserId = "user-id",
+                CurrentPassword = "OldPass123!",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+            var serverResponse = new CommandResponse { Succeeded = true, Message = "Password changed successfully." };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/change-password")
+                .Respond("application/json", JsonSerializer.Serialize(serverResponse, JsonOptions));
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ChangePasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("Password changed successfully."));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ChangePasswordAsync_NonSuccessStatusCode_ReturnsFailure()
+        {
+            var model = new ChangePasswordModel
+            {
+                UserId = "user-id",
+                CurrentPassword = "wrong-pass",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/change-password")
+                .Respond(HttpStatusCode.BadRequest, "text/plain", "Incorrect password.");
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ChangePasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ChangePasswordAsync_NullDeserializationResult_ReturnsFailure()
+        {
+            var model = new ChangePasswordModel
+            {
+                UserId = "user-id",
+                CurrentPassword = "OldPass123!",
+                NewPassword = "NewPass123!",
+                ConfirmPassword = "NewPass123!"
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/change-password")
+                .Respond("application/json", "null");
+
+            var (service, _) = CreateService(mockHttp);
+
+            var result = await service.ChangePasswordAsync(model);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
     }
 }

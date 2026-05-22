@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MealPlanner.UI.Web.Pages.Identities
 {
+    [AllowAnonymous]
     public partial class RedirectToLogin
     {
         [Inject]
