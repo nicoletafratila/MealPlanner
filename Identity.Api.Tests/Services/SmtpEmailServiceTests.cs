@@ -305,5 +305,110 @@ namespace Identity.Api.Tests.Services
                 c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
+
+        [Test]
+        public async Task SendContactUsAsync_SendsToFromAddress()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendContactUsAsync("Jane Doe", "jane@example.com", "Hello", "Body");
+
+            Assert.That(captured!.To[0].Address, Is.EqualTo("noreply@mealplanner.com"));
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_SetsReplyToSubmitterEmail()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendContactUsAsync("Jane Doe", "jane@example.com", "Hello", "Body");
+
+            Assert.That(captured!.ReplyToList[0].Address, Is.EqualTo("jane@example.com"));
+            Assert.That(captured!.ReplyToList[0].DisplayName, Is.EqualTo("Jane Doe"));
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_SubjectContainsPrefix()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendContactUsAsync("Jane", "jane@example.com", "My Subject", "Body");
+
+            Assert.That(captured!.Subject, Does.Contain("Contact Us"));
+            Assert.That(captured!.Subject, Does.Contain("My Subject"));
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_BodyContainsFromNameAndEmail()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendContactUsAsync("Jane Doe", "jane@example.com", "Hello", "Test message");
+
+            Assert.That(captured!.Body, Does.Contain("Jane Doe"));
+            Assert.That(captured!.Body, Does.Contain("jane@example.com"));
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_BodyContainsMessage()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendContactUsAsync("Jane", "jane@example.com", "Hello", "My test message content");
+
+            Assert.That(captured!.Body, Does.Contain("My test message content"));
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_CreatesSmtpClientWithConfiguredHostAndPort()
+        {
+            await _service.SendContactUsAsync("Jane", "jane@example.com", "Hello", "Body");
+
+            _smtpClientFactoryMock.Verify(f => f.Create("smtp.example.com", 587), Times.Once);
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_CallsSendMailAsync()
+        {
+            await _service.SendContactUsAsync("Jane", "jane@example.com", "Hello", "Body");
+
+            _smtpClientMock.Verify(
+                c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task SendContactUsAsync_IsBodyHtml()
+        {
+            MailMessage? captured = null;
+            _smtpClientMock
+                .Setup(c => c.SendMailAsync(It.IsAny<MailMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<MailMessage, CancellationToken>((msg, _) => captured = msg)
+                .Returns(Task.CompletedTask);
+
+            await _service.SendContactUsAsync("Jane", "jane@example.com", "Hello", "Body");
+
+            Assert.That(captured!.IsBodyHtml, Is.True);
+        }
     }
 }

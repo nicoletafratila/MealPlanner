@@ -53,9 +53,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ControllerMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="Features\ContactUs\Resources\ContactUsMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ContactUsMessages.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Features\ContactUs\Resources\ContactUsMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ContactUsMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Features\Authentication\Resources\AuthenticationMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AuthenticationMessages.Designer.cs</LastGenOutput>

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using Identity.Api.Features.Authentication.Resources;
+using Identity.Api.Features.ContactUs.Resources;
 
 namespace Identity.Api.Services
 {
@@ -74,6 +75,32 @@ namespace Identity.Api.Services
 
             await client.SendMailAsync(message, cancellationToken);
             logger.LogDebug("Password reset email sent to {Email}", toEmail);
+        }
+
+        public async Task SendContactUsAsync(string fromName, string fromEmail, string subject, string message, CancellationToken cancellationToken = default)
+        {
+            var emailSettings = configuration.GetSection("Email");
+
+            var body = $"<p><strong>{ContactUsMessages.EmailFromLabel}:</strong> {fromName} &lt;{fromEmail}&gt;</p>" +
+                       $"<p><strong>{ContactUsMessages.EmailSubjectLabel}:</strong> {subject}</p>" +
+                       $"<hr/><p><strong>{ContactUsMessages.EmailMessageLabel}:</strong></p><p>{message.Replace("\n", "<br/>")}</p>";
+
+            using var mailMessage = new MailMessage
+            {
+                From = new MailAddress(emailSettings["From"]!),
+                Subject = $"{ContactUsMessages.EmailSubjectPrefix}: {subject}",
+                Body = body,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(emailSettings["From"]!);
+            mailMessage.ReplyToList.Add(new MailAddress(fromEmail, fromName));
+
+            using var client = smtpClientFactory.Create(emailSettings["Host"]!, int.Parse(emailSettings["Port"]!));
+            client.EnableSsl = bool.Parse(emailSettings["EnableSsl"] ?? "true");
+            client.Credentials = new NetworkCredential(emailSettings["Username"], emailSettings["Password"]);
+
+            await client.SendMailAsync(mailMessage, cancellationToken);
+            logger.LogDebug("Contact us email sent from {Email}", fromEmail);
         }
     }
 }

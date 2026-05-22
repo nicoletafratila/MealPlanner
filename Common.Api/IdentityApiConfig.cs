@@ -12,7 +12,8 @@ namespace Common.Api
             Controllers = new Dictionary<string, string>
             {
                 [IdentityControllers.Authentication] = "api/authentication",
-                [IdentityControllers.ApplicationUser] = "api/applicationuser"
+                [IdentityControllers.ApplicationUser] = "api/applicationuser",
+                [IdentityControllers.ContactUs] = "api/contactus"
             };
         }
     }

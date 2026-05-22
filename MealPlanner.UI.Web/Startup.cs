@@ -19,6 +19,9 @@ namespace MealPlanner.UI.Web
             services.AddHttpClient<IApplicationUserService, ApplicationUserService>()
                 .ConfigureHttpClient(ConfigureIdentityClient);
 
+            services.AddHttpClient<IContactUsService, ContactUsService>()
+                .ConfigureHttpClient(ConfigureIdentityClient);
+
             // RecipeBook API clients
             services.AddHttpClient<IProductService, ProductService>()
                 .ConfigureHttpClient(ConfigureRecipeBookClient);

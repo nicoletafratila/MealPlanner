@@ -230,6 +230,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AuditTrail.resx</DependentUpon>
     </Compile>
+    <Compile Update="Pages\Resources\ContactUs.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ContactUs.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Services\Identities\Resources\ContactUsServiceMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ContactUsServiceMessages.resx</DependentUpon>
+    </Compile>
     <Compile Update="Shared\Resources\NavMenu.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -383,6 +393,14 @@
     <EmbeddedResource Update="Shared\Resources\NavMenu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NavMenu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Resources\ContactUs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ContactUs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Services\Identities\Resources\ContactUsServiceMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ContactUsServiceMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
