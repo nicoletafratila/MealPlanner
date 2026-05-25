@@ -47,5 +47,7 @@ namespace Identity.Shared.Models
         public string EmailAddress { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }
+
+        public bool IsLockedOut { get; set; }
     }
 }

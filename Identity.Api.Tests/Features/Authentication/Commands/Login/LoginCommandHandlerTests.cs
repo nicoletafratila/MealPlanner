@@ -131,7 +131,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
                 .ReturnsAsync(["admin"]);
 
             _signInManagerMock
-                .Setup(s => s.PasswordSignInAsync("user", "pwd", true, false))
+                .Setup(s => s.PasswordSignInAsync("user", "pwd", true, true))
                 .ReturnsAsync(SignInResult.Success);
 
             // Act
@@ -151,7 +151,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             _userManagerMock.Verify(m => m.FindByNameAsync("user"), Times.Once);
             _userManagerMock.Verify(m => m.GetRolesAsync(user), Times.Once);
             _signInManagerMock.Verify(
-                s => s.PasswordSignInAsync("user", "pwd", true, false),
+                s => s.PasswordSignInAsync("user", "pwd", true, true),
                 Times.Once);
         }
 
@@ -174,7 +174,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
                 .ReturnsAsync([]);
 
             _signInManagerMock
-                .Setup(s => s.PasswordSignInAsync("user", "pwd", false, false))
+                .Setup(s => s.PasswordSignInAsync("user", "pwd", false, true))
                 .ReturnsAsync(SignInResult.LockedOut);
 
             // Act
@@ -189,7 +189,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             });
 
             _signInManagerMock.Verify(
-                s => s.PasswordSignInAsync("user", "pwd", false, false),
+                s => s.PasswordSignInAsync("user", "pwd", false, true),
                 Times.Once);
         }
 
@@ -212,7 +212,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
                 .ReturnsAsync([]);
 
             _signInManagerMock
-                .Setup(s => s.PasswordSignInAsync("user", "wrong", false, false))
+                .Setup(s => s.PasswordSignInAsync("user", "wrong", false, true))
                 .ReturnsAsync(SignInResult.Failed);
 
             // Act
@@ -227,7 +227,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             });
 
             _signInManagerMock.Verify(
-                s => s.PasswordSignInAsync("user", "wrong", false, false),
+                s => s.PasswordSignInAsync("user", "wrong", false, true),
                 Times.Once);
         }
     }

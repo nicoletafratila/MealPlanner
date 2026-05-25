@@ -63,7 +63,12 @@ namespace Identity.Api
             services.AddScoped<IAsyncRepository<RecipeCategory, int>>(sp =>
                 new BaseAsyncRepository<RecipeCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                    {
+                        options.Lockout.MaxFailedAccessAttempts = 5;
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                        options.Lockout.AllowedForNewUsers = true;
+                    })
                     .AddEntityFrameworkStores<MealPlannerDbContext>()
                     .AddDefaultTokenProviders();
             services.AddIdentityServer()

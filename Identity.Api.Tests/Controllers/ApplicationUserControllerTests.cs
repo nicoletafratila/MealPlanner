@@ -1,6 +1,7 @@
 ﻿using Common.Models;
 using Common.Pagination;
 using Identity.Api.Controllers;
+using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
 using Identity.Api.Features.ApplicationUser.Queries.Search;
@@ -189,6 +190,88 @@ namespace Identity.Api.Tests.Controllers
                     It.Is<GetEditQuery>(q => q.Name == username),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
+        }
+
+        #endregion
+
+        #region UnlockAsync
+
+        [Test]
+        public async Task UnlockAsync_NullCommand_ReturnsBadRequest()
+        {
+            var result = await _controller.UnlockAsync(null!, CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<UnlockCommand>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task UnlockAsync_EmptyUserId_ReturnsBadRequest()
+        {
+            var result = await _controller.UnlockAsync(new UnlockCommand { UserId = "" }, CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<UnlockCommand>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task UnlockAsync_ResponseNull_Returns500()
+        {
+            var command = new UnlockCommand { UserId = "user-1" };
+
+            _mediatorMock
+                .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((CommandResponse?)null);
+
+            var result = await _controller.UnlockAsync(command, CancellationToken.None);
+
+            var objResult = result.Result as ObjectResult;
+            Assert.That(objResult, Is.Not.Null);
+            Assert.That(objResult!.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+        }
+
+        [Test]
+        public async Task UnlockAsync_ResponseFailed_ReturnsBadRequest()
+        {
+            var command = new UnlockCommand { UserId = "user-1" };
+            var failed = CommandResponse.Failed("Unlock failed");
+
+            _mediatorMock
+                .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(failed);
+
+            var result = await _controller.UnlockAsync(command, CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+            Assert.That(badRequest!.Value, Is.SameAs(failed));
+        }
+
+        [Test]
+        public async Task UnlockAsync_ResponseSucceeded_ReturnsOk()
+        {
+            var command = new UnlockCommand { UserId = "user-1" };
+            var success = CommandResponse.Success();
+
+            _mediatorMock
+                .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(success);
+
+            var result = await _controller.UnlockAsync(command, CancellationToken.None);
+
+            var okResult = result.Result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(okResult!.Value, Is.SameAs(success));
+
+            _mediatorMock.Verify(m => m.Send(command, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion

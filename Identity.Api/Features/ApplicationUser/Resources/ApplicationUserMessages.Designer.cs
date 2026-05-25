@@ -122,5 +122,14 @@ namespace Identity.Api.Features.ApplicationUser.Resources {
                 return ResourceManager.GetString("UserNotFoundWithId", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while unlocking the user..
+        /// </summary>
+        internal static string UnlockUserError {
+            get {
+                return ResourceManager.GetString("UnlockUserError", resourceCulture);
+            }
+        }
     }
 }

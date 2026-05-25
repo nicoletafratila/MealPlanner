@@ -11,7 +11,9 @@
     }
 
     .grid-additional-columns th:nth-child(7),
-    .grid-additional-columns td:nth-child(7) {
+    .grid-additional-columns td:nth-child(7),
+    .grid-additional-columns th:nth-child(8),
+    .grid-additional-columns td:nth-child(8) {
         width: auto;
         text-align: center;
     }
@@ -45,7 +47,7 @@
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnPhoneNumber" PropertyName="PhoneNumber" SortString="PhoneNumber" SortKeySelector="item => item.PhoneNumber">
                     @context.PhoneNumber
                 </GridColumn>
-                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnActive" PropertyName="IsActive">
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnActive" PropertyName="IsActive" SortString="IsActive" SortKeySelector="item => item.IsActive">
                     @if (context.IsActive)
                     {
                         <span class="badge bg-success">&#10003;</span>
@@ -53,6 +55,16 @@
                     else
                     {
                         <span class="badge bg-secondary">&ndash;</span>
+                    }
+                </GridColumn>
+                <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnLocked" PropertyName="IsLockedOut" SortString="IsLockedOut" SortKeySelector="item => item.IsLockedOut">
+                    @if (!context.IsLockedOut)
+                    {
+                        <span class="badge bg-secondary">&ndash;</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">&#10003;</span>
                     }
                 </GridColumn>
             </Columns>

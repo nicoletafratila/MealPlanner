@@ -72,6 +72,21 @@ namespace MealPlanner.UI.Web.Pages.Identities
             NavigationManager?.NavigateTo(destination);
         }
 
+        private async Task UnlockUserAsync()
+        {
+            var response = await ApplicationUserService!.UnlockAsync(ApplicationUser!.UserId!);
+            if (response != null && !response.Succeeded)
+            {
+                await MessageComponent!.ShowErrorAsync(response.Message!);
+            }
+            else
+            {
+                ApplicationUser!.IsLockedOut = false;
+                await MessageComponent!.ShowInfoAsync(Resources.UserProfile.UnlockSucceeded);
+                StateHasChanged();
+            }
+        }
+
         private void NavigateToChangePassword()
         {
             NavigationManager?.NavigateTo($"identities/change-password?userId={ApplicationUser?.UserId}&name={ApplicationUser?.Username}");

@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class UserProfile {
@@ -133,6 +133,15 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Locked: .
+        /// </summary>
+        internal static string LockedOutLabel {
+            get {
+                return ResourceManager.GetString("LockedOutLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone number: .
         /// </summary>
         internal static string PhoneNumberLabel {
@@ -201,6 +210,33 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         internal static string SelectImageLabel {
             get {
                 return ResourceManager.GetString("SelectImageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unlock User.
+        /// </summary>
+        internal static string UnlockButton {
+            get {
+                return ResourceManager.GetString("UnlockButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User has been unlocked successfully.
+        /// </summary>
+        internal static string UnlockSucceeded {
+            get {
+                return ResourceManager.GetString("UnlockSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locked.
+        /// </summary>
+        internal static string UserLockedBadge {
+            get {
+                return ResourceManager.GetString("UserLockedBadge", resourceCulture);
             }
         }
         

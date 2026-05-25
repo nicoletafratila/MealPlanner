@@ -25,6 +25,7 @@ namespace Identity.Shared.Tests.Models
             {
                 Assert.That(model.Username, Is.EqualTo(string.Empty));
                 Assert.That(model.EmailAddress, Is.EqualTo(string.Empty));
+                Assert.That(model.IsLockedOut, Is.False);
 
                 Assert.That(isValid, Is.False);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.Username))), Is.True);

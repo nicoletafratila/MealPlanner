@@ -198,6 +198,186 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         }
 
         [Test]
+        public async Task Handle_WithIsActiveFilter_ReturnsOnlyActiveUsers()
+        {
+            var entities = new List<Common.Data.Entities.ApplicationUser>
+            {
+                new() { Id = "1", UserName = "alice" },
+                new() { Id = "2", UserName = "bob" }
+            };
+
+            var models = new List<ApplicationUserModel>
+            {
+                new() { UserId = "1", Username = "alice", IsActive = true },
+                new() { UserId = "2", Username = "bob",   IsActive = false }
+            };
+
+            _userManagerMock
+                .Setup(m => m.Users)
+                .Returns(entities.AsQueryable());
+
+            _mapperMock
+                .Setup(m => m.Map<IList<ApplicationUserModel>>(It.IsAny<object>()))
+                .Returns(models);
+
+            var filter = new FilterItem(
+                nameof(ApplicationUserModel.IsActive),
+                "True",
+                FilterOperator.Equals,
+                StringComparison.OrdinalIgnoreCase);
+
+            var result = await _handler.Handle(new SearchQuery
+            {
+                QueryParameters = new QueryParameters<ApplicationUserModel>
+                {
+                    Filters = [filter],
+                    PageNumber = 1,
+                    PageSize = 10
+                }
+            }, CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Has.Count.EqualTo(1));
+                Assert.That(result.Items[0].UserId, Is.EqualTo("1"));
+            }
+        }
+
+        [Test]
+        public async Task Handle_WithIsActiveSortingAscending_ReturnsFalseBeforeTrue()
+        {
+            var entities = new List<Common.Data.Entities.ApplicationUser>
+            {
+                new() { Id = "1", UserName = "alice" },
+                new() { Id = "2", UserName = "bob" }
+            };
+
+            var models = new List<ApplicationUserModel>
+            {
+                new() { UserId = "1", Username = "alice", IsActive = true },
+                new() { UserId = "2", Username = "bob",   IsActive = false }
+            };
+
+            _userManagerMock
+                .Setup(m => m.Users)
+                .Returns(entities.AsQueryable());
+
+            _mapperMock
+                .Setup(m => m.Map<IList<ApplicationUserModel>>(It.IsAny<object>()))
+                .Returns(models);
+
+            var result = await _handler.Handle(new SearchQuery
+            {
+                QueryParameters = new QueryParameters<ApplicationUserModel>
+                {
+                    Sorting =
+                    [
+                        new SortingModel { PropertyName = nameof(ApplicationUserModel.IsActive), Direction = SortDirection.Ascending }
+                    ],
+                    PageNumber = 1,
+                    PageSize = 10
+                }
+            }, CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Has.Count.EqualTo(2));
+                Assert.That(result.Items[0].UserId, Is.EqualTo("2")); // IsActive = false first
+                Assert.That(result.Items[1].UserId, Is.EqualTo("1")); // IsActive = true second
+            }
+        }
+
+        [Test]
+        public async Task Handle_WithIsLockedOutFilter_ReturnsOnlyLockedOutUsers()
+        {
+            var entities = new List<Common.Data.Entities.ApplicationUser>
+            {
+                new() { Id = "1", UserName = "alice" },
+                new() { Id = "2", UserName = "bob" }
+            };
+
+            var models = new List<ApplicationUserModel>
+            {
+                new() { UserId = "1", Username = "alice", IsLockedOut = true },
+                new() { UserId = "2", Username = "bob",   IsLockedOut = false }
+            };
+
+            _userManagerMock
+                .Setup(m => m.Users)
+                .Returns(entities.AsQueryable());
+
+            _mapperMock
+                .Setup(m => m.Map<IList<ApplicationUserModel>>(It.IsAny<object>()))
+                .Returns(models);
+
+            var filter = new FilterItem(
+                nameof(ApplicationUserModel.IsLockedOut),
+                "True",
+                FilterOperator.Equals,
+                StringComparison.OrdinalIgnoreCase);
+
+            var result = await _handler.Handle(new SearchQuery
+            {
+                QueryParameters = new QueryParameters<ApplicationUserModel>
+                {
+                    Filters = [filter],
+                    PageNumber = 1,
+                    PageSize = 10
+                }
+            }, CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Has.Count.EqualTo(1));
+                Assert.That(result.Items[0].UserId, Is.EqualTo("1"));
+            }
+        }
+
+        [Test]
+        public async Task Handle_WithIsLockedOutSortingAscending_ReturnsFalseBeforeTrue()
+        {
+            var entities = new List<Common.Data.Entities.ApplicationUser>
+            {
+                new() { Id = "1", UserName = "alice" },
+                new() { Id = "2", UserName = "bob" }
+            };
+
+            var models = new List<ApplicationUserModel>
+            {
+                new() { UserId = "1", Username = "alice", IsLockedOut = true },
+                new() { UserId = "2", Username = "bob",   IsLockedOut = false }
+            };
+
+            _userManagerMock
+                .Setup(m => m.Users)
+                .Returns(entities.AsQueryable());
+
+            _mapperMock
+                .Setup(m => m.Map<IList<ApplicationUserModel>>(It.IsAny<object>()))
+                .Returns(models);
+
+            var result = await _handler.Handle(new SearchQuery
+            {
+                QueryParameters = new QueryParameters<ApplicationUserModel>
+                {
+                    Sorting =
+                    [
+                        new SortingModel { PropertyName = nameof(ApplicationUserModel.IsLockedOut), Direction = SortDirection.Ascending }
+                    ],
+                    PageNumber = 1,
+                    PageSize = 10
+                }
+            }, CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Has.Count.EqualTo(2));
+                Assert.That(result.Items[0].UserId, Is.EqualTo("2")); // IsLockedOut = false first
+                Assert.That(result.Items[1].UserId, Is.EqualTo("1")); // IsLockedOut = true second
+            }
+        }
+
+        [Test]
         public async Task Handle_WithPagination_ReturnsCorrectPage()
         {
             var entities = new List<Common.Data.Entities.ApplicationUser>

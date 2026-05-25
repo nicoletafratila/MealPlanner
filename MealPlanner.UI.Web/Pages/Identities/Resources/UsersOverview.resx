@@ -55,6 +55,9 @@
   <data name="ColumnActive" xml:space="preserve">
     <value>Active</value>
   </data>
+  <data name="ColumnLocked" xml:space="preserve">
+    <value>Locked</value>
+  </data>
   <data name="BreadcrumbHome" xml:space="preserve">
     <value>Home</value>
   </data>

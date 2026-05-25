@@ -11,7 +11,3 @@ PM> Script-migration
 
 
 
-
-lockout after failed atempts
-feature to unlock user
-In-memory filter/sort/pagination on all Search handlers

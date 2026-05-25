@@ -18,6 +18,7 @@ namespace Identity.Shared.Tests.Models
                 Assert.That(model.LastName, Is.Null);
                 Assert.That(model.EmailAddress, Is.Null);
                 Assert.That(model.IsActive, Is.False);
+                Assert.That(model.IsLockedOut, Is.False);
                 Assert.That(model.Index, Is.Zero);
                 Assert.That(model.IsSelected, Is.False);
             }
@@ -34,6 +35,7 @@ namespace Identity.Shared.Tests.Models
                 LastName = "Smith",
                 EmailAddress = "alice@example.com",
                 IsActive = true,
+                IsLockedOut = true,
                 Index = 3
             };
 
@@ -45,6 +47,7 @@ namespace Identity.Shared.Tests.Models
                 Assert.That(model.LastName, Is.EqualTo("Smith"));
                 Assert.That(model.EmailAddress, Is.EqualTo("alice@example.com"));
                 Assert.That(model.IsActive, Is.True);
+                Assert.That(model.IsLockedOut, Is.True);
                 Assert.That(model.Index, Is.EqualTo(3));
             }
         }

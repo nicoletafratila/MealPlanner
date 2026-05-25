@@ -47,7 +47,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                     username,
                     password,
                     isPersistent: request.Model.RememberLogin,
-                    lockoutOnFailure: false);
+                    lockoutOnFailure: true);
 
                 if (result.Succeeded)
                 {

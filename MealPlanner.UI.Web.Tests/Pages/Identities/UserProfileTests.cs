@@ -249,5 +249,85 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             Assert.That(nav.Uri, Does.Contain("userId=user-id"));
             Assert.That(nav.Uri, Does.Contain("name=testuser"));
         }
+
+        // ---------- UnlockUserAsync ----------
+
+        private IRenderedComponent<UserProfile> RenderLockedUser(string name = "testuser", string userId = "user-id")
+        {
+            _appUserServiceMock
+                .Setup(s => s.GetEditAsync(name, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ApplicationUserEditModel
+                {
+                    UserId = userId,
+                    Username = name,
+                    FirstName = "Test",
+                    LastName = "User",
+                    IsLockedOut = true
+                });
+
+            return _ctx.Render<UserProfile>(ps =>
+            {
+                ps.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+                ps.Add(p => p.Name, name);
+            });
+        }
+
+        [Test]
+        public async Task UnlockUserAsync_Success_UpdatesIsLockedOut_AndShowsInfo()
+        {
+            _appUserServiceMock
+                .Setup(s => s.UnlockAsync("user-id", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderLockedUser(userId: "user-id");
+            var method = GetMethod("UnlockUserAsync");
+
+            Assert.That(cut.Instance.ApplicationUser!.IsLockedOut, Is.True);
+
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            Assert.That(cut.Instance.ApplicationUser!.IsLockedOut, Is.False);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task UnlockUserAsync_Failure_ShowsError_AndIsLockedOutUnchanged()
+        {
+            _appUserServiceMock
+                .Setup(s => s.UnlockAsync("user-id", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = false, Message = "Unlock failed." });
+
+            var cut = RenderLockedUser(userId: "user-id");
+            var method = GetMethod("UnlockUserAsync");
+
+            Assert.That(cut.Instance.ApplicationUser!.IsLockedOut, Is.True);
+
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            Assert.That(cut.Instance.ApplicationUser!.IsLockedOut, Is.True);
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("Unlock failed.", It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
     }
 }

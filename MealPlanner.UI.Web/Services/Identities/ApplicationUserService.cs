@@ -106,6 +106,48 @@ namespace MealPlanner.UI.Web.Services.Identities
             }
         }
 
+        public async Task<CommandResponse?> UnlockAsync(
+            string userId,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("UserId must not be empty.", nameof(userId));
+
+            await EnsureAuthAsync(cancellationToken);
+
+            using var response = await httpClient.PostAsJsonAsync(
+                $"{_userController}/unlock",
+                new { UserId = userId },
+                JsonOptions,
+                cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                logger.LogWarning(
+                    "ApplicationUser UnlockAsync failed with status code {StatusCode}. Body: {Body}",
+                    response.StatusCode,
+                    error);
+
+                return CommandResponse.Failed(
+                    string.IsNullOrWhiteSpace(error) ? Resources.ApplicationUserServiceMessages.UnlockUserFailed : error);
+            }
+
+            try
+            {
+                await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                return await JsonSerializer.DeserializeAsync<CommandResponse?>(
+                    stream,
+                    JsonOptions,
+                    cancellationToken);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse for ApplicationUser UnlockAsync. UserId {UserId}", userId);
+                return CommandResponse.Failed(Resources.ApplicationUserServiceMessages.UnlockUserFailed);
+            }
+        }
+
         public async Task<CommandResponse?> UpdateAsync(
             ApplicationUserEditModel model,
             CancellationToken cancellationToken = default)

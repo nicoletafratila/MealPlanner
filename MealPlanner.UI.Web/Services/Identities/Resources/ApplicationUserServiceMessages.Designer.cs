@@ -77,5 +77,14 @@ namespace MealPlanner.UI.Web.Services.Identities.Resources {
                 return ResourceManager.GetString("UpdateUserFailed", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unlock user failed..
+        /// </summary>
+        internal static string UnlockUserFailed {
+            get {
+                return ResourceManager.GetString("UnlockUserFailed", resourceCulture);
+            }
+        }
     }
 }

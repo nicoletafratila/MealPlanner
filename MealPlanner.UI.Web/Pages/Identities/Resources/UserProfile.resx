@@ -90,4 +90,16 @@
   <data name="ChangePasswordButton" xml:space="preserve">
     <value>Change Password</value>
   </data>
+  <data name="UnlockButton" xml:space="preserve">
+    <value>Unlock User</value>
+  </data>
+  <data name="LockedOutLabel" xml:space="preserve">
+    <value>Locked: </value>
+  </data>
+  <data name="UserLockedBadge" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="UnlockSucceeded" xml:space="preserve">
+    <value>User has been unlocked successfully</value>
+  </data>
 </root>

@@ -45,4 +45,7 @@
   <data name="InvalidResponseUserUpdate" xml:space="preserve">
     <value>Invalid response from user update endpoint.</value>
   </data>
+  <data name="UnlockUserFailed" xml:space="preserve">
+    <value>Unlock user failed.</value>
+  </data>
 </root>

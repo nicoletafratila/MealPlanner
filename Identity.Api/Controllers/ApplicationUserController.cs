@@ -2,6 +2,7 @@
 using Common.Models;
 using Common.Pagination;
 using Identity.Api.Controllers.Resources;
+using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
 using Identity.Api.Features.ApplicationUser.Queries.Search;
@@ -84,6 +85,29 @@ namespace Identity.Api.Controllers
             }
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Unlocks a locked-out user and resets their failed access count.
+        /// </summary>
+        [HttpPost("unlock")]
+        [Authorize(Policy = Common.Constants.MealPlanner.PolicyScope, Roles = "admin")]
+        public async Task<ActionResult<CommandResponse?>> UnlockAsync(
+            [FromBody] UnlockCommand command,
+            CancellationToken cancellationToken)
+        {
+            if (command is null || string.IsNullOrWhiteSpace(command.UserId))
+                return BadRequest(ControllerMessages.ModelRequired);
+
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if (response is null)
+                return StatusCode(StatusCodes.Status500InternalServerError, ControllerMessages.UnknownError);
+
+            if (!response.Succeeded)
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
         /// <summary>

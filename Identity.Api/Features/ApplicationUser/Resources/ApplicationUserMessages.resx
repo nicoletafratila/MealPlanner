@@ -60,4 +60,7 @@
 	<data name="QueryParametersRequired" xml:space="preserve">
     <value>QueryParameters is required.</value>
   </data>
+	<data name="UnlockUserError" xml:space="preserve">
+    <value>An error occurred while unlocking the user.</value>
+  </data>
 </root>

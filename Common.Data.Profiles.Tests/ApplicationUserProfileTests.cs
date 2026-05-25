@@ -123,6 +123,71 @@ namespace Common.Data.Profiles.Tests
         }
 
         [Test]
+        public void ApplicationUser_To_ApplicationUserEditModel_LockoutEndInFuture_IsLockedOutTrue()
+        {
+            var entity = new ApplicationUser
+            {
+                Id = "u1",
+                UserName = "locked",
+                LockoutEnd = DateTimeOffset.UtcNow.AddMinutes(10)
+            };
+
+            var result = _mapper.Map<ApplicationUserEditModel>(entity);
+
+            Assert.That(result.IsLockedOut, Is.True);
+        }
+
+        [Test]
+        public void ApplicationUser_To_ApplicationUserEditModel_LockoutEndInPast_IsLockedOutFalse()
+        {
+            var entity = new ApplicationUser
+            {
+                Id = "u1",
+                UserName = "unlocked",
+                LockoutEnd = DateTimeOffset.UtcNow.AddMinutes(-1)
+            };
+
+            var result = _mapper.Map<ApplicationUserEditModel>(entity);
+
+            Assert.That(result.IsLockedOut, Is.False);
+        }
+
+        [Test]
+        public void ApplicationUser_To_ApplicationUserEditModel_NoLockoutEnd_IsLockedOutFalse()
+        {
+            var entity = new ApplicationUser { Id = "u1", UserName = "unlocked", LockoutEnd = null };
+
+            var result = _mapper.Map<ApplicationUserEditModel>(entity);
+
+            Assert.That(result.IsLockedOut, Is.False);
+        }
+
+        [Test]
+        public void ApplicationUser_To_ApplicationUserModel_LockoutEndInFuture_IsLockedOutTrue()
+        {
+            var entity = new ApplicationUser
+            {
+                Id = "u1",
+                UserName = "locked",
+                LockoutEnd = DateTimeOffset.UtcNow.AddMinutes(10)
+            };
+
+            var result = _mapper.Map<ApplicationUserModel>(entity);
+
+            Assert.That(result.IsLockedOut, Is.True);
+        }
+
+        [Test]
+        public void ApplicationUser_To_ApplicationUserModel_NoLockoutEnd_IsLockedOutFalse()
+        {
+            var entity = new ApplicationUser { Id = "u1", UserName = "unlocked", LockoutEnd = null };
+
+            var result = _mapper.Map<ApplicationUserModel>(entity);
+
+            Assert.That(result.IsLockedOut, Is.False);
+        }
+
+        [Test]
         public void ApplicationUserEditModel_To_ApplicationUser_Maps_Properties()
         {
             var model = new ApplicationUserEditModel
