@@ -1,4 +1,4 @@
-namespace Identity.Api.Services
+namespace Identity.Api.Features.Email
 {
     public interface IEmailService
     {

@@ -3,7 +3,7 @@ using System.Net.Mail;
 using Identity.Api.Features.Authentication.Resources;
 using Identity.Api.Features.ContactUs.Resources;
 
-namespace Identity.Api.Services
+namespace Identity.Api.Features.Email
 {
     public class SmtpEmailService(IConfiguration configuration, IWebHostEnvironment environment, ISmtpClientFactory smtpClientFactory, ILogger<SmtpEmailService> logger) : IEmailService
     {

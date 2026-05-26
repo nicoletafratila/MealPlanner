@@ -1,6 +1,6 @@
 using Common.Models;
 using Identity.Api.Features.ContactUs.Resources;
-using Identity.Api.Services;
+using Identity.Api.Features.Email;
 using MediatR;
 
 namespace Identity.Api.Features.ContactUs.Commands.Send

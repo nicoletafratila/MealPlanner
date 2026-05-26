@@ -1,6 +1,5 @@
-using Common.Models;
 using Identity.Api.Features.ContactUs.Commands.Send;
-using Identity.Api.Services;
+using Identity.Api.Features.Email;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;

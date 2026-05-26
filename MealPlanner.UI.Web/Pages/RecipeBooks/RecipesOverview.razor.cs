@@ -24,6 +24,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private SortDirection _nameSortDirection = SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+        private int _currentPage = 1;
+        private string _lastFiltersKey = "";
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -128,13 +130,20 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task<GridDataProviderResult<RecipeModel>> DataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
+            var filtersKey = GetFiltersKey(request.Filters);
+            var filtersChanged = !_firstLoad && filtersKey != _lastFiltersKey;
+            var pageNumber = filtersChanged ? _currentPage : request.PageNumber;
+
+            _lastFiltersKey = filtersKey;
+            _currentPage = pageNumber;
+
             var queryParameters = new QueryParameters<RecipeModel>
             {
                 Filters = request.Filters,
                 Sorting = request.Sorting?
                     .Select(QueryParameters<RecipeModel>.ToModel)
                     .ToList()!,
-                PageNumber = request.PageNumber,
+                PageNumber = pageNumber,
                 PageSize = request.PageSize
             };
 
@@ -204,5 +213,13 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task ShowInfoAsync(string message)
             => await MessageComponent!.ShowInfoAsync(message);
+
+        private static string GetFiltersKey(IEnumerable<FilterItem>? filters)
+        {
+            if (filters == null) return "";
+            return string.Join("|", filters
+                .OrderBy(f => f.PropertyName)
+                .Select(f => $"{f.PropertyName}={f.Operator}:{f.Value}"));
+        }
     }
 }

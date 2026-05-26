@@ -4,6 +4,7 @@ using Common.Data.DataContext;
 using Common.Data.Entities;
 using Common.Data.Repository;
 using Duende.IdentityModel;
+using Identity.Api.Features.Email;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -18,8 +19,8 @@ namespace Identity.Api
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddTransient<Services.IEmailService, Services.SmtpEmailService>();
-            services.AddSingleton<Services.ISmtpClientFactory, Services.SmtpClientFactory>();
+            services.AddTransient<IEmailService, SmtpEmailService>();
+            services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>();
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
