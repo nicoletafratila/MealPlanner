@@ -11,8 +11,6 @@ PM> Script-migration
 
 
 
-when i filter/add to current menu the page number dissapears
-
 grupeaza structura pe module si foldere, imparte common
 create the weeks menu on first click on the recipe if not yet created
 update on the banner after weeks menu is created
