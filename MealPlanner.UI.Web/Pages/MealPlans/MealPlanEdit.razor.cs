@@ -222,7 +222,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var recipe = await RecipeService.GetByIdAsync(recipeId);
             if (recipe is null)
+            {
+                await ShowErrorAsync(Resources.MealPlanEdit.AddRecipeFailed);
                 return;
+            }
 
             MealPlan.Recipes.Add(recipe);
             MealPlan.Recipes.SetIndexes();

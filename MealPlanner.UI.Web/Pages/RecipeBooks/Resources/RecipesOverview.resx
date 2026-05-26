@@ -86,6 +86,9 @@
 	<data name="SaveFailedMessage" xml:space="preserve">
 		<value>Save failed. Please try again.</value>
 	</data>
+	<data name="NoCurrentMealPlan" xml:space="preserve">
+		<value>No meal plan found for the current week. Please create a meal plan first.</value>
+	</data>
 	<data name="RecipeAdded" xml:space="preserve">
 		<value>Recipe has been added successfully</value>
 	</data>

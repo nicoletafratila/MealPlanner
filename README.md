@@ -13,9 +13,7 @@ PM> Script-migration
 
 
 grupeaza structura pe module si foldere
- warning NU1903: Package 'AutoMapper' 14.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-rvv3-g6hj-g44x
- when i filter the page number dissapears
-
+when i filter the page number dissapears
 create the weeks menu on first click on the recipe if not yet created
 update on the banner after weeks menu is created
 allow same recipe multiple times on the menu

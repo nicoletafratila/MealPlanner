@@ -168,11 +168,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var mealPlan = await MealPlanService.GetCurrentAsync();
             if (mealPlan is null)
+            {
+                await ShowErrorAsync(Resources.RecipesOverview.NoCurrentMealPlan);
                 return;
+            }
 
             var mealPlanToAdd = await MealPlanService.GetEditAsync(mealPlan.Id);
             if (mealPlanToAdd is null)
+            {
+                await ShowErrorAsync(Resources.RecipesOverview.SaveFailedMessage);
                 return;
+            }
 
             mealPlanToAdd.Recipes ??= [];
 
@@ -184,11 +190,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             mealPlanToAdd.Recipes.SetIndexes();
 
             var response = await MealPlanService.UpdateAsync(mealPlanToAdd);
-            if (response is null)
+            if (response is null || !response.Succeeded)
             {
-                await ShowErrorAsync(Resources.RecipesOverview.SaveFailedMessage);
+                await ShowErrorAsync(response?.Message ?? Resources.RecipesOverview.SaveFailedMessage);
                 return;
             }
+
             await ShowInfoAsync(Resources.RecipesOverview.RecipeAdded);
         }
 

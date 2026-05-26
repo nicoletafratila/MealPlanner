@@ -44,10 +44,15 @@ namespace MealPlanner.UI.Web.Services.RecipeBooks
                     JsonOptions,
                     cancellationToken);
             }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "Failed to fetch RecipeModel for id {RecipeId}", id);
+                return null;
+            }
             catch (JsonException ex)
             {
                 logger.LogError(ex, "Failed to deserialize RecipeModel for id {RecipeId}", id);
-                throw;
+                return null;
             }
         }
 
