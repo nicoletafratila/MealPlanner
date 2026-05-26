@@ -1,8 +1,8 @@
-﻿using Blazored.Modal;
+using Blazored.Modal;
 using Common.Api;
-using MealPlanner.UI.Web.Services.Identities;
-using MealPlanner.UI.Web.Services.MealPlans;
-using MealPlanner.UI.Web.Services.RecipeBooks;
+using Identity.Services;
+using MealPlanner.Services;
+using RecipeBook.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Serilog;
 

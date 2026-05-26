@@ -1,11 +1,11 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Bunit;
 using Bunit.TestDoubles;
 using Common.Models;
 using Common.UI;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages.Identities;
-using MealPlanner.UI.Web.Services.Identities;
+using Identity.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;

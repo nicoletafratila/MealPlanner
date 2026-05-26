@@ -1,12 +1,12 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Bunit;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.MealPlans;
-using MealPlanner.UI.Web.Services.MealPlans;
-using MealPlanner.UI.Web.Services.RecipeBooks;
+using MealPlanner.Services;
+using RecipeBook.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

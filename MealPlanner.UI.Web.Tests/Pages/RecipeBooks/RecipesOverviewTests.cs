@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using BlazorBootstrap;
 using Blazored.SessionStorage;
 using Bunit;
@@ -6,8 +6,8 @@ using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
-using MealPlanner.UI.Web.Services.MealPlans;
-using MealPlanner.UI.Web.Services.RecipeBooks;
+using MealPlanner.Services;
+using RecipeBook.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

@@ -1,6 +1,6 @@
-﻿using BlazorBootstrap;
+using BlazorBootstrap;
 using Common.UI;
-using MealPlanner.UI.Web.Services.RecipeBooks;
+using RecipeBook.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Shared.Models;
