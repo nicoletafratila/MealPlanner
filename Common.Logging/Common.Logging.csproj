@@ -1,26 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="AutoMapper" Version="$(AutoMapper)" />
+    <PackageReference Include="Serilog.AspNetCore" Version="$(SerilogAspNetCore)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
     <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\..\..\..\..\dev\installed_packages\automapper\12.0.1\lib\netstandard2.1\AutoMapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

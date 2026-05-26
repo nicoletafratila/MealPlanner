@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -41,12 +40,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-    <PackageReference Include="Blazored.Modal" Version="7.3.1" />
-    <PackageReference Include="bootstrap-dialog" Version="3.3.4.1" />
-    <PackageReference Include="MudBlazor" Version="9.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.3" />
+    <PackageReference Include="BuildBundlerMinifier" Version="$(BuildBundlerMinifier)" />
+    <PackageReference Include="Blazored.Modal" Version="$(BlazoredModal)" />
+    <PackageReference Include="bootstrap-dialog" Version="$(BootstrapDialog)" />
+    <PackageReference Include="MudBlazor" Version="$(MudBlazor)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJson)" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="$(SerilogSinksMSSqlServer)" />
   </ItemGroup>
 
   <ItemGroup>
