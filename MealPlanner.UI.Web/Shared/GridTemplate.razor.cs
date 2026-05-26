@@ -38,7 +38,9 @@ namespace MealPlanner.UI.Web.Shared
         private async Task<GridSettings?> SettingsProviderWrapperAsync()
         {
             var settings = SettingsProvider != null ? await SettingsProvider() : null;
-            return settings ?? new GridSettings { PageNumber = 1, PageSize = PageSize };
+            if (settings is { PageSize: > 0 } && PageSizeSelectorItems.Contains(settings.PageSize))
+                return settings;
+            return new GridSettings { PageNumber = 1, PageSize = PageSize };
         }
 
         public async Task RefreshDataAsync()
