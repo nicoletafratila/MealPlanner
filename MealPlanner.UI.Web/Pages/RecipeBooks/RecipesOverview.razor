@@ -20,16 +20,6 @@
     </div>
 
     <div class="card-body">
-        <div class="d-flex align-items-center bg-primary bg-opacity-25 text-white px-2 py-1 mb-1">
-            <span class="me-2 small">@Resources.RecipesOverview.HeaderCategory</span>
-            <select @onchange="OnRecipeCategoryChangedAsync" class="form-select form-select-sm" style="width: auto; min-width: 160px;">
-                <option value="">All</option>
-                @foreach (var cat in _recipeCategories)
-                {
-                    <option value="@cat.Name">@cat.Name</option>
-                }
-            </select>
-        </div>
         <GridTemplate TItem="RecipeModel" @key="@_gridKey" @ref="_recipesGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass" PageSize="20" PageSizeSelectorItems="@(new int[] { 20, 40, 60, 80, 100 })">
             <Columns>
                 <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
@@ -71,7 +61,7 @@
                         </div>
                     </div>
                 </GridColumn>
-                <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderCategory" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" Filterable="false" />
+                <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderCategory" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
             </Columns>
         </GridTemplate>
     </div>
