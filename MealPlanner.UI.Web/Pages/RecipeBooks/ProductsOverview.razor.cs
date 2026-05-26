@@ -22,6 +22,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private SortDirection _nameSortDirection = SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+        private int _pageBeforeFilter = 1;
+        private string _lastFiltersKey = "";
+        private string _selectedProductCategoryName = "";
+        private List<ProductCategoryModel> _productCategories = [];
+        private int _pageSize = 20;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -30,17 +35,31 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         public IProductService ProductService { get; set; } = default!;
 
         [Inject]
+        public IProductCategoryService ProductCategoryService { get; set; } = default!;
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             _navItems =
             [
                 new BreadcrumbItem { Text = Resources.ProductsOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
             ];
+
+            var queryParameters = new QueryParameters<ProductCategoryModel>
+            {
+                Filters = [],
+                Sorting = [new SortingModel { PropertyName = "Name", Direction = SortDirection.Ascending }],
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+
+            var result = await ProductCategoryService.SearchAsync(queryParameters);
+            _productCategories = result?.Items?.ToList() ?? [];
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -121,12 +140,74 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 await _productsGrid.RefreshDataAsync();
         }
 
+        private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
+        {
+            _selectedProductCategoryName = e.Value?.ToString() ?? "";
+
+            if (_productsGrid is not null)
+                await _productsGrid.RefreshDataAsync();
+        }
+
         private async Task<GridDataProviderResult<ProductModel>> DataProviderAsync(
             GridDataProviderRequest<ProductModel> request)
         {
+            if (request.PageSize > 0)
+                _pageSize = request.PageSize;
+
+            var filtersKey = GetFiltersKey(request.Filters);
+            var filterCleared = !_firstLoad && _lastFiltersKey != "" && filtersKey == "";
+            var filterApplied = !_firstLoad && _lastFiltersKey == "" && filtersKey != "";
+
+            if (filterCleared)
+            {
+                var restoreParameters = new QueryParameters<ProductModel>
+                {
+                    Filters = [],
+                    Sorting = request.Sorting?
+                        .Select(QueryParameters<ProductModel>.ToModel)
+                        .ToList() ?? [],
+                    PageNumber = _pageBeforeFilter,
+                    PageSize = _pageSize
+                };
+                await SessionStorage.SetItemAsync(restoreParameters);
+                _lastFiltersKey = filtersKey;
+                _firstLoad = true;
+                _gridKey++;
+                StateHasChanged();
+                return new GridDataProviderResult<ProductModel> { Data = [], TotalCount = 0 };
+            }
+
+            if (filterApplied)
+            {
+                var resetParameters = new QueryParameters<ProductModel>
+                {
+                    Filters = request.Filters,
+                    Sorting = request.Sorting?
+                        .Select(QueryParameters<ProductModel>.ToModel)
+                        .ToList() ?? [],
+                    PageNumber = 1,
+                    PageSize = _pageSize
+                };
+                await SessionStorage.SetItemAsync(resetParameters);
+                _lastFiltersKey = filtersKey;
+                _firstLoad = true;
+                _gridKey++;
+                StateHasChanged();
+                return new GridDataProviderResult<ProductModel> { Data = [], TotalCount = 0 };
+            }
+
+            _lastFiltersKey = filtersKey;
+
+            if (filtersKey == "")
+                _pageBeforeFilter = request.PageNumber;
+
+            var apiFilters = request.Filters?.ToList() ?? [];
+            if (!string.IsNullOrEmpty(_selectedProductCategoryName))
+                apiFilters.Add(new FilterItem("ProductCategoryName", _selectedProductCategoryName, FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+
             var queryParameters = new QueryParameters<ProductModel>
             {
-                Filters = request.Filters,
+                Filters = apiFilters,
                 Sorting = request.Sorting?
                     .Select(QueryParameters<ProductModel>.ToModel)
                     .ToList()!,
@@ -143,7 +224,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var items = result.Items ?? [];
 
             if (!isFirstLoad)
-                await SessionStorage.SetItemAsync(queryParameters);
+            {
+                var sessionParameters = new QueryParameters<ProductModel>
+                {
+                    Filters = request.Filters,
+                    Sorting = queryParameters.Sorting,
+                    PageNumber = request.PageNumber,
+                    PageSize = _pageSize
+                };
+                await SessionStorage.SetItemAsync(sessionParameters);
+            }
 
             _tableGridClass = items.Count == 0
                 ? CssClasses.GridTemplateEmptyHorizontalClass
@@ -155,6 +245,22 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 Data = items,
                 TotalCount = result.Metadata?.TotalCount ?? 0
             };
+        }
+
+        private string GetFiltersKey(IEnumerable<FilterItem>? filters)
+        {
+            var parts = new List<string>();
+
+            if (!string.IsNullOrEmpty(_selectedProductCategoryName))
+                parts.Add($"cat={_selectedProductCategoryName}");
+
+            if (filters != null)
+                parts.AddRange(filters
+                    .Where(f => !string.IsNullOrEmpty(f.Value))
+                    .OrderBy(f => f.PropertyName)
+                    .Select(f => $"{f.PropertyName}={f.Operator}:{f.Value}"));
+
+            return string.Join("|", parts);
         }
 
         private async Task ShowErrorAsync(string message)
