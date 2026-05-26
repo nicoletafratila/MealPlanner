@@ -1,0 +1,71 @@
+<Project>
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!-- All non-MAUI projects target net10.0 -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'MealPlanner.UI.Mobile'">
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Microsoft .NET 10 runtime packages (all ship at the same patch) -->
+    <MicrosoftAspNetCore>10.0.8</MicrosoftAspNetCore>
+    <!-- EF Core providers converge with the main group in .NET 10 -->
+    <MicrosoftEFCoreSqlServer>10.0.8</MicrosoftEFCoreSqlServer>
+    <MicrosoftEFCoreSqlite>10.0.8</MicrosoftEFCoreSqlite>
+    <MicrosoftEFCoreInMemory>10.0.8</MicrosoftEFCoreInMemory>
+    <MicrosoftEFCoreDesign>10.0.8</MicrosoftEFCoreDesign>
+    <!-- Other Microsoft packages -->
+    <MicrosoftAspNetCoreAuthenticationJwtBearer>10.0.8</MicrosoftAspNetCoreAuthenticationJwtBearer>
+    <MicrosoftAspNetCoreComponents>10.0.8</MicrosoftAspNetCoreComponents>
+    <MicrosoftAspNetCoreComponentsAuthorization>10.0.8</MicrosoftAspNetCoreComponentsAuthorization>
+    <MicrosoftAspNetCoreComponentsWebAssemblyAuthentication>10.0.8</MicrosoftAspNetCoreComponentsWebAssemblyAuthentication>
+    <MicrosoftAspNetCoreDiagnosticsEntityFrameworkCore>10.0.8</MicrosoftAspNetCoreDiagnosticsEntityFrameworkCore>
+    <MicrosoftAspNetCoreIdentityEntityFrameworkCore>10.0.8</MicrosoftAspNetCoreIdentityEntityFrameworkCore>
+    <MicrosoftAspNetCoreIdentityUI>10.0.8</MicrosoftAspNetCoreIdentityUI>
+    <MicrosoftAspNetCoreWebUtilities>10.0.8</MicrosoftAspNetCoreWebUtilities>
+    <MicrosoftDataSqlClient>7.0.1</MicrosoftDataSqlClient>
+    <MicrosoftDataSqlite>10.0.8</MicrosoftDataSqlite>
+    <MicrosoftExtensionsDependencyInjection>10.0.8</MicrosoftExtensionsDependencyInjection>
+    <MicrosoftExtensionsHttp>10.0.8</MicrosoftExtensionsHttp>
+    <!-- MAUI (ships on a separate cadence) -->
+    <MicrosoftMaui>10.0.70</MicrosoftMaui>
+    <!-- Test infrastructure -->
+    <MicrosoftNETTestSdk>18.5.1</MicrosoftNETTestSdk>
+    <NUnitVersion>4.6.1</NUnitVersion>
+    <NUnitAnalyzers>4.13.0</NUnitAnalyzers>
+    <NUnit3TestAdapter>6.2.0</NUnit3TestAdapter>
+    <CoverletCollector>10.0.1</CoverletCollector>
+    <!-- Third-party -->
+    <AutoMapper>14.0.0</AutoMapper>
+    <BlazorBootstrap>3.5.0</BlazorBootstrap>
+    <BlazoredModal>7.3.1</BlazoredModal>
+    <BlazoredSessionStorage>2.4.0</BlazoredSessionStorage>
+    <BootstrapDialog>3.3.4.1</BootstrapDialog>
+    <BUnit>2.7.2</BUnit>
+    <BuildBundlerMinifier>3.2.449</BuildBundlerMinifier>
+    <DuendeIdentityServer>7.4.7</DuendeIdentityServer>
+    <DuendeIdentityServerAspNetIdentity>7.4.7</DuendeIdentityServerAspNetIdentity>
+    <FluentValidation>12.1.1</FluentValidation>
+    <MediatR>11.1.0</MediatR>
+    <MediatRExtensionsMSDI>11.1.0</MediatRExtensionsMSDI>
+    <Moq>4.20.72</Moq>
+    <MudBlazor>9.4.0</MudBlazor>
+    <NewtonsoftJson>13.0.4</NewtonsoftJson>
+    <RichardSzalayMockHttp>7.0.0</RichardSzalayMockHttp>
+    <SerilogAspNetCore>10.0.0</SerilogAspNetCore>
+    <SerilogSinksMSSqlServer>10.0.0</SerilogSinksMSSqlServer>
+    <SwashbuckleAspNetCore>9.0.6</SwashbuckleAspNetCore>
+    <XUnit>2.9.2</XUnit>
+    <XUnitRunnerVisualStudio>2.8.2</XUnitRunnerVisualStudio>
+  </PropertyGroup>
+
+</Project>

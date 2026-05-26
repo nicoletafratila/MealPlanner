@@ -178,6 +178,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No meal plan found for the current week. Please create a meal plan first..
+        /// </summary>
+        internal static string NoCurrentMealPlan {
+            get {
+                return ResourceManager.GetString("NoCurrentMealPlan", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Recipe has been added successfully.
         /// </summary>
         internal static string RecipeAdded {

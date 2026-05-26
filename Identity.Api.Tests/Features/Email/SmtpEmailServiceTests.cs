@@ -1,12 +1,12 @@
 using System.Net;
 using System.Net.Mail;
-using Identity.Api.Services;
+using Identity.Api.Features.Email;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Identity.Api.Tests.Services
+namespace Identity.Api.Tests.Features.Email
 {
     [TestFixture]
     public class SmtpEmailServiceTests
@@ -331,8 +331,11 @@ namespace Identity.Api.Tests.Services
 
             await _service.SendContactUsAsync("Jane Doe", "jane@example.com", "Hello", "Body");
 
-            Assert.That(captured!.ReplyToList[0].Address, Is.EqualTo("jane@example.com"));
-            Assert.That(captured!.ReplyToList[0].DisplayName, Is.EqualTo("Jane Doe"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(captured!.ReplyToList[0].Address, Is.EqualTo("jane@example.com"));
+                Assert.That(captured!.ReplyToList[0].DisplayName, Is.EqualTo("Jane Doe"));
+            }
         }
 
         [Test]

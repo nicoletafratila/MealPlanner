@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Common.Data.Entities;
 using Common.Data.Repository;
 using Identity.Api.Features.Authentication.Commands.Register;
-using Identity.Api.Services;
+using Identity.Api.Features.Email;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -68,11 +68,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Username is already taken."));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("newuser"), Times.Once);
             _userManagerMock.Verify(
@@ -96,11 +96,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Email address is already registered."));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByEmailAsync("newuser@example.com"), Times.Once);
             _userManagerMock.Verify(
@@ -128,11 +128,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Does.Contain("Password too weak."));
-            });
+            }
 
             _userManagerMock.Verify(
                 m => m.AddToRoleAsync(It.IsAny<Common.Data.Entities.ApplicationUser>(), It.IsAny<string>()),
@@ -204,11 +204,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("Registration successful. Please check your email to confirm your account."));
-            });
+            }
 
             // Only null-UserId (seeded) templates get copied — 2 products, 2 recipes
             _productCategoryRepoMock.Verify(

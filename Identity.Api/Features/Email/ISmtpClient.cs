@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace Identity.Api.Services
+namespace Identity.Api.Features.Email
 {
     public interface ISmtpClient : IDisposable
     {

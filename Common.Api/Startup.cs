@@ -5,7 +5,6 @@ using Common.Data.Profiles;
 using Common.Data.Profiles.Resolvers;
 using Common.Data.Repository;
 using Common.Logging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

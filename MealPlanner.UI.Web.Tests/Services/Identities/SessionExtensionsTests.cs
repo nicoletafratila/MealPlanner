@@ -1,4 +1,5 @@
-﻿using Blazored.SessionStorage;
+using Blazored.SessionStorage;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services.Identities;
 using Moq;
 
@@ -19,7 +20,7 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
                 .Returns(ValueTask.CompletedTask)
                 .Verifiable();
 
-            var dto = new TestDto { Name = "A", Value = 1 };
+            var dto = new ShopModel { Name = "A", Id = 1 };
 
             // Act
             await storageMock.Object.SetItemAsync(dto, key);
@@ -35,14 +36,14 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
         {
             // Arrange
             var storageMock = new Mock<ISessionStorageService>();
-            var expectedKey = typeof(TestDto).FullName!;
+            var expectedKey = typeof(ShopModel).FullName!;
 
             storageMock
                 .Setup(s => s.SetItemAsync(expectedKey, It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Returns(ValueTask.CompletedTask)
                 .Verifiable();
 
-            var dto = new TestDto { Name = "B", Value = 2 };
+            var dto = new ShopModel { Name = "B", Id = 2 };
 
             // Act
             await storageMock.Object.SetItemAsync(dto, null);
@@ -60,20 +61,20 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             var storageMock = new Mock<ISessionStorageService>();
             const string key = "explicit-key";
 
-            var json = "{\"Name\":\"C\",\"Value\":3}";
+            var json = "{\"Name\":\"C\",\"Id\":3}";
             storageMock
                 .Setup(s => s.GetItemAsync<string?>(key, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(json);
 
             // Act
-            var result = await SessionExtensions.GetItemAsync<TestDto>(storageMock.Object, key);
+            var result = await SessionExtensions.GetItemAsync<ShopModel>(storageMock.Object, key);
 
             // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Name, Is.EqualTo("C"));
-                Assert.That(result.Value, Is.EqualTo(3));
+                Assert.That(result.Id, Is.EqualTo(3));
             }
         }
 
@@ -82,22 +83,22 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
         {
             // Arrange
             var storageMock = new Mock<ISessionStorageService>();
-            var expectedKey = typeof(TestDto).FullName!;
+            var expectedKey = typeof(ShopModel).FullName!;
 
-            var json = "{\"Name\":\"D\",\"Value\":4}";
+            var json = "{\"Name\":\"D\",\"Id\":4}";
             storageMock
                 .Setup(s => s.GetItemAsync<string?>(expectedKey, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(json);
 
             // Act
-            var result = await SessionExtensions.GetItemAsync<TestDto>(storageMock.Object, null);
+            var result = await SessionExtensions.GetItemAsync<ShopModel>(storageMock.Object, null);
 
             // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Name, Is.EqualTo("D"));
-                Assert.That(result.Value, Is.EqualTo(4));
+                Assert.That(result.Id, Is.EqualTo(4));
             }
         }
 
@@ -106,14 +107,14 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
         {
             // Arrange
             var storageMock = new Mock<ISessionStorageService>();
-            var key = typeof(TestDto).FullName!;
+            var key = typeof(ShopModel).FullName!;
 
             storageMock
                 .Setup(s => s.GetItemAsync<string?>(key, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string?)null);
 
             // Act
-            var result = await SessionExtensions.GetItemAsync<TestDto>(storageMock.Object);
+            var result = await SessionExtensions.GetItemAsync<ShopModel>(storageMock.Object);
 
             // Assert
             Assert.That(result, Is.Null);
@@ -124,7 +125,7 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
         {
             // Arrange
             ISessionStorageService? storage = null;
-            var dto = new TestDto { Name = "E", Value = 5 };
+            var dto = new ShopModel { Name = "E", Id = 5 };
 
             // Act & Assert
             Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.SetItemAsync(storage!, dto));
@@ -137,7 +138,7 @@ namespace MealPlanner.UI.Web.Tests.Services.Identities
             ISessionStorageService? storage = null;
 
             // Act & Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.GetItemAsync<TestDto>(storage!));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.GetItemAsync<ShopModel>(storage!));
         }
     }
 }

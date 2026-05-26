@@ -21,6 +21,40 @@ namespace MealPlanner.Api.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public override async Task UpdateAsync(Shop entity, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            var existing = await Context.ShopDisplaySequences
+                .Where(s => s.ShopId == entity.Id)
+                .ToListAsync(cancellationToken);
+
+            var desired = entity.DisplaySequence ?? [];
+            var desiredCategoryIds = desired.Select(s => s.ProductCategoryId).ToHashSet();
+
+            Context.ShopDisplaySequences.RemoveRange(
+                existing.Where(s => !desiredCategoryIds.Contains(s.ProductCategoryId)));
+
+            var existingByCategory = existing.ToDictionary(s => s.ProductCategoryId);
+            var toAdd = new List<ShopDisplaySequence>();
+            foreach (var item in desired)
+            {
+                if (existingByCategory.TryGetValue(item.ProductCategoryId, out var tracked))
+                    tracked.Value = item.Value;
+                else
+                    toAdd.Add(new ShopDisplaySequence { ShopId = entity.Id, ProductCategoryId = item.ProductCategoryId, Value = item.Value });
+            }
+            await Context.ShopDisplaySequences.AddRangeAsync(toAdd, cancellationToken);
+
+            entity.DisplaySequence = existing
+                .Where(s => desiredCategoryIds.Contains(s.ProductCategoryId))
+                .Concat(toAdd)
+                .ToList();
+
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task<Shop?> GetByIdIncludeDisplaySequenceAsync(
             int? id,
             CancellationToken cancellationToken)

@@ -68,7 +68,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("AddButton", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to add recipe. Please try again..
+        /// </summary>
+        internal static string AddRecipeFailed {
+            get {
+                return ResourceManager.GetString("AddRecipeFailed", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Back to overview.
         /// </summary>

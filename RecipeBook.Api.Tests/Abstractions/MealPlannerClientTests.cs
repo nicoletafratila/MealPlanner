@@ -2,6 +2,7 @@
 using Common.Api;
 using Common.Constants;
 using MealPlanner.Shared.Models;
+using Microsoft.Extensions.Configuration;
 using RecipeBook.Api.Abstractions;
 using RichardSzalay.MockHttp;
 
@@ -16,24 +17,19 @@ namespace RecipeBook.Api.Tests.Abstractions
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static IApiConfig CreateConfig()
+        private static MealPlannerApiConfig CreateConfig()
         {
-            var configMock = new Moq.Mock<IApiConfig>(Moq.MockBehavior.Strict);
-
-            configMock.SetupGet(c => c.BaseUrl)
-                .Returns(new Uri(BaseAddress));
-
-            configMock.SetupGet(c => c.Controllers)
-                .Returns(new Dictionary<string, string>
-                {
-                    { MealPlannerControllers.Shop, ShopPath },
-                    { MealPlannerControllers.MealPlan, MealPlanPath }
-                });
-
-            return configMock.Object;
+            var configValues = new Dictionary<string, string?>
+            {
+                [$"{ApiConfigNames.MealPlanner}:BaseUrl"] = BaseAddress
+            };
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(configValues)
+                .Build();
+            return new MealPlannerApiConfig(configuration);
         }
 
-        private static (MealPlannerClient client, MockHttpMessageHandler mockHttp, IApiConfig config) CreateClient()
+        private static (MealPlannerClient client, MockHttpMessageHandler mockHttp, MealPlannerApiConfig config) CreateClient()
         {
             var mockHttp = new MockHttpMessageHandler();
 
@@ -67,7 +63,7 @@ namespace RecipeBook.Api.Tests.Abstractions
             };
 
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MealPlannerClient(httpClient, null!));
+                _ = new MealPlannerClient(httpClient, (MealPlannerApiConfig)null!));
         }
 
         [Test]

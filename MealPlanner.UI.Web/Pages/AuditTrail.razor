@@ -43,7 +43,6 @@ else
                         <th>@nameof(LogModel.Timestamp)</th>
                         <th>@nameof(LogModel.Level)</th>
                         <th>@nameof(LogModel.Message)</th>
-                        <th>@nameof(LogModel.MessageTemplate)</th>
                         <th>@nameof(LogModel.Exception)</th>
                     </tr>
                 </thead>
@@ -59,7 +58,6 @@ else
                                 </span>
                             </td>
                             <td>@log.Message</td>
-                            <td>@log.MessageTemplate</td>
                             <td>@log.Exception</td>
                         </tr>
                     }

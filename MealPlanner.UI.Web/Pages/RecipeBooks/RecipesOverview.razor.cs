@@ -24,6 +24,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private SortDirection _nameSortDirection = SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+        private int _currentPage = 1;
+        private string _lastFiltersKey = "";
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -128,13 +130,20 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task<GridDataProviderResult<RecipeModel>> DataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
+            var filtersKey = GetFiltersKey(request.Filters);
+            var filtersChanged = !_firstLoad && filtersKey != _lastFiltersKey;
+            var pageNumber = filtersChanged ? _currentPage : request.PageNumber;
+
+            _lastFiltersKey = filtersKey;
+            _currentPage = pageNumber;
+
             var queryParameters = new QueryParameters<RecipeModel>
             {
                 Filters = request.Filters,
                 Sorting = request.Sorting?
                     .Select(QueryParameters<RecipeModel>.ToModel)
                     .ToList()!,
-                PageNumber = request.PageNumber,
+                PageNumber = pageNumber,
                 PageSize = request.PageSize
             };
 
@@ -168,11 +177,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var mealPlan = await MealPlanService.GetCurrentAsync();
             if (mealPlan is null)
+            {
+                await ShowErrorAsync(Resources.RecipesOverview.NoCurrentMealPlan);
                 return;
+            }
 
             var mealPlanToAdd = await MealPlanService.GetEditAsync(mealPlan.Id);
             if (mealPlanToAdd is null)
+            {
+                await ShowErrorAsync(Resources.RecipesOverview.SaveFailedMessage);
                 return;
+            }
 
             mealPlanToAdd.Recipes ??= [];
 
@@ -184,11 +199,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             mealPlanToAdd.Recipes.SetIndexes();
 
             var response = await MealPlanService.UpdateAsync(mealPlanToAdd);
-            if (response is null)
+            if (response is null || !response.Succeeded)
             {
-                await ShowErrorAsync(Resources.RecipesOverview.SaveFailedMessage);
+                await ShowErrorAsync(response?.Message ?? Resources.RecipesOverview.SaveFailedMessage);
                 return;
             }
+
             await ShowInfoAsync(Resources.RecipesOverview.RecipeAdded);
         }
 
@@ -197,5 +213,13 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task ShowInfoAsync(string message)
             => await MessageComponent!.ShowInfoAsync(message);
+
+        private static string GetFiltersKey(IEnumerable<FilterItem>? filters)
+        {
+            if (filters == null) return "";
+            return string.Join("|", filters
+                .OrderBy(f => f.PropertyName)
+                .Select(f => $"{f.PropertyName}={f.Operator}:{f.Value}"));
+        }
     }
 }

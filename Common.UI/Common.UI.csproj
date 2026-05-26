@@ -1,14 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.12" />
+    <PackageReference Include="Blazored.SessionStorage" Version="$(BlazoredSessionStorage)" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="$(MicrosoftAspNetCoreComponents)" />
   </ItemGroup>
 
 </Project>

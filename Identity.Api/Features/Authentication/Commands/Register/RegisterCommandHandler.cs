@@ -4,7 +4,7 @@ using Common.Data.Repository;
 using Common.Models;
 using Duende.IdentityModel;
 using Identity.Api.Features.Authentication.Resources;
-using Identity.Api.Services;
+using Identity.Api.Features.Email;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

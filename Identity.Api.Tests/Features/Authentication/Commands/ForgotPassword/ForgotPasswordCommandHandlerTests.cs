@@ -1,5 +1,5 @@
 using Identity.Api.Features.Authentication.Commands.ForgotPassword;
-using Identity.Api.Services;
+using Identity.Api.Features.Email;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

@@ -21,6 +21,55 @@ namespace MealPlanner.Api.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public override async Task UpdateAsync(ShoppingList entity, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            var existing = await Ctx.ShoppingListProducts
+                .Where(p => p.ShoppingListId == entity.Id)
+                .ToListAsync(cancellationToken);
+
+            var desired = entity.Products ?? [];
+            var desiredProductIds = desired.Select(p => p.ProductId).ToHashSet();
+
+            Ctx.ShoppingListProducts.RemoveRange(
+                existing.Where(p => !desiredProductIds.Contains(p.ProductId)));
+
+            var existingByProduct = existing.ToDictionary(p => p.ProductId);
+            var toAdd = new List<ShoppingListProduct>();
+            foreach (var item in desired)
+            {
+                if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
+                {
+                    tracked.Quantity = item.Quantity;
+                    tracked.UnitId = item.UnitId;
+                    tracked.Collected = item.Collected;
+                    tracked.DisplaySequence = item.DisplaySequence;
+                }
+                else
+                {
+                    toAdd.Add(new ShoppingListProduct
+                    {
+                        ShoppingListId = entity.Id,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitId = item.UnitId,
+                        Collected = item.Collected,
+                        DisplaySequence = item.DisplaySequence
+                    });
+                }
+            }
+            await Ctx.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
+
+            entity.Products = existing
+                .Where(p => desiredProductIds.Contains(p.ProductId))
+                .Concat(toAdd)
+                .ToList();
+
+            Ctx.Entry(entity).State = EntityState.Modified;
+            await Ctx.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
             int id,
             CancellationToken cancellationToken)
