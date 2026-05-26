@@ -163,11 +163,11 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(found!.Name, Is.EqualTo("Plan1"));
                 Assert.That(found.MealPlanRecipes, Is.Not.Null);
-            });
+            }
             Assert.That(found.MealPlanRecipes!, Has.Count.EqualTo(1));
             var mpr = found.MealPlanRecipes!.Single();
             using (Assert.EnterMultipleScope())
@@ -239,34 +239,28 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(found!.MealPlanRecipes, Is.Not.Null);
                 Assert.That(found.MealPlanRecipes!, Has.Count.EqualTo(1));
-            });
+            }
 
             var mpr = found.MealPlanRecipes!.Single();
             var r = mpr.Recipe;
             Assert.That(r, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(r!.RecipeIngredients, Is.Not.Null);
                 Assert.That(r.RecipeIngredients!, Has.Count.EqualTo(1));
-            });
+            }
 
             var ing = r.RecipeIngredients!.Single();
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.That(ing.Unit, Is.Not.Null);
-                    Assert.That(ing.Product, Is.Not.Null);
-                });
-                Assert.Multiple(() =>
-                {
-                    Assert.That(ing.Product!.ProductCategory, Is.Not.Null);
-                    Assert.That(ing.Product!.BaseUnit, Is.Not.Null);
-                });
+                Assert.That(ing.Unit, Is.Not.Null);
+                Assert.That(ing.Product, Is.Not.Null);
+                Assert.That(ing.Product!.ProductCategory, Is.Not.Null);
+                Assert.That(ing.Product!.BaseUnit, Is.Not.Null);
             }
         }
 
@@ -380,11 +374,11 @@ namespace MealPlanner.Api.Tests.Repositories
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
             var kv = result.Single();
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(kv.Key.ProductCategoryId, Is.EqualTo(20));
                 Assert.That(kv.Value.Name, Is.EqualTo("Plan1"));
-            });
+            }
         }
 
         [Test]
@@ -507,12 +501,69 @@ namespace MealPlanner.Api.Tests.Repositories
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.That(r1, Is.Null);
-                    Assert.That(r2, Is.Null);
-                });
+                Assert.That(r1, Is.Null);
+                Assert.That(r2, Is.Null);
             }
+        }
+
+        // ---------- UpdateAsync ----------
+        [Test]
+        public async Task UpdateAsync_AddsNewRecipe_ToExistingMealPlan()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan1", UserId = "user1" });
+            ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            entity!.MealPlanRecipes =
+            [
+                new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 },
+                new MealPlanRecipe { MealPlanId = 1, RecipeId = 11 }
+            ];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.MealPlanRecipes.Where(mpr => mpr.MealPlanId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(2));
+            Assert.That(rows.Select(r => r.RecipeId), Is.EquivalentTo([10, 11]));
+        }
+
+        [Test]
+        public async Task UpdateAsync_RemovesDeletedRecipe_FromMealPlan()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan1", UserId = "user1" });
+            ctx.MealPlanRecipes.AddRange(
+                new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 },
+                new MealPlanRecipe { MealPlanId = 1, RecipeId = 11 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            entity!.MealPlanRecipes = [new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 }];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.MealPlanRecipes.Where(mpr => mpr.MealPlanId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(1));
+            Assert.That(rows.Single().RecipeId, Is.EqualTo(10));
+        }
+
+        [Test]
+        public async Task UpdateAsync_NullEntity_Throws()
+        {
+            // Arrange
+            var repo = CreateRepository(out _);
+
+            // Act / Assert
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await repo.UpdateAsync(null!, CancellationToken.None));
         }
     }
 }

@@ -216,5 +216,97 @@ namespace RecipeBook.Api.Tests.Repositories
                 Assert.That(result2, Is.Null);
             }
         }
+
+        // ---------- UpdateAsync ----------
+        [Test]
+        public async Task UpdateAsync_AddsNewIngredient_ToRecipe()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
+            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
+            entity!.RecipeIngredients =
+            [
+                new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m },
+                new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = 1, Quantity = 2m }
+            ];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(2));
+            Assert.That(rows.Select(ri => ri.ProductId), Is.EquivalentTo(new[] { 100, 200 }));
+        }
+
+        [Test]
+        public async Task UpdateAsync_RemovesDeletedIngredient_FromRecipe()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
+            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.RecipeIngredients.AddRange(
+                new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m },
+                new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = 1, Quantity = 2m });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
+            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m }];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(1));
+            Assert.That(rows.Single().ProductId, Is.EqualTo(100));
+        }
+
+        [Test]
+        public async Task UpdateAsync_UpdatesQuantityAndUnit_ForExistingIngredient()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.Units.AddRange(
+                new Unit { Id = 1, Name = "kg", UnitType = 0 },
+                new Unit { Id = 2, Name = "g", UnitType = 0 });
+            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
+            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 2, Quantity = 500m }];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var row = ctx.RecipeIngredients.Single(ri => ri.RecipeId == 1 && ri.ProductId == 100);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(row.Quantity, Is.EqualTo(500m));
+                Assert.That(row.UnitId, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public async Task UpdateAsync_NullEntity_Throws()
+        {
+            // Arrange
+            var repo = CreateRepository(out _);
+
+            // Act / Assert
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await repo.UpdateAsync(null!, CancellationToken.None));
+        }
     }
 }

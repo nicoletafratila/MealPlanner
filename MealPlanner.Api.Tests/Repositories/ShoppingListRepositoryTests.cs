@@ -189,5 +189,119 @@ namespace MealPlanner.Api.Tests.Repositories
                 Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   ", "user1", CancellationToken.None));
             }
         }
+
+        // ---------- UpdateAsync ----------
+        [Test]
+        public async Task UpdateAsync_AddsNewProduct_ToShoppingList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            ctx.ShoppingListProducts.Add(
+                new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
+            entity!.Products =
+            [
+                new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m },
+                new ShoppingListProduct { ShoppingListId = 1, ProductId = 20, UnitId = 1, Quantity = 3m }
+            ];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.ShoppingListProducts.Where(p => p.ShoppingListId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(2));
+            Assert.That(rows.Select(p => p.ProductId), Is.EquivalentTo(new[] { 10, 20 }));
+        }
+
+        [Test]
+        public async Task UpdateAsync_RemovesDeletedProduct_FromShoppingList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            ctx.ShoppingListProducts.AddRange(
+                new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m },
+                new ShoppingListProduct { ShoppingListId = 1, ProductId = 20, UnitId = 1, Quantity = 2m });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
+            entity!.Products = [new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m }];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.ShoppingListProducts.Where(p => p.ShoppingListId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(1));
+            Assert.That(rows.Single().ProductId, Is.EqualTo(10));
+        }
+
+        [Test]
+        public async Task UpdateAsync_UpdatesMutableColumns_ForExistingProduct()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            ctx.Units.AddRange(
+                new Unit { Id = 1, Name = "kg", UnitType = 0 },
+                new Unit { Id = 2, Name = "g", UnitType = 0 });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            ctx.ShoppingListProducts.Add(new ShoppingListProduct
+            {
+                ShoppingListId = 1,
+                ProductId = 10,
+                UnitId = 1,
+                Quantity = 1m,
+                Collected = false,
+                DisplaySequence = 1
+            });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
+            entity!.Products =
+            [
+                new ShoppingListProduct
+                {
+                    ShoppingListId = 1,
+                    ProductId = 10,
+                    UnitId = 2,
+                    Quantity = 5m,
+                    Collected = true,
+                    DisplaySequence = 3
+                }
+            ];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var row = ctx.ShoppingListProducts.Single(p => p.ShoppingListId == 1 && p.ProductId == 10);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(row.Quantity, Is.EqualTo(5m));
+                Assert.That(row.UnitId, Is.EqualTo(2));
+                Assert.That(row.Collected, Is.True);
+                Assert.That(row.DisplaySequence, Is.EqualTo(3));
+            }
+        }
+
+        [Test]
+        public async Task UpdateAsync_NullEntity_Throws()
+        {
+            // Arrange
+            var repo = CreateRepository(out _);
+
+            // Act / Assert
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await repo.UpdateAsync(null!, CancellationToken.None));
+        }
     }
 }

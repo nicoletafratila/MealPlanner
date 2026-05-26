@@ -128,5 +128,92 @@ namespace MealPlanner.Api.Tests.Repositories
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.GetByIdIncludeDisplaySequenceAsync(null, CancellationToken.None));
         }
+
+        // ---------- UpdateAsync ----------
+        [Test]
+        public async Task UpdateAsync_AddsNewDisplaySequence()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.ProductCategories.AddRange(
+                new ProductCategory { Id = 1, Name = "Cat1" },
+                new ProductCategory { Id = 2, Name = "Cat2" });
+            ctx.Shops.Add(new Shop { Id = 1, Name = "Shop1" });
+            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
+            entity!.DisplaySequence =
+            [
+                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 },
+                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 2, Value = 20 }
+            ];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(2));
+            Assert.That(rows.Select(s => s.ProductCategoryId), Is.EquivalentTo(new[] { 1, 2 }));
+        }
+
+        [Test]
+        public async Task UpdateAsync_RemovesDeletedDisplaySequence()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.ProductCategories.AddRange(
+                new ProductCategory { Id = 1, Name = "Cat1" },
+                new ProductCategory { Id = 2, Name = "Cat2" });
+            ctx.Shops.Add(new Shop { Id = 1, Name = "Shop1" });
+            ctx.ShopDisplaySequences.AddRange(
+                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 },
+                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 2, Value = 20 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
+            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 }];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == 1).ToList();
+            Assert.That(rows, Has.Count.EqualTo(1));
+            Assert.That(rows.Single().ProductCategoryId, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task UpdateAsync_UpdatesValue_ForExistingCategory()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+            ctx.ProductCategories.Add(new ProductCategory { Id = 1, Name = "Cat1" });
+            ctx.Shops.Add(new Shop { Id = 1, Name = "Shop1" });
+            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
+            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 99 }];
+
+            // Act
+            await repo.UpdateAsync(entity, CancellationToken.None);
+
+            // Assert
+            var row = ctx.ShopDisplaySequences.Single(s => s.ShopId == 1 && s.ProductCategoryId == 1);
+            Assert.That(row.Value, Is.EqualTo(99));
+        }
+
+        [Test]
+        public async Task UpdateAsync_NullEntity_Throws()
+        {
+            // Arrange
+            var repo = CreateRepository(out _);
+
+            // Act / Assert
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await repo.UpdateAsync(null!, CancellationToken.None));
+        }
     }
 }

@@ -40,6 +40,51 @@ namespace RecipeBook.Api.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
+        public override async Task UpdateAsync(Recipe entity, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            var existing = await Context.RecipeIngredients
+                .Where(ri => ri.RecipeId == entity.Id)
+                .ToListAsync(cancellationToken);
+
+            var desired = entity.RecipeIngredients ?? [];
+            var desiredProductIds = desired.Select(ri => ri.ProductId).ToHashSet();
+
+            Context.RecipeIngredients.RemoveRange(
+                existing.Where(ri => !desiredProductIds.Contains(ri.ProductId)));
+
+            var existingByProduct = existing.ToDictionary(ri => ri.ProductId);
+            var toAdd = new List<RecipeIngredient>();
+            foreach (var item in desired)
+            {
+                if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
+                {
+                    tracked.Quantity = item.Quantity;
+                    tracked.UnitId = item.UnitId;
+                }
+                else
+                {
+                    toAdd.Add(new RecipeIngredient
+                    {
+                        RecipeId = entity.Id,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitId = item.UnitId
+                    });
+                }
+            }
+            await Context.RecipeIngredients.AddRangeAsync(toAdd, cancellationToken);
+
+            entity.RecipeIngredients = existing
+                .Where(ri => desiredProductIds.Contains(ri.ProductId))
+                .Concat(toAdd)
+                .ToList();
+
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task<Recipe?> GetByIdIncludeIngredientsAsync(
             int? id,
             CancellationToken cancellationToken)

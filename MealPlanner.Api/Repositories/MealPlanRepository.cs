@@ -32,6 +32,43 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(mp => mp.Id == id, cancellationToken);
         }
 
+        public override async Task UpdateAsync(MealPlan entity, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            var desiredRecipeIds = entity.MealPlanRecipes?
+                .Select(mpr => mpr.RecipeId)
+                .ToHashSet() ?? [];
+
+            var existingRecipes = await Context.MealPlanRecipes
+                .Where(mpr => mpr.MealPlanId == entity.Id)
+                .ToListAsync(cancellationToken);
+
+            var existingRecipeIds = existingRecipes
+                .Select(mpr => mpr.RecipeId)
+                .ToHashSet();
+
+            Context.MealPlanRecipes.RemoveRange(
+                existingRecipes.Where(mpr => !desiredRecipeIds.Contains(mpr.RecipeId)));
+
+            var newRecipes = desiredRecipeIds
+                .Where(id => !existingRecipeIds.Contains(id))
+                .Select(id => new MealPlanRecipe { RecipeId = id, MealPlanId = entity.Id })
+                .ToList();
+            await Context.MealPlanRecipes.AddRangeAsync(newRecipes, cancellationToken);
+
+            // Restore navigation collection to already-tracked instances so that DetectChanges
+            // (triggered by Entry) doesn't attempt to re-track the untracked AutoMapper objects,
+            // which would cause an identity conflict on composite-key entities.
+            entity.MealPlanRecipes = existingRecipes
+                .Where(mpr => desiredRecipeIds.Contains(mpr.RecipeId))
+                .Concat(newRecipes)
+                .ToList();
+
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(
             int id,
             CancellationToken cancellationToken)
