@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
-using MealPlanner.UI.Web.Services.RecipeBooks;
+using RecipeBook.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;

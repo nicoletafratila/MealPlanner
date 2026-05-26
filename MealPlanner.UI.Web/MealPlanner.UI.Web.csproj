@@ -54,7 +54,10 @@
     <ProjectReference Include="..\Common.Logging\Common.Logging.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\Common.UI\Common.UI.csproj" />
+    <ProjectReference Include="..\Identity.Services\Identity.Services.csproj" />
+    <ProjectReference Include="..\MealPlanner.Services\MealPlanner.Services.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
+    <ProjectReference Include="..\RecipeBook.Services\RecipeBook.Services.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 
@@ -73,16 +76,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Register.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Services\Identities\Resources\AuthenticationServiceMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AuthenticationServiceMessages.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Services\Identities\Resources\ApplicationUserServiceMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ApplicationUserServiceMessages.resx</DependentUpon>
     </Compile>
     <Compile Update="Pages\Identities\Resources\UsersOverview.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -234,12 +227,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ContactUs.resx</DependentUpon>
     </Compile>
-    <Compile Update="Services\Identities\Resources\ContactUsServiceMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ContactUsServiceMessages.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Shared\Resources\NavMenu.Designer.cs">
+<Compile Update="Shared\Resources\NavMenu.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>NavMenu.resx</DependentUpon>
@@ -264,14 +252,6 @@
     <EmbeddedResource Update="Pages\Identities\Resources\Register.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Register.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Services\Identities\Resources\AuthenticationServiceMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AuthenticationServiceMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Services\Identities\Resources\ApplicationUserServiceMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ApplicationUserServiceMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\Identities\Resources\UsersOverview.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -396,10 +376,6 @@
     <EmbeddedResource Update="Pages\Resources\ContactUs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ContactUs.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Services\Identities\Resources\ContactUsServiceMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ContactUsServiceMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

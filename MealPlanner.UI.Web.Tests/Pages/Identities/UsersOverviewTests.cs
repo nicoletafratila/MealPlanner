@@ -5,7 +5,7 @@ using Bunit;
 using Common.Pagination;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages.Identities;
-using MealPlanner.UI.Web.Services.Identities;
+using Identity.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

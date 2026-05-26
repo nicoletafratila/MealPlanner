@@ -3,7 +3,7 @@ using Common.Models;
 using Common.UI;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages;
-using MealPlanner.UI.Web.Services.Identities;
+using Identity.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
