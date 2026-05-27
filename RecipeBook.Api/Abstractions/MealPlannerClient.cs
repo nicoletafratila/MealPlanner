@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using Common.Api;
-using Common.Constants;
+using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
 
 namespace RecipeBook.Api.Abstractions

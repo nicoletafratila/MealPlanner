@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using Common.Constants;
+using Identity.Shared.Constants;
 using Common.Models;
 using Identity.Api;
 using Identity.Shared.Models;

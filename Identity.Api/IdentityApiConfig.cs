@@ -1,5 +1,5 @@
 ﻿using Common.Api;
-using Common.Constants;
+using Identity.Shared.Constants;
 
 namespace Identity.Api
 {

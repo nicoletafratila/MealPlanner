@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Common.Api;
-using Common.Constants;
+using RecipeBook.Shared.Constants;
 using Common.Models;
 using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;

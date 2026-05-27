@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using BlazorBootstrap;
 using Common.Api;
-using Common.Constants;
+using MealPlanner.Shared.Constants;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api;

@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Common.Api;
-using Common.Constants;
+using MealPlanner.Shared.Constants;
 using Common.Models;
 using MealPlanner.Api;
 using Microsoft.AspNetCore.WebUtilities;

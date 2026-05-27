@@ -1,4 +1,4 @@
-﻿namespace Common.Constants
+namespace RecipeBook.Shared.Constants
 {
     public class RecipeBookControllers
     {

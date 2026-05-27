@@ -1,4 +1,4 @@
-﻿namespace Common.Constants
+namespace Identity.Shared.Constants
 {
     public class IdentityControllers
     {

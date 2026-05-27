@@ -99,6 +99,7 @@
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
     <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿namespace Common.Constants
+namespace MealPlanner.Shared.Constants
 {
     public class MealPlannerControllers
     {

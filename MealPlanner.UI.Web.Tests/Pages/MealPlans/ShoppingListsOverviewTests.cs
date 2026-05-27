@@ -36,7 +36,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 .ReturnsAsync(new PagedList<ShoppingListModel>([], new Metadata()));
 
             _sessionStorageMock
-                .Setup(s => s.GetItemAsync<string>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string?)null);
 
             _sessionStorageMock

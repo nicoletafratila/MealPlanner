@@ -1,5 +1,5 @@
 using Common.Api;
-using Common.Constants;
+using RecipeBook.Shared.Constants;
 
 namespace RecipeBook.Api
 {

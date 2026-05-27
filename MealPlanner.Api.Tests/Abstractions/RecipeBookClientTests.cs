@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Common.Constants;
+using RecipeBook.Shared.Constants;
 using MealPlanner.Api.Abstractions;
 using Microsoft.Extensions.Configuration;
 using RecipeBook.Shared.Models;

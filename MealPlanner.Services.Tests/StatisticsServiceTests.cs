@@ -2,7 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Blazored.SessionStorage;
 using Common.Api;
-using Common.Constants;
+using MealPlanner.Shared.Constants;
 using Common.Models;
 using MealPlanner.Api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

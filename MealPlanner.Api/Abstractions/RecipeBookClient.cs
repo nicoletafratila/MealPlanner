@@ -1,5 +1,5 @@
 ﻿using Common.Api;
-using Common.Constants;
+using RecipeBook.Shared.Constants;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeBook.Shared.Models;
 
