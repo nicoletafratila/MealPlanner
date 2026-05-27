@@ -1,12 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using Common.Api;
+﻿using AutoMapper;
 using Common.Pagination;
+using Common.Services;
 using Moq;
-using NUnit.Framework;
 using RecipeBook.Api.Features.RecipeCategory.Queries.Search;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;

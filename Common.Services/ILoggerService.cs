@@ -1,6 +1,6 @@
-﻿using Common.Models;
+using Common.Models;
 
-namespace Common.Logging
+namespace Common.Services
 {
     public interface ILoggerService
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Models;
+﻿using Common.Models;
 using MediatR;
 using RecipeBook.Shared.Models;
 

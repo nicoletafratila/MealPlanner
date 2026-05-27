@@ -4,6 +4,7 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;
+using RecipeBook.Api;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Services

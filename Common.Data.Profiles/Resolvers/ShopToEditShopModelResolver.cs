@@ -1,7 +1,7 @@
-﻿using Common.Data.Entities;
+﻿using AutoMapper;
+using Common.Data.Entities;
 using Common.Models;
 using MealPlanner.Shared.Models;
-using AutoMapper;
 
 namespace Common.Data.Profiles.Resolvers
 {

@@ -1,9 +1,9 @@
 using Bunit;
 using Common.Models;
 using Common.UI;
+using Identity.Services;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages.Identities;
-using Identity.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

@@ -3,9 +3,9 @@ using Blazored.SessionStorage;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Services;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using RecipeBook.Services;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks

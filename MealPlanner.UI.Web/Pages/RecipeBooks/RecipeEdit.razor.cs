@@ -3,11 +3,11 @@ using BlazorBootstrap;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
+using RecipeBook.Services;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks

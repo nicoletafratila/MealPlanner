@@ -1,7 +1,7 @@
-﻿using Common.Constants;
-using Microsoft.Extensions.Configuration;
+﻿using Common.Api;
+using Common.Constants;
 
-namespace Common.Api
+namespace Identity.Api
 {
     public class IdentityApiConfig : ApiConfig
     {

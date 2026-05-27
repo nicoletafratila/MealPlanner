@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Models;
+﻿using Common.Models;
 using MealPlanner.Shared.Models;
 using MediatR;
 

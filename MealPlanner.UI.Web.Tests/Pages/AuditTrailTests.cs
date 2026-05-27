@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Bunit;
-using Common.Logging;
 using Common.Models;
+using Common.Services;
 using MealPlanner.UI.Web.Pages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

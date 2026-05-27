@@ -1,10 +1,9 @@
 using System.Net;
 using System.Text.Json;
-using Common.Api;
 using Common.Constants;
 using Common.Models;
+using Identity.Api;
 using Identity.Shared.Models;
-using Identity.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;

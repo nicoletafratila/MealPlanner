@@ -1,4 +1,4 @@
-﻿using Common.Api;
+﻿using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchProducts;
 using MealPlanner.Api.Repositories;

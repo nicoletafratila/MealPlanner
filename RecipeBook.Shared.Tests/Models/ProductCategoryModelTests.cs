@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using RecipeBook.Shared.Models;
+﻿using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
 {

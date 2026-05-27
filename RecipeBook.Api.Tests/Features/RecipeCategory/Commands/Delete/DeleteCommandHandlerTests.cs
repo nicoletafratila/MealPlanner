@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Common.Models;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Delete;
 using RecipeBook.Api.Repositories;
 using RecipeCategoryEntity = Common.Data.Entities.RecipeCategory;

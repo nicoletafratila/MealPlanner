@@ -6,10 +6,10 @@ using Common.Pagination;
 using Common.UI;
 using Identity.Services;
 using MealPlanner.Services;
-using RecipeBook.Services;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using RecipeBook.Services;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks

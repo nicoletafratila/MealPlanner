@@ -12,6 +12,7 @@ PM> Script-migration
 
 warning cu automapper
 grupeaza structura pe module si foldere, imparte common
+maui
 create the weeks menu on first click on the recipe if not yet created
 update on the banner after weeks menu is created
 allow same recipe multiple times on the menu

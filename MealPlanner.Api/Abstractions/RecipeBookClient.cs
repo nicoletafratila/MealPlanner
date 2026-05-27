@@ -5,10 +5,10 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Abstractions
 {
-    public class RecipeBookClient(HttpClient httpClient, RecipeBookApiConfig config) : IRecipeBookClient
+    public class RecipeBookClient(HttpClient httpClient, RecipeBookClientConfig config) : IRecipeBookClient
     {
         private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        private readonly RecipeBookApiConfig _config = config ?? throw new ArgumentNullException(nameof(config));
+        private readonly RecipeBookClientConfig _config = config ?? throw new ArgumentNullException(nameof(config));
 
         public async Task<IList<RecipeCategoryModel>?> GetCategoriesAsync(
             string categoryIds,

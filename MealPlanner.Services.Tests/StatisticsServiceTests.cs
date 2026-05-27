@@ -4,7 +4,7 @@ using Blazored.SessionStorage;
 using Common.Api;
 using Common.Constants;
 using Common.Models;
-using MealPlanner.Services;
+using MealPlanner.Api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace Common.Api
+namespace Common.Services
 {
     public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
     {

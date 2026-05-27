@@ -5,12 +5,12 @@ using Common.Api;
 using Common.Constants;
 using Common.Models;
 using Common.Pagination;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using RecipeBook.Api;
 using RecipeBook.Shared.Models;
 using RichardSzalay.MockHttp;
 

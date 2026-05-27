@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Logging\Common.Logging.csproj" />
+    <ProjectReference Include="..\Common.Services\Common.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

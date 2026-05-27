@@ -1,7 +1,7 @@
-﻿using Common.Constants;
-using Microsoft.Extensions.Configuration;
+using Common.Api;
+using Common.Constants;
 
-namespace Common.Api
+namespace MealPlanner.UI.Web
 {
     public class MealPlannerWebConfig : ApiConfig
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using RecipeBook.Api.Features.RecipeCategory.Commands.Add;
+﻿using RecipeBook.Api.Features.RecipeCategory.Commands.Add;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add

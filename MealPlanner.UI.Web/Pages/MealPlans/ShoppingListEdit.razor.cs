@@ -4,13 +4,13 @@ using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
+using MealPlanner.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
-using MealPlanner.Services;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using RecipeBook.Services;
 using RecipeBook.Shared.Converters;
 using RecipeBook.Shared.Models;
 

@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Data.Repository;
 using Common.Models;
 
-namespace Common.Logging
+namespace Common.Services
 {
     public class LoggerService(IMapper mapper, ILoggerRepository repository) : ILoggerService
     {

@@ -1,6 +1,6 @@
 ﻿using Serilog.Events;
 
-namespace Common.Logging
+namespace Common.Services
 {
     public static class LogEventLevelHelper
     {

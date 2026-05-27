@@ -1,6 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll;
-using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
 {

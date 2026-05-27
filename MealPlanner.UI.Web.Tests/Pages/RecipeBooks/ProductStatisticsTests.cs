@@ -4,11 +4,11 @@ using Blazored.SessionStorage;
 using Bunit;
 using Common.Models;
 using Common.Pagination;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
 using MealPlanner.Services;
-using RecipeBook.Services;
+using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using RecipeBook.Services;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks

@@ -1,5 +1,5 @@
-﻿using Common.Api;
-using Common.Models;
+﻿using Common.Models;
+using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
 using MediatR;

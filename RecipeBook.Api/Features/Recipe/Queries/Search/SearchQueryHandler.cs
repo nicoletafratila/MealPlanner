@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Common.Api;
 using Common.Pagination;
+using Common.Services;
 using MediatR;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;

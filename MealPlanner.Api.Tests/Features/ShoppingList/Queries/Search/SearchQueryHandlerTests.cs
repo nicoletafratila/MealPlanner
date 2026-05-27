@@ -1,6 +1,6 @@
-using AutoMapper;
-using Common.Api;
+﻿using AutoMapper;
 using Common.Pagination;
+using Common.Services;
 using MealPlanner.Api.Features.ShoppingList.Queries.Search;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;

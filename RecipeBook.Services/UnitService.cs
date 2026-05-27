@@ -6,6 +6,7 @@ using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using RecipeBook.Api;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Services

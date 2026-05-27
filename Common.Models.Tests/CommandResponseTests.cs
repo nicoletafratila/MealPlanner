@@ -1,6 +1,4 @@
 ﻿using System.Text.Json;
-using Common.Models;
-using NUnit.Framework;
 
 namespace Common.Models.Tests
 {

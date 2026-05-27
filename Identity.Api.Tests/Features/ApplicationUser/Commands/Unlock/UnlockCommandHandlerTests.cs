@@ -1,4 +1,3 @@
-using Common.Models;
 using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

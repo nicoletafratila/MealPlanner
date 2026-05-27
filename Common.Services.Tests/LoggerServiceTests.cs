@@ -4,7 +4,7 @@ using Common.Data.Repository;
 using Common.Models;
 using Moq;
 
-namespace Common.Logging.Tests
+namespace Common.Services.Tests
 {
     [TestFixture]
     public class LoggerServiceTests

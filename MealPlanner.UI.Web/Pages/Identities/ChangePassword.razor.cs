@@ -1,7 +1,7 @@
 using BlazorBootstrap;
 using Common.UI;
-using Identity.Shared.Models;
 using Identity.Services;
+using Identity.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 

@@ -1,4 +1,4 @@
-namespace Common.Api
+namespace Common.Services
 {
     public interface ICurrentUserService
     {

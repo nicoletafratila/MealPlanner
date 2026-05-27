@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Common.Api;
 using Common.Models;
+using Common.Services;
 using MediatR;
 using RecipeBook.Api.Features.Product.Resources;
 using RecipeBook.Api.Repositories;

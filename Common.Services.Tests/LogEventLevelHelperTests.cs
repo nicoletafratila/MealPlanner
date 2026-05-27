@@ -1,6 +1,6 @@
 ﻿using Serilog.Events;
 
-namespace Common.Logging.Tests
+namespace Common.Services.Tests
 {
     [TestFixture]
     public class LogEventLevelHelperTests
