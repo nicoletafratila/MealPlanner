@@ -1,7 +1,7 @@
-﻿using Common.Constants.Units;
-using Common.Data.Entities.Converters;
+using Common.Constants.Units;
+using Common.Services.Converters;
 
-namespace Common.Data.Entities.Tests.Converters
+namespace Common.Services.Tests.Converters
 {
     [TestFixture]
     public class VolumeConverterTests
@@ -31,7 +31,7 @@ namespace Common.Data.Entities.Tests.Converters
         public void Convert_tsp_to_cup_Works()
         {
             var result = VolumeConverter.Convert(96m, VolumeUnit.tsp, VolumeUnit.cup);
-            Assert.That(result, Is.EqualTo(2m)); // 96 tsp = 2 cups
+            Assert.That(result, Is.EqualTo(2m));
         }
 
         [Test]

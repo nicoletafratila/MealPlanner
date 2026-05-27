@@ -16,6 +16,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Converters\Resources\ConverterMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConverterMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Converters\Resources\ConverterMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ConverterMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
+    <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
     <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
   </ItemGroup>

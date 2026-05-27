@@ -1,20 +1,15 @@
-﻿namespace Common.Data.Entities.Tests
+using Common.Data.Entities;
+
+namespace Common.Services.Tests
 {
     [TestFixture]
-    public class RecipeIngredientTests
+    public class RecipeIngredientExtensionsTests
     {
         [Test]
         public void ToShoppingListProduct_Maps_Fields_And_Uses_BaseUnit()
         {
-            // Arrange
             var baseUnit = new Unit { Id = 2, Name = "gr" };
-            var product = new Product
-            {
-                Id = 10,
-                Name = "Flour",
-                BaseUnit = baseUnit
-            };
-
+            var product = new Product { Id = 10, Name = "Flour", BaseUnit = baseUnit };
             var ingredient = new RecipeIngredient
             {
                 Product = product,
@@ -24,36 +19,24 @@
                 UnitId = baseUnit.Id
             };
 
-            const int displaySequence = 7;
+            var result = ingredient.ToShoppingListProduct(7);
 
-            // Act
-            var result = ingredient.ToShoppingListProduct(displaySequence);
-
-            // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.ProductId, Is.EqualTo(product.Id));
                 Assert.That(result.Product, Is.SameAs(product));
-
                 Assert.That(result.Quantity, Is.EqualTo(5m));
-
                 Assert.That(result.UnitId, Is.EqualTo(baseUnit.Id));
                 Assert.That(result.Unit, Is.SameAs(baseUnit));
-
                 Assert.That(result.Collected, Is.False);
-                Assert.That(result.DisplaySequence, Is.EqualTo(displaySequence));
+                Assert.That(result.DisplaySequence, Is.EqualTo(7));
             }
         }
 
         [Test]
         public void ToShoppingListProduct_Throws_When_Product_Is_Null()
         {
-            var ingredient = new RecipeIngredient
-            {
-                Product = null,
-                Unit = new Unit(),
-                Quantity = 1m
-            };
+            var ingredient = new RecipeIngredient { Product = null, Unit = new Unit(), Quantity = 1m };
 
             Assert.That(
                 () => ingredient.ToShoppingListProduct(1),
@@ -64,17 +47,9 @@
         [Test]
         public void ToShoppingListProduct_Throws_When_BaseUnit_Is_Null()
         {
-            var product = new Product
-            {
-                Id = 10,
-                Name = "Flour",
-                BaseUnit = null
-            };
-
             var ingredient = new RecipeIngredient
             {
-                Product = product,
-                ProductId = product.Id,
+                Product = new Product { Id = 10, BaseUnit = null },
                 Unit = new Unit(),
                 Quantity = 1m
             };
@@ -89,17 +64,9 @@
         public void ToShoppingListProduct_Throws_When_Unit_Is_Null()
         {
             var baseUnit = new Unit { Id = 2, Name = "g" };
-            var product = new Product
-            {
-                Id = 10,
-                Name = "Flour",
-                BaseUnit = baseUnit
-            };
-
             var ingredient = new RecipeIngredient
             {
-                Product = product,
-                ProductId = product.Id,
+                Product = new Product { Id = 10, BaseUnit = baseUnit },
                 Unit = null,
                 Quantity = 1m
             };

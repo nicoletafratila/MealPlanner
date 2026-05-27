@@ -1,8 +1,9 @@
-﻿using Common.Constants;
+using Common.Constants;
 using Common.Constants.Units;
-using Common.Data.Entities.Converters.Resources;
+using Common.Data.Entities;
+using Common.Services.Converters.Resources;
 
-namespace Common.Data.Entities.Converters
+namespace Common.Services.Converters
 {
     public static class UnitConverter
     {
@@ -34,7 +35,7 @@ namespace Common.Data.Entities.Converters
                         fromUnit.Name!.ToEnum<VolumeUnit>(),
                         toUnit.Name!.ToEnum<VolumeUnit>()),
 
-                UnitType.Piece => fromValue, // identity
+                UnitType.Piece => fromValue,
 
                 _ => throw new NotSupportedException(string.Format(ConverterMessages.UnitTypeNotSupported, fromUnit.UnitType))
             };

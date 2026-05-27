@@ -1,7 +1,7 @@
-﻿using Common.Constants.Units;
-using Common.Data.Entities.Converters;
+using Common.Constants.Units;
+using Common.Services.Converters;
 
-namespace Common.Data.Entities.Tests.Converters
+namespace Common.Services.Tests.Converters
 {
     [TestFixture]
     public class MassConverterTests

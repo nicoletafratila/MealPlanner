@@ -234,7 +234,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _sessionStorageMock.Verify(
                 s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
-                Times.Exactly(2));
+                Times.Once);
 
             using (Assert.EnterMultipleScope())
             {

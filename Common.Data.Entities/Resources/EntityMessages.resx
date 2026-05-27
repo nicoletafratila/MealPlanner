@@ -37,25 +37,4 @@
   <data name="LastNameAlphaOnly" xml:space="preserve">
     <value>Last Name must be alpha characters only.</value>
   </data>
-  <data name="ShoppingListNameFormat" xml:space="preserve">
-    <value>Shopping list details for {0} in shop {1}</value>
-  </data>
-  <data name="IngredientProductMustNotBeNull" xml:space="preserve">
-    <value>Ingredient.Product must not be null.</value>
-  </data>
-  <data name="IngredientProductBaseUnitMustNotBeNull" xml:space="preserve">
-    <value>Ingredient.Product.BaseUnit must not be null.</value>
-  </data>
-  <data name="IngredientUnitMustNotBeNull" xml:space="preserve">
-    <value>Ingredient.Unit must not be null.</value>
-  </data>
-  <data name="ProductMustBeSet" xml:space="preserve">
-    <value>Product must be set before converting to ShoppingListProduct.</value>
-  </data>
-  <data name="ProductBaseUnitMustBeSet" xml:space="preserve">
-    <value>Product.BaseUnit must be set before converting to ShoppingListProduct.</value>
-  </data>
-  <data name="UnitMustBeSet" xml:space="preserve">
-    <value>Unit must be set before converting to ShoppingListProduct.</value>
-  </data>
 </root>

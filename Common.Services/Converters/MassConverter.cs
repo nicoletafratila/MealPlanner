@@ -1,7 +1,7 @@
-﻿using Common.Constants.Units;
-using Common.Data.Entities.Converters.Resources;
+using Common.Constants.Units;
+using Common.Services.Converters.Resources;
 
-namespace Common.Data.Entities.Converters
+namespace Common.Services.Converters
 {
     public static class MassConverter
     {
@@ -23,7 +23,6 @@ namespace Common.Data.Entities.Converters
             if (!FactorsToKg.TryGetValue(toUnit, out var toFactor))
                 throw new NotSupportedException(string.Format(ConverterMessages.MassConversionToNotSupported, toUnit));
 
-            // to kg, then to target
             var valueInKg = fromValue * fromFactor;
             return valueInKg / toFactor;
         }

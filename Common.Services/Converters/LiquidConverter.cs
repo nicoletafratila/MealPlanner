@@ -1,7 +1,7 @@
-﻿using Common.Constants.Units;
-using Common.Data.Entities.Converters.Resources;
+using Common.Constants.Units;
+using Common.Services.Converters.Resources;
 
-namespace Common.Data.Entities.Converters
+namespace Common.Services.Converters
 {
     public static class LiquidConverter
     {

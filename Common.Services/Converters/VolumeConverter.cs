@@ -1,7 +1,7 @@
-﻿using Common.Constants.Units;
-using Common.Data.Entities.Converters.Resources;
+using Common.Constants.Units;
+using Common.Services.Converters.Resources;
 
-namespace Common.Data.Entities.Converters
+namespace Common.Services.Converters
 {
     public static class VolumeConverter
     {
@@ -9,8 +9,8 @@ namespace Common.Data.Entities.Converters
             new()
             {
                 { VolumeUnit.tsp, 1m },
-                { VolumeUnit.tbsp, 3m },   // 1 tbsp = 3 tsp
-                { VolumeUnit.cup, 48m }    // 1 cup = 48 tsp (16 tbsp * 3 tsp)
+                { VolumeUnit.tbsp, 3m },
+                { VolumeUnit.cup, 48m }
             };
 
         public static decimal Convert(decimal fromValue, VolumeUnit fromUnit, VolumeUnit toUnit)
