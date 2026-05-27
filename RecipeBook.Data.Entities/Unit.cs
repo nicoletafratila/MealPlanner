@@ -1,8 +1,8 @@
-﻿using Common.Constants.Units;
+using Common.Constants.Units;
 
-namespace Common.Data.Entities
+namespace RecipeBook.Data.Entities
 {
-    public sealed class Unit : Entity<int>
+    public sealed class Unit : Common.Data.Entities.Entity<int>
     {
         public string? Name { get; set; } = string.Empty;
 

@@ -11,6 +11,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
+    <ProjectReference Include="..\Identity.Data.Entities\Identity.Data.Entities.csproj" />
+    <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />
+    <ProjectReference Include="..\MealPlanner.Data.Entities\MealPlanner.Data.Entities.csproj" />
   </ItemGroup>
 
 </Project>

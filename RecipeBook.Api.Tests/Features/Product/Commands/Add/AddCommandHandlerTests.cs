@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
 
             var command = new AddCommand { Model = model };
 
-            var existing = new Common.Data.Entities.Product { Id = 10, Name = "Milk", ProductCategoryId = 2 };
+            var existing = new RecipeBook.Data.Entities.Product { Id = 10, Name = "Milk", ProductCategoryId = 2 };
 
             _repoMock
                 .Setup(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()))
@@ -107,8 +107,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.Product>(It.IsAny<ProductEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Product>(It.IsAny<ProductEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -126,9 +126,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.Product?)null);
+                .ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
 
-            var mappedEntity = new Common.Data.Entities.Product
+            var mappedEntity = new RecipeBook.Data.Entities.Product
             {
                 Id = 5,
                 Name = "Bread",
@@ -137,7 +137,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.Product>(model))
+                .Setup(m => m.Map<RecipeBook.Data.Entities.Product>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -150,7 +150,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.Product>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -169,9 +169,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.Product?)null);
+                .ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
 
-            var mappedEntity = new Common.Data.Entities.Product
+            var mappedEntity = new RecipeBook.Data.Entities.Product
             {
                 Id = 7,
                 Name = "ErrorProduct",
@@ -180,7 +180,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.Product>(model))
+                .Setup(m => m.Map<RecipeBook.Data.Entities.Product>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -197,7 +197,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.Product>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(

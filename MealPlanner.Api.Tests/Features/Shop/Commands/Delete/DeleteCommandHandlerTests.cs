@@ -1,4 +1,4 @@
-﻿using MealPlanner.Api.Features.Shop.Commands.Delete;
+using MealPlanner.Api.Features.Shop.Commands.Delete;
 using MealPlanner.Api.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -51,7 +51,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Delete
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.Shop?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -62,7 +62,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Delete
             Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<MealPlanner.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Delete
             const int id = 3;
             var command = new DeleteCommand { Id = id };
 
-            var entity = new Common.Data.Entities.Shop { Id = id, Name = "Shop1" };
+            var entity = new MealPlanner.Data.Entities.Shop { Id = id, Name = "Shop1" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -100,7 +100,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Delete
             const int id = 4;
             var command = new DeleteCommand { Id = id };
 
-            var entity = new Common.Data.Entities.Shop { Id = id, Name = "ShopX" };
+            var entity = new MealPlanner.Data.Entities.Shop { Id = id, Name = "ShopX" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))

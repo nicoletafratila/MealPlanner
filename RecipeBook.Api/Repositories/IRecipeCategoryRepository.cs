@@ -1,4 +1,4 @@
-﻿using Common.Data.Entities;
+﻿using RecipeBook.Data.Entities;
 using Common.Data.Repository;
 
 namespace RecipeBook.Api.Repositories

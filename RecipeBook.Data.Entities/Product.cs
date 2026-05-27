@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Common.Data.Entities
+namespace RecipeBook.Data.Entities
 {
-    public sealed class Product : Entity<int>
+    public sealed class Product : Common.Data.Entities.Entity<int>
     {
         public string? UserId { get; set; }
 

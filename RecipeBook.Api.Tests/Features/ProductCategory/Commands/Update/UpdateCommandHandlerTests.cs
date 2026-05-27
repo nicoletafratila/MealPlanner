@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.ProductCategory.Commands.Update;
@@ -80,7 +80,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync((Common.Data.Entities.ProductCategory?)null);
+                .ReturnsAsync((RecipeBook.Data.Entities.ProductCategory?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -94,8 +94,8 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Update
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ProductCategoryEditModel>(), It.IsAny<Common.Data.Entities.ProductCategory>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.ProductCategory>(), CancellationToken.None), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<ProductCategoryEditModel>(), It.IsAny<RecipeBook.Data.Entities.ProductCategory>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.ProductCategory>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.ProductCategory
+            var existing = new RecipeBook.Data.Entities.ProductCategory
             {
                 Id = id,
                 Name = "OldCat"
@@ -154,7 +154,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.ProductCategory
+            var existing = new RecipeBook.Data.Entities.ProductCategory
             {
                 Id = id,
                 Name = "OldX"

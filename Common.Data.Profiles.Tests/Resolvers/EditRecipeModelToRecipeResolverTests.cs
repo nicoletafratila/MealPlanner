@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Data.Profiles.Resolvers;
 using RecipeBook.Shared.Models;
 

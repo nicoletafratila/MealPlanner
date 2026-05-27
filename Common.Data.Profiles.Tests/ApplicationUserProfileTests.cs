@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using Identity.Data.Entities;
 using Identity.Shared.Models;
 
 namespace Common.Data.Profiles.Tests

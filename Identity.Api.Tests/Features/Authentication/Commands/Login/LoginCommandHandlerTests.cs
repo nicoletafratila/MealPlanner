@@ -1,4 +1,4 @@
-﻿using Common.Models;
+using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
@@ -10,22 +10,22 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
     [TestFixture]
     public class LoginCommandHandlerTests
     {
-        private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
-        private Mock<SignInManager<Common.Data.Entities.ApplicationUser>> _signInManagerMock = null!;
+        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<SignInManager<Identity.Data.Entities.ApplicationUser>> _signInManagerMock = null!;
         private Mock<ILogger<LoginCommandHandler>> _loggerMock = null!;
         private LoginCommandHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Common.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Common.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
-            _signInManagerMock = new Mock<SignInManager<Common.Data.Entities.ApplicationUser>>(
+            _signInManagerMock = new Mock<SignInManager<Identity.Data.Entities.ApplicationUser>>(
                 _userManagerMock.Object,
                 Mock.Of<Microsoft.AspNetCore.Http.IHttpContextAccessor>(),
-                Mock.Of<IUserClaimsPrincipalFactory<Common.Data.Entities.ApplicationUser>>(),
+                Mock.Of<IUserClaimsPrincipalFactory<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null);
 
             _loggerMock = new Mock<ILogger<LoginCommandHandler>>(MockBehavior.Loose);
@@ -63,7 +63,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             _userManagerMock
                 .Setup(m => m.FindByNameAsync("user"))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -86,7 +86,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         public async Task Handle_UserNotActive_ReturnsUserNotActiveMessage()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = false };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = false };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "pwd" }
@@ -116,7 +116,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         public async Task Handle_SuccessfulLogin_ReturnsLoginCommandResponse()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "pwd", RememberLogin = true }
@@ -159,7 +159,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         public async Task Handle_LockedOut_ReturnsLockedOutMessage()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "pwd" }
@@ -197,7 +197,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         public async Task Handle_InvalidPassword_ReturnsUserPasswordNotFound()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
             var command = new LoginCommand
             {
                 Model = new LoginModel { Username = "user", Password = "wrong" }

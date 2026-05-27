@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Common.Data.DataContext;
-using Common.Data.Entities;
+using Identity.Data.Entities;
 using Duende.IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

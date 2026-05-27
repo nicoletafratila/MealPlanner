@@ -1,5 +1,6 @@
-ï»¿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Data.Profiles.Resolvers;
 using MealPlanner.Shared.Models;
 using RecipeBook.Shared.Models;
@@ -106,8 +107,8 @@ namespace Common.Data.Profiles.Tests.Resolvers
             using (Assert.EnterMultipleScope())
             {
                 // Expected ordering:
-                // 1) Collected = false â†’ (Zucchini (3), Apples (10))
-                // 2) Collected = true  â†’ (Avocado (1), Bananas (5))
+                // 1) Collected = false › (Zucchini (3), Apples (10))
+                // 2) Collected = true  › (Avocado (1), Bananas (5))
                 Assert.That(
                     orderedNames,
                     Is.EqualTo(["Zucchini", "Apples", "Avocado", "Bananas"]).AsCollection

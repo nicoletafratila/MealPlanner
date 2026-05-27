@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Models;
 using Common.Services;
 using MealPlanner.Api.Repositories;
@@ -39,7 +39,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
                 if (existingItem is not null)
                     return CommandResponse.Failed(Resources.ShoppingListMessages.AlreadyExists);
 
-                var mapped = _mapper.Map<Common.Data.Entities.ShoppingList>(request.Model);
+                var mapped = _mapper.Map<MealPlanner.Data.Entities.ShoppingList>(request.Model);
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

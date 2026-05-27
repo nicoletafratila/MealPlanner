@@ -1,4 +1,4 @@
-﻿namespace Common.Data.Entities.Tests
+namespace MealPlanner.Data.Entities.Tests
 {
     [TestFixture]
     public class ShopTests

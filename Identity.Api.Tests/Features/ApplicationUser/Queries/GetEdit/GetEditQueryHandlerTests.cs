@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,15 +9,15 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
     [TestFixture]
     public class GetEditQueryHandlerTests
     {
-        private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IMapper> _mapperMock = null!;
         private GetEditQueryHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Common.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Common.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
@@ -54,7 +54,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
 
             _userManagerMock
                 .Setup(m => m.FindByNameAsync("alice"))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -68,14 +68,14 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
             });
 
             _userManagerMock.Verify(m => m.FindByNameAsync("alice"), Times.Once);
-            _mapperMock.Verify(m => m.Map<ApplicationUserEditModel>(It.IsAny<Common.Data.Entities.ApplicationUser>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<ApplicationUserEditModel>(It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_UserFound_ReturnsMappedModel()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser
+            var user = new Identity.Data.Entities.ApplicationUser
             {
                 Id = "1",
                 UserName = "alice",
@@ -120,7 +120,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
         public async Task Handle_MapperReturnsNull_FallsBackToEmptyModel()
         {
             // Arrange
-            var user = new Common.Data.Entities.ApplicationUser
+            var user = new Identity.Data.Entities.ApplicationUser
             {
                 Id = "1",
                 UserName = "alice"

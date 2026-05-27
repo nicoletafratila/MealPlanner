@@ -1,5 +1,6 @@
 using System.Security.Claims;
-using Common.Data.Entities;
+using Identity.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Data.Repository;
 using Common.Models;
 using Duende.IdentityModel;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.Authentication.Commands.Register
 {
     public class RegisterCommandHandler(
-        UserManager<Common.Data.Entities.ApplicationUser> userManager,
+        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
         IAsyncRepository<ProductCategory, int> productCategoryRepository,
         IAsyncRepository<RecipeCategory, int> recipeCategoryRepository,
         IEmailService emailService,
@@ -38,7 +39,7 @@ namespace Identity.Api.Features.Authentication.Commands.Register
                 if (existingByEmail is not null)
                     return CommandResponse.Failed(AuthenticationMessages.EmailAlreadyTaken);
 
-                var user = new Common.Data.Entities.ApplicationUser
+                var user = new Identity.Data.Entities.ApplicationUser
                 {
                     UserName = model.Username,
                     Email = model.EmailAddress,

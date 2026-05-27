@@ -1,4 +1,4 @@
-﻿using Common.Data.Entities;
+﻿using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

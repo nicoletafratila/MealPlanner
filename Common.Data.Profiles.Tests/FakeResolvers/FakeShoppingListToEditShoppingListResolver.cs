@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using MealPlanner.Shared.Models;
 
 namespace Common.Data.Profiles.Tests.FakeResolvers

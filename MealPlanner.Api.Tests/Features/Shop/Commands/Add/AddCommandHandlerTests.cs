@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.Shop.Commands.Add;
 using MealPlanner.Api.Repositories;
@@ -85,7 +85,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             var model = new ShopEditModel { Id = 0, Name = "Shop1" };
             var command = new AddCommand { Model = model };
 
-            var existingShops = new List<Common.Data.Entities.Shop>
+            var existingShops = new List<MealPlanner.Data.Entities.Shop>
             {
                 new() { Id = 1, Name = "Shop1", UserId = "user1" }
             };
@@ -103,8 +103,8 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             Assert.That(result.Message, Is.EqualTo("This shop already exists."));
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.Shop>(It.IsAny<ShopEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.Shop>(It.IsAny<ShopEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -118,10 +118,10 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
                 .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
-            var mappedEntity = new Common.Data.Entities.Shop { Id = 5, Name = "NewShop" };
+            var mappedEntity = new MealPlanner.Data.Entities.Shop { Id = 5, Name = "NewShop" };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.Shop>(model))
+                .Setup(m => m.Map<MealPlanner.Data.Entities.Shop>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -136,7 +136,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.Shop>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.Shop>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -151,10 +151,10 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
                 .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
-            var mappedEntity = new Common.Data.Entities.Shop { Id = 7, Name = "ErrorShop" };
+            var mappedEntity = new MealPlanner.Data.Entities.Shop { Id = 7, Name = "ErrorShop" };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.Shop>(model))
+                .Setup(m => m.Map<MealPlanner.Data.Entities.Shop>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -170,7 +170,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shop."));
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.Shop>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.Shop>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(

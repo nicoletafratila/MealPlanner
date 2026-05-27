@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Common.Data.Entities.Resources {
+namespace Identity.Data.Entities.Resources {
     using System;
 
 
@@ -29,7 +29,7 @@ namespace Common.Data.Entities.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Common.Data.Entities.Resources.EntityMessages", typeof(EntityMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Identity.Data.Entities.Resources.EntityMessages", typeof(EntityMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

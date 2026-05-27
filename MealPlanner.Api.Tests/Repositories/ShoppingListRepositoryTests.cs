@@ -1,5 +1,6 @@
 using Common.Data.DataContext;
-using Common.Data.Entities;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using MealPlanner.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

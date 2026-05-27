@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.ApplicationUser.Queries.Search
 {
     public class SearchQueryHandler(
-        UserManager<Common.Data.Entities.ApplicationUser> userManager,
+        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
         IMapper mapper) : IRequestHandler<SearchQuery, PagedList<ApplicationUserModel>>
     {
-        private readonly UserManager<Common.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        private readonly UserManager<Identity.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
         public Task<PagedList<ApplicationUserModel>> Handle(SearchQuery request, CancellationToken cancellationToken)

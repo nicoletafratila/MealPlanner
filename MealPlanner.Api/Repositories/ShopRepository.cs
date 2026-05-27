@@ -1,5 +1,5 @@
 ﻿using Common.Data.DataContext;
-using Common.Data.Entities;
+using MealPlanner.Data.Entities;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 

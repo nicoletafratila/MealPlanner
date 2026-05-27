@@ -1,6 +1,6 @@
-﻿using Common.Constants.Units;
+using Common.Constants.Units;
 
-namespace Common.Data.Entities.Tests
+namespace RecipeBook.Data.Entities.Tests
 {
     [TestFixture]
     public class UnitTests

@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Common.Data.Entities
+namespace RecipeBook.Data.Entities
 {
-    public class Recipe : Entity<int>
+    public class Recipe : Common.Data.Entities.Entity<int>
     {
         public string? UserId { get; set; }
 

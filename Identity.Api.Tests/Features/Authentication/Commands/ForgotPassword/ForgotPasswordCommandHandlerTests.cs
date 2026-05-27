@@ -10,7 +10,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
     [TestFixture]
     public class ForgotPasswordCommandHandlerTests
     {
-        private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IEmailService> _emailServiceMock = null!;
         private Mock<ILogger<ForgotPasswordCommandHandler>> _loggerMock = null!;
         private ForgotPasswordCommandHandler _handler = null!;
@@ -18,8 +18,8 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Common.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Common.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _emailServiceMock = new Mock<IEmailService>(MockBehavior.Loose);
@@ -52,7 +52,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
         {
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("unknown@example.com"))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             var command = BuildCommand("unknown@example.com");
 
@@ -69,7 +69,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
         [Test]
         public async Task Handle_EmailRegistered_SendsPasswordResetEmailAndReturnsSuccess()
         {
-            var user = new Common.Data.Entities.ApplicationUser { Id = "user-id", Email = "user@example.com" };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id", Email = "user@example.com" };
 
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("user@example.com"))
@@ -98,7 +98,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
         [Test]
         public async Task Handle_EmailSendFails_StillReturnsSuccess()
         {
-            var user = new Common.Data.Entities.ApplicationUser { Id = "user-id", Email = "user@example.com" };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id", Email = "user@example.com" };
 
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("user@example.com"))
@@ -125,11 +125,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
         {
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             var resultForUnknown = await _handler.Handle(BuildCommand("nobody@example.com"), CancellationToken.None);
 
-            var user = new Common.Data.Entities.ApplicationUser { Id = "uid", Email = "real@example.com" };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "uid", Email = "real@example.com" };
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("real@example.com"))
                 .ReturnsAsync(user);

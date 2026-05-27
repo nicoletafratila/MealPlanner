@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Data.Entities;
+using MealPlanner.Data.Entities;
 using MealPlanner.Shared.Models;
 using RecipeBook.Shared.Models;
 

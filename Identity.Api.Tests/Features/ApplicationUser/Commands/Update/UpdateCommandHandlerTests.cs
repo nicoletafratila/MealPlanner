@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +10,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
     [TestFixture]
     public class UpdateCommandHandlerTests
     {
-        private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IMapper> _mapperMock = null!;
         private Mock<ILogger<UpdateCommandHandler>> _loggerMock = null!;
         private UpdateCommandHandler _handler = null!;
@@ -18,8 +18,8 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Common.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Common.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
@@ -106,7 +106,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("123"))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -120,14 +120,14 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
             });
 
             _userManagerMock.Verify(m => m.FindByIdAsync("123"), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ApplicationUserEditModel>(), It.IsAny<Common.Data.Entities.ApplicationUser>()), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<ApplicationUserEditModel>(), It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_UpdateFails_ReturnsFailedWithErrors()
         {
             // Arrange
-            var existing = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel
@@ -173,7 +173,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
-            var existing = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel
@@ -211,7 +211,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         public async Task Handle_Exception_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            var existing = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel

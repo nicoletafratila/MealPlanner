@@ -1,18 +1,16 @@
 ﻿using System.Reflection;
 using Common.Data.Entities;
+using Identity.Data.Entities;
+using MealPlanner.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace Common.Data.DataContext
 {
-    public sealed class MealPlannerDbContext
-        : IdentityDbContext<ApplicationUser>
+    public sealed class MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options)
+                : IdentityDbContext<ApplicationUser>(options)
     {
-        public MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
         public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
         public DbSet<Recipe> Recipes => Set<Recipe>();

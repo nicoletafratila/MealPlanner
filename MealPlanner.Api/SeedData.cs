@@ -1,6 +1,7 @@
 ﻿using Common.Constants.Units;
 using Common.Data.DataContext;
-using Common.Data.Entities;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api

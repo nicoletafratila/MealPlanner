@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
-using RecipeEntity = Common.Data.Entities.Recipe;
+using RecipeEntity = RecipeBook.Data.Entities.Recipe;
 
 namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
 {

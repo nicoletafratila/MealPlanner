@@ -1,5 +1,6 @@
-ï»¿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Data.Profiles.Resolvers;
 using RecipeBook.Shared.Models;
 
@@ -102,10 +103,10 @@ namespace Common.Data.Profiles.Tests.Resolvers
             using (Assert.EnterMultipleScope())
             {
                 // Expected order:
-                // 1. Category A â†’ Beta
-                // 2. Category B â†’ Alpha
-                // 3. Category B â†’ Zeta
-                // 4. null product â†’ ""
+                // 1. Category A › Beta
+                // 2. Category B › Alpha
+                // 3. Category B › Zeta
+                // 4. null product › ""
                 Assert.That(names, Is.EqualTo([ "", "Beta", "Alpha", "Zeta"]).AsCollection);
 
                 // Indexes must be 1..N

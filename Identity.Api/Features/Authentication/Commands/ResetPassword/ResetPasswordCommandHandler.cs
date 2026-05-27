@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.Authentication.Commands.ResetPassword
 {
     public class ResetPasswordCommandHandler(
-        UserManager<Common.Data.Entities.ApplicationUser> userManager,
+        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
         ILogger<ResetPasswordCommandHandler> logger) : IRequestHandler<ResetPasswordCommand, CommandResponse?>
     {
         public async Task<CommandResponse?> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)

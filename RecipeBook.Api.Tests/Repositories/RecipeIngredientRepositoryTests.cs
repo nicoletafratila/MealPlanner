@@ -1,5 +1,5 @@
-﻿using Common.Data.DataContext;
-using Common.Data.Entities;
+using Common.Data.DataContext;
+using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;

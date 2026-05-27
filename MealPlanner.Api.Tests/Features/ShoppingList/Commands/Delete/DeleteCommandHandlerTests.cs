@@ -1,4 +1,4 @@
-﻿using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
+using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
 using MealPlanner.Api.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -51,7 +51,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.ShoppingList?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -62,7 +62,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
             Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
             const int id = 3;
             var command = new DeleteCommand { Id = id };
 
-            var entity = new Common.Data.Entities.ShoppingList { Id = id, Name = "Weekly" };
+            var entity = new MealPlanner.Data.Entities.ShoppingList { Id = id, Name = "Weekly" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -100,7 +100,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
             const int id = 4;
             var command = new DeleteCommand { Id = id };
 
-            var entity = new Common.Data.Entities.ShoppingList { Id = id, Name = "ToDelete" };
+            var entity = new MealPlanner.Data.Entities.ShoppingList { Id = id, Name = "ToDelete" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))

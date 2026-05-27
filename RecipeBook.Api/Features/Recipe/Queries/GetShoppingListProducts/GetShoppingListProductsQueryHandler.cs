@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Models;
 using MealPlanner.Shared.Models;
 using MediatR;
@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
                 if (shop is null)
                     return null;
 
-                var shopEntity = _mapper.Map<Common.Data.Entities.Shop>(shop);
+                var shopEntity = _mapper.Map<MealPlanner.Data.Entities.Shop>(shop);
                 var shoppingList = recipe.MakeShoppingList(shopEntity);
                 var products = shoppingList.Products;
 

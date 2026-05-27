@@ -1,6 +1,6 @@
 using Common.Constants;
 using Common.Constants.Units;
-using Common.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Services.Converters.Resources;
 
 namespace Common.Services.Converters

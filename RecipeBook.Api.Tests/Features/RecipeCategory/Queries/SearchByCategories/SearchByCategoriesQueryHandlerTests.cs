@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Moq;
 using RecipeBook.Api.Features.RecipeCategory.Queries.SearchByCategories;
 using RecipeBook.Api.Repositories;
@@ -46,7 +46,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
         public async Task Handle_EmptyCategoryIds_ReturnsAllCategories()
         {
             // Arrange
-            var entities = new List<Common.Data.Entities.RecipeCategory>
+            var entities = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
                 new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
                 new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
@@ -86,7 +86,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
         public async Task Handle_WithCategoryIds_FiltersCategoriesById()
         {
             // Arrange
-            var entities = new List<Common.Data.Entities.RecipeCategory>
+            var entities = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
                 new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
                 new() { Id = 2, Name = "Cat2", DisplaySequence = 2 },
@@ -108,7 +108,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
             // The handler will pass the filtered list (ids 1 and 3) into Map
             _mapperMock
                 .Setup(m => m.Map<IList<RecipeCategoryModel>>(
-                    It.Is<IList<Common.Data.Entities.RecipeCategory>>(list =>
+                    It.Is<IList<RecipeBook.Data.Entities.RecipeCategory>>(list =>
                         list.Count == 2 &&
                         list.Any(e => e.Id == 1) &&
                         list.Any(e => e.Id == 3))))
@@ -134,7 +134,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
         public async Task Handle_InvalidCategoryIds_AreIgnored()
         {
             // Arrange
-            var entities = new List<Common.Data.Entities.RecipeCategory>
+            var entities = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
                 new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
                 new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
@@ -154,7 +154,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
 
             _mapperMock
                 .Setup(m => m.Map<IList<RecipeCategoryModel>>(
-                    It.Is<IList<Common.Data.Entities.RecipeCategory>>(list =>
+                    It.Is<IList<RecipeBook.Data.Entities.RecipeCategory>>(list =>
                         list.Count == 1 &&
                         list[0].Id == 1)))
                 .Returns(models);
@@ -185,7 +185,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
 
             _mapperMock
                 .Setup(m => m.Map<IList<RecipeCategoryModel>>(
-                    It.Is<IList<Common.Data.Entities.RecipeCategory>>(list => list.Count == 0)))
+                    It.Is<IList<RecipeBook.Data.Entities.RecipeCategory>>(list => list.Count == 0)))
                 .Returns([]);
 
             var query = new SearchByCategoriesQuery

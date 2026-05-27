@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -61,7 +62,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
 
             _mealPlanRepoMock
                 .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -78,7 +79,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             // Arrange
             var query = new GetShoppingListProductsQuery { MealPlanId = 1, ShopId = 2 };
 
-            var mealPlan = new Common.Data.Entities.MealPlan() { Id = 1, Name = "Plan1" };
+            var mealPlan = new MealPlanner.Data.Entities.MealPlan() { Id = 1, Name = "Plan1" };
 
             _mealPlanRepoMock
                 .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
@@ -86,7 +87,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
 
             _shopRepoMock
                 .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.Shop?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -137,8 +138,8 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
                 Name = "Cake",
                 RecipeIngredients = [ingredient1, ingredient2]
             };
-            var shop = new Common.Data.Entities.Shop { Id = 2, Name = "Shop1", DisplaySequence = [new ShopDisplaySequence() { Value = 2, ProductCategoryId = 100 }, new ShopDisplaySequence() { Value = 1, ProductCategoryId = 101 }] };
-            var mealPlan = new Common.Data.Entities.MealPlan() { Id = 1, Name = "Plan1" };
+            var shop = new MealPlanner.Data.Entities.Shop { Id = 2, Name = "Shop1", DisplaySequence = [new ShopDisplaySequence() { Value = 2, ProductCategoryId = 100 }, new ShopDisplaySequence() { Value = 1, ProductCategoryId = 101 }] };
+            var mealPlan = new MealPlanner.Data.Entities.MealPlan() { Id = 1, Name = "Plan1" };
             mealPlan.MealPlanRecipes =
             [
                new MealPlanRecipe()

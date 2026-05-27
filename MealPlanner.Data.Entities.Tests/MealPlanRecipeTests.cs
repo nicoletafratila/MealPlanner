@@ -1,4 +1,6 @@
-﻿namespace Common.Data.Entities.Tests
+using RecipeBook.Data.Entities;
+
+namespace MealPlanner.Data.Entities.Tests
 {
     [TestFixture]
     public class MealPlanRecipeTests

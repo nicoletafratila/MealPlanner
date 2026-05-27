@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MealPlanner.Api.Features.MealPlan.Commands.Update;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -76,7 +76,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -90,8 +90,8 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
             });
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<MealPlanEditModel>(), It.IsAny<Common.Data.Entities.MealPlan>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<MealPlanEditModel>(), It.IsAny<MealPlanner.Data.Entities.MealPlan>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<MealPlanner.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.MealPlan { Id = id, Name = "OldPlan" };
+            var existing = new MealPlanner.Data.Entities.MealPlan { Id = id, Name = "OldPlan" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -137,7 +137,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
             var model = new MealPlanEditModel { Id = id, Name = "PlanX" };
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.MealPlan { Id = id, Name = "OldX" };
+            var existing = new MealPlanner.Data.Entities.MealPlan { Id = id, Name = "OldX" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))

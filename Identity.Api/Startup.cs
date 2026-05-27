@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
 using System.Text;
 using Common.Data.DataContext;
-using Common.Data.Entities;
+using Identity.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Data.Repository;
 using Duende.IdentityModel;
 using Identity.Api.Features.Email;

@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.ApplicationUser.Commands.Unlock
 {
     public class UnlockCommandHandler(
-        UserManager<Common.Data.Entities.ApplicationUser> userManager,
+        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
         ILogger<UnlockCommandHandler> logger) : IRequestHandler<UnlockCommand, CommandResponse?>
     {
-        private readonly UserManager<Common.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        private readonly UserManager<Identity.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly ILogger<UnlockCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(UnlockCommand request, CancellationToken cancellationToken)

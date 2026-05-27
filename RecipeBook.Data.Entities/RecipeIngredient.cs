@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Common.Data.Entities
+namespace RecipeBook.Data.Entities
 {
     public class RecipeIngredient
     {

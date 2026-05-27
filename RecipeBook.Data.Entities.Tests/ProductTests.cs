@@ -1,4 +1,4 @@
-﻿namespace Common.Data.Entities.Tests
+namespace RecipeBook.Data.Entities.Tests
 {
     [TestFixture]
     public class ProductTests

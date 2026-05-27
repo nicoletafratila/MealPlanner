@@ -1,4 +1,4 @@
-﻿using Common.Services;
+using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchRecipes;
 using MealPlanner.Api.Repositories;
@@ -117,11 +117,11 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 .ReturnsAsync(categories);
 
             // MealPlanRecipes: 3 in Main (R1 * 2, R2 * 1) and 1 in Dessert (D1 * 1)
-            var mealPlanRecipes = new List<Common.Data.Entities.MealPlanRecipe>
+            var mealPlanRecipes = new List<MealPlanner.Data.Entities.MealPlanRecipe>
             {
                 new()
                 {
-                    Recipe = new Common.Data.Entities.Recipe
+                    Recipe = new RecipeBook.Data.Entities.Recipe
                     {
                         Id = 1,
                         Name = "R1",
@@ -130,7 +130,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 },
                 new()
                 {
-                    Recipe = new Common.Data.Entities.Recipe
+                    Recipe = new RecipeBook.Data.Entities.Recipe
                     {
                         Id = 2,
                         Name = "R1",
@@ -139,7 +139,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 },
                 new()
                 {
-                    Recipe = new Common.Data.Entities.Recipe
+                    Recipe = new RecipeBook.Data.Entities.Recipe
                     {
                         Id = 3,
                         Name = "R2",
@@ -148,7 +148,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 },
                 new()
                 {
-                    Recipe = new Common.Data.Entities.Recipe
+                    Recipe = new RecipeBook.Data.Entities.Recipe
                     {
                         Id = 4,
                         Name = "D1",

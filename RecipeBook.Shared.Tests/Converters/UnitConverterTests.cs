@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Data.Entities;
+using RecipeBook.Data.Entities;
 using Moq;
 using RecipeBook.Shared.Converters;
 using RecipeBook.Shared.Models;

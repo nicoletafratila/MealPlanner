@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
+using RecipeBook.Data.Entities;
 
-namespace Common.Data.Entities
+namespace MealPlanner.Data.Entities
 {
     public sealed class ShopDisplaySequence
     {

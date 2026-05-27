@@ -1,4 +1,4 @@
-﻿using Common.Services;
+using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchProducts;
 using MealPlanner.Api.Repositories;
@@ -123,14 +123,14 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                 .ReturnsAsync(categories);
 
             // Two mealplans with products in Dairy and one in Bakery
-            var p1 = new Common.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = 20 };
-            var p2 = new Common.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = 20 };
-            var p3 = new Common.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = 21 };
+            var p1 = new RecipeBook.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = 20 };
+            var p2 = new RecipeBook.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = 20 };
+            var p3 = new RecipeBook.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = 21 };
 
-            var mp1 = new Common.Data.Entities.MealPlan { Id = 100, Name = "Plan1" };
-            var mp2 = new Common.Data.Entities.MealPlan { Id = 101, Name = "Plan2" };
+            var mp1 = new MealPlanner.Data.Entities.MealPlan { Id = 100, Name = "Plan1" };
+            var mp2 = new MealPlanner.Data.Entities.MealPlan { Id = 101, Name = "Plan2" };
 
-            var pairs = new List<KeyValuePair<Common.Data.Entities.Product, Common.Data.Entities.MealPlan>>
+            var pairs = new List<KeyValuePair<RecipeBook.Data.Entities.Product, MealPlanner.Data.Entities.MealPlan>>
             {
                 new(p1, mp1),
                 new(p1, mp2),

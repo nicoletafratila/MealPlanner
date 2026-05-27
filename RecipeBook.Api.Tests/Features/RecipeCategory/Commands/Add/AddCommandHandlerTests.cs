@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -90,7 +90,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
 
             var command = new AddCommand { Model = model };
 
-            var existing = new List<Common.Data.Entities.RecipeCategory>
+            var existing = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
                 new() { Id = 1, Name = "breakfast", DisplaySequence = 1 }
             };
@@ -109,8 +109,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.RecipeCategory>(It.IsAny<RecipeCategoryEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.RecipeCategory>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.RecipeCategory>(It.IsAny<RecipeCategoryEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<RecipeBook.Data.Entities.RecipeCategory>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
                 .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
-            var mappedEntity = new Common.Data.Entities.RecipeCategory
+            var mappedEntity = new RecipeBook.Data.Entities.RecipeCategory
             {
                 Id = 5,
                 Name = "Lunch",
@@ -137,7 +137,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.RecipeCategory>(model))
+                .Setup(m => m.Map<RecipeBook.Data.Entities.RecipeCategory>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -150,7 +150,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.RecipeCategory>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.RecipeCategory>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -170,7 +170,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
                 .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
-            var mappedEntity = new Common.Data.Entities.RecipeCategory
+            var mappedEntity = new RecipeBook.Data.Entities.RecipeCategory
             {
                 Id = 7,
                 Name = "Dinner",
@@ -178,7 +178,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.RecipeCategory>(model))
+                .Setup(m => m.Map<RecipeBook.Data.Entities.RecipeCategory>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -195,7 +195,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.RecipeCategory>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.RecipeCategory>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(

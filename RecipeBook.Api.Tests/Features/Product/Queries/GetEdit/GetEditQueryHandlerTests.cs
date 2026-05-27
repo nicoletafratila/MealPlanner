@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Moq;
 using RecipeBook.Api.Features.Product.Queries.GetEdit;
 using RecipeBook.Api.Repositories;
@@ -47,7 +47,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
         {
             // Arrange
             const int id = 5;
-            var entity = new Common.Data.Entities.Product
+            var entity = new RecipeBook.Data.Entities.Product
             {
                 Id = id,
                 Name = "Product1",
@@ -94,7 +94,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync((Common.Data.Entities.Product?)null);
+                .ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
 
             var query = new GetEditQuery(id);
 
@@ -110,7 +110,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<ProductEditModel>(It.IsAny<Common.Data.Entities.Product>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<ProductEditModel>(It.IsAny<RecipeBook.Data.Entities.Product>()), Times.Never);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
         {
             // Arrange
             const int id = 7;
-            var entity = new Common.Data.Entities.Product
+            var entity = new RecipeBook.Data.Entities.Product
             {
                 Id = id,
                 Name = "ProdX",

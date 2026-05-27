@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace Common.Data.Entities
+namespace Identity.Data.Entities
 {
     public sealed class ApplicationUser : IdentityUser
     {

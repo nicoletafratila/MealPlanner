@@ -9,15 +9,15 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
     [TestFixture]
     public class ResetPasswordCommandHandlerTests
     {
-        private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<ILogger<ResetPasswordCommandHandler>> _loggerMock = null!;
         private ResetPasswordCommandHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Common.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Common.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _loggerMock = new Mock<ILogger<ResetPasswordCommandHandler>>(MockBehavior.Loose);
@@ -46,7 +46,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
         {
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("unknown-id"))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             var result = await _handler.Handle(BuildCommand(userId: "unknown-id"), CancellationToken.None);
 
@@ -58,14 +58,14 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
             });
 
             _userManagerMock.Verify(
-                m => m.ResetPasswordAsync(It.IsAny<Common.Data.Entities.ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()),
+                m => m.ResetPasswordAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()),
                 Times.Never);
         }
 
         [Test]
         public async Task Handle_InvalidToken_ReturnsFailedResponse()
         {
-            var user = new Common.Data.Entities.ApplicationUser { Id = "user-id" };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))
@@ -88,7 +88,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
         [Test]
         public async Task Handle_Success_ReturnsSuccessResponse()
         {
-            var user = new Common.Data.Entities.ApplicationUser { Id = "user-id" };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))
@@ -111,7 +111,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
         [Test]
         public async Task Handle_Success_CallsResetPasswordWithCorrectArguments()
         {
-            var user = new Common.Data.Entities.ApplicationUser { Id = "user-id" };
+            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))

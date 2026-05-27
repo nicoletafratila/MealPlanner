@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MealPlanner.Api.Features.ShoppingList.Commands.Update;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -80,7 +80,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.ShoppingList?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -97,10 +97,10 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mapperMock.Verify(
-                m => m.Map(It.IsAny<ShoppingListEditModel>(), It.IsAny<Common.Data.Entities.ShoppingList>()),
+                m => m.Map(It.IsAny<ShoppingListEditModel>(), It.IsAny<MealPlanner.Data.Entities.ShoppingList>()),
                 Times.Never);
             _repoMock.Verify(
-                r => r.UpdateAsync(It.IsAny<Common.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()),
+                r => r.UpdateAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -117,7 +117,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.ShoppingList
+            var existing = new MealPlanner.Data.Entities.ShoppingList
             {
                 Id = id,
                 Name = "OldName"
@@ -164,7 +164,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.ShoppingList
+            var existing = new MealPlanner.Data.Entities.ShoppingList
             {
                 Id = id,
                 Name = "OldList"

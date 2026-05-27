@@ -1,6 +1,6 @@
-﻿namespace Common.Data.Entities
+namespace RecipeBook.Data.Entities
 {
-    public sealed class ProductCategory : Entity<int>
+    public sealed class ProductCategory : Common.Data.Entities.Entity<int>
     {
         public string? UserId { get; set; }
 
