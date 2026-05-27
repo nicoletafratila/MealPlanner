@@ -1,11 +1,12 @@
 using System.Text.Json;
 using Common.Api;
-using Common.Constants;
+using RecipeBook.Shared.Constants;
 using Common.Models;
 using Common.Pagination;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using RecipeBook.Api;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Services

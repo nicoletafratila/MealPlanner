@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Constants.Units;
+﻿using Common.Constants.Units;
 using Common.Models;
 
 namespace RecipeBook.Shared.Models

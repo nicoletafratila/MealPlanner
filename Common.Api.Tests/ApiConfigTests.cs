@@ -34,18 +34,18 @@ namespace Common.Api.Tests
 
             var config = new ApiConfig(configuration);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(config.BaseUrl, Is.EqualTo(new Uri("https://example.com")));
                 Assert.That(config.Timeout, Is.EqualTo(30));
                 Assert.That(config.Controllers, Is.Not.Null);
-            });
+            }
             Assert.That(config.Controllers, Has.Count.EqualTo(2));
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(config.Controllers["Products"], Is.EqualTo("products"));
                 Assert.That(config.Controllers["Orders"], Is.EqualTo("orders"));
-            });
+            }
         }
 
         [Test]
@@ -66,18 +66,18 @@ namespace Common.Api.Tests
 
             var config = new TestApiConfig(configuration);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(config.BaseUrl, Is.EqualTo(new Uri("https://api.example.com")));
                 Assert.That(config.Timeout, Is.EqualTo(10));
                 Assert.That(config.Controllers, Is.Not.Null);
-            });
+            }
             Assert.That(config.Controllers, Has.Count.EqualTo(2));
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(config.Controllers["Users"], Is.EqualTo("users"));
                 Assert.That(config.Controllers["Reports"], Is.EqualTo("reports"));
-            });
+            }
         }
 
         [Test]

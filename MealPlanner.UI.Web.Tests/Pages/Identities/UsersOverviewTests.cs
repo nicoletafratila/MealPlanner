@@ -3,9 +3,9 @@ using BlazorBootstrap;
 using Blazored.SessionStorage;
 using Bunit;
 using Common.Pagination;
+using Identity.Services;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages.Identities;
-using Identity.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -41,7 +41,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
                 .ReturnsAsync(new PagedList<ApplicationUserModel>([], new Metadata()));
 
             _sessionStorageMock
-                .Setup(s => s.GetItemAsync<string>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string?)null);
 
             _sessionStorageMock

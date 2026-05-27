@@ -1,10 +1,13 @@
+using System.Net.Http.Json;
 using System.Text.Json;
 using Common.Api;
-using Common.Constants;
+using Identity.Shared.Constants;
 using Common.Models;
 using Common.Pagination;
+using Identity.Api;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace Identity.Services
 {
@@ -32,20 +35,20 @@ namespace Identity.Services
         {
             var query = new Dictionary<string, string?>
             {
-                [nameof(QueryParameters<ApplicationUserModel>.Filters)] =
+                [nameof(QueryParameters<>.Filters)] =
                     queryParameters?.Filters is null
                         ? null
                         : JsonSerializer.Serialize(queryParameters.Filters, JsonOptions),
 
-                [nameof(QueryParameters<ApplicationUserModel>.Sorting)] =
+                [nameof(QueryParameters<>.Sorting)] =
                     queryParameters?.Sorting is null
                         ? null
                         : JsonSerializer.Serialize(queryParameters.Sorting, JsonOptions),
 
-                [nameof(QueryParameters<ApplicationUserModel>.PageSize)] =
+                [nameof(QueryParameters<>.PageSize)] =
                     (queryParameters?.PageSize ?? int.MaxValue).ToString(),
 
-                [nameof(QueryParameters<ApplicationUserModel>.PageNumber)] =
+                [nameof(QueryParameters<>.PageNumber)] =
                     (queryParameters?.PageNumber ?? 1).ToString()
             };
 

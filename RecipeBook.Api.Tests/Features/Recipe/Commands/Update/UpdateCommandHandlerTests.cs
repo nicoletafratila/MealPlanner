@@ -1,11 +1,6 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using Common.Models;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;

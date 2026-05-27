@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Blazored.Modal;
 using Common.Pagination;
-using MealPlanner.Shared.Models;
 using MealPlanner.Services;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 

@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MealPlanner.Shared.Models;
-using NUnit.Framework;
-using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Tests.Models
 {

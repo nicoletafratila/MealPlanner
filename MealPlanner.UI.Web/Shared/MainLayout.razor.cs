@@ -1,6 +1,6 @@
 using Common.UI;
-using MealPlanner.Shared.Models;
 using MealPlanner.Services;
+using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared

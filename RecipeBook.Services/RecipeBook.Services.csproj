@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\RecipeBook.Api\RecipeBook.Api.csproj" />
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />

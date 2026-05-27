@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
-using Common.Api;
-using Common.Constants;
+using RecipeBook.Shared.Constants;
 using MealPlanner.Api.Abstractions;
 using Microsoft.Extensions.Configuration;
 using RecipeBook.Shared.Models;
@@ -17,10 +16,10 @@ namespace MealPlanner.Api.Tests.Abstractions
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static RecipeBookApiConfig CreateConfig()
+        private static RecipeBookClientConfig CreateConfig()
         {
             var configuration = new ConfigurationBuilder().Build();
-            var cfg = new RecipeBookApiConfig(configuration)
+            var cfg = new RecipeBookClientConfig(configuration)
             {
                 BaseUrl = new Uri(BaseAddress),
                 Controllers = new Dictionary<string, string>

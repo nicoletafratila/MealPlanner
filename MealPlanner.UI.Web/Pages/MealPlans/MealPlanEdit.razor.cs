@@ -4,12 +4,12 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
+using MealPlanner.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
-using MealPlanner.Services;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using RecipeBook.Services;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans

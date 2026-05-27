@@ -1,16 +1,14 @@
 using System.Net;
-using System.Net.Http;
 using System.Text.Json;
 using Blazored.SessionStorage;
 using Common.Api;
-using Common.Constants;
+using Identity.Shared.Constants;
 using Common.Models;
+using Identity.Api;
 using Identity.Shared.Models;
-using Identity.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
 using RichardSzalay.MockHttp;
 
 namespace Identity.Services.Tests

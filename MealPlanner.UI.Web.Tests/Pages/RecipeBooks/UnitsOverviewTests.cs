@@ -6,10 +6,10 @@ using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using RecipeBook.Services;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
@@ -45,7 +45,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
 
             _sessionStorageMock
-                .Setup(s => s.GetItemAsync<string>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string?)null);
 
             _sessionStorageMock

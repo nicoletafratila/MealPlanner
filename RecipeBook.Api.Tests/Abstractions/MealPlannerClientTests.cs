@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
-using Common.Api;
-using Common.Constants;
+using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Configuration;
 using RecipeBook.Api.Abstractions;
@@ -17,7 +16,7 @@ namespace RecipeBook.Api.Tests.Abstractions
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static MealPlannerApiConfig CreateConfig()
+        private static MealPlannerClientConfig CreateConfig()
         {
             var configValues = new Dictionary<string, string?>
             {
@@ -26,10 +25,10 @@ namespace RecipeBook.Api.Tests.Abstractions
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(configValues)
                 .Build();
-            return new MealPlannerApiConfig(configuration);
+            return new MealPlannerClientConfig(configuration);
         }
 
-        private static (MealPlannerClient client, MockHttpMessageHandler mockHttp, MealPlannerApiConfig config) CreateClient()
+        private static (MealPlannerClient client, MockHttpMessageHandler mockHttp, MealPlannerClientConfig config) CreateClient()
         {
             var mockHttp = new MockHttpMessageHandler();
 
@@ -63,7 +62,7 @@ namespace RecipeBook.Api.Tests.Abstractions
             };
 
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new MealPlannerClient(httpClient, (MealPlannerApiConfig)null!));
+                _ = new MealPlannerClient(httpClient, (MealPlannerClientConfig)null!));
         }
 
         [Test]

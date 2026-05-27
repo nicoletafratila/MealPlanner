@@ -2,10 +2,10 @@ using System.Reflection;
 using Blazored.Modal;
 using Bunit;
 using Common.Pagination;
+using MealPlanner.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages;
 using MealPlanner.UI.Web.Pages.MealPlans;
-using MealPlanner.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 

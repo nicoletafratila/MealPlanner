@@ -51,10 +51,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
-    <ProjectReference Include="..\Common.Logging\Common.Logging.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\Common.UI\Common.UI.csproj" />
     <ProjectReference Include="..\Identity.Services\Identity.Services.csproj" />
+    <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
+    <ProjectReference Include="..\RecipeBook.Api\RecipeBook.Api.csproj" />
     <ProjectReference Include="..\MealPlanner.Services\MealPlanner.Services.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Services\RecipeBook.Services.csproj" />

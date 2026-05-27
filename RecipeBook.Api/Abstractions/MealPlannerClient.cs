@@ -1,14 +1,14 @@
 ﻿using System.Net.Http.Headers;
 using Common.Api;
-using Common.Constants;
+using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
 
 namespace RecipeBook.Api.Abstractions
 {
-    public class MealPlannerClient(HttpClient httpClient, MealPlannerApiConfig apiConfig) : IMealPlannerClient
+    public class MealPlannerClient(HttpClient httpClient, MealPlannerClientConfig apiConfig) : IMealPlannerClient
     {
         private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        private readonly MealPlannerApiConfig _apiConfig = apiConfig ?? throw new ArgumentNullException(nameof(apiConfig));
+        private readonly MealPlannerClientConfig _apiConfig = apiConfig ?? throw new ArgumentNullException(nameof(apiConfig));
 
         public async Task<ShopEditModel?> GetShopAsync(int shopId, string? authToken, CancellationToken cancellationToken)
         {

@@ -1,4 +1,3 @@
-using Common.Data.Entities;
 using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Common.Api;
 using Common.Pagination;
+using Common.Services;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using MediatR;

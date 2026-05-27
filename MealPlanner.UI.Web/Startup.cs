@@ -1,9 +1,11 @@
 using Blazored.Modal;
-using Common.Api;
+using Identity.Api;
 using Identity.Services;
+using MealPlanner.Api;
 using MealPlanner.Services;
-using RecipeBook.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using RecipeBook.Api;
+using RecipeBook.Services;
 using Serilog;
 
 namespace MealPlanner.UI.Web
@@ -12,6 +14,11 @@ namespace MealPlanner.UI.Web
     {
         protected override void RegisterServices(IServiceCollection services)
         {
+            services.AddSingleton<IdentityApiConfig>();
+            services.AddSingleton<RecipeBookApiConfig>();
+            services.AddSingleton<MealPlannerApiConfig>();
+            services.AddSingleton<MealPlannerWebConfig>();
+
             // Identity API clients
             services.AddHttpClient<IAuthenticationService, AuthenticationService>()
                 .ConfigureHttpClient(ConfigureIdentityClient);

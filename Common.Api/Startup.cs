@@ -4,7 +4,7 @@ using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Profiles.Resolvers;
 using Common.Data.Repository;
-using Common.Logging;
+using Common.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,10 +61,6 @@ namespace Common.Api
             services.AddScoped<TokenProvider>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
-            services.AddSingleton<RecipeBookApiConfig>();
-            services.AddSingleton<MealPlannerApiConfig>();
-            services.AddSingleton<MealPlannerWebConfig>();
-            services.AddSingleton<IdentityApiConfig>();
             RegisterRepositories(services);
             RegisterServices(services);
 

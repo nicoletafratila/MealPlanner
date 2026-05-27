@@ -5,9 +5,9 @@ using Bunit;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
+using MealPlanner.Services;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.MealPlans;
-using MealPlanner.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -36,7 +36,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 .ReturnsAsync(new PagedList<MealPlanModel>([], new Metadata()));
 
             _sessionStorageMock
-                .Setup(s => s.GetItemAsync<string>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string?)null);
 
             _sessionStorageMock
