@@ -12,11 +12,11 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             var query = new SearchQuery();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.CategoryIds, Is.Null);
                 Assert.That(query.AuthToken, Is.Null);
-            });
+            }
         }
 
         [Test]
@@ -26,11 +26,11 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             var query = new SearchQuery("1,2,3", "token123");
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.CategoryIds, Is.EqualTo("1,2,3"));
                 Assert.That(query.AuthToken, Is.EqualTo("token123"));
-            });
+            }
         }
 
         [Test]
@@ -45,11 +45,11 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             };
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.CategoryIds, Is.EqualTo("4,5"));
                 Assert.That(query.AuthToken, Is.EqualTo("abc"));
-            });
+            }
         }
     }
 }

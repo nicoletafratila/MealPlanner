@@ -5,22 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="0ebagfua.eg2~" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="$(CoverletCollector)" />
+    <PackageReference Include="coverlet.collector" Version="$(CoverletCollector)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(MicrosoftEFCoreInMemory)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdk)" />
     <PackageReference Include="NUnit" Version="$(NUnitVersion)" />
-    <PackageReference Include="NUnit.Analyzers" Version="$(NUnitAnalyzers)" />
+    <PackageReference Include="NUnit.Analyzers" Version="$(NUnitAnalyzers)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapter)" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.TableConfigurations\RecipeBook.Data.TableConfigurations.csproj" />
-    <ProjectReference Include="..\MealPlanner.Data.TableConfigurations\MealPlanner.Data.TableConfigurations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

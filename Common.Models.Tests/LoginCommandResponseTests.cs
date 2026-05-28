@@ -12,13 +12,13 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Username, Is.Null);
                     Assert.That(response.JwtBearer, Is.Null);
                     Assert.That(response.Claims, Is.Not.Null);
                     Assert.That(response.Claims, Is.Empty);
-                });
+                }
 
                 Assert.That(response.IsAuthenticated, Is.False);
             }
@@ -36,14 +36,14 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Succeeded, Is.True);
                     Assert.That(response.Message, Is.EqualTo("OK"));
                     Assert.That(response.ErrorCode, Is.EqualTo("0"));
                     Assert.That(response.JwtBearer, Is.Null);
                     Assert.That(response.Claims, Is.Empty);
-                });
+                }
 
                 Assert.That(response.IsAuthenticated, Is.False);
             }
@@ -63,14 +63,14 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Succeeded, Is.True);
                     Assert.That(response.Message, Is.EqualTo("Logged in"));
                     Assert.That(response.ErrorCode, Is.EqualTo(string.Empty));
                     Assert.That(response.JwtBearer, Is.EqualTo("jwt-token-value"));
                     Assert.That(response.Username, Is.EqualTo("user1"));
-                });
+                }
 
                 Assert.That(response.IsAuthenticated, Is.True);
             }

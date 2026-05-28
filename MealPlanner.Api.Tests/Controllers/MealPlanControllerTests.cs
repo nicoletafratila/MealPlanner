@@ -81,17 +81,17 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(products));
 
                 Assert.That(captured, Is.Not.Null);
-            });
-            Assert.Multiple(() =>
+            }
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(captured!.MealPlanId, Is.EqualTo(3));
                 Assert.That(captured!.ShopId, Is.EqualTo(7));
-            });
+            }
 
             _senderMock.Verify(m => m.Send(It.IsAny<GetShoppingListProductsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -128,18 +128,18 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(paged));
 
                 Assert.That(captured, Is.Not.Null);
-            });
-            Assert.Multiple(() =>
+            }
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(captured!.QueryParameters, Is.Not.Null);
                 Assert.That(captured!.QueryParameters!.PageSize, Is.EqualTo(10));
                 Assert.That(captured!.QueryParameters!.PageNumber, Is.EqualTo(2));
-            });
+            }
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -170,12 +170,12 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(models));
 
                 Assert.That(captured, Is.Not.Null);
-            });
+            }
             Assert.That(captured!.RecipeId, Is.EqualTo(10));
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchByRecipeIdQuery>(), It.IsAny<CancellationToken>()), Times.Once);

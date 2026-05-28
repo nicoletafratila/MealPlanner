@@ -12,11 +12,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var command = new MakeShoppingListCommand();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(command.MealPlanId, Is.EqualTo(0));
                 Assert.That(command.ShopId, Is.EqualTo(0));
-            });
+            }
         }
 
         [Test]
@@ -30,11 +30,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var command = new MakeShoppingListCommand(mealPlanId, shopId);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(command.MealPlanId, Is.EqualTo(mealPlanId));
                 Assert.That(command.ShopId, Is.EqualTo(shopId));
-            });
+            }
         }
 
         [Test]
@@ -49,11 +49,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             };
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(command.MealPlanId, Is.EqualTo(7));
                 Assert.That(command.ShopId, Is.EqualTo(3));
-            });
+            }
         }
     }
 }

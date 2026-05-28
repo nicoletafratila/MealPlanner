@@ -1,7 +1,9 @@
 using System.Data;
 using Common.Data.DataContext;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests.Migrations
 {
@@ -21,7 +23,10 @@ namespace MealPlanner.Api.Tests.Migrations
                 .UseSqlite(_connection)
                 .Options;
 
-            _context = new MealPlannerDbContext(options);
+            _context = new MealPlannerDbContext(options, new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
 
             await _context.Database.EnsureCreatedAsync();
         }

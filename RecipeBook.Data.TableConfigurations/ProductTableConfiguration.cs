@@ -1,8 +1,8 @@
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using RecipeBook.Data.Entities;
 
-namespace Common.Data.DataContext.TableConfigurations
+namespace RecipeBook.Data.TableConfigurations
 {
     public sealed class ProductTableConfiguration
         : IEntityTypeConfiguration<Product>

@@ -2,7 +2,7 @@ using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Common.Data.DataContext.TableConfigurations
+namespace MealPlanner.Data.TableConfigurations
 {
     public sealed class ShopTableConfiguration
         : IEntityTypeConfiguration<Shop>

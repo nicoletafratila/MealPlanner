@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using Common.Data.DataContext;
+using RecipeBook.Data.TableConfigurations;
+using MealPlanner.Data.TableConfigurations;
 using Identity.Data.Entities;
 using Duende.IdentityModel;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +18,11 @@ namespace Identity.Api.Tests
         public void SetUp()
         {
             var services = new ServiceCollection();
+
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
 
             services.AddDbContext<MealPlannerDbContext>(opts => opts.UseInMemoryDatabase($"MealPlanner_{Guid.NewGuid()}"));
             services

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MealPlanner.Data.Entities;
 using RecipeBook.Data.Entities;
 using MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts;
@@ -199,7 +199,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(result[0].Product!.Name, Is.EqualTo(product2.Name));
                     Assert.That(result[0].Quantity, Is.EqualTo(ingredient2.Quantity));
@@ -208,7 +208,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
                     Assert.That(result[1].Product!.Name, Is.EqualTo(product1.Name));
                     Assert.That(result[1].Quantity, Is.EqualTo(ingredient1.Quantity));
                     Assert.That(result[1].Index, Is.EqualTo(2));
-                });
+                }
             }
 
             _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);

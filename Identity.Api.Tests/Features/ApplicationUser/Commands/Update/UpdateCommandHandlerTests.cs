@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
@@ -75,7 +75,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
             var result1 = await _handler.Handle(command1, CancellationToken.None);
             var result2 = await _handler.Handle(command2, CancellationToken.None);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result1, Is.Not.Null);
                 Assert.That(result1!.Succeeded, Is.False);
@@ -84,7 +84,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Assert.That(result2, Is.Not.Null);
                 Assert.That(result2!.Succeeded, Is.False);
                 Assert.That(result2.Message, Does.StartWith("Could not find a user with id"));
-            });
+            }
 
             _userManagerMock.Verify(
                 m => m.FindByIdAsync(It.IsAny<string>()),
@@ -113,11 +113,11 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Could not find a user with id = 123"));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("123"), Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<ApplicationUserEditModel>(), It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
@@ -158,11 +158,11 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Invalid email; Another error"));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("1"), Times.Once);
             _mapperMock.Verify(m => m.Map(command.Model, existing), Times.Once);
@@ -238,11 +238,11 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred while updating the user."));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("1"), Times.Once);
             _mapperMock.Verify(m => m.Map(command.Model, existing), Times.Once);

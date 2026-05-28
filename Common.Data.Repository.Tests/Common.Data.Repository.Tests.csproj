@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
+    <ProjectReference Include="..\RecipeBook.Data.TableConfigurations\RecipeBook.Data.TableConfigurations.csproj" />
+    <ProjectReference Include="..\MealPlanner.Data.TableConfigurations\MealPlanner.Data.TableConfigurations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

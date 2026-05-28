@@ -18,10 +18,14 @@ namespace Common.Api
 
         protected virtual void RegisterRepositories(IServiceCollection services) { }
 
+        protected virtual void RegisterTableConfigurationAssemblies(IServiceCollection services) { }
+
         protected virtual void ConfigureMapper(IMapperConfigurationExpression cfg) { }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            RegisterTableConfigurationAssemblies(services);
+
             services.AddDbContext<MealPlannerDbContext>(options =>
             {
                 //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");

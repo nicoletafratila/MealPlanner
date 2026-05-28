@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MealPlanner.Api.Features.MealPlan.Queries.GetEdit;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -73,12 +73,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Plan1"));
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<MealPlanEditModel>(entity), Times.Once);
@@ -100,12 +100,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.Null.Or.Empty);
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<MealPlanEditModel>(It.IsAny<MealPlanner.Data.Entities.MealPlan>()), Times.Never);
@@ -136,11 +136,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<MealPlanEditModel>(entity), Times.Once);

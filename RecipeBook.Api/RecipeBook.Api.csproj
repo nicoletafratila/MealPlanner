@@ -95,6 +95,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Profiles\RecipeBook.Data.Profiles.csproj" />
+    <ProjectReference Include="..\RecipeBook.Data.TableConfigurations\RecipeBook.Data.TableConfigurations.csproj" />
+    <ProjectReference Include="..\MealPlanner.Data.TableConfigurations\MealPlanner.Data.TableConfigurations.csproj" />
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />

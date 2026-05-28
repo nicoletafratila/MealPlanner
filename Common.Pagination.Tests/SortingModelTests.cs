@@ -18,11 +18,11 @@ namespace Common.Pagination.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(model.PropertyName, Is.EqualTo("Name"));
                     Assert.That(model.Direction, Is.EqualTo(SortDirection.Descending));
-                });
+                }
             }
         }
 

@@ -12,11 +12,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             var query = new GetShoppingListProductsQuery();
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.MealPlanId, Is.EqualTo(0));
                 Assert.That(query.ShopId, Is.EqualTo(0));
-            });
+            }
         }
 
         [Test]
@@ -30,11 +30,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             var query = new GetShoppingListProductsQuery(mealPlanId, shopId);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.MealPlanId, Is.EqualTo(mealPlanId));
                 Assert.That(query.ShopId, Is.EqualTo(shopId));
-            });
+            }
         }
 
         [Test]
@@ -49,11 +49,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             };
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.MealPlanId, Is.EqualTo(7));
                 Assert.That(query.ShopId, Is.EqualTo(3));
-            });
+            }
         }
     }
 }

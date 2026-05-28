@@ -1,4 +1,4 @@
-using Common.Models;
+﻿using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
@@ -70,11 +70,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Invalid credentials."));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("user"), Times.Once);
             _signInManagerMock.Verify(
@@ -101,11 +101,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Your account is not active. Please contact an administrator."));
-            });
+            }
 
             _signInManagerMock.Verify(
                 s => s.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()),
@@ -141,12 +141,12 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.TypeOf<LoginCommandResponse>());
             var loginResponse = (LoginCommandResponse)result!;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(loginResponse.Succeeded, Is.True);
                 Assert.That(loginResponse.JwtBearer, Is.Not.Null.And.Not.Empty);
                 Assert.That(loginResponse.Claims, Is.Not.Empty);
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("user"), Times.Once);
             _userManagerMock.Verify(m => m.GetRolesAsync(user), Times.Once);
@@ -182,11 +182,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("User is locked out"));
-            });
+            }
 
             _signInManagerMock.Verify(
                 s => s.PasswordSignInAsync("user", "pwd", false, true),
@@ -220,11 +220,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("User/password not found."));
-            });
+            }
 
             _signInManagerMock.Verify(
                 s => s.PasswordSignInAsync("user", "wrong", false, true),

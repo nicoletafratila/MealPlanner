@@ -19,6 +19,7 @@
     <!-- Microsoft .NET 10 runtime packages (all ship at the same patch) -->
     <MicrosoftAspNetCore>10.0.8</MicrosoftAspNetCore>
     <!-- EF Core providers converge with the main group in .NET 10 -->
+    <MicrosoftEFCore>10.0.8</MicrosoftEFCore>
     <MicrosoftEFCoreSqlServer>10.0.8</MicrosoftEFCoreSqlServer>
     <MicrosoftEFCoreSqlite>10.0.8</MicrosoftEFCoreSqlite>
     <MicrosoftEFCoreInMemory>10.0.8</MicrosoftEFCoreInMemory>

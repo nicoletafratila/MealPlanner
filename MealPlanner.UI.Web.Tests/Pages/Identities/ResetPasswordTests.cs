@@ -1,4 +1,4 @@
-using Bunit;
+﻿using Bunit;
 using Common.Models;
 using Common.UI;
 using Identity.Services;
@@ -55,11 +55,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
         {
             var cut = RenderComponent(userId: "user-id", token: "reset-token");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.ResetPasswordModel.UserId, Is.EqualTo("user-id"));
                 Assert.That(cut.Instance.ResetPasswordModel.Token, Is.EqualTo("reset-token"));
-            });
+            }
         }
 
         [Test]

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Common.Data.Entities;
+﻿using Common.Data.Entities;
 using Identity.Data.Entities;
 using MealPlanner.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,7 +7,9 @@ using RecipeBook.Data.Entities;
 
 namespace Common.Data.DataContext
 {
-    public sealed class MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options)
+    public sealed class MealPlannerDbContext(
+        DbContextOptions<MealPlannerDbContext> options,
+        TableConfigurationAssemblies? tableConfigurationAssemblies = null)
                 : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
@@ -29,7 +30,9 @@ namespace Common.Data.DataContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            if (tableConfigurationAssemblies != null)
+                foreach (var assembly in tableConfigurationAssemblies.Assemblies)
+                    modelBuilder.ApplyConfigurationsFromAssembly(assembly);
 
             modelBuilder.Entity<RecipeIngredient>()
                 .Property(b => b.Quantity)

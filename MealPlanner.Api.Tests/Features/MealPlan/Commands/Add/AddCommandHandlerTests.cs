@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
 using MealPlanner.Api.Repositories;
@@ -96,11 +96,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("This meal plan already exists."));
-            });
+            }
 
             _repoMock.Verify(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(It.IsAny<MealPlanEditModel>()), Times.Never);
@@ -166,11 +166,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the meal plan."));
-            });
+            }
 
             _repoMock.Verify(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model), Times.Once);

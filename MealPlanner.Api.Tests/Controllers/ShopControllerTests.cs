@@ -85,18 +85,18 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(paged));
 
                 Assert.That(captured, Is.Not.Null);
-            });
-            Assert.Multiple(() =>
+            }
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(captured!.QueryParameters, Is.Not.Null);
                 Assert.That(captured!.QueryParameters!.PageSize, Is.EqualTo(10));
                 Assert.That(captured!.QueryParameters!.PageNumber, Is.EqualTo(2));
-            });
+            }
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }

@@ -45,11 +45,11 @@ namespace Common.Api.Tests
 
             var auth = client.DefaultRequestHeaders.Authorization;
             Assert.That(auth, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(auth!.Scheme, Is.EqualTo(JwtBearerDefaults.AuthenticationScheme));
                 Assert.That(auth.Parameter, Is.EqualTo(token));
-            });
+            }
         }
 
         [Test]
@@ -89,12 +89,12 @@ namespace Common.Api.Tests
         [Test]
         public void GetCleanToken_NullOrEmpty_ReturnsEmptyString()
         {
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(HttpClientExtensions.GetCleanToken(null), Is.EqualTo(string.Empty));
                 Assert.That(HttpClientExtensions.GetCleanToken(string.Empty), Is.EqualTo(string.Empty));
                 Assert.That(HttpClientExtensions.GetCleanToken("   "), Is.EqualTo(string.Empty));
-            });
+            }
         }
 
         [Test]
@@ -118,11 +118,11 @@ namespace Common.Api.Tests
         {
             const string token = "xyz";
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(HttpClientExtensions.GetCleanToken($"bearer {token}"), Is.EqualTo(token));
                 Assert.That(HttpClientExtensions.GetCleanToken($"BEARER {token}"), Is.EqualTo(token));
-            });
+            }
         }
 
         [Test]
@@ -185,11 +185,11 @@ namespace Common.Api.Tests
 
             var auth = client.DefaultRequestHeaders.Authorization;
             Assert.That(auth, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(auth!.Scheme, Is.EqualTo(JwtBearerDefaults.AuthenticationScheme));
                 Assert.That(auth.Parameter, Is.EqualTo(token));
-            });
+            }
         }
     }
 }

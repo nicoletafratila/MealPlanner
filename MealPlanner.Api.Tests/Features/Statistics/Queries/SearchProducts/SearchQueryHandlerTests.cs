@@ -1,4 +1,4 @@
-using Common.Services;
+﻿using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchProducts;
 using MealPlanner.Api.Repositories;
@@ -159,26 +159,26 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(dairyStat.Data, Is.Not.Null);
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(dairyStat.Data!.ContainsKey("Milk"), Is.True);
                     Assert.That(dairyStat.Data["Milk"], Is.EqualTo(2));
                     Assert.That(dairyStat.Data.ContainsKey("Cheese"), Is.False);
                     Assert.That(dairyStat.Data.ContainsKey("Others"), Is.True);
                     Assert.That(dairyStat.Data["Others"], Is.EqualTo(1));
-                });
+                }
             }
 
             // Bakery: Bread(1) => goes into Others
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(bakeryStat.Data, Is.Not.Null);
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(bakeryStat.Data!.ContainsKey("Bread"), Is.False);
                     Assert.That(bakeryStat.Data.ContainsKey("Others"), Is.True);
                     Assert.That(bakeryStat.Data["Others"], Is.EqualTo(1));
-                });
+                }
             }
 
             recipeClientMock.Verify(c =>

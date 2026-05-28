@@ -1,4 +1,4 @@
-using AutoMapper;
+ï»¿using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
 using MealPlanner.Api.Repositories;
@@ -146,11 +146,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Id, Is.EqualTo(10));
                 Assert.That(result.Name, Is.EqualTo("Generated"));
-            });
+            }
 
             _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);
             _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()), Times.Once);
@@ -222,7 +222,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             // Act
             await _handler.Handle(command, CancellationToken.None);
 
-            // Assert — nav props must be restored from the in-memory meal plan graph
+            // Assert ï¿½ nav props must be restored from the in-memory meal plan graph
             Assert.That(savedProduct.Product, Is.SameAs(product));
             Assert.That(savedProduct.Unit, Is.SameAs(pieceUnit));
         }

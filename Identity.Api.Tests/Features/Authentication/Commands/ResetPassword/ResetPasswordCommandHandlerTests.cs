@@ -1,4 +1,4 @@
-using Identity.Api.Features.Authentication.Commands.ResetPassword;
+﻿using Identity.Api.Features.Authentication.Commands.ResetPassword;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -51,11 +51,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
             var result = await _handler.Handle(BuildCommand(userId: "unknown-id"), CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Password reset failed. The link may be invalid or expired."));
-            });
+            }
 
             _userManagerMock.Verify(
                 m => m.ResetPasswordAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()),
@@ -78,11 +78,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
             var result = await _handler.Handle(BuildCommand(token: "bad-token"), CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Password reset failed. The link may be invalid or expired."));
-            });
+            }
         }
 
         [Test]
@@ -101,11 +101,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ResetPassword
             var result = await _handler.Handle(BuildCommand(), CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("Your password has been reset successfully."));
-            });
+            }
         }
 
         [Test]

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MealPlanner.Api.Features.ShoppingList.Queries.GetEdit;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -73,12 +73,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("List1"));
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
@@ -102,12 +102,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.Null.Or.Empty);
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
@@ -142,11 +142,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),

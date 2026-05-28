@@ -1,4 +1,4 @@
-using MealPlanner.Api.Features.MealPlan.Commands.Delete;
+﻿using MealPlanner.Api.Features.MealPlan.Commands.Delete;
 using MealPlanner.Api.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -58,11 +58,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Delete
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _repoMock.Verify(r => r.DeleteAsync(It.IsAny<MealPlanner.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -118,11 +118,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Delete
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the meal plan."));
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _repoMock.Verify(r => r.DeleteAsync(entity, It.IsAny<CancellationToken>()), Times.Once);

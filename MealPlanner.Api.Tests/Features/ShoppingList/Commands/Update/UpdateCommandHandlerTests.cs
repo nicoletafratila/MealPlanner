@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MealPlanner.Api.Features.ShoppingList.Commands.Update;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -87,11 +87,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
@@ -187,11 +187,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shopping list."));
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),

@@ -1,12 +1,12 @@
-using Common.Data.DataContext.TableConfigurations;
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
-namespace Common.Data.DataContext.Tests.TableConfigurations
+namespace RecipeBook.Data.TableConfigurations.Tests
 {
     [TestFixture]
-    public class ProductTableConfigurationTests
+    public class RecipeTableConfigurationTests
     {
         [Test]
         public void Configure_SetsUserIdIndex()
@@ -14,16 +14,16 @@ namespace Common.Data.DataContext.Tests.TableConfigurations
             var conventionSet = new ConventionSet();
             var modelBuilder = new ModelBuilder(conventionSet);
 
-            var entityBuilder = modelBuilder.Entity<Product>();
+            var entityBuilder = modelBuilder.Entity<Recipe>();
 
-            var configuration = new ProductTableConfiguration();
+            var configuration = new RecipeTableConfiguration();
             configuration.Configure(entityBuilder);
 
-            var entityType = modelBuilder.Model.FindEntityType(typeof(Product));
-            Assert.That(entityType, Is.Not.Null, "Product entity not found in model.");
+            var entityType = modelBuilder.Model.FindEntityType(typeof(Recipe));
+            Assert.That(entityType, Is.Not.Null, "Recipe entity not found in model.");
 
             var userIdIndex = entityType!.GetIndexes().SingleOrDefault(i => i.Properties.Any(p => p.Name == "UserId"));
-            Assert.That(userIdIndex, Is.Not.Null, "Index on UserId not configured for Product.");
+            Assert.That(userIdIndex, Is.Not.Null, "Index on UserId not configured for Recipe.");
         }
 
         [Test]
@@ -31,9 +31,9 @@ namespace Common.Data.DataContext.Tests.TableConfigurations
         {
             var conventionSet = new ConventionSet();
             var modelBuilder = new ModelBuilder(conventionSet);
-            var entityBuilder = modelBuilder.Entity<Product>();
+            var entityBuilder = modelBuilder.Entity<Recipe>();
 
-            var configuration = new ProductTableConfiguration();
+            var configuration = new RecipeTableConfiguration();
 
             Assert.That(() => configuration.Configure(entityBuilder), Throws.Nothing);
         }

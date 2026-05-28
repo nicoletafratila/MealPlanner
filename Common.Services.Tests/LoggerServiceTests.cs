@@ -81,11 +81,11 @@ namespace Common.Services.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Has.Length.EqualTo(2));
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(result[0], Is.EqualTo(model2)); 
                     Assert.That(result[1], Is.EqualTo(model1));
-                });
+                }
             }
 
             _repositoryMock.Verify(r => r.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);

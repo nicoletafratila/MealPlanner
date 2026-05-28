@@ -1,9 +1,9 @@
-using Common.Data.DataContext.TableConfigurations;
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
-namespace Common.Data.DataContext.Tests.TableConfigurations
+namespace RecipeBook.Data.TableConfigurations.Tests
 {
     [TestFixture]
     public class RecipeIngredientTableConfigurationTests

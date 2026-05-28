@@ -1,9 +1,9 @@
-using Common.Data.DataContext.TableConfigurations;
 using MealPlanner.Data.Entities;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace Common.Data.DataContext.Tests.TableConfigurations
+namespace MealPlanner.Data.TableConfigurations.Tests
 {
     [TestFixture]
     public class ShopDisplaySequenceTableConfigurationTests

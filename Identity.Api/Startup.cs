@@ -2,23 +2,33 @@
 using System.Text;
 using AutoMapper;
 using Common.Data.DataContext;
+using Common.Data.Repository;
+using Duende.IdentityModel;
 using Identity.Api.Features.Email;
 using Identity.Data.Entities;
 using Identity.Data.Profiles;
-using RecipeBook.Data.Entities;
-using Common.Data.Repository;
-using Duende.IdentityModel;
+using MealPlanner.Data.TableConfigurations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 using Serilog;
 
 namespace Identity.Api
 {
     public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
+        protected override void RegisterTableConfigurationAssemblies(IServiceCollection services)
+        {
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
+        }
+
         protected override void ConfigureMapper(IMapperConfigurationExpression cfg)
         {
             cfg.AddProfile<ApplicationUserProfile>();

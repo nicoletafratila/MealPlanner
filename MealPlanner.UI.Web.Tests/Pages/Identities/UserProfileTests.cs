@@ -1,4 +1,4 @@
-using BlazorBootstrap;
+﻿using BlazorBootstrap;
 using Bunit;
 using Bunit.TestDoubles;
 using Common.Models;
@@ -92,11 +92,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             var cut = RenderWithName("testuser", userId: "user-id");
 
             Assert.That(cut.Instance.ApplicationUser, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cut.Instance.ApplicationUser!.Username, Is.EqualTo("testuser"));
                 Assert.That(cut.Instance.ApplicationUser.UserId, Is.EqualTo("user-id"));
-            });
+            }
 
             _appUserServiceMock.Verify(
                 s => s.GetEditAsync("testuser", It.IsAny<CancellationToken>()),

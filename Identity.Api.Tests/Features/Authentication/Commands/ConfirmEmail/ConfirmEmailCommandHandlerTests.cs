@@ -1,4 +1,4 @@
-using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
+﻿using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -41,11 +41,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
             var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "unknown-id", Token = "token" }, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Invalid email confirmation link."));
-            });
+            }
         }
 
         [Test]
@@ -64,11 +64,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
             var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "user-id", Token = "bad-token" }, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Email confirmation failed. The link may be invalid or expired."));
-            });
+            }
 
             _userManagerMock.Verify(m => m.UpdateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
         }
@@ -93,11 +93,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
             var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "user-id", Token = "valid-token" }, CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("Your email has been confirmed. You can now log in."));
-            });
+            }
 
             Assert.That(user.IsActive, Is.True);
             _userManagerMock.Verify(m => m.UpdateAsync(user), Times.Once);

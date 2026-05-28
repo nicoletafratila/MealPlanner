@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MealPlanner.Api.Features.MealPlan.Commands.Update;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -83,11 +83,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<MealPlanEditModel>(), It.IsAny<MealPlanner.Data.Entities.MealPlan>()), Times.Never);
@@ -156,11 +156,11 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the meal plan."));
-            });
+            }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);

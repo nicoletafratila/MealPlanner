@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
@@ -61,11 +61,11 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.EmailAddress, Is.Null.Or.Empty);
                 Assert.That(result.Username, Is.Null.Or.Empty);
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("alice"), Times.Once);
             _mapperMock.Verify(m => m.Map<ApplicationUserEditModel>(It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
@@ -104,13 +104,13 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.UserId, Is.EqualTo("1"));
                 Assert.That(result.Username, Is.EqualTo("alice"));
                 Assert.That(result.EmailAddress, Is.EqualTo("alice@example.com"));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("alice"), Times.Once);
             _mapperMock.Verify(m => m.Map<ApplicationUserEditModel>(user), Times.Once);
