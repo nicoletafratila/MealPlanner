@@ -7,7 +7,7 @@ namespace Common.Api
     {
         public static async Task EnsureAuthorizationHeaderAsync(
             this HttpClient httpClient,
-            TokenProvider tokenProvider,
+            ITokenProvider tokenProvider,
             CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(httpClient);

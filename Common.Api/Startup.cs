@@ -44,7 +44,7 @@ namespace Common.Api
             });
             services.AddSingleton(s => config.CreateMapper());
 
-            services.AddScoped<TokenProvider>();
+            services.AddScoped<ITokenProvider, TokenProvider>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();
             services.AddScoped<ILoggerService, LoggerService>();
             RegisterRepositories(services);

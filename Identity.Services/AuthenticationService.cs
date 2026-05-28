@@ -11,7 +11,7 @@ namespace Identity.Services
 {
     public class AuthenticationService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         IdentityApiConfig identityApiConfig,
         ILogger<AuthenticationService> logger) : IAuthenticationService
     {

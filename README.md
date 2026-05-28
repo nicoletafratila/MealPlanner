@@ -10,8 +10,9 @@ PM> Script-migration
 
 
 
+schimba ids in guid
 warning cu automapper
-maui
+Error occurred while getting package vulnerability data: Unable to load the service index for source https://suvoda-005514975141.d.codeartifact.eu-west-1.amazonaws.com/nuget/sv-framework-nuget/v3/index.json.
 create the weeks menu on first click on the recipe if not yet created
 update on the banner after weeks menu is created
 allow same recipe multiple times on the menu

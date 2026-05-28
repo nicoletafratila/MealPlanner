@@ -12,7 +12,7 @@ namespace RecipeBook.Services
 {
     public class RecipeService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         RecipeBookApiConfig recipeBookApiConfig,
         ILogger<RecipeService> logger) : IRecipeService
     {
