@@ -88,6 +88,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\Identity.Data.Profiles\Identity.Data.Profiles.csproj" />
     <ProjectReference Include="..\Identity.Data.Entities\Identity.Data.Entities.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />
     <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />

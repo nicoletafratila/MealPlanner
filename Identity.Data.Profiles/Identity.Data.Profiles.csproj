@@ -10,8 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
-    <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
+    <ProjectReference Include="..\Common.Data.Profiles\Common.Data.Profiles.csproj" />
+    <ProjectReference Include="..\Identity.Data.Entities\Identity.Data.Entities.csproj" />
+    <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
   </ItemGroup>
 
 </Project>

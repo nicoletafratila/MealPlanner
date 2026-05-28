@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using AutoMapper;
 using Duende.IdentityModel;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,14 +9,29 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecipeBook.Api.Abstractions;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Profiles;
+using RecipeBook.Data.Profiles.Resolvers;
 using Serilog;
 
 namespace RecipeBook.Api
 {
     public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
+        protected override void ConfigureMapper(IMapperConfigurationExpression cfg)
+        {
+            cfg.AddProfile<ProductProfile>();
+            cfg.AddProfile<RecipeIngredientProfile>();
+            cfg.AddProfile<ProductCategoryProfile>();
+            cfg.AddProfile<RecipeProfile>();
+            cfg.AddProfile<RecipeCategoryProfile>();
+            cfg.AddProfile<UnitProfile>();
+        }
+
         protected override void RegisterServices(IServiceCollection services)
         {
+            services.AddTransient<EditRecipeModelToRecipeResolver>();
+            services.AddTransient<RecipeToEditRecipeModelResolver>();
+
             services.AddSingleton<MealPlannerClientConfig>();
 
             services.AddHttpClient<IMealPlannerClient, MealPlannerClient>()

@@ -1,21 +1,52 @@
 ﻿using System.Reflection;
 using System.Text;
+using AutoMapper;
 using Duende.IdentityModel;
+using Identity.Data.Profiles;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
+using MealPlanner.Data.Profiles;
+using MealPlanner.Data.Profiles.Resolvers;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RecipeBook.Data.Profiles;
+using RecipeBook.Data.Profiles.Resolvers;
 using Serilog;
 
 namespace MealPlanner.Api
 {
     public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
+        protected override void ConfigureMapper(IMapperConfigurationExpression cfg)
+        {
+            cfg.AddProfile<ProductProfile>();
+            cfg.AddProfile<RecipeIngredientProfile>();
+            cfg.AddProfile<ProductCategoryProfile>();
+            cfg.AddProfile<MealPlanProfile>();
+            cfg.AddProfile<RecipeProfile>();
+            cfg.AddProfile<RecipeCategoryProfile>();
+            cfg.AddProfile<UnitProfile>();
+            cfg.AddProfile<ShoppingListProfile>();
+            cfg.AddProfile<ShoppingListProductProfile>();
+            cfg.AddProfile<ShopProfile>();
+            cfg.AddProfile<ShopDisplaySequenceProfile>();
+            cfg.AddProfile<ApplicationUserProfile>();
+        }
+
         protected override void RegisterServices(IServiceCollection services)
         {
+            services.AddTransient<EditMealPlanModelToMealPlanResolver>();
+            services.AddTransient<EditRecipeModelToRecipeResolver>();
+            services.AddTransient<EditShopModelToShopResolver>();
+            services.AddTransient<EditShoppingListModelToShoppingListResolver>();
+            services.AddTransient<MealPlanToEditMealPlanModelResolver>();
+            services.AddTransient<RecipeToEditRecipeModelResolver>();
+            services.AddTransient<ShoppingListToEditShoppingListModelResolver>();
+            services.AddTransient<ShopToEditShopModelResolver>();
+
             services.AddSingleton<RecipeBookClientConfig>();
 
             services.AddHttpClient<IRecipeBookClient, RecipeBookClient>()

@@ -2,7 +2,6 @@
 using Blazored.SessionStorage;
 using Common.Data.DataContext;
 using Common.Data.Profiles;
-using Common.Data.Profiles.Resolvers;
 using Common.Data.Repository;
 using Common.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +18,8 @@ namespace Common.Api
 
         protected virtual void RegisterRepositories(IServiceCollection services) { }
 
+        protected virtual void ConfigureMapper(IMapperConfigurationExpression cfg) { }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MealPlannerDbContext>(options =>
@@ -34,29 +35,10 @@ namespace Common.Api
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             var config = new MapperConfiguration(c =>
             {
-                c.AddProfile<ProductProfile>();
-                c.AddProfile<RecipeIngredientProfile>();
-                c.AddProfile<ProductCategoryProfile>();
-                c.AddProfile<MealPlanProfile>();
-                c.AddProfile<RecipeProfile>();
-                c.AddProfile<RecipeCategoryProfile>();
-                c.AddProfile<UnitProfile>();
-                c.AddProfile<ShoppingListProfile>();
-                c.AddProfile<ShoppingListProductProfile>();
-                c.AddProfile<ShopProfile>();
-                c.AddProfile<ShopDisplaySequenceProfile>();
                 c.AddProfile<LogProfile>();
-                c.AddProfile<ApplicationUserProfile>();
+                ConfigureMapper(c);
             });
             services.AddSingleton(s => config.CreateMapper());
-            services.AddTransient<EditMealPlanModelToMealPlanResolver>();
-            services.AddTransient<EditRecipeModelToRecipeResolver>();
-            services.AddTransient<EditShopModelToShopResolver>();
-            services.AddTransient<EditShoppingListModelToShoppingListResolver>();
-            services.AddTransient<MealPlanToEditMealPlanModelResolver>();
-            services.AddTransient<RecipeToEditRecipeModelResolver>();
-            services.AddTransient<ShoppingListToEditShoppingListModelResolver>();
-            services.AddTransient<ShopToEditShopModelResolver>();
 
             services.AddScoped<TokenProvider>();
             services.AddScoped<ILoggerRepository, LoggerRepository>();

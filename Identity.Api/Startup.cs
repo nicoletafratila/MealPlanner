@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
 using System.Text;
+using AutoMapper;
 using Common.Data.DataContext;
+using Identity.Api.Features.Email;
 using Identity.Data.Entities;
+using Identity.Data.Profiles;
 using RecipeBook.Data.Entities;
 using Common.Data.Repository;
 using Duende.IdentityModel;
-using Identity.Api.Features.Email;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +19,11 @@ namespace Identity.Api
 {
     public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
     {
+        protected override void ConfigureMapper(IMapperConfigurationExpression cfg)
+        {
+            cfg.AddProfile<ApplicationUserProfile>();
+        }
+
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
