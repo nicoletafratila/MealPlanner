@@ -11,7 +11,7 @@ namespace MealPlanner.Services
 {
     public class ShoppingListService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         MealPlannerApiConfig mealPlannerApiConfig,
         ILogger<ShoppingListService> logger) : IShoppingListService
     {

@@ -10,7 +10,7 @@ namespace MealPlanner.Services
 {
     public class StatisticsService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         MealPlannerApiConfig mealPlannerApiConfig,
         ILogger<StatisticsService> logger) : IStatisticsService
     {

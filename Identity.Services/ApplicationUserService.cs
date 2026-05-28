@@ -13,7 +13,7 @@ namespace Identity.Services
 {
     public class ApplicationUserService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         IdentityApiConfig identityApiConfig,
         ILogger<ApplicationUserService> logger) : IApplicationUserService
     {

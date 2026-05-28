@@ -13,7 +13,7 @@ namespace MealPlanner.Services
 {
     public class MealPlanService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         MealPlannerApiConfig mealPlannerApiConfig,
         ILogger<MealPlanService> logger) : IMealPlanService
     {

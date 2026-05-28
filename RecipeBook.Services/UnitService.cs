@@ -13,7 +13,7 @@ namespace RecipeBook.Services
 {
     public class UnitService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         RecipeBookApiConfig recipeBookApiConfig,
         IMemoryCache cache,
         ILogger<UnitService> logger) : IUnitService

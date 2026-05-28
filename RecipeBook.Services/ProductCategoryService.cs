@@ -11,7 +11,7 @@ namespace RecipeBook.Services
 {
     public class ProductCategoryService(
         HttpClient httpClient,
-        TokenProvider tokenProvider,
+        ITokenProvider tokenProvider,
         RecipeBookApiConfig recipeBookApiConfig,
         ILogger<ProductCategoryService> logger) : IProductCategoryService
     {

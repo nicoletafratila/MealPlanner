@@ -2,7 +2,7 @@
 
 namespace Common.Api
 {
-    public sealed class TokenProvider(ISessionStorageService sessionStorage)
+    public sealed class TokenProvider(ISessionStorageService sessionStorage) : ITokenProvider
     {
         private readonly ISessionStorageService _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
 
