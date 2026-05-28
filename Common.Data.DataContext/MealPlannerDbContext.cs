@@ -1,18 +1,17 @@
-﻿using System.Reflection;
-using Common.Data.Entities;
+﻿using Common.Data.Entities;
+using Identity.Data.Entities;
+using MealPlanner.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace Common.Data.DataContext
 {
-    public sealed class MealPlannerDbContext
-        : IdentityDbContext<ApplicationUser>
+    public sealed class MealPlannerDbContext(
+        DbContextOptions<MealPlannerDbContext> options,
+        TableConfigurationAssemblies? tableConfigurationAssemblies = null)
+                : IdentityDbContext<ApplicationUser>(options)
     {
-        public MealPlannerDbContext(DbContextOptions<MealPlannerDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<MealPlan> MealPlans => Set<MealPlan>();
         public DbSet<MealPlanRecipe> MealPlanRecipes => Set<MealPlanRecipe>();
         public DbSet<Recipe> Recipes => Set<Recipe>();
@@ -31,7 +30,9 @@ namespace Common.Data.DataContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            if (tableConfigurationAssemblies != null)
+                foreach (var assembly in tableConfigurationAssemblies.Assemblies)
+                    modelBuilder.ApplyConfigurationsFromAssembly(assembly);
 
             modelBuilder.Entity<RecipeIngredient>()
                 .Property(b => b.Quantity)

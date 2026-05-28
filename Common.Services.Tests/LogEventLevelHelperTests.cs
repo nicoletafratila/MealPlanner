@@ -10,7 +10,7 @@ namespace Common.Services.Tests
         {
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(LogEventLevelHelper.StringToEnum("Verbose"), Is.EqualTo(LogEventLevel.Verbose));
                     Assert.That(LogEventLevelHelper.StringToEnum("debug"), Is.EqualTo(LogEventLevel.Debug));
@@ -18,7 +18,7 @@ namespace Common.Services.Tests
                     Assert.That(LogEventLevelHelper.StringToEnum("Warning"), Is.EqualTo(LogEventLevel.Warning));
                     Assert.That(LogEventLevelHelper.StringToEnum("Error"), Is.EqualTo(LogEventLevel.Error));
                     Assert.That(LogEventLevelHelper.StringToEnum("Fatal"), Is.EqualTo(LogEventLevel.Fatal));
-                });
+                }
             }
         }
 
@@ -44,7 +44,7 @@ namespace Common.Services.Tests
         {
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass("Verbose"), Is.EqualTo("info"));
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass("Debug"), Is.EqualTo("info"));
@@ -52,7 +52,7 @@ namespace Common.Services.Tests
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass("Warning"), Is.EqualTo("warning"));
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass("Error"), Is.EqualTo("danger"));
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass("Fatal"), Is.EqualTo("danger"));
-                });
+                }
             }
         }
 
@@ -61,7 +61,7 @@ namespace Common.Services.Tests
         {
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass(LogEventLevel.Verbose), Is.EqualTo("info"));
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass(LogEventLevel.Debug), Is.EqualTo("info"));
@@ -69,7 +69,7 @@ namespace Common.Services.Tests
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass(LogEventLevel.Warning), Is.EqualTo("warning"));
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass(LogEventLevel.Error), Is.EqualTo("danger"));
                     Assert.That(LogEventLevelHelper.GetBootstrapUIClass(LogEventLevel.Fatal), Is.EqualTo("danger"));
-                });
+                }
             }
         }
 

@@ -129,11 +129,11 @@ namespace Identity.Api.Tests.Controllers
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Invalid credentials."));
-            });
+            }
 
             _mediatorMock.Verify(
                 m => m.Send(
@@ -258,11 +258,11 @@ namespace Identity.Api.Tests.Controllers
             await _controller.ConfirmEmailAsync("abc-123", "my-token", CancellationToken.None);
 
             Assert.That(captured, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(captured!.UserId, Is.EqualTo("abc-123"));
                 Assert.That(captured.Token, Is.EqualTo("my-token"));
-            });
+            }
         }
 
         [Test]

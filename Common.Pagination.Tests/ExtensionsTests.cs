@@ -54,7 +54,7 @@ namespace Common.Pagination.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(paged.Items, Has.Count.EqualTo(10));
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(paged.Items.Select(x => x.Name), Is.EqualTo(Enumerable.Range(1, 10).Select(i => i.ToString())));
                     Assert.That(paged.Metadata.PageNumber, Is.EqualTo(pageNumber));
@@ -63,7 +63,7 @@ namespace Common.Pagination.Tests
                     Assert.That(paged.Metadata.TotalPages, Is.EqualTo(3));
                     Assert.That(paged.Items.First().Index, Is.EqualTo(1));
                     Assert.That(paged.Items.Last().Index, Is.EqualTo(10));
-                });
+                }
             }
         }
 
@@ -81,12 +81,12 @@ namespace Common.Pagination.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(paged.Items, Has.Count.EqualTo(10));
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(paged.Items.Select(x => x.Name), Is.EqualTo(Enumerable.Range(11, 10).Select(i => i.ToString())));
                     Assert.That(paged.Items.First().Index, Is.EqualTo(11));
                     Assert.That(paged.Items.Last().Index, Is.EqualTo(20));
-                });
+                }
             }
         }
 
@@ -104,12 +104,12 @@ namespace Common.Pagination.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(paged.Items, Has.Count.EqualTo(5));
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(paged.Items.Select(x => x.Name), Is.EqualTo(Enumerable.Range(21, 5).Select(i => i.ToString())));
                     Assert.That(paged.Items.First().Index, Is.EqualTo(21));
                     Assert.That(paged.Items.Last().Index, Is.EqualTo(25));
-                });
+                }
             }
         }
 
@@ -126,13 +126,13 @@ namespace Common.Pagination.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(paged.Items, Is.Empty);
                     Assert.That(paged.Metadata.TotalCount, Is.EqualTo(10));
                     Assert.That(paged.Metadata.TotalPages, Is.EqualTo(1));
                     Assert.That(paged.Metadata.PageNumber, Is.EqualTo(pageNumber));
-                });
+                }
             }
         }
 
@@ -150,11 +150,11 @@ namespace Common.Pagination.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(paged.Items.Select(x => x.Name), Is.EqualTo(new[] { "1", "2" }));
                     Assert.That(paged.Metadata.TotalCount, Is.EqualTo(3));
-                });
+                }
             }
         }
     }

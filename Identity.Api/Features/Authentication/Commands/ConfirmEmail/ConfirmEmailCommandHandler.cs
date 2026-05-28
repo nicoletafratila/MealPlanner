@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.Authentication.Commands.ConfirmEmail
 {
     public class ConfirmEmailCommandHandler(
-        UserManager<Common.Data.Entities.ApplicationUser> userManager,
+        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
         ILogger<ConfirmEmailCommandHandler> logger) : IRequestHandler<ConfirmEmailCommand, CommandResponse?>
     {
         public async Task<CommandResponse?> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)

@@ -1,0 +1,16 @@
+using MealPlanner.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace MealPlanner.Data.TableConfigurations
+{
+    public sealed class ShoppingListProductTableConfiguration
+        : IEntityTypeConfiguration<ShoppingListProduct>
+    {
+        public void Configure(EntityTypeBuilder<ShoppingListProduct> builder)
+        {
+            builder.HasKey(t => new { t.ShoppingListId, t.ProductId });
+            builder.HasIndex(t => t.ProductId);
+        }
+    }
+}

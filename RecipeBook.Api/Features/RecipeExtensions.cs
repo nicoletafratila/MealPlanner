@@ -1,4 +1,5 @@
-using Common.Data.Entities;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Services;
 using Common.Services.Converters;
 using Common.Services.Converters.Resources;
@@ -7,7 +8,7 @@ namespace RecipeBook.Api.Features
 {
     public static class RecipeExtensions
     {
-        public static ShoppingList MakeShoppingList(this Common.Data.Entities.Recipe recipe, Shop shop)
+        public static ShoppingList MakeShoppingList(this RecipeBook.Data.Entities.Recipe recipe, Shop shop)
         {
             ArgumentNullException.ThrowIfNull(shop);
 

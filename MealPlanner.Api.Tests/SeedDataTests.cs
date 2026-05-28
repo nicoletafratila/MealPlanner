@@ -1,5 +1,7 @@
 ﻿using Common.Constants.Units;
 using Common.Data.DataContext;
+using RecipeBook.Data.TableConfigurations;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +16,11 @@ namespace MealPlanner.Api.Tests
         public void SetUp()
         {
             var services = new ServiceCollection();
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
+
             services.AddDbContext<MealPlannerDbContext>(opts =>  opts.UseInMemoryDatabase($"MealPlanner_{Guid.NewGuid()}"));
 
             _provider = services.BuildServiceProvider();

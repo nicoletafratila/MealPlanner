@@ -85,7 +85,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             var model = new MealPlanEditModel { Id = 0, Name = "Plan1" };
             var command = new AddCommand { Model = model };
 
-            var existing = new Common.Data.Entities.MealPlan { Id = 10, Name = "Plan1" };
+            var existing = new MealPlanner.Data.Entities.MealPlan { Id = 10, Name = "Plan1" };
 
             _repoMock
                 .Setup(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()))
@@ -96,15 +96,15 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("This meal plan already exists."));
-            });
+            }
 
             _repoMock.Verify(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.MealPlan>(It.IsAny<MealPlanEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<Common.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(It.IsAny<MealPlanEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -116,12 +116,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("NewPlan", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
 
-            var mappedEntity = new Common.Data.Entities.MealPlan { Id = 5, Name = "NewPlan" };
+            var mappedEntity = new MealPlanner.Data.Entities.MealPlan { Id = 5, Name = "NewPlan" };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.MealPlan>(model))
+                .Setup(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -136,7 +136,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.SearchAsync("NewPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.MealPlan>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -149,12 +149,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
 
-            var mappedEntity = new Common.Data.Entities.MealPlan { Id = 7, Name = "ErrorPlan" };
+            var mappedEntity = new MealPlanner.Data.Entities.MealPlan { Id = 7, Name = "ErrorPlan" };
 
             _mapperMock
-                .Setup(m => m.Map<Common.Data.Entities.MealPlan>(model))
+                .Setup(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -166,14 +166,14 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the meal plan."));
-            });
+            }
 
             _repoMock.Verify(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<Common.Data.Entities.MealPlan>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Identity.Services\Identity.Services.csproj" />
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

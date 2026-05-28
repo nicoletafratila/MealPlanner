@@ -62,17 +62,17 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(expectedStats));
 
                 Assert.That(capturedQuery, Is.Not.Null);
-            });
-            Assert.Multiple(() =>
+            }
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(capturedQuery!.CategoryIds, Is.EqualTo("1,2"));
                 Assert.That(capturedQuery!.AuthToken, Is.EqualTo("token123"));
-            });
+            }
 
             _senderMock.Verify(m => m.Send(
                     It.IsAny<Api.Features.Statistics.Queries.SearchRecipes.SearchQuery>(),
@@ -109,17 +109,17 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(expectedStats));
 
                 Assert.That(capturedQuery, Is.Not.Null);
-            });
-            Assert.Multiple(() =>
+            }
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(capturedQuery!.CategoryIds, Is.EqualTo("3,4"));
                 Assert.That(capturedQuery!.AuthToken, Is.EqualTo("tok"));
-            });
+            }
 
             _senderMock.Verify(m => m.Send(
                     It.IsAny<Api.Features.Statistics.Queries.SearchProducts.SearchQuery>(),
@@ -152,17 +152,17 @@ namespace MealPlanner.Api.Tests.Controllers
             // Assert
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(expectedStats));
 
                 Assert.That(capturedQuery, Is.Not.Null);
-            });
-            Assert.Multiple(() =>
+            }
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(capturedQuery!.CategoryIds, Is.Null);
                 Assert.That(capturedQuery!.AuthToken, Is.Empty);
-            });
+            }
 
             _senderMock.Verify(m => m.Send(
                     It.IsAny<Api.Features.Statistics.Queries.SearchRecipes.SearchQuery>(),

@@ -15,11 +15,11 @@ namespace Common.Pagination.Tests
             // Assert: we only assert invariants we control
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(parameters.PageNumber, Is.GreaterThanOrEqualTo(1));
                     Assert.That(parameters.PageSize, Is.GreaterThan(0));
-                });
+                }
             }
         }
 
@@ -95,11 +95,11 @@ namespace Common.Pagination.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(roundTripped.PropertyName, Is.EqualTo(nameof(RecipeModel.Id)));
                     Assert.That(roundTripped.Direction, Is.EqualTo(SortDirection.Descending));
-                });
+                }
             }
         }
 
@@ -120,11 +120,11 @@ namespace Common.Pagination.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(roundTripped.PropertyName, Is.EqualTo(nameof(RecipeModel.Name)));
                     Assert.That(roundTripped.Direction, Is.EqualTo(SortDirection.Ascending));
-                });
+                }
             }
         }
     }

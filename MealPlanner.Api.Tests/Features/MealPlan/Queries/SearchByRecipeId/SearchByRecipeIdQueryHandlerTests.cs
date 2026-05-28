@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId;
 using MealPlanner.Api.Repositories;
@@ -62,7 +62,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             const int recipeId = 10;
             var query = new SearchByRecipeIdQuery(recipeId);
 
-            var entities = new List<Common.Data.Entities.MealPlan>
+            var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
                 new() { Id = 1, Name = "Plan1" },
                 new() { Id = 2, Name = "Plan2" }
@@ -101,7 +101,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             const int recipeId = 10;
             var query = new SearchByRecipeIdQuery(recipeId);
 
-            var entities = new List<Common.Data.Entities.MealPlan>
+            var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
                 new() { Id = 1, Name = "Plan1" }
             };

@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.RecipeCategory.Commands.Delete;
 using RecipeBook.Api.Repositories;
-using RecipeCategoryEntity = Common.Data.Entities.RecipeCategory;
-using RecipeEntity = Common.Data.Entities.Recipe;
+using RecipeCategoryEntity = RecipeBook.Data.Entities.RecipeCategory;
+using RecipeEntity = RecipeBook.Data.Entities.Recipe;
 
 namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Delete
 {

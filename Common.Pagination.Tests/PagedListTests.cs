@@ -14,16 +14,16 @@ namespace Common.Pagination.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(pagedList.Metadata, Is.Not.Null);
                     Assert.That(pagedList.Items, Is.Not.Null);
-                });
-                Assert.Multiple(() =>
+                }
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(pagedList.Items, Is.Empty);
                     Assert.That(pagedList.Count, Is.EqualTo(0));
-                });
+                }
                 Assert.That(pagedList.HasItems, Is.False);
             }
         }
@@ -45,18 +45,18 @@ namespace Common.Pagination.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(pagedList.Metadata, Is.SameAs(metadata));
                     Assert.That(pagedList.Items, Is.Not.Null);
-                });
+                }
                 Assert.That(pagedList.Items, Has.Count.EqualTo(2));
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(pagedList.Items[0].Id, Is.EqualTo(1));
                     Assert.That(pagedList.Items[1].Id, Is.EqualTo(2));
                     Assert.That(pagedList.Count, Is.EqualTo(2));
-                });
+                }
                 Assert.That(pagedList.HasItems, Is.True);
             }
         }
@@ -98,7 +98,7 @@ namespace Common.Pagination.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(pagedList.Metadata, Is.Not.Null);
                     Assert.That(pagedList.Metadata.PageNumber, Is.EqualTo(1));
@@ -108,7 +108,7 @@ namespace Common.Pagination.Tests
 
                     Assert.That(pagedList.Items, Is.Empty);
                     Assert.That(pagedList.Count, Is.EqualTo(0));
-                });
+                }
 
                 Assert.That(pagedList.HasItems, Is.False);
             }

@@ -1,4 +1,4 @@
-﻿using Common.Data.Entities;
+﻿using MealPlanner.Data.Entities;
 using Common.Data.Repository;
 
 namespace MealPlanner.Api.Repositories

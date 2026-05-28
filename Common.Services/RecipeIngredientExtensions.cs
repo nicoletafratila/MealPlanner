@@ -1,4 +1,5 @@
-using Common.Data.Entities;
+﻿using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using Common.Services.Converters;
 using Common.Services.Converters.Resources;
 

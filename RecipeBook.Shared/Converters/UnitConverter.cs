@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.Data.DataContext;
-using Common.Data.Entities;
+using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Converters

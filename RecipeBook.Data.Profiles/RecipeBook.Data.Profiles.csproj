@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Data.Profiles\Common.Data.Profiles.csproj" />
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
+    <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />
+    <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

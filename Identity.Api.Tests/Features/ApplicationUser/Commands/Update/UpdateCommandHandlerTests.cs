@@ -10,7 +10,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
     [TestFixture]
     public class UpdateCommandHandlerTests
     {
-        private Mock<UserManager<Common.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IMapper> _mapperMock = null!;
         private Mock<ILogger<UpdateCommandHandler>> _loggerMock = null!;
         private UpdateCommandHandler _handler = null!;
@@ -18,8 +18,8 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Common.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Common.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
@@ -75,7 +75,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
             var result1 = await _handler.Handle(command1, CancellationToken.None);
             var result2 = await _handler.Handle(command2, CancellationToken.None);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result1, Is.Not.Null);
                 Assert.That(result1!.Succeeded, Is.False);
@@ -84,7 +84,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Assert.That(result2, Is.Not.Null);
                 Assert.That(result2!.Succeeded, Is.False);
                 Assert.That(result2.Message, Does.StartWith("Could not find a user with id"));
-            });
+            }
 
             _userManagerMock.Verify(
                 m => m.FindByIdAsync(It.IsAny<string>()),
@@ -106,28 +106,28 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("123"))
-                .ReturnsAsync((Common.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Could not find a user with id = 123"));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("123"), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ApplicationUserEditModel>(), It.IsAny<Common.Data.Entities.ApplicationUser>()), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<ApplicationUserEditModel>(), It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_UpdateFails_ReturnsFailedWithErrors()
         {
             // Arrange
-            var existing = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel
@@ -158,11 +158,11 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("Invalid email; Another error"));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("1"), Times.Once);
             _mapperMock.Verify(m => m.Map(command.Model, existing), Times.Once);
@@ -173,7 +173,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
-            var existing = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel
@@ -211,7 +211,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         public async Task Handle_Exception_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            var existing = new Common.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel
@@ -238,11 +238,11 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("An error occurred while updating the user."));
-            });
+            }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("1"), Times.Once);
             _mapperMock.Verify(m => m.Map(command.Model, existing), Times.Once);

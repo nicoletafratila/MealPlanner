@@ -1,7 +1,9 @@
-﻿using System.Data;
+using System.Data;
 using Common.Data.DataContext;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests.Migrations
 {
@@ -21,7 +23,10 @@ namespace MealPlanner.Api.Tests.Migrations
                 .UseSqlite(_connection)
                 .Options;
 
-            _context = new MealPlannerDbContext(options);
+            _context = new MealPlannerDbContext(options, new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
 
             await _context.Database.EnsureCreatedAsync();
         }
@@ -80,59 +85,59 @@ namespace MealPlanner.Api.Tests.Migrations
         [Test]
         public void Can_Insert_BasicEntities_AccordingToSchema()
         {
-            var unit = new Common.Data.Entities.Unit
+            var unit = new RecipeBook.Data.Entities.Unit
             {
                 Name = "kg",
                 UnitType = 0
             };
 
-            var productCategory = new Common.Data.Entities.ProductCategory
+            var productCategory = new RecipeBook.Data.Entities.ProductCategory
             {
                 Name = "Dairy"
             };
 
-            var product = new Common.Data.Entities.Product
+            var product = new RecipeBook.Data.Entities.Product
             {
                 Name = "Milk",
                 BaseUnit = unit,
                 ProductCategory = productCategory
             };
 
-            var recipeCategory = new Common.Data.Entities.RecipeCategory
+            var recipeCategory = new RecipeBook.Data.Entities.RecipeCategory
             {
                 Name = "Main",
                 DisplaySequence = 1
             };
 
-            var recipe = new Common.Data.Entities.Recipe
+            var recipe = new RecipeBook.Data.Entities.Recipe
             {
                 Name = "Recipe1",
                 RecipeCategory = recipeCategory
             };
 
-            var mealPlan = new Common.Data.Entities.MealPlan
+            var mealPlan = new MealPlanner.Data.Entities.MealPlan
             {
                 Name = "Weekly Plan"
             };
 
-            var mpr = new Common.Data.Entities.MealPlanRecipe
+            var mpr = new MealPlanner.Data.Entities.MealPlanRecipe
             {
                 MealPlan = mealPlan,
                 Recipe = recipe
             };
 
-            var shop = new Common.Data.Entities.Shop
+            var shop = new MealPlanner.Data.Entities.Shop
             {
                 Name = "Shop1"
             };
 
-            var shoppingList = new Common.Data.Entities.ShoppingList
+            var shoppingList = new MealPlanner.Data.Entities.ShoppingList
             {
                 Name = "List1",
                 Shop = shop
             };
 
-            var slProduct = new Common.Data.Entities.ShoppingListProduct
+            var slProduct = new MealPlanner.Data.Entities.ShoppingListProduct
             {
                 ShoppingList = shoppingList,
                 Product = product,
@@ -142,7 +147,7 @@ namespace MealPlanner.Api.Tests.Migrations
                 Collected = false
             };
 
-            var ingredient = new Common.Data.Entities.RecipeIngredient
+            var ingredient = new RecipeBook.Data.Entities.RecipeIngredient
             {
                 Recipe = recipe,
                 Product = product,

@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
+    <ProjectReference Include="..\Identity.Data.Entities\Identity.Data.Entities.csproj" />
     <ProjectReference Include="..\Identity.Api\Identity.Api.csproj" />
   </ItemGroup>
 

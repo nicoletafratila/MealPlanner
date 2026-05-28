@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="$(AutoMapper)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Data.Profiles\Common.Data.Profiles.csproj" />
+    <ProjectReference Include="..\Identity.Data.Entities\Identity.Data.Entities.csproj" />
+    <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

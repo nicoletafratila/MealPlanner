@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Models;
 using Common.Services;
 using MediatR;
@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Add
                     }
                 }
 
-                var mapped = _mapper.Map<Common.Data.Entities.RecipeCategory>(request.Model);
+                var mapped = _mapper.Map<RecipeBook.Data.Entities.RecipeCategory>(request.Model);
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

@@ -47,7 +47,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         {
             // Arrange
             const int id = 5;
-            var entity = new Common.Data.Entities.ShoppingList
+            var entity = new MealPlanner.Data.Entities.ShoppingList
             {
                 Id = id,
                 Name = "List1"
@@ -73,12 +73,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("List1"));
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
@@ -94,7 +94,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
 
             _repoMock
                 .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.ShoppingList?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.ShoppingList?)null);
 
             var query = new GetEditQuery(id);
 
@@ -102,18 +102,18 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.Null.Or.Empty);
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mapperMock.Verify(
-                m => m.Map<ShoppingListEditModel>(It.IsAny<Common.Data.Entities.ShoppingList>()),
+                m => m.Map<ShoppingListEditModel>(It.IsAny<MealPlanner.Data.Entities.ShoppingList>()),
                 Times.Never);
         }
 
@@ -122,7 +122,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         {
             // Arrange
             const int id = 7;
-            var entity = new Common.Data.Entities.ShoppingList
+            var entity = new MealPlanner.Data.Entities.ShoppingList
             {
                 Id = id,
                 Name = "SomeList"
@@ -142,11 +142,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Id, Is.EqualTo(id));
-            });
+            }
 
             _repoMock.Verify(
                 r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()),

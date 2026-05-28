@@ -1,5 +1,7 @@
 ﻿using Common.Data.DataContext;
-using Common.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
+using MealPlanner.Data.TableConfigurations;
+using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
@@ -15,6 +17,11 @@ namespace RecipeBook.Api.Tests.Repositories
         public void SetUp()
         {
             var services = new ServiceCollection();
+
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
 
             services.AddDbContext<MealPlannerDbContext>(options =>
                 options.UseInMemoryDatabase("ProductRepositoryTests_" + TestContext.CurrentContext.Test.ID));

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Pagination;
 using Common.Services;
 using MealPlanner.Api.Features.Shop.Queries.Search;
@@ -86,7 +86,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
-            var entities = new List<Common.Data.Entities.Shop>
+            var entities = new List<MealPlanner.Data.Entities.Shop>
             {
                 new() { Id = 1, Name = "Shop1" },
                 new() { Id = 2, Name = "Shop2" }
@@ -135,7 +135,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<Common.Data.Entities.Shop>
+            var entities = new List<MealPlanner.Data.Entities.Shop>
             {
                 new() { Id = 1, Name = "Shop1" }
             };

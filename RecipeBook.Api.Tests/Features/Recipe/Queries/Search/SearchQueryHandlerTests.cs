@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Pagination;
 using Common.Services;
 using Moq;
@@ -86,7 +86,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
-            var entities = new List<Common.Data.Entities.Recipe>
+            var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
                 new() { Id = 1, Name = "R1", RecipeCategoryId = 10 },
                 new() { Id = 2, Name = "R2", RecipeCategoryId = 20 }
@@ -136,7 +136,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_CategoryFilter_AppliesFilterBeforePaging()
         {
-            var entities = new List<Common.Data.Entities.Recipe>
+            var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
                 new() { Id = 1, Name = "R1", RecipeCategoryId = 10 },
                 new() { Id = 2, Name = "R2", RecipeCategoryId = 20 },
@@ -184,7 +184,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<Common.Data.Entities.Recipe>
+            var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
                 new() { Id = 1, Name = "R1", RecipeCategoryId = 10 }
             };

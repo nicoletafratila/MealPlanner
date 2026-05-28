@@ -14,13 +14,13 @@ namespace Common.Models.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Succeeded, Is.False);
                     Assert.That(response.IsSuccess, Is.False);
                     Assert.That(response.Message, Is.Null);
                     Assert.That(response.ErrorCode, Is.Null);
-                });
+                }
             }
         }
 
@@ -36,13 +36,13 @@ namespace Common.Models.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Succeeded, Is.True);
                     Assert.That(response.IsSuccess, Is.True);
                     Assert.That(response.Message, Is.EqualTo("OK"));
                     Assert.That(response.ErrorCode, Is.EqualTo("0"));
-                });
+                }
             }
         }
 
@@ -55,13 +55,13 @@ namespace Common.Models.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Succeeded, Is.True);
                     Assert.That(response.IsSuccess, Is.True);
                     Assert.That(response.Message, Is.EqualTo("All good"));
                     Assert.That(response.ErrorCode, Is.Null);
-                });
+                }
             }
         }
 
@@ -74,13 +74,13 @@ namespace Common.Models.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(response.Succeeded, Is.False);
                     Assert.That(response.IsSuccess, Is.False);
                     Assert.That(response.Message, Is.EqualTo("Something went wrong"));
                     Assert.That(response.ErrorCode, Is.EqualTo("ERR001"));
-                });
+                }
             }
         }
 

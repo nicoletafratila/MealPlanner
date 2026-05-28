@@ -6,16 +6,16 @@ namespace MealPlanner.Api.Features
 {
     public static class MealPlanExtensions
     {
-        public static Common.Data.Entities.ShoppingList MakeShoppingList(
-            this Common.Data.Entities.MealPlan mealPlan,
-            Common.Data.Entities.Shop? shop)
+        public static MealPlanner.Data.Entities.ShoppingList MakeShoppingList(
+            this MealPlanner.Data.Entities.MealPlan mealPlan,
+            MealPlanner.Data.Entities.Shop? shop)
         {
             if (shop is null)
-                return new Common.Data.Entities.ShoppingList();
+                return new MealPlanner.Data.Entities.ShoppingList();
 
             if (mealPlan.MealPlanRecipes == null || !mealPlan.MealPlanRecipes.Any())
             {
-                return new Common.Data.Entities.ShoppingList
+                return new MealPlanner.Data.Entities.ShoppingList
                 {
                     Name = string.Format(ConverterMessages.ShoppingListNameFormat, mealPlan.Name, shop.Name),
                     ShopId = shop.Id,
@@ -23,7 +23,7 @@ namespace MealPlanner.Api.Features
                 };
             }
 
-            var productsById = new Dictionary<int, Common.Data.Entities.ShoppingListProduct>();
+            var productsById = new Dictionary<int, MealPlanner.Data.Entities.ShoppingListProduct>();
 
             foreach (var mealPlanRecipe in mealPlan.MealPlanRecipes)
             {
@@ -68,7 +68,7 @@ namespace MealPlanner.Api.Features
                 item.Unit = null;
             }
 
-            return new Common.Data.Entities.ShoppingList
+            return new MealPlanner.Data.Entities.ShoppingList
             {
                 Name = string.Format(ConverterMessages.ShoppingListNameFormat, mealPlan.Name, shop.Name),
                 ShopId = shop.Id,

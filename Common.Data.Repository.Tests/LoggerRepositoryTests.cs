@@ -1,4 +1,6 @@
 ﻿using Common.Data.DataContext;
+using RecipeBook.Data.TableConfigurations;
+using MealPlanner.Data.TableConfigurations;
 using Common.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,11 @@ namespace Common.Data.Repository.Tests
         public void SetUp()
         {
             var services = new ServiceCollection();
+
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
 
             services.AddDbContext<MealPlannerDbContext>(options =>
                 options.UseInMemoryDatabase("LoggerRepositoryTests_" + TestContext.CurrentContext.Test.ID));

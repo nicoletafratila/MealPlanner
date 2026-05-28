@@ -123,14 +123,14 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                 .ReturnsAsync(categories);
 
             // Two mealplans with products in Dairy and one in Bakery
-            var p1 = new Common.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = 20 };
-            var p2 = new Common.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = 20 };
-            var p3 = new Common.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = 21 };
+            var p1 = new RecipeBook.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = 20 };
+            var p2 = new RecipeBook.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = 20 };
+            var p3 = new RecipeBook.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = 21 };
 
-            var mp1 = new Common.Data.Entities.MealPlan { Id = 100, Name = "Plan1" };
-            var mp2 = new Common.Data.Entities.MealPlan { Id = 101, Name = "Plan2" };
+            var mp1 = new MealPlanner.Data.Entities.MealPlan { Id = 100, Name = "Plan1" };
+            var mp2 = new MealPlanner.Data.Entities.MealPlan { Id = 101, Name = "Plan2" };
 
-            var pairs = new List<KeyValuePair<Common.Data.Entities.Product, Common.Data.Entities.MealPlan>>
+            var pairs = new List<KeyValuePair<RecipeBook.Data.Entities.Product, MealPlanner.Data.Entities.MealPlan>>
             {
                 new(p1, mp1),
                 new(p1, mp2),
@@ -159,26 +159,26 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(dairyStat.Data, Is.Not.Null);
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(dairyStat.Data!.ContainsKey("Milk"), Is.True);
                     Assert.That(dairyStat.Data["Milk"], Is.EqualTo(2));
                     Assert.That(dairyStat.Data.ContainsKey("Cheese"), Is.False);
                     Assert.That(dairyStat.Data.ContainsKey("Others"), Is.True);
                     Assert.That(dairyStat.Data["Others"], Is.EqualTo(1));
-                });
+                }
             }
 
             // Bakery: Bread(1) => goes into Others
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(bakeryStat.Data, Is.Not.Null);
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(bakeryStat.Data!.ContainsKey("Bread"), Is.False);
                     Assert.That(bakeryStat.Data.ContainsKey("Others"), Is.True);
                     Assert.That(bakeryStat.Data["Others"], Is.EqualTo(1));
-                });
+                }
             }
 
             recipeClientMock.Verify(c =>

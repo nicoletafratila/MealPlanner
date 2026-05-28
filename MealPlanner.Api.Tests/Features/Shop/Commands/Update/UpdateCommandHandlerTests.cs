@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MealPlanner.Api.Features.Shop.Commands.Update;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
@@ -80,7 +80,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.Shop?)null);
+                .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -91,8 +91,8 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
 
             _repoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ShopEditModel>(), It.IsAny<Common.Data.Entities.Shop>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<ShopEditModel>(), It.IsAny<MealPlanner.Data.Entities.Shop>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<MealPlanner.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.Shop
+            var existing = new MealPlanner.Data.Entities.Shop
             {
                 Id = id,
                 Name = "OldName"
@@ -151,7 +151,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.Shop
+            var existing = new MealPlanner.Data.Entities.Shop
             {
                 Id = id,
                 Name = "OldShop"

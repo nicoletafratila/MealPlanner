@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Unit.Commands.Update;
@@ -80,7 +80,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(10, CancellationToken.None))
-                .ReturnsAsync((Common.Data.Entities.Unit?)null);
+                .ReturnsAsync((RecipeBook.Data.Entities.Unit?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -94,8 +94,8 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(10, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<UnitEditModel>(), It.IsAny<Common.Data.Entities.Unit>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>(), CancellationToken.None), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<UnitEditModel>(), It.IsAny<RecipeBook.Data.Entities.Unit>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.Unit
+            var existing = new RecipeBook.Data.Entities.Unit
             {
                 Id = 1,
                 Name = "old",
@@ -127,7 +127,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
                .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>(), CancellationToken.None))
+                .Setup(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None))
                 .Returns(Task.CompletedTask);
 
             // Act
@@ -155,7 +155,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new Common.Data.Entities.Unit
+            var existing = new RecipeBook.Data.Entities.Unit
             {
                 Id = 2,
                 Name = "old",
@@ -171,7 +171,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
                 .Returns(existing);
 
             _repoMock
-                .Setup(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>(), CancellationToken.None))
+                .Setup(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -186,7 +186,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(2, CancellationToken.None), Times.Once);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Common.Data.Entities.Unit>(), CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
 
             _loggerMock.Verify(

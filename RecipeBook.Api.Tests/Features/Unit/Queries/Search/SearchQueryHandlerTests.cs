@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Pagination;
 using Moq;
 using RecipeBook.Api.Features.Unit.Queries.Search;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
-using UnitEntity = Common.Data.Entities.Unit;
+using UnitEntity = RecipeBook.Data.Entities.Unit;
 
 namespace RecipeBook.Api.Tests.Features.Unit.Queries.Search
 {

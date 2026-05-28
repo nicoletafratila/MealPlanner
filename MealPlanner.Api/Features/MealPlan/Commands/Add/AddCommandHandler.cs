@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Models;
 using Common.Services;
 using MealPlanner.Api.Repositories;
@@ -41,7 +41,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Add
                     return CommandResponse.Failed(Resources.MealPlanMessages.AlreadyExists);
                 }
 
-                var mapped = _mapper.Map<Common.Data.Entities.MealPlan>(request.Model);
+                var mapped = _mapper.Map<MealPlanner.Data.Entities.MealPlan>(request.Model);
                 mapped.UserId = userId;
                 mapped.CreatedAt = DateTime.Now;
                 await _repository.AddAsync(mapped, cancellationToken);

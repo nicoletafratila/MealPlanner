@@ -5,40 +5,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="DataContext\**" />
-    <Compile Remove="Migrations\**" />
-    <Compile Remove="TableConfigurations\**" />
-    <EmbeddedResource Remove="DataContext\**" />
-    <EmbeddedResource Remove="Migrations\**" />
-    <EmbeddedResource Remove="TableConfigurations\**" />
-    <None Remove="DataContext\**" />
-    <None Remove="Migrations\**" />
-    <None Remove="TableConfigurations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Resources\EntityMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityMessages.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\EntityMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EntityMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(MicrosoftAspNetCoreIdentityEntityFrameworkCore)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsDependencyInjection)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
-  </ItemGroup>
-
 </Project>

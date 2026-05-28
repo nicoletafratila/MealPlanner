@@ -12,7 +12,7 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(metadata.PageNumber, Is.EqualTo(1));
                     Assert.That(metadata.PageSize, Is.EqualTo(1));
@@ -20,7 +20,7 @@
                     Assert.That(metadata.TotalCount, Is.EqualTo(0));
                     Assert.That(metadata.HasPreviousPage, Is.False);
                     Assert.That(metadata.HasNextPage, Is.False);
-                });
+                }
             }
         }
 
@@ -38,7 +38,7 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(metadata.PageNumber, Is.EqualTo(pageNumber));
                     Assert.That(metadata.PageSize, Is.EqualTo(pageSize));
@@ -46,7 +46,7 @@
                     Assert.That(metadata.TotalPages, Is.EqualTo(4)); // 35 / 10 => 3.5 => 4
                     Assert.That(metadata.HasPreviousPage, Is.True);
                     Assert.That(metadata.HasNextPage, Is.True);
-                });
+                }
             }
         }
 
@@ -64,12 +64,12 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(metadata.TotalPages, Is.EqualTo(4));
                     Assert.That(metadata.HasNextPage, Is.False);
                     Assert.That(metadata.HasPreviousPage, Is.True);
-                });
+                }
             }
         }
 

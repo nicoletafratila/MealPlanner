@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using Common.Data.Entities;
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -54,7 +55,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
 
             _recipeRepoMock
                 .Setup(r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Common.Data.Entities.Recipe?)null);
+                .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -80,7 +81,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 AuthToken = "token"
             };
 
-            var recipe = new Common.Data.Entities.Recipe();
+            var recipe = new RecipeBook.Data.Entities.Recipe();
 
             _recipeRepoMock
                 .Setup(r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()))
@@ -114,20 +115,20 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 AuthToken = "token"
             };
 
-            var unit = new Common.Data.Entities.Unit()
+            var unit = new RecipeBook.Data.Entities.Unit()
             {
                 Id = 1,
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
-            var recipe = new Common.Data.Entities.Recipe()
+            var recipe = new RecipeBook.Data.Entities.Recipe()
             {
                 RecipeIngredients =
                 [
                     new RecipeIngredient()
                     {
                         ProductId = 1,
-                        Product = new Common.Data.Entities.Product ()
+                        Product = new RecipeBook.Data.Entities.Product ()
                         {
                             Id = 1,
                             Name = "B",
@@ -139,7 +140,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                     new RecipeIngredient()
                     {
                         ProductId = 2,
-                        Product = new Common.Data.Entities.Product ()
+                        Product = new RecipeBook.Data.Entities.Product ()
                         {
                             Id = 2,
                             Name = "A",

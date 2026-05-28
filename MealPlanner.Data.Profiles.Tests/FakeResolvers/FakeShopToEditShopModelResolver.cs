@@ -1,0 +1,29 @@
+using AutoMapper;
+using MealPlanner.Data.Entities;
+using MealPlanner.Shared.Models;
+
+namespace MealPlanner.Data.Profiles.Tests.FakeResolvers
+{
+    public class FakeShopToEditShopModelResolver
+       : IMemberValueResolver<
+           Shop,
+           ShopEditModel,
+           IList<ShopDisplaySequence>?,
+           IList<ShopDisplaySequenceEditModel>>
+    {
+        public bool WasCalled { get; private set; }
+
+        public IList<ShopDisplaySequenceEditModel> ReturnedValue { get; set; } = [];
+
+        public IList<ShopDisplaySequenceEditModel> Resolve(
+            Shop source,
+            ShopEditModel destination,
+            IList<ShopDisplaySequence>? sourceValue,
+            IList<ShopDisplaySequenceEditModel>? destValue,
+            ResolutionContext context)
+        {
+            WasCalled = true;
+            return ReturnedValue;
+        }
+    }
+}
