@@ -2,9 +2,9 @@ using BlazorBootstrap;
 using Common.Pagination;
 using Common.UI;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using RecipeBook.Services;
+using Microsoft.AspNetCore.Components;
+using RecipeBook.Services.Core;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,

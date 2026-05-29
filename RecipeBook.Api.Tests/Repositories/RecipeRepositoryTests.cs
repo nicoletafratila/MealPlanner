@@ -1,8 +1,8 @@
 using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Tests.Repositories
 {

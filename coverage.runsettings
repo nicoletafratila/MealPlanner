@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <ExcludeByFile>**/Migrations/**/*.cs,**/*.Designer.cs,**/*ModelSnapshot.cs,**/obj/**/*.cs</ExcludeByFile>
+          <ExcludeByAttribute>ExcludeFromCodeCoverage,GeneratedCode,GeneratedCodeAttribute,DebuggerNonUserCode,DebuggerNonUserCodeAttribute,CompilerGenerated,CompilerGeneratedAttribute</ExcludeByAttribute>
+          <Include>[Common.*]*,[Identity.*]*,[RecipeBook.*]*,[MealPlanner.*]*</Include>
+          <Exclude>[*.Tests]*,[*.Tests.*]*</Exclude>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

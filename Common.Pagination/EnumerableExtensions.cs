@@ -1,6 +1,5 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Reflection;
-using BlazorBootstrap;
 
 namespace Common.Pagination
 {
@@ -8,20 +7,14 @@ namespace Common.Pagination
     {
         public static IQueryable<TItem> ApplySorting<TItem>(
             this IQueryable<TItem> source,
-            IEnumerable<SortingItem<TItem>>? sortingItems)
+            IEnumerable<SortingModel>? sortingModels)
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (sortingItems == null)
-            {
-                return source;
-            }
+            if (sortingModels == null) return source;
 
-            var sorts = sortingItems.ToList();
-            if (sorts.Count == 0)
-            {
-                return source;
-            }
+            var sorts = sortingModels.ToList();
+            if (sorts.Count == 0) return source;
 
             var parameter = Expression.Parameter(typeof(TItem), "x");
             var isFirst = true;
@@ -29,18 +22,22 @@ namespace Common.Pagination
 
             foreach (var sort in sorts)
             {
-                if (string.IsNullOrWhiteSpace(sort.SortString))
-                    throw new ArgumentException("SortString cannot be null or empty.", nameof(sortingItems));
+                if (string.IsNullOrWhiteSpace(sort.PropertyName))
+                    throw new ArgumentException("SortString cannot be null or empty.", nameof(sortingModels));
 
                 var propertyInfo = typeof(TItem).GetProperty(
-                    sort.SortString,
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase) ?? throw new ArgumentException($"Property '{sort.SortString}' does not exist on type {typeof(TItem).Name}.", nameof(sortingItems));
+                    sort.PropertyName,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
+                    ?? throw new ArgumentException(
+                        $"Property '{sort.PropertyName}' does not exist on type {typeof(TItem).Name}.",
+                        nameof(sortingModels));
+
                 var property = Expression.Property(parameter, propertyInfo);
                 var lambda = Expression.Lambda(property, parameter);
 
                 var methodName = isFirst
-                    ? (sort.SortDirection == SortDirection.Descending ? "OrderByDescending" : "OrderBy")
-                    : (sort.SortDirection == SortDirection.Descending ? "ThenByDescending" : "ThenBy");
+                    ? (sort.Direction == SortDirection.Descending ? "OrderByDescending" : "OrderBy")
+                    : (sort.Direction == SortDirection.Descending ? "ThenByDescending" : "ThenBy");
 
                 isFirst = false;
 

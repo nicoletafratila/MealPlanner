@@ -1,13 +1,4 @@
-using System.Reflection;
-using Blazored.Modal;
-using Bunit;
-using Common.Pagination;
-using MealPlanner.Services;
-using MealPlanner.Shared.Models;
-using MealPlanner.UI.Web.Pages;
-using MealPlanner.UI.Web.Pages.MealPlans;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using System.Reflection;using Blazored.Modal; using Bunit; using Common.Pagination; using MealPlanner.Services.Core; using MealPlanner.Shared.Models; using MealPlanner.UI.Web.Pages.MealPlans; using MealPlanner.UI.Web.Pages; using Microsoft.Extensions.DependencyInjection; using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 {

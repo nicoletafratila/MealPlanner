@@ -37,6 +37,7 @@
     <MicrosoftDataSqlite>10.0.8</MicrosoftDataSqlite>
     <MicrosoftExtensionsDependencyInjection>10.0.8</MicrosoftExtensionsDependencyInjection>
     <MicrosoftExtensionsHttp>10.0.8</MicrosoftExtensionsHttp>
+    <MicrosoftExtensionsLoggingAbstractions>10.0.8</MicrosoftExtensionsLoggingAbstractions>
     <!-- MAUI (ships on a separate cadence) -->
     <MicrosoftMaui>10.0.70</MicrosoftMaui>
     <!-- Test infrastructure -->
@@ -62,6 +63,7 @@
     <MudBlazor>9.4.0</MudBlazor>
     <NewtonsoftJson>13.0.4</NewtonsoftJson>
     <RichardSzalayMockHttp>7.0.0</RichardSzalayMockHttp>
+    <Serilog>4.2.0</Serilog>
     <SerilogAspNetCore>10.0.0</SerilogAspNetCore>
     <SerilogSinksMSSqlServer>10.0.0</SerilogSinksMSSqlServer>
     <SwashbuckleAspNetCore>9.0.6</SwashbuckleAspNetCore>

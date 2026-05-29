@@ -1,8 +1,8 @@
 using AutoMapper;
+using Common.Data.Profiles;
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.Profiles.Resolvers;
 using MealPlanner.Shared.Models;
-using Common.Data.Profiles;
 
 namespace MealPlanner.Data.Profiles
 {

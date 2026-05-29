@@ -1,15 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.SessionStorage;
-using Bunit;
-using Common.Models;
-using Common.Pagination;
-using MealPlanner.Services;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Models; using Common.Pagination; using MealPlanner.Services.Core; using MealPlanner.UI.Web.Models; using MealPlanner.UI.Web.Pages.RecipeBooks; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Core; using RecipeBook.Shared.Models; using SortDirection = Common.Pagination.SortDirection;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -172,10 +161,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var stat = new StatisticModel
             {
-                Title = "S1",
-                Chart = new DoughnutChart(),
-                ChartData = new ChartData(),
-                ChartOptions = new DoughnutChartOptions()
+                Title = "S1"
             };
 
             _categoryServiceMock

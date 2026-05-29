@@ -1,10 +1,4 @@
-using System.Security.Claims;
-using Common.UI;
-using Identity.Services;
-using Identity.Shared.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;using Common.UI; using Identity.Services.Core; using Identity.Shared.Models; using Microsoft.AspNetCore.Authorization; using Microsoft.AspNetCore.Components.Authorization; using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Pages.Identities
 {

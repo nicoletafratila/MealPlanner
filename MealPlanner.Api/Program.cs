@@ -1,6 +1,6 @@
-using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
+using Serilog;
 
 namespace MealPlanner.Api
 {

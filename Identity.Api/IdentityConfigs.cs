@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Duende.IdentityServer;
-using Duende.IdentityServer.Models;
+using System.Security.Claims;using Duende.IdentityServer.Models; using Duende.IdentityServer;
 
 namespace Identity.Api
 {

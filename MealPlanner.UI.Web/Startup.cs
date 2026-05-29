@@ -1,62 +1,54 @@
 using Blazored.Modal;
-using Identity.Api;
-using Identity.Services;
-using MealPlanner.Api;
-using MealPlanner.Services;
+using Identity.Services.Core;
+using MealPlanner.Services.Core;
 using Microsoft.AspNetCore.Components.Authorization;
-using RecipeBook.Api;
-using RecipeBook.Services;
+using RecipeBook.Services.Core;
 using Serilog;
 
 namespace MealPlanner.UI.Web
 {
-    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
+    public class Startup(IConfiguration configuration) : Common.Core.Startup(configuration)
     {
         protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddSingleton<IdentityApiConfig>();
-            services.AddSingleton<RecipeBookApiConfig>();
-            services.AddSingleton<MealPlannerApiConfig>();
-            services.AddSingleton<MealPlannerWebConfig>();
-
             // Identity API clients
             services.AddHttpClient<IAuthenticationService, AuthenticationService>()
-                .ConfigureHttpClient(ConfigureIdentityClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "IdentityApi"));
 
             services.AddHttpClient<IApplicationUserService, ApplicationUserService>()
-                .ConfigureHttpClient(ConfigureIdentityClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "IdentityApi"));
 
             services.AddHttpClient<IContactUsService, ContactUsService>()
-                .ConfigureHttpClient(ConfigureIdentityClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "IdentityApi"));
 
             // RecipeBook API clients
             services.AddHttpClient<IProductService, ProductService>()
-                .ConfigureHttpClient(ConfigureRecipeBookClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             services.AddHttpClient<IProductCategoryService, ProductCategoryService>()
-                .ConfigureHttpClient(ConfigureRecipeBookClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             services.AddHttpClient<IRecipeService, RecipeService>()
-                .ConfigureHttpClient(ConfigureRecipeBookClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
-                .ConfigureHttpClient(ConfigureRecipeBookClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             services.AddHttpClient<IUnitService, UnitService>()
-                .ConfigureHttpClient(ConfigureRecipeBookClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             // MealPlanner API clients
             services.AddHttpClient<IMealPlanService, MealPlanService>()
-                .ConfigureHttpClient(ConfigureMealPlannerClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "MealPlannerApi"));
 
             services.AddHttpClient<IShoppingListService, ShoppingListService>()
-                .ConfigureHttpClient(ConfigureMealPlannerClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "MealPlannerApi"));
 
             services.AddHttpClient<IShopService, ShopService>()
-                .ConfigureHttpClient(ConfigureMealPlannerClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "MealPlannerApi"));
 
             services.AddHttpClient<IStatisticsService, StatisticsService>()
-                .ConfigureHttpClient(ConfigureMealPlannerClient);
+                .ConfigureHttpClient(c => ConfigureClient(c, "MealPlannerApi"));
         }
 
         public void ConfigureServices(WebApplicationBuilder builder)
@@ -80,45 +72,25 @@ namespace MealPlanner.UI.Web
             }
 
             app.UseSerilogRequestLogging();
-
             app.UseStaticFiles();
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
             app.MapDefaultControllerRoute();
-
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
-
             app.Run();
         }
 
-        #region HttpClient configuration helpers
-
-        private static void ConfigureIdentityClient(IServiceProvider serviceProvider, HttpClient httpClient)
+        private void ConfigureClient(HttpClient client, string section)
         {
-            var clientConfig = serviceProvider.GetRequiredService<IdentityApiConfig>();
-            httpClient.BaseAddress = clientConfig.BaseUrl;
-            httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-        }
+            var baseUrl = configuration[$"{section}:BaseUrl"];
+            if (!string.IsNullOrWhiteSpace(baseUrl))
+                client.BaseAddress = new Uri(baseUrl);
 
-        private static void ConfigureRecipeBookClient(IServiceProvider serviceProvider, HttpClient httpClient)
-        {
-            var clientConfig = serviceProvider.GetRequiredService<RecipeBookApiConfig>();
-            httpClient.BaseAddress = clientConfig.BaseUrl;
-            httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
+            if (configuration.GetValue<int>($"{section}:Timeout") is > 0 and var timeout)
+                client.Timeout = TimeSpan.FromSeconds(timeout);
         }
-
-        private static void ConfigureMealPlannerClient(IServiceProvider serviceProvider, HttpClient httpClient)
-        {
-            var clientConfig = serviceProvider.GetRequiredService<MealPlannerApiConfig>();
-            httpClient.BaseAddress = clientConfig.BaseUrl;
-            httpClient.Timeout = TimeSpan.FromSeconds(clientConfig.Timeout);
-        }
-
-        #endregion
     }
 }

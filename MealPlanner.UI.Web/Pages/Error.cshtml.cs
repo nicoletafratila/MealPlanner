@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics;using Microsoft.AspNetCore.Mvc.RazorPages; using Microsoft.AspNetCore.Mvc;
 
 namespace MealPlanner.UI.Web.Pages
 {

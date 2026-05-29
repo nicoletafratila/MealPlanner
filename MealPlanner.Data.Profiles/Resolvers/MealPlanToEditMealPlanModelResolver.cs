@@ -1,6 +1,6 @@
 using AutoMapper;
-using MealPlanner.Data.Entities;
 using Common.Models;
+using MealPlanner.Data.Entities;
 using MealPlanner.Shared.Models;
 using RecipeBook.Shared.Models;
 

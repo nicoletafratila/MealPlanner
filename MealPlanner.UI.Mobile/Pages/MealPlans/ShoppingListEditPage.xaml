@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
+             xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.ShoppingListEditPage"
+             x:DataType="vm:ShoppingListEditViewModel"
+             Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Shopping List|Shopping List'}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="📋" Command="{Binding ExportCommand}" />
+        <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
+                     IsDestructive="True"
+                     IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20,12,20,0" Spacing="8">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,8" />
+
+                <!-- Name -->
+                <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
+                <Entry Text="{Binding Model.Name}" Placeholder="Shopping list name" />
+
+                <!-- Shop -->
+                <Label Text="Shop" Style="{StaticResource SectionHeaderLabel}" />
+                <Picker ItemsSource="{Binding Shops}" ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedShop}"
+                        Title="Select shop" />
+
+                <!-- Add product section -->
+                <Label Text="Add product" Style="{StaticResource SectionHeaderLabel}" />
+                <Picker Title="Product category"
+                        ItemsSource="{Binding ProductCategories}"
+                        SelectedItem="{Binding SelectedProductCategory}"
+                        ItemDisplayBinding="{Binding Name}" />
+                <Picker Title="Product"
+                        ItemsSource="{Binding ProductsByCategory}"
+                        SelectedItem="{Binding SelectedProduct}"
+                        ItemDisplayBinding="{Binding Name}" />
+                <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                    <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="Qty" Keyboard="Numeric" />
+                    <Picker Grid.Column="1" Title="Unit"
+                            ItemsSource="{Binding UnitsForProduct}"
+                            SelectedItem="{Binding SelectedUnit}"
+                            ItemDisplayBinding="{Binding Name}" />
+                    <Button Grid.Column="2" Text="Add"
+                            Command="{Binding AddProductCommand}"
+                            IsEnabled="{Binding SelectedProduct, Converter={x:Static converters:NotNullConverter.Instance}}"
+                            Padding="14,10" />
+                </Grid>
+
+                <!-- Import from meal plan / recipe -->
+                <Label Text="Import" Style="{StaticResource SectionHeaderLabel}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Grid.Column="0" Text="From Meal Plan" Style="{StaticResource OutlineButton}"
+                            Command="{Binding AddFromMealPlanCommand}" />
+                    <Button Grid.Column="1" Text="From Recipe" Style="{StaticResource OutlineButton}"
+                            Command="{Binding AddFromRecipeCommand}" />
+                </Grid>
+
+                <Label Text="Products" Style="{StaticResource SectionHeaderLabel}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Products list -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Model.Products}" Margin="12,0">
+            <CollectionView.EmptyView>
+                <Label Text="No products yet." HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:ShoppingListProductEditModel">
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="8,6">
+                        <CheckBox Grid.Column="0" IsChecked="{Binding Collected}"
+                                  CheckedChanged="OnProductCheckedChanged" />
+                        <VerticalStackLayout Grid.Column="1" Margin="8,0" VerticalOptions="Center">
+                            <Label Text="{Binding Product.Name}" FontAttributes="Bold"
+                                   TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="{Binding Quantity}" FontSize="12" TextColor="{StaticResource DarkGray}"
+                                       TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />
+                                <Label Text="{Binding Unit.Name}" FontSize="12" TextColor="{StaticResource DarkGray}"
+                                       TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="✕" Style="{StaticResource DangerButton}"
+                                Padding="6,2"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=RemoveProductCommand}"
+                                CommandParameter="{Binding .}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Label Grid.Row="2" Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}"
+               Margin="20,4" />
+    </Grid>
+</ContentPage>

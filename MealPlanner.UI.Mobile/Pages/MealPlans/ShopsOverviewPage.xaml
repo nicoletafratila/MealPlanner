@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
+             xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
+             x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.ShopsOverviewPage"
+             x:DataType="vm:ShopsOverviewViewModel"
+             Title="Shops">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+        <CollectionView ItemsSource="{Binding Shops}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:ShopModel">
+                    <SwipeView Margin="12,4">
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete" BackgroundColor="{StaticResource ErrorColor}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShopsOverviewViewModel}}, Path=DeleteCommand}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Frame Style="{StaticResource CardFrame}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShopsOverviewViewModel}}, Path=EditCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                        </Frame>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

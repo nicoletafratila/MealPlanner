@@ -1,6 +1,6 @@
-﻿using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
 using Common.Data.Repository;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Api.Repositories
 {

@@ -1,8 +1,9 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using Common.Data.DataContext;
 using Duende.IdentityModel;
+using MealPlanner.Data.TableConfigurations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,15 +11,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecipeBook.Api.Abstractions;
 using RecipeBook.Api.Repositories;
-using RecipeBook.Data.Profiles;
 using RecipeBook.Data.Profiles.Resolvers;
+using RecipeBook.Data.Profiles;
 using RecipeBook.Data.TableConfigurations;
-using MealPlanner.Data.TableConfigurations;
 using Serilog;
 
 namespace RecipeBook.Api
 {
-    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
+    public class Startup(IConfiguration configuration) : Common.Core.Startup(configuration)
     {
         protected override void RegisterTableConfigurationAssemblies(IServiceCollection services)
         {

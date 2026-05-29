@@ -1,5 +1,3 @@
-﻿using System.Linq.Expressions;
-using BlazorBootstrap;
 using RecipeBook.Shared.Models;
 
 namespace Common.Pagination.Tests
@@ -7,19 +5,22 @@ namespace Common.Pagination.Tests
     [TestFixture]
     public class EnumerableExtensionsApplySortingTests
     {
-        private static SortingItem<RecipeModel> CreateSortingItem(
+        private static SortingModel CreateSortingModel(
             string sortString,
             SortDirection direction)
         {
-            Expression<Func<RecipeModel, IComparable>> keySelector = x => x.Name;
-            return new SortingItem<RecipeModel>(sortString, keySelector, direction);
+            return new SortingModel
+            {
+                PropertyName = sortString,
+                Direction = direction
+            };
         }
 
         [Test]
         public void ApplySorting_Throws_When_Source_Is_Null()
         {
             IQueryable<RecipeModel>? source = null;
-            var sorting = new[] { CreateSortingItem(nameof(RecipeModel.Name), SortDirection.Ascending) };
+            var sorting = new[] { CreateSortingModel(nameof(RecipeModel.Name), SortDirection.Ascending) };
 
             Assert.That(
                 () => source!.ApplySorting(sorting),
@@ -64,7 +65,7 @@ namespace Common.Pagination.Tests
 
             var sorting = new[]
             {
-                CreateSortingItem(string.Empty, SortDirection.Ascending)
+                CreateSortingModel(string.Empty, SortDirection.Ascending)
             };
 
             Assert.That(
@@ -83,7 +84,7 @@ namespace Common.Pagination.Tests
 
             var sorting = new[]
             {
-                CreateSortingItem("DoesNotExist", SortDirection.Ascending)
+                CreateSortingModel("DoesNotExist", SortDirection.Ascending)
             };
 
             Assert.That(
@@ -104,7 +105,7 @@ namespace Common.Pagination.Tests
 
             var sorting = new[]
             {
-                CreateSortingItem(nameof(RecipeModel.Name), SortDirection.Ascending)
+                CreateSortingModel(nameof(RecipeModel.Name), SortDirection.Ascending)
             };
 
             var result = data.ApplySorting(sorting).ToArray();
@@ -124,7 +125,7 @@ namespace Common.Pagination.Tests
 
             var sorting = new[]
             {
-                CreateSortingItem(nameof(RecipeModel.Name), SortDirection.Descending)
+                CreateSortingModel(nameof(RecipeModel.Name), SortDirection.Descending)
             };
 
             var result = data.ApplySorting(sorting).ToArray();
@@ -143,7 +144,7 @@ namespace Common.Pagination.Tests
 
             var sorting = new[]
             {
-                CreateSortingItem("name", SortDirection.Ascending)
+                CreateSortingModel("name", SortDirection.Ascending)
             };
 
             var result = data.ApplySorting(sorting).ToArray();

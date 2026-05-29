@@ -1,6 +1,6 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
 {

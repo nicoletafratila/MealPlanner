@@ -1,4 +1,4 @@
-﻿using MealPlanner.Data.Entities;
+using MealPlanner.Data.Entities;
 using RecipeBook.Data.Entities;
 
 namespace Common.Services.Tests

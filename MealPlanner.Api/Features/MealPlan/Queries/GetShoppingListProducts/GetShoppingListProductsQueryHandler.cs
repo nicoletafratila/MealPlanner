@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using MealPlanner.Data.Entities;
+using AutoMapper;
 using Common.Models;
 using MealPlanner.Api.Repositories;
+using MealPlanner.Data.Entities;
 using MealPlanner.Shared.Models;
 using MediatR;
 

@@ -1,14 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using BlazorBootstrap;
-using Common.Models;
-using Common.Pagination;
-using Common.UI;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using BlazorBootstrap; using Common.Models; using Common.Pagination; using Common.UI; using Microsoft.AspNetCore.Authorization; using Microsoft.AspNetCore.Components.Forms; using Microsoft.AspNetCore.Components; using Microsoft.JSInterop; using RecipeBook.Services.Core; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
 {
@@ -81,7 +71,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "DisplaySequence",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -98,7 +88,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -293,14 +283,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
             var productCategoryId = e.Value?.ToString();
-            var filters = new List<FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem(
+                filters.Add(new Common.Pagination.FilterItem(
                     "ProductCategoryId",
                     productCategoryId,
-                    FilterOperator.Equals,
+                    Common.Pagination.FilterOperator.Equals,
                     StringComparison.OrdinalIgnoreCase));
             }
 
@@ -312,7 +302,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,

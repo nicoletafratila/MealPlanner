@@ -1,17 +1,4 @@
-﻿using System.Security.Claims;
-using Common.Models;
-using Identity.Api.Features.Authentication.Commands.ChangePassword;
-using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
-using Identity.Api.Features.Authentication.Commands.ForgotPassword;
-using Identity.Api.Features.Authentication.Commands.Login;
-using Identity.Api.Features.Authentication.Commands.Logout;
-using Identity.Api.Features.Authentication.Commands.Register;
-using Identity.Api.Features.Authentication.Commands.ResetPassword;
-using Identity.Shared.Models;
-using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;using Common.Models; using Identity.Api.Features.Authentication.Commands.ChangePassword; using Identity.Api.Features.Authentication.Commands.ConfirmEmail; using Identity.Api.Features.Authentication.Commands.ForgotPassword; using Identity.Api.Features.Authentication.Commands.Login; using Identity.Api.Features.Authentication.Commands.Logout; using Identity.Api.Features.Authentication.Commands.Register; using Identity.Api.Features.Authentication.Commands.ResetPassword; using Identity.Shared.Models; using MediatR; using Microsoft.AspNetCore.Authentication; using Microsoft.AspNetCore.Identity; using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api.Controllers
 {

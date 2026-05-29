@@ -54,11 +54,7 @@ namespace RecipeBook.Api.Features.Unit.Queries.Search
             if (parameters.Sorting is null || !parameters.Sorting.Any())
                 return source;
 
-            var sortingItems = parameters.Sorting
-                .Select(QueryParameters<UnitModel>.FromModel)
-                .ToList();
-
-            return source.AsQueryable().ApplySorting(sortingItems)!.ToList();
+            return source.AsQueryable().ApplySorting(parameters.Sorting)!.ToList();
         }
     }
 }

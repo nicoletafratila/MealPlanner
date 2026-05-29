@@ -1,13 +1,4 @@
-using System.Security.Claims;
-using Identity.Data.Entities;
-using RecipeBook.Data.Entities;
-using Common.Data.Repository;
-using Common.Models;
-using Duende.IdentityModel;
-using Identity.Api.Features.Authentication.Resources;
-using Identity.Api.Features.Email;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;using Common.Data.Repository; using Common.Models; using Duende.IdentityModel; using Identity.Api.Features.Authentication.Resources; using Identity.Api.Features.Email; using Identity.Data.Entities; using MediatR; using Microsoft.AspNetCore.Identity; using RecipeBook.Data.Entities;
 
 namespace Identity.Api.Features.Authentication.Commands.Register
 {

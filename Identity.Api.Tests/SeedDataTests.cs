@@ -1,12 +1,4 @@
-﻿using System.Security.Claims;
-using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
-using MealPlanner.Data.TableConfigurations;
-using Identity.Data.Entities;
-using Duende.IdentityModel;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;using Common.Data.DataContext; using Duende.IdentityModel; using Identity.Data.Entities; using MealPlanner.Data.TableConfigurations; using Microsoft.AspNetCore.Identity; using Microsoft.EntityFrameworkCore; using Microsoft.Extensions.DependencyInjection; using RecipeBook.Data.TableConfigurations;
 
 namespace Identity.Api.Tests
 {

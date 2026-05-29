@@ -96,7 +96,7 @@ namespace RecipeBook.Data.Profiles.Tests
             var model = new UnitModel
             {
                 Id = 5,
-                Name = null,
+                Name = null!,
             };
 
             var destination = new Unit

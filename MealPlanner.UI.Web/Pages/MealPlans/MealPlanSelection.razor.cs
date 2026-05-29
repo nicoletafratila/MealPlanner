@@ -1,10 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Blazored.Modal;
-using Common.Pagination;
-using MealPlanner.Services;
-using MealPlanner.Shared.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
+using System.ComponentModel.DataAnnotations;using Blazored.Modal; using Common.Pagination; using MealPlanner.Services.Core; using MealPlanner.Shared.Models; using Microsoft.AspNetCore.Authorization; using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
 {

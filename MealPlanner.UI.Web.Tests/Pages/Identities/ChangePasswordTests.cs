@@ -2,7 +2,7 @@ using BlazorBootstrap;
 using Bunit;
 using Common.Models;
 using Common.UI;
-using Identity.Services;
+using Identity.Services.Core;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages.Identities;
 using Microsoft.AspNetCore.Components;

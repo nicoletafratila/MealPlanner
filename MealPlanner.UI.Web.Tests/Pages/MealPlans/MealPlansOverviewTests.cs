@@ -1,16 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.SessionStorage;
-using Bunit;
-using Common.Models;
-using Common.Pagination;
-using Common.UI;
-using MealPlanner.Services;
-using MealPlanner.Shared.Models;
-using MealPlanner.UI.Web.Pages.MealPlans;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Models; using Common.Pagination; using Common.UI; using MealPlanner.Services.Core; using MealPlanner.Shared.Models; using MealPlanner.UI.Web.Pages.MealPlans; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 {

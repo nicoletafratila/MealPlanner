@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using RecipeBook.Shared.Resources;
+using System.ComponentModel.DataAnnotations;using Common.Models; using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {

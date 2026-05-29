@@ -1,6 +1,6 @@
 using AutoMapper;
-using RecipeBook.Data.Entities;
 using Common.Models;
+using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Data.Profiles.Resolvers

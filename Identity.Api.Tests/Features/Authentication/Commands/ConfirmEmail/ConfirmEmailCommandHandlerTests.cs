@@ -1,4 +1,4 @@
-﻿using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
+using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;

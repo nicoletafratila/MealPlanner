@@ -1,8 +1,8 @@
-﻿using Common.Data.DataContext;
-using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
+using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Api.Repositories
 {

@@ -1,8 +1,8 @@
-﻿using MealPlanner.Data.Entities;
+using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
+using Microsoft.EntityFrameworkCore;
 using RecipeBook.Data.Entities;
 using RecipeBook.Data.TableConfigurations;
-using Microsoft.EntityFrameworkCore;
 
 namespace Common.Data.DataContext.Tests
 {
@@ -85,6 +85,36 @@ namespace Common.Data.DataContext.Tests
             {
                 Assert.That(quantityProp!.GetPrecision(), Is.EqualTo(18));
                 Assert.That(quantityProp.GetScale(), Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public void Ctor_WithNullTableConfigurationAssemblies_CreatesContextWithoutConfigurations()
+        {
+            var options = new DbContextOptionsBuilder<MealPlannerDbContext>()
+                .UseInMemoryDatabase(nameof(Ctor_WithNullTableConfigurationAssemblies_CreatesContextWithoutConfigurations))
+                .Options;
+
+            using var context = new MealPlannerDbContext(options, tableConfigurationAssemblies: null);
+
+            Assert.That(context, Is.Not.Null);
+            Assert.That(context.MealPlans, Is.Not.Null);
+        }
+
+        [Test]
+        public void CanSaveAndRetrieveMealPlan()
+        {
+            using var context = CreateContext(nameof(CanSaveAndRetrieveMealPlan));
+            var plan = new MealPlan { Name = "Weekly Plan", UserId = "u1" };
+            context.MealPlans.Add(plan);
+            context.SaveChanges();
+
+            var retrieved = context.MealPlans.Single();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(retrieved.Name, Is.EqualTo("Weekly Plan"));
+                Assert.That(retrieved.UserId, Is.EqualTo("u1"));
             }
         }
     }

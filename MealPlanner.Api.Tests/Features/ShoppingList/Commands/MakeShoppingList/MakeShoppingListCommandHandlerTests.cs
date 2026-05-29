@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
 using MealPlanner.Api.Repositories;
@@ -222,7 +222,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             // Act
             await _handler.Handle(command, CancellationToken.None);
 
-            // Assert � nav props must be restored from the in-memory meal plan graph
+            // Assert ? nav props must be restored from the in-memory meal plan graph
             Assert.That(savedProduct.Product, Is.SameAs(product));
             Assert.That(savedProduct.Unit, Is.SameAs(pieceUnit));
         }

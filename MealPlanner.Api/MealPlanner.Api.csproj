@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -104,7 +104,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\Common.Core\Common.Core.csproj" />
     <ProjectReference Include="..\Identity.Data.Profiles\Identity.Data.Profiles.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Profiles\RecipeBook.Data.Profiles.csproj" />
     <ProjectReference Include="..\MealPlanner.Data.Profiles\MealPlanner.Data.Profiles.csproj" />

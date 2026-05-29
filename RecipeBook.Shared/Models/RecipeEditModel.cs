@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using Common.Validators;
-using RecipeBook.Shared.Resources;
+using System.ComponentModel.DataAnnotations;using Common.Models; using Common.Validators; using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {

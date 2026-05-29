@@ -1,15 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.Modal;
-using Bunit;
-using Common.Pagination;
-using MealPlanner.UI.Web.Pages;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using BlazorBootstrap; using Blazored.Modal; using Bunit; using Common.Pagination; using MealPlanner.UI.Web.Pages.RecipeBooks; using MealPlanner.UI.Web.Pages; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Core; using RecipeBook.Shared.Models; using SortDirection = Common.Pagination.SortDirection;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -130,7 +119,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                     qp.Filters != null &&
                     qp.Filters.Count() == 1 &&
                     qp.Filters.First().PropertyName == "RecipeCategoryId" &&
-                    (string)qp.Filters.First().Value == "1" &&
+                    qp.Filters.First().Value as string == "1" &&
                     qp.Sorting != null &&
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&

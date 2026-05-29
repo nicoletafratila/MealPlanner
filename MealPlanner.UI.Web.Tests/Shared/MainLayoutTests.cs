@@ -1,8 +1,8 @@
 using BlazorBootstrap;
-using Bunit;
 using Bunit.TestDoubles;
-using Identity.Services;
-using MealPlanner.Services;
+using Bunit;
+using Identity.Services.Core;
+using MealPlanner.Services.Core;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;

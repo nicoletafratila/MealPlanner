@@ -1,7 +1,7 @@
-﻿using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
-using Common.Services.Converters;
 using Common.Services.Converters.Resources;
+using Common.Services.Converters;
+using MealPlanner.Data.Entities;
+using RecipeBook.Data.Entities;
 
 namespace Common.Services
 {

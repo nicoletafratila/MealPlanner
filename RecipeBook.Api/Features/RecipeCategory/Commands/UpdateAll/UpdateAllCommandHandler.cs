@@ -1,9 +1,4 @@
-using System.Text;
-using AutoMapper;
-using Common.Models;
-using MediatR;
-using RecipeBook.Api.Features.RecipeCategory.Resources;
-using RecipeBook.Api.Repositories;
+using System.Text;using AutoMapper; using Common.Models; using MediatR; using RecipeBook.Api.Features.RecipeCategory.Resources; using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
 {

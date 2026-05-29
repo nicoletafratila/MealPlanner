@@ -13,7 +13,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         public void Resolve_Maps_Recipes_Correctly()
         {
             var resolver = new EditMealPlanModelToMealPlanResolver();
-            var context = default(ResolutionContext);
+            ResolutionContext context = default!;
 
             var recipes = new List<RecipeModel>
             {
@@ -48,7 +48,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         public void Resolve_EmptyList_Returns_Empty()
         {
             var resolver = new EditMealPlanModelToMealPlanResolver();
-            var context = default(ResolutionContext);
+            ResolutionContext context = default!;
 
             var edit = new MealPlanEditModel
             {
@@ -73,7 +73,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         public void Resolve_NullSourceValue_Returns_Empty()
         {
             var resolver = new EditMealPlanModelToMealPlanResolver();
-            var context = default(ResolutionContext);
+            ResolutionContext context = default!;
 
             var edit = new MealPlanEditModel
             {

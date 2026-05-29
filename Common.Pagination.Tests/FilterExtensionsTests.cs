@@ -1,5 +1,4 @@
-﻿using BlazorBootstrap;
-using RecipeBook.Shared.Models;
+﻿using RecipeBook.Shared.Models;
 
 namespace Common.Pagination.Tests
 {

@@ -1,6 +1,4 @@
-﻿using BlazorBootstrap;
-
-namespace Common.Pagination.Tests
+﻿namespace Common.Pagination.Tests
 {
     [TestFixture]
     public class SortingModelTests

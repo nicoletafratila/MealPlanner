@@ -1,6 +1,6 @@
 using MealPlanner.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Data.TableConfigurations
 {

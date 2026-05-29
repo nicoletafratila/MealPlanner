@@ -1,5 +1,5 @@
-using System.Net;
 using System.Net.Mail;
+using System.Net;
 using Identity.Api.Features.Authentication.Resources;
 using Identity.Api.Features.ContactUs.Resources;
 

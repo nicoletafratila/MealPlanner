@@ -1,7 +1,4 @@
-﻿using System.Data.Common;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
+using System.Data.Common;using Microsoft.Data.SqlClient; using Microsoft.EntityFrameworkCore.Migrations; using Microsoft.EntityFrameworkCore;
 
 namespace Common.Data.DataContext
 {

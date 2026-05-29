@@ -1,12 +1,12 @@
 using AutoMapper;
 using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Abstractions;
 using RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts

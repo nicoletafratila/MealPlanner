@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:identity="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity"
+       xmlns:recipebook="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook"
+       xmlns:mealplans="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans"
+       x:Class="MealPlanner.UI.Mobile.AppShell"
+       Shell.FlyoutBehavior="Flyout"
+       Title="MealPlanner">
+
+    <!-- Recipes -->
+    <FlyoutItem Title="Recipes" Icon="recipe.png">
+        <ShellContent Title="Recipes" ContentTemplate="{DataTemplate recipebook:RecipesOverviewPage}" Route="RecipesOverview" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Meal Plans" Icon="mealplan.png">
+        <ShellContent Title="Meal Plans" ContentTemplate="{DataTemplate mealplans:MealPlansOverviewPage}" Route="MealPlansOverview" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Shopping Lists" Icon="shopping.png">
+        <ShellContent Title="Shopping Lists" ContentTemplate="{DataTemplate mealplans:ShoppingListsOverviewPage}" Route="ShoppingListsOverview" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Shops" Icon="shop.png">
+        <ShellContent Title="Shops" ContentTemplate="{DataTemplate mealplans:ShopsOverviewPage}" Route="ShopsOverview" />
+    </FlyoutItem>
+
+    <!-- Reference data -->
+    <FlyoutItem Title="Products" Icon="product.png">
+        <ShellContent Title="Products" ContentTemplate="{DataTemplate recipebook:ProductsOverviewPage}" Route="ProductsOverview" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Categories" Icon="category.png">
+        <Tab Title="Categories">
+            <ShellContent Title="Recipe Categories" ContentTemplate="{DataTemplate recipebook:RecipeCategoriesOverviewPage}" Route="RecipeCategoriesOverview" />
+            <ShellContent Title="Product Categories" ContentTemplate="{DataTemplate recipebook:ProductCategoriesOverviewPage}" Route="ProductCategoriesOverview" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Units" Icon="unit.png">
+        <ShellContent Title="Units" ContentTemplate="{DataTemplate recipebook:UnitsOverviewPage}" Route="UnitsOverview" />
+    </FlyoutItem>
+
+    <!-- Statistics -->
+    <FlyoutItem Title="Statistics" Icon="recipe.png">
+        <Tab Title="Statistics">
+            <ShellContent Title="Recipe Statistics" ContentTemplate="{DataTemplate recipebook:RecipeStatisticsPage}" Route="RecipeStatistics" />
+            <ShellContent Title="Product Statistics" ContentTemplate="{DataTemplate recipebook:ProductStatisticsPage}" Route="ProductStatistics" />
+        </Tab>
+    </FlyoutItem>
+
+    <!-- Account -->
+    <FlyoutItem Title="Profile" Icon="profile.png">
+        <ShellContent Title="My Profile" ContentTemplate="{DataTemplate identity:UserProfilePage}" Route="UserProfile" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Users" Icon="users.png">
+        <ShellContent Title="Users" ContentTemplate="{DataTemplate identity:UsersOverviewPage}" Route="UsersOverview" />
+    </FlyoutItem>
+
+</Shell>

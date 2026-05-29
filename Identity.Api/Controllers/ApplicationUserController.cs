@@ -1,5 +1,4 @@
-﻿using BlazorBootstrap;
-using Common.Models;
+﻿using Common.Models;
 using Common.Pagination;
 using Identity.Api.Controllers.Resources;
 using Identity.Api.Features.ApplicationUser.Commands.Unlock;

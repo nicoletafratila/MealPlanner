@@ -21,14 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="$(AutoMapper)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
-    <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
-    <ProjectReference Include="..\Common.Services\Common.Services.csproj" />
     <ProjectReference Include="..\Common.Validators\Common.Validators.csproj" />
   </ItemGroup>
 

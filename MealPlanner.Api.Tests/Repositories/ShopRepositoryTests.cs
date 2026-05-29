@@ -1,11 +1,11 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
-using MealPlanner.Data.TableConfigurations;
-using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using MealPlanner.Api.Repositories;
+using MealPlanner.Data.Entities;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests.Repositories
 {

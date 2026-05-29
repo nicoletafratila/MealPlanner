@@ -1,8 +1,4 @@
-﻿using System.Security.Claims;
-using Common.Data.DataContext;
-using Identity.Data.Entities;
-using Duende.IdentityModel;
-using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;using Common.Data.DataContext; using Duende.IdentityModel; using Identity.Data.Entities; using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Api
 {

@@ -1,9 +1,9 @@
 using AutoMapper;
 using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
 using MealPlanner.Data.Profiles.Resolvers;
 using MealPlanner.Data.Profiles.Tests.FakeResolvers;
 using MealPlanner.Shared.Models;
+using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Data.Profiles.Tests

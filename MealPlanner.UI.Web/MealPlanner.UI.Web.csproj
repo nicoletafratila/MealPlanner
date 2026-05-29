@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="$(BlazorBootstrap)" />
     <PackageReference Include="BuildBundlerMinifier" Version="$(BuildBundlerMinifier)" />
     <PackageReference Include="Blazored.Modal" Version="$(BlazoredModal)" />
     <PackageReference Include="bootstrap-dialog" Version="$(BootstrapDialog)" />
@@ -49,16 +50,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\Common.Core\Common.Core.csproj" />
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\Identity.Services\Identity.Services.csproj" />
+    <ProjectReference Include="..\Identity.Services.Core\Identity.Services.Core.csproj" />
     <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
     <ProjectReference Include="..\RecipeBook.Api\RecipeBook.Api.csproj" />
-    <ProjectReference Include="..\MealPlanner.Services\MealPlanner.Services.csproj" />
+    <ProjectReference Include="..\MealPlanner.Services.Core\MealPlanner.Services.Core.csproj" />
+    <ProjectReference Include="..\RecipeBook.Services.Core\RecipeBook.Services.Core.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
-    <ProjectReference Include="..\RecipeBook.Services\RecipeBook.Services.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>
 
@@ -239,7 +240,16 @@
     <Content Update="wwwroot\css\site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\css\site.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+
+  <!-- After dotnet clean, BuildBundlerMinifier deletes site.min.css but DefineStaticWebAssets
+       runs before the bundler regenerates it. Copy site.css as a fallback so the asset exists. -->
+  <Target Name="EnsureMinCssExists" BeforeTargets="DefineStaticWebAssets">
+    <Copy SourceFiles="wwwroot\css\site.css" DestinationFiles="wwwroot\css\site.min.css" Condition="!Exists('$(MSBuildProjectDirectory)\wwwroot\css\site.min.css')" />
+  </Target>
 
   <ItemGroup>
     <EmbeddedResource Update="Pages\Identities\Resources\ForgotPassword.resx">

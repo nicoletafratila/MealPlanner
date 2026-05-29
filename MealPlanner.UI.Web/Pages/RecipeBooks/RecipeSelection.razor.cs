@@ -3,7 +3,7 @@ using Blazored.Modal;
 using Common.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Core;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -64,14 +64,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var recipeCategoryId = e.Value?.ToString();
             RecipeId = string.Empty;
 
-            var filters = new List<FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new FilterItem(
+                filters.Add(new Common.Pagination.FilterItem(
                     propertyName: "RecipeCategoryId",
                     value: recipeCategoryId,
-                    FilterOperator.Equals,
+                    Common.Pagination.FilterOperator.Equals,
                     stringComparison: StringComparison.OrdinalIgnoreCase));
             }
 
@@ -83,7 +83,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,

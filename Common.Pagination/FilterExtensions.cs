@@ -1,6 +1,5 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Reflection;
-using BlazorBootstrap;
 
 namespace Common.Pagination
 {
@@ -11,9 +10,7 @@ namespace Common.Pagination
             ArgumentNullException.ThrowIfNull(filter);
 
             if (string.IsNullOrWhiteSpace(filter.PropertyName))
-            {
                 throw new ArgumentException("PropertyName cannot be null or empty.", nameof(filter));
-            }
 
             var propertyInfo = typeof(T).GetProperty(
                                    filter.PropertyName,
@@ -25,7 +22,6 @@ namespace Common.Pagination
             var parameter = Expression.Parameter(typeof(T), "x");
             var member = Expression.Property(parameter, propertyInfo);
             var propertyType = propertyInfo.PropertyType;
-
             var underlyingType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
             bool isNullable = underlyingType != propertyType;
 
@@ -33,13 +29,9 @@ namespace Common.Pagination
             if (filterValue is not null && underlyingType != filterValue.GetType())
             {
                 if (underlyingType.IsEnum && filterValue is string enumString)
-                {
                     filterValue = Enum.Parse(underlyingType, enumString, ignoreCase: true);
-                }
                 else
-                {
                     filterValue = Convert.ChangeType(filterValue, underlyingType);
-                }
             }
 
             var constant = isNullable && filterValue is not null
@@ -106,74 +98,32 @@ namespace Common.Pagination
         }
 
         private static BinaryExpression BuildStringEqualsCall(
-            MemberExpression member,
-            ConstantExpression constant,
-            StringComparison comparison)
+            MemberExpression member, ConstantExpression constant, StringComparison comparison)
         {
             if (member.Type != typeof(string))
-            {
-                throw new NotSupportedException(
-                    "Operator Equals with StringComparison is only supported for string properties.");
-            }
-
+                throw new NotSupportedException("Operator Equals with StringComparison is only supported for string properties.");
             if (constant.Value is null)
-            {
                 throw new ArgumentException("Filter value for operator Equals cannot be null.");
-            }
 
-            var notNull = Expression.NotEqual(
-                member,
-                Expression.Constant(null, typeof(string)));
-
-            var equalsMethod = typeof(string).GetMethod(
-                                   nameof(string.Equals),
-                                   new[] { typeof(string), typeof(string), typeof(StringComparison) })
-                               ?? throw new InvalidOperationException(
-                                   "Could not find string.Equals(string, string, StringComparison) overload.");
-
-            var call = Expression.Call(
-                equalsMethod,
-                member,
-                constant,
-                Expression.Constant(comparison));
-
+            var notNull = Expression.NotEqual(member, Expression.Constant(null, typeof(string)));
+            var equalsMethod = typeof(string).GetMethod(nameof(string.Equals), [typeof(string), typeof(string), typeof(StringComparison)])
+                ?? throw new InvalidOperationException("Could not find string.Equals(string, string, StringComparison) overload.");
+            var call = Expression.Call(equalsMethod, member, constant, Expression.Constant(comparison));
             return Expression.AndAlso(notNull, call);
         }
 
         private static BinaryExpression BuildStringMethodCall(
-            MemberExpression member,
-            ConstantExpression constant,
-            string methodName,
-            StringComparison comparison)
+            MemberExpression member, ConstantExpression constant, string methodName, StringComparison comparison)
         {
             if (member.Type != typeof(string))
-            {
-                throw new NotSupportedException(
-                    $"Operator {methodName} is only supported for string properties.");
-            }
-
+                throw new NotSupportedException($"Operator {methodName} is only supported for string properties.");
             if (constant.Value is null)
-            {
-                throw new ArgumentException(
-                    $"Filter value for operator {methodName} cannot be null.");
-            }
+                throw new ArgumentException($"Filter value for operator {methodName} cannot be null.");
 
-            var method = typeof(string).GetMethod(
-                             methodName,
-                             new[] { typeof(string), typeof(StringComparison) })
-                         ?? throw new InvalidOperationException(
-                             $"Could not find string.{methodName}(string, StringComparison) overload.");
-
-            var notNull = Expression.NotEqual(
-                member,
-                Expression.Constant(null, typeof(string)));
-
-            var call = Expression.Call(
-                member,
-                method,
-                constant,
-                Expression.Constant(comparison));
-
+            var method = typeof(string).GetMethod(methodName, [typeof(string), typeof(StringComparison)])
+                ?? throw new InvalidOperationException($"Could not find string.{methodName}(string, StringComparison) overload.");
+            var notNull = Expression.NotEqual(member, Expression.Constant(null, typeof(string)));
+            var call = Expression.Call(member, method, constant, Expression.Constant(comparison));
             return Expression.AndAlso(notNull, call);
         }
     }

@@ -1,17 +1,4 @@
-using System.Reflection;
-using Blazored.Modal;
-using Bunit;
-using Common.Models;
-using Common.Pagination;
-using Common.UI;
-using MealPlanner.Services;
-using MealPlanner.Shared.Models;
-using MealPlanner.UI.Web.Pages.MealPlans;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using Blazored.Modal; using Bunit; using Common.Models; using Common.Pagination; using Common.UI; using MealPlanner.Services.Core; using MealPlanner.Shared.Models; using MealPlanner.UI.Web.Pages.MealPlans; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Core; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 {
@@ -571,7 +558,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                     qp.Filters != null &&
                     qp.Filters.Count() == 1 &&
                     qp.Filters.First().PropertyName == "ProductCategoryId" &&
-                    (string)qp.Filters.First().Value == "3"), CancellationToken.None),
+                    qp.Filters.First().Value as string == "3"), CancellationToken.None),
                 Times.Once);
 
             using (Assert.EnterMultipleScope())

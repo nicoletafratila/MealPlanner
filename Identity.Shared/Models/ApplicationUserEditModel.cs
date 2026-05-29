@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using Identity.Shared.Resources;
+using System.ComponentModel.DataAnnotations;using Common.Models; using Identity.Shared.Resources;
 
 namespace Identity.Shared.Models
 {

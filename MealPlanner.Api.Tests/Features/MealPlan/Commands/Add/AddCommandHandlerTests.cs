@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
 using MealPlanner.Api.Repositories;

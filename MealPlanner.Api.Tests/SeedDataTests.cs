@@ -1,9 +1,9 @@
-﻿using Common.Constants.Units;
+using Common.Constants.Units;
 using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests
 {

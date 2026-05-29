@@ -4,12 +4,12 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
-using MealPlanner.Services;
+using MealPlanner.Services.Core;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Core;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
@@ -72,7 +72,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                     new SortingModel
                     {
                         PropertyName = "DisplaySequence",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -326,14 +326,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var recipeCategoryId = e.Value?.ToString();
             RecipeId = string.Empty;
 
-            var filters = new List<FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new FilterItem(
+                filters.Add(new Common.Pagination.FilterItem(
                     "RecipeCategoryId",
                     recipeCategoryId,
-                    FilterOperator.Equals,
+                    Common.Pagination.FilterOperator.Equals,
                     StringComparison.OrdinalIgnoreCase));
             }
 
@@ -345,7 +345,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageNumber = 1,

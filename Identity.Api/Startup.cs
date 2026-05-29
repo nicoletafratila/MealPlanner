@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using Common.Data.DataContext;
@@ -19,7 +19,7 @@ using Serilog;
 
 namespace Identity.Api
 {
-    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
+    public class Startup(IConfiguration configuration) : Common.Core.Startup(configuration)
     {
         protected override void RegisterTableConfigurationAssemblies(IServiceCollection services)
         {

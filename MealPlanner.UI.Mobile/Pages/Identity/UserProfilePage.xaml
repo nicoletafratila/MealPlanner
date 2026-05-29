@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             x:Class="MealPlanner.UI.Mobile.Pages.Identity.UserProfilePage"
+             x:DataType="vm:UserProfileViewModel"
+             Title="My Profile">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12" IsVisible="{Binding Model, Converter={x:Static converters:NotNullConverter.Instance}}">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+            <Label Text="Username" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{Binding Model.Username}" />
+
+            <Label Text="Email" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.EmailAddress}" Keyboard="Email" />
+
+            <Label Text="First Name" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.FirstName}" />
+
+            <Label Text="Last Name" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.LastName}" />
+
+            <Label Text="Phone" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.PhoneNumber}" Keyboard="Telephone" />
+
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
+            <Button Text="Change Password" Style="{StaticResource OutlineButton}"
+                    Command="{Binding ChangePasswordCommand}" Margin="0,16,0,0" />
+            <Button Text="Sign Out" Style="{StaticResource DangerButton}"
+                    Command="{Binding LogoutCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -3,11 +3,11 @@ using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using Common.UI;
-using Identity.Services;
+using Identity.Services.Core;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Core;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ProductModel>? _productsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
-        private SortDirection _nameSortDirection = SortDirection.Ascending;
+        private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
         private int _pageBeforeFilter = 1;
@@ -52,7 +52,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var stored = await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
             var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
-            var direction = nameSort?.Direction ?? SortDirection.Ascending;
+            var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
 
             if (direction != _nameSortDirection)
             {
@@ -63,7 +63,10 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         }
 
         private async Task<GridSettings?> SettingsProviderAsync()
-            => await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
+        {
+            var qp = await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
+            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+        }
 
         private void New()
         {
@@ -140,7 +143,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 {
                     Filters = [],
                     Sorting = request.Sorting?
-                        .Select(QueryParameters<ProductModel>.ToModel)
+                        .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
                         .ToList() ?? [],
                     PageNumber = _pageBeforeFilter,
                     PageSize = _pageSize
@@ -157,9 +160,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 var resetParameters = new QueryParameters<ProductModel>
                 {
-                    Filters = request.Filters,
+                    Filters = request.Filters?
+                        .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                        .ToList(),
                     Sorting = request.Sorting?
-                        .Select(QueryParameters<ProductModel>.ToModel)
+                        .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
                         .ToList() ?? [],
                     PageNumber = 1,
                     PageSize = _pageSize
@@ -179,10 +184,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var queryParameters = new QueryParameters<ProductModel>
             {
-                Filters = request.Filters?.ToList() ?? [],
+                Filters = request.Filters?
+                    .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList() ?? [],
                 Sorting = request.Sorting?
-                    .Select(QueryParameters<ProductModel>.ToModel)
-                    .ToList()!,
+                    .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
+                    .ToList() ?? [],
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
             };
@@ -199,7 +206,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 var sessionParameters = new QueryParameters<ProductModel>
                 {
-                    Filters = request.Filters,
+                    Filters = request.Filters?
+                        .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                        .ToList(),
                     Sorting = queryParameters.Sorting,
                     PageNumber = request.PageNumber,
                     PageSize = _pageSize
@@ -219,7 +228,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             };
         }
 
-        private string GetFiltersKey(IEnumerable<FilterItem>? filters)
+        private string GetFiltersKey(IEnumerable<BlazorBootstrap.FilterItem>? filters)
         {
             if (filters == null) return "";
             return string.Join("|", filters

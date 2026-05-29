@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
+             xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.RecipeEditPage"
+             x:DataType="vm:RecipeEditViewModel"
+             Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Recipe|Edit Recipe'}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+            <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Name}" Placeholder="Recipe name" />
+
+            <Label Text="Category" Style="{StaticResource SectionHeaderLabel}" />
+            <Picker ItemsSource="{Binding Categories}" SelectedIndex="{Binding Model.RecipeCategoryId}"
+                    ItemDisplayBinding="{Binding Name}" Title="Select category" />
+
+            <Label Text="Source" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Source}" Placeholder="Optional source / URL" />
+
+            <Label Text="Ingredients" Style="{StaticResource SectionHeaderLabel}" />
+            <CollectionView ItemsSource="{Binding Model.Ingredients}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:RecipeIngredientEditModel">
+                        <Grid ColumnDefinitions="*,Auto,80,Auto" Spacing="8" Padding="0,4">
+                            <Picker Grid.Column="0" Title="Product"
+                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeEditViewModel}}, Path=Products}"
+                                    SelectedIndex="{Binding ProductId}"
+                                    ItemDisplayBinding="{Binding Name}" />
+                            <Picker Grid.Column="1" Title="Unit"
+                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeEditViewModel}}, Path=Units}"
+                                    SelectedIndex="{Binding UnitId}"
+                                    ItemDisplayBinding="{Binding Name}" />
+                            <Entry Grid.Column="2" Text="{Binding Quantity, StringFormat='{0}'}"
+                                   Keyboard="Numeric" Placeholder="Qty" />
+                            <Button Grid.Column="3" Text="✕" Style="{StaticResource DangerButton}"
+                                    Padding="8,4"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeEditViewModel}}, Path=RemoveIngredientCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="+ Add Ingredient" Style="{StaticResource OutlineButton}"
+                    Command="{Binding AddIngredientCommand}" />
+
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

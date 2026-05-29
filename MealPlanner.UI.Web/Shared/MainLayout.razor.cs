@@ -1,5 +1,5 @@
 using Common.UI;
-using MealPlanner.Services;
+using MealPlanner.Services.Core;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
