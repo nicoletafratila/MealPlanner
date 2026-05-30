@@ -1,8 +1,9 @@
 using Blazored.SessionStorage;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Services;
 using Moq;
 
-namespace Identity.Services.Core.Tests
+namespace MealPlanner.UI.Web.Tests.Services
 {
     [TestFixture]
     public class SessionExtensionsTests

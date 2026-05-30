@@ -3,7 +3,7 @@ using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using Common.UI;
-using Identity.Services.Core;
+using MealPlanner.UI.Web.Services;
 using Identity.Services.Http;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;

@@ -1,7 +1,7 @@
 using Blazored.SessionStorage;
 using Newtonsoft.Json;
 
-namespace Identity.Services.Core
+namespace MealPlanner.UI.Web.Services
 {
     public static class SessionExtensions
     {

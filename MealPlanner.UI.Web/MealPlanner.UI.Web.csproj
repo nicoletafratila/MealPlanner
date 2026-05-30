@@ -43,6 +43,7 @@
     <PackageReference Include="Blazor.Bootstrap" Version="$(BlazorBootstrap)" />
     <PackageReference Include="BuildBundlerMinifier" Version="$(BuildBundlerMinifier)" />
     <PackageReference Include="Blazored.Modal" Version="$(BlazoredModal)" />
+    <PackageReference Include="Blazored.SessionStorage" Version="$(BlazoredSessionStorage)" />
     <PackageReference Include="bootstrap-dialog" Version="$(BootstrapDialog)" />
     <PackageReference Include="MudBlazor" Version="$(MudBlazor)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJson)" />
@@ -54,12 +55,11 @@
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\Identity.Services.Core\Identity.Services.Core.csproj" />
     <ProjectReference Include="..\Identity.Services.Http\Identity.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
     <ProjectReference Include="..\RecipeBook.Api\RecipeBook.Api.csproj" />
     <ProjectReference Include="..\MealPlanner.Services.Http\MealPlanner.Services.Http.csproj" />
-    <ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
+<ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
   </ItemGroup>

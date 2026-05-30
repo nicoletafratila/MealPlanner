@@ -3,7 +3,7 @@ using System.Text.Json;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace Identity.Services.Core
+namespace MealPlanner.UI.Web.Services
 {
     public class CustomAuthenticationState(ISessionStorageService sessionStorage) : AuthenticationStateProvider
     {
