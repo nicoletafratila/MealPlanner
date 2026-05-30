@@ -3,6 +3,7 @@ using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
+using Common.Services.Converters;
 using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using RecipeBook.Services.Http;
-using RecipeBook.Services.Core.Converters;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans

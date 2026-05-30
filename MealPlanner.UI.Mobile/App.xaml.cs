@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Mobile
         {
             base.OnStart();
             var isAuthenticated = await _authState.IsAuthenticatedAsync();
-            MainPage = isAuthenticated
+            Windows[0].Page = isAuthenticated
                 ? _services.GetRequiredService<AppShell>()
                 : new NavigationPage(_services.GetRequiredService<LoginPage>());
         }

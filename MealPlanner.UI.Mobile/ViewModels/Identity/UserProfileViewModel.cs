@@ -8,8 +8,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, AuthenticationService authService) : BaseViewModel
     {
-        [ObservableProperty]
-        private ApplicationUserEditModel? _model;
+        [ObservableProperty] private ApplicationUserEditModel? _model;
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -49,7 +48,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         private async Task LogoutAsync()
         {
             await authService.LogoutAsync();
-            Application.Current!.MainPage = new NavigationPage(
+            Application.Current!.Windows[0].Page = new NavigationPage(
                 IPlatformApplication.Current!.Services.GetRequiredService<Pages.Identity.LoginPage>());
         }
     }

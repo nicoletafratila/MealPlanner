@@ -158,7 +158,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (plans is null || plans.Items.Count == 0) { SetError("No meal plans found."); return; }
 
             var names = plans.Items.Select(p => p.Name).ToArray();
-            var picked = await Shell.Current.DisplayActionSheet("Select meal plan", "Cancel", null, names);
+            var picked = await Shell.Current.DisplayActionSheetAsync("Select meal plan", "Cancel", null, names);
             if (picked is null || picked == "Cancel") return;
 
             var plan = plans.Items.FirstOrDefault(p => p.Name == picked);
@@ -185,7 +185,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
             if (catNames is { Length: > 0 })
             {
-                var pickedCat = await Shell.Current.DisplayActionSheet("Filter by category (optional)", "Skip", null, catNames);
+                var pickedCat = await Shell.Current.DisplayActionSheetAsync("Filter by category (optional)", "Skip", null, catNames);
                 if (pickedCat is not null && pickedCat != "Skip")
                     recipeCategoryId = categories!.Items.FirstOrDefault(c => c.Name == pickedCat)?.Id;
             }
@@ -198,7 +198,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (recipes is null || recipes.Items.Count == 0) { SetError("No recipes found."); return; }
 
             var names = recipes.Items.Select(r => r.Name).ToArray();
-            var picked = await Shell.Current.DisplayActionSheet("Select recipe", "Cancel", null, names);
+            var picked = await Shell.Current.DisplayActionSheetAsync("Select recipe", "Cancel", null, names);
             if (picked is null || picked == "Cancel") return;
 
             var recipe = recipes.Items.FirstOrDefault(r => r.Name == picked);
@@ -247,7 +247,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private async Task DeleteAsync()
         {
             if (IsNew) return;
-            var confirm = await Shell.Current.DisplayAlert("Delete", "Delete this shopping list?", "Delete", "Cancel");
+            var confirm = await Shell.Current.DisplayAlertAsync("Delete", "Delete this shopping list?", "Delete", "Cancel");
             if (!confirm) return;
             IsBusy = true; ClearMessages();
             try
@@ -266,7 +266,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             var text = string.Join(Environment.NewLine,
                 Model.Products.Select(p => $"{p.Product?.Name} - {p.Quantity} {p.Unit?.Name}"));
             await Clipboard.SetTextAsync(text);
-            await Shell.Current.DisplayAlert("Exported", "Shopping list copied to clipboard.", "OK");
+            await Shell.Current.DisplayAlertAsync("Exported", "Shopping list copied to clipboard.", "OK");
         }
 
         [RelayCommand]

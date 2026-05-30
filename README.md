@@ -13,6 +13,7 @@ PM> Script-migration
 
 
 unit tests on what is missing, except mobile app
+muta Identity.Services.Core in web project, services
 
 
 

@@ -102,7 +102,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private async Task DeleteAsync()
         {
             if (IsNew) return;
-            var confirm = await Shell.Current.DisplayAlert("Delete", "Delete this meal plan?", "Delete", "Cancel");
+            var confirm = await Shell.Current.DisplayAlertAsync("Delete", "Delete this meal plan?", "Delete", "Cancel");
             if (!confirm) return;
             IsBusy = true; ClearMessages();
             try
@@ -121,7 +121,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (Shops.Count == 0) { SetError("No shops available."); return; }
 
             var shopNames = Shops.Select(s => s.Name).ToArray();
-            var picked = await Shell.Current.DisplayActionSheet("Select shop", "Cancel", null, shopNames);
+            var picked = await Shell.Current.DisplayActionSheetAsync("Select shop", "Cancel", null, shopNames);
             if (picked is null || picked == "Cancel") return;
 
             var shop = Shops.FirstOrDefault(s => s.Name == picked);
