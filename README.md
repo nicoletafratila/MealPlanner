@@ -12,9 +12,6 @@ PM> Script-migration
 
 
 
-unit tests on what is missing, except mobile app
-
-
 
 
 filtru nu mai merge la retete
