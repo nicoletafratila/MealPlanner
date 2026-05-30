@@ -4,7 +4,7 @@ using Common.Services;
 using Identity.Shared.Constants;
 using Identity.Shared.Models;
 
-namespace Identity.Services.Core.Http
+namespace Identity.Services.Http
 {
     public class AuthenticationService(HttpClient httpClient, ITokenProvider tokenProvider, IAuthStateNotifier authStateNotifier)
         : ServiceBase(httpClient, tokenProvider)

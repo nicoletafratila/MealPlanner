@@ -8,7 +8,8 @@
       "PowerShell(dotnet build *)",
       "Read(//c/Users/nfratila/.claude/skills/**)",
       "Read(//c/Users/nfratila/.claude/**)",
-      "Bash(xargs ls)"
+      "Bash(xargs ls)",
+      "Bash(dotnet sln *)"
     ]
   }
 }

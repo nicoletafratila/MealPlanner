@@ -1,21 +1,17 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
 using Common.Models;
-using MealPlanner.Shared.Constants;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Shared.Models;
 using RichardSzalay.MockHttp;
 
-namespace MealPlanner.Services.Core.Tests
+namespace MealPlanner.Services.Http.Tests
 {
     [TestFixture]
     public class StatisticsServiceTests
     {
-        private const string AuthTokenKey = Common.Constants.MealPlanner.AuthToken;
         private const string BaseAddress = "https://api.test/";
         private const string StatisticsPath = "api/statistics";
 
@@ -30,15 +26,13 @@ namespace MealPlanner.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            sessionStorage
-                .Setup(s => s.GetItemAsync<string?>(AuthTokenKey, It.IsAny<CancellationToken>()))
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
-
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
             var logger = Mock.Of<ILogger<StatisticsService>>();
 
-            return new StatisticsService(httpClient, tokenProvider, logger);
+            return new StatisticsService(httpClient, tokenProvider.Object, logger);
         }
 
         // ---------- GetFavoriteRecipesAsync ----------

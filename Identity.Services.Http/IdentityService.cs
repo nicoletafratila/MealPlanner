@@ -1,4 +1,3 @@
-using Common.Constants;
 using Common.Http;
 using Common.Models;
 using Common.Services;
@@ -6,7 +5,7 @@ using Identity.Shared.Constants;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Identity.Services.Core.Http
+namespace Identity.Services.Http
 {
     public class IdentityService(
         HttpClient httpClient,

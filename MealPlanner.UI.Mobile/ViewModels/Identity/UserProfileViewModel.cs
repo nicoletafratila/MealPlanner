@@ -1,12 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Identity.Services.Core.Http;
+using Identity.Services.Http;
 using Identity.Shared.Models;
 using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class UserProfileViewModel(UserService userService, MobileAuthStateService authState, IdentityService authService) : BaseViewModel
+    public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, IdentityService authService) : BaseViewModel
     {
         [ObservableProperty]
         private ApplicationUserEditModel? _model;

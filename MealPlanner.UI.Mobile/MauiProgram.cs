@@ -1,7 +1,7 @@
 using Common.Http;
 using CommunityToolkit.Maui;
-using Identity.Services.Core.Http;
-using MealPlanner.Services.Core.Http;
+using Identity.Services.Http;
+using MealPlanner.Services.Http;
 using MealPlanner.UI.Mobile.Pages.Identity;
 using MealPlanner.UI.Mobile.Pages.MealPlans;
 using MealPlanner.UI.Mobile.Pages.RecipeBook;
@@ -52,16 +52,16 @@ namespace MealPlanner.UI.Mobile
 
             // API HTTP clients
             services.AddHttpClient<IdentityService>(c => c.BaseAddress = new Uri(identityBase));
-            services.AddHttpClient<UserService>(c => c.BaseAddress = new Uri(identityBase));
+            services.AddHttpClient<ApplicationUserService>(c => c.BaseAddress = new Uri(identityBase));
             services.AddHttpClient<RecipeService>(c => c.BaseAddress = new Uri(recipeBase));
             services.AddHttpClient<RecipeCategoryService>(c => c.BaseAddress = new Uri(recipeBase));
             services.AddHttpClient<ProductService>(c => c.BaseAddress = new Uri(recipeBase));
             services.AddHttpClient<ProductCategoryService>(c => c.BaseAddress = new Uri(recipeBase));
             services.AddHttpClient<UnitService>(c => c.BaseAddress = new Uri(recipeBase));
-            services.AddHttpClient<MealPlanService>(c => c.BaseAddress = new Uri(mealPlannerBase));
-            services.AddHttpClient<ShopService>(c => c.BaseAddress = new Uri(mealPlannerBase));
-            services.AddHttpClient<ShoppingListService>(c => c.BaseAddress = new Uri(mealPlannerBase));
-            services.AddHttpClient<StatisticsService>(c => c.BaseAddress = new Uri(mealPlannerBase));
+            services.AddHttpClient<IMealPlanService, MealPlanService>(c => c.BaseAddress = new Uri(mealPlannerBase));
+            services.AddHttpClient<IShopService, ShopService>(c => c.BaseAddress = new Uri(mealPlannerBase));
+            services.AddHttpClient<IShoppingListService, ShoppingListService>(c => c.BaseAddress = new Uri(mealPlannerBase));
+            services.AddHttpClient<IStatisticsService, StatisticsService>(c => c.BaseAddress = new Uri(mealPlannerBase));
 
             // ViewModels — Identity
             services.AddTransient<LoginViewModel>();

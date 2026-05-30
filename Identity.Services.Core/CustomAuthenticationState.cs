@@ -1,9 +1,7 @@
-using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Logging;
 
 namespace Identity.Services.Core
 {

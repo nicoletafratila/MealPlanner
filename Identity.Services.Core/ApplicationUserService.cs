@@ -1,8 +1,16 @@
-using System.Net.Http.Json;using Common.Constants; using Common.Core; using Common.Http; using Common.Models; using Common.Pagination; using Common.Services; using Identity.Shared.Constants; using Identity.Shared.Models; using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
+using Common.Constants;
+using Common.Http;
+using Common.Models;
+using Common.Pagination;
+using Common.Services;
+using Identity.Shared.Constants;
+using Identity.Shared.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Identity.Services.Core
 {
-    public class ApplicationUserService(HttpClient httpClient, Common.Http.ITokenProvider tokenProvider, ILogger<ApplicationUserService> logger)
+    public class ApplicationUserService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<ApplicationUserService> logger)
         : ServiceBase(httpClient, tokenProvider), IApplicationUserService
     {
         private readonly string _controller = IdentityControllers.ApplicationUserUrl;

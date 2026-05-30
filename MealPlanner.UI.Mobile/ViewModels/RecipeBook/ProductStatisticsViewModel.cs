@@ -1,9 +1,15 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using MealPlanner.Services.Core.Http; using RecipeBook.Services.Core.Http; using RecipeBook.Shared.Models;
+using System.Collections.ObjectModel;
+using Common.Pagination;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MealPlanner.Services.Http;
+using RecipeBook.Services.Core.Http;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class ProductStatisticsViewModel(
-        StatisticsService statisticsService,
+        IStatisticsService statisticsService,
         ProductCategoryService productCategoryService) : BaseViewModel
     {
         [ObservableProperty] private ObservableCollection<StatisticEntryModel> _entries = [];
@@ -15,8 +21,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             try
             {
                 var categories = await productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 500 });
-                var ids = categories?.Items?.Select(c => c.Id) ?? [];
-                var data = await statisticsService.GetFavoriteProductsAsync(ids);
+                var data = await statisticsService.GetFavoriteProductsAsync(categories?.Items?.ToList() ?? []);
                 Entries = data is not null
                     ? new ObservableCollection<StatisticEntryModel>(FlattenStatistics(data))
                     : [];

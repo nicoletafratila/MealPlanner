@@ -12,8 +12,11 @@ PM> Script-migration
 
 
 
-interfete si la  public interface IMealPlanService pr mobile
+filtru nu mai merge la retete
 unit tests on what is missing, except mobile app
+
+
+
 
 
 schimba ids in guid

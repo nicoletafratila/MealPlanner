@@ -1,8 +1,14 @@
-using System.Net.Http.Json;using Common.Core; using Common.Http; using Common.Models; using Common.Services; using Identity.Shared.Constants; using Identity.Shared.Models; using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
+using Common.Http;
+using Common.Models;
+using Common.Services;
+using Identity.Shared.Constants;
+using Identity.Shared.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Identity.Services.Core
 {
-    public class ContactUsService(HttpClient httpClient, Common.Http.ITokenProvider tokenProvider, ILogger<ContactUsService> logger)
+    public class ContactUsService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<ContactUsService> logger)
         : ServiceBase(httpClient, tokenProvider), IContactUsService
     {
         private readonly string _controller = IdentityControllers.ContactUsUrl;

@@ -1,8 +1,13 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using MealPlanner.Services.Core.Http; using MealPlanner.Shared.Models;
+using System.Collections.ObjectModel;
+using Common.Pagination;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
-    public partial class MealPlansOverviewViewModel(MealPlanService mealPlanService) : BaseViewModel
+    public partial class MealPlansOverviewViewModel(IMealPlanService mealPlanService) : BaseViewModel
     {
         [ObservableProperty] private ObservableCollection<MealPlanModel> _mealPlans = [];
         [ObservableProperty] private int _currentPage = 1;
@@ -27,9 +32,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private async Task DeleteAsync(MealPlanModel mp)
         {
-            var (success, error) = await mealPlanService.DeleteAsync(mp.Id);
-            if (success) MealPlans.Remove(mp);
-            else SetError(error);
+            var result = await mealPlanService.DeleteAsync(mp.Id);
+            if (result?.Succeeded == true) MealPlans.Remove(mp);
+            else SetError(result?.Message);
         }
     }
 }

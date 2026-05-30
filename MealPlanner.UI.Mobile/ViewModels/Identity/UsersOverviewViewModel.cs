@@ -1,8 +1,13 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using Identity.Services.Core.Http; using Identity.Shared.Models;
+using System.Collections.ObjectModel;
+using Common.Pagination;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class UsersOverviewViewModel(UserService userService) : BaseViewModel
+    public partial class UsersOverviewViewModel(ApplicationUserService userService) : BaseViewModel
     {
         [ObservableProperty] private ObservableCollection<ApplicationUserModel> _users = [];
         [ObservableProperty] private int _currentPage = 1;

@@ -1,12 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MealPlanner.Services.Core.Http;
+using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     [QueryProperty(nameof(ShopId), "id")]
-    public partial class ShopEditViewModel(ShopService shopService) : BaseViewModel
+    public partial class ShopEditViewModel(IShopService shopService) : BaseViewModel
     {
         [ObservableProperty] private int _shopId;
         [ObservableProperty] private ShopEditModel _model = new();
@@ -29,9 +29,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (IsBusy) return; IsBusy = true; ClearMessages();
             try
             {
-                var (success, error) = IsNew ? await shopService.AddAsync(Model) : await shopService.UpdateAsync(Model);
-                if (success) await Shell.Current.GoToAsync("..");
-                else SetError(error);
+                var result = IsNew ? await shopService.AddAsync(Model) : await shopService.UpdateAsync(Model);
+                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                else SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

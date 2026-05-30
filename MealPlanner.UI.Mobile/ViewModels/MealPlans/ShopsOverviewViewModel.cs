@@ -1,8 +1,13 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using MealPlanner.Services.Core.Http; using MealPlanner.Shared.Models;
+using System.Collections.ObjectModel;
+using Common.Pagination;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
-    public partial class ShopsOverviewViewModel(ShopService shopService) : BaseViewModel
+    public partial class ShopsOverviewViewModel(IShopService shopService) : BaseViewModel
     {
         [ObservableProperty] private ObservableCollection<ShopModel> _shops = [];
 
@@ -25,9 +30,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private async Task DeleteAsync(ShopModel s)
         {
-            var (success, error) = await shopService.DeleteAsync(s.Id);
-            if (success) Shops.Remove(s);
-            else SetError(error);
+            var result = await shopService.DeleteAsync(s.Id);
+            if (result?.Succeeded == true) Shops.Remove(s);
+            else SetError(result?.Message);
         }
     }
 }

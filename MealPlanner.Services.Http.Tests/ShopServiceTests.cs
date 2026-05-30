@@ -1,28 +1,24 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
 using Common.Models;
 using Common.Pagination;
-using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 
-namespace MealPlanner.Services.Core.Tests
+namespace MealPlanner.Services.Http.Tests
 {
     [TestFixture]
-    public class ShoppingListServiceTests
+    public class ShopServiceTests
     {
-        private const string AuthTokenKey = Common.Constants.MealPlanner.AuthToken;
         private const string BaseAddress = "https://api.test/";
-        private const string ShoppingListPath = "api/shoppinglist";
+        private const string ShopPath = "api/shop";
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static ShoppingListService CreateService(
+        private static ShopService CreateService(
             MockHttpMessageHandler mockHttp,
             string token = "test-token")
         {
@@ -31,15 +27,13 @@ namespace MealPlanner.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            sessionStorage
-                .Setup(s => s.GetItemAsync<string?>(AuthTokenKey, It.IsAny<CancellationToken>()))
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
+            var logger = Mock.Of<ILogger<ShopService>>();
 
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
-            var logger = Mock.Of<ILogger<ShoppingListService>>();
-
-            return new ShoppingListService(httpClient, tokenProvider, logger);
+            return new ShopService(httpClient, tokenProvider.Object, logger);
         }
 
         // ---------- GetEditAsync ----------
@@ -49,17 +43,17 @@ namespace MealPlanner.Services.Core.Tests
             // Arrange
             const string token = "my-jwt-token";
             var id = 42;
-            var expected = new ShoppingListEditModel { Id = id };
+            var expected = new ShopEditModel { Id = id };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ShoppingListPath}/edit*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/edit*")
                 .With(m =>
                 {
                     var auth = m.Headers.Authorization;
                     return auth is not null
-                           && auth.Scheme == JwtBearerDefaults.AuthenticationScheme
+                           && auth.Scheme == "Bearer"
                            && auth.Parameter == token
                            && m.RequestUri!.Query.Contains($"id={id}");
                 })
@@ -89,17 +83,17 @@ namespace MealPlanner.Services.Core.Tests
                 TotalCount = 2
             };
 
-            var paged = new PagedList<ShoppingListModel>(
+            var paged = new PagedList<ShopModel>(
                 [
-                    new ShoppingListModel(),
-                    new ShoppingListModel()
+                    new ShopModel(),
+                    new ShopModel()
                 ],
                 metadata);
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ShoppingListPath}/search*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
 
             var service = CreateService(mockHttp);
@@ -124,7 +118,7 @@ namespace MealPlanner.Services.Core.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ShoppingListPath}/search*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
                 .Respond(HttpStatusCode.InternalServerError);
 
             var service = CreateService(mockHttp);
@@ -134,76 +128,22 @@ namespace MealPlanner.Services.Core.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
-        // ---------- MakeShoppingListAsync ----------
-        [Test]
-        public async Task MakeShoppingListAsync_PostsCreateModel_AndReturnsEditModel()
-        {
-            // Arrange
-            var createModel = new ShoppingListCreateModel
-            {
-                // populate properties as needed
-            };
-
-            var expectedEdit = new ShoppingListEditModel { Id = 5 };
-
-            var mockHttp = new MockHttpMessageHandler();
-
-            mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}/makeShoppingList")
-                .With(m =>
-                {
-                    var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ShoppingListCreateModel>(body, JsonOptions);
-                    return deserialized is not null; // could be stricter if needed
-                })
-                .Respond("application/json", JsonSerializer.Serialize(expectedEdit, JsonOptions));
-
-            var service = CreateService(mockHttp);
-
-            // Act
-            var result = await service.MakeShoppingListAsync(createModel);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Id, Is.EqualTo(expectedEdit.Id));
-            mockHttp.VerifyNoOutstandingExpectation();
-        }
-
-        [Test]
-        public void MakeShoppingListAsync_Throws_OnNonSuccessStatusCode()
-        {
-            // Arrange
-            var createModel = new ShoppingListCreateModel();
-
-            var mockHttp = new MockHttpMessageHandler();
-
-            mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}/makeShoppingList")
-                .Respond(HttpStatusCode.BadRequest);
-
-            var service = CreateService(mockHttp);
-
-            // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.MakeShoppingListAsync(createModel));
-            mockHttp.VerifyNoOutstandingExpectation();
-        }
-
         // ---------- AddAsync ----------
         [Test]
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new ShoppingListEditModel { Id = 1 };
+            var model = new ShopEditModel { Id = 1 };
             var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ShoppingListEditModel>(body, JsonOptions);
+                    var deserialized = JsonSerializer.Deserialize<ShopEditModel>(body, JsonOptions);
                     return deserialized is not null && deserialized.Id == model.Id;
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
@@ -227,12 +167,12 @@ namespace MealPlanner.Services.Core.Tests
         public void AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new ShoppingListEditModel { Id = 1 };
+            var model = new ShopEditModel { Id = 1 };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}")
                 .Respond(HttpStatusCode.BadRequest);
 
             var service = CreateService(mockHttp);
@@ -247,17 +187,17 @@ namespace MealPlanner.Services.Core.Tests
         public async Task UpdateAsync_PutsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new ShoppingListEditModel { Id = 2 };
+            var model = new ShopEditModel { Id = 2 };
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Put, $"{BaseAddress}{ShoppingListPath}")
+                .Expect(HttpMethod.Put, $"{BaseAddress}{ShopPath}")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ShoppingListEditModel>(body, JsonOptions);
+                    var deserialized = JsonSerializer.Deserialize<ShopEditModel>(body, JsonOptions);
                     return deserialized is not null && deserialized.Id == model.Id;
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
@@ -277,12 +217,12 @@ namespace MealPlanner.Services.Core.Tests
         public void UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new ShoppingListEditModel { Id = 2 };
+            var model = new ShopEditModel { Id = 2 };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Put, $"{BaseAddress}{ShoppingListPath}")
+                .Expect(HttpMethod.Put, $"{BaseAddress}{ShopPath}")
                 .Respond(HttpStatusCode.BadRequest);
 
             var service = CreateService(mockHttp);
@@ -303,7 +243,7 @@ namespace MealPlanner.Services.Core.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Delete, $"{BaseAddress}{ShoppingListPath}*")
+                .Expect(HttpMethod.Delete, $"{BaseAddress}{ShopPath}*")
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
 
@@ -327,7 +267,7 @@ namespace MealPlanner.Services.Core.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Delete, $"{BaseAddress}{ShoppingListPath}*")
+                .Expect(HttpMethod.Delete, $"{BaseAddress}{ShopPath}*")
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond(HttpStatusCode.NotFound);
 

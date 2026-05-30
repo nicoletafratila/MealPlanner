@@ -1,22 +1,18 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
 using Common.Models;
 using Common.Pagination;
-using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 
-namespace MealPlanner.Services.Core.Tests
+namespace MealPlanner.Services.Http.Tests
 {
     [TestFixture]
     public class MealPlanServiceTests
     {
-        private const string AuthTokenKey = Common.Constants.MealPlanner.AuthToken;
         private const string BaseAddress = "https://api.test/";
         private const string MealPlanPath = "api/mealplan";
 
@@ -31,15 +27,13 @@ namespace MealPlanner.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            sessionStorage
-                .Setup(s => s.GetItemAsync<string?>(AuthTokenKey, It.IsAny<CancellationToken>()))
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
-
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
             var logger = Mock.Of<ILogger<MealPlanService>>();
 
-            return new MealPlanService(httpClient, tokenProvider, logger);
+            return new MealPlanService(httpClient, tokenProvider.Object, logger);
         }
 
         // ---------- GetEditAsync ----------
@@ -59,7 +53,7 @@ namespace MealPlanner.Services.Core.Tests
                 {
                     var auth = m.Headers.Authorization;
                     return auth is not null
-                           && auth.Scheme == JwtBearerDefaults.AuthenticationScheme
+                           && auth.Scheme == "Bearer"
                            && auth.Parameter == token
                            && m.RequestUri!.Query.Contains($"id={mealPlanId}");
                 })

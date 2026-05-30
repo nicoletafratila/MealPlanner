@@ -5,7 +5,7 @@ using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using Identity.Services.Core;
-using MealPlanner.Services.Core;
+using MealPlanner.Services.Http;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;

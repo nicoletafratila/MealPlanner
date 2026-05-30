@@ -1,6 +1,6 @@
 using System.Net.Http.Json;using Common.Models; using Microsoft.Extensions.Logging; using RecipeBook.Shared.Models;
 
-namespace MealPlanner.Services.Core
+namespace MealPlanner.Services.Http
 {
     public interface IStatisticsService
     {

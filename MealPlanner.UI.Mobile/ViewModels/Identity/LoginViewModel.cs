@@ -1,5 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
-using Identity.Services.Core.Http;
+using Identity.Services.Http;
 using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
