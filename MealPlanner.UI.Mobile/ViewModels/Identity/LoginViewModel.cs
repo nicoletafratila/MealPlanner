@@ -4,7 +4,7 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class LoginViewModel(IdentityService authService) : BaseViewModel
+    public partial class LoginViewModel(AuthenticationService authService) : BaseViewModel
     {
         public LoginModel Model { get; } = new();
 
@@ -16,11 +16,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var (success, error) = await authService.LoginAsync(Model);
-                if (success)
+                var result = await authService.LoginAsync(Model);
+                if (result?.Succeeded == true)
                     await Shell.Current.GoToAsync("//RecipesOverview");
                 else
-                    SetError(error);
+                    SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

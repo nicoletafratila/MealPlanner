@@ -1,6 +1,8 @@
-using System.Net.Http.Json;using Common.Models; using Common.Pagination; using Microsoft.Extensions.Logging; using RecipeBook.Shared.Models;
+using Common.Models;
+using Common.Pagination;
+using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Services.Core
+namespace RecipeBook.Services.Http
 {
     public interface IUnitService
     {

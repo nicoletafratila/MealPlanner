@@ -1,10 +1,9 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
+using RecipeBook.Services.Http;
 using Common.Models;
 using Common.Pagination;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -12,12 +11,11 @@ using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
 using RichardSzalay.MockHttp;
 
-namespace RecipeBook.Services.Core.Tests
+namespace RecipeBook.Services.Http.Tests
 {
     [TestFixture]
     public class UnitServiceTests
     {
-        private const string AuthTokenKey = Common.Constants.MealPlanner.AuthToken;
         private const string BaseAddress = "https://api.test/";
         private const string UnitPath = "api/unit";
 
@@ -33,15 +31,13 @@ namespace RecipeBook.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            sessionStorage
-                .Setup(s => s.GetItemAsync<string?>(AuthTokenKey, It.IsAny<CancellationToken>()))
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
-
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
             var logger = Mock.Of<ILogger<UnitService>>();
 
-            return new UnitService(httpClient, tokenProvider, cache ?? new MemoryCache(new MemoryCacheOptions()), logger);
+            return new UnitService(httpClient, tokenProvider.Object, cache ?? new MemoryCache(new MemoryCacheOptions()), logger);
         }
 
         // ---------- GetEditAsync ----------
@@ -61,7 +57,7 @@ namespace RecipeBook.Services.Core.Tests
                 {
                     var auth = m.Headers.Authorization;
                     return auth is not null
-                           && auth.Scheme == JwtBearerDefaults.AuthenticationScheme
+                           && auth.Scheme == "Bearer"
                            && auth.Parameter == token
                            && m.RequestUri!.Query.Contains($"id={unitId}");
                 })

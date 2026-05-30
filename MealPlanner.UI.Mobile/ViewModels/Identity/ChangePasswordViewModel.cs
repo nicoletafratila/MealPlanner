@@ -4,7 +4,7 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class ChangePasswordViewModel(IdentityService authService) : BaseViewModel
+    public partial class ChangePasswordViewModel(AuthenticationService authService) : BaseViewModel
     {
         public ChangePasswordModel Model { get; } = new();
 
@@ -21,14 +21,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var (success, error) = await authService.ChangePasswordAsync(Model);
-                if (success)
+                var result = await authService.ChangePasswordAsync(Model);
+                if (result?.Succeeded == true)
                 {
                     SetSuccess("Password changed successfully.");
                     await Task.Delay(1500);
                     await Shell.Current.GoToAsync("..");
                 }
-                else SetError(error);
+                else SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

@@ -9,7 +9,7 @@ using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services.Core;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans

@@ -4,7 +4,7 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class RegisterViewModel(IdentityService authService) : BaseViewModel
+    public partial class RegisterViewModel(AuthenticationService authService) : BaseViewModel
     {
         public RegistrationModel Model { get; } = new();
 
@@ -21,13 +21,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var (success, error) = await authService.RegisterAsync(Model);
-                if (success)
+                var result = await authService.RegisterAsync(Model);
+                if (result?.Succeeded == true)
                 {
                     SetSuccess("Registration successful. Please log in.");
                     await Shell.Current.GoToAsync("..");
                 }
-                else SetError(error);
+                else SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

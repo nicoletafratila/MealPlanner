@@ -11,7 +11,7 @@ using MealPlanner.UI.Mobile.ViewModels.MealPlans;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using RecipeBook.Services.Core.Http;
+using RecipeBook.Services.Http;
 
 namespace MealPlanner.UI.Mobile
 {
@@ -46,12 +46,13 @@ namespace MealPlanner.UI.Mobile
             var services = builder.Services;
 
             // Infrastructure
+            services.AddMemoryCache();
             services.AddSingleton<ITokenProvider, SecureStorageTokenProvider>();
             services.AddSingleton<MobileAuthStateService>();
             services.AddSingleton<IAuthStateNotifier>(sp => sp.GetRequiredService<MobileAuthStateService>());
 
             // API HTTP clients
-            services.AddHttpClient<IdentityService>(c => c.BaseAddress = new Uri(identityBase));
+            services.AddHttpClient<AuthenticationService>(c => c.BaseAddress = new Uri(identityBase));
             services.AddHttpClient<ApplicationUserService>(c => c.BaseAddress = new Uri(identityBase));
             services.AddHttpClient<RecipeService>(c => c.BaseAddress = new Uri(recipeBase));
             services.AddHttpClient<RecipeCategoryService>(c => c.BaseAddress = new Uri(recipeBase));

@@ -10,7 +10,7 @@ using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using RecipeBook.Services.Core;
+using RecipeBook.Services.Http;
 using RecipeBook.Services.Core.Converters;
 using RecipeBook.Shared.Models;
 

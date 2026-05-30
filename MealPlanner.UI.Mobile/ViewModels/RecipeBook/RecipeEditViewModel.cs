@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using RecipeBook.Services.Core.Http; using RecipeBook.Shared.Models;
+using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
@@ -45,11 +45,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             ClearMessages();
             try
             {
-                var (success, error) = IsNew
+                var result = IsNew
                     ? await recipeService.AddAsync(Model)
                     : await recipeService.UpdateAsync(Model);
-                if (success) await Shell.Current.GoToAsync("..");
-                else SetError(error);
+                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                else SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

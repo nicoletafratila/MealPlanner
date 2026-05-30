@@ -4,7 +4,7 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class ResetPasswordViewModel(IdentityService authService) : BaseViewModel
+    public partial class ResetPasswordViewModel(AuthenticationService authService) : BaseViewModel
     {
         public ResetPasswordModel Model { get; } = new();
 
@@ -21,14 +21,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var (success, error) = await authService.ResetPasswordAsync(Model);
-                if (success)
+                var result = await authService.ResetPasswordAsync(Model);
+                if (result?.Succeeded == true)
                 {
                     SetSuccess("Password reset successfully. Please log in.");
                     await Task.Delay(1500);
                     await Shell.Current.GoToAsync("..");
                 }
-                else SetError(error);
+                else SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

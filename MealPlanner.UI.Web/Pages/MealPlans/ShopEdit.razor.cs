@@ -5,7 +5,7 @@ using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services.Core;
+using RecipeBook.Services.Http;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
 {

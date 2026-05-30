@@ -1,84 +1,70 @@
 using Common.Constants;
 using Common.Http;
+using Common.Models;
 using Common.Pagination;
 using Common.Services;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
+using Microsoft.Extensions.Logging;
 
-namespace RecipeBook.Services.Core.Http
+namespace RecipeBook.Services.Http
 {
-    public class UnitService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<UnitService> logger)
-        : ServiceBase(httpClient, tokenProvider)
+    public class UnitService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<UnitService> logger)
+        : ServiceBase(httpClient, tokenProvider), IUnitService
     {
-        private readonly string _controller =
-            RecipeBookControllers.UnitUrl
-            ?? throw new ArgumentException("Unit controller URL is not configured.");
+        private readonly string _controller = RecipeBookControllers.UnitUrl;
+        private static CancellationTokenSource _cacheToken = new();
 
-        public async Task<PagedList<UnitModel>?> SearchAsync(
-            QueryParameters<UnitModel>? queryParameters = null,
-            CancellationToken cancellationToken = default)
+        private static void InvalidateCache()
         {
-            try
-            {
-                return await SearchAsync(_controller, queryParameters, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} SearchAsync failed", nameof(UnitService));
-                return null;
-            }
+            var old = Interlocked.Exchange(ref _cacheToken, new CancellationTokenSource());
+            old.Cancel();
+            old.Dispose();
         }
 
         public async Task<UnitEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl(
-                $"{_controller}/{RecipeBookControllers.EditRoute}",
-                new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<UnitEditModel>(url, cancellationToken);
         }
 
-        public async Task<(bool Success, string? Error)> AddAsync(UnitEditModel model, CancellationToken cancellationToken = default)
+        public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null, CancellationToken cancellationToken = default)
         {
-            try
+            var cacheKey = $"units:{queryParameters?.PageNumber}:{queryParameters?.PageSize}:{string.Join(",", queryParameters?.Sorting?.Select(s => s.PropertyName) ?? [])}";
+            if (cache.TryGetValue(cacheKey, out PagedList<UnitModel>? cached)) return cached;
+
+            var result = await SearchAsync(_controller, queryParameters, cancellationToken);
+
+            if (result is not null)
             {
-                var response = await PostAsync(_controller, model, cancellationToken);
-                return response?.Succeeded == true ? (true, null) : (false, response?.Message ?? "Add failed.");
+                var opts = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30))
+                    .AddExpirationToken(new CancellationChangeToken(_cacheToken.Token));
+                cache.Set(cacheKey, result, opts);
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} AddAsync failed for model {@Model}", nameof(UnitService), model);
-                return (false, ex.Message);
-            }
+
+            return result;
         }
 
-        public async Task<(bool Success, string? Error)> UpdateAsync(UnitEditModel model, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> AddAsync(UnitEditModel model, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await PutAsync(_controller, model, cancellationToken);
-                return response?.Succeeded == true ? (true, null) : (false, response?.Message ?? "Update failed.");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} UpdateAsync failed for model {@Model}", nameof(UnitService), model);
-                return (false, ex.Message);
-            }
+            try { var r = await PostAsync(_controller, model, cancellationToken); InvalidateCache(); return r; }
+            catch (Exception ex) { logger.LogError(ex, "Unit AddAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<(bool Success, string? Error)> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> UpdateAsync(UnitEditModel model, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
-                var response = await DeleteAsync(url, cancellationToken);
-                return response?.Succeeded == true ? (true, null) : (false, response?.Message ?? "Delete failed.");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} DeleteAsync failed for id {Id}", nameof(UnitService), id);
-                return (false, ex.Message);
-            }
+            try { var r = await PutAsync(_controller, model, cancellationToken); InvalidateCache(); return r; }
+            catch (Exception ex) { logger.LogError(ex, "Unit UpdateAsync failed. Model {@Model}", model); throw; }
+        }
+
+        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            try { var r = await DeleteAsync(url, cancellationToken); InvalidateCache(); return r; }
+            catch (Exception ex) { logger.LogError(ex, "Unit DeleteAsync failed. Id {Id}", id); throw; }
         }
     }
 }

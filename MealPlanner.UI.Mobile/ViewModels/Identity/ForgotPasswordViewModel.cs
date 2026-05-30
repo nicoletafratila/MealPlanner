@@ -4,7 +4,7 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class ForgotPasswordViewModel(IdentityService authService) : BaseViewModel
+    public partial class ForgotPasswordViewModel(AuthenticationService authService) : BaseViewModel
     {
         public ForgotPasswordModel Model { get; } = new();
 
@@ -16,11 +16,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var (success, error) = await authService.ForgotPasswordAsync(Model);
-                if (success)
+                var result = await authService.ForgotPasswordAsync(Model);
+                if (result?.Succeeded == true)
                     SetSuccess("If the email exists, a reset link has been sent.");
                 else
-                    SetError(error);
+                    SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

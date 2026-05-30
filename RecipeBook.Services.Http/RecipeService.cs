@@ -1,103 +1,60 @@
 using Common.Constants;
 using Common.Http;
+using Common.Models;
 using Common.Pagination;
 using Common.Services;
 using MealPlanner.Shared.Models;
-using Microsoft.Extensions.Logging;
 using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
+using Microsoft.Extensions.Logging;
 
-namespace RecipeBook.Services.Core.Http
+namespace RecipeBook.Services.Http
 {
     public class RecipeService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<RecipeService> logger)
-        : ServiceBase(httpClient, tokenProvider)
+        : ServiceBase(httpClient, tokenProvider), IRecipeService
     {
-        private readonly string _controller =
-            RecipeBookControllers.RecipeUrl
-            ?? throw new ArgumentException("Recipe controller URL is not configured.");
+        private readonly string _controller = RecipeBookControllers.RecipeUrl;
 
         public async Task<RecipeModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
-            return await GetAsync<RecipeModel>(url, cancellationToken);
+            try { return await GetAsync<RecipeModel>(url, cancellationToken); }
+            catch (Exception ex) { logger.LogError(ex, "Failed to fetch RecipeModel for id {RecipeId}", id); return null; }
         }
 
         public async Task<RecipeEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl(
-                $"{_controller}/{RecipeBookControllers.EditRoute}",
-                new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<RecipeEditModel>(url, cancellationToken);
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, int shopId, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl(
-                $"{_controller}/{RecipeBookControllers.ShoppingListProductsRoute}",
-                new Dictionary<string, string?>
-                {
-                    [ApiQueryParams.RecipeId] = recipeId.ToString(),
-                    [ApiQueryParams.ShopId] = shopId.ToString()
-                });
+            var url = BuildUrl($"{_controller}/{RecipeBookControllers.ShoppingListProductsRoute}",
+                new Dictionary<string, string?> { [ApiQueryParams.RecipeId] = recipeId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });
             return await GetAsync<IList<ShoppingListProductEditModel>>(url, cancellationToken);
         }
 
-        public async Task<PagedList<RecipeModel>?> SearchAsync(
-            QueryParameters<RecipeModel>? queryParameters = null,
-            CancellationToken cancellationToken = default)
+        public Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null, CancellationToken cancellationToken = default)
+            => SearchAsync(_controller, queryParameters, cancellationToken);
+
+        public async Task<CommandResponse?> AddAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                return await SearchAsync(_controller, queryParameters, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} SearchAsync failed", nameof(RecipeService));
-                return null;
-            }
+            try { return await PostAsync(_controller, model, cancellationToken); }
+            catch (Exception ex) { logger.LogError(ex, "Recipe AddAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<(bool Success, string? Error)> AddAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> UpdateAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await PostAsync(_controller, model, cancellationToken);
-                return response?.Succeeded == true ? (true, null) : (false, response?.Message ?? "Add failed.");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} AddAsync failed for model {@Model}", nameof(RecipeService), model);
-                return (false, ex.Message);
-            }
+            try { return await PutAsync(_controller, model, cancellationToken); }
+            catch (Exception ex) { logger.LogError(ex, "Recipe UpdateAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<(bool Success, string? Error)> UpdateAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var response = await PutAsync(_controller, model, cancellationToken);
-                return response?.Succeeded == true ? (true, null) : (false, response?.Message ?? "Update failed.");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} UpdateAsync failed for model {@Model}", nameof(RecipeService), model);
-                return (false, ex.Message);
-            }
-        }
-
-        public async Task<(bool Success, string? Error)> DeleteAsync(int id, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
-                var response = await DeleteAsync(url, cancellationToken);
-                return response?.Succeeded == true ? (true, null) : (false, response?.Message ?? "Delete failed.");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{ServiceName} DeleteAsync failed for id {Id}", nameof(RecipeService), id);
-                return (false, ex.Message);
-            }
+            var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            try { return await DeleteAsync(url, cancellationToken); }
+            catch (Exception ex) { logger.LogError(ex, "Recipe DeleteAsync failed. Id {Id}", id); throw; }
         }
     }
 }

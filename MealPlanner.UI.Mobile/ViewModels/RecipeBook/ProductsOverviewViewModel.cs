@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using RecipeBook.Services.Core.Http; using RecipeBook.Shared.Models;
+using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
@@ -30,9 +30,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private async Task DeleteAsync(ProductModel p)
         {
-            var (success, error) = await productService.DeleteAsync(p.Id);
-            if (success) Products.Remove(p);
-            else SetError(error);
+            var result = await productService.DeleteAsync(p.Id);
+            if (result?.Succeeded == true) Products.Remove(p);
+            else SetError(result?.Message);
         }
     }
 }

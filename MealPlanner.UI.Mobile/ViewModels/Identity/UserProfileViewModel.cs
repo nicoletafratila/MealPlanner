@@ -6,7 +6,7 @@ using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, IdentityService authService) : BaseViewModel
+    public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, AuthenticationService authService) : BaseViewModel
     {
         [ObservableProperty]
         private ApplicationUserEditModel? _model;

@@ -1,28 +1,26 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
+using RecipeBook.Services.Http;
 using Common.Models;
 using Common.Pagination;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
 using RichardSzalay.MockHttp;
 
-namespace RecipeBook.Services.Core.Tests
+namespace RecipeBook.Services.Http.Tests
 {
     [TestFixture]
-    public class ProductCategoryServiceTests
+    public class ProductServiceTests
     {
-        private const string AuthTokenKey = Common.Constants.MealPlanner.AuthToken;
         private const string BaseAddress = "https://api.test/";
-        private const string ProductCategoryPath = "api/productcategory";
+        private const string ProductPath = "api/product";
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static ProductCategoryService CreateService(
+        private static ProductService CreateService(
             MockHttpMessageHandler mockHttp,
             string token = "test-token")
         {
@@ -31,15 +29,13 @@ namespace RecipeBook.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            sessionStorage
-                .Setup(s => s.GetItemAsync<string?>(AuthTokenKey, It.IsAny<CancellationToken>()))
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
+            var logger = Mock.Of<ILogger<ProductService>>();
 
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
-            var logger = Mock.Of<ILogger<ProductCategoryService>>();
-
-            return new ProductCategoryService(httpClient, tokenProvider, logger);
+            return new ProductService(httpClient, tokenProvider.Object, logger);
         }
 
         // ---------- GetEditAsync ----------
@@ -49,17 +45,17 @@ namespace RecipeBook.Services.Core.Tests
             // Arrange
             const string token = "my-jwt-token";
             var id = 42;
-            var expected = new ProductCategoryEditModel { Id = id };
+            var expected = new ProductEditModel { Id = id };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductCategoryPath}/edit*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/edit*")
                 .With(m =>
                 {
                     var auth = m.Headers.Authorization;
                     return auth is not null
-                           && auth.Scheme == JwtBearerDefaults.AuthenticationScheme
+                           && auth.Scheme == "Bearer"
                            && auth.Parameter == token
                            && m.RequestUri!.Query.Contains($"id={id}");
                 })
@@ -89,17 +85,17 @@ namespace RecipeBook.Services.Core.Tests
                 TotalCount = 2
             };
 
-            var paged = new PagedList<ProductCategoryModel>(
+            var paged = new PagedList<ProductModel>(
                 [
-                    new ProductCategoryModel(),
-                    new ProductCategoryModel()
+                    new ProductModel(),
+                    new ProductModel()
                 ],
                 metadata);
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductCategoryPath}/search*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
 
             var service = CreateService(mockHttp);
@@ -124,7 +120,7 @@ namespace RecipeBook.Services.Core.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductCategoryPath}/search*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
                 .Respond(HttpStatusCode.InternalServerError);
 
             var service = CreateService(mockHttp);
@@ -139,17 +135,17 @@ namespace RecipeBook.Services.Core.Tests
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new ProductCategoryEditModel { Id = 1 };
+            var model = new ProductEditModel { Id = 1 };
             var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ProductCategoryPath}")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ProductPath}")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ProductCategoryEditModel>(body, JsonOptions);
+                    var deserialized = JsonSerializer.Deserialize<ProductEditModel>(body, JsonOptions);
                     return deserialized is not null && deserialized.Id == model.Id;
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
@@ -173,12 +169,12 @@ namespace RecipeBook.Services.Core.Tests
         public void AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new ProductCategoryEditModel { Id = 1 };
+            var model = new ProductEditModel { Id = 1 };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ProductCategoryPath}")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ProductPath}")
                 .Respond(HttpStatusCode.BadRequest);
 
             var service = CreateService(mockHttp);
@@ -193,17 +189,17 @@ namespace RecipeBook.Services.Core.Tests
         public async Task UpdateAsync_PutsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new ProductCategoryEditModel { Id = 2 };
+            var model = new ProductEditModel { Id = 2 };
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Put, $"{BaseAddress}{ProductCategoryPath}")
+                .Expect(HttpMethod.Put, $"{BaseAddress}{ProductPath}")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ProductCategoryEditModel>(body, JsonOptions);
+                    var deserialized = JsonSerializer.Deserialize<ProductEditModel>(body, JsonOptions);
                     return deserialized is not null && deserialized.Id == model.Id;
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
@@ -223,12 +219,12 @@ namespace RecipeBook.Services.Core.Tests
         public void UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new ProductCategoryEditModel { Id = 2 };
+            var model = new ProductEditModel { Id = 2 };
 
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Put, $"{BaseAddress}{ProductCategoryPath}")
+                .Expect(HttpMethod.Put, $"{BaseAddress}{ProductPath}")
                 .Respond(HttpStatusCode.BadRequest);
 
             var service = CreateService(mockHttp);
@@ -249,7 +245,7 @@ namespace RecipeBook.Services.Core.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Delete, $"{BaseAddress}{ProductCategoryPath}*")
+                .Expect(HttpMethod.Delete, $"{BaseAddress}{ProductPath}*")
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
 
@@ -273,7 +269,7 @@ namespace RecipeBook.Services.Core.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Delete, $"{BaseAddress}{ProductCategoryPath}*")
+                .Expect(HttpMethod.Delete, $"{BaseAddress}{ProductPath}*")
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond(HttpStatusCode.NotFound);
 

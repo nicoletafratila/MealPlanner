@@ -1,6 +1,9 @@
-using System.Net.Http.Json;using Common.Models; using Common.Pagination; using MealPlanner.Shared.Models; using Microsoft.Extensions.Logging; using RecipeBook.Shared.Models;
+using Common.Models;
+using Common.Pagination;
+using MealPlanner.Shared.Models;
+using RecipeBook.Shared.Models;
 
-namespace RecipeBook.Services.Core
+namespace RecipeBook.Services.Http
 {
     public interface IRecipeService
     {

@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using RecipeBook.Services.Core.Http; using RecipeBook.Shared.Models;
+using System.Collections.ObjectModel;using Common.Pagination; using CommunityToolkit.Mvvm.ComponentModel; using CommunityToolkit.Mvvm.Input; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
@@ -31,9 +31,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private async Task DeleteAsync(RecipeCategoryModel cat)
         {
-            var (success, error) = await categoryService.DeleteAsync(cat.Id);
-            if (success) Categories.Remove(cat);
-            else SetError(error);
+            var result = await categoryService.DeleteAsync(cat.Id);
+            if (result?.Succeeded == true) Categories.Remove(cat);
+            else SetError(result?.Message);
         }
     }
 }
