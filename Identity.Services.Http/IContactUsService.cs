@@ -1,6 +1,7 @@
-using System.Net.Http.Json;using Common.Models; using Identity.Shared.Models; using Microsoft.Extensions.Logging;
+using Common.Models;
+using Identity.Shared.Models;
 
-namespace Identity.Services.Core
+namespace Identity.Services.Http
 {
     public interface IContactUsService
     {

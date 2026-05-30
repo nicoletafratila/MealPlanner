@@ -12,13 +12,12 @@ PM> Script-migration
 
 
 
-filtru nu mai merge la retete
 unit tests on what is missing, except mobile app
 
 
 
 
-
+filtru nu mai merge la retete
 schimba ids in guid
 warning cu automapper
 Error occurred while getting package vulnerability data: Unable to load the service index for source https://suvoda-005514975141.d.codeartifact.eu-west-1.amazonaws.com/nuget/sv-framework-nuget/v3/index.json.

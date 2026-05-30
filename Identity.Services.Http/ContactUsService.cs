@@ -6,7 +6,7 @@ using Identity.Shared.Constants;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Identity.Services.Core
+namespace Identity.Services.Http
 {
     public class ContactUsService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<ContactUsService> logger)
         : ServiceBase(httpClient, tokenProvider), IContactUsService

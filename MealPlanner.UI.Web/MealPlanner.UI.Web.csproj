@@ -55,6 +55,7 @@
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\Common.UI\Common.UI.csproj" />
     <ProjectReference Include="..\Identity.Services.Core\Identity.Services.Core.csproj" />
+    <ProjectReference Include="..\Identity.Services.Http\Identity.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
     <ProjectReference Include="..\RecipeBook.Api\RecipeBook.Api.csproj" />
     <ProjectReference Include="..\MealPlanner.Services.Http\MealPlanner.Services.Http.csproj" />

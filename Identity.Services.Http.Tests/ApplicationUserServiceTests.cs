@@ -1,22 +1,20 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
 using Common.Models;
 using Common.Pagination;
+using Identity.Services.Http;
 using Identity.Shared.Constants;
 using Identity.Shared.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 
-namespace Identity.Services.Core.Tests
+namespace Identity.Services.Http.Tests
 {
     [TestFixture]
     public class ApplicationUserServiceTests
     {
-        private const string AuthTokenKey = Common.Constants.MealPlanner.AuthToken;
         private const string BaseAddress = "https://api.test/";
         private const string UserPath = IdentityControllers.ApplicationUserUrl;
 
@@ -24,7 +22,6 @@ namespace Identity.Services.Core.Tests
 
         private static ApplicationUserService CreateService(
             MockHttpMessageHandler mockHttp,
-            Mock<ISessionStorageService>? storageMockOut = null,
             string token = "test-token")
         {
             var httpClient = new HttpClient(mockHttp)
@@ -32,17 +29,13 @@ namespace Identity.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            sessionStorage
-                .Setup(s => s.GetItemAsync<string?>(AuthTokenKey, It.IsAny<CancellationToken>()))
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
-
-            storageMockOut?.SetReturnsDefault(sessionStorage.Object);
-
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
             var logger = Mock.Of<ILogger<ApplicationUserService>>();
 
-            return new ApplicationUserService(httpClient, tokenProvider, logger);
+            return new ApplicationUserService(httpClient, tokenProvider.Object, logger);
         }
 
         // ---------- SearchAsync ----------

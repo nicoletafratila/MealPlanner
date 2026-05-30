@@ -35,9 +35,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             ClearMessages();
             try
             {
-                var (success, error) = await userService.UpdateAsync(Model);
-                if (success) SetSuccess("Profile updated.");
-                else SetError(error);
+                var result = await userService.UpdateAsync(Model);
+                if (result?.Succeeded == true) SetSuccess("Profile updated.");
+                else SetError(result?.Message);
             }
             finally { IsBusy = false; }
         }

@@ -1,15 +1,15 @@
 using System.Net;
 using System.Text.Json;
-using Blazored.SessionStorage;
-using Common.Core;
+using Common.Http;
 using Common.Models;
+using Identity.Services.Http;
 using Identity.Shared.Constants;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 
-namespace Identity.Services.Core.Tests
+namespace Identity.Services.Http.Tests
 {
     [TestFixture]
     public class AuthenticationServiceTests
@@ -19,7 +19,7 @@ namespace Identity.Services.Core.Tests
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static (AuthenticationService service, Mock<ISessionStorageService> storageMock) CreateService(
+        private static (AuthenticationService service, Mock<ITokenProvider> tokenMock) CreateService(
             MockHttpMessageHandler mockHttp)
         {
             var httpClient = new HttpClient(mockHttp)
@@ -27,12 +27,11 @@ namespace Identity.Services.Core.Tests
                 BaseAddress = new Uri(BaseAddress)
             };
 
-            var sessionStorage = new Mock<ISessionStorageService>();
-            var tokenProvider = new TokenProvider(sessionStorage.Object);
+            var tokenMock = new Mock<ITokenProvider>();
             var logger = Mock.Of<ILogger<AuthenticationService>>();
 
-            var service = new AuthenticationService(httpClient, tokenProvider, logger);
-            return (service, sessionStorage);
+            var service = new AuthenticationService(httpClient, tokenMock.Object, logger);
+            return (service, tokenMock);
         }
 
         // ---------- LoginAsync ----------
@@ -54,11 +53,11 @@ namespace Identity.Services.Core.Tests
                 .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/login")
                 .Respond("application/json", JsonSerializer.Serialize(loginResponse, JsonOptions));
 
-            var (service, storageMock) = CreateService(mockHttp);
+            var (service, tokenMock) = CreateService(mockHttp);
 
-            storageMock
-                .Setup(s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Returns(ValueTask.CompletedTask)
+            tokenMock
+                .Setup(t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
                 .Verifiable();
 
             // Act
@@ -71,8 +70,8 @@ namespace Identity.Services.Core.Tests
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("ok"));
             }
-            storageMock.Verify(
-                s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, "jwt-token", It.IsAny<CancellationToken>()),
+            tokenMock.Verify(
+                t => t.SetTokenAsync("jwt-token", It.IsAny<CancellationToken>()),
                 Times.Once);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -95,7 +94,7 @@ namespace Identity.Services.Core.Tests
                 .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/login")
                 .Respond("application/json", JsonSerializer.Serialize(loginResponse, JsonOptions));
 
-            var (service, storageMock) = CreateService(mockHttp);
+            var (service, tokenMock) = CreateService(mockHttp);
 
             // Act
             var result = await service.LoginAsync(loginModel);
@@ -107,8 +106,8 @@ namespace Identity.Services.Core.Tests
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("invalid credentials"));
             }
-            storageMock.Verify(
-                s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            tokenMock.Verify(
+                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -125,7 +124,7 @@ namespace Identity.Services.Core.Tests
                 .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/login")
                 .Respond(HttpStatusCode.BadRequest, "text/plain", errorBody);
 
-            var (service, storageMock) = CreateService(mockHttp);
+            var (service, tokenMock) = CreateService(mockHttp);
 
             // Act
             var result = await service.LoginAsync(loginModel);
@@ -137,8 +136,8 @@ namespace Identity.Services.Core.Tests
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo(errorBody));
             }
-            storageMock.Verify(
-                s => s.SetItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            tokenMock.Verify(
+                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -159,15 +158,15 @@ namespace Identity.Services.Core.Tests
                 .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/logout")
                 .Respond("application/json", JsonSerializer.Serialize(logoutResponse, JsonOptions));
 
-            var (service, storageMock) = CreateService(mockHttp);
+            var (service, tokenMock) = CreateService(mockHttp);
 
-            storageMock
-                .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
+            tokenMock
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync("existing-token");
 
-            storageMock
-                .Setup(s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
-                .Returns(ValueTask.CompletedTask)
+            tokenMock
+                .Setup(t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
                 .Verifiable();
 
             // Act
@@ -180,8 +179,8 @@ namespace Identity.Services.Core.Tests
                 Assert.That(result!.Succeeded, Is.True);
                 Assert.That(result.Message, Is.EqualTo("logged out"));
             }
-            storageMock.Verify(
-                s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()),
+            tokenMock.Verify(
+                t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()),
                 Times.Once);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -197,10 +196,10 @@ namespace Identity.Services.Core.Tests
                 .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/logout")
                 .Respond(HttpStatusCode.BadRequest, "text/plain", errorBody);
 
-            var (service, storageMock) = CreateService(mockHttp);
+            var (service, tokenMock) = CreateService(mockHttp);
 
-            storageMock
-                .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
+            tokenMock
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync("existing-token");
 
             // Act
@@ -213,8 +212,8 @@ namespace Identity.Services.Core.Tests
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo(errorBody));
             }
-            storageMock.Verify(
-                s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()),
+            tokenMock.Verify(
+                t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()),
                 Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -234,10 +233,10 @@ namespace Identity.Services.Core.Tests
                 .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/logout")
                 .Respond("application/json", JsonSerializer.Serialize(logoutResponse, JsonOptions));
 
-            var (service, storageMock) = CreateService(mockHttp);
+            var (service, tokenMock) = CreateService(mockHttp);
 
-            storageMock
-                .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
+            tokenMock
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync("existing-token");
 
             // Act
@@ -250,8 +249,8 @@ namespace Identity.Services.Core.Tests
                 Assert.That(result!.Succeeded, Is.False);
                 Assert.That(result.Message, Is.EqualTo("logout failed"));
             }
-            storageMock.Verify(
-                s => s.RemoveItemAsync(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()),
+            tokenMock.Verify(
+                t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()),
                 Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }

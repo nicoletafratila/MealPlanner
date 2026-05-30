@@ -37,9 +37,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [RelayCommand]
         private async Task UnlockUserAsync(string userId)
         {
-            var (success, error) = await userService.UnlockAsync(userId);
-            if (success) await LoadAsync();
-            else SetError(error);
+            var result = await userService.UnlockAsync(userId);
+            if (result?.Succeeded == true) await LoadAsync();
+            else SetError(result?.Message);
         }
 
         [RelayCommand] private async Task NextPageAsync() { CurrentPage++; await LoadAsync(); }

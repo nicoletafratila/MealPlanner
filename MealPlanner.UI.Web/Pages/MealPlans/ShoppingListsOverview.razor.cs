@@ -4,6 +4,7 @@ using Common.Constants;
 using Common.Pagination;
 using Common.UI;
 using Identity.Services.Core;
+using Identity.Services.Http;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Shared;

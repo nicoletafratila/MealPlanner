@@ -1,13 +1,14 @@
 using System.Net;
 using System.Text.Json;
 using Common.Models;
+using Identity.Services.Http;
 using Identity.Shared.Constants;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 
-namespace Identity.Services.Core.Tests
+namespace Identity.Services.Http.Tests
 {
     [TestFixture]
     public class ContactUsServiceTests
