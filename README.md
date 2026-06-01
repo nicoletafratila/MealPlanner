@@ -13,7 +13,6 @@ PM> Script-migration
 
 
 
-
 filtru nu mai merge la retete
 schimba ids in guid
 warning cu automapper

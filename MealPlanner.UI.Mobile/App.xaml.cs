@@ -13,15 +13,15 @@ namespace MealPlanner.UI.Mobile
             InitializeComponent();
             _authState = authState;
             _services = services;
+            MainPage = new NavigationPage(services.GetRequiredService<LoginPage>());
         }
 
         protected override async void OnStart()
         {
             base.OnStart();
             var isAuthenticated = await _authState.IsAuthenticatedAsync();
-            Windows[0].Page = isAuthenticated
-                ? _services.GetRequiredService<AppShell>()
-                : new NavigationPage(_services.GetRequiredService<LoginPage>());
+            if (isAuthenticated)
+                Windows[0].Page = _services.GetRequiredService<AppShell>();
         }
     }
 }
