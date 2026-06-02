@@ -30,7 +30,7 @@ namespace Identity.Services.Http
             if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("UserId must not be empty.", nameof(userId));
             try
             {
-                using var response = await httpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.UnlockRoute}", new { UserId = userId }, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.UnlockRoute}", new { UserId = userId }, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -52,7 +52,7 @@ namespace Identity.Services.Http
             ArgumentNullException.ThrowIfNull(model);
             try
             {
-                using var response = await httpClient.PutAsJsonAsync(_controller, model, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PutAsJsonAsync(_controller, model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync(cancellationToken);

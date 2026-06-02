@@ -14,21 +14,23 @@ namespace Common.Services
             PropertyNameCaseInsensitive = true
         };
 
+        protected HttpClient HttpClient { get; } = httpClient;
+
         protected ITokenProvider TokenProvider { get; } = tokenProvider;
 
         protected async Task EnsureAuthAsync(CancellationToken cancellationToken) =>
-            await httpClient.EnsureAuthorizationHeaderAsync(TokenProvider, cancellationToken);
+            await HttpClient.EnsureAuthorizationHeaderAsync(TokenProvider, cancellationToken);
 
         protected async Task<T?> GetAsync<T>(string url, CancellationToken cancellationToken)
         {
             await EnsureAuthAsync(cancellationToken);
-            return await httpClient.GetFromJsonAsync<T>(url, JsonOptions, cancellationToken);
+            return await HttpClient.GetFromJsonAsync<T>(url, JsonOptions, cancellationToken);
         }
 
         protected async Task<CommandResponse?> PostAsync<TBody>(string url, TBody body, CancellationToken cancellationToken)
         {
             await EnsureAuthAsync(cancellationToken);
-            using var response = await httpClient.PostAsJsonAsync(url, body, JsonOptions, cancellationToken);
+            using var response = await HttpClient.PostAsJsonAsync(url, body, JsonOptions, cancellationToken);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
         }
@@ -36,7 +38,7 @@ namespace Common.Services
         protected async Task<TResponse?> PostAsync<TBody, TResponse>(string url, TBody body, CancellationToken cancellationToken)
         {
             await EnsureAuthAsync(cancellationToken);
-            using var response = await httpClient.PostAsJsonAsync(url, body, JsonOptions, cancellationToken);
+            using var response = await HttpClient.PostAsJsonAsync(url, body, JsonOptions, cancellationToken);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken);
         }
@@ -44,7 +46,7 @@ namespace Common.Services
         protected async Task<CommandResponse?> PutAsync<TBody>(string url, TBody body, CancellationToken cancellationToken)
         {
             await EnsureAuthAsync(cancellationToken);
-            using var response = await httpClient.PutAsJsonAsync(url, body, JsonOptions, cancellationToken);
+            using var response = await HttpClient.PutAsJsonAsync(url, body, JsonOptions, cancellationToken);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
         }
@@ -52,7 +54,7 @@ namespace Common.Services
         protected async Task<CommandResponse?> DeleteAsync(string url, CancellationToken cancellationToken)
         {
             await EnsureAuthAsync(cancellationToken);
-            using var response = await httpClient.DeleteAsync(url, cancellationToken);
+            using var response = await HttpClient.DeleteAsync(url, cancellationToken);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
         }
@@ -65,7 +67,7 @@ namespace Common.Services
             var query = BuildSearchQuery(queryParameters);
             var fullUrl = BuildUrl($"{url}/{ApiQueryParams.SearchRoute}", query);
             await EnsureAuthAsync(cancellationToken);
-            using var response = await httpClient.GetAsync(fullUrl, cancellationToken);
+            using var response = await HttpClient.GetAsync(fullUrl, cancellationToken);
             response.EnsureSuccessStatusCode();
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return await JsonSerializer.DeserializeAsync<PagedList<T>>(stream, JsonOptions, cancellationToken);

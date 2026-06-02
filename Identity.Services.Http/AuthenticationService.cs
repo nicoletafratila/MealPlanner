@@ -17,7 +17,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                using var response = await httpClient.PostAsJsonAsync(
+                using var response = await HttpClient.PostAsJsonAsync(
                     $"{_controller}/{IdentityControllers.LoginRoute}", model, JsonOptions, cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
@@ -45,7 +45,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                using var response = await httpClient.PostAsync($"{_controller}/{IdentityControllers.LogoutRoute}", content: null, cancellationToken);
+                using var response = await HttpClient.PostAsync($"{_controller}/{IdentityControllers.LogoutRoute}", content: null, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -63,7 +63,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                using var response = await httpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.RegisterRoute}", model, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.RegisterRoute}", model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -80,7 +80,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                using var response = await httpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.ForgotPasswordRoute}", model, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.ForgotPasswordRoute}", model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode) { logger.LogWarning("ForgotPasswordAsync failed."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed); }
                 return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
             }
@@ -91,7 +91,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                using var response = await httpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.ResetPasswordRoute}", model, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.ResetPasswordRoute}", model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode) { logger.LogWarning("ResetPasswordAsync failed."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed); }
                 return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
             }
@@ -103,7 +103,7 @@ namespace Identity.Services.Http
             try
             {
                 await EnsureAuthAsync(cancellationToken);
-                using var response = await httpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.ChangePasswordRoute}", model, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.ChangePasswordRoute}", model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync(cancellationToken);

@@ -18,7 +18,7 @@ namespace Identity.Services.Http
             try
             {
                 // Contact form does not require authentication
-                using var response = await httpClient.PostAsJsonAsync(
+                using var response = await HttpClient.PostAsJsonAsync(
                     $"{_controller}/{IdentityControllers.SendRoute}", model, JsonOptions, cancellationToken);
 
                 if (!response.IsSuccessStatusCode)

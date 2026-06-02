@@ -5,12 +5,18 @@ namespace MealPlanner.UI.Mobile
     public partial class App : Application
     {
         private readonly MobileAuthStateService _authState;
+        private readonly IServiceProvider _services;
 
         public App(MobileAuthStateService authState, IServiceProvider services)
         {
             InitializeComponent();
             _authState = authState;
-            MainPage = services.GetRequiredService<AppShell>();
+            _services = services;
+        }
+
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            return new Window(_services.GetRequiredService<AppShell>());
         }
 
         protected override async void OnStart()
