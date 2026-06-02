@@ -381,6 +381,35 @@ namespace MealPlanner.Services.Http.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
+        // ---------- GetMenuName ----------
+
+        [Test]
+        public void GetMenuName_ReturnsFormattedStringWithCurrentYearAndWeek()
+        {
+            var service = CreateService(new MockHttpMessageHandler());
+
+            var now = DateTime.Now;
+            var calendar = System.Globalization.CultureInfo.InvariantCulture.Calendar;
+            int expectedWeek = calendar.GetWeekOfYear(
+                now,
+                System.Globalization.CalendarWeekRule.FirstFourDayWeek,
+                DayOfWeek.Monday);
+
+            var result = service.GetMenuName("Meniu");
+
+            Assert.That(result, Is.EqualTo($"Meniu {now.Year}/{expectedWeek}"));
+        }
+
+        [Test]
+        public void GetMenuName_PreservesCustomPrefix()
+        {
+            var service = CreateService(new MockHttpMessageHandler());
+
+            var result = service.GetMenuName("MyMenu");
+
+            Assert.That(result, Does.StartWith("MyMenu "));
+        }
+
         // ---------- DeleteAsync ----------
         [Test]
         public async Task DeleteAsync_SendsDeleteWithId_AndReturnsCommandResponse()

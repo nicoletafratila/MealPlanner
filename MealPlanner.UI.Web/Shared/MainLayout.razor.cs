@@ -26,6 +26,18 @@ namespace MealPlanner.UI.Web.Shared
             }
         }
 
+        public async Task RefreshCurrentMealPlanAsync()
+        {
+            try
+            {
+                _currentMealPlan = await MealPlanService.GetCurrentAsync();
+            }
+            catch
+            {
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+
         public bool IsErrorActive { get; private set; }
         public bool IsInfoActive { get; private set; }
         public bool IsWarningActive { get; private set; }

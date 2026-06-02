@@ -1,4 +1,18 @@
-using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Models; using Common.Pagination; using Common.UI; using MealPlanner.Services.Http; using MealPlanner.UI.Web.Pages.RecipeBooks; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
+using System.Reflection;
+using BlazorBootstrap;
+using Blazored.SessionStorage;
+using Bunit;
+using Common.Models;
+using Common.Pagination;
+using Common.UI;
+using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Pages.RecipeBooks;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using RecipeBook.Services.Http;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -61,6 +75,27 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             return _ctx.Render<RecipesOverview>(parameters =>
             {
                 parameters.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+            });
+        }
+
+        private IRenderedComponent<RecipesOverview> RenderWithRefreshCallback(Action onRefresh)
+        {
+            Func<Task> callback = () => { onRefresh(); return Task.CompletedTask; };
+            return _ctx.Render<RecipesOverview>(parameters =>
+            {
+                parameters.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+                parameters.AddCascadingValue("RefreshCurrentMealPlan", callback);
+            });
+        }
+
+        private static async Task InvokeAddToMealPlanAsync(IRenderedComponent<RecipesOverview> cut, RecipeModel recipe)
+        {
+            var method = typeof(RecipesOverview).GetMethod("AddToMealPlanAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null, "AddToMealPlanAsync not found via reflection.");
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [recipe])!;
+                await task;
             });
         }
 
@@ -246,6 +281,204 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 Assert.That(result.Data!.Count(), Is.EqualTo(2));
                 Assert.That(result.TotalCount, Is.EqualTo(2));
             }
+        }
+
+        // ---------- AddToMealPlanAsync ----------
+
+        [Test]
+        public async Task AddToMealPlanAsync_WhenNoCurrentPlan_CreatesPlanWithRecipeAndShowsCreatedMessage()
+        {
+            // Arrange
+            var recipe = new RecipeModel { Id = 1, Name = "Pasta" };
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((MealPlanModel?)null);
+            _mealPlanServiceMock
+                .Setup(s => s.GetMenuName(It.IsAny<string>()))
+                .Returns("Meniu 2025/23");
+            _mealPlanServiceMock
+                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderWithMessageComponent();
+
+            // Act
+            await InvokeAddToMealPlanAsync(cut, recipe);
+
+            // Assert — plan created with the recipe included
+            _mealPlanServiceMock.Verify(
+                s => s.AddAsync(
+                    It.Is<MealPlanEditModel>(m =>
+                        m.Name == "Meniu 2025/23" &&
+                        m.Recipes != null &&
+                        m.Recipes.Count == 1 &&
+                        m.Recipes[0].Id == recipe.Id),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(
+                    It.Is<string>(s => s.Contains("created")),
+                    It.IsAny<string>(),
+                    CancellationToken.None),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task AddToMealPlanAsync_WhenNoCurrentPlan_InvokesRefreshCallback()
+        {
+            // Arrange
+            var recipe = new RecipeModel { Id = 2 };
+            var refreshCalled = false;
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((MealPlanModel?)null);
+            _mealPlanServiceMock
+                .Setup(s => s.GetMenuName(It.IsAny<string>()))
+                .Returns("Meniu 2025/23");
+            _mealPlanServiceMock
+                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderWithRefreshCallback(() => refreshCalled = true);
+
+            // Act
+            await InvokeAddToMealPlanAsync(cut, recipe);
+
+            // Assert
+            Assert.That(refreshCalled, Is.True);
+        }
+
+        [Test]
+        public async Task AddToMealPlanAsync_WhenNoCurrentPlan_AndCreateFails_ShowsError()
+        {
+            // Arrange
+            var recipe = new RecipeModel { Id = 3 };
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((MealPlanModel?)null);
+            _mealPlanServiceMock
+                .Setup(s => s.GetMenuName(It.IsAny<string>()))
+                .Returns("Meniu 2025/23");
+            _mealPlanServiceMock
+                .Setup(s => s.AddAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = false, Message = "save error" });
+
+            var cut = RenderWithMessageComponent();
+
+            // Act
+            await InvokeAddToMealPlanAsync(cut, recipe);
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("save error", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                Times.Once);
+            _mealPlanServiceMock.Verify(
+                s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AddsRecipeAndShowsInfo()
+        {
+            // Arrange
+            var recipe = new RecipeModel { Id = 5, Name = "Salad" };
+            var currentPlan = new MealPlanModel { Id = 10, Name = "This week" };
+            var editModel = new MealPlanEditModel { Id = 10, Name = "This week", Recipes = [] };
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(currentPlan);
+            _mealPlanServiceMock
+                .Setup(s => s.GetEditAsync(10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(editModel);
+            _mealPlanServiceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderWithMessageComponent();
+
+            // Act
+            await InvokeAddToMealPlanAsync(cut, recipe);
+
+            // Assert
+            _mealPlanServiceMock.Verify(
+                s => s.UpdateAsync(
+                    It.Is<MealPlanEditModel>(m => m.Recipes!.Any(r => r.Id == recipe.Id)),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(
+                    "Recipe has been added successfully",
+                    It.IsAny<string>(),
+                    CancellationToken.None),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AndRecipeAlreadyAdded_DoesNotUpdate()
+        {
+            // Arrange
+            var recipe = new RecipeModel { Id = 7 };
+            var currentPlan = new MealPlanModel { Id = 10 };
+            var editModel = new MealPlanEditModel
+            {
+                Id = 10,
+                Recipes = [new RecipeModel { Id = 7 }]
+            };
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(currentPlan);
+            _mealPlanServiceMock
+                .Setup(s => s.GetEditAsync(10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(editModel);
+
+            var cut = RenderWithMessageComponent();
+
+            // Act
+            await InvokeAddToMealPlanAsync(cut, recipe);
+
+            // Assert — duplicate silently ignored
+            _mealPlanServiceMock.Verify(
+                s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AndUpdateFails_ShowsError()
+        {
+            // Arrange
+            var recipe = new RecipeModel { Id = 8 };
+            var currentPlan = new MealPlanModel { Id = 10 };
+            var editModel = new MealPlanEditModel { Id = 10, Recipes = [] };
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(currentPlan);
+            _mealPlanServiceMock
+                .Setup(s => s.GetEditAsync(10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(editModel);
+            _mealPlanServiceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = false, Message = "update failed" });
+
+            var cut = RenderWithMessageComponent();
+
+            // Act
+            await InvokeAddToMealPlanAsync(cut, recipe);
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("update failed", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                Times.Once);
         }
     }
 }

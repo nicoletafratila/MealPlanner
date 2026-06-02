@@ -29,6 +29,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
 
+        [CascadingParameter(Name = "RefreshCurrentMealPlan")]
+        private Func<Task>? RefreshCurrentMealPlan { get; set; }
+
         [Parameter]
         public string? Id { get; set; }
 
@@ -87,7 +90,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 MealPlan = new MealPlanEditModel
                 {
                     Recipes = [],
-                    Name = GetMenuName(),
+                    Name = MealPlanService.GetMenuName(Resources.MealPlanEdit.MenuName),
                 };
             }
             else
@@ -132,6 +135,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
+            if (RefreshCurrentMealPlan is not null)
+                await RefreshCurrentMealPlan();
             await ShowInfoAsync(Resources.MealPlanEdit.SaveSucceeded);
             NavigateToOverview();
         }
@@ -179,6 +184,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
+            if (RefreshCurrentMealPlan is not null)
+                await RefreshCurrentMealPlan();
             await ShowInfoAsync(Resources.MealPlanEdit.DeleteSucceeded);
             NavigateToOverview();
         }
@@ -362,12 +369,5 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task ShowInfoAsync(string message)
             => await MessageComponent!.ShowInfoAsync(message);
 
-        private static string GetMenuName()
-        {
-            var now = DateTime.Now;
-            var calendar = System.Globalization.CultureInfo.InvariantCulture.Calendar;
-            int week = calendar.GetWeekOfYear(now, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-            return $"{Resources.MealPlansOverview.MenuName} {now.Year}/{week}";
-        }
     }
 }

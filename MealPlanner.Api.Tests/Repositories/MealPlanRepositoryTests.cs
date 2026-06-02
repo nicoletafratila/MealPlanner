@@ -2,6 +2,7 @@ using Common.Data.DataContext;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Data.Entities;
@@ -42,6 +43,24 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             context = _provider.GetRequiredService<MealPlannerDbContext>();
             return new MealPlanRepository(context);
+        }
+
+        // SQLite is required for tests that use ExecuteDeleteAsync (unsupported by InMemory).
+        private static (MealPlanRepository repo, MealPlannerDbContext ctx, SqliteConnection connection) CreateSqliteRepository()
+        {
+            var connection = new SqliteConnection("Data Source=:memory:");
+            connection.Open();
+
+            var assemblies = new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]);
+            var options = new DbContextOptionsBuilder<MealPlannerDbContext>()
+                .UseSqlite(connection)
+                .Options;
+
+            var ctx = new MealPlannerDbContext(options, assemblies);
+            return (new MealPlanRepository(ctx), ctx, connection);
         }
 
         private static (MealPlan plan, Recipe recipe, Product product) CreateMealPlanGraph(
@@ -511,6 +530,70 @@ namespace MealPlanner.Api.Tests.Repositories
             {
                 Assert.That(r1, Is.Null);
                 Assert.That(r2, Is.Null);
+            }
+        }
+
+        // ---------- DeleteAsync ----------
+
+        [Test]
+        public async Task DeleteAsync_RemovesJunctionRowsAndMealPlan()
+        {
+            var (repo, ctx, connection) = CreateSqliteRepository();
+            await using var _ = ctx;
+            using var __ = connection;
+
+            await ctx.Database.EnsureCreatedAsync();
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Cat", DisplaySequence = 1 });
+            ctx.Recipes.Add(new Recipe { Id = 10, Name = "R1", RecipeCategoryId = 1 });
+            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan", UserId = "u1" });
+            ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            Assert.That(entity, Is.Not.Null);
+
+            // Act
+            await repo.DeleteAsync(entity!, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(await ctx.MealPlans.AnyAsync(mp => mp.Id == 1), Is.False);
+                Assert.That(await ctx.MealPlanRecipes.AnyAsync(mpr => mpr.MealPlanId == 1), Is.False);
+            }
+        }
+
+        [Test]
+        public async Task DeleteAsync_WhenRecipesShareCategory_DoesNotThrow()
+        {
+            // Regression: deleting a plan whose recipes share a RecipeCategory used to throw
+            // InvalidOperationException due to EF identity-map conflicts on DbContext.Remove.
+            var (repo, ctx, connection) = CreateSqliteRepository();
+            await using var _ = ctx;
+            using var __ = connection;
+
+            await ctx.Database.EnsureCreatedAsync();
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Main", DisplaySequence = 1 });
+            ctx.Recipes.AddRange(
+                new Recipe { Id = 10, Name = "R1", RecipeCategoryId = 1 },
+                new Recipe { Id = 11, Name = "R2", RecipeCategoryId = 1 });
+            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan", UserId = "u1" });
+            ctx.MealPlanRecipes.AddRange(
+                new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 },
+                new MealPlanRecipe { MealPlanId = 1, RecipeId = 11 });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            Assert.That(entity, Is.Not.Null);
+
+            // Act & Assert — must not throw
+            Assert.DoesNotThrowAsync(async () =>
+                await repo.DeleteAsync(entity!, CancellationToken.None));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(await ctx.MealPlans.AnyAsync(mp => mp.Id == 1), Is.False);
+                Assert.That(await ctx.MealPlanRecipes.AnyAsync(mpr => mpr.MealPlanId == 1), Is.False);
             }
         }
 

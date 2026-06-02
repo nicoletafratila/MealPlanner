@@ -4,9 +4,9 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
-using MealPlanner.UI.Web.Services;
-using Identity.Services.Http;
 using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -31,6 +31,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter(Name = "RefreshCurrentMealPlan")]
+        private Func<Task>? RefreshCurrentMealPlan { get; set; }
 
         [Inject]
         public IRecipeService RecipeService { get; set; } = default!;
@@ -234,9 +237,23 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 return;
 
             var mealPlan = await MealPlanService.GetCurrentAsync();
+
             if (mealPlan is null)
             {
-                await ShowErrorAsync(Resources.RecipesOverview.NoCurrentMealPlan);
+                var newPlan = new MealPlanEditModel
+                {
+                    Name = MealPlanService.GetMenuName(Resources.RecipesOverview.MenuName),
+                    Recipes = [recipe]
+                };
+                var createResponse = await MealPlanService.AddAsync(newPlan);
+                if (createResponse is null || !createResponse.Succeeded)
+                {
+                    await ShowErrorAsync(createResponse?.Message ?? Resources.RecipesOverview.SaveFailedMessage);
+                    return;
+                }
+                if (RefreshCurrentMealPlan is not null)
+                    await RefreshCurrentMealPlan();
+                await ShowInfoAsync(Resources.RecipesOverview.MealPlanCreatedAndRecipeAdded);
                 return;
             }
 

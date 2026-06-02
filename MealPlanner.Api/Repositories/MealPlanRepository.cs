@@ -33,6 +33,17 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(mp => mp.Id == id, cancellationToken);
         }
 
+        public override async Task DeleteAsync(MealPlan entity, CancellationToken cancellationToken)
+        {
+            await Context.MealPlanRecipes
+                .Where(mpr => mpr.MealPlanId == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await Context.MealPlans
+                .Where(mp => mp.Id == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+        }
+
         public override async Task UpdateAsync(MealPlan entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);

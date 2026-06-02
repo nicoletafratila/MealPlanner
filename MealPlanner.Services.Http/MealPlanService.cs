@@ -62,12 +62,17 @@ namespace MealPlanner.Services.Http
             catch (Exception ex) { logger.LogError(ex, "MealPlan DeleteAsync failed. Id {Id}", id); throw; }
         }
 
-        private static List<FilterItem> CreateCurrentWeekFilters()
+        public string GetMenuName(string menuName)
         {
-            var today = DateTime.Today;
-            var firstDay = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
-            var diff = (7 + (today.DayOfWeek - firstDay)) % 7;
-            var weekStart = today.AddDays(-diff).Date;
+            var now = DateTime.Now;
+            var calendar = CultureInfo.InvariantCulture.Calendar;
+            int week = calendar.GetWeekOfYear(now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return $"{menuName} {now.Year}/{week}";
+        }
+
+        private List<FilterItem> CreateCurrentWeekFilters()
+        {
+            var weekStart = GetCurrentWeekStart();
             var weekEnd = weekStart.AddDays(7);
 
             return
@@ -75,6 +80,14 @@ namespace MealPlanner.Services.Http
                 new FilterItem(nameof(MealPlanEditModel.CreatedAt), weekStart.ToString(), FilterOperator.GreaterThanOrEquals, StringComparison.OrdinalIgnoreCase),
                 new FilterItem(nameof(MealPlanEditModel.CreatedAt), weekEnd.ToString(), FilterOperator.LessThan, StringComparison.OrdinalIgnoreCase)
             ];
+        }
+
+        private DateTime GetCurrentWeekStart()
+        {
+            var today = DateTime.Today;
+            var firstDay = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+            var diff = (7 + (today.DayOfWeek - firstDay)) % 7;
+            return today.AddDays(-diff).Date;
         }
     }
 }

@@ -89,6 +89,9 @@
 	<data name="NoCurrentMealPlan" xml:space="preserve">
 		<value>No meal plan found for the current week. Please create a meal plan first.</value>
 	</data>
+	<data name="MealPlanCreatedAndRecipeAdded" xml:space="preserve">
+		<value>Week's menu has been created and the recipe has been added successfully.</value>
+	</data>
 	<data name="RecipeAdded" xml:space="preserve">
 		<value>Recipe has been added successfully</value>
 	</data>
@@ -98,4 +101,7 @@
 	<data name="HeaderCategory" xml:space="preserve">
 		<value>Category</value>
 	</data>
+	<data name="MenuName" xml:space="preserve">
+    <value>Meniu</value>
+  </data>
 </root>

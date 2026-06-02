@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MealPlanEdit {
@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("AddButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Failed to add recipe. Please try again..
         /// </summary>
@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("AddRecipeFailed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Back to overview.
         /// </summary>
@@ -228,6 +228,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         internal static string MakeShoppingListButton {
             get {
                 return ResourceManager.GetString("MakeShoppingListButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meniu.
+        /// </summary>
+        internal static string MenuName {
+            get {
+                return ResourceManager.GetString("MenuName", resourceCulture);
             }
         }
         

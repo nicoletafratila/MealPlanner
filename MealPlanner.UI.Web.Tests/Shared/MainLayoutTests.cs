@@ -232,6 +232,61 @@ namespace MealPlanner.UI.Web.Tests.Shared
             }
         }
 
+        // ---------- RefreshCurrentMealPlanAsync ----------
+
+        [Test]
+        public async Task RefreshCurrentMealPlanAsync_UpdatesLabelWhenPlanBecomesAvailable()
+        {
+            // Arrange — first call (OnInitializedAsync) returns null, second call (refresh) returns a plan
+            _mealPlanServiceMock
+                .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((MealPlanModel?)null)
+                .ReturnsAsync(new MealPlanModel { Id = 5, Name = "Meniu 2025/23" });
+
+            var cut = _ctx.Render<MainLayout>();
+            await cut.InvokeAsync(() => Task.CompletedTask);
+
+            Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"),
+                "Label should be absent before refresh.");
+
+            // Act
+            await cut.InvokeAsync(() => cut.Instance.RefreshCurrentMealPlanAsync());
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("Meniu 2025/23"));
+                Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/5"));
+            }
+        }
+
+        [Test]
+        public async Task RefreshCurrentMealPlanAsync_ClearsLabelWhenPlanIsDeleted()
+        {
+            // Arrange — first call returns a plan, second call (after delete) returns null
+            _mealPlanServiceMock
+                .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new MealPlanModel { Id = 3, Name = "Meniu 2025/1" })
+                .ReturnsAsync((MealPlanModel?)null);
+
+            var cut = _ctx.Render<MainLayout>();
+            await cut.InvokeAsync(() => Task.CompletedTask);
+
+            Assert.That(cut.Markup, Does.Contain("This week's menu:"),
+                "Label should be present before refresh.");
+
+            // Act
+            await cut.InvokeAsync(() => cut.Instance.RefreshCurrentMealPlanAsync());
+
+            // Assert — plan gone, "not yet created" prompt appears
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("You have not created"));
+            }
+        }
+
         [Test]
         public void Layout_Cascades_IMessageComponent_ToChildren()
         {
