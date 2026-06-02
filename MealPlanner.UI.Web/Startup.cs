@@ -86,11 +86,11 @@ namespace MealPlanner.UI.Web
 
         private void ConfigureClient(HttpClient client, string section)
         {
-            var baseUrl = configuration[$"{section}:BaseUrl"];
+            var baseUrl = Configuration[$"{section}:BaseUrl"];
             if (!string.IsNullOrWhiteSpace(baseUrl))
                 client.BaseAddress = new Uri(baseUrl);
 
-            if (configuration.GetValue<int>($"{section}:Timeout") is > 0 and var timeout)
+            if (Configuration.GetValue<int>($"{section}:Timeout") is > 0 and var timeout)
                 client.Timeout = TimeSpan.FromSeconds(timeout);
         }
     }

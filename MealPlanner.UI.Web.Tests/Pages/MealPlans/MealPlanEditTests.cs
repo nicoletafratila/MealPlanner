@@ -50,6 +50,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _recipeCategoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+
+            _mealPlanServiceMock
+                .Setup(s => s.GetMenuName(It.IsAny<string>()))
+                .Returns("Meniu 2025/23");
         }
 
         private IRenderedComponent<MealPlanEdit> RenderComponent(string? id = null)

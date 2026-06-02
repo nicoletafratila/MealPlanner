@@ -14,8 +14,6 @@ PM> Script-migration
 
 
 
-warning cu automapper
+
 schimba ids in guid
 allow same recipe multiple times on the menu
-selectare de limba si traduceri
-

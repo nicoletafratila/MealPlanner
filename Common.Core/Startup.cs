@@ -15,6 +15,9 @@ namespace Common.Core
     {
         public IConfiguration Configuration { get; } = configuration;
 
+        private static bool IsDevelopment =>
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
         protected virtual void RegisterServices(IServiceCollection services) { }
 
         protected virtual void RegisterRepositories(IServiceCollection services) { }
@@ -32,7 +35,8 @@ namespace Common.Core
                 //options.UseInMemoryDatabase(databaseName: "MealPlannerInMemory");
                 options.UseSqlServer(Configuration.GetConnectionString("MealPlanner"), x => x.MigrationsAssembly("MealPlanner.Api"));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                options.EnableSensitiveDataLogging();
+                if (IsDevelopment)
+                    options.EnableSensitiveDataLogging();
             });
 
             services.AddScoped(typeof(IAsyncRepository<,>), typeof(BaseAsyncRepository<,>));
