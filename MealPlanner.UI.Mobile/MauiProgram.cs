@@ -10,6 +10,7 @@ using MealPlanner.UI.Mobile.ViewModels.Identity;
 using MealPlanner.UI.Mobile.ViewModels.MealPlans;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using RecipeBook.Services.Http;
 
@@ -50,6 +51,16 @@ namespace MealPlanner.UI.Mobile
             services.AddSingleton<ITokenProvider, SecureStorageTokenProvider>();
             services.AddSingleton<MobileAuthStateService>();
             services.AddSingleton<IAuthStateNotifier>(sp => sp.GetRequiredService<MobileAuthStateService>());
+
+#if DEBUG
+            // Android emulator can't validate the .NET dev cert — bypass SSL in debug builds only
+            services.ConfigureAll<HttpClientFactoryOptions>(options =>
+                options.HttpMessageHandlerBuilderActions.Add(b =>
+                    b.PrimaryHandler = new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    }));
+#endif
 
             // API HTTP clients
             services.AddHttpClient<AuthenticationService>(c => c.BaseAddress = new Uri(identityBase));

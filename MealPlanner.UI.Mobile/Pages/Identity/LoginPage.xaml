@@ -6,7 +6,8 @@
              x:Class="MealPlanner.UI.Mobile.Pages.Identity.LoginPage"
              x:DataType="vm:LoginViewModel"
              Title="Sign In"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
 
     <ScrollView>
         <VerticalStackLayout Padding="32,60,32,32" Spacing="16">

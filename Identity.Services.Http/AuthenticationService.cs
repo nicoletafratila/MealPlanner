@@ -37,6 +37,7 @@ namespace Identity.Services.Http
                 return CommandResponse.Failed(loginResponse.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed);
             }
             catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during LoginAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorAuthentication); }
+            catch (TaskCanceledException ex) { logger.LogError(ex, "Timeout during LoginAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorAuthentication); }
             catch (System.Text.Json.JsonException ex) { logger.LogError(ex, "Deserialization error during LoginAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseAuthentication); }
         }
 

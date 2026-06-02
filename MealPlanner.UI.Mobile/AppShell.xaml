@@ -8,6 +8,11 @@
        Shell.FlyoutBehavior="Flyout"
        Title="MealPlanner">
 
+    <!-- Pre-auth (hidden from flyout) -->
+    <ShellContent Route="Login"
+                  FlyoutItemIsVisible="False"
+                  ContentTemplate="{DataTemplate identity:LoginPage}" />
+
     <!-- Recipes -->
     <FlyoutItem Title="Recipes" Icon="recipe.png">
         <ShellContent Title="Recipes" ContentTemplate="{DataTemplate recipebook:RecipesOverviewPage}" Route="RecipesOverview" />

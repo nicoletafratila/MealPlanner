@@ -22,6 +22,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 else
                     SetError(result?.Message);
             }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
             finally { IsBusy = false; }
         }
 
