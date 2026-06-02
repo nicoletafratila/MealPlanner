@@ -171,11 +171,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     PageSize = _pageSize
                 };
                 await SessionStorage.SetItemAsync(resetParameters);
-                _lastFiltersKey = filtersKey;
-                _firstLoad = true;
-                _gridKey++;
-                StateHasChanged();
-                return new GridDataProviderResult<ProductModel> { Data = [], TotalCount = 0 };
             }
 
             _lastFiltersKey = filtersKey;
