@@ -23,7 +23,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             IsBusy = true;
             try
             {
-                var cats = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 100 });
+                var cats = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
                 if (cats is not null) Categories = new ObservableCollection<ProductCategoryModel>(cats.Items);
                 if (!IsNew) Model = await productService.GetEditAsync(ProductId) ?? new();
             }

@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             if (IsBusy) return; IsBusy = true; ClearMessages();
             try
             {
-                var result = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200 });
+                var result = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
                 if (result is not null) Categories = new ObservableCollection<ProductCategoryModel>(result.Items);
             }
             catch (Exception ex) { SetError(ex.Message); }

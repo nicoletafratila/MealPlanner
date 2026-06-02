@@ -1,9 +1,13 @@
+using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MealPlanner.UI.Mobile.ViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {
+        protected static readonly List<SortingModel> DefaultSorting =
+            [new SortingModel { PropertyName = "Name", Direction = SortDirection.Ascending }];
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsNotBusy))]
         private bool _isBusy;

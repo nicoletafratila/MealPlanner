@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             ClearMessages();
             try
             {
-                var result = await categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200 });
+                var result = await categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
                 if (result is not null)
                     Categories = new ObservableCollection<RecipeCategoryModel>(result.Items);
             }

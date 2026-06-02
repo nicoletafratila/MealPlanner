@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (IsBusy) return; IsBusy = true; ClearMessages();
             try
             {
-                var result = await shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 100 });
+                var result = await shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 100, Sorting = DefaultSorting });
                 if (result is not null) Shops = new ObservableCollection<ShopModel>(result.Items);
             }
             catch (Exception ex) { SetError(ex.Message); }

@@ -22,7 +22,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             try
             {
                 var filters = string.IsNullOrWhiteSpace(SearchText) ? null : new[] { new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase) };
-                var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters });
+                var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null) { Products = new ObservableCollection<ProductModel>(result.Items); HasNextPage = result.Metadata.HasNextPage; }
             }
             catch (Exception ex) { SetError(ex.Message); }

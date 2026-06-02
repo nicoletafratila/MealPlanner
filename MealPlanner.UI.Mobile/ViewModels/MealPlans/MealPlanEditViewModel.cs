@@ -45,9 +45,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true;
             try
             {
-                var catTask = recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200 });
-                var recipeTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500 });
-                var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200 });
+                var catTask = recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
+                var recipeTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = DefaultSorting });
+                var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200, Sorting = DefaultSorting });
                 await Task.WhenAll(catTask, recipeTask, shopTask);
 
                 if (catTask.Result is not null)

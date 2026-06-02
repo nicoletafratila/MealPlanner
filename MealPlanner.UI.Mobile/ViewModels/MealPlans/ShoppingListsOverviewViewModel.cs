@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (IsBusy) return; IsBusy = true; CurrentPage = 1; ClearMessages();
             try
             {
-                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { PageNumber = CurrentPage });
+                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { PageNumber = CurrentPage, Sorting = DefaultSorting });
                 if (result is not null) { ShoppingLists = new ObservableCollection<ShoppingListModel>(result.Items); HasNextPage = result.Metadata.HasNextPage; }
             }
             catch (Exception ex) { SetError(ex.Message); }

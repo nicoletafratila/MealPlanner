@@ -55,9 +55,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true;
             try
             {
-                var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200 });
-                var catTask = productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200 });
-                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 200 });
+                var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200, Sorting = DefaultSorting });
+                var catTask = productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
+                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 200, Sorting = DefaultSorting });
                 await Task.WhenAll(shopTask, catTask, unitTask);
 
                 if (shopTask.Result is not null) Shops = new ObservableCollection<ShopModel>(shopTask.Result.Items);
@@ -89,10 +89,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             try
             {
                 var result = categoryId is null or 0
-                    ? await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500 })
+                    ? await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = DefaultSorting })
                     : await productService.SearchAsync(new QueryParameters<ProductModel>
                     {
                         PageSize = 500,
+                        Sorting = DefaultSorting,
                         Filters = [new FilterItem("ProductCategoryId", categoryId.ToString(), FilterOperator.Equals)]
                     });
                 ProductsByCategory = result is not null
@@ -154,7 +155,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         {
             if (Model.ShopId == 0) { SetError("Select a shop first."); return; }
 
-            var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200 });
+            var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200, Sorting = DefaultSorting });
             if (plans is null || plans.Items.Count == 0) { SetError("No meal plans found."); return; }
 
             var names = plans.Items.Select(p => p.Name).ToArray();
@@ -179,7 +180,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         {
             if (Model.ShopId == 0) { SetError("Select a shop first."); return; }
 
-            var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200 });
+            var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
             string[]? catNames = categories?.Items?.Select(c => c.Name).ToArray();
             int? recipeCategoryId = null;
 
@@ -193,6 +194,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             var recipes = await recipeService.SearchAsync(new QueryParameters<RecipeModel>
             {
                 PageSize = 500,
+                Sorting = DefaultSorting,
                 Filters = recipeCategoryId.HasValue ? [new FilterItem("RecipeCategoryId", recipeCategoryId.ToString(), FilterOperator.Equals)] : null
             });
             if (recipes is null || recipes.Items.Count == 0) { SetError("No recipes found."); return; }

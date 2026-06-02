@@ -9,6 +9,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     public partial class UsersOverviewViewModel(ApplicationUserService userService) : BaseViewModel
     {
+        private static readonly List<SortingModel> _defaultSorting = [new SortingModel { PropertyName = "Username", Direction = SortDirection.Ascending }];
+
         [ObservableProperty] private ObservableCollection<ApplicationUserModel> _users = [];
         [ObservableProperty] private int _currentPage = 1;
         [ObservableProperty] private bool _hasNextPage;
@@ -22,7 +24,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             ClearMessages();
             try
             {
-                var result = await userService.SearchAsync(new QueryParameters<ApplicationUserModel> { PageNumber = CurrentPage });
+                var result = await userService.SearchAsync(new QueryParameters<ApplicationUserModel> { PageNumber = CurrentPage, Sorting = _defaultSorting });
                 if (result is not null)
                 {
                     Users = new ObservableCollection<ApplicationUserModel>(result.Items);

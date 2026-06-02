@@ -26,9 +26,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             IsNew = RecipeId == 0;
             try
             {
-                var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100 });
-                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 100 });
-                var prodTask = productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500 });
+                var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
+                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 100, Sorting = DefaultSorting });
+                var prodTask = productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = DefaultSorting });
                 await Task.WhenAll(catTask, unitTask, prodTask);
 
                 if (catTask.Result is not null) Categories = new ObservableCollection<RecipeCategoryModel>(catTask.Result.Items);
