@@ -15,7 +15,7 @@ namespace MealPlanner.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(link.MealPlan, Is.Null);
-                Assert.That(link.MealPlanId, Is.Zero);
+                Assert.That(link.MealPlanId, Is.EqualTo(Guid.Empty));
                 Assert.That(link.Recipe, Is.Null);
                 Assert.That(link.RecipeId, Is.Zero);
             }
@@ -27,12 +27,13 @@ namespace MealPlanner.Data.Entities.Tests
             // Arrange
             var mealPlan = new MealPlan();
             var recipe = new Recipe();
+            var mealPlanId = Guid.NewGuid();
 
             // Act
             var link = new MealPlanRecipe
             {
                 MealPlan = mealPlan,
-                MealPlanId = 1,
+                MealPlanId = mealPlanId,
                 Recipe = recipe,
                 RecipeId = 2
             };
@@ -41,7 +42,7 @@ namespace MealPlanner.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(link.MealPlan, Is.SameAs(mealPlan));
-                Assert.That(link.MealPlanId, Is.EqualTo(1));
+                Assert.That(link.MealPlanId, Is.EqualTo(mealPlanId));
                 Assert.That(link.Recipe, Is.SameAs(recipe));
                 Assert.That(link.RecipeId, Is.EqualTo(2));
             }
@@ -50,9 +51,10 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void ToString_Contains_MealPlanId_And_RecipeId()
         {
+            var mealPlanId = Guid.NewGuid();
             var link = new MealPlanRecipe
             {
-                MealPlanId = 10,
+                MealPlanId = mealPlanId,
                 RecipeId = 20
             };
 
@@ -60,7 +62,7 @@ namespace MealPlanner.Data.Entities.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(text, Does.Contain("10"));
+                Assert.That(text, Does.Contain(mealPlanId.ToString()));
                 Assert.That(text, Does.Contain("20"));
             }
         }

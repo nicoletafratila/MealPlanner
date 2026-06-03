@@ -14,7 +14,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
 
                 // BaseModel defaults
@@ -27,7 +27,7 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             const string name = "Weekly Plan";
 
             // Act
@@ -46,7 +46,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new MealPlanModel(1, null!);
+                _ = new MealPlanModel(Guid.NewGuid(), null!);
             });
         }
 
@@ -56,7 +56,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new MealPlanModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Dinner Plan"
             };
 

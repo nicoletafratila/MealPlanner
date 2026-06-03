@@ -42,7 +42,7 @@ namespace MealPlanner.Services.Http.Tests
         {
             // Arrange
             const string token = "my-jwt-token";
-            var mealPlanId = 42;
+            var mealPlanId = Guid.NewGuid();
             var expected = new MealPlanEditModel { Id = mealPlanId };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -84,7 +84,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetEditAsync(1));
+            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetEditAsync(Guid.NewGuid()));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -93,7 +93,7 @@ namespace MealPlanner.Services.Http.Tests
         public async Task GetShoppingListProductsAsync_ReturnsList()
         {
             // Arrange
-            var mealPlanId = 10;
+            var mealPlanId = Guid.NewGuid();
             var shopId = 5;
 
             var expected = new List<ShoppingListProductEditModel>
@@ -138,7 +138,7 @@ namespace MealPlanner.Services.Http.Tests
 
             // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(
-                async () => await service.GetShoppingListProductsAsync(1, 1));
+                async () => await service.GetShoppingListProductsAsync(Guid.NewGuid(), 1));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -147,9 +147,9 @@ namespace MealPlanner.Services.Http.Tests
         public async Task GetCurrentAsync_ReturnsFirstItem_WhenMealPlanFound()
         {
             // Arrange
-            var expected = new MealPlanModel { Id = 99, Name = "This week" };
+            var expected = new MealPlanModel { Id = Guid.NewGuid(), Name = "This week" };
             var paged = new PagedList<MealPlanModel>(
-                [expected, new MealPlanModel { Id = 100 }],
+                [expected, new MealPlanModel { Id = Guid.NewGuid() }],
                 new Metadata { TotalCount = 2 });
 
             var mockHttp = new MockHttpMessageHandler();
@@ -282,7 +282,7 @@ namespace MealPlanner.Services.Http.Tests
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new MealPlanEditModel { Id = 1 };
+            var model = new MealPlanEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -316,7 +316,7 @@ namespace MealPlanner.Services.Http.Tests
         public void AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new MealPlanEditModel { Id = 1 };
+            var model = new MealPlanEditModel { Id = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -336,7 +336,7 @@ namespace MealPlanner.Services.Http.Tests
         public async Task UpdateAsync_PutsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new MealPlanEditModel { Id = 2 };
+            var model = new MealPlanEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -366,7 +366,7 @@ namespace MealPlanner.Services.Http.Tests
         public void UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new MealPlanEditModel { Id = 2 };
+            var model = new MealPlanEditModel { Id = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -415,7 +415,7 @@ namespace MealPlanner.Services.Http.Tests
         public async Task DeleteAsync_SendsDeleteWithId_AndReturnsCommandResponse()
         {
             // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -440,7 +440,7 @@ namespace MealPlanner.Services.Http.Tests
         public void DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
 
             var mockHttp = new MockHttpMessageHandler();
 

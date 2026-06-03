@@ -127,8 +127,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             var p2 = new RecipeBook.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = 20 };
             var p3 = new RecipeBook.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = 21 };
 
-            var mp1 = new MealPlanner.Data.Entities.MealPlan { Id = 100, Name = "Plan1" };
-            var mp2 = new MealPlanner.Data.Entities.MealPlan { Id = 101, Name = "Plan2" };
+            var mp1 = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan1" };
+            var mp2 = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan2" };
 
             var pairs = new List<KeyValuePair<RecipeBook.Data.Entities.Product, MealPlanner.Data.Entities.MealPlan>>
             {

@@ -37,7 +37,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var mealPlan = new MealPlan
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test plan",
                 MealPlanRecipes = null
             };
@@ -53,7 +53,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var mealPlan = new MealPlan
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test plan",
                 MealPlanRecipes = []
             };
@@ -82,7 +82,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
 
             var mealPlan = new MealPlan
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test plan",
                 MealPlanRecipes =
                 [

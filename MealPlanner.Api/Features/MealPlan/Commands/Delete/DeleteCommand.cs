@@ -11,13 +11,13 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Delete
         /// <summary>
         /// Id of the meal plan to delete.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public DeleteCommand()
         {
         }
 
-        public DeleteCommand(int id)
+        public DeleteCommand(Guid id)
         {
             Id = id;
         }

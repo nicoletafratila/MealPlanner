@@ -8,10 +8,9 @@ namespace MealPlanner.Shared.Models
     public class MealPlanEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new plans).
+        /// Database identity (empty for new plans).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Meal plan name (required, max 100 characters).
@@ -36,7 +35,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public MealPlanEditModel(int id, string name)
+        public MealPlanEditModel(Guid id, string name)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

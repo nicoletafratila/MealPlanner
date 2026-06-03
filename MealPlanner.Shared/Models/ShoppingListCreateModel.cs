@@ -10,7 +10,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// The source meal plan id used to generate the shopping list.
         /// </summary>
-        public int MealPlanId { get; set; }
+        public Guid MealPlanId { get; set; }
 
         /// <summary>
         /// The shop id where this shopping list will be used.
@@ -21,7 +21,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public ShoppingListCreateModel(int mealPlanId, int shopId)
+        public ShoppingListCreateModel(Guid mealPlanId, int shopId)
         {
             MealPlanId = mealPlanId;
             ShopId = shopId;

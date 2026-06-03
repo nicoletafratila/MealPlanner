@@ -64,14 +64,14 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
 
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" },
+                new() { Id = Guid.NewGuid(), Name = "Plan2" }
             };
 
             var models = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" },
+                new() { Id = Guid.NewGuid(), Name = "Plan2" }
             };
 
             _repoMock
@@ -103,7 +103,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
 
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
-                new() { Id = 1, Name = "Plan1" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
             _repoMock

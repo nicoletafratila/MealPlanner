@@ -278,7 +278,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            if (!int.TryParse(result.Data.ToString(), out var mealPlanId))
+            if (!Guid.TryParse(result.Data.ToString(), out var mealPlanId))
             {
                 await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectMealPlan);
                 return;

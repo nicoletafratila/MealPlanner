@@ -99,7 +99,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
                 .Setup(c => c.GetMealPlansByRecipeIdAsync(id, "token", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(
                 [
-                    new() { Id = 1, Name = "Plan1" }
+                    new() { Id = Guid.NewGuid(), Name = "Plan1" }
                 ]);
 
             // Act

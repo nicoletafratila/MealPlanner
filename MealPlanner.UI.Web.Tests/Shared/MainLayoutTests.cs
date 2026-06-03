@@ -173,7 +173,8 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task OnInitializedAsync_WhenMealPlanExists_ShowsMealPlanNameAsLink()
         {
             // Arrange
-            var plan = new MealPlanModel { Id = 3, Name = "Week 20 Menu" };
+            var id = Guid.NewGuid();
+            var plan = new MealPlanModel { Id = id, Name = "Week 20 Menu" };
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(plan);
@@ -187,7 +188,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             {
                 Assert.That(cut.Markup, Does.Contain("This week's menu:"));
                 Assert.That(cut.Markup, Does.Contain("Week 20 Menu"));
-                Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/3"));
+                Assert.That(cut.Markup, Does.Contain($"mealplans/mealplanedit/{id}"));
                 Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
             }
         }
@@ -238,10 +239,11 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task RefreshCurrentMealPlanAsync_UpdatesLabelWhenPlanBecomesAvailable()
         {
             // Arrange — first call (OnInitializedAsync) returns null, second call (refresh) returns a plan
+            var id = Guid.NewGuid();
             _mealPlanServiceMock
                 .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanModel?)null)
-                .ReturnsAsync(new MealPlanModel { Id = 5, Name = "Meniu 2025/23" });
+                .ReturnsAsync(new MealPlanModel { Id = id, Name = "Meniu 2025/23" });
 
             var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => Task.CompletedTask);
@@ -257,7 +259,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             {
                 Assert.That(cut.Markup, Does.Contain("This week's menu:"));
                 Assert.That(cut.Markup, Does.Contain("Meniu 2025/23"));
-                Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/5"));
+                Assert.That(cut.Markup, Does.Contain($"mealplans/mealplanedit/{id}"));
             }
         }
 
@@ -267,7 +269,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Arrange — first call returns a plan, second call (after delete) returns null
             _mealPlanServiceMock
                 .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new MealPlanModel { Id = 3, Name = "Meniu 2025/1" })
+                .ReturnsAsync(new MealPlanModel { Id = Guid.NewGuid(), Name = "Meniu 2025/1" })
                 .ReturnsAsync((MealPlanModel?)null);
 
             var cut = _ctx.Render<MainLayout>();

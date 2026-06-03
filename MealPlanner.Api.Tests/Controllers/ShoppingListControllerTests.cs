@@ -106,9 +106,10 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task MakeShoppingListAsync_SendsMakeShoppingListCommand()
         {
             // Arrange
+            var mealPlanId = Guid.NewGuid();
             var createModel = new ShoppingListCreateModel
             {
-                MealPlanId = 3,
+                MealPlanId = mealPlanId,
                 ShopId = 7
             };
 
@@ -142,7 +143,7 @@ namespace MealPlanner.Api.Tests.Controllers
             }
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(captured!.MealPlanId, Is.EqualTo(3));
+                Assert.That(captured!.MealPlanId, Is.EqualTo(mealPlanId));
                 Assert.That(captured!.ShopId, Is.EqualTo(7));
             }
 

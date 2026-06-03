@@ -63,8 +63,12 @@ namespace MealPlanner.Api.Tests.Repositories
             return (new MealPlanRepository(ctx), ctx, connection);
         }
 
+        // Deterministic mapping so a given int seed always maps to the same Guid,
+        // preserving the linkage between MealPlan.Id and MealPlanRecipe.MealPlanId.
+        private static Guid MealPlanId(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static (MealPlan plan, Recipe recipe, Product product) CreateMealPlanGraph(
-            int mealPlanId,
+            Guid mealPlanId,
             string mealPlanName,
             int recipeId,
             string recipeName,
@@ -163,7 +167,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan, recipe, product) = CreateMealPlanGraph(
-                mealPlanId: 1,
+                mealPlanId: MealPlanId(1),
                 mealPlanName: "Plan1",
                 recipeId: 10,
                 recipeName: "R1",
@@ -186,7 +190,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(1, CancellationToken.None);
+            var found = await repo.GetByIdAsync(MealPlanId(1), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -212,7 +216,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan, recipe, product) = CreateMealPlanGraph(
-                1, "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
+                MealPlanId(1), "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
 
             ctx.RecipeCategories.Add(recipe.RecipeCategory!);
             ctx.ProductCategories.Add(product.ProductCategory!);
@@ -225,7 +229,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(999, CancellationToken.None);
+            var found = await repo.GetByIdAsync(MealPlanId(999), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Null);
@@ -239,7 +243,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan, recipe, product) = CreateMealPlanGraph(
-                mealPlanId: 1,
+                mealPlanId: MealPlanId(1),
                 mealPlanName: "Plan1",
                 recipeId: 10,
                 recipeName: "R1",
@@ -262,7 +266,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeRecipesAsync(1, CancellationToken.None);
+            var found = await repo.GetByIdIncludeRecipesAsync(MealPlanId(1), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -298,7 +302,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan, recipe, product) = CreateMealPlanGraph(
-                1, "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
+                MealPlanId(1), "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
 
             ctx.RecipeCategories.Add(recipe.RecipeCategory!);
             ctx.ProductCategories.Add(product.ProductCategory!);
@@ -311,7 +315,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeRecipesAsync(999, CancellationToken.None);
+            var found = await repo.GetByIdIncludeRecipesAsync(MealPlanId(999), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Null);
@@ -325,9 +329,9 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan1, recipe1, product1) = CreateMealPlanGraph(
-                1, "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
+                MealPlanId(1), "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
             var (plan2, recipe2, product2) = CreateMealPlanGraph(
-                2, "Plan2", 11, "R2", 6, "Dessert", 21, "Fruit", 3, 4);
+                MealPlanId(2), "Plan2", 11, "R2", 6, "Dessert", 21, "Fruit", 3, 4);
 
             ctx.RecipeCategories.AddRange(recipe1.RecipeCategory!, recipe2.RecipeCategory!);
             ctx.ProductCategories.AddRange(product1.ProductCategory!, product2.ProductCategory!);
@@ -376,9 +380,9 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan1, recipe1, product1) = CreateMealPlanGraph(
-                1, "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
+                MealPlanId(1), "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
             var (plan2, recipe2, product2) = CreateMealPlanGraph(
-                2, "Plan2", 11, "R2", 6, "Dessert", 21, "Fruit", 3, 4);
+                MealPlanId(2), "Plan2", 11, "R2", 6, "Dessert", 21, "Fruit", 3, 4);
 
             ctx.RecipeCategories.AddRange(recipe1.RecipeCategory!, recipe2.RecipeCategory!);
             ctx.ProductCategories.AddRange(product1.ProductCategory!, product2.ProductCategory!);
@@ -430,9 +434,9 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan1, recipe1, product1) = CreateMealPlanGraph(
-                1, "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
+                MealPlanId(1), "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
             var (plan2, recipe2, product2) = CreateMealPlanGraph(
-                2, "Plan2", 11, "R2", 6, "Dessert", 21, "Fruit", 3, 4);
+                MealPlanId(2), "Plan2", 11, "R2", 6, "Dessert", 21, "Fruit", 3, 4);
 
             ctx.RecipeCategories.AddRange(recipe1.RecipeCategory!, recipe2.RecipeCategory!);
             ctx.ProductCategories.AddRange(product1.ProductCategory!, product2.ProductCategory!);
@@ -463,7 +467,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var (plan1, recipe1, product1) = CreateMealPlanGraph(
-                1, "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
+                MealPlanId(1), "Plan1", 10, "R1", 5, "Main", 20, "Baking", 1, 2);
             ctx.RecipeCategories.Add(recipe1.RecipeCategory!);
             ctx.ProductCategories.Add(product1.ProductCategory!);
             ctx.Units.AddRange(product1.BaseUnit!, recipe1.RecipeIngredients!.Single().Unit!);
@@ -488,8 +492,8 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = new MealPlan { Id = 1, Name = "Weekly", UserId = "user1" };
-            var p2 = new MealPlan { Id = 2, Name = "Other", UserId = "user1" };
+            var p1 = new MealPlan { Id = MealPlanId(1), Name = "Weekly", UserId = "user1" };
+            var p2 = new MealPlan { Id = MealPlanId(2), Name = "Other", UserId = "user1" };
             ctx.MealPlans.AddRange(p1, p2);
             await ctx.SaveChangesAsync();
 
@@ -498,7 +502,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Id, Is.EqualTo(1));
+            Assert.That(result!.Id, Is.EqualTo(MealPlanId(1)));
         }
 
         [Test]
@@ -507,7 +511,7 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Weekly", UserId = "user1" });
+            ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Weekly", UserId = "user1" });
             await ctx.SaveChangesAsync();
 
             // Act
@@ -545,11 +549,11 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.Database.EnsureCreatedAsync();
             ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Cat", DisplaySequence = 1 });
             ctx.Recipes.Add(new Recipe { Id = 10, Name = "R1", RecipeCategoryId = 1 });
-            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan", UserId = "u1" });
-            ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 });
+            ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan", UserId = "u1" });
+            ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdAsync(MealPlanId(1), CancellationToken.None);
             Assert.That(entity, Is.Not.Null);
 
             // Act
@@ -558,8 +562,8 @@ namespace MealPlanner.Api.Tests.Repositories
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(await ctx.MealPlans.AnyAsync(mp => mp.Id == 1), Is.False);
-                Assert.That(await ctx.MealPlanRecipes.AnyAsync(mpr => mpr.MealPlanId == 1), Is.False);
+                Assert.That(await ctx.MealPlans.AnyAsync(mp => mp.Id == MealPlanId(1)), Is.False);
+                Assert.That(await ctx.MealPlanRecipes.AnyAsync(mpr => mpr.MealPlanId == MealPlanId(1)), Is.False);
             }
         }
 
@@ -577,13 +581,13 @@ namespace MealPlanner.Api.Tests.Repositories
             ctx.Recipes.AddRange(
                 new Recipe { Id = 10, Name = "R1", RecipeCategoryId = 1 },
                 new Recipe { Id = 11, Name = "R2", RecipeCategoryId = 1 });
-            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan", UserId = "u1" });
+            ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan", UserId = "u1" });
             ctx.MealPlanRecipes.AddRange(
-                new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 },
-                new MealPlanRecipe { MealPlanId = 1, RecipeId = 11 });
+                new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 },
+                new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 11 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdAsync(MealPlanId(1), CancellationToken.None);
             Assert.That(entity, Is.Not.Null);
 
             // Act & Assert — must not throw
@@ -592,8 +596,8 @@ namespace MealPlanner.Api.Tests.Repositories
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(await ctx.MealPlans.AnyAsync(mp => mp.Id == 1), Is.False);
-                Assert.That(await ctx.MealPlanRecipes.AnyAsync(mpr => mpr.MealPlanId == 1), Is.False);
+                Assert.That(await ctx.MealPlans.AnyAsync(mp => mp.Id == MealPlanId(1)), Is.False);
+                Assert.That(await ctx.MealPlanRecipes.AnyAsync(mpr => mpr.MealPlanId == MealPlanId(1)), Is.False);
             }
         }
 
@@ -603,22 +607,22 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan1", UserId = "user1" });
-            ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 });
+            ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan1", UserId = "user1" });
+            ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdAsync(MealPlanId(1), CancellationToken.None);
             entity!.MealPlanRecipes =
             [
-                new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 },
-                new MealPlanRecipe { MealPlanId = 1, RecipeId = 11 }
+                new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 },
+                new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 11 }
             ];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.MealPlanRecipes.Where(mpr => mpr.MealPlanId == 1).ToList();
+            var rows = ctx.MealPlanRecipes.Where(mpr => mpr.MealPlanId == MealPlanId(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(2));
             Assert.That(rows.Select(r => r.RecipeId), Is.EquivalentTo([10, 11]));
         }
@@ -628,20 +632,20 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.MealPlans.Add(new MealPlan { Id = 1, Name = "Plan1", UserId = "user1" });
+            ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan1", UserId = "user1" });
             ctx.MealPlanRecipes.AddRange(
-                new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 },
-                new MealPlanRecipe { MealPlanId = 1, RecipeId = 11 });
+                new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 },
+                new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 11 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdAsync(1, CancellationToken.None);
-            entity!.MealPlanRecipes = [new MealPlanRecipe { MealPlanId = 1, RecipeId = 10 }];
+            var entity = await repo.GetByIdAsync(MealPlanId(1), CancellationToken.None);
+            entity!.MealPlanRecipes = [new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 }];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.MealPlanRecipes.Where(mpr => mpr.MealPlanId == 1).ToList();
+            var rows = ctx.MealPlanRecipes.Where(mpr => mpr.MealPlanId == MealPlanId(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(1));
             Assert.That(rows.Single().RecipeId, Is.EqualTo(10));
         }

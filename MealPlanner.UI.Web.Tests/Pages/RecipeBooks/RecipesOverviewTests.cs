@@ -385,15 +385,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AddsRecipeAndShowsInfo()
         {
             // Arrange
+            var planId = Guid.NewGuid();
             var recipe = new RecipeModel { Id = 5, Name = "Salad" };
-            var currentPlan = new MealPlanModel { Id = 10, Name = "This week" };
-            var editModel = new MealPlanEditModel { Id = 10, Name = "This week", Recipes = [] };
+            var currentPlan = new MealPlanModel { Id = planId, Name = "This week" };
+            var editModel = new MealPlanEditModel { Id = planId, Name = "This week", Recipes = [] };
 
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(currentPlan);
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(10, It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetEditAsync(planId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
             _mealPlanServiceMock
                 .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
@@ -423,11 +424,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AndRecipeAlreadyAdded_DoesNotUpdate()
         {
             // Arrange
+            var planId = Guid.NewGuid();
             var recipe = new RecipeModel { Id = 7 };
-            var currentPlan = new MealPlanModel { Id = 10 };
+            var currentPlan = new MealPlanModel { Id = planId };
             var editModel = new MealPlanEditModel
             {
-                Id = 10,
+                Id = planId,
                 Recipes = [new RecipeModel { Id = 7 }]
             };
 
@@ -435,7 +437,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(currentPlan);
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(10, It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetEditAsync(planId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
 
             var cut = RenderWithMessageComponent();
@@ -456,15 +458,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AndUpdateFails_ShowsError()
         {
             // Arrange
+            var planId = Guid.NewGuid();
             var recipe = new RecipeModel { Id = 8 };
-            var currentPlan = new MealPlanModel { Id = 10 };
-            var editModel = new MealPlanEditModel { Id = 10, Recipes = [] };
+            var currentPlan = new MealPlanModel { Id = planId };
+            var editModel = new MealPlanEditModel { Id = planId, Recipes = [] };
 
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(currentPlan);
             _mealPlanServiceMock
-                .Setup(s => s.GetEditAsync(10, It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetEditAsync(planId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
             _mealPlanServiceMock
                 .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))

@@ -15,7 +15,7 @@ namespace MealPlanner.Services.Http
     {
         private readonly string _controller = MealPlannerControllers.MealPlanUrl;
 
-        public async Task<MealPlanEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<MealPlanEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{MealPlannerControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<MealPlanEditModel>(url, cancellationToken);
@@ -33,7 +33,7 @@ namespace MealPlanner.Services.Http
             return result.Items.Count != 0 ? result.Items.OrderByDescending(x => x.CreatedAt).FirstOrDefault() : null;
         }
 
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int mealPlanId, int shopId, CancellationToken cancellationToken = default)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid mealPlanId, int shopId, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{MealPlannerControllers.ShoppingListProductsRoute}",
                 new Dictionary<string, string?> { [ApiQueryParams.MealPlanId] = mealPlanId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });
@@ -55,7 +55,7 @@ namespace MealPlanner.Services.Http
             catch (Exception ex) { logger.LogError(ex, "MealPlan UpdateAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try { return await DeleteAsync(url, cancellationToken); }

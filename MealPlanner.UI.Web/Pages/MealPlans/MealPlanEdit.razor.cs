@@ -84,8 +84,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             Categories = await RecipeCategoryService.SearchAsync(queryParameters);
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            _ = Guid.TryParse(Id, out var id);
+            if (id == Guid.Empty)
             {
                 MealPlan = new MealPlanEditModel
                 {
@@ -114,7 +114,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             CommandResponse? response;
 
-            if (mealPlan.Id == 0)
+            if (mealPlan.Id == Guid.Empty)
             {
                 response = await MealPlanService.AddAsync(mealPlan);
             }
@@ -143,7 +143,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteAsync()
         {
-            if (MealPlan is null || MealPlan.Id == 0)
+            if (MealPlan is null || MealPlan.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -168,7 +168,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteCoreAsync(MealPlanEditModel mealPlan)
         {
-            if (mealPlan.Id == 0)
+            if (mealPlan.Id == Guid.Empty)
                 return;
 
             var response = await MealPlanService.DeleteAsync(mealPlan.Id);

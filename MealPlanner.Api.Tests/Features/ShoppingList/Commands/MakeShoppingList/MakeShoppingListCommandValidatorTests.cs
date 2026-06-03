@@ -15,25 +15,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         }
 
         [Test]
-        public void MealPlanId_Zero_HasValidationError()
+        public void MealPlanId_Empty_HasValidationError()
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = 0,
-                ShopId = 1
-            };
-
-            var result = _validator.TestValidate(command);
-
-            result.ShouldHaveValidationErrorFor(x => x.MealPlanId);
-        }
-
-        [Test]
-        public void MealPlanId_Negative_HasValidationError()
-        {
-            var command = new MakeShoppingListCommand
-            {
-                MealPlanId = -1,
+                MealPlanId = Guid.Empty,
                 ShopId = 1
             };
 
@@ -47,7 +33,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = 1,
+                MealPlanId = Guid.NewGuid(),
                 ShopId = 0
             };
 
@@ -61,7 +47,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = 1,
+                MealPlanId = Guid.NewGuid(),
                 ShopId = -2
             };
 
@@ -75,7 +61,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = 3,
+                MealPlanId = Guid.NewGuid(),
                 ShopId = 4
             };
 

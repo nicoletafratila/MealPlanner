@@ -14,7 +14,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.MealPlanId, Is.Zero);
+                Assert.That(model.MealPlanId, Is.EqualTo(Guid.Empty));
                 Assert.That(model.ShopId, Is.Zero);
 
                 // BaseModel defaults
@@ -27,7 +27,7 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int mealPlanId = 10;
+            var mealPlanId = Guid.NewGuid();
             const int shopId = 3;
 
             // Act

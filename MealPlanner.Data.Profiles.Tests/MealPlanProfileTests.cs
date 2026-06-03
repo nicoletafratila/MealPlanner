@@ -14,6 +14,7 @@ namespace MealPlanner.Data.Profiles.Tests
         private IMapper _mapper = null!;
         private FakeMealPlanToEditMealPlanModelResolver _fakeForward = null!;
         private FakeEditMealPlanModelToMealPlanResolver _fakeReverse = null!;
+        private static readonly Guid ReverseMealPlanId = Guid.NewGuid();
 
         [SetUp]
         public void SetUp()
@@ -37,7 +38,7 @@ namespace MealPlanner.Data.Profiles.Tests
                     new MealPlanRecipe
                     {
                         RecipeId = 99,
-                        MealPlanId = 123
+                        MealPlanId = ReverseMealPlanId
                     }
                 ]
             };
@@ -61,9 +62,10 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void MealPlan_To_MealPlanModel_Maps_Id_And_Name()
         {
+            var id = Guid.NewGuid();
             var mp = new MealPlan
             {
-                Id = 1,
+                Id = id,
                 Name = "Weekly Plan"
             };
 
@@ -71,7 +73,7 @@ namespace MealPlanner.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(1));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Weekly Plan"));
             }
         }
@@ -84,9 +86,10 @@ namespace MealPlanner.Data.Profiles.Tests
                 Name = "Original"
             };
 
+            var id = Guid.NewGuid();
             var model = new MealPlanModel
             {
-                Id = 44,
+                Id = id,
                 Name = "Updated"
             };
 
@@ -94,7 +97,7 @@ namespace MealPlanner.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(44));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Updated"));
             }
         }
@@ -104,7 +107,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var mp = new MealPlan
             {
-                Id = 999,
+                Id = Guid.NewGuid(),
                 MealPlanRecipes =
                 [
                     new MealPlanRecipe
@@ -130,7 +133,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var edit = new MealPlanEditModel
             {
-                Id = 123,
+                Id = ReverseMealPlanId,
                 Recipes =
                 [
                     new RecipeModel
@@ -147,7 +150,7 @@ namespace MealPlanner.Data.Profiles.Tests
                 Assert.That(_fakeReverse.WasCalled, Is.True);
                 Assert.That(result.MealPlanRecipes, Has.Count.EqualTo(1));
                 Assert.That(result.MealPlanRecipes![0].RecipeId, Is.EqualTo(99));
-                Assert.That(result.MealPlanRecipes[0].MealPlanId, Is.EqualTo(123));
+                Assert.That(result.MealPlanRecipes[0].MealPlanId, Is.EqualTo(ReverseMealPlanId));
             }
         }
     }

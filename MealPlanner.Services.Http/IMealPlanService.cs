@@ -7,12 +7,12 @@ namespace MealPlanner.Services.Http
     {
         string GetMenuName(string menuName);
 
-        Task<MealPlanEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default);
+        Task<MealPlanEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default);
 
         Task<MealPlanModel?> GetCurrentAsync(CancellationToken cancellationToken = default);
 
         Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(
-            int mealPlanId,
+            Guid mealPlanId,
             int shopId,
             CancellationToken cancellationToken = default);
 
@@ -29,7 +29,7 @@ namespace MealPlanner.Services.Http
             CancellationToken cancellationToken = default);
 
         Task<CommandResponse?> DeleteAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken = default);
     }
 }

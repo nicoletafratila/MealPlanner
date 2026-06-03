@@ -7,7 +7,7 @@ using RecipeBook.Data.Entities;
 namespace MealPlanner.Api.Repositories
 {
     public class MealPlanRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<MealPlan, int>(dbContext), IMealPlanRepository
+        : BaseAsyncRepository<MealPlan, Guid>(dbContext), IMealPlanRepository
     {
         private MealPlannerDbContext Context =>
             DbContext as MealPlannerDbContext
@@ -23,7 +23,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public override async Task<MealPlan?> GetByIdAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.MealPlans!
@@ -82,7 +82,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.MealPlans

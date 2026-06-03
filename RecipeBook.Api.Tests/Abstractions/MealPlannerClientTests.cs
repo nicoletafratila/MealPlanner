@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Abstractions
 
             var plans = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
             var url = $"{BaseAddress}{MealPlanPath}/searchbyid?id=7";

@@ -26,7 +26,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             finally { IsBusy = false; }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync("MealPlanEdit?id=0");
+        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"MealPlanEdit?id={Guid.Empty}");
         [RelayCommand] private Task EditAsync(MealPlanModel mp) => Shell.Current.GoToAsync($"MealPlanEdit?id={mp.Id}");
 
         [RelayCommand]

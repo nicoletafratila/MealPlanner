@@ -6,7 +6,7 @@ namespace MealPlanner.Data.Entities
     {
         [ForeignKey(nameof(MealPlanId))]
         public MealPlan? MealPlan { get; set; }
-        public int MealPlanId { get; set; }
+        public Guid MealPlanId { get; set; }
 
         [ForeignKey(nameof(RecipeId))]
         public Recipe? Recipe { get; set; }

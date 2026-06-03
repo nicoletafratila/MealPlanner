@@ -21,9 +21,10 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
                 new() { Id = 20 }
             };
 
+            var id = Guid.NewGuid();
             var edit = new MealPlanEditModel
             {
-                Id = 5,
+                Id = id,
                 Recipes = recipes
             };
 
@@ -38,9 +39,9 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
             {
                 Assert.That(result, Has.Count.EqualTo(2));
                 Assert.That(result![0].RecipeId, Is.EqualTo(10));
-                Assert.That(result[0].MealPlanId, Is.EqualTo(5));
+                Assert.That(result[0].MealPlanId, Is.EqualTo(id));
                 Assert.That(result[1].RecipeId, Is.EqualTo(20));
-                Assert.That(result[1].MealPlanId, Is.EqualTo(5));
+                Assert.That(result[1].MealPlanId, Is.EqualTo(id));
             }
         }
 
@@ -52,7 +53,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
 
             var edit = new MealPlanEditModel
             {
-                Id = 3,
+                Id = Guid.NewGuid(),
                 Recipes = []
             };
 
@@ -77,7 +78,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
 
             var edit = new MealPlanEditModel
             {
-                Id = 3,
+                Id = Guid.NewGuid(),
                 Recipes = null
             };
 

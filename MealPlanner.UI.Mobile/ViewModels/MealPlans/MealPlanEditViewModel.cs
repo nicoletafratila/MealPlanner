@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         IShopService shopService,
         IShoppingListService shoppingListService) : BaseViewModel
     {
-        [ObservableProperty] private int _mealPlanId;
+        [ObservableProperty] private Guid _mealPlanId;
         [ObservableProperty] private MealPlanEditModel _model = new();
         [ObservableProperty] private ObservableCollection<RecipeCategoryModel> _categories = [];
         [ObservableProperty] private ObservableCollection<RecipeModel> _allRecipes = [];
@@ -27,7 +27,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty] private RecipeModel? _selectedRecipe;
         [ObservableProperty] private bool _isNew;
 
-        partial void OnMealPlanIdChanged(int value) { IsNew = value == 0; _ = LoadAsync(); }
+        partial void OnMealPlanIdChanged(Guid value) { IsNew = value == Guid.Empty; _ = LoadAsync(); }
 
         partial void OnSelectedCategoryChanged(RecipeCategoryModel? value)
         {

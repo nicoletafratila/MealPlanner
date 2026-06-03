@@ -41,8 +41,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var items = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" },
+                new() { Id = Guid.NewGuid(), Name = "Plan2" }
             };
 
             var mealPlans = new PagedList<MealPlanModel>(

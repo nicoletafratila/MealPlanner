@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
         public GetShoppingListProductsQueryValidator()
         {
             RuleFor(x => x.MealPlanId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.MealPlanMessages.MealPlanIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)

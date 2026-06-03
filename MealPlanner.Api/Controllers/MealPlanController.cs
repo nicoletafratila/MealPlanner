@@ -25,7 +25,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("edit")]
         public async Task<ActionResult<MealPlanEditModel>> GetEditAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var query = new GetEditQuery { Id = id };
@@ -35,7 +35,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("shoppingListProducts")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
-            [FromQuery] int mealPlanId,
+            [FromQuery] Guid mealPlanId,
             [FromQuery] int shopId,
             CancellationToken cancellationToken)
         {
@@ -115,7 +115,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpDelete]
         public async Task<ActionResult<CommandResponse?>> DeleteAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var command = new DeleteCommand { Id = id };
