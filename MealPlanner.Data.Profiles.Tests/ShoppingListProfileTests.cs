@@ -63,7 +63,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var list = new ShoppingList
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Weekly",
                 Shop = new Shop(),
                 Products =
@@ -96,7 +96,7 @@ namespace MealPlanner.Data.Profiles.Tests
 
             var model = new ShoppingListModel
             {
-                Id = 22,
+                Id = Guid.NewGuid(),
                 Name = "Updated"
             };
 

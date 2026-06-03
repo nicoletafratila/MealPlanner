@@ -125,8 +125,9 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var command = new MakeShoppingListCommand { MealPlanId = mealPlanId, ShopId = shopId };
             var mealPlan = new MealPlanner.Data.Entities.MealPlan { Id = mealPlanId, Name = "Plan1" };
             var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" };
-            var newList = new MealPlanner.Data.Entities.ShoppingList { Id = 10, Name = "Generated", Products = [] };
-            var mappedEdit = new ShoppingListEditModel { Id = 10, Name = "Generated" };
+            var newListId = Guid.NewGuid();
+            var newList = new MealPlanner.Data.Entities.ShoppingList { Id = newListId, Name = "Generated", Products = [] };
+            var mappedEdit = new ShoppingListEditModel { Id = newListId, Name = "Generated" };
 
             _mealPlanRepoMock
                 .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))
@@ -153,14 +154,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result!.Id, Is.EqualTo(10));
+                Assert.That(result!.Id, Is.EqualTo(newListId));
                 Assert.That(result.Name, Is.EqualTo("Generated"));
             }
 
             _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()), Times.Once);
             _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()), Times.Once);
             _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Once);
-            _shoppingListRepoMock.Verify(r => r.GetByIdIncludeProductsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _shoppingListRepoMock.Verify(r => r.GetByIdIncludeProductsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<ShoppingListEditModel>(newList), Times.Once);
         }
 
@@ -200,13 +201,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" };
 
             var savedProduct = new MealPlanner.Data.Entities.ShoppingListProduct { ProductId = 5 };
+            var savedListId = Guid.NewGuid();
             var savedList = new MealPlanner.Data.Entities.ShoppingList
             {
-                Id = 10,
+                Id = savedListId,
                 Name = "Plan1 Shop1",
                 Products = [savedProduct]
             };
-            var mappedEdit = new ShoppingListEditModel { Id = 10 };
+            var mappedEdit = new ShoppingListEditModel { Id = savedListId };
 
             _mealPlanRepoMock
                 .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))

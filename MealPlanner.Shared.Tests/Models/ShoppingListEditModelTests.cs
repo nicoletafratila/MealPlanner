@@ -22,7 +22,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Products, Is.Not.Null);
@@ -40,12 +40,12 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Weekly Groceries",
                 ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
                 ]
             };
 
@@ -65,12 +65,12 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
                 ]
             };
 
@@ -102,7 +102,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 ShopId = Guid.NewGuid(),
                 Products = []
@@ -128,7 +128,7 @@ namespace MealPlanner.Shared.Tests.Models
             // One product -> valid
             model.Products =
             [
-                new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
             ];
 
             isValid = TryValidate(model, out results);
@@ -139,7 +139,7 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
             const string name = "Party List";
             var shopId = Guid.NewGuid();
 
@@ -160,7 +160,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ShoppingListEditModel(1, null!, Guid.NewGuid());
+                _ = new ShoppingListEditModel(Guid.NewGuid(), null!, Guid.NewGuid());
             });
         }
 
@@ -169,12 +169,12 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Holiday Shopping",
                 ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
                 ]
             };
 

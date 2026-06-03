@@ -8,10 +8,9 @@ namespace MealPlanner.Shared.Models
     public class ShoppingListEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new lists).
+        /// Database identity (empty for new lists).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Shopping list name (required, max 100 characters).
@@ -38,7 +37,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public ShoppingListEditModel(int id, string name, Guid shopId)
+        public ShoppingListEditModel(Guid id, string name, Guid shopId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

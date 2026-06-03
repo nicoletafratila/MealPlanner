@@ -18,7 +18,7 @@ namespace MealPlanner.Data.Entities.Tests
                 Assert.That(item.Product, Is.Null);
                 Assert.That(item.Unit, Is.Null);
 
-                Assert.That(item.ShoppingListId, Is.Zero);
+                Assert.That(item.ShoppingListId, Is.EqualTo(Guid.Empty));
                 Assert.That(item.ProductId, Is.Zero);
                 Assert.That(item.UnitId, Is.Zero);
 
@@ -35,12 +35,13 @@ namespace MealPlanner.Data.Entities.Tests
             var shoppingList = new ShoppingList();
             var product = new Product();
             var unit = new Unit();
+            var shoppingListId = Guid.NewGuid();
 
             // Act
             var item = new ShoppingListProduct
             {
                 ShoppingList = shoppingList,
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
                 Product = product,
                 ProductId = 2,
                 Unit = unit,
@@ -54,7 +55,7 @@ namespace MealPlanner.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(item.ShoppingList, Is.SameAs(shoppingList));
-                Assert.That(item.ShoppingListId, Is.EqualTo(1));
+                Assert.That(item.ShoppingListId, Is.EqualTo(shoppingListId));
 
                 Assert.That(item.Product, Is.SameAs(product));
                 Assert.That(item.ProductId, Is.EqualTo(2));
@@ -71,9 +72,10 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void ToString_Contains_Key_Information()
         {
+            var shoppingListId = Guid.NewGuid();
             var item = new ShoppingListProduct
             {
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
                 ProductId = 2,
                 UnitId = 3,
                 Quantity = 4m
@@ -83,7 +85,7 @@ namespace MealPlanner.Data.Entities.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(text, Does.Contain("1"));
+                Assert.That(text, Does.Contain(shoppingListId.ToString()));
                 Assert.That(text, Does.Contain("2"));
                 Assert.That(text, Does.Contain("3"));
                 Assert.That(text, Does.Contain("4"));

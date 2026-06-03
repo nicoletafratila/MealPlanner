@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;using RecipeBook.Data.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
+using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Data.Entities
 {

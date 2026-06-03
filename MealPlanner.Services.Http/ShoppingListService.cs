@@ -7,7 +7,7 @@ namespace MealPlanner.Services.Http
     {
         private readonly string _controller = MealPlannerControllers.ShoppingListUrl;
 
-        public async Task<ShoppingListEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ShoppingListEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{MealPlannerControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<ShoppingListEditModel>(url, cancellationToken);
@@ -34,7 +34,7 @@ namespace MealPlanner.Services.Http
             catch (Exception ex) { logger.LogError(ex, "ShoppingList UpdateAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try { return await DeleteAsync(url, cancellationToken); }

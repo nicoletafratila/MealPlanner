@@ -30,7 +30,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var entity = new ShoppingListProduct
             {
-                ShoppingListId = 5,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 2.5m,
                 UnitId = 10,
                 ProductId = 99,
@@ -59,7 +59,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 8,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 11.75m,
                 UnitId = 3,
                 Product = new ProductModel() { Id = 41 },
@@ -87,18 +87,19 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void Null_SourceValue_Does_Not_Overwrite_Destination()
         {
+            var shoppingListId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
                 Quantity = 0,
                 UnitId = 1,
                 Product = new ProductModel() { Id = 1 },
                 DisplaySequence = 1,
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
             };
 
             var destination = new ShoppingListProduct
             {
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
                 Quantity = 10,
                 UnitId = 5,
                 ProductId = 8,

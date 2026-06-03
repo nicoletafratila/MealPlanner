@@ -43,6 +43,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
                     return null;
 
                 var newList = mealPlan.MakeShoppingList(shop);
+                newList.Id = Guid.NewGuid();
                 newList.UserId = userId;
 
                 var saved = await _shoppingListRepository.AddAsync(newList, cancellationToken);

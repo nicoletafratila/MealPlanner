@@ -11,7 +11,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Queries.GetEdit
         public GetEditQueryValidator()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(ShoppingListMessages.IdGreaterThanZero);
         }
     }

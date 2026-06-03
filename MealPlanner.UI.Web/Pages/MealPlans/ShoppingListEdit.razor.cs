@@ -106,8 +106,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shops = await ShopService.SearchAsync();
             BaseUnits = await UnitService.SearchAsync();
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            _ = Guid.TryParse(Id, out var id);
+            if (id == Guid.Empty)
             {
                 ShoppingList = new ShoppingListEditModel
                 {
@@ -136,7 +136,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             CommandResponse? response;
 
-            if (shoppingList.Id == 0)
+            if (shoppingList.Id == Guid.Empty)
             {
                 response = await ShoppingListService.AddAsync(shoppingList);
             }
@@ -163,7 +163,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteAsync()
         {
-            if (ShoppingList is null || ShoppingList.Id == 0)
+            if (ShoppingList is null || ShoppingList.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -188,7 +188,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteCoreAsync(ShoppingListEditModel shoppingList)
         {
-            if (shoppingList.Id == 0)
+            if (shoppingList.Id == Guid.Empty)
                 return;
 
             var response = await ShoppingListService.DeleteAsync(shoppingList.Id);

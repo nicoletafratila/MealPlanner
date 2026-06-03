@@ -90,13 +90,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(ShoppingListsOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var list = new ShoppingListModel { Id = 7 };
+            var id = Guid.NewGuid();
+            var list = new ShoppingListModel { Id = id };
 
             // Act
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [list]));
 
             // Assert
-            Assert.That(nav.Uri, Does.EndWith("mealplans/shoppinglistedit/7"));
+            Assert.That(nav.Uri, Does.EndWith($"mealplans/shoppinglistedit/{id}"));
         }
 
         // ---------- DeleteAsync / DeleteCoreAsync ----------
@@ -118,7 +119,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _shoppingListServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
+                s => s.DeleteAsync(It.IsAny<Guid>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -128,8 +129,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
+            var id = Guid.NewGuid();
             _shoppingListServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
+                .Setup(s => s.DeleteAsync(id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -137,7 +139,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(ShoppingListsOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var item = new ShoppingListModel { Id = 5, Name = "List" };
+            var item = new ShoppingListModel { Id = id, Name = "List" };
 
             // Act
             await cut.InvokeAsync(async () =>
@@ -147,7 +149,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shoppingListServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
+            _shoppingListServiceMock.Verify(s => s.DeleteAsync(id, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
@@ -157,8 +159,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         public async Task DeleteCoreAsync_ShowsGenericError_WhenResponseNull()
         {
             // Arrange
+            var id = Guid.NewGuid();
             _shoppingListServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
+                .Setup(s => s.DeleteAsync(id, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent();
@@ -166,7 +169,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(ShoppingListsOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var item = new ShoppingListModel { Id = 5 };
+            var item = new ShoppingListModel { Id = id };
 
             // Act
             await cut.InvokeAsync(async () =>
@@ -191,8 +194,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Message = "Delete failed because of dependency"
             };
 
+            var id = Guid.NewGuid();
             _shoppingListServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
+                .Setup(s => s.DeleteAsync(id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -200,7 +204,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(ShoppingListsOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var item = new ShoppingListModel { Id = 5 };
+            var item = new ShoppingListModel { Id = id };
 
             // Act
             await cut.InvokeAsync(async () =>
@@ -260,7 +264,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var items = new List<ShoppingListModel>
             {
-                new() { Id = 1, Name = "List1" }
+                new() { Id = Guid.NewGuid(), Name = "List1" }
             };
 
             var paged = new PagedList<ShoppingListModel>(

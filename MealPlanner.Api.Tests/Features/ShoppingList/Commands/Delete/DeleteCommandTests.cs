@@ -1,4 +1,4 @@
-﻿using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
+using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
 
 namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
 {
@@ -6,20 +6,20 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
     public class DeleteCommandTests
     {
         [Test]
-        public void DefaultCtor_InitializesIdToZero()
+        public void DefaultCtor_InitializesIdToEmpty()
         {
             // Act
             var command = new DeleteCommand();
 
             // Assert
-            Assert.That(command.Id, Is.EqualTo(0));
+            Assert.That(command.Id, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void Ctor_SetsId()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
 
             // Act
             var command = new DeleteCommand(id);
@@ -32,14 +32,15 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
         public void Can_Set_And_Get_Id()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var command = new DeleteCommand
             {
                 // Act
-                Id = 42
+                Id = id
             };
 
             // Assert
-            Assert.That(command.Id, Is.EqualTo(42));
+            Assert.That(command.Id, Is.EqualTo(id));
         }
     }
 }

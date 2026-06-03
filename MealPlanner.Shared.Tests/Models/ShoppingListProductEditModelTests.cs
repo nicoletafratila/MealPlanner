@@ -23,7 +23,6 @@ namespace MealPlanner.Shared.Tests.Models
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.ShoppingListId))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.UnitId))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.DisplaySequence))), Is.True);
             }
@@ -33,8 +32,9 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties_AndValidates_WhenWithinConstraints()
         {
             // Arrange
+            var shoppingListId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel(
-                shoppingListId: 1,
+                shoppingListId: shoppingListId,
                 quantity: 2.5m,
                 unitId: 3,
                 displaySequence: 1);
@@ -47,7 +47,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(isValid, Is.True);
                 Assert.That(results, Is.Empty);
-                Assert.That(model.ShoppingListId, Is.EqualTo(1));
+                Assert.That(model.ShoppingListId, Is.EqualTo(shoppingListId));
                 Assert.That(model.Quantity, Is.EqualTo(2.5m));
                 Assert.That(model.UnitId, Is.EqualTo(3));
                 Assert.That(model.DisplaySequence, Is.EqualTo(1));
@@ -60,7 +60,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange: negative quantity
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 1,
+                ShoppingListId = Guid.NewGuid(),
                 UnitId = 2,
                 DisplaySequence = 1,
                 Quantity = -1m
@@ -92,7 +92,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 1,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 1m,
                 UnitId = 0,
                 DisplaySequence = 1
@@ -124,7 +124,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange: negative
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 1,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 1m,
                 UnitId = 1,
                 DisplaySequence = -1

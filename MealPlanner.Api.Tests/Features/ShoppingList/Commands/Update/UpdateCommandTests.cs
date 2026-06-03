@@ -22,7 +22,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             // Arrange
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Weekly"
             };
 
@@ -49,7 +49,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
             var command = new UpdateCommand();
             var model = new ShoppingListEditModel
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Groceries"
             };
 

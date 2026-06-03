@@ -298,7 +298,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var addedEntity = await ShoppingListService.MakeShoppingListAsync(
                 new ShoppingListCreateModel { MealPlanId = MealPlan.Id, ShopId = shopId });
 
-            if (addedEntity is not null && addedEntity.Id > 0)
+            if (addedEntity is not null && addedEntity.Id != Guid.Empty)
             {
                 NavigationManager.NavigateTo($"mealplans/shoppinglistedit/{addedEntity.Id}");
             }

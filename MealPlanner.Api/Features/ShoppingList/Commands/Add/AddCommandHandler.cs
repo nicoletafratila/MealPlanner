@@ -39,7 +39,8 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
                 if (existingItem is not null)
                     return CommandResponse.Failed(Resources.ShoppingListMessages.AlreadyExists);
 
-                var mapped = _mapper.Map<MealPlanner.Data.Entities.ShoppingList>(request.Model);
+                var mapped = _mapper.Map<Data.Entities.ShoppingList>(request.Model);
+                mapped.Id = Guid.NewGuid();
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

@@ -4,7 +4,7 @@ namespace MealPlanner.Services.Http
 {
     public interface IShoppingListService
     {
-        Task<ShoppingListEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default);
+        Task<ShoppingListEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default);
 
         Task<PagedList<ShoppingListModel>?> SearchAsync(
             QueryParameters<ShoppingListModel>? queryParameters = null,
@@ -23,7 +23,7 @@ namespace MealPlanner.Services.Http
             CancellationToken cancellationToken = default);
 
         Task<CommandResponse?> DeleteAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken = default);
     }
 }

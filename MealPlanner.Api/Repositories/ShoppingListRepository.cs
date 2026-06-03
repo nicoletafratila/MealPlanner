@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MealPlanner.Api.Repositories
 {
     public class ShoppingListRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<ShoppingList, int>(dbContext), IShoppingListRepository
+        : BaseAsyncRepository<ShoppingList, Guid>(dbContext), IShoppingListRepository
     {
         private MealPlannerDbContext Ctx =>
             DbContext as MealPlannerDbContext
@@ -71,7 +71,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Ctx.ShoppingLists

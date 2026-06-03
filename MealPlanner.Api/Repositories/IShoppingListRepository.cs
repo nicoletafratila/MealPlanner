@@ -3,10 +3,10 @@ using MealPlanner.Data.Entities;
 
 namespace MealPlanner.Api.Repositories
 {
-    public interface IShoppingListRepository : IAsyncRepository<ShoppingList, int>
+    public interface IShoppingListRepository : IAsyncRepository<ShoppingList, Guid>
     {
         Task<IReadOnlyList<ShoppingList>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
-        Task<ShoppingList?> GetByIdIncludeProductsAsync(int id, CancellationToken cancellationToken);
+        Task<ShoppingList?> GetByIdIncludeProductsAsync(Guid id, CancellationToken cancellationToken);
         Task<ShoppingList?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
     }
 }

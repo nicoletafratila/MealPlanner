@@ -46,7 +46,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         public async Task Handle_EntityFound_ReturnsMappedModel()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var entity = new MealPlanner.Data.Entities.ShoppingList
             {
                 Id = id,
@@ -90,7 +90,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         public async Task Handle_EntityNotFound_ReturnsEmptyModelWithId()
         {
             // Arrange
-            const int id = 10;
+            var id = Guid.NewGuid();
 
             _repoMock
                 .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
@@ -121,7 +121,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         public async Task Handle_MapperReturnsNull_FallsBackToEmptyModelWithId()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
             var entity = new MealPlanner.Data.Entities.ShoppingList
             {
                 Id = id,

@@ -12,7 +12,7 @@ namespace MealPlanner.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(list.Id, Is.Zero);
+                Assert.That(list.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(list.Name, Is.Null);
                 Assert.That(list.Shop, Is.Null);
                 Assert.That(list.ShopId, Is.EqualTo(Guid.Empty));
@@ -33,11 +33,12 @@ namespace MealPlanner.Data.Entities.Tests
             };
 
             var shopId = Guid.NewGuid();
+            var id = Guid.NewGuid();
 
             // Act
             var list = new ShoppingList
             {
-                Id = 10,
+                Id = id,
                 Name = "Weekly Groceries",
                 Shop = shop,
                 ShopId = shopId,
@@ -47,7 +48,7 @@ namespace MealPlanner.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(list.Id, Is.EqualTo(10));
+                Assert.That(list.Id, Is.EqualTo(id));
                 Assert.That(list.Name, Is.EqualTo("Weekly Groceries"));
                 Assert.That(list.Shop, Is.SameAs(shop));
                 Assert.That(list.ShopId, Is.EqualTo(shopId));
@@ -60,9 +61,10 @@ namespace MealPlanner.Data.Entities.Tests
         public void ToString_Contains_Name_Id_And_ShopId()
         {
             var shopId = Guid.NewGuid();
+            var id = Guid.NewGuid();
             var list = new ShoppingList
             {
-                Id = 3,
+                Id = id,
                 Name = "Test List",
                 ShopId = shopId
             };
@@ -72,7 +74,7 @@ namespace MealPlanner.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(text, Does.Contain("Test List"));
-                Assert.That(text, Does.Contain("3"));
+                Assert.That(text, Does.Contain(id.ToString()));
                 Assert.That(text, Does.Contain(shopId.ToString()));
             }
         }

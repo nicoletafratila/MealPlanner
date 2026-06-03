@@ -10,9 +10,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Parent shopping list id.
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
-        public int ShoppingListId { get; set; }
+        public Guid ShoppingListId { get; set; }
 
         /// <summary>
         /// Quantity for the product. Must be a positive number (0 or greater).
@@ -55,7 +53,7 @@ namespace MealPlanner.Shared.Models
         }
 
         public ShoppingListProductEditModel(
-            int shoppingListId,
+            Guid shoppingListId,
             decimal quantity,
             int unitId,
             int displaySequence)

@@ -37,7 +37,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var list = new ShoppingList
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test list",
                 Products = null
             };
@@ -53,7 +53,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var list = new ShoppingList
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test list",
                 Products = []
             };
@@ -69,7 +69,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var list = new ShoppingList
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Daily items",
                 Products =
                 [

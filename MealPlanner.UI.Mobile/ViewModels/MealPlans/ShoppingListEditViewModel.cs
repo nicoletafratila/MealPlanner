@@ -20,7 +20,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         RecipeService recipeService,
         RecipeCategoryService recipeCategoryService) : BaseViewModel
     {
-        [ObservableProperty] private int _shoppingListId;
+        [ObservableProperty] private Guid _shoppingListId;
         [ObservableProperty] private ShoppingListEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
@@ -40,7 +40,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];
 
-        partial void OnShoppingListIdChanged(int value) { IsNew = value == 0; _ = LoadAsync(); }
+        partial void OnShoppingListIdChanged(Guid value) { IsNew = value == Guid.Empty; _ = LoadAsync(); }
 
         partial void OnSelectedShopChanged(ShopModel? value) { if (value is not null) Model.ShopId = value.Id; }
 

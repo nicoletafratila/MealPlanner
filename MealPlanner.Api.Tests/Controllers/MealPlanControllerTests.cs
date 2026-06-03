@@ -62,8 +62,8 @@ namespace MealPlanner.Api.Tests.Controllers
             // Arrange
             var products = new List<ShoppingListProductEditModel>
             {
-                new() { ShoppingListId = 1, Product = new RecipeBook.Shared.Models.ProductModel(){ Id = 10 } },
-                new() { ShoppingListId = 1, Product = new RecipeBook.Shared.Models.ProductModel(){ Id = 11 } }
+                new() { ShoppingListId = Guid.NewGuid(), Product = new RecipeBook.Shared.Models.ProductModel(){ Id = 10 } },
+                new() { ShoppingListId = Guid.NewGuid(), Product = new RecipeBook.Shared.Models.ProductModel(){ Id = 11 } }
             };
 
             GetShoppingListProductsQuery? captured = null;

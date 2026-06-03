@@ -46,7 +46,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
         public async Task Handle_ItemNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             _repoMock
@@ -59,7 +59,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+            Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _repoMock.Verify(r => r.DeleteAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -69,7 +69,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
         public async Task Handle_ItemFound_DeletesAndReturnsSuccess()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             var entity = new MealPlanner.Data.Entities.ShoppingList { Id = id, Name = "Weekly" };
@@ -97,7 +97,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Delete
         public async Task Handle_ExceptionDuringDelete_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 4;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             var entity = new MealPlanner.Data.Entities.ShoppingList { Id = id, Name = "ToDelete" };
