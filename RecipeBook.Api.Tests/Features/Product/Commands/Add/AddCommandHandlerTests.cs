@@ -86,12 +86,12 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Id = 0,
                 Name = "Milk",
                 BaseUnitId = 1,
-                ProductCategoryId = 2
+                ProductCategoryId = Guid.NewGuid()
             };
 
             var command = new AddCommand { Model = model };
 
-            var existing = new RecipeBook.Data.Entities.Product { Id = 10, Name = "Milk", ProductCategoryId = 2 };
+            var existing = new RecipeBook.Data.Entities.Product { Id = 10, Name = "Milk", ProductCategoryId = Guid.NewGuid() };
 
             _repoMock
                 .Setup(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()))
@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Id = 0,
                 Name = "Bread",
                 BaseUnitId = 1,
-                ProductCategoryId = 2
+                ProductCategoryId = Guid.NewGuid()
             };
 
             var command = new AddCommand { Model = model };
@@ -132,7 +132,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             {
                 Id = 5,
                 Name = "Bread",
-                ProductCategoryId = 2,
+                ProductCategoryId = Guid.NewGuid(),
                 BaseUnitId = 1
             };
 
@@ -162,7 +162,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Id = 0,
                 Name = "ErrorProduct",
                 BaseUnitId = 1,
-                ProductCategoryId = 2
+                ProductCategoryId = Guid.NewGuid()
             };
 
             var command = new AddCommand { Model = model };
@@ -175,7 +175,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             {
                 Id = 7,
                 Name = "ErrorProduct",
-                ProductCategoryId = 2,
+                ProductCategoryId = Guid.NewGuid(),
                 BaseUnitId = 1
             };
 

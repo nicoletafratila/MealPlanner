@@ -4,7 +4,7 @@ namespace Identity.Api.Features.Authentication.Commands.Register
 {
     public class RegisterCommandHandler(
         UserManager<Identity.Data.Entities.ApplicationUser> userManager,
-        IAsyncRepository<ProductCategory, int> productCategoryRepository,
+        IAsyncRepository<ProductCategory, Guid> productCategoryRepository,
         IAsyncRepository<RecipeCategory, int> recipeCategoryRepository,
         IEmailService emailService,
         ILogger<RegisterCommandHandler> logger) : IRequestHandler<RegisterCommand, CommandResponse?>

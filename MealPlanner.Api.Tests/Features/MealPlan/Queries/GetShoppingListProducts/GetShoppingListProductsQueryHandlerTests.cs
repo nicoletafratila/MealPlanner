@@ -107,6 +107,8 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             // Arrange
             var mealPlanId = Guid.NewGuid();
             var shopId = Guid.NewGuid();
+            var cat1Id = Guid.NewGuid();
+            var cat2Id = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery { MealPlanId = mealPlanId, ShopId = shopId };
 
             var baseUnit = new Unit { Id = 1, Name = "kg" };
@@ -114,14 +116,14 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             {
                 Id = 5,
                 Name = "Flour",
-                ProductCategory = new ProductCategory { Id = 100, Name = "Cat1" },
+                ProductCategory = new ProductCategory { Id = cat1Id, Name = "Cat1" },
                 BaseUnit = baseUnit
             };
             var product2 = new Product
             {
                 Id = 6,
                 Name = "Egg",
-                ProductCategory = new ProductCategory { Id = 101, Name = "Cat2" },
+                ProductCategory = new ProductCategory { Id = cat2Id, Name = "Cat2" },
                 BaseUnit = baseUnit
             };
             var ingredient1 = new RecipeIngredient
@@ -143,7 +145,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
                 Name = "Cake",
                 RecipeIngredients = [ingredient1, ingredient2]
             };
-            var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1", DisplaySequence = [new ShopDisplaySequence() { Value = 2, ProductCategoryId = 100 }, new ShopDisplaySequence() { Value = 1, ProductCategoryId = 101 }] };
+            var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1", DisplaySequence = [new ShopDisplaySequence() { Value = 2, ProductCategoryId = cat1Id }, new ShopDisplaySequence() { Value = 1, ProductCategoryId = cat2Id }] };
             var mealPlan = new MealPlanner.Data.Entities.MealPlan() { Id = mealPlanId, Name = "Plan1" };
             mealPlan.MealPlanRecipes =
             [

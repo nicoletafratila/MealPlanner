@@ -106,10 +106,12 @@ namespace MealPlanner.Services.Http.Tests
         {
             // Arrange
             const string token = "my-jwt-token";
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
             var categories = new List<ProductCategoryModel>
             {
-                new() { Id = 2 },
-                new() { Id = 4 }
+                new() { Id = id1 },
+                new() { Id = id2 }
             };
 
             var expected = new List<StatisticModel>
@@ -126,7 +128,7 @@ namespace MealPlanner.Services.Http.Tests
                 {
                     var auth = m.Headers.Authorization;
                     var query = m.RequestUri!.Query;
-                    return Uri.UnescapeDataString(query).Contains("categoryIds=2,4");
+                    return Uri.UnescapeDataString(query).Contains($"categoryIds={id1},{id2}");
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expected, JsonOptions));
 
@@ -150,7 +152,7 @@ namespace MealPlanner.Services.Http.Tests
         public void GetFavoriteProductsAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var categories = new List<ProductCategoryModel> { new() { Id = 2 } };
+            var categories = new List<ProductCategoryModel> { new() { Id = Guid.NewGuid() } };
 
             var mockHttp = new MockHttpMessageHandler();
 

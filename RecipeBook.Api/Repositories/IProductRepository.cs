@@ -13,7 +13,7 @@ namespace RecipeBook.Api.Repositories
         /// <summary>
         /// Gets all products in a given category.
         /// </summary>
-        Task<IReadOnlyList<Product>> SearchAsync(int categoryId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Product>> SearchAsync(Guid categoryId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds a product by name (case-insensitive) scoped to a user, or null if not found.

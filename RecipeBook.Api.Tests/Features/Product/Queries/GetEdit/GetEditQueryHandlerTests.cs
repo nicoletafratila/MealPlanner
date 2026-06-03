@@ -51,14 +51,14 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             {
                 Id = id,
                 Name = "Product1",
-                ProductCategoryId = 10
+                ProductCategoryId = Guid.NewGuid()
             };
 
             var mapped = new ProductEditModel
             {
                 Id = id,
                 Name = "Product1",
-                ProductCategoryId = 10
+                ProductCategoryId = Guid.NewGuid()
             };
 
             _repoMock
@@ -122,7 +122,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             {
                 Id = id,
                 Name = "ProdX",
-                ProductCategoryId = 3
+                ProductCategoryId = Guid.NewGuid()
             };
 
             _repoMock

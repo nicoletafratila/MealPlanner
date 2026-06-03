@@ -37,7 +37,7 @@ namespace MealPlanner.Api.Tests.Features
         public void MakeShoppingList_Aggregates_Quantities_Per_Product()
         {
             var baseUnit = new RecipeBook.Data.Entities.Unit { Id = 2, Name = "gr" };
-            var category = new RecipeBook.Data.Entities.ProductCategory { Id = 3 };
+            var category = new RecipeBook.Data.Entities.ProductCategory { Id = Guid.NewGuid() };
             var product = new RecipeBook.Data.Entities.Product
             {
                 Id = 10, Name = "Flour",

@@ -51,7 +51,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
 
             repoMock.Verify(r =>
                     r.SearchByProductCategoryIdsAsync(
-                        It.IsAny<IList<int>>(),
+                        It.IsAny<IList<Guid>>(),
                         It.IsAny<string>(),
                         It.IsAny<CancellationToken>()),
                 Times.Never);
@@ -63,15 +63,17 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             // Arrange
             var (handler, repoMock, recipeClientMock) = CreateHandler();
 
+            var categoryIdsCsv = $"{Guid.NewGuid()},{Guid.NewGuid()}";
+
             var query = new SearchQuery
             {
-                CategoryIds = "1,2",
+                CategoryIds = categoryIdsCsv,
                 AuthToken = "test-token"
             };
 
             recipeClientMock
                 .Setup(c => c.GetProductCategoriesAsync(
-                    "1,2",
+                    categoryIdsCsv,
                     "test-token",
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
@@ -84,14 +86,14 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
 
             repoMock.Verify(r =>
                     r.SearchByProductCategoryIdsAsync(
-                        It.IsAny<IList<int>>(),
+                        It.IsAny<IList<Guid>>(),
                         It.IsAny<string>(),
                         It.IsAny<CancellationToken>()),
                 Times.Never);
 
             recipeClientMock.Verify(c =>
                     c.GetProductCategoriesAsync(
-                        "1,2",
+                        categoryIdsCsv,
                         "test-token",
                         It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -103,29 +105,33 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
             // Arrange
             var (handler, repoMock, recipeClientMock) = CreateHandler();
 
+            var dairyId = Guid.NewGuid();
+            var bakeryId = Guid.NewGuid();
+            var categoryIdsCsv = $"{dairyId},{bakeryId}";
+
             var query = new SearchQuery
             {
-                CategoryIds = "20,21",
+                CategoryIds = categoryIdsCsv,
                 AuthToken = "tok"
             };
 
             var categories = new List<ProductCategoryModel>
             {
-                new() { Id = 20, Name = "Dairy" },
-                new() { Id = 21, Name = "Bakery" }
+                new() { Id = dairyId, Name = "Dairy" },
+                new() { Id = bakeryId, Name = "Bakery" }
             };
 
             recipeClientMock
                 .Setup(c => c.GetProductCategoriesAsync(
-                    "20,21",
+                    categoryIdsCsv,
                     "tok",
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(categories);
 
             // Two mealplans with products in Dairy and one in Bakery
-            var p1 = new RecipeBook.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = 20 };
-            var p2 = new RecipeBook.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = 20 };
-            var p3 = new RecipeBook.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = 21 };
+            var p1 = new RecipeBook.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = dairyId };
+            var p2 = new RecipeBook.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = dairyId };
+            var p3 = new RecipeBook.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = bakeryId };
 
             var mp1 = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan1" };
             var mp2 = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan2" };
@@ -140,8 +146,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
 
             repoMock
                 .Setup(r => r.SearchByProductCategoryIdsAsync(
-                    It.Is<IList<int>>(ids =>
-                        ids.Count == 2 && ids.Contains(20) && ids.Contains(21)),
+                    It.Is<IList<Guid>>(ids =>
+                        ids.Count == 2 && ids.Contains(dairyId) && ids.Contains(bakeryId)),
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(pairs);
@@ -183,14 +189,14 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
 
             recipeClientMock.Verify(c =>
                     c.GetProductCategoriesAsync(
-                        "20,21",
+                        categoryIdsCsv,
                         "tok",
                         It.IsAny<CancellationToken>()),
                 Times.Once);
 
             repoMock.Verify(r =>
                     r.SearchByProductCategoryIdsAsync(
-                        It.IsAny<IList<int>>(),
+                        It.IsAny<IList<Guid>>(),
                         It.IsAny<string>(),
                         It.IsAny<CancellationToken>()),
                 Times.Once);

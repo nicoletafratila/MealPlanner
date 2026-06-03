@@ -16,6 +16,8 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchQueryHandler _handler = null!;
 
+        private static Guid ProductCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         [SetUp]
         public void SetUp()
         {
@@ -87,14 +89,14 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.ProductCategory>
             {
-                new() { Id = 1, Name = "Cat1" },
-                new() { Id = 2, Name = "Cat2" }
+                new() { Id = ProductCategoryGuid(1), Name = "Cat1" },
+                new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
             };
 
             var models = new List<ProductCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1" },
-                new() { Id = 2, Name = "Cat2" }
+                new() { Id = ProductCategoryGuid(1), Name = "Cat1" },
+                new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
             };
 
             _repoMock
@@ -123,7 +125,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
             Assert.That(result.Items, Has.Count.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 2]));
+                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(new[] { ProductCategoryGuid(1), ProductCategoryGuid(2) }));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
@@ -136,7 +138,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.ProductCategory>
             {
-                new() { Id = 1, Name = "Cat1" }
+                new() { Id = ProductCategoryGuid(1), Name = "Cat1" }
             };
 
             _repoMock

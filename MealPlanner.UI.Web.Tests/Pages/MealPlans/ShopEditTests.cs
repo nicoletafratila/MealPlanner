@@ -57,7 +57,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         {
             // Arrange
             var categories = new PagedList<ProductCategoryModel>(
-                [new() { Id = 1 }],
+                [new() { Id = Guid.NewGuid() }],
                 new Metadata());
 
             _productCategoryServiceMock

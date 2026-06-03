@@ -6,7 +6,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
     public class RegisterCommandHandlerTests
     {
         private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
-        private Mock<IAsyncRepository<ProductCategory, int>> _productCategoryRepoMock = null!;
+        private Mock<IAsyncRepository<ProductCategory, Guid>> _productCategoryRepoMock = null!;
         private Mock<IAsyncRepository<RecipeCategory, int>> _recipeCategoryRepoMock = null!;
         private Mock<IEmailService> _emailServiceMock = null!;
         private Mock<ILogger<RegisterCommandHandler>> _loggerMock = null!;
@@ -19,7 +19,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
                 Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
-            _productCategoryRepoMock = new Mock<IAsyncRepository<ProductCategory, int>>(MockBehavior.Loose);
+            _productCategoryRepoMock = new Mock<IAsyncRepository<ProductCategory, Guid>>(MockBehavior.Loose);
             _recipeCategoryRepoMock = new Mock<IAsyncRepository<RecipeCategory, int>>(MockBehavior.Loose);
             _emailServiceMock = new Mock<IEmailService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<RegisterCommandHandler>>(MockBehavior.Loose);
@@ -138,9 +138,9 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             var productTemplates = new List<ProductCategory>
             {
-                new() { Id = 1, Name = "Vegetables", UserId = null },
-                new() { Id = 2, Name = "Dairy", UserId = null },
-                new() { Id = 3, Name = "OtherUserOwned", UserId = "other-user" }
+                new() { Id = Guid.NewGuid(), Name = "Vegetables", UserId = null },
+                new() { Id = Guid.NewGuid(), Name = "Dairy", UserId = null },
+                new() { Id = Guid.NewGuid(), Name = "OtherUserOwned", UserId = "other-user" }
             };
 
             var recipeTemplates = new List<RecipeCategory>

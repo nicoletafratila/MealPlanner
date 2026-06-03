@@ -24,7 +24,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             finally { IsBusy = false; }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync("ProductCategoryEdit?id=0");
+        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"ProductCategoryEdit?id={Guid.Empty}");
         [RelayCommand] private Task EditAsync(ProductCategoryModel c) => Shell.Current.GoToAsync($"ProductCategoryEdit?id={c.Id}");
 
         [RelayCommand]

@@ -48,6 +48,10 @@ namespace MealPlanner.Api.Tests.Repositories
         // preserving the linkage between Shop.Id and ShopDisplaySequence.ShopId.
         private static Guid ShopGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+        // Maps the int seed used throughout these tests to a deterministic ProductCategory Guid, so
+        // call sites can keep passing simple seeds while the entity uses a uniqueidentifier key.
+        private static Guid ProductCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static Shop CreateShopGraph(
             Guid id,
             string name,
@@ -58,13 +62,13 @@ namespace MealPlanner.Api.Tests.Repositories
             {
                 var category = new ProductCategory
                 {
-                    Id = categoryId,
+                    Id = ProductCategoryGuid(categoryId),
                     Name = $"Cat{categoryId}"
                 };
 
                 display.Add(new ShopDisplaySequence
                 {
-                    ProductCategoryId = categoryId,
+                    ProductCategoryId = ProductCategoryGuid(categoryId),
                     ProductCategory = category,
                     Value = value
                 });
@@ -148,17 +152,17 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
             ctx.ProductCategories.AddRange(
-                new ProductCategory { Id = 1, Name = "Cat1" },
-                new ProductCategory { Id = 2, Name = "Cat2" });
+                new ProductCategory { Id = ProductCategoryGuid(1), Name = "Cat1" },
+                new ProductCategory { Id = ProductCategoryGuid(2), Name = "Cat2" });
             ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1" });
-            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 });
+            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(1), Value = 10 });
             await ctx.SaveChangesAsync();
 
             var entity = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
             entity!.DisplaySequence =
             [
-                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 },
-                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 2, Value = 20 }
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(1), Value = 10 },
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(2), Value = 20 }
             ];
 
             // Act
@@ -167,7 +171,7 @@ namespace MealPlanner.Api.Tests.Repositories
             // Assert
             var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == ShopGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(2));
-            Assert.That(rows.Select(s => s.ProductCategoryId), Is.EquivalentTo(new[] { 1, 2 }));
+            Assert.That(rows.Select(s => s.ProductCategoryId), Is.EquivalentTo(new[] { ProductCategoryGuid(1), ProductCategoryGuid(2) }));
         }
 
         [Test]
@@ -176,16 +180,16 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
             ctx.ProductCategories.AddRange(
-                new ProductCategory { Id = 1, Name = "Cat1" },
-                new ProductCategory { Id = 2, Name = "Cat2" });
+                new ProductCategory { Id = ProductCategoryGuid(1), Name = "Cat1" },
+                new ProductCategory { Id = ProductCategoryGuid(2), Name = "Cat2" });
             ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1" });
             ctx.ShopDisplaySequences.AddRange(
-                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 },
-                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 2, Value = 20 });
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(1), Value = 10 },
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(2), Value = 20 });
             await ctx.SaveChangesAsync();
 
             var entity = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
-            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 }];
+            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(1), Value = 10 }];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
@@ -193,7 +197,7 @@ namespace MealPlanner.Api.Tests.Repositories
             // Assert
             var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == ShopGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(1));
-            Assert.That(rows.Single().ProductCategoryId, Is.EqualTo(1));
+            Assert.That(rows.Single().ProductCategoryId, Is.EqualTo(ProductCategoryGuid(1)));
         }
 
         [Test]
@@ -201,19 +205,19 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.ProductCategories.Add(new ProductCategory { Id = 1, Name = "Cat1" });
+            ctx.ProductCategories.Add(new ProductCategory { Id = ProductCategoryGuid(1), Name = "Cat1" });
             ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1" });
-            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 });
+            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(1), Value = 10 });
             await ctx.SaveChangesAsync();
 
             var entity = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
-            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 99 }];
+            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = ProductCategoryGuid(1), Value = 99 }];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var row = ctx.ShopDisplaySequences.Single(s => s.ShopId == ShopGuid(1) && s.ProductCategoryId == 1);
+            var row = ctx.ShopDisplaySequences.Single(s => s.ShopId == ShopGuid(1) && s.ProductCategoryId == ProductCategoryGuid(1));
             Assert.That(row.Value, Is.EqualTo(99));
         }
 

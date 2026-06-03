@@ -42,7 +42,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                     Id = 1,
                     Name = "Product1",
                     BaseUnitId = 2,
-                    ProductCategoryId = 3
+                    ProductCategoryId = Guid.NewGuid()
                 }
             };
 

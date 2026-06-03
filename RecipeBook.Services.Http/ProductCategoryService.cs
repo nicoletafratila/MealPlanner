@@ -14,7 +14,7 @@ namespace RecipeBook.Services.Http
     {
         private readonly string _controller = RecipeBookControllers.ProductCategoryUrl;
 
-        public async Task<ProductCategoryEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ProductCategoryEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<ProductCategoryEditModel>(url, cancellationToken);
@@ -35,7 +35,7 @@ namespace RecipeBook.Services.Http
             catch (Exception ex) { logger.LogError(ex, "ProductCategory UpdateAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try { return await DeleteAsync(url, cancellationToken); }

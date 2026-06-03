@@ -17,7 +17,7 @@
         <Entry Text="{Binding Model.Name}" Placeholder="Product name" />
         <Label Text="Category" Style="{StaticResource SectionHeaderLabel}" />
         <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" Title="Select category"
-                SelectedIndex="{Binding Model.ProductCategoryId}" />
+                SelectedItem="{Binding SelectedCategory}" />
         <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
     </VerticalStackLayout>

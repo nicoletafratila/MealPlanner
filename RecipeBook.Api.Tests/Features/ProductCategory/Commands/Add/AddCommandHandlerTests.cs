@@ -83,7 +83,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Add
         {
             var model = new ProductCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Dairy"
             };
 
@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Add
 
             var existing = new List<RecipeBook.Data.Entities.ProductCategory>
             {
-                new() { Id = 1, Name = "dairy" }
+                new() { Id = Guid.NewGuid(), Name = "dairy" }
             };
 
             _repoMock
@@ -117,7 +117,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Add
         {
             var model = new ProductCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Snacks"
             };
 
@@ -129,7 +129,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.ProductCategory
             {
-                Id = 5,
+                Id = Guid.NewGuid(),
                 Name = "Snacks"
             };
 
@@ -156,7 +156,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Add
         {
             var model = new ProductCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "ErrorCat"
             };
 
@@ -168,7 +168,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.ProductCategory
             {
-                Id = 7,
+                Id = Guid.NewGuid(),
                 Name = "ErrorCat"
             };
 

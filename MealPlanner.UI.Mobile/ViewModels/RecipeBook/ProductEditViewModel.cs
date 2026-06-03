@@ -13,9 +13,15 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty] private int _productId;
         [ObservableProperty] private ProductEditModel _model = new();
         [ObservableProperty] private ObservableCollection<ProductCategoryModel> _categories = [];
+        [ObservableProperty] private ProductCategoryModel? _selectedCategory;
         [ObservableProperty] private bool _isNew;
 
         partial void OnProductIdChanged(int value) { IsNew = value == 0; _ = LoadAsync(); }
+
+        partial void OnSelectedCategoryChanged(ProductCategoryModel? value)
+        {
+            if (value is not null) Model.ProductCategoryId = value.Id;
+        }
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -26,6 +32,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var cats = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
                 if (cats is not null) Categories = new ObservableCollection<ProductCategoryModel>(cats.Items);
                 if (!IsNew) Model = await productService.GetEditAsync(ProductId) ?? new();
+                SelectedCategory = Categories.FirstOrDefault(c => c.Id == Model.ProductCategoryId);
             }
             catch (Exception ex) { SetError(ex.Message); }
             finally { IsBusy = false; }

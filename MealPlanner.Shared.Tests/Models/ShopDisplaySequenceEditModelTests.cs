@@ -40,7 +40,7 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            var category = new ProductCategoryModel { Id = 10, Name = "Dairy" };
+            var category = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Dairy" };
             var shopId = Guid.NewGuid();
 
             // Act
@@ -63,7 +63,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 ShopId = Guid.NewGuid(),
                 Value = -1,
-                ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" }
+                ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat" }
             };
 
             // Act
@@ -85,7 +85,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 ShopId = Guid.NewGuid(),
                 Value = 0,
-                ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" }
+                ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat" }
             };
 
             // Act
@@ -116,7 +116,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 ShopId = Guid.NewGuid(),
                 Value = 3,
-                ProductCategory = new ProductCategoryModel { Id = 1, Name = "Snacks" }
+                ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Snacks" }
             };
 
             // Act

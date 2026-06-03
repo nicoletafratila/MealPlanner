@@ -43,9 +43,11 @@ namespace RecipeBook.Api.Tests.Repositories
             return new ProductRepository(context);
         }
 
+        private static Guid ProductCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static Product CreateProductGraph(
             string name,
-            int categoryId,
+            Guid categoryId,
             string categoryName,
             string baseUnitName)
         {
@@ -71,8 +73,8 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = CreateProductGraph("P1", 10, "Cat1", "kg");
-            var p2 = CreateProductGraph("P2", 20, "Cat2", "l");
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            var p2 = CreateProductGraph("P2", ProductCategoryGuid(20), "Cat2", "l");
             ctx.Products.AddRange(p1, p2);
             await ctx.SaveChangesAsync();
 
@@ -94,7 +96,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = CreateProductGraph("P1", 10, "Cat1", "kg");
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
             ctx.Products.Add(p1);
             await ctx.SaveChangesAsync();
 
@@ -118,13 +120,13 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = CreateProductGraph("P1", 10, "Cat1", "kg");
-            var p2 = CreateProductGraph("P2", 20, "Cat2", "l");
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            var p2 = CreateProductGraph("P2", ProductCategoryGuid(20), "Cat2", "l");
             ctx.Products.AddRange(p1, p2);
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(10, CancellationToken.None);
+            var result = await repo.SearchAsync(ProductCategoryGuid(10), CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -137,12 +139,12 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = CreateProductGraph("P1", 10, "Cat1", "kg");
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
             ctx.Products.Add(p1);
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(999, CancellationToken.None);
+            var result = await repo.SearchAsync(ProductCategoryGuid(999), CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -156,8 +158,8 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = CreateProductGraph("Milk", 10, "Cat1", "l");
-            var p2 = CreateProductGraph("Bread", 20, "Cat2", "pcs");
+            var p1 = CreateProductGraph("Milk", ProductCategoryGuid(10), "Cat1", "l");
+            var p2 = CreateProductGraph("Bread", ProductCategoryGuid(20), "Cat2", "pcs");
             p1.UserId = "user1";
             p2.UserId = "user1";
             ctx.Products.AddRange(p1, p2);
@@ -195,7 +197,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var p1 = CreateProductGraph("Milk", 10, "Cat1", "l");
+            var p1 = CreateProductGraph("Milk", ProductCategoryGuid(10), "Cat1", "l");
             p1.UserId = "user1";
             ctx.Products.Add(p1);
             await ctx.SaveChangesAsync();

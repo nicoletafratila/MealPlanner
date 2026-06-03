@@ -32,7 +32,8 @@ namespace RecipeBook.Api.Tests.Features
         [Test]
         public void MakeShoppingList_SingleIngredient_CreatesSingleProduct()
         {
-            var category = new RecipeBook.Data.Entities.ProductCategory { Id = 100 };
+            var categoryId = Guid.NewGuid();
+            var category = new RecipeBook.Data.Entities.ProductCategory { Id = categoryId };
             var baseUnit = new RecipeBook.Data.Entities.Unit { Id = 1, Name = "kg" };
             var product = new RecipeBook.Data.Entities.Product { Id = 5, Name = "Flour", ProductCategory = category, BaseUnit = baseUnit };
             var recipe = new RecipeBook.Data.Entities.Recipe
@@ -40,7 +41,7 @@ namespace RecipeBook.Api.Tests.Features
                 Name = "Cake",
                 RecipeIngredients = [new RecipeBook.Data.Entities.RecipeIngredient { ProductId = 5, Product = product, Quantity = 2m, Unit = baseUnit }]
             };
-            var shop = new MealPlanner.Data.Entities.Shop { DisplaySequence = [new MealPlanner.Data.Entities.ShopDisplaySequence { Value = 3, ProductCategoryId = 100 }] };
+            var shop = new MealPlanner.Data.Entities.Shop { DisplaySequence = [new MealPlanner.Data.Entities.ShopDisplaySequence { Value = 3, ProductCategoryId = categoryId }] };
 
             var list = recipe.MakeShoppingList(shop);
 

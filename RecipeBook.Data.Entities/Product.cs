@@ -16,7 +16,7 @@ namespace RecipeBook.Data.Entities
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory? ProductCategory { get; set; }
-        public int ProductCategoryId { get; set; }
+        public Guid ProductCategoryId { get; set; }
 
         public override string ToString() =>
             $"{Name} (Id: {Id}, CategoryId: {ProductCategoryId}, BaseUnitId: {BaseUnitId})";

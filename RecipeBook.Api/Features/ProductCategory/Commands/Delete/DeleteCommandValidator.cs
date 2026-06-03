@@ -11,7 +11,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
         public DeleteCommandValidator()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(ProductCategoryMessages.IdGreaterThanZero);
         }
     }

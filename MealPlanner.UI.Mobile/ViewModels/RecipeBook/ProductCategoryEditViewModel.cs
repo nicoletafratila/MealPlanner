@@ -8,11 +8,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(CategoryId), "id")]
     public partial class ProductCategoryEditViewModel(ProductCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private int _categoryId;
+        [ObservableProperty] private Guid _categoryId;
         [ObservableProperty] private ProductCategoryEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
-        partial void OnCategoryIdChanged(int value) { IsNew = value == 0; if (!IsNew) _ = LoadAsync(); }
+        partial void OnCategoryIdChanged(Guid value) { IsNew = value == Guid.Empty; if (!IsNew) _ = LoadAsync(); }
 
         [RelayCommand]
         private async Task LoadAsync()

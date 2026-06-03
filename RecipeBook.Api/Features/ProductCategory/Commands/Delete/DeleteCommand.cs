@@ -11,13 +11,13 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Delete
         /// <summary>
         /// Id of the product category to delete.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public DeleteCommand()
         {
         }
 
-        public DeleteCommand(int id)
+        public DeleteCommand(Guid id)
         {
             Id = id;
         }

@@ -18,7 +18,7 @@ namespace MealPlanner.Data.Entities.Tests
                 Assert.That(seq.Shop, Is.Null);
                 Assert.That(seq.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(seq.ProductCategory, Is.Null);
-                Assert.That(seq.ProductCategoryId, Is.Zero);
+                Assert.That(seq.ProductCategoryId, Is.EqualTo(Guid.Empty));
             }
         }
 
@@ -29,6 +29,7 @@ namespace MealPlanner.Data.Entities.Tests
             var shop = new Shop();
             var category = new ProductCategory();
             var shopId = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
 
             // Act
             var seq = new ShopDisplaySequence
@@ -37,7 +38,7 @@ namespace MealPlanner.Data.Entities.Tests
                 Shop = shop,
                 ShopId = shopId,
                 ProductCategory = category,
-                ProductCategoryId = 2
+                ProductCategoryId = categoryId
             };
 
             // Assert
@@ -47,7 +48,7 @@ namespace MealPlanner.Data.Entities.Tests
                 Assert.That(seq.Shop, Is.SameAs(shop));
                 Assert.That(seq.ShopId, Is.EqualTo(shopId));
                 Assert.That(seq.ProductCategory, Is.SameAs(category));
-                Assert.That(seq.ProductCategoryId, Is.EqualTo(2));
+                Assert.That(seq.ProductCategoryId, Is.EqualTo(categoryId));
             }
         }
 
@@ -55,10 +56,11 @@ namespace MealPlanner.Data.Entities.Tests
         public void ToString_Contains_Key_Information()
         {
             var shopId = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
             var seq = new ShopDisplaySequence
             {
                 ShopId = shopId,
-                ProductCategoryId = 20,
+                ProductCategoryId = categoryId,
                 Value = 30
             };
 
@@ -67,7 +69,7 @@ namespace MealPlanner.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(text, Does.Contain(shopId.ToString()));
-                Assert.That(text, Does.Contain("20"));
+                Assert.That(text, Does.Contain(categoryId.ToString()));
                 Assert.That(text, Does.Contain("30"));
             }
         }

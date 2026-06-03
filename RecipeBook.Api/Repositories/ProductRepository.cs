@@ -44,7 +44,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public async Task<IReadOnlyList<Product>> SearchAsync(
-            int categoryId,
+            Guid categoryId,
             CancellationToken cancellationToken)
         {
             return await Context.Products

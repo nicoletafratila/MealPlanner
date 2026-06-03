@@ -67,6 +67,10 @@ namespace MealPlanner.Api.Tests.Repositories
         // preserving the linkage between MealPlan.Id and MealPlanRecipe.MealPlanId.
         private static Guid MealPlanId(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+        // Maps the int seed used throughout these tests to a deterministic ProductCategory Guid, so
+        // call sites can keep passing simple seeds while the entity uses a uniqueidentifier key.
+        private static Guid ProductCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static (MealPlan plan, Recipe recipe, Product product) CreateMealPlanGraph(
             Guid mealPlanId,
             string mealPlanName,
@@ -88,7 +92,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
             var productCategory = new ProductCategory
             {
-                Id = productCategoryId,
+                Id = ProductCategoryGuid(productCategoryId),
                 Name = productCategoryName
             };
 
@@ -400,14 +404,14 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByProductCategoryIdsAsync([20], "user1", CancellationToken.None);
+            var result = await repo.SearchByProductCategoryIdsAsync([ProductCategoryGuid(20)], "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
             var kv = result.Single();
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(kv.Key.ProductCategoryId, Is.EqualTo(20));
+                Assert.That(kv.Key.ProductCategoryId, Is.EqualTo(ProductCategoryGuid(20)));
                 Assert.That(kv.Value.Name, Is.EqualTo("Plan1"));
             }
         }

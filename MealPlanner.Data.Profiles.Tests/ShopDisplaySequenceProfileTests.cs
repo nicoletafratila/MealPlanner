@@ -29,7 +29,7 @@ namespace MealPlanner.Data.Profiles.Tests
             var entity = new ShopDisplaySequence
             {
                 ShopId = Guid.NewGuid(),
-                ProductCategoryId = 20,
+                ProductCategoryId = Guid.NewGuid(),
                 Value = 3
             };
 
@@ -55,7 +55,7 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 ShopId = Guid.NewGuid(),
                 Value = 7,
-                ProductCategory = new ProductCategoryModel { Id = 30 }
+                ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid() }
             };
 
             var result = _mapper.Map<ShopDisplaySequence>(model);
@@ -85,7 +85,7 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 ShopId = Guid.NewGuid(),
                 Value = 2,
-                ProductCategoryId = 5,
+                ProductCategoryId = Guid.NewGuid(),
                 Shop = new Shop { Name = "Existing Shop" },
                 ProductCategory = new ProductCategory { Name = "Existing Category" }
             };
@@ -96,7 +96,7 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 Assert.That(destination.ShopId, Is.EqualTo(model.ShopId));
                 Assert.That(destination.Value, Is.EqualTo(model.Value));
-                Assert.That(destination.ProductCategoryId, Is.Zero);
+                Assert.That(destination.ProductCategoryId, Is.EqualTo(Guid.Empty));
 
                 Assert.That(destination.Shop!.Name, Is.EqualTo("Existing Shop"));
                 Assert.That(destination.ProductCategory!.Name, Is.EqualTo("Existing Category"));

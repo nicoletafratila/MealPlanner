@@ -8,7 +8,7 @@ namespace MealPlanner.Data.Entities
 
         public IList<ShopDisplaySequence>? DisplaySequence { get; set; } = [];
 
-        public ShopDisplaySequence? GetDisplaySequence(int? categoryId)
+        public ShopDisplaySequence? GetDisplaySequence(Guid? categoryId)
         {
             if (categoryId is null || DisplaySequence is null || DisplaySequence.Count == 0)
                 return null;

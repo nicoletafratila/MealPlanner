@@ -77,8 +77,8 @@ namespace Identity.Api
 
         protected override void RegisterRepositories(IServiceCollection services)
         {
-            services.AddScoped<IAsyncRepository<ProductCategory, int>>(sp =>
-                new BaseAsyncRepository<ProductCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
+            services.AddScoped<IAsyncRepository<ProductCategory, Guid>>(sp =>
+                new BaseAsyncRepository<ProductCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
             services.AddScoped<IAsyncRepository<RecipeCategory, int>>(sp =>
                 new BaseAsyncRepository<RecipeCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
 

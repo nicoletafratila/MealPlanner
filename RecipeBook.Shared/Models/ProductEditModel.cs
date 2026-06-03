@@ -43,14 +43,13 @@ namespace RecipeBook.Shared.Models
         /// Product category id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int ProductCategoryId { get; set; }
+        public Guid ProductCategoryId { get; set; }
 
         public ProductEditModel()
         {
         }
 
-        public ProductEditModel(int id, string name, int baseUnitId, int productCategoryId)
+        public ProductEditModel(int id, string name, int baseUnitId, Guid productCategoryId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

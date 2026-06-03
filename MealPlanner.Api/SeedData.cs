@@ -50,90 +50,61 @@ namespace MealPlanner.Api
             await context.SaveChangesAsync();
         }
 
+        private static readonly string[] ProductCategoryOrder =
+        [
+            "Lactate", "Mezeluri", "Legume", "Fructe", "Condimente", "Carne", "Conserve", "Ulei/Otet",
+            "Fructe uscate", "Paste", "Branzeturi", "Fainoase", "Sosuri", "Congelate", "Apa",
+            "Cofetarie/Patiserie", "Brutarie", "Peste", "Produse bucatarie", "Cereale", "Rechizite",
+            "Jucarii", "Detergenti", "Haine", "Alcool", "Produse igena", "Sucuri", "Ceai/Cafea",
+            "Hartie/Servetele", "Snaks", "Dulciuri"
+        ];
+
         private static async Task SeedShopsAsync(MealPlannerDbContext context)
         {
             if (context.Shops.Any())
                 return;
 
+            var categoryIdsByName = await context.ProductCategories
+                .Where(c => c.Name != null)
+                .ToDictionaryAsync(c => c.Name!, c => c.Id);
+
+            if (categoryIdsByName.Count == 0)
+                return;
+
             context.Shops.Add(new Shop
             {
                 Name = "Carrefour AFI",
-                DisplaySequence =
-                [
-                    new() { ProductCategoryId = 1,  Value = 10 },
-                    new() { ProductCategoryId = 2,  Value = 6  },
-                    new() { ProductCategoryId = 3,  Value = 3  },
-                    new() { ProductCategoryId = 4,  Value = 2  },
-                    new() { ProductCategoryId = 5,  Value = 20 },
-                    new() { ProductCategoryId = 6,  Value = 5  },
-                    new() { ProductCategoryId = 7,  Value = 21 },
-                    new() { ProductCategoryId = 8,  Value = 23 },
-                    new() { ProductCategoryId = 9,  Value = 12 },
-                    new() { ProductCategoryId = 10, Value = 24 },
-                    new() { ProductCategoryId = 11, Value = 9  },
-                    new() { ProductCategoryId = 12, Value = 19 },
-                    new() { ProductCategoryId = 13, Value = 22 },
-                    new() { ProductCategoryId = 14, Value = 8  },
-                    new() { ProductCategoryId = 15, Value = 14 },
-                    new() { ProductCategoryId = 16, Value = 18 },
-                    new() { ProductCategoryId = 17, Value = 1  },
-                    new() { ProductCategoryId = 18, Value = 7  },
-                    new() { ProductCategoryId = 19, Value = 25 },
-                    new() { ProductCategoryId = 20, Value = 11 },
-                    new() { ProductCategoryId = 21, Value = 26 },
-                    new() { ProductCategoryId = 22, Value = 30 },
-                    new() { ProductCategoryId = 23, Value = 28 },
-                    new() { ProductCategoryId = 24, Value = 31 },
-                    new() { ProductCategoryId = 25, Value = 4  },
-                    new() { ProductCategoryId = 26, Value = 29 },
-                    new() { ProductCategoryId = 27, Value = 13 },
-                    new() { ProductCategoryId = 28, Value = 15 },
-                    new() { ProductCategoryId = 29, Value = 27 },
-                    new() { ProductCategoryId = 30, Value = 16 },
-                    new() { ProductCategoryId = 31, Value = 17 }
-                ]
+                DisplaySequence = BuildDisplaySequence(
+                    categoryIdsByName,
+                    [10, 6, 3, 2, 20, 5, 21, 23, 12, 24, 9, 19, 22, 8, 14, 18, 1, 7, 25, 11, 26, 30, 28, 31, 4, 29, 13, 15, 27, 16, 17])
             });
 
             context.Shops.Add(new Shop
             {
                 Name = "Carrefour Calea Bucuresti",
-                DisplaySequence =
-                [
-                    new() { ProductCategoryId = 1,  Value = 29 },
-                    new() { ProductCategoryId = 2,  Value = 23 },
-                    new() { ProductCategoryId = 3,  Value = 28 },
-                    new() { ProductCategoryId = 4,  Value = 27 },
-                    new() { ProductCategoryId = 5,  Value = 11 },
-                    new() { ProductCategoryId = 6,  Value = 24 },
-                    new() { ProductCategoryId = 7,  Value = 12 },
-                    new() { ProductCategoryId = 8,  Value = 15 },
-                    new() { ProductCategoryId = 9,  Value = 20 },
-                    new() { ProductCategoryId = 10, Value = 16 },
-                    new() { ProductCategoryId = 11, Value = 30 },
-                    new() { ProductCategoryId = 12, Value = 13 },
-                    new() { ProductCategoryId = 13, Value = 14 },
-                    new() { ProductCategoryId = 14, Value = 26 },
-                    new() { ProductCategoryId = 15, Value = 9  },
-                    new() { ProductCategoryId = 16, Value = 17 },
-                    new() { ProductCategoryId = 17, Value = 31 },
-                    new() { ProductCategoryId = 18, Value = 25 },
-                    new() { ProductCategoryId = 19, Value = 3  },
-                    new() { ProductCategoryId = 20, Value = 19 },
-                    new() { ProductCategoryId = 21, Value = 1  },
-                    new() { ProductCategoryId = 22, Value = 2  },
-                    new() { ProductCategoryId = 23, Value = 5  },
-                    new() { ProductCategoryId = 24, Value = 4  },
-                    new() { ProductCategoryId = 25, Value = 10 },
-                    new() { ProductCategoryId = 26, Value = 7  },
-                    new() { ProductCategoryId = 27, Value = 8  },
-                    new() { ProductCategoryId = 28, Value = 18 },
-                    new() { ProductCategoryId = 29, Value = 6  },
-                    new() { ProductCategoryId = 30, Value = 21 },
-                    new() { ProductCategoryId = 31, Value = 22 }
-                ]
+                DisplaySequence = BuildDisplaySequence(
+                    categoryIdsByName,
+                    [29, 23, 28, 27, 11, 24, 12, 15, 20, 16, 30, 13, 14, 26, 9, 17, 31, 25, 3, 19, 1, 2, 5, 4, 10, 7, 8, 18, 6, 21, 22])
             });
 
             await context.SaveChangesAsync();
+        }
+
+        private static List<ShopDisplaySequence> BuildDisplaySequence(
+            IReadOnlyDictionary<string, Guid> categoryIdsByName,
+            int[] values)
+        {
+            var sequence = new List<ShopDisplaySequence>();
+
+            for (var i = 0; i < ProductCategoryOrder.Length && i < values.Length; i++)
+            {
+                if (categoryIdsByName.TryGetValue(ProductCategoryOrder[i], out var categoryId))
+                {
+                    sequence.Add(new ShopDisplaySequence { ProductCategoryId = categoryId, Value = values[i] });
+                }
+            }
+
+            return sequence;
         }
     }
 }

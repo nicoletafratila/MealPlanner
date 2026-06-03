@@ -62,7 +62,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Returns the display sequence entry for a given category id, or null if not found.
         /// </summary>
-        public ShopDisplaySequenceEditModel? GetDisplaySequence(int? categoryId)
+        public ShopDisplaySequenceEditModel? GetDisplaySequence(Guid? categoryId)
         {
             if (categoryId is null || DisplaySequence is null)
                 return null;

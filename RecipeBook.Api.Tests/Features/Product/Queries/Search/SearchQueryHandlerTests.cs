@@ -88,8 +88,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = 10 },
-                new() { Id = 2, Name = "P2", ProductCategoryId = 20 }
+                new() { Id = 1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = 2, Name = "P2", ProductCategoryId = Guid.NewGuid() }
             };
 
             var models = new List<ProductModel>
@@ -138,9 +138,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = 10 },
-                new() { Id = 2, Name = "P2", ProductCategoryId = 20 },
-                new() { Id = 3, Name = "P3", ProductCategoryId = 10 },
+                new() { Id = 1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = 2, Name = "P2", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = 3, Name = "P3", ProductCategoryId = Guid.NewGuid() },
             };
 
             var models = new List<ProductModel>
@@ -186,7 +186,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = 10 }
+                new() { Id = 1, Name = "P1", ProductCategoryId = Guid.NewGuid() }
             };
 
             _repoMock

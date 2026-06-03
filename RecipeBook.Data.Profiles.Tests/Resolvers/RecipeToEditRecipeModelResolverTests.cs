@@ -67,8 +67,8 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         [Test]
         public void Map_MapsIngredients_OrdersByCategoryThenProductName_AndSetsIndexes()
         {
-            var catA = new ProductCategory { Id = 1, Name = "Category A" };
-            var catB = new ProductCategory { Id = 2, Name = "Category B" };
+            var catA = new ProductCategory { Id = Guid.NewGuid(), Name = "Category A" };
+            var catB = new ProductCategory { Id = Guid.NewGuid(), Name = "Category B" };
 
             var recipe = new Recipe
             {

@@ -63,7 +63,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 if (shopTask.Result is not null) Shops = new ObservableCollection<ShopModel>(shopTask.Result.Items);
                 if (catTask.Result is not null)
                 {
-                    var cats = new List<ProductCategoryModel> { new() { Id = 0, Name = "All categories" } };
+                    var cats = new List<ProductCategoryModel> { new() { Id = Guid.Empty, Name = "All categories" } };
                     cats.AddRange(catTask.Result.Items);
                     ProductCategories = new ObservableCollection<ProductCategoryModel>(cats);
                 }
@@ -84,11 +84,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             finally { IsBusy = false; }
         }
 
-        private async Task LoadProductsByCategoryAsync(int? categoryId)
+        private async Task LoadProductsByCategoryAsync(Guid? categoryId)
         {
             try
             {
-                var result = categoryId is null or 0
+                var result = categoryId is null || categoryId.Value == Guid.Empty
                     ? await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = DefaultSorting })
                     : await productService.SearchAsync(new QueryParameters<ProductModel>
                     {

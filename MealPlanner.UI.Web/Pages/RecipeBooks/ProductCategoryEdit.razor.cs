@@ -35,7 +35,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 new BreadcrumbItem { Text = Resources.ProductCategoryEdit.BreadcrumbProductCategory, IsCurrentPage = true },
             ];
 
-            if (!int.TryParse(Id, out var id) || id == 0)
+            if (!Guid.TryParse(Id, out var id) || id == Guid.Empty)
             {
                 ProductCategory = new ProductCategoryEditModel();
             }
@@ -55,7 +55,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             Common.Models.CommandResponse? response;
 
-            if (productCategory.Id == 0)
+            if (productCategory.Id == Guid.Empty)
             {
                 response = await ProductCategoryService.AddAsync(productCategory);
             }
@@ -82,7 +82,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteAsync()
         {
-            if (ProductCategory.Id == 0)
+            if (ProductCategory.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -107,7 +107,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteCoreAsync(ProductCategoryEditModel productCategory)
         {
-            if (productCategory.Id == 0)
+            if (productCategory.Id == Guid.Empty)
                 return;
 
             var response = await ProductCategoryService.DeleteAsync(productCategory.Id);

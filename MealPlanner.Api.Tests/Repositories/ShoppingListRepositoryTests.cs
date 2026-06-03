@@ -55,7 +55,7 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             var category = new ProductCategory
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Category1"
             };
 
