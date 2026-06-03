@@ -2,10 +2,9 @@ using BlazorBootstrap;
 using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
-using MealPlanner.UI.Web.Services;
 using Identity.Services.Http;
 using Identity.Shared.Models;
-using MealPlanner.UI.Web.Shared;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
@@ -15,7 +14,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
     public partial class UsersOverview
     {
         private List<BreadcrumbItem> _navItems = [];
-        private GridTemplate<ApplicationUserModel>? _usersGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
         private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;

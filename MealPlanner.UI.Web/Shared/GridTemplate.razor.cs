@@ -1,11 +1,16 @@
 ﻿using BlazorBootstrap;
 using Common.Models;
+using Common.UI;
+using MealPlanner.UI.Web.Shared.Resources;
 using Microsoft.AspNetCore.Components;
 
 namespace MealPlanner.UI.Web.Shared
 {
     public partial class GridTemplate<TItem> where TItem : BaseModel
     {
+        [CascadingParameter(Name = "MessageComponent")]
+        private IMessageComponent? MessageComponent { get; set; }
+
         [Parameter]
         public GridDataProviderDelegate<TItem>? DataProvider { get; set; }
 
@@ -34,6 +39,24 @@ namespace MealPlanner.UI.Web.Shared
         public GridSettingsProviderDelegate? SettingsProvider { get; set; }
 
         private Grid<TItem>? gridTemplateReference;
+
+        private async Task<GridDataProviderResult<TItem>> DataProviderWrapperAsync(GridDataProviderRequest<TItem> request)
+        {
+            if (DataProvider is null)
+                return new GridDataProviderResult<TItem> { Data = [], TotalCount = 0 };
+
+            try
+            {
+                return await DataProvider(request);
+            }
+            catch (HttpRequestException)
+            {
+                if (MessageComponent is not null)
+                    await MessageComponent.ShowErrorAsync(Messages.ServiceUnavailable);
+
+                return new GridDataProviderResult<TItem> { Data = [], TotalCount = 0 };
+            }
+        }
 
         private async Task<GridSettings?> SettingsProviderWrapperAsync()
         {

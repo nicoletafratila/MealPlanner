@@ -4,7 +4,6 @@ using Common.Constants;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.UI.Web.Services;
-using Identity.Services.Http;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;

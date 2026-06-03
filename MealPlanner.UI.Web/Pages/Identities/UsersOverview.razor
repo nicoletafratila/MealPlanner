@@ -25,7 +25,7 @@
     </div>
 
     <div class="card-body">
-        <GridTemplate TItem="ApplicationUserModel" @key="@_gridKey" @ref="_usersGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
+        <GridTemplate TItem="ApplicationUserModel" @key="@_gridKey" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
