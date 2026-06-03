@@ -60,12 +60,13 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void Recipe_To_RecipeModel_Maps_Category_And_Image()
         {
+            var categoryId = Guid.NewGuid();
             var recipe = new Recipe
             {
                 Id = 1,
                 Name = "Test",
                 ImageContent = [1, 2, 3],
-                RecipeCategory = new RecipeCategory { Id = 11, Name = "Dessert" }
+                RecipeCategory = new RecipeCategory { Id = categoryId, Name = "Dessert" }
             };
 
             var result = _mapper.Map<RecipeModel>(recipe);
@@ -74,7 +75,7 @@ namespace RecipeBook.Data.Profiles.Tests
             {
                 Assert.That(result.Id, Is.EqualTo(1));
                 Assert.That(result.Name, Is.EqualTo("Test"));
-                Assert.That(result.RecipeCategoryId, Is.EqualTo("11"));
+                Assert.That(result.RecipeCategoryId, Is.EqualTo(categoryId.ToString()));
                 Assert.That(result.RecipeCategoryName, Is.EqualTo("Dessert"));
                 Assert.That(result.ImageUrl, Does.StartWith("data:image/jpg;base64,"));
             }

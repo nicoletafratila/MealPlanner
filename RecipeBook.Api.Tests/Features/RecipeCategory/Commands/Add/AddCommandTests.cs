@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             // Arrange
             var model = new RecipeCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Breakfast",
                 DisplaySequence = 1
             };
@@ -50,7 +50,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             var command = new AddCommand();
             var model = new RecipeCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Lunch",
                 DisplaySequence = 2
             };

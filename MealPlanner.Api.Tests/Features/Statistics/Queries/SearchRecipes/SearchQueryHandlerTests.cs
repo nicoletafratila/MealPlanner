@@ -50,7 +50,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 Times.Never);
 
             mealPlanRepoMock.Verify(
-                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -60,15 +60,17 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             // Arrange
             var (handler, mealPlanRepoMock, recipeBookClientMock) = CreateHandler();
 
+            var categoryIds = $"{Guid.NewGuid()},{Guid.NewGuid()}";
+
             var query = new SearchQuery
             {
-                CategoryIds = "1,2",
+                CategoryIds = categoryIds,
                 AuthToken = "test-token"
             };
 
             recipeBookClientMock
                 .Setup(c => c.GetCategoriesAsync(
-                    "1,2",
+                    categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
@@ -80,12 +82,12 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             Assert.That(result, Is.Empty);
 
             mealPlanRepoMock.Verify(
-                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
 
             recipeBookClientMock.Verify(
                 c => c.GetCategoriesAsync(
-                    "1,2",
+                    categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -97,21 +99,25 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             // Arrange
             var (handler, mealPlanRepoMock, recipeBookClientMock) = CreateHandler();
 
+            var cat1Id = Guid.NewGuid();
+            var cat2Id = Guid.NewGuid();
+            var categoryIds = $"{cat1Id},{cat2Id}";
+
             var query = new SearchQuery
             {
-                CategoryIds = "5,6",
+                CategoryIds = categoryIds,
                 AuthToken = "test-token"
             };
 
             var categories = new List<RecipeCategoryModel>
             {
-                new() { Id = 5, Name = "Main" },
-                new() { Id = 6, Name = "Dessert" }
+                new() { Id = cat1Id, Name = "Main" },
+                new() { Id = cat2Id, Name = "Dessert" }
             };
 
             recipeBookClientMock
                 .Setup(c => c.GetCategoriesAsync(
-                    "5,6",
+                    categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(categories);
@@ -125,7 +131,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                     {
                         Id = 1,
                         Name = "R1",
-                        RecipeCategoryId = 5
+                        RecipeCategoryId = cat1Id
                     }
                 },
                 new()
@@ -134,7 +140,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                     {
                         Id = 2,
                         Name = "R1",
-                        RecipeCategoryId = 5
+                        RecipeCategoryId = cat1Id
                     }
                 },
                 new()
@@ -143,7 +149,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                     {
                         Id = 3,
                         Name = "R2",
-                        RecipeCategoryId = 5
+                        RecipeCategoryId = cat1Id
                     }
                 },
                 new()
@@ -152,14 +158,14 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                     {
                         Id = 4,
                         Name = "D1",
-                        RecipeCategoryId = 6
+                        RecipeCategoryId = cat2Id
                     }
                 }
             };
 
             mealPlanRepoMock
                 .Setup(r => r.SearchByRecipeCategoryIdsAsync(
-                    It.Is<IList<int>>(ids => ids.Count == 2 && ids.Contains(5) && ids.Contains(6)),
+                    It.Is<IList<Guid>>(ids => ids.Count == 2 && ids.Contains(cat1Id) && ids.Contains(cat2Id)),
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlanRecipes);
@@ -200,13 +206,13 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
 
             recipeBookClientMock.Verify(
                 c => c.GetCategoriesAsync(
-                    "5,6",
+                    categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()),
                 Times.Once);
 
             mealPlanRepoMock.Verify(
-                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<int>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                r => r.SearchByRecipeCategoryIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
     }

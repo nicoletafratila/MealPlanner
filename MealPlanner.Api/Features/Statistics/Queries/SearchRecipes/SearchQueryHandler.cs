@@ -119,14 +119,14 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
             return result;
         }
 
-        private static List<int> ParseCategoryIds(string? ids)
+        private static List<Guid> ParseCategoryIds(string? ids)
         {
             if (string.IsNullOrWhiteSpace(ids))
                 return [];
 
             return ids
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(part => int.TryParse(part, out var id) ? (int?)id : null)
+                .Select(part => Guid.TryParse(part, out var id) ? (Guid?)id : null)
                 .Where(id => id.HasValue)
                 .Select(id => id!.Value)
                 .ToList();

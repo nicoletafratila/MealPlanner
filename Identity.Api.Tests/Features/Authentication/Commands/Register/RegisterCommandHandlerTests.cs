@@ -7,7 +7,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
     {
         private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IAsyncRepository<ProductCategory, Guid>> _productCategoryRepoMock = null!;
-        private Mock<IAsyncRepository<RecipeCategory, int>> _recipeCategoryRepoMock = null!;
+        private Mock<IAsyncRepository<RecipeCategory, Guid>> _recipeCategoryRepoMock = null!;
         private Mock<IEmailService> _emailServiceMock = null!;
         private Mock<ILogger<RegisterCommandHandler>> _loggerMock = null!;
         private RegisterCommandHandler _handler = null!;
@@ -20,7 +20,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
                 null, null, null, null, null, null, null, null);
 
             _productCategoryRepoMock = new Mock<IAsyncRepository<ProductCategory, Guid>>(MockBehavior.Loose);
-            _recipeCategoryRepoMock = new Mock<IAsyncRepository<RecipeCategory, int>>(MockBehavior.Loose);
+            _recipeCategoryRepoMock = new Mock<IAsyncRepository<RecipeCategory, Guid>>(MockBehavior.Loose);
             _emailServiceMock = new Mock<IEmailService>(MockBehavior.Loose);
             _loggerMock = new Mock<ILogger<RegisterCommandHandler>>(MockBehavior.Loose);
 
@@ -145,8 +145,8 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             var recipeTemplates = new List<RecipeCategory>
             {
-                new() { Id = 1, Name = "Breakfast", DisplaySequence = 1, UserId = null },
-                new() { Id = 2, Name = "Dinner", DisplaySequence = 2, UserId = null }
+                new() { Id = Guid.NewGuid(), Name = "Breakfast", DisplaySequence = 1, UserId = null },
+                new() { Id = Guid.NewGuid(), Name = "Dinner", DisplaySequence = 2, UserId = null }
             };
 
             _userManagerMock

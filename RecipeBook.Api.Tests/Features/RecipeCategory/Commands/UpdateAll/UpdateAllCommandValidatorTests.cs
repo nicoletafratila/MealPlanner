@@ -54,7 +54,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             {
                 Models =
                 [
-                    new() { Id = 1, Name = "Cat1", DisplaySequence = 1 }
+                    new() { Id = Guid.NewGuid(), Name = "Cat1", DisplaySequence = 1 }
                 ]
             };
 

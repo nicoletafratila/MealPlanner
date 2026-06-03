@@ -59,7 +59,7 @@
                 <div class="form-group mt-3">
                     <label for="recipeCategory" class="col-sm-3">@Resources.RecipeEdit.LabelRecipeCategory</label>
                     <InputSelect id="recipeCategory" class="form-select" @bind-Value="@Recipe.RecipeCategoryId">
-                        <option selected value="0">@Resources.RecipeEdit.ChooseOption</option>
+                        <option selected value="">@Resources.RecipeEdit.ChooseOption</option>
                         @if (RecipeCategories != null && RecipeCategories.Items != null && RecipeCategories.Items.Any())
                         {
                             @foreach (var item in RecipeCategories.Items)

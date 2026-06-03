@@ -44,7 +44,7 @@ namespace RecipeBook.Services.Http.Tests
         {
             // Arrange
             const string token = "my-jwt-token";
-            var id = 42;
+            var id = Guid.NewGuid();
             var expected = new RecipeCategoryEditModel { Id = id };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -135,7 +135,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new RecipeCategoryEditModel { Id = 1 };
+            var model = new RecipeCategoryEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -169,7 +169,7 @@ namespace RecipeBook.Services.Http.Tests
         public void AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new RecipeCategoryEditModel { Id = 1 };
+            var model = new RecipeCategoryEditModel { Id = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -189,7 +189,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task UpdateAsync_PutsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new RecipeCategoryEditModel { Id = 2 };
+            var model = new RecipeCategoryEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -219,7 +219,7 @@ namespace RecipeBook.Services.Http.Tests
         public void UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new RecipeCategoryEditModel { Id = 2 };
+            var model = new RecipeCategoryEditModel { Id = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -241,8 +241,8 @@ namespace RecipeBook.Services.Http.Tests
             // Arrange
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             var expectedResponse = new CommandResponse { Succeeded = true };
@@ -274,7 +274,7 @@ namespace RecipeBook.Services.Http.Tests
         public void BulkUpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var models = new List<RecipeCategoryModel> { new() { Id = 1 }, new() { Id = 2 } };
+            var models = new List<RecipeCategoryModel> { new() { Id = Guid.NewGuid() }, new() { Id = Guid.NewGuid() } };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -294,7 +294,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task DeleteAsync_SendsDeleteWithId_AndReturnsCommandResponse()
         {
             // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -319,7 +319,7 @@ namespace RecipeBook.Services.Http.Tests
         public void DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
 
             var mockHttp = new MockHttpMessageHandler();
 

@@ -75,7 +75,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             {
                 Id = id,
                 Name = "My Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             var command = new UpdateCommand { Model = model };
@@ -107,11 +107,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
         {
             // Arrange
             const int id = 2;
+            var categoryId = Guid.NewGuid();
             var model = new RecipeEditModel
             {
                 Id = id,
                 Name = "Updated Recipe",
-                RecipeCategoryId = 3
+                RecipeCategoryId = categoryId
             };
 
             var command = new UpdateCommand { Model = model };
@@ -120,7 +121,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             {
                 Id = id,
                 Name = "Old Name",
-                RecipeCategoryId = 3
+                RecipeCategoryId = categoryId
             };
 
             _repoMock
@@ -154,11 +155,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
         {
             // Arrange
             const int id = 3;
+            var categoryId = Guid.NewGuid();
             var model = new RecipeEditModel
             {
                 Id = id,
                 Name = "Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = categoryId
             };
 
             var command = new UpdateCommand { Model = model };
@@ -167,7 +169,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             {
                 Id = id,
                 Name = "OldRecipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = categoryId
             };
 
             _repoMock

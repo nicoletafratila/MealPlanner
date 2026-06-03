@@ -27,7 +27,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Assert.That(model.Source, Is.Null);
                 Assert.That(model.ImageContent, Is.Null);
                 Assert.That(model.ImageUrl, Is.Null);
-                Assert.That(model.RecipeCategoryId, Is.Zero);
+                Assert.That(model.RecipeCategoryId, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Ingredients, Is.Not.Null);
                 Assert.That(model.Ingredients, Is.Empty);
 
@@ -46,7 +46,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Name = "Pasta",
                 Source = "Cookbook",
                 ImageContent = new byte[10],
-                RecipeCategoryId = 2,
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
@@ -72,7 +72,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Id = 1,
                 Name = "",
                 ImageContent = new byte[10],
-                RecipeCategoryId = 1,
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
@@ -110,7 +110,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Id = 1,
                 Name = "Test",
                 ImageContent = new byte[10],
-                RecipeCategoryId = 1,
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
@@ -138,7 +138,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Id = 1,
                 Name = "Test",
                 ImageContent = null,
-                RecipeCategoryId = 1,
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
@@ -169,29 +169,21 @@ namespace RecipeBook.Shared.Tests.Models
         }
 
         [Test]
-        public void RecipeCategoryId_MustBeAtLeast1()
+        public void RecipeCategoryId_Guid_IsAccepted()
         {
             var model = new RecipeEditModel
             {
                 Id = 1,
                 Name = "Test",
                 ImageContent = new byte[10],
-                RecipeCategoryId = 0, // invalid
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
                 ]
             };
 
-            var isValid = TryValidate(model, out var results);
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeEditModel.RecipeCategoryId))), Is.True);
-            }
-
-            model.RecipeCategoryId = 1;
-            isValid = TryValidate(model, out results);
+            var isValid = TryValidate(model, out _);
             Assert.That(isValid, Is.True);
         }
 
@@ -203,7 +195,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Id = 1,
                 Name = "Test",
                 ImageContent = new byte[10],
-                RecipeCategoryId = 1,
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients = []
             };
 
@@ -242,7 +234,7 @@ namespace RecipeBook.Shared.Tests.Models
                 Id = 1,
                 Name = "My Recipe",
                 ImageContent = new byte[10],
-                RecipeCategoryId = 1,
+                RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
                     new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }

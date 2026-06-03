@@ -42,8 +42,7 @@ namespace RecipeBook.Shared.Models
         /// Selected recipe category id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int RecipeCategoryId { get; set; }
+        public Guid RecipeCategoryId { get; set; }
 
         /// <summary>
         /// Ingredient lines; must contain at least one item.
@@ -56,7 +55,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public RecipeEditModel(int id, string name, int recipeCategoryId)
+        public RecipeEditModel(int id, string name, Guid recipeCategoryId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

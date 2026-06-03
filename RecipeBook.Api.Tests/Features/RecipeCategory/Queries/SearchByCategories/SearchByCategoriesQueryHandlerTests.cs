@@ -13,6 +13,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
         private Mock<IMapper> _mapperMock = null!;
         private SearchByCategoriesQueryHandler _handler = null!;
 
+        private static Guid RecipeCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         [SetUp]
         public void SetUp()
         {
@@ -48,14 +50,14 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
             // Arrange
             var entities = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
             };
 
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
             };
 
             _repoMock
@@ -76,7 +78,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(2));
-            Assert.That(result.Select(c => c.Id), Is.EquivalentTo([1, 2]));
+            Assert.That(result.Select(c => c.Id), Is.EquivalentTo(new[] { RecipeCategoryGuid(1), RecipeCategoryGuid(2) }));
 
             _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<RecipeCategoryModel>>(entities), Times.Once);
@@ -86,19 +88,20 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
         public async Task Handle_WithCategoryIds_FiltersCategoriesById()
         {
             // Arrange
+            var id1 = RecipeCategoryGuid(1);
+            var id3 = RecipeCategoryGuid(3);
+
             var entities = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 },
-                new() { Id = 3, Name = "Cat3", DisplaySequence = 3 }
+                new() { Id = id1, Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 },
+                new() { Id = id3, Name = "Cat3", DisplaySequence = 3 }
             };
-
-            var filteredEntities = entities.Where(e => e.Id == 1 || e.Id == 3).ToList();
 
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 3, Name = "Cat3", DisplaySequence = 3 }
+                new() { Id = id1, Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = id3, Name = "Cat3", DisplaySequence = 3 }
             };
 
             _repoMock
@@ -110,13 +113,13 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
                 .Setup(m => m.Map<IList<RecipeCategoryModel>>(
                     It.Is<IList<RecipeBook.Data.Entities.RecipeCategory>>(list =>
                         list.Count == 2 &&
-                        list.Any(e => e.Id == 1) &&
-                        list.Any(e => e.Id == 3))))
+                        list.Any(e => e.Id == id1) &&
+                        list.Any(e => e.Id == id3))))
                 .Returns(models);
 
             var query = new SearchByCategoriesQuery
             {
-                CategoryIds = "1, 3"
+                CategoryIds = $"{id1}, {id3}"
             };
 
             // Act
@@ -124,7 +127,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(2));
-            Assert.That(result.Select(c => c.Id), Is.EquivalentTo([1, 3]));
+            Assert.That(result.Select(c => c.Id), Is.EquivalentTo(new[] { id1, id3 }));
 
             _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.VerifyAll();
@@ -134,18 +137,17 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
         public async Task Handle_InvalidCategoryIds_AreIgnored()
         {
             // Arrange
+            var id1 = RecipeCategoryGuid(1);
+
             var entities = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
+                new() { Id = id1, Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
             };
-
-            // Only 1 is valid int; "abc" will be ignored
-            var filtered = entities.Where(e => e.Id == 1).ToList();
 
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 }
+                new() { Id = id1, Name = "Cat1", DisplaySequence = 1 }
             };
 
             _repoMock
@@ -156,12 +158,12 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
                 .Setup(m => m.Map<IList<RecipeCategoryModel>>(
                     It.Is<IList<RecipeBook.Data.Entities.RecipeCategory>>(list =>
                         list.Count == 1 &&
-                        list[0].Id == 1)))
+                        list[0].Id == id1)))
                 .Returns(models);
 
             var query = new SearchByCategoriesQuery
             {
-                CategoryIds = "1,abc"
+                CategoryIds = $"{id1},abc"
             };
 
             // Act
@@ -169,7 +171,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.SearchByCategorie
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Id, Is.EqualTo(1));
+            Assert.That(result[0].Id, Is.EqualTo(id1));
 
             _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
             _mapperMock.VerifyAll();

@@ -22,8 +22,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             // Arrange
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
+                new() { Id = Guid.NewGuid(), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = Guid.NewGuid(), Name = "Cat2", DisplaySequence = 2 }
             };
 
             // Act
@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             var command = new UpdateAllCommand();
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 3, Name = "Cat3", DisplaySequence = 3 }
+                new() { Id = Guid.NewGuid(), Name = "Cat3", DisplaySequence = 3 }
             };
 
             // Act

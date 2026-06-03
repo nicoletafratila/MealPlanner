@@ -14,7 +14,7 @@ namespace RecipeBook.Data.Entities
 
         [ForeignKey("RecipeCategoryId")]
         public RecipeCategory? RecipeCategory { get; set; }
-        public int RecipeCategoryId { get; set; }
+        public Guid RecipeCategoryId { get; set; }
 
         public IList<RecipeIngredient>? RecipeIngredients { get; set; }
     }

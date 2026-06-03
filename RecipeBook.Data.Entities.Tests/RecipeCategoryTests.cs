@@ -12,7 +12,7 @@ namespace RecipeBook.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(category.Id, Is.Zero);
+                Assert.That(category.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(category.Name, Is.Null);
                 Assert.That(category.DisplaySequence, Is.Zero);
             }
@@ -21,10 +21,13 @@ namespace RecipeBook.Data.Entities.Tests
         [Test]
         public void Properties_Can_Be_Set_And_Read()
         {
+            // Arrange
+            var id = Guid.NewGuid();
+
             // Act
             var category = new RecipeCategory
             {
-                Id = 5,
+                Id = id,
                 Name = "Breakfast",
                 DisplaySequence = 10
             };
@@ -32,7 +35,7 @@ namespace RecipeBook.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(category.Id, Is.EqualTo(5));
+                Assert.That(category.Id, Is.EqualTo(id));
                 Assert.That(category.Name, Is.EqualTo("Breakfast"));
                 Assert.That(category.DisplaySequence, Is.EqualTo(10));
             }
@@ -41,9 +44,10 @@ namespace RecipeBook.Data.Entities.Tests
         [Test]
         public void ToString_Contains_Name_Id_And_DisplaySequence()
         {
+            var id = Guid.NewGuid();
             var category = new RecipeCategory
             {
-                Id = 3,
+                Id = id,
                 Name = "Dinner",
                 DisplaySequence = 2
             };
@@ -53,7 +57,7 @@ namespace RecipeBook.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(text, Does.Contain("Dinner"));
-                Assert.That(text, Does.Contain("3"));
+                Assert.That(text, Does.Contain(id.ToString()));
                 Assert.That(text, Does.Contain("2"));
             }
         }

@@ -69,13 +69,13 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var category1 = new RecipeCategory
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Category 1",
                 DisplaySequence = 2
             };
             var category0 = new RecipeCategory
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Category 0",
                 DisplaySequence = 1
             };

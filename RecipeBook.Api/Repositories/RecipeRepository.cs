@@ -102,7 +102,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public async Task<IReadOnlyList<Recipe>> SearchAsync(
-            int categoryId,
+            Guid categoryId,
             CancellationToken cancellationToken)
         {
             return await Context.Recipes

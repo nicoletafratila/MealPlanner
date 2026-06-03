@@ -31,7 +31,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         partial void OnSelectedCategoryChanged(RecipeCategoryModel? value)
         {
-            if (value is null || value.Id == 0)
+            if (value is null || value.Id == Guid.Empty)
                 FilteredRecipes = AllRecipes;
             else
                 FilteredRecipes = new ObservableCollection<RecipeModel>(
@@ -52,7 +52,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
                 if (catTask.Result is not null)
                 {
-                    var all = new List<RecipeCategoryModel> { new() { Id = 0, Name = "All categories" } };
+                    var all = new List<RecipeCategoryModel> { new() { Id = Guid.Empty, Name = "All categories" } };
                     all.AddRange(catTask.Result.Items);
                     Categories = new ObservableCollection<RecipeCategoryModel>(all);
                 }

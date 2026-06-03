@@ -86,16 +86,19 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
+            var cat10 = Guid.NewGuid();
+            var cat20 = Guid.NewGuid();
+
             var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = 10 },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = 20 }
+                new() { Id = 1, Name = "R1", RecipeCategoryId = cat10 },
+                new() { Id = 2, Name = "R2", RecipeCategoryId = cat20 }
             };
 
             var models = new List<RecipeModel>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = "10" },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = "20" }
+                new() { Id = 1, Name = "R1", RecipeCategoryId = cat10.ToString() },
+                new() { Id = 2, Name = "R2", RecipeCategoryId = cat20.ToString() }
             };
 
             _repoMock
@@ -136,18 +139,21 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_CategoryFilter_AppliesFilterBeforePaging()
         {
+            var cat10 = Guid.NewGuid();
+            var cat20 = Guid.NewGuid();
+
             var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = 10 },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = 20 },
-                new() { Id = 3, Name = "R3", RecipeCategoryId = 10 },
+                new() { Id = 1, Name = "R1", RecipeCategoryId = cat10 },
+                new() { Id = 2, Name = "R2", RecipeCategoryId = cat20 },
+                new() { Id = 3, Name = "R3", RecipeCategoryId = cat10 },
             };
 
             var models = new List<RecipeModel>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = "10" },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = "20" },
-                new() { Id = 3, Name = "R3", RecipeCategoryId = "10" },
+                new() { Id = 1, Name = "R1", RecipeCategoryId = cat10.ToString() },
+                new() { Id = 2, Name = "R2", RecipeCategoryId = cat20.ToString() },
+                new() { Id = 3, Name = "R3", RecipeCategoryId = cat10.ToString() },
             };
 
             _repoMock
@@ -168,7 +174,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
 
             var query = new SearchQuery
             {
-                CategoryId = "10",
+                CategoryId = cat10.ToString(),
                 QueryParameters = qp
             };
 
@@ -186,7 +192,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = 10 }
+                new() { Id = 1, Name = "R1", RecipeCategoryId = Guid.NewGuid() }
             };
 
             _repoMock

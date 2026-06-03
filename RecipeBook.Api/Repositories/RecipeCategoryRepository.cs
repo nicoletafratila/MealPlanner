@@ -9,7 +9,7 @@ namespace RecipeBook.Api.Repositories
     /// Async repository for <see cref="RecipeCategory"/> entities.
     /// </summary>
     public class RecipeCategoryRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
+        : BaseAsyncRepository<RecipeCategory, Guid>(dbContext), IRecipeCategoryRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
@@ -23,7 +23,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public async Task<IReadOnlyList<RecipeCategory>> GetByIdsAsync(
-            IList<int> ids,
+            IList<Guid> ids,
             CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(ids);

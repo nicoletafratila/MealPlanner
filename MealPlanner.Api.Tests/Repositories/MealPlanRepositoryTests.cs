@@ -71,6 +71,10 @@ namespace MealPlanner.Api.Tests.Repositories
         // call sites can keep passing simple seeds while the entity uses a uniqueidentifier key.
         private static Guid ProductCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+        // Maps the int seed used throughout these tests to a deterministic RecipeCategory Guid, so
+        // call sites can keep passing simple seeds while the entity uses a uniqueidentifier key.
+        private static Guid RecipeCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static (MealPlan plan, Recipe recipe, Product product) CreateMealPlanGraph(
             Guid mealPlanId,
             string mealPlanName,
@@ -85,7 +89,7 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             var recipeCategory = new RecipeCategory
             {
-                Id = recipeCategoryId,
+                Id = RecipeCategoryGuid(recipeCategoryId),
                 Name = recipeCategoryName,
                 DisplaySequence = 1
             };
@@ -353,13 +357,13 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchByRecipeCategoryIdsAsync([5], "user1", CancellationToken.None);
+            var result = await repo.SearchByRecipeCategoryIdsAsync([RecipeCategoryGuid(5)], "user1", CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
             var mpr = result.Single();
             Assert.That(mpr.Recipe, Is.Not.Null);
-            Assert.That(mpr.Recipe!.RecipeCategoryId, Is.EqualTo(5));
+            Assert.That(mpr.Recipe!.RecipeCategoryId, Is.EqualTo(RecipeCategoryGuid(5)));
         }
 
         [Test]
@@ -551,8 +555,8 @@ namespace MealPlanner.Api.Tests.Repositories
             using var __ = connection;
 
             await ctx.Database.EnsureCreatedAsync();
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Cat", DisplaySequence = 1 });
-            ctx.Recipes.Add(new Recipe { Id = 10, Name = "R1", RecipeCategoryId = 1 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(1), Name = "Cat", DisplaySequence = 1 });
+            ctx.Recipes.Add(new Recipe { Id = 10, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(1) });
             ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan", UserId = "u1" });
             ctx.MealPlanRecipes.Add(new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 });
             await ctx.SaveChangesAsync();
@@ -581,10 +585,10 @@ namespace MealPlanner.Api.Tests.Repositories
             using var __ = connection;
 
             await ctx.Database.EnsureCreatedAsync();
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 1, Name = "Main", DisplaySequence = 1 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(1), Name = "Main", DisplaySequence = 1 });
             ctx.Recipes.AddRange(
-                new Recipe { Id = 10, Name = "R1", RecipeCategoryId = 1 },
-                new Recipe { Id = 11, Name = "R2", RecipeCategoryId = 1 });
+                new Recipe { Id = 10, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(1) },
+                new Recipe { Id = 11, Name = "R2", RecipeCategoryId = RecipeCategoryGuid(1) });
             ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan", UserId = "u1" });
             ctx.MealPlanRecipes.AddRange(
                 new MealPlanRecipe { MealPlanId = MealPlanId(1), RecipeId = 10 },

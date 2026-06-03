@@ -28,7 +28,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         }
 
         [RelayCommand]
-        private Task AddAsync() => Shell.Current.GoToAsync("RecipeCategoryEdit?id=0");
+        private Task AddAsync() => Shell.Current.GoToAsync($"RecipeCategoryEdit?id={Guid.Empty}");
 
         [RelayCommand]
         private Task EditAsync(RecipeCategoryModel cat) => Shell.Current.GoToAsync($"RecipeCategoryEdit?id={cat.Id}");

@@ -6,7 +6,7 @@ namespace RecipeBook.Services.Http
 {
     public interface IRecipeCategoryService
     {
-        Task<RecipeCategoryEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default);
+        Task<RecipeCategoryEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default);
         Task<PagedList<RecipeCategoryModel>?> SearchAsync(
             QueryParameters<RecipeCategoryModel>? queryParameters = null,
             CancellationToken cancellationToken = default);
@@ -15,6 +15,6 @@ namespace RecipeBook.Services.Http
         Task<CommandResponse?> UpdateAsync(
             IList<RecipeCategoryModel> models,
             CancellationToken cancellationToken = default);
-        Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

@@ -182,7 +182,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
             var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
             string[]? catNames = categories?.Items?.Select(c => c.Name).ToArray();
-            int? recipeCategoryId = null;
+            Guid? recipeCategoryId = null;
 
             if (catNames is { Length: > 0 })
             {

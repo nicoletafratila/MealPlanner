@@ -51,8 +51,8 @@ namespace MealPlanner.Api.Tests.Abstractions
 
             var categories = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Main" },
-                new() { Id = 2, Name = "Dessert" }
+                new() { Id = Guid.NewGuid(), Name = "Main" },
+                new() { Id = Guid.NewGuid(), Name = "Dessert" }
             };
 
             var url = $"{BaseAddress}{RecipeCategoryPath}/searchbycategories?categoryIds=1%2C2";

@@ -46,8 +46,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Arrange
             var categoryItems = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             var categories = new PagedList<RecipeCategoryModel>(
@@ -79,7 +79,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task OnRecipeCategoryChangedAsync_WithCategoryId_LoadsRecipes_WithCorrectFilterAndSorting()
         {
             // Arrange
-            var categoryItems = new List<RecipeCategoryModel> { new() { Id = 1 } };
+            var categoryItems = new List<RecipeCategoryModel> { new() { Id = Guid.NewGuid() } };
             var categories = new PagedList<RecipeCategoryModel>(
                 categoryItems, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
 

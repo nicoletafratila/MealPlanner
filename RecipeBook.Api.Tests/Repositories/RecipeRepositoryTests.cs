@@ -36,10 +36,12 @@ namespace RecipeBook.Api.Tests.Repositories
             return new RecipeRepository(context);
         }
 
+        private static Guid RecipeCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static Recipe CreateRecipeGraph(
             int id,
             string name,
-            int categoryId,
+            Guid categoryId,
             string categoryName)
         {
             var category = new RecipeCategory
@@ -79,8 +81,8 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "R1", 10, "Main");
-            var r2 = CreateRecipeGraph(2, "R2", 20, "Dessert");
+            var r1 = CreateRecipeGraph(1, "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(2, "R2", RecipeCategoryGuid(20), "Dessert");
             ctx.Recipes.AddRange(r1, r2);
             await ctx.SaveChangesAsync();
 
@@ -98,7 +100,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "R1", 10, "Main");
+            var r1 = CreateRecipeGraph(1, "R1", RecipeCategoryGuid(10), "Main");
             ctx.Recipes.Add(r1);
             await ctx.SaveChangesAsync();
 
@@ -122,7 +124,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var recipe = CreateRecipeGraph(1, "R1", 10, "Main");
+            var recipe = CreateRecipeGraph(1, "R1", RecipeCategoryGuid(10), "Main");
             ctx.Recipes.Add(recipe);
             await ctx.SaveChangesAsync();
 
@@ -164,13 +166,13 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "R1", 10, "Main");
-            var r2 = CreateRecipeGraph(2, "R2", 20, "Dessert");
+            var r1 = CreateRecipeGraph(1, "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(2, "R2", RecipeCategoryGuid(20), "Dessert");
             ctx.Recipes.AddRange(r1, r2);
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(10, CancellationToken.None);
+            var result = await repo.SearchAsync(RecipeCategoryGuid(10), CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -184,8 +186,8 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "My Recipe", 10, "Main");
-            var r2 = CreateRecipeGraph(2, "Other", 20, "Dessert");
+            var r1 = CreateRecipeGraph(1, "My Recipe", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(2, "Other", RecipeCategoryGuid(20), "Dessert");
             r1.UserId = "user1";
             r2.UserId = "user1";
             ctx.Recipes.AddRange(r1, r2);
@@ -223,9 +225,9 @@ namespace RecipeBook.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
             ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
             ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m });
             await ctx.SaveChangesAsync();
 
@@ -250,9 +252,9 @@ namespace RecipeBook.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
             ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
             ctx.RecipeIngredients.AddRange(
                 new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m },
                 new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = 1, Quantity = 2m });
@@ -275,11 +277,11 @@ namespace RecipeBook.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
             ctx.Units.AddRange(
                 new Unit { Id = 1, Name = "kg", UnitType = 0 },
                 new Unit { Id = 2, Name = "g", UnitType = 0 });
-            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
             ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m });
             await ctx.SaveChangesAsync();
 

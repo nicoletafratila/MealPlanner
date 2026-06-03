@@ -30,18 +30,18 @@ namespace RecipeBook.Api.Features.RecipeCategory.Queries.SearchByCategories
             return _mapper.Map<IList<RecipeCategoryModel>>(data);
         }
 
-        private static List<int> ParseCategoryIds(string? categoryIds)
+        private static List<Guid> ParseCategoryIds(string? categoryIds)
         {
             if (string.IsNullOrWhiteSpace(categoryIds))
                 return [];
 
-            var result = new List<int>();
+            var result = new List<Guid>();
 
             foreach (var token in categoryIds
                          .Split(',', StringSplitOptions.RemoveEmptyEntries)
                          .Select(s => s.Trim()))
             {
-                if (int.TryParse(token, out var id))
+                if (Guid.TryParse(token, out var id))
                 {
                     result.Add(id);
                 }

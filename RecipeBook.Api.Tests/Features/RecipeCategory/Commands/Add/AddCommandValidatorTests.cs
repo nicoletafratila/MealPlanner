@@ -39,7 +39,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             {
                 Model = new RecipeCategoryEditModel
                 {
-                    Id = 0,
+                    Id = Guid.Empty,
                     Name = "Breakfast",
                     DisplaySequence = 1
                 }

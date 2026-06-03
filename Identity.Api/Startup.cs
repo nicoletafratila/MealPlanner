@@ -79,8 +79,8 @@ namespace Identity.Api
         {
             services.AddScoped<IAsyncRepository<ProductCategory, Guid>>(sp =>
                 new BaseAsyncRepository<ProductCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
-            services.AddScoped<IAsyncRepository<RecipeCategory, int>>(sp =>
-                new BaseAsyncRepository<RecipeCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
+            services.AddScoped<IAsyncRepository<RecipeCategory, Guid>>(sp =>
+                new BaseAsyncRepository<RecipeCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {

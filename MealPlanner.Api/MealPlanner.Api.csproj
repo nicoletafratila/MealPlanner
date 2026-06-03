@@ -45,6 +45,8 @@
     <Compile Include="Migrations\20260603124420_ShoppingListIdToGuid.Designer.cs" />
     <Compile Include="Migrations\20260603143937_ProductCategoryIdToGuid.cs" />
     <Compile Include="Migrations\20260603143937_ProductCategoryIdToGuid.Designer.cs" />
+    <Compile Include="Migrations\20260603160326_RecipeCategoryIdToGuid.cs" />
+    <Compile Include="Migrations\20260603160326_RecipeCategoryIdToGuid.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 

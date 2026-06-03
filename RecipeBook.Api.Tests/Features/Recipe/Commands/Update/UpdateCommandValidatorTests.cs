@@ -41,7 +41,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 {
                     Id = 1,
                     Name = "My Recipe",
-                    RecipeCategoryId = 2
+                    RecipeCategoryId = Guid.NewGuid()
                 }
             };
 

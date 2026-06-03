@@ -3,9 +3,9 @@ using System.Security.Claims;using Common.Data.Repository; using Common.Models; 
 namespace Identity.Api.Features.Authentication.Commands.Register
 {
     public class RegisterCommandHandler(
-        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
+        UserManager<Data.Entities.ApplicationUser> userManager,
         IAsyncRepository<ProductCategory, Guid> productCategoryRepository,
-        IAsyncRepository<RecipeCategory, int> recipeCategoryRepository,
+        IAsyncRepository<RecipeCategory, Guid> recipeCategoryRepository,
         IEmailService emailService,
         ILogger<RegisterCommandHandler> logger) : IRequestHandler<RegisterCommand, CommandResponse?>
     {

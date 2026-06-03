@@ -44,7 +44,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var filters = new List<FilterItem>();
                 if (!string.IsNullOrWhiteSpace(SearchText))
                     filters.Add(new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase));
-                if (SelectedCategory?.Id > 0)
+                if (SelectedCategory is not null && SelectedCategory.Id != Guid.Empty)
                     filters.Add(new FilterItem("RecipeCategoryId", SelectedCategory.Id.ToString(), FilterOperator.Equals));
                 var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
                 if (result is not null)
@@ -79,7 +79,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(SearchText))
                 filters.Add(new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase));
-            if (SelectedCategory?.Id > 0)
+            if (SelectedCategory is not null && SelectedCategory.Id != Guid.Empty)
                 filters.Add(new FilterItem("RecipeCategoryId", SelectedCategory.Id.ToString(), FilterOperator.Equals));
             var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
             if (result is not null)

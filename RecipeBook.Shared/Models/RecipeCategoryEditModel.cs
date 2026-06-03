@@ -8,10 +8,9 @@ namespace RecipeBook.Shared.Models
     public class RecipeCategoryEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new categories).
+        /// Database identity (empty for new categories).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Category name (required, max 100 characters).
@@ -31,7 +30,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public RecipeCategoryEditModel(int id, string name, int displaySequence)
+        public RecipeCategoryEditModel(Guid id, string name, int displaySequence)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
