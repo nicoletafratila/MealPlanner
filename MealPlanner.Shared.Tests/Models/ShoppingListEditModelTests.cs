@@ -24,7 +24,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(model.Id, Is.Zero);
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
-                Assert.That(model.ShopId, Is.Zero);
+                Assert.That(model.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Products, Is.Not.Null);
                 Assert.That(model.Products, Is.Empty);
 
@@ -42,7 +42,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "Weekly Groceries",
-                ShopId = 10,
+                ShopId = Guid.NewGuid(),
                 Products =
                 [
                     new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
@@ -67,7 +67,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "",
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Products =
                 [
                     new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
@@ -104,7 +104,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "Test",
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Products = []
             };
 
@@ -141,7 +141,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             const int id = 7;
             const string name = "Party List";
-            const int shopId = 3;
+            var shopId = Guid.NewGuid();
 
             // Act
             var model = new ShoppingListEditModel(id, name, shopId);
@@ -160,7 +160,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ShoppingListEditModel(1, null!, 1);
+                _ = new ShoppingListEditModel(1, null!, Guid.NewGuid());
             });
         }
 
@@ -171,7 +171,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = 1,
                 Name = "Holiday Shopping",
-                ShopId = 2,
+                ShopId = Guid.NewGuid(),
                 Products =
                 [
                     new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }

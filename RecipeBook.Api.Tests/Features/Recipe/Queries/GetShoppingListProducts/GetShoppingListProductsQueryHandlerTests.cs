@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             var query = new GetShoppingListProductsQuery
             {
                 RecipeId = 5,
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 AuthToken = "token"
             };
 
@@ -66,7 +66,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mealPlannerClientMock.Verify(
-                c => c.GetShopAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()),
+                c => c.GetShopAsync(It.IsAny<Guid>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -74,10 +74,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public async Task Handle_ShopNotFound_ReturnsNull()
         {
             // Arrange
+            var shopId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
                 RecipeId = 5,
-                ShopId = 10,
+                ShopId = shopId,
                 AuthToken = "token"
             };
 
@@ -88,7 +89,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 .ReturnsAsync(recipe);
 
             _mealPlannerClientMock
-                .Setup(c => c.GetShopAsync(10, "token", It.IsAny<CancellationToken>()))
+                .Setup(c => c.GetShopAsync(shopId, "token", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ShopEditModel?)null);
 
             // Act
@@ -100,7 +101,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mealPlannerClientMock.Verify(
-                c => c.GetShopAsync(10, "token", It.IsAny<CancellationToken>()),
+                c => c.GetShopAsync(shopId, "token", It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -108,10 +109,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public async Task Handle_RecipeAndShopFound_ReturnsMappedAndSortedProducts()
         {
             // Arrange
+            var shopId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
                 RecipeId = 1,
-                ShopId = 2,
+                ShopId = shopId,
                 AuthToken = "token"
             };
 
@@ -158,12 +160,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
 
             var shopEditModel = new ShopEditModel
             {
-                Id = 1,
+                Id = shopId,
                 Name = "Test",
             };
 
             _mealPlannerClientMock
-                .Setup(c => c.GetShopAsync(2, "token", It.IsAny<CancellationToken>()))
+                .Setup(c => c.GetShopAsync(shopId, "token", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(shopEditModel);
 
             var shopEntity = new Shop();
@@ -203,7 +205,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mealPlannerClientMock.Verify(
-                c => c.GetShopAsync(2, "token", It.IsAny<CancellationToken>()),
+                c => c.GetShopAsync(shopId, "token", It.IsAny<CancellationToken>()),
                 Times.Once);
             _mapperMock.Verify(m => m.Map<Shop>(shopEditModel), Times.Once);
             _mapperMock.VerifyAll();
@@ -216,7 +218,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             var query = new GetShoppingListProductsQuery
             {
                 RecipeId = 1,
-                ShopId = 2,
+                ShopId = Guid.NewGuid(),
                 AuthToken = "token"
             };
 

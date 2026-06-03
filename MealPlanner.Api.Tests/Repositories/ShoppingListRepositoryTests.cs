@@ -81,7 +81,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
             var shop = new Shop
             {
-                Id = 5,
+                Id = Guid.NewGuid(),
                 Name = shopName
             };
 
@@ -204,9 +204,10 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            var shopId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
             ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = shopId, UserId = "user1" });
             ctx.ShoppingListProducts.Add(
                 new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m });
             await ctx.SaveChangesAsync();
@@ -232,9 +233,10 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            var shopId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
             ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = shopId, UserId = "user1" });
             ctx.ShoppingListProducts.AddRange(
                 new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m },
                 new ShoppingListProduct { ShoppingListId = 1, ProductId = 20, UnitId = 1, Quantity = 2m });
@@ -257,11 +259,12 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            var shopId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
             ctx.Units.AddRange(
                 new Unit { Id = 1, Name = "kg", UnitType = 0 },
                 new Unit { Id = 2, Name = "g", UnitType = 0 });
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = shopId, UserId = "user1" });
             ctx.ShoppingListProducts.Add(new ShoppingListProduct
             {
                 ShoppingListId = 1,

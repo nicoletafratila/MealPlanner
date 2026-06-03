@@ -41,8 +41,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var shopItems = new List<ShopModel>
             {
-                new() { Id = 1, Name = "Shop1" },
-                new() { Id = 2, Name = "Shop2" }
+                new() { Id = Guid.NewGuid(), Name = "Shop1" },
+                new() { Id = Guid.NewGuid(), Name = "Shop2" }
             };
 
             var shops = new PagedList<ShopModel>(

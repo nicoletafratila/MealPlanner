@@ -44,8 +44,12 @@ namespace MealPlanner.Api.Tests.Repositories
             return new ShopRepository(context);
         }
 
+        // Deterministic mapping so a given int seed always maps to the same Guid,
+        // preserving the linkage between Shop.Id and ShopDisplaySequence.ShopId.
+        private static Guid ShopGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static Shop CreateShopGraph(
-            int id,
+            Guid id,
             string name,
             params (int categoryId, int value)[] displaySeq)
         {
@@ -82,7 +86,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             var shop = CreateShopGraph(
-                id: 1,
+                id: ShopGuid(1),
                 name: "TestShop",
                 (1, 10),
                 (2, 5));
@@ -94,7 +98,7 @@ namespace MealPlanner.Api.Tests.Repositories
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
+            var found = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -115,12 +119,12 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var shop = CreateShopGraph(1, "Existing");
+            var shop = CreateShopGraph(ShopGuid(1), "Existing");
             ctx.Shops.Add(shop);
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeDisplaySequenceAsync(999, CancellationToken.None);
+            var found = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(999), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Null);
@@ -146,22 +150,22 @@ namespace MealPlanner.Api.Tests.Repositories
             ctx.ProductCategories.AddRange(
                 new ProductCategory { Id = 1, Name = "Cat1" },
                 new ProductCategory { Id = 2, Name = "Cat2" });
-            ctx.Shops.Add(new Shop { Id = 1, Name = "Shop1" });
-            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 });
+            ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1" });
+            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
             entity!.DisplaySequence =
             [
-                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 },
-                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 2, Value = 20 }
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 },
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 2, Value = 20 }
             ];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == 1).ToList();
+            var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == ShopGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(2));
             Assert.That(rows.Select(s => s.ProductCategoryId), Is.EquivalentTo(new[] { 1, 2 }));
         }
@@ -174,20 +178,20 @@ namespace MealPlanner.Api.Tests.Repositories
             ctx.ProductCategories.AddRange(
                 new ProductCategory { Id = 1, Name = "Cat1" },
                 new ProductCategory { Id = 2, Name = "Cat2" });
-            ctx.Shops.Add(new Shop { Id = 1, Name = "Shop1" });
+            ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1" });
             ctx.ShopDisplaySequences.AddRange(
-                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 },
-                new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 2, Value = 20 });
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 },
+                new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 2, Value = 20 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
-            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 }];
+            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
+            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 }];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == 1).ToList();
+            var rows = ctx.ShopDisplaySequences.Where(s => s.ShopId == ShopGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(1));
             Assert.That(rows.Single().ProductCategoryId, Is.EqualTo(1));
         }
@@ -198,18 +202,18 @@ namespace MealPlanner.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
             ctx.ProductCategories.Add(new ProductCategory { Id = 1, Name = "Cat1" });
-            ctx.Shops.Add(new Shop { Id = 1, Name = "Shop1" });
-            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 10 });
+            ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1" });
+            ctx.ShopDisplaySequences.Add(new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 10 });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(1, CancellationToken.None);
-            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = 1, ProductCategoryId = 1, Value = 99 }];
+            var entity = await repo.GetByIdIncludeDisplaySequenceAsync(ShopGuid(1), CancellationToken.None);
+            entity!.DisplaySequence = [new ShopDisplaySequence { ShopId = ShopGuid(1), ProductCategoryId = 1, Value = 99 }];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var row = ctx.ShopDisplaySequences.Single(s => s.ShopId == 1 && s.ProductCategoryId == 1);
+            var row = ctx.ShopDisplaySequences.Single(s => s.ShopId == ShopGuid(1) && s.ProductCategoryId == 1);
             Assert.That(row.Value, Is.EqualTo(99));
         }
 

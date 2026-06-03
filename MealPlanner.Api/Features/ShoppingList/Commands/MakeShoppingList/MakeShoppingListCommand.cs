@@ -16,13 +16,13 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
         /// <summary>
         /// Id of the shop for which the shopping list is generated.
         /// </summary>
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         public MakeShoppingListCommand()
         {
         }
 
-        public MakeShoppingListCommand(Guid mealPlanId, int shopId)
+        public MakeShoppingListCommand(Guid mealPlanId, Guid shopId)
         {
             MealPlanId = mealPlanId;
             ShopId = shopId;

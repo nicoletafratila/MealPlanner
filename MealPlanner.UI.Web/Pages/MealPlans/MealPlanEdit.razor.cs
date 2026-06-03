@@ -292,7 +292,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (result.Cancelled || !result.Confirmed || result.Data is null)
                 return;
 
-            if (!int.TryParse(result.Data.ToString(), out var shopId))
+            if (!Guid.TryParse(result.Data.ToString(), out var shopId))
                 return;
 
             var addedEntity = await ShoppingListService.MakeShoppingListAsync(

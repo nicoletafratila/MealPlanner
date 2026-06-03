@@ -16,7 +16,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
         /// <summary>
         /// Id of the shop/context for which to generate product quantities/order.
         /// </summary>
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         /// <summary>
         /// Optional auth token (if needed for downstream services).
@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
         {
         }
 
-        public GetShoppingListProductsQuery(int recipeId, int shopId, string? authToken = null)
+        public GetShoppingListProductsQuery(int recipeId, Guid shopId, string? authToken = null)
         {
             RecipeId = recipeId;
             ShopId = shopId;

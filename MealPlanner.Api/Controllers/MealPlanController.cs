@@ -36,7 +36,7 @@ namespace MealPlanner.Api.Controllers
         [HttpGet("shoppingListProducts")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
             [FromQuery] Guid mealPlanId,
-            [FromQuery] int shopId,
+            [FromQuery] Guid shopId,
             CancellationToken cancellationToken)
         {
             var query = new GetShoppingListProductsQuery

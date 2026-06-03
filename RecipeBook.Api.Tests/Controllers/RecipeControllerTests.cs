@@ -78,16 +78,17 @@ namespace RecipeBook.Api.Tests.Controllers
             var items = new[] { new ShoppingListProductEditModel { Product = new ProductModel() { Id = 1 } } };
             _controller.HttpContext.Request.Headers.Authorization = "Bearer token123";
 
+            var shopId = Guid.NewGuid();
             _senderMock
                 .Setup(m => m.Send(
                     It.Is<GetShoppingListProductsQuery>(q =>
                         q.RecipeId == 1 &&
-                        q.ShopId == 2 &&
+                        q.ShopId == shopId &&
                         q.AuthToken == "token123"),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(items);
 
-            var result = await _controller.GetShoppingListProductsAsync(1, 2, CancellationToken.None);
+            var result = await _controller.GetShoppingListProductsAsync(1, shopId, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);

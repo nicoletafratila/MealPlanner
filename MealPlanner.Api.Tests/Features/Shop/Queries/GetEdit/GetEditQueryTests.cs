@@ -6,20 +6,20 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.GetEdit
     public class GetEditQueryTests
     {
         [Test]
-        public void DefaultCtor_InitializesIdToZero()
+        public void DefaultCtor_InitializesIdToEmpty()
         {
             // Act
             var query = new GetEditQuery();
 
             // Assert
-            Assert.That(query.Id, Is.EqualTo(0));
+            Assert.That(query.Id, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void Ctor_SetsId()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
 
             // Act
             var query = new GetEditQuery(id);
@@ -32,14 +32,15 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.GetEdit
         public void Can_Set_And_Get_Id()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var query = new GetEditQuery
             {
                 // Act
-                Id = 42
+                Id = id
             };
 
             // Assert
-            Assert.That(query.Id, Is.EqualTo(42));
+            Assert.That(query.Id, Is.EqualTo(id));
         }
     }
 }

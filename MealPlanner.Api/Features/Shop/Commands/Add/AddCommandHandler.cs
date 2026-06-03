@@ -45,6 +45,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
                     return CommandResponse.Failed(Resources.ShopMessages.AlreadyExists);
 
                 var mapped = _mapper.Map<MealPlanner.Data.Entities.Shop>(request.Model);
+                mapped.Id = Guid.NewGuid();
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

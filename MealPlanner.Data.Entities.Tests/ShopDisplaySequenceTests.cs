@@ -16,7 +16,7 @@ namespace MealPlanner.Data.Entities.Tests
             {
                 Assert.That(seq.Value, Is.Zero);
                 Assert.That(seq.Shop, Is.Null);
-                Assert.That(seq.ShopId, Is.Zero);
+                Assert.That(seq.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(seq.ProductCategory, Is.Null);
                 Assert.That(seq.ProductCategoryId, Is.Zero);
             }
@@ -28,13 +28,14 @@ namespace MealPlanner.Data.Entities.Tests
             // Arrange
             var shop = new Shop();
             var category = new ProductCategory();
+            var shopId = Guid.NewGuid();
 
             // Act
             var seq = new ShopDisplaySequence
             {
                 Value = 5,
                 Shop = shop,
-                ShopId = 1,
+                ShopId = shopId,
                 ProductCategory = category,
                 ProductCategoryId = 2
             };
@@ -44,7 +45,7 @@ namespace MealPlanner.Data.Entities.Tests
             {
                 Assert.That(seq.Value, Is.EqualTo(5));
                 Assert.That(seq.Shop, Is.SameAs(shop));
-                Assert.That(seq.ShopId, Is.EqualTo(1));
+                Assert.That(seq.ShopId, Is.EqualTo(shopId));
                 Assert.That(seq.ProductCategory, Is.SameAs(category));
                 Assert.That(seq.ProductCategoryId, Is.EqualTo(2));
             }
@@ -53,9 +54,10 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void ToString_Contains_Key_Information()
         {
+            var shopId = Guid.NewGuid();
             var seq = new ShopDisplaySequence
             {
-                ShopId = 10,
+                ShopId = shopId,
                 ProductCategoryId = 20,
                 Value = 30
             };
@@ -64,7 +66,7 @@ namespace MealPlanner.Data.Entities.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(text, Does.Contain("10"));
+                Assert.That(text, Does.Contain(shopId.ToString()));
                 Assert.That(text, Does.Contain("20"));
                 Assert.That(text, Does.Contain("30"));
             }

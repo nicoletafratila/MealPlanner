@@ -7,10 +7,10 @@ namespace RecipeBook.Api.Abstractions
         private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         private readonly MealPlannerClientConfig _apiConfig = apiConfig ?? throw new ArgumentNullException(nameof(apiConfig));
 
-        public async Task<ShopEditModel?> GetShopAsync(int shopId, string? authToken, CancellationToken cancellationToken)
+        public async Task<ShopEditModel?> GetShopAsync(Guid shopId, string? authToken, CancellationToken cancellationToken)
         {
-            if (shopId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(shopId), "shopId must be greater than zero.");
+            if (shopId == Guid.Empty)
+                throw new ArgumentOutOfRangeException(nameof(shopId), "shopId must not be empty.");
 
             ConfigureClient(authToken);
 

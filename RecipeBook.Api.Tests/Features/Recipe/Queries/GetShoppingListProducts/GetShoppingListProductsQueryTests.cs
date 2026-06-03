@@ -15,7 +15,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.RecipeId, Is.Zero);
-                Assert.That(query.ShopId, Is.Zero);
+                Assert.That(query.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(query.AuthToken, Is.Null);
             }
         }
@@ -25,7 +25,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         {
             // Arrange
             const int recipeId = 5;
-            const int shopId = 10;
+            var shopId = Guid.NewGuid();
             const string token = "abc";
 
             // Act
@@ -44,11 +44,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public void Can_Set_And_Get_Properties()
         {
             // Arrange
+            var shopId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
                 // Act
                 RecipeId = 7,
-                ShopId = 3,
+                ShopId = shopId,
                 AuthToken = "token123"
             };
 
@@ -56,7 +57,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.RecipeId, Is.EqualTo(7));
-                Assert.That(query.ShopId, Is.EqualTo(3));
+                Assert.That(query.ShopId, Is.EqualTo(shopId));
                 Assert.That(query.AuthToken, Is.EqualTo("token123"));
             }
         }

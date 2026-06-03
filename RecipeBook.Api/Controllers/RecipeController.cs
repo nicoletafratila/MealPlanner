@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("shoppingListProducts")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
             [FromQuery] int recipeId,
-            [FromQuery] int shopId,
+            [FromQuery] Guid shopId,
             CancellationToken cancellationToken)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();

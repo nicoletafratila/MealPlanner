@@ -8,7 +8,7 @@ namespace MealPlanner.Data.Entities
 
         [ForeignKey(nameof(ShopId))]
         public Shop? Shop { get; set; }
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory? ProductCategory { get; set; }

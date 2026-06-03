@@ -24,7 +24,7 @@ namespace MealPlanner.Shared.Models
         /// Linked shop id (required).
         /// </summary>
         [Required]
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         /// <summary>
         /// List of products in this shopping list.
@@ -38,7 +38,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public ShoppingListEditModel(int id, string name, int shopId)
+        public ShoppingListEditModel(int id, string name, Guid shopId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

@@ -20,7 +20,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Returns(ValueTask.CompletedTask)
                 .Verifiable();
 
-            var dto = new ShopModel { Name = "A", Id = 1 };
+            var dto = new ShopModel { Name = "A", Id = Guid.NewGuid() };
 
             // Act
             await storageMock.Object.SetItemAsync(dto, key);
@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Returns(ValueTask.CompletedTask)
                 .Verifiable();
 
-            var dto = new ShopModel { Name = "B", Id = 2 };
+            var dto = new ShopModel { Name = "B", Id = Guid.NewGuid() };
 
             // Act
             await storageMock.Object.SetItemAsync(dto, null);
@@ -61,7 +61,8 @@ namespace MealPlanner.UI.Web.Tests.Services
             var storageMock = new Mock<ISessionStorageService>();
             const string key = "explicit-key";
 
-            var json = "{\"Name\":\"C\",\"Id\":3}";
+            var id = Guid.NewGuid();
+            var json = $"{{\"Name\":\"C\",\"Id\":\"{id}\"}}";
             storageMock
                 .Setup(s => s.GetItemAsync<string?>(key, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(json);
@@ -74,7 +75,7 @@ namespace MealPlanner.UI.Web.Tests.Services
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Name, Is.EqualTo("C"));
-                Assert.That(result.Id, Is.EqualTo(3));
+                Assert.That(result.Id, Is.EqualTo(id));
             }
         }
 
@@ -85,7 +86,8 @@ namespace MealPlanner.UI.Web.Tests.Services
             var storageMock = new Mock<ISessionStorageService>();
             var expectedKey = typeof(ShopModel).FullName!;
 
-            var json = "{\"Name\":\"D\",\"Id\":4}";
+            var id = Guid.NewGuid();
+            var json = $"{{\"Name\":\"D\",\"Id\":\"{id}\"}}";
             storageMock
                 .Setup(s => s.GetItemAsync<string?>(expectedKey, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(json);
@@ -98,7 +100,7 @@ namespace MealPlanner.UI.Web.Tests.Services
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Name, Is.EqualTo("D"));
-                Assert.That(result.Id, Is.EqualTo(4));
+                Assert.That(result.Id, Is.EqualTo(id));
             }
         }
 
@@ -125,7 +127,7 @@ namespace MealPlanner.UI.Web.Tests.Services
         {
             // Arrange
             ISessionStorageService? storage = null;
-            var dto = new ShopModel { Name = "E", Id = 5 };
+            var dto = new ShopModel { Name = "E", Id = Guid.NewGuid() };
 
             // Act & Assert
             Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.SetItemAsync(storage!, dto));

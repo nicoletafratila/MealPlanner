@@ -22,7 +22,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             // Arrange
             var model = new ShopEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "NewShop"
             };
 
@@ -49,7 +49,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             var command = new AddCommand();
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Shop1"
             };
 

@@ -9,13 +9,13 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
     public class GetShoppingListProductsQuery : IRequest<IList<ShoppingListProductEditModel>?>
     {
         public Guid MealPlanId { get; set; }
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         public GetShoppingListProductsQuery()
         {
         }
 
-        public GetShoppingListProductsQuery(Guid mealPlanId, int shopId)
+        public GetShoppingListProductsQuery(Guid mealPlanId, Guid shopId)
         {
             MealPlanId = mealPlanId;
             ShopId = shopId;

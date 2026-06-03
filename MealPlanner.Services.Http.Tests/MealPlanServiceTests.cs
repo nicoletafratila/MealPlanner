@@ -94,7 +94,7 @@ namespace MealPlanner.Services.Http.Tests
         {
             // Arrange
             var mealPlanId = Guid.NewGuid();
-            var shopId = 5;
+            var shopId = Guid.NewGuid();
 
             var expected = new List<ShoppingListProductEditModel>
             {
@@ -138,7 +138,7 @@ namespace MealPlanner.Services.Http.Tests
 
             // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(
-                async () => await service.GetShoppingListProductsAsync(Guid.NewGuid(), 1));
+                async () => await service.GetShoppingListProductsAsync(Guid.NewGuid(), Guid.NewGuid()));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

@@ -153,7 +153,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private async Task AddFromMealPlanAsync()
         {
-            if (Model.ShopId == 0) { SetError("Select a shop first."); return; }
+            if (Model.ShopId == Guid.Empty) { SetError("Select a shop first."); return; }
 
             var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200, Sorting = DefaultSorting });
             if (plans is null || plans.Items.Count == 0) { SetError("No meal plans found."); return; }
@@ -178,7 +178,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private async Task AddFromRecipeAsync()
         {
-            if (Model.ShopId == 0) { SetError("Select a shop first."); return; }
+            if (Model.ShopId == Guid.Empty) { SetError("Select a shop first."); return; }
 
             var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
             string[]? catNames = categories?.Items?.Select(c => c.Name).ToArray();

@@ -53,7 +53,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var shop = new Shop
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test Shop",
             };
 
@@ -85,7 +85,7 @@ namespace MealPlanner.Data.Profiles.Tests
 
             var sourceModel = new ShopModel
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Updated Shop",
                 Index = 5,
                 IsSelected = true

@@ -8,11 +8,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     [QueryProperty(nameof(ShopId), "id")]
     public partial class ShopEditViewModel(IShopService shopService) : BaseViewModel
     {
-        [ObservableProperty] private int _shopId;
+        [ObservableProperty] private Guid _shopId;
         [ObservableProperty] private ShopEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
-        partial void OnShopIdChanged(int value) { IsNew = value == 0; if (!IsNew) _ = LoadAsync(); }
+        partial void OnShopIdChanged(Guid value) { IsNew = value == Guid.Empty; if (!IsNew) _ = LoadAsync(); }
 
         [RelayCommand]
         private async Task LoadAsync()

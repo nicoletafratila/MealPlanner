@@ -1,6 +1,6 @@
 namespace MealPlanner.Data.Entities
 {
-    public sealed class Shop : Common.Data.Entities.Entity<int>
+    public sealed class Shop : Common.Data.Entities.Entity<Guid>
     {
         public string? UserId { get; set; }
 

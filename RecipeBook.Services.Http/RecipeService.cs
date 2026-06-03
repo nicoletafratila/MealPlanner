@@ -28,7 +28,7 @@ namespace RecipeBook.Services.Http
             return await GetAsync<RecipeEditModel>(url, cancellationToken);
         }
 
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, int shopId, CancellationToken cancellationToken = default)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, Guid shopId, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{RecipeBookControllers.ShoppingListProductsRoute}",
                 new Dictionary<string, string?> { [ApiQueryParams.RecipeId] = recipeId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });

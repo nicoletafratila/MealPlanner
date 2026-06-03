@@ -115,7 +115,7 @@ namespace RecipeBook.Services.Http.Tests
         {
             // Arrange
             var recipeId = 10;
-            var shopId = 5;
+            var shopId = Guid.NewGuid();
 
             var expected = new List<ShoppingListProductEditModel>
             {

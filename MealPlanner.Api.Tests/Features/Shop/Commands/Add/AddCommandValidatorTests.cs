@@ -39,7 +39,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             {
                 Model = new ShopEditModel
                 {
-                    Id = 0,
+                    Id = Guid.Empty,
                     Name = "NewShop"
                 }
             };

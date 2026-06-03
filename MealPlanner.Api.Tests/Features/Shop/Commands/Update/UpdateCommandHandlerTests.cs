@@ -69,7 +69,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
         public async Task Handle_EntityNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var model = new ShopEditModel
             {
                 Id = id,
@@ -88,7 +88,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+            Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
 
             _repoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<ShopEditModel>(), It.IsAny<MealPlanner.Data.Entities.Shop>()), Times.Never);
@@ -99,7 +99,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
-            const int id = 2;
+            var id = Guid.NewGuid();
             var model = new ShopEditModel
             {
                 Id = id,
@@ -142,7 +142,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
         public async Task Handle_ExceptionDuringUpdate_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             var model = new ShopEditModel
             {
                 Id = id,

@@ -36,14 +36,15 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task GetEditAsync_SendsGetEditQuery()
         {
             // Arrange
-            var editModel = new ShopEditModel { Id = 5, Name = "Shop1" };
+            var id = Guid.NewGuid();
+            var editModel = new ShopEditModel { Id = id, Name = "Shop1" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
 
             // Act
-            var result = await _controller.GetEditAsync(5, CancellationToken.None);
+            var result = await _controller.GetEditAsync(id, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -105,7 +106,7 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task PostAsync_SendsAddCommand()
         {
             // Arrange
-            var model = new ShopEditModel { Id = 0, Name = "NewShop" };
+            var model = new ShopEditModel { Id = Guid.Empty, Name = "NewShop" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -127,7 +128,7 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task PutAsync_SendsUpdateCommand()
         {
             // Arrange
-            var model = new ShopEditModel { Id = 2, Name = "UpdatedShop" };
+            var model = new ShopEditModel { Id = Guid.NewGuid(), Name = "UpdatedShop" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -149,14 +150,15 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task DeleteAsync_SendsDeleteCommand()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var response = CommandResponse.Success();
 
             _senderMock
-                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == 9), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.DeleteAsync(9, CancellationToken.None);
+            var result = await _controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;

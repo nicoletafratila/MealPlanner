@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MealPlanner.Api.Repositories
 {
     public class ShopRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<Shop, int>(dbContext), IShopRepository
+        : BaseAsyncRepository<Shop, Guid>(dbContext), IShopRepository
     {
         private MealPlannerDbContext Context =>
             DbContext as MealPlannerDbContext
@@ -56,7 +56,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<Shop?> GetByIdIncludeDisplaySequenceAsync(
-            int? id,
+            Guid? id,
             CancellationToken cancellationToken)
         {
             if (id is null)

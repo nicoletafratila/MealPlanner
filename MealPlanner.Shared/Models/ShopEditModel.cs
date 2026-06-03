@@ -8,10 +8,9 @@ namespace MealPlanner.Shared.Models
     public class ShopEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new shops).
+        /// Database identity (empty for new shops).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Shop name (required, max 100 characters).

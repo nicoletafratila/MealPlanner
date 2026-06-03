@@ -12,7 +12,7 @@ namespace MealPlanner.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(shop.Id, Is.Zero);
+                Assert.That(shop.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(shop.Name, Is.Null);
                 Assert.That(shop.DisplaySequence, Is.Not.Null);
                 Assert.That(shop.DisplaySequence, Is.Empty);

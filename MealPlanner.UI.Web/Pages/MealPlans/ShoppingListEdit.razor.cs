@@ -256,7 +256,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
-        private bool CanAddMealPlan => ShoppingList?.ShopId != 0;
+        private bool CanAddMealPlan => ShoppingList?.ShopId != Guid.Empty;
 
         private async Task AddMealPlanAsync()
         {
@@ -297,7 +297,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
-        private bool CanAddRecipe => ShoppingList?.ShopId != 0;
+        private bool CanAddRecipe => ShoppingList?.ShopId != Guid.Empty;
 
         private async Task AddRecipeAsync()
         {
@@ -510,7 +510,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task OnShopChangedAsync(ChangeEventArgs e)
         {
-            if (!int.TryParse(e.Value?.ToString(), out var shopId))
+            if (!Guid.TryParse(e.Value?.ToString(), out var shopId))
                 return;
 
             if (ShoppingList is null)

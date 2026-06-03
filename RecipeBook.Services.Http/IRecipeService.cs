@@ -11,7 +11,7 @@ namespace RecipeBook.Services.Http
         Task<RecipeEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default);
         Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(
             int recipeId,
-            int shopId,
+            Guid shopId,
             CancellationToken cancellationToken = default);
         Task<PagedList<RecipeModel>?> SearchAsync(
             QueryParameters<RecipeModel>? queryParameters = null,

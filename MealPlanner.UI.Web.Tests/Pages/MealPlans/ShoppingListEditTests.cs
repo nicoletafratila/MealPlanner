@@ -106,10 +106,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             ArrangeLookups();
 
+            var shopId = Guid.NewGuid();
             var existing = new ShoppingListEditModel
             {
                 Id = 5,
-                ShopId = 1,
+                ShopId = shopId,
                 Products = []
             };
 
@@ -118,7 +119,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 .ReturnsAsync(existing);
 
             _shopServiceMock
-                .Setup(s => s.GetEditAsync(1, CancellationToken.None))
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
                 .ReturnsAsync(new ShopEditModel());
 
             // Act
@@ -179,20 +180,21 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
+            var shopId = Guid.NewGuid();
             var existingShoppingList = new ShoppingListEditModel
             {
                 Id = 5,
-                ShopId = 1,
+                ShopId = shopId,
                 Products = []
             };
 
             var existingShop = new ShopEditModel
             {
-                Id = 1,
+                Id = shopId,
             };
 
             _shopServiceMock
-               .Setup(s => s.GetEditAsync(1, CancellationToken.None))
+               .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
                .ReturnsAsync(existingShop);
 
             _shoppingListServiceMock
@@ -218,7 +220,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(1, CancellationToken.None), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(shopId, CancellationToken.None), Times.Once);
             _shoppingListServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _shoppingListServiceMock.Verify(
                 s => s.UpdateAsync(It.Is<ShoppingListEditModel>(m => m.Id == 5), CancellationToken.None),
@@ -332,20 +334,21 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Message = "ok"
             };
 
+            var shopId = Guid.NewGuid();
             var existingShoppingList = new ShoppingListEditModel
             {
                 Id = 5,
-                ShopId = 1,
+                ShopId = shopId,
                 Products = []
             };
 
             var existingShop = new ShopEditModel
             {
-                Id = 1,
+                Id = shopId,
             };
 
             _shopServiceMock
-               .Setup(s => s.GetEditAsync(1, CancellationToken.None))
+               .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
                .ReturnsAsync(existingShop);
 
             _shoppingListServiceMock
@@ -371,7 +374,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(1, CancellationToken.None), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(shopId, CancellationToken.None), Times.Once);
             _shoppingListServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _shoppingListServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
@@ -388,20 +391,21 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             ArrangeLookups();
 
+            var shopId = Guid.NewGuid();
             var existingShoppingList = new ShoppingListEditModel
             {
                 Id = 5,
-                ShopId = 1,
+                ShopId = shopId,
                 Products = []
             };
 
             var existingShop = new ShopEditModel
             {
-                Id = 1,
+                Id = shopId,
             };
 
             _shopServiceMock
-               .Setup(s => s.GetEditAsync(1, CancellationToken.None))
+               .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
                .ReturnsAsync(existingShop);
 
             _shoppingListServiceMock
@@ -427,7 +431,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(1, CancellationToken.None), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(shopId, CancellationToken.None), Times.Once);
             _shoppingListServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
@@ -446,20 +450,21 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Message = "Delete failed because of dependency"
             };
 
+            var shopId = Guid.NewGuid();
             var existingShoppingList = new ShoppingListEditModel
             {
                 Id = 5,
-                ShopId = 1,
+                ShopId = shopId,
                 Products = []
             };
 
             var existingShop = new ShopEditModel
             {
-                Id = 1,
+                Id = shopId,
             };
 
             _shopServiceMock
-               .Setup(s => s.GetEditAsync(1, CancellationToken.None))
+               .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
                .ReturnsAsync(existingShop);
 
             _shoppingListServiceMock
@@ -485,7 +490,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _shopServiceMock.Verify(s => s.GetEditAsync(1, CancellationToken.None), Times.Once);
+            _shopServiceMock.Verify(s => s.GetEditAsync(shopId, CancellationToken.None), Times.Once);
             _shoppingListServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),

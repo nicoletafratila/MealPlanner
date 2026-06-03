@@ -34,7 +34,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var shop = new Shop
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test Shop",
                 DisplaySequence = null
             };
@@ -50,7 +50,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var shop = new Shop
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test Shop",
                 DisplaySequence = []
             };
@@ -66,7 +66,7 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         {
             var shop = new Shop
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Supermarket",
                 DisplaySequence =
                 [

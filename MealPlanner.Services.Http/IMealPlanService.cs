@@ -13,7 +13,7 @@ namespace MealPlanner.Services.Http
 
         Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(
             Guid mealPlanId,
-            int shopId,
+            Guid shopId,
             CancellationToken cancellationToken = default);
 
         Task<PagedList<MealPlanModel>?> SearchAsync(

@@ -107,10 +107,11 @@ namespace MealPlanner.Api.Tests.Controllers
         {
             // Arrange
             var mealPlanId = Guid.NewGuid();
+            var shopId = Guid.NewGuid();
             var createModel = new ShoppingListCreateModel
             {
                 MealPlanId = mealPlanId,
-                ShopId = 7
+                ShopId = shopId
             };
 
             var editModel = new ShoppingListEditModel
@@ -144,7 +145,7 @@ namespace MealPlanner.Api.Tests.Controllers
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(captured!.MealPlanId, Is.EqualTo(mealPlanId));
-                Assert.That(captured!.ShopId, Is.EqualTo(7));
+                Assert.That(captured!.ShopId, Is.EqualTo(shopId));
             }
 
             _senderMock.Verify(m => m.Send(It.IsAny<MakeShoppingListCommand>(), It.IsAny<CancellationToken>()), Times.Once);

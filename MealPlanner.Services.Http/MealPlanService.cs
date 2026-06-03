@@ -33,7 +33,7 @@ namespace MealPlanner.Services.Http
             return result.Items.Count != 0 ? result.Items.OrderByDescending(x => x.CreatedAt).FirstOrDefault() : null;
         }
 
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid mealPlanId, int shopId, CancellationToken cancellationToken = default)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid mealPlanId, Guid shopId, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{MealPlannerControllers.ShoppingListProductsRoute}",
                 new Dictionary<string, string?> { [ApiQueryParams.MealPlanId] = mealPlanId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });

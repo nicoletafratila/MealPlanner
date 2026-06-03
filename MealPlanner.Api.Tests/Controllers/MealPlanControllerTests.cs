@@ -77,9 +77,10 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(products);
 
             var mealPlanId = Guid.NewGuid();
+            var shopId = Guid.NewGuid();
 
             // Act
-            var result = await _controller.GetShoppingListProductsAsync(mealPlanId, 7, CancellationToken.None);
+            var result = await _controller.GetShoppingListProductsAsync(mealPlanId, shopId, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -93,7 +94,7 @@ namespace MealPlanner.Api.Tests.Controllers
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(captured!.MealPlanId, Is.EqualTo(mealPlanId));
-                Assert.That(captured!.ShopId, Is.EqualTo(7));
+                Assert.That(captured!.ShopId, Is.EqualTo(shopId));
             }
 
             _senderMock.Verify(m => m.Send(It.IsAny<GetShoppingListProductsQuery>(), It.IsAny<CancellationToken>()), Times.Once);

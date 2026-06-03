@@ -22,7 +22,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.ShopId, Is.Zero);
+                Assert.That(model.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Value, Is.Zero);
                 Assert.That(model.ProductCategory, Is.Null);
 
@@ -41,14 +41,15 @@ namespace MealPlanner.Shared.Tests.Models
         {
             // Arrange
             var category = new ProductCategoryModel { Id = 10, Name = "Dairy" };
+            var shopId = Guid.NewGuid();
 
             // Act
-            var model = new ShopDisplaySequenceEditModel(5, 2, category);
+            var model = new ShopDisplaySequenceEditModel(shopId, 2, category);
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.ShopId, Is.EqualTo(5));
+                Assert.That(model.ShopId, Is.EqualTo(shopId));
                 Assert.That(model.Value, Is.EqualTo(2));
                 Assert.That(model.ProductCategory, Is.SameAs(category));
             }
@@ -60,7 +61,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopDisplaySequenceEditModel
             {
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Value = -1,
                 ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" }
             };
@@ -82,7 +83,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopDisplaySequenceEditModel
             {
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Value = 0,
                 ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" }
             };
@@ -113,7 +114,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopDisplaySequenceEditModel
             {
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Value = 3,
                 ProductCategory = new ProductCategoryModel { Id = 1, Name = "Snacks" }
             };
@@ -131,7 +132,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopDisplaySequenceEditModel
             {
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Value = 4,
                 ProductCategory = null
             };

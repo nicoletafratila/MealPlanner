@@ -21,7 +21,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             var query = new GetShoppingListProductsQuery
             {
                 MealPlanId = Guid.Empty,
-                ShopId = 1
+                ShopId = Guid.NewGuid()
             };
 
             // Act
@@ -32,13 +32,13 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         }
 
         [Test]
-        public void ShopId_Zero_HasValidationError()
+        public void ShopId_Empty_HasValidationError()
         {
             // Arrange
             var query = new GetShoppingListProductsQuery
             {
                 MealPlanId = Guid.NewGuid(),
-                ShopId = 0
+                ShopId = Guid.Empty
             };
 
             // Act
@@ -49,30 +49,13 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         }
 
         [Test]
-        public void ShopId_Negative_HasValidationError()
+        public void BothIds_Valid_HasNoValidationErrors()
         {
             // Arrange
             var query = new GetShoppingListProductsQuery
             {
                 MealPlanId = Guid.NewGuid(),
-                ShopId = -2
-            };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.ShopId);
-        }
-
-        [Test]
-        public void BothIds_GreaterThanZero_HasNoValidationErrors()
-        {
-            // Arrange
-            var query = new GetShoppingListProductsQuery
-            {
-                MealPlanId = Guid.NewGuid(),
-                ShopId = 4
+                ShopId = Guid.NewGuid()
             };
 
             // Act

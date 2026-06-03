@@ -14,7 +14,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
                 .WithMessage(Resources.MealPlanMessages.MealPlanIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.MealPlanMessages.ShopIdGreaterThanZero);
         }
     }

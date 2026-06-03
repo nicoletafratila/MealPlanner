@@ -40,8 +40,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 new BreadcrumbItem { Text = Resources.ShopEdit.BreadcrumbShop, IsCurrentPage = true },
             ];
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            _ = Guid.TryParse(Id, out var id);
+            if (id == Guid.Empty)
             {
                 var categories = await ProductCategoriesService.SearchAsync();
                 var items = categories?.Items ?? [];
@@ -62,7 +62,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             CommandResponse? response;
 
-            if (shop.Id == 0)
+            if (shop.Id == Guid.Empty)
             {
                 response = await ShopService.AddAsync(shop);
             }
@@ -89,7 +89,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteAsync()
         {
-            if (Shop.Id == 0)
+            if (Shop.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -114,7 +114,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteCoreAsync(ShopEditModel shop)
         {
-            if (shop.Id == 0)
+            if (shop.Id == Guid.Empty)
                 return;
 
             var response = await ShopService.DeleteAsync(shop.Id);

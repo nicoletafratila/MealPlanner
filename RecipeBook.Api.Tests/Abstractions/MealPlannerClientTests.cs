@@ -66,7 +66,7 @@ namespace RecipeBook.Api.Tests.Abstractions
             var (client, _, _) = CreateClient();
 
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-                await client.GetShopAsync(0, "token", CancellationToken.None));
+                await client.GetShopAsync(Guid.Empty, "token", CancellationToken.None));
         }
 
         [Test]
@@ -75,26 +75,27 @@ namespace RecipeBook.Api.Tests.Abstractions
             // Arrange
             var (client, mockHttp, _) = CreateClient();
 
+            var shopId = Guid.NewGuid();
             var expectedShop = new ShopEditModel
             {
-                Id = 5,
+                Id = shopId,
                 Name = "TestShop"
             };
 
-            var url = $"{BaseAddress}{ShopPath}/edit?id=5";
+            var url = $"{BaseAddress}{ShopPath}/edit?id={shopId}";
 
             mockHttp.When(HttpMethod.Get, url)
                 .WithHeaders("Authorization", "Bearer abc")
                 .Respond("application/json", JsonSerializer.Serialize(expectedShop, JsonOptions));
 
             // Act
-            var result = await client.GetShopAsync(5, "abc", CancellationToken.None);
+            var result = await client.GetShopAsync(shopId, "abc", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result!.Id, Is.EqualTo(5));
+                Assert.That(result!.Id, Is.EqualTo(shopId));
                 Assert.That(result.Name, Is.EqualTo("TestShop"));
             }
 

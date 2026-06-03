@@ -15,7 +15,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
                 .WithMessage(RecipeMessages.RecipeIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(RecipeMessages.ShopIdGreaterThanZero);
         }
     }

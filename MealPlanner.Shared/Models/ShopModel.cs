@@ -10,7 +10,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Database identity.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Shop name.
@@ -21,7 +21,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public ShopModel(int id, string name)
+        public ShopModel(Guid id, string name)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

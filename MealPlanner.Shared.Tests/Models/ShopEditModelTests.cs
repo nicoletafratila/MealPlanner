@@ -22,7 +22,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.DisplaySequence, Is.Not.Null);
                 Assert.That(model.DisplaySequence, Is.Empty);
@@ -38,11 +38,11 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "My Shop",
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 10, Name = "Cat1" } }
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = 10, Name = "Cat1" } }
                 ]
             };
 
@@ -62,11 +62,11 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
                 ]
             };
 
@@ -98,7 +98,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Shop",
                 DisplaySequence = []
             };
@@ -123,7 +123,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Valid list
             model.DisplaySequence =
             [
-                new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
+                new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
             ];
 
             isValid = TryValidate(model, out results);
@@ -170,8 +170,8 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = cat1 },
-                    new() { ShopId = 1, Value = 2, ProductCategory = cat2 },
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = cat1 },
+                    new() { ShopId = Guid.NewGuid(), Value = 2, ProductCategory = cat2 },
                 ]
             };
 
@@ -201,11 +201,11 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = null!,
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
                 ]
             };
 

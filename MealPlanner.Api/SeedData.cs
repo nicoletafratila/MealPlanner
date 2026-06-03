@@ -11,10 +11,13 @@ namespace MealPlanner.Api
         public static async Task EnsureSeedDataAsync(IServiceScope scope)
         {
             var context = scope.ServiceProvider.GetService<MealPlannerDbContext>() ?? throw new InvalidOperationException("MealPlannerDbContext is not registered in the service provider.");
-            context.Database.EnsureCreated();
             if (context.Database.IsRelational())
             {
                 context.Database.Migrate();
+            }
+            else
+            {
+                context.Database.EnsureCreated();
             }
 
             await SeedUnitsAsync(context);

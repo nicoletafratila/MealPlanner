@@ -28,7 +28,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var entity = new ShopDisplaySequence
             {
-                ShopId = 10,
+                ShopId = Guid.NewGuid(),
                 ProductCategoryId = 20,
                 Value = 3
             };
@@ -53,7 +53,7 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var model = new ShopDisplaySequenceEditModel
             {
-                ShopId = 15,
+                ShopId = Guid.NewGuid(),
                 Value = 7,
                 ProductCategory = new ProductCategoryModel { Id = 30 }
             };
@@ -76,14 +76,14 @@ namespace MealPlanner.Data.Profiles.Tests
         {
             var model = new ShopDisplaySequenceEditModel
             {
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Value = 10,
                 ProductCategory = null
             };
 
             var destination = new ShopDisplaySequence
             {
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Value = 2,
                 ProductCategoryId = 5,
                 Shop = new Shop { Name = "Existing Shop" },

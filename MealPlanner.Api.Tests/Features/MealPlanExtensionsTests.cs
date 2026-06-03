@@ -13,7 +13,7 @@ namespace MealPlanner.Api.Tests.Features
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.Not.Null);
-                Assert.That(result.ShopId, Is.Zero);
+                Assert.That(result.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(result.Name, Is.Null);
             }
         }
@@ -21,13 +21,14 @@ namespace MealPlanner.Api.Tests.Features
         [Test]
         public void MakeShoppingList_Returns_Empty_Products_When_No_Recipes()
         {
+            var shopId = Guid.NewGuid();
             var result = new MealPlanner.Data.Entities.MealPlan { Name = "Plan" }
-                .MakeShoppingList(new MealPlanner.Data.Entities.Shop { Id = 1, Name = "Shop1" });
+                .MakeShoppingList(new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" });
 
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Name, Is.EqualTo("Shopping list details for Plan in shop Shop1"));
-                Assert.That(result.ShopId, Is.EqualTo(1));
+                Assert.That(result.ShopId, Is.EqualTo(shopId));
                 Assert.That(result.Products, Is.Empty);
             }
         }
@@ -54,13 +55,14 @@ namespace MealPlanner.Api.Tests.Features
                 ]
             };
 
-            var shop = new MealPlanner.Data.Entities.Shop { Id = 5, Name = "MyShop", DisplaySequence = [new MealPlanner.Data.Entities.ShopDisplaySequence { ShopId = 5, ProductCategoryId = category.Id, Value = 7 }] };
+            var shopId = Guid.NewGuid();
+            var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "MyShop", DisplaySequence = [new MealPlanner.Data.Entities.ShopDisplaySequence { ShopId = shopId, ProductCategoryId = category.Id, Value = 7 }] };
 
             var result = mealPlan.MakeShoppingList(shop);
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.ShopId, Is.EqualTo(5));
+                Assert.That(result.ShopId, Is.EqualTo(shopId));
                 Assert.That(result.Products, Has.Count.EqualTo(1));
                 var item = result.Products!.Single();
                 Assert.That(item.Quantity, Is.EqualTo(150m));
@@ -83,7 +85,7 @@ namespace MealPlanner.Api.Tests.Features
                 ]
             };
 
-            var result = mealPlan.MakeShoppingList(new MealPlanner.Data.Entities.Shop { Id = 1, Name = "Shop1" });
+            var result = mealPlan.MakeShoppingList(new MealPlanner.Data.Entities.Shop { Id = Guid.NewGuid(), Name = "Shop1" });
 
             Assert.That(result.Products, Is.Empty);
         }

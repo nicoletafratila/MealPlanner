@@ -15,13 +15,13 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// The shop id where this shopping list will be used.
         /// </summary>
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         public ShoppingListCreateModel()
         {
         }
 
-        public ShoppingListCreateModel(Guid mealPlanId, int shopId)
+        public ShoppingListCreateModel(Guid mealPlanId, Guid shopId)
         {
             MealPlanId = mealPlanId;
             ShopId = shopId;

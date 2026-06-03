@@ -14,15 +14,16 @@ namespace RecipeBook.Api.Tests.Features
         [Test]
         public void MakeShoppingList_NoIngredients_ReturnsEmptyListWithNameAndShopId()
         {
+            var shopId = Guid.NewGuid();
             var recipe = new RecipeBook.Data.Entities.Recipe { Id = 1, Name = "TestRecipe", RecipeIngredients = null };
-            var shop = new MealPlanner.Data.Entities.Shop { Id = 10, Name = "MyShop" };
+            var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "MyShop" };
 
             var list = recipe.MakeShoppingList(shop);
 
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(list.Name, Is.EqualTo("Shopping list details for TestRecipe in shop MyShop"));
-                Assert.That(list.ShopId, Is.EqualTo(10));
+                Assert.That(list.ShopId, Is.EqualTo(shopId));
                 Assert.That(list.Products, Is.Not.Null);
                 Assert.That(list.Products, Is.Empty);
             }

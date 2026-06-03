@@ -15,7 +15,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.MealPlanId, Is.EqualTo(Guid.Empty));
-                Assert.That(query.ShopId, Is.EqualTo(0));
+                Assert.That(query.ShopId, Is.EqualTo(Guid.Empty));
             }
         }
 
@@ -24,7 +24,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         {
             // Arrange
             var mealPlanId = Guid.NewGuid();
-            const int shopId = 10;
+            var shopId = Guid.NewGuid();
 
             // Act
             var query = new GetShoppingListProductsQuery(mealPlanId, shopId);
@@ -42,18 +42,19 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         {
             // Arrange
             var mealPlanId = Guid.NewGuid();
+            var shopId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
                 // Act
                 MealPlanId = mealPlanId,
-                ShopId = 3
+                ShopId = shopId
             };
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(query.MealPlanId, Is.EqualTo(mealPlanId));
-                Assert.That(query.ShopId, Is.EqualTo(3));
+                Assert.That(query.ShopId, Is.EqualTo(shopId));
             }
         }
     }
