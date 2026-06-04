@@ -24,7 +24,7 @@ namespace Common.Services
                 .ToArray();
         }
 
-        public async Task<LogModel?> GetLogAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<LogModel?> GetLogAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var log = await _repository.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
             if (log is null)

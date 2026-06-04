@@ -60,7 +60,7 @@ namespace Common.Data.Repository.Tests
             using (Assert.EnterMultipleScope())
             {
                 // Assert
-                Assert.That(added.Id, Is.Not.Zero);
+                Assert.That(added.Id, Is.Not.EqualTo(Guid.Empty));
                 Assert.That(ctx.Set<Log>().Count(), Is.EqualTo(1));
             }
         }

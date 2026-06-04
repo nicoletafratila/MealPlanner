@@ -24,9 +24,10 @@ namespace Common.Data.Profiles.Tests
         [Test]
         public void Log_To_LogModel_Maps_Properties()
         {
+            var id = Guid.NewGuid();
             var entity = new Log
             {
-                Id = 1,
+                Id = id,
                 Message = "Error occurred",
                 Level = "Warning"
             };
@@ -35,7 +36,7 @@ namespace Common.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(1));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Message, Is.EqualTo("Error occurred"));
                 Assert.That(result.Level, Is.EqualTo("Warning"));
 
@@ -47,9 +48,10 @@ namespace Common.Data.Profiles.Tests
         [Test]
         public void LogModel_To_Log_Maps_Properties()
         {
+            var id = Guid.NewGuid();
             var model = new LogModel
             {
-                Id = 11,
+                Id = id,
                 Message = "Something happened",
                 Level = "Info"
             };
@@ -58,7 +60,7 @@ namespace Common.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(11));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Message, Is.EqualTo("Something happened"));
                 Assert.That(result.Level, Is.EqualTo("Info"));
             }

@@ -2,7 +2,7 @@
 
 namespace Common.Data.Repository
 {
-    public interface ILoggerRepository : IAsyncRepository<Log, int>
+    public interface ILoggerRepository : IAsyncRepository<Log, Guid>
     {
     }
 }

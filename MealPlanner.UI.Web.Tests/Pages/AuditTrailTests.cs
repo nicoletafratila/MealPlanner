@@ -13,7 +13,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
         {
             return new LogModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Message = message,
                 MessageTemplate = message,
                 Level = level,

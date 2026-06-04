@@ -1,6 +1,6 @@
 ﻿namespace Common.Data.Entities
 {
-    public class Log : Entity<int>
+    public class Log : Entity<Guid>
     {
         public string? Message { get; set; } = string.Empty;
         public string? MessageTemplate { get; set; } = string.Empty;
