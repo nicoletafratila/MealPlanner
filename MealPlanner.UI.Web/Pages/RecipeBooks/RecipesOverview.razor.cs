@@ -266,10 +266,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             mealPlanToAdd.Recipes ??= [];
 
-            var existing = mealPlanToAdd.Recipes.FirstOrDefault(r => r.Id == recipe.Id);
-            if (existing is not null)
-                return;
-
             mealPlanToAdd.Recipes.Add(recipe);
             mealPlanToAdd.Recipes.SetIndexes();
 
