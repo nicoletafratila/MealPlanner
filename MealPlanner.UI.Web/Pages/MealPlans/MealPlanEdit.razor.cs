@@ -220,13 +220,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             MealPlan.Recipes ??= [];
 
             var recipeId = Guid.Parse(RecipeId!);
-            var existing = MealPlan.Recipes.FirstOrDefault(r => r.Id == recipeId);
-            if (existing is not null)
-            {
-                StateHasChanged();
-                return;
-            }
-
             var recipe = await RecipeService.GetByIdAsync(recipeId);
             if (recipe is null)
             {

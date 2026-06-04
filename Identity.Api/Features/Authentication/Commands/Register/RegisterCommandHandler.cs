@@ -1,4 +1,12 @@
-using System.Security.Claims;using Common.Data.Repository; using Common.Models; using Duende.IdentityModel; using Identity.Api.Features.Authentication.Resources; using Identity.Api.Features.Email; using Identity.Data.Entities; using MediatR; using Microsoft.AspNetCore.Identity; using RecipeBook.Data.Entities;
+using System.Security.Claims;
+using Common.Data.Repository;
+using Common.Models;
+using Duende.IdentityModel;
+using Identity.Api.Features.Authentication.Resources;
+using Identity.Api.Features.Email;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
+using RecipeBook.Data.Entities;
 
 namespace Identity.Api.Features.Authentication.Commands.Register
 {
@@ -30,7 +38,7 @@ namespace Identity.Api.Features.Authentication.Commands.Register
                 if (existingByEmail is not null)
                     return CommandResponse.Failed(AuthenticationMessages.EmailAlreadyTaken);
 
-                var user = new Identity.Data.Entities.ApplicationUser
+                var user = new Data.Entities.ApplicationUser
                 {
                     UserName = model.Username,
                     Email = model.EmailAddress,

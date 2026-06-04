@@ -608,7 +608,7 @@ namespace MealPlanner.Api.Migrations
                     b.HasOne("RecipeBook.Data.Entities.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -716,7 +716,7 @@ namespace MealPlanner.Api.Migrations
                     b.HasOne("RecipeBook.Data.Entities.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");

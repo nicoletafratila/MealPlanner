@@ -93,6 +93,7 @@
     <ProjectReference Include="..\MealPlanner.Data.TableConfigurations\MealPlanner.Data.TableConfigurations.csproj" />
     <ProjectReference Include="..\Identity.Data.Entities\Identity.Data.Entities.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />
+    <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
     <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
   </ItemGroup>

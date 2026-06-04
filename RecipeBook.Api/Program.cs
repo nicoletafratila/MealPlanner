@@ -44,7 +44,8 @@ namespace RecipeBook.Api
                           sinkOptions: new MSSqlServerSinkOptions
                           {
                               TableName = "Logs",
-                              SchemaName = "dbo"
+                              SchemaName = "dbo",
+                              AutoCreateSqlTable = false
                           },
                           restrictedToMinimumLevel: LogEventLevel.Error);
                 });

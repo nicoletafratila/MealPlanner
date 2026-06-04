@@ -1,10 +1,15 @@
-﻿using Common.Data.DataContext;
+using System;
+using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace MealPlanner.Api.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("AspNetRoles"))
@@ -57,8 +62,7 @@ namespace MealPlanner.Api.Migrations
                     name: "Logs",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                         Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                         MessageTemplate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                         Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -76,9 +80,11 @@ namespace MealPlanner.Api.Migrations
                     name: "MealPlans",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
-                        Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                        Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                        CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                        UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                     },
                     constraints: table =>
                     {
@@ -90,8 +96,8 @@ namespace MealPlanner.Api.Migrations
                     name: "ProductCategories",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                     },
                     constraints: table =>
@@ -104,8 +110,8 @@ namespace MealPlanner.Api.Migrations
                     name: "RecipeCategories",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                         DisplaySequence = table.Column<int>(type: "int", nullable: false)
                     },
@@ -119,8 +125,8 @@ namespace MealPlanner.Api.Migrations
                     name: "Shops",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                     },
                     constraints: table =>
@@ -133,8 +139,7 @@ namespace MealPlanner.Api.Migrations
                     name: "Units",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                         UnitType = table.Column<int>(type: "int", nullable: false)
                     },
@@ -143,7 +148,6 @@ namespace MealPlanner.Api.Migrations
                         table.PrimaryKey("PK_Units", x => x.Id);
                     });
 
-            // --- Tables with FK dependencies ---
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("AspNetRoleClaims"))
                 migrationBuilder.CreateTable(
                     name: "AspNetRoleClaims",
@@ -163,7 +167,7 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.RoleId,
                             principalTable: "AspNetRoles",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("AspNetUserClaims"))
@@ -185,7 +189,7 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.UserId,
                             principalTable: "AspNetUsers",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("AspNetUserLogins"))
@@ -206,7 +210,7 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.UserId,
                             principalTable: "AspNetUsers",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("AspNetUserRoles"))
@@ -225,13 +229,13 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.RoleId,
                             principalTable: "AspNetRoles",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                             column: x => x.UserId,
                             principalTable: "AspNetUsers",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("AspNetUserTokens"))
@@ -252,7 +256,7 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.UserId,
                             principalTable: "AspNetUsers",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("Recipes"))
@@ -260,12 +264,12 @@ namespace MealPlanner.Api.Migrations
                     name: "Recipes",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                         ImageContent = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                         Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                        RecipeCategoryId = table.Column<int>(type: "int", nullable: false)
+                        RecipeCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                     },
                     constraints: table =>
                     {
@@ -275,7 +279,7 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.RecipeCategoryId,
                             principalTable: "RecipeCategories",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("ShopDisplaySequences"))
@@ -283,8 +287,8 @@ namespace MealPlanner.Api.Migrations
                     name: "ShopDisplaySequences",
                     columns: table => new
                     {
-                        ShopId = table.Column<int>(type: "int", nullable: false),
-                        ProductCategoryId = table.Column<int>(type: "int", nullable: false),
+                        ShopId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        ProductCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                         Value = table.Column<int>(type: "int", nullable: false)
                     },
                     constraints: table =>
@@ -295,13 +299,13 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.ProductCategoryId,
                             principalTable: "ProductCategories",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_ShopDisplaySequences_Shops_ShopId",
                             column: x => x.ShopId,
                             principalTable: "Shops",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("ShoppingLists"))
@@ -309,10 +313,10 @@ namespace MealPlanner.Api.Migrations
                     name: "ShoppingLists",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                        ShopId = table.Column<int>(type: "int", nullable: false)
+                        ShopId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                     },
                     constraints: table =>
                     {
@@ -322,7 +326,7 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.ShopId,
                             principalTable: "Shops",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("Products"))
@@ -330,12 +334,12 @@ namespace MealPlanner.Api.Migrations
                     name: "Products",
                     columns: table => new
                     {
-                        Id = table.Column<int>(type: "int", nullable: false)
-                            .Annotation("SqlServer:Identity", "1, 1"),
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                         Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                         ImageContent = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                        BaseUnitId = table.Column<int>(type: "int", nullable: false),
-                        ProductCategoryId = table.Column<int>(type: "int", nullable: false)
+                        BaseUnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        ProductCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                     },
                     constraints: table =>
                     {
@@ -345,13 +349,13 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.ProductCategoryId,
                             principalTable: "ProductCategories",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_Products_Units_BaseUnitId",
                             column: x => x.BaseUnitId,
                             principalTable: "Units",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("MealPlanRecipes"))
@@ -359,24 +363,25 @@ namespace MealPlanner.Api.Migrations
                     name: "MealPlanRecipes",
                     columns: table => new
                     {
-                        MealPlanId = table.Column<int>(type: "int", nullable: false),
-                        RecipeId = table.Column<int>(type: "int", nullable: false)
+                        Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        MealPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                     },
                     constraints: table =>
                     {
-                        table.PrimaryKey("PK_MealPlanRecipes", x => new { x.MealPlanId, x.RecipeId });
+                        table.PrimaryKey("PK_MealPlanRecipes", x => x.Id);
                         table.ForeignKey(
                             name: "FK_MealPlanRecipes_MealPlans_MealPlanId",
                             column: x => x.MealPlanId,
                             principalTable: "MealPlans",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_MealPlanRecipes_Recipes_RecipeId",
                             column: x => x.RecipeId,
                             principalTable: "Recipes",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("RecipeIngredients"))
@@ -384,10 +389,10 @@ namespace MealPlanner.Api.Migrations
                     name: "RecipeIngredients",
                     columns: table => new
                     {
-                        RecipeId = table.Column<int>(type: "int", nullable: false),
-                        ProductId = table.Column<int>(type: "int", nullable: false),
+                        RecipeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                         Quantity = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                        UnitId = table.Column<int>(type: "int", nullable: false)
+                        UnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                     },
                     constraints: table =>
                     {
@@ -397,19 +402,18 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.ProductId,
                             principalTable: "Products",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_RecipeIngredients_Recipes_RecipeId",
                             column: x => x.RecipeId,
                             principalTable: "Recipes",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_RecipeIngredients_Units_UnitId",
                             column: x => x.UnitId,
                             principalTable: "Units",
-                            principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            principalColumn: "Id");
                     });
 
             if (!migrationBuilder.TableExists<MealPlannerDbContext>("ShoppingListProducts"))
@@ -417,10 +421,10 @@ namespace MealPlanner.Api.Migrations
                     name: "ShoppingListProducts",
                     columns: table => new
                     {
-                        ShoppingListId = table.Column<int>(type: "int", nullable: false),
-                        ProductId = table.Column<int>(type: "int", nullable: false),
+                        ShoppingListId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                        ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                         Quantity = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                        UnitId = table.Column<int>(type: "int", nullable: false),
+                        UnitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                         Collected = table.Column<bool>(type: "bit", nullable: false),
                         DisplaySequence = table.Column<int>(type: "int", nullable: false)
                     },
@@ -432,22 +436,20 @@ namespace MealPlanner.Api.Migrations
                             column: x => x.ProductId,
                             principalTable: "Products",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_ShoppingListProducts_ShoppingLists_ShoppingListId",
                             column: x => x.ShoppingListId,
                             principalTable: "ShoppingLists",
                             principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            onDelete: ReferentialAction.Cascade);
                         table.ForeignKey(
                             name: "FK_ShoppingListProducts_Units_UnitId",
                             column: x => x.UnitId,
                             principalTable: "Units",
-                            principalColumn: "Id",
-                            onDelete: ReferentialAction.NoAction);
+                            principalColumn: "Id");
                     });
 
-            // --- Indexes ---
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_AspNetRoleClaims_RoleId", "AspNetRoleClaims"))
                 migrationBuilder.CreateIndex("IX_AspNetRoleClaims_RoleId", "AspNetRoleClaims", "RoleId");
 
@@ -469,14 +471,29 @@ namespace MealPlanner.Api.Migrations
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("UserNameIndex", "AspNetUsers"))
                 migrationBuilder.CreateIndex("UserNameIndex", "AspNetUsers", "NormalizedUserName", unique: true, filter: "[NormalizedUserName] IS NOT NULL");
 
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_MealPlanRecipes_MealPlanId", "MealPlanRecipes"))
+                migrationBuilder.CreateIndex("IX_MealPlanRecipes_MealPlanId", "MealPlanRecipes", "MealPlanId");
+
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_MealPlanRecipes_RecipeId", "MealPlanRecipes"))
                 migrationBuilder.CreateIndex("IX_MealPlanRecipes_RecipeId", "MealPlanRecipes", "RecipeId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_MealPlans_UserId", "MealPlans"))
+                migrationBuilder.CreateIndex("IX_MealPlans_UserId", "MealPlans", "UserId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ProductCategories_UserId", "ProductCategories"))
+                migrationBuilder.CreateIndex("IX_ProductCategories_UserId", "ProductCategories", "UserId");
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Products_BaseUnitId", "Products"))
                 migrationBuilder.CreateIndex("IX_Products_BaseUnitId", "Products", "BaseUnitId");
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Products_ProductCategoryId", "Products"))
                 migrationBuilder.CreateIndex("IX_Products_ProductCategoryId", "Products", "ProductCategoryId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Products_UserId", "Products"))
+                migrationBuilder.CreateIndex("IX_Products_UserId", "Products", "UserId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_RecipeCategories_UserId", "RecipeCategories"))
+                migrationBuilder.CreateIndex("IX_RecipeCategories_UserId", "RecipeCategories", "UserId");
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_RecipeIngredients_ProductId", "RecipeIngredients"))
                 migrationBuilder.CreateIndex("IX_RecipeIngredients_ProductId", "RecipeIngredients", "ProductId");
@@ -486,6 +503,9 @@ namespace MealPlanner.Api.Migrations
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Recipes_RecipeCategoryId", "Recipes"))
                 migrationBuilder.CreateIndex("IX_Recipes_RecipeCategoryId", "Recipes", "RecipeCategoryId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Recipes_UserId", "Recipes"))
+                migrationBuilder.CreateIndex("IX_Recipes_UserId", "Recipes", "UserId");
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShopDisplaySequences_ProductCategoryId", "ShopDisplaySequences"))
                 migrationBuilder.CreateIndex("IX_ShopDisplaySequences_ProductCategoryId", "ShopDisplaySequences", "ProductCategoryId");
@@ -498,8 +518,15 @@ namespace MealPlanner.Api.Migrations
 
             if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShoppingLists_ShopId", "ShoppingLists"))
                 migrationBuilder.CreateIndex("IX_ShoppingLists_ShopId", "ShoppingLists", "ShopId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_ShoppingLists_UserId", "ShoppingLists"))
+                migrationBuilder.CreateIndex("IX_ShoppingLists_UserId", "ShoppingLists", "UserId");
+
+            if (!migrationBuilder.IndexExists<MealPlannerDbContext>("IX_Shops_UserId", "Shops"))
+                migrationBuilder.CreateIndex("IX_Shops_UserId", "Shops", "UserId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(name: "AspNetRoleClaims");

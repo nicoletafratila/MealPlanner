@@ -16,48 +16,12 @@
   <ItemGroup>
     <Compile Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
     <Compile Remove="Logs\**" />
-    <Compile Remove="Migrations\**" />
     <Content Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
     <Content Remove="Logs\**" />
-    <Content Remove="Migrations\**" />
     <EmbeddedResource Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
     <EmbeddedResource Remove="Logs\**" />
-    <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Features\MealPlan\Queries\GetAllEditMealPlan\**" />
     <None Remove="Logs\**" />
-    <None Remove="Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Migrations\20250918144047_InitialCreate.cs" />
-    <Compile Include="Migrations\20250918144047_InitialCreate.Designer.cs" />
-    <Compile Include="Migrations\20260414152727_Update_MealPlans_AddDates.cs" />
-    <Compile Include="Migrations\20260414152727_Update_MealPlans_AddDates.Designer.cs" />
-    <Compile Include="Migrations\20260513135252_AddUserIdToEntities.cs" />
-    <Compile Include="Migrations\20260513135252_AddUserIdToEntities.Designer.cs" />
-    <Compile Include="Migrations\20260521091647_AddUserIdIndexes.cs" />
-    <Compile Include="Migrations\20260521091647_AddUserIdIndexes.Designer.cs" />
-    <Compile Include="Migrations\20260603100228_MealPlanIdToGuid.cs" />
-    <Compile Include="Migrations\20260603100228_MealPlanIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260603111830_ShopIdToGuid.cs" />
-    <Compile Include="Migrations\20260603111830_ShopIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260603124420_ShoppingListIdToGuid.cs" />
-    <Compile Include="Migrations\20260603124420_ShoppingListIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260603143937_ProductCategoryIdToGuid.cs" />
-    <Compile Include="Migrations\20260603143937_ProductCategoryIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260603160326_RecipeCategoryIdToGuid.cs" />
-    <Compile Include="Migrations\20260603160326_RecipeCategoryIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260604074728_UnitIdToGuid.cs" />
-    <Compile Include="Migrations\20260604074728_UnitIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260604085608_ProductIdToGuid.cs" />
-    <Compile Include="Migrations\20260604085608_ProductIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260604101320_UpdateRecipeIdToGuid.cs" />
-    <Compile Include="Migrations\20260604101320_UpdateRecipeIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\20260604121125_MealPlanRecipe_AddId.cs" />
-    <Compile Include="Migrations\20260604121125_MealPlanRecipe_AddId.Designer.cs" />
-    <Compile Include="Migrations\20260604143856_LogIdToGuid.cs" />
-    <Compile Include="Migrations\20260604143856_LogIdToGuid.Designer.cs" />
-    <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -138,5 +102,9 @@
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>
