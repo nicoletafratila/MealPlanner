@@ -46,7 +46,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
         public async Task Handle_EntityFound_ReturnsMappedModel()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var entity = new RecipeBook.Data.Entities.Recipe
             {
                 Id = id,
@@ -90,7 +90,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
         public async Task Handle_EntityNotFound_ReturnsEmptyModelWithId()
         {
             // Arrange
-            const int id = 10;
+            var id = Guid.NewGuid();
 
             _repoMock
                 .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetEdit
         public async Task Handle_MapperReturnsNull_FallsBackToEmptyModelWithId()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
             var entity = new RecipeBook.Data.Entities.Recipe
             {
                 Id = id,

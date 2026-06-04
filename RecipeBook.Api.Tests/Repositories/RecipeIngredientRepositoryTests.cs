@@ -44,6 +44,7 @@ namespace RecipeBook.Api.Tests.Repositories
         }
 
         private static Guid ProductGuid(int seed) => new(seed * 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid RecipeGuid(int seed) => new(seed * 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         [Test]
         public async Task GetAllAsync_ReturnsAllIngredients_WithUnitsIncluded()
@@ -55,8 +56,8 @@ namespace RecipeBook.Api.Tests.Repositories
             ctx.Units.Add(unit);
 
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(1), Unit = unit, Quantity = 1 },
-                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(2), Unit = unit, Quantity = 2 });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(1), Unit = unit, Quantity = 1 },
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(2), Unit = unit, Quantity = 2 });
 
             await ctx.SaveChangesAsync();
 
@@ -78,9 +79,9 @@ namespace RecipeBook.Api.Tests.Repositories
             ctx.Units.Add(unit);
 
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(1), Unit = unit, Quantity = 1 },
-                new RecipeIngredient { RecipeId = 2, ProductId = ProductGuid(1), Unit = unit, Quantity = 2 },
-                new RecipeIngredient { RecipeId = 3, ProductId = ProductGuid(2), Unit = unit, Quantity = 3 });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(1), Unit = unit, Quantity = 1 },
+                new RecipeIngredient { RecipeId = RecipeGuid(2), ProductId = ProductGuid(1), Unit = unit, Quantity = 2 },
+                new RecipeIngredient { RecipeId = RecipeGuid(3), ProductId = ProductGuid(2), Unit = unit, Quantity = 3 });
 
             await ctx.SaveChangesAsync();
 
@@ -100,7 +101,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             ctx.RecipeIngredients.Add(
-                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(5), Quantity = 1 });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(5), Quantity = 1 });
             await ctx.SaveChangesAsync();
 
             // Act

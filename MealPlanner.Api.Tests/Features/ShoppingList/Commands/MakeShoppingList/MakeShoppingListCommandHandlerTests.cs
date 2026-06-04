@@ -188,7 +188,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             };
             var recipe = new RecipeBook.Data.Entities.Recipe
             {
-                Id = 10,
+                Id = Guid.NewGuid(),
                 RecipeIngredients = [ingredient]
             };
             var mealPlanId = Guid.NewGuid();
@@ -196,7 +196,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             {
                 Id = mealPlanId,
                 Name = "Plan1",
-                MealPlanRecipes = [new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = 10, Recipe = recipe }]
+                MealPlanRecipes = [new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = recipe.Id, Recipe = recipe }]
             };
             var shopId = Guid.NewGuid();
             var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" };

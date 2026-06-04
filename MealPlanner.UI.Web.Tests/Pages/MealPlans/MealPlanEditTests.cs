@@ -477,16 +477,17 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             ArrangeCategories();
 
-            var recipe = new RecipeModel { Id = 5, Name = "R1" };
+            var recipeId = Guid.NewGuid();
+            var recipe = new RecipeModel { Id = recipeId, Name = "R1" };
 
             _recipeServiceMock
-                .Setup(s => s.GetByIdAsync(5, CancellationToken.None))
+                .Setup(s => s.GetByIdAsync(recipeId, CancellationToken.None))
                 .ReturnsAsync(recipe);
 
             var cut = RenderComponent("0");
 
             cut.Instance.MealPlan.Recipes = [];
-            cut.Instance.RecipeId = "5";
+            cut.Instance.RecipeId = recipeId.ToString();
 
             var method = typeof(MealPlanEdit).GetMethod("AddRecipeAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
@@ -502,7 +503,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             Assert.That(cut.Instance.MealPlan.Recipes!, Has.Count.EqualTo(1));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Instance.MealPlan.Recipes![0].Id, Is.EqualTo(5));
+                Assert.That(cut.Instance.MealPlan.Recipes![0].Id, Is.EqualTo(recipeId));
                 Assert.That(cut.Instance.MealPlan.Recipes![0].Index, Is.EqualTo(1));
             }
         }
@@ -514,7 +515,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             ArrangeCategories();
 
-            var recipes = new PagedList<RecipeModel>([new() { Id = 1, Name = "A" }], new Metadata());
+            var recipes = new PagedList<RecipeModel>([new() { Id = Guid.NewGuid(), Name = "A" }], new Metadata());
 
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))

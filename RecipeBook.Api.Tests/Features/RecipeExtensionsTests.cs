@@ -15,7 +15,7 @@ namespace RecipeBook.Api.Tests.Features
         public void MakeShoppingList_NoIngredients_ReturnsEmptyListWithNameAndShopId()
         {
             var shopId = Guid.NewGuid();
-            var recipe = new RecipeBook.Data.Entities.Recipe { Id = 1, Name = "TestRecipe", RecipeIngredients = null };
+            var recipe = new RecipeBook.Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "TestRecipe", RecipeIngredients = null };
             var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "MyShop" };
 
             var list = recipe.MakeShoppingList(shop);

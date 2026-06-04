@@ -50,8 +50,8 @@ namespace MealPlanner.Api.Tests.Features
                 Name = "Weekly Plan",
                 MealPlanRecipes =
                 [
-                    new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = 1, Recipe = new RecipeBook.Data.Entities.Recipe { Id = 1, RecipeIngredients = [new RecipeBook.Data.Entities.RecipeIngredient { Product = product, ProductId = product.Id, Quantity = 100m, Unit = baseUnit, UnitId = baseUnit.Id }] } },
-                    new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = 2, Recipe = new RecipeBook.Data.Entities.Recipe { Id = 2, RecipeIngredients = [new RecipeBook.Data.Entities.RecipeIngredient { Product = product, ProductId = product.Id, Quantity = 50m, Unit = baseUnit, UnitId = baseUnit.Id }] } }
+                    new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = Guid.NewGuid(), Recipe = new RecipeBook.Data.Entities.Recipe { Id = Guid.NewGuid(), RecipeIngredients = [new RecipeBook.Data.Entities.RecipeIngredient { Product = product, ProductId = product.Id, Quantity = 100m, Unit = baseUnit, UnitId = baseUnit.Id }] } },
+                    new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = Guid.NewGuid(), Recipe = new RecipeBook.Data.Entities.Recipe { Id = Guid.NewGuid(), RecipeIngredients = [new RecipeBook.Data.Entities.RecipeIngredient { Product = product, ProductId = product.Id, Quantity = 50m, Unit = baseUnit, UnitId = baseUnit.Id }] } }
                 ]
             };
 
@@ -80,8 +80,8 @@ namespace MealPlanner.Api.Tests.Features
                 Name = "Plan",
                 MealPlanRecipes =
                 [
-                    new MealPlanner.Data.Entities.MealPlanRecipe { Recipe = null!, RecipeId = 0 },
-                    new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = 1, Recipe = new RecipeBook.Data.Entities.Recipe { Id = 1, RecipeIngredients = new List<RecipeBook.Data.Entities.RecipeIngredient?> { null }! } }
+                    new MealPlanner.Data.Entities.MealPlanRecipe { Recipe = null!, RecipeId = Guid.Empty },
+                    new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = Guid.NewGuid(), Recipe = new RecipeBook.Data.Entities.Recipe { Id = Guid.NewGuid(), RecipeIngredients = new List<RecipeBook.Data.Entities.RecipeIngredient?> { null }! } }
                 ]
             };
 

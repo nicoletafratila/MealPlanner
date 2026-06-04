@@ -15,9 +15,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         }
 
         [Test]
-        public void Id_Zero_HasValidationError()
+        public void Id_Empty_HasValidationError()
         {
-            var command = new DeleteCommand { Id = 0 };
+            var command = new DeleteCommand { Id = Guid.Empty };
 
             var result = _validator.TestValidate(command);
 
@@ -25,19 +25,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         }
 
         [Test]
-        public void Id_Negative_HasValidationError()
+        public void Id_ValidGuid_HasNoValidationError()
         {
-            var command = new DeleteCommand { Id = -1 };
-
-            var result = _validator.TestValidate(command);
-
-            result.ShouldHaveValidationErrorFor(x => x.Id);
-        }
-
-        [Test]
-        public void Id_GreaterThanZero_HasNoValidationError()
-        {
-            var command = new DeleteCommand { Id = 5 };
+            var command = new DeleteCommand { Id = Guid.NewGuid() };
 
             var result = _validator.TestValidate(command);
 

@@ -11,7 +11,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
         /// <summary>
         /// Id of the recipe to delete.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Optional auth token if downstream services require it.
@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Delete
         {
         }
 
-        public DeleteCommand(int id, string? authToken = null)
+        public DeleteCommand(Guid id, string? authToken = null)
         {
             Id = id;
             AuthToken = authToken;

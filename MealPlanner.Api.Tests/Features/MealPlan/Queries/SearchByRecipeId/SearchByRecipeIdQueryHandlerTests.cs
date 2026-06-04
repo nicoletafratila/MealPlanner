@@ -59,7 +59,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         public async Task Handle_ReturnsMappedMealPlans_WithIndexesSet()
         {
             // Arrange
-            const int recipeId = 10;
+            var recipeId = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(recipeId);
 
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
@@ -98,7 +98,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
             // Arrange
-            const int recipeId = 10;
+            var recipeId = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(recipeId);
 
             var entities = new List<MealPlanner.Data.Entities.MealPlan>

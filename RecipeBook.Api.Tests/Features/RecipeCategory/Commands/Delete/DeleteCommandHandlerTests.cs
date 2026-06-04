@@ -93,8 +93,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Delete
             var category = new RecipeCategoryEntity { Id = id, Name = "Breakfast" };
             var recipes = new List<RecipeEntity>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = id },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = Guid.NewGuid() }
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = id },
+                new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = Guid.NewGuid() }
             };
 
             _categoryRepoMock
@@ -131,7 +131,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Delete
             var category = new RecipeCategoryEntity { Id = id, Name = "Lunch" };
             var recipes = new List<RecipeEntity>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = Guid.NewGuid() }
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = Guid.NewGuid() }
             };
 
             _categoryRepoMock

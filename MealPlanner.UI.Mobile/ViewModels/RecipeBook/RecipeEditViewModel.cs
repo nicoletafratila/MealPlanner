@@ -10,20 +10,20 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(RecipeId), "id")]
     public partial class RecipeEditViewModel(RecipeService recipeService, RecipeCategoryService categoryService, UnitService unitService, ProductService productService) : BaseViewModel
     {
-        [ObservableProperty] private int _recipeId;
+        [ObservableProperty] private Guid _recipeId;
         [ObservableProperty] private RecipeEditModel _model = new();
         [ObservableProperty] private ObservableCollection<RecipeCategoryModel> _categories = [];
         [ObservableProperty] private ObservableCollection<UnitModel> _units = [];
         [ObservableProperty] private ObservableCollection<ProductModel> _products = [];
         [ObservableProperty] private bool _isNew;
 
-        partial void OnRecipeIdChanged(int value) => _ = LoadAsync();
+        partial void OnRecipeIdChanged(Guid value) => _ = LoadAsync();
 
         [RelayCommand]
         private async Task LoadAsync()
         {
             IsBusy = true;
-            IsNew = RecipeId == 0;
+            IsNew = RecipeId == Guid.Empty;
             try
             {
                 var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100, Sorting = DefaultSorting });

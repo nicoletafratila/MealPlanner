@@ -11,8 +11,7 @@ namespace RecipeBook.Shared.Models
         /// The parent recipe id this ingredient belongs to.
         /// </summary>
         [Required]
-        [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeIdRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int RecipeId { get; set; }
+        public Guid RecipeId { get; set; }
 
         /// <summary>
         /// Ingredient quantity. Must be a positive number.
@@ -40,7 +39,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public RecipeIngredientEditModel(int recipeId, decimal quantity, Guid unitId)
+        public RecipeIngredientEditModel(Guid recipeId, decimal quantity, Guid unitId)
         {
             RecipeId = recipeId;
             Quantity = quantity;

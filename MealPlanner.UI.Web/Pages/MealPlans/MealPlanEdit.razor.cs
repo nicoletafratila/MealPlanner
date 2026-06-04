@@ -219,7 +219,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             MealPlan.Recipes ??= [];
 
-            var recipeId = int.Parse(RecipeId!);
+            var recipeId = Guid.Parse(RecipeId!);
             var existing = MealPlan.Recipes.FirstOrDefault(r => r.Id == recipeId);
             if (existing is not null)
             {

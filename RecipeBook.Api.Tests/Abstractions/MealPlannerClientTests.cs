@@ -109,7 +109,7 @@ namespace RecipeBook.Api.Tests.Abstractions
             var (client, _, _) = CreateClient();
 
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-                await client.GetMealPlansByRecipeIdAsync(0, "token", CancellationToken.None));
+                await client.GetMealPlansByRecipeIdAsync(Guid.Empty, "token", CancellationToken.None));
         }
 
         [Test]
@@ -123,14 +123,15 @@ namespace RecipeBook.Api.Tests.Abstractions
                 new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
-            var url = $"{BaseAddress}{MealPlanPath}/searchbyid?id=7";
+            var recipeId = Guid.NewGuid();
+            var url = $"{BaseAddress}{MealPlanPath}/searchbyid?id={recipeId}";
 
             mockHttp.When(HttpMethod.Get, url)
                 .WithHeaders("Authorization", "Bearer tok")
                 .Respond("application/json", JsonSerializer.Serialize(plans, JsonOptions));
 
             // Act
-            var result = await client.GetMealPlansByRecipeIdAsync(7, "tok", CancellationToken.None);
+            var result = await client.GetMealPlansByRecipeIdAsync(recipeId, "tok", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);

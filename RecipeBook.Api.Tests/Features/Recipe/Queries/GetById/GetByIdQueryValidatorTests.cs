@@ -15,9 +15,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetById
         }
 
         [Test]
-        public void Id_Zero_HasValidationError()
+        public void Id_Empty_HasValidationError()
         {
-            var query = new GetByIdQuery { Id = 0 };
+            var query = new GetByIdQuery { Id = Guid.Empty };
 
             var result = _validator.TestValidate(query);
 
@@ -25,19 +25,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetById
         }
 
         [Test]
-        public void Id_Negative_HasValidationError()
+        public void Id_ValidGuid_HasNoValidationError()
         {
-            var query = new GetByIdQuery { Id = -1 };
-
-            var result = _validator.TestValidate(query);
-
-            result.ShouldHaveValidationErrorFor(x => x.Id);
-        }
-
-        [Test]
-        public void Id_GreaterThanZero_HasNoValidationError()
-        {
-            var query = new GetByIdQuery { Id = 5 };
+            var query = new GetByIdQuery { Id = Guid.NewGuid() };
 
             var result = _validator.TestValidate(query);
 

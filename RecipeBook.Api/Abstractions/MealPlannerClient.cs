@@ -21,12 +21,12 @@ namespace RecipeBook.Api.Abstractions
         }
 
         public async Task<IList<MealPlanModel>?> GetMealPlansByRecipeIdAsync(
-            int recipeId,
+            Guid recipeId,
             string? authToken,
             CancellationToken cancellationToken)
         {
-            if (recipeId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(recipeId), "recipeId must be greater than zero.");
+            if (recipeId == Guid.Empty)
+                throw new ArgumentOutOfRangeException(nameof(recipeId), "recipeId must not be empty.");
 
             ConfigureClient(authToken);
 

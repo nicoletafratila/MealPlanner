@@ -15,6 +15,7 @@ namespace MealPlanner.Data.Profiles.Tests
         private FakeMealPlanToEditMealPlanModelResolver _fakeForward = null!;
         private FakeEditMealPlanModelToMealPlanResolver _fakeReverse = null!;
         private static readonly Guid ReverseMealPlanId = Guid.NewGuid();
+        private static readonly Guid ReverseRecipeId = Guid.NewGuid();
 
         [SetUp]
         public void SetUp()
@@ -37,7 +38,7 @@ namespace MealPlanner.Data.Profiles.Tests
                 [
                     new MealPlanRecipe
                     {
-                        RecipeId = 99,
+                        RecipeId = ReverseRecipeId,
                         MealPlanId = ReverseMealPlanId
                     }
                 ]
@@ -149,7 +150,7 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 Assert.That(_fakeReverse.WasCalled, Is.True);
                 Assert.That(result.MealPlanRecipes, Has.Count.EqualTo(1));
-                Assert.That(result.MealPlanRecipes![0].RecipeId, Is.EqualTo(99));
+                Assert.That(result.MealPlanRecipes![0].RecipeId, Is.EqualTo(ReverseRecipeId));
                 Assert.That(result.MealPlanRecipes[0].MealPlanId, Is.EqualTo(ReverseMealPlanId));
             }
         }

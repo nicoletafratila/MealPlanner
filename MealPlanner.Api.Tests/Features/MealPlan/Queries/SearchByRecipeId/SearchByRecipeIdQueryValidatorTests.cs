@@ -15,9 +15,9 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         }
 
         [Test]
-        public void RecipeId_Zero_HasValidationError()
+        public void RecipeId_Empty_HasValidationError()
         {
-            var query = new SearchByRecipeIdQuery { RecipeId = 0 };
+            var query = new SearchByRecipeIdQuery { RecipeId = Guid.Empty };
 
             var result = _validator.TestValidate(query);
 
@@ -25,19 +25,9 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         }
 
         [Test]
-        public void RecipeId_Negative_HasValidationError()
+        public void RecipeId_ValidGuid_HasNoValidationError()
         {
-            var query = new SearchByRecipeIdQuery { RecipeId = -1 };
-
-            var result = _validator.TestValidate(query);
-
-            result.ShouldHaveValidationErrorFor(x => x.RecipeId);
-        }
-
-        [Test]
-        public void RecipeId_GreaterThanZero_HasNoValidationError()
-        {
-            var query = new SearchByRecipeIdQuery { RecipeId = 5 };
+            var query = new SearchByRecipeIdQuery { RecipeId = Guid.NewGuid() };
 
             var result = _validator.TestValidate(query);
 

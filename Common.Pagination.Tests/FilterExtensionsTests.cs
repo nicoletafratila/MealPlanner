@@ -214,19 +214,19 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 1 },
-                new RecipeModel { Id = 3 },
-                new RecipeModel { Id = 5 }
+                new RecipeModel { Index = 1 },
+                new RecipeModel { Index = 3 },
+                new RecipeModel { Index = 5 }
             };
 
             var filter = new FilterItem(
-                propertyName: nameof(RecipeModel.Id),
+                propertyName: nameof(RecipeModel.Index),
                 value: "3",
                 @operator: FilterOperator.GreaterThan,
                 stringComparison: StringComparison.OrdinalIgnoreCase);
 
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
-            var result = data.Where(predicate).Select(x => x.Id).ToArray();
+            var result = data.Where(predicate).Select(x => x.Index).ToArray();
 
             Assert.That(result, Is.EquivalentTo([5]));
         }
@@ -236,19 +236,19 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 1 },
-                new RecipeModel { Id = 3 },
-                new RecipeModel { Id = 5 }
+                new RecipeModel { Index = 1 },
+                new RecipeModel { Index = 3 },
+                new RecipeModel { Index = 5 }
             };
 
             var filter = new FilterItem(
-                propertyName: nameof(RecipeModel.Id),
+                propertyName: nameof(RecipeModel.Index),
                 value: "3",
                 @operator: FilterOperator.GreaterThanOrEquals,
                 stringComparison: StringComparison.OrdinalIgnoreCase);
 
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
-            var result = data.Where(predicate).Select(x => x.Id).ToArray();
+            var result = data.Where(predicate).Select(x => x.Index).ToArray();
 
             Assert.That(result, Is.EquivalentTo([3, 5]));
         }
@@ -258,19 +258,19 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 1 },
-                new RecipeModel { Id = 3 },
-                new RecipeModel { Id = 5 }
+                new RecipeModel { Index = 1 },
+                new RecipeModel { Index = 3 },
+                new RecipeModel { Index = 5 }
             };
 
             var filter = new FilterItem(
-                propertyName: nameof(RecipeModel.Id),
+                propertyName: nameof(RecipeModel.Index),
                 value: "3",
                 @operator: FilterOperator.LessThan,
                 stringComparison: StringComparison.OrdinalIgnoreCase);
 
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
-            var result = data.Where(predicate).Select(x => x.Id).ToArray();
+            var result = data.Where(predicate).Select(x => x.Index).ToArray();
 
             Assert.That(result, Is.EquivalentTo([1]));
         }
@@ -280,19 +280,19 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 1 },
-                new RecipeModel { Id = 3 },
-                new RecipeModel { Id = 5 }
+                new RecipeModel { Index = 1 },
+                new RecipeModel { Index = 3 },
+                new RecipeModel { Index = 5 }
             };
 
             var filter = new FilterItem(
-                propertyName: nameof(RecipeModel.Id),
+                propertyName: nameof(RecipeModel.Index),
                 value: "3",
                 @operator: FilterOperator.LessThanOrEquals,
                 stringComparison: StringComparison.OrdinalIgnoreCase);
 
             var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
-            var result = data.Where(predicate).Select(x => x.Id).ToArray();
+            var result = data.Where(predicate).Select(x => x.Index).ToArray();
 
             Assert.That(result, Is.EquivalentTo([1, 3]));
         }
@@ -353,7 +353,7 @@ namespace Common.Pagination.Tests
         public void UnsupportedOperator_Throws_NotSupportedException()
         {
             var filter = new FilterItem(
-                propertyName: nameof(RecipeModel.Id),
+                propertyName: nameof(RecipeModel.Index),
                 value: "1",
                 @operator: (FilterOperator)999,
                 stringComparison: StringComparison.OrdinalIgnoreCase);
@@ -367,7 +367,7 @@ namespace Common.Pagination.Tests
         public void String_Operator_On_NonString_Property_Throws()
         {
             var filter = new FilterItem(
-                propertyName: nameof(RecipeModel.Id),
+                propertyName: nameof(RecipeModel.Index),
                 value: "3",
                 @operator: FilterOperator.Contains,
                 stringComparison: StringComparison.OrdinalIgnoreCase);

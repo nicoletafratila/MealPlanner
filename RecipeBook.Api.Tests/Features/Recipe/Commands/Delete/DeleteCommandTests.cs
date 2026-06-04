@@ -14,7 +14,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(command.Id, Is.Zero);
+                Assert.That(command.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(command.AuthToken, Is.Null);
             }
         }
@@ -23,7 +23,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         public void Ctor_SetsId_And_AuthToken()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
             const string token = "token123";
 
             // Act
@@ -44,14 +44,14 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var command = new DeleteCommand
             {
                 // Act
-                Id = 42,
+                Id = Guid.NewGuid(),
                 AuthToken = "abc"
             };
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(command.Id, Is.EqualTo(42));
+                Assert.That(command.Id, Is.Not.EqualTo(Guid.Empty));
                 Assert.That(command.AuthToken, Is.EqualTo("abc"));
             }
         }

@@ -46,15 +46,16 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public async Task Handle_RecipeNotFound_ReturnsNull()
         {
             // Arrange
+            var recipeId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 5,
+                RecipeId = recipeId,
                 ShopId = Guid.NewGuid(),
                 AuthToken = "token"
             };
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
 
             // Act
@@ -63,7 +64,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             // Assert
             Assert.That(result, Is.Null);
             _recipeRepoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()),
+                r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mealPlannerClientMock.Verify(
                 c => c.GetShopAsync(It.IsAny<Guid>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()),
@@ -74,10 +75,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public async Task Handle_ShopNotFound_ReturnsNull()
         {
             // Arrange
+            var recipeId = Guid.NewGuid();
             var shopId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 5,
+                RecipeId = recipeId,
                 ShopId = shopId,
                 AuthToken = "token"
             };
@@ -85,7 +87,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             var recipe = new RecipeBook.Data.Entities.Recipe();
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(recipe);
 
             _mealPlannerClientMock
@@ -98,7 +100,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             // Assert
             Assert.That(result, Is.Null);
             _recipeRepoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(5, It.IsAny<CancellationToken>()),
+                r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mealPlannerClientMock.Verify(
                 c => c.GetShopAsync(shopId, "token", It.IsAny<CancellationToken>()),
@@ -109,10 +111,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public async Task Handle_RecipeAndShopFound_ReturnsMappedAndSortedProducts()
         {
             // Arrange
+            var recipeId = Guid.NewGuid();
             var shopId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 1,
+                RecipeId = recipeId,
                 ShopId = shopId,
                 AuthToken = "token"
             };
@@ -155,7 +158,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             };
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(recipe);
 
             var shopEditModel = new ShopEditModel
@@ -202,7 +205,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             }
 
             _recipeRepoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()),
+                r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mealPlannerClientMock.Verify(
                 c => c.GetShopAsync(shopId, "token", It.IsAny<CancellationToken>()),
@@ -215,15 +218,16 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         public async Task Handle_Exception_LogsError_AndReturnsNull()
         {
             // Arrange
+            var recipeId = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 1,
+                RecipeId = recipeId,
                 ShopId = Guid.NewGuid(),
                 AuthToken = "token"
             };
 
             _recipeRepoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -233,7 +237,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
             Assert.That(result, Is.Null);
 
             _recipeRepoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(1, It.IsAny<CancellationToken>()),
+                r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()),
                 Times.Once);
 
             _loggerMock.Verify(

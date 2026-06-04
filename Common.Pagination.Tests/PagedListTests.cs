@@ -32,10 +32,12 @@ namespace Common.Pagination.Tests
         public void Ctor_Sets_Items_And_Metadata()
         {
             // Arrange
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
             var items = new[]
             {
-                new RecipeModel { Id = 1 },
-                new RecipeModel { Id = 2 }
+                new RecipeModel { Id = id1 },
+                new RecipeModel { Id = id2 }
             };
             var metadata = new Metadata();
 
@@ -53,8 +55,8 @@ namespace Common.Pagination.Tests
                 Assert.That(pagedList.Items, Has.Count.EqualTo(2));
                 using (Assert.EnterMultipleScope())
                 {
-                    Assert.That(pagedList.Items[0].Id, Is.EqualTo(1));
-                    Assert.That(pagedList.Items[1].Id, Is.EqualTo(2));
+                    Assert.That(pagedList.Items[0].Id, Is.EqualTo(id1));
+                    Assert.That(pagedList.Items[1].Id, Is.EqualTo(id2));
                     Assert.That(pagedList.Count, Is.EqualTo(2));
                 }
                 Assert.That(pagedList.HasItems, Is.True);

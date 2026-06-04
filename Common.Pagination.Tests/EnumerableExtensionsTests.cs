@@ -32,8 +32,8 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 2, Name = "B" },
-                new RecipeModel { Id = 1, Name = "A" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "B" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "A" }
             }.AsQueryable();
 
             var result = data.ApplySorting(null);
@@ -46,8 +46,8 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 2, Name = "B" },
-                new RecipeModel { Id = 1, Name = "A" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "B" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "A" }
             }.AsQueryable();
 
             var result = data.ApplySorting([]);
@@ -60,7 +60,7 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 1, Name = "A" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "A" }
             }.AsQueryable();
 
             var sorting = new[]
@@ -79,7 +79,7 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 1, Name = "A" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "A" }
             }.AsQueryable();
 
             var sorting = new[]
@@ -98,9 +98,9 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 3, Name = "Charlie" },
-                new RecipeModel { Id = 1, Name = "Alice" },
-                new RecipeModel { Id = 2, Name = "Bob" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "Charlie" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "Alice" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "Bob" }
             }.AsQueryable();
 
             var sorting = new[]
@@ -118,9 +118,9 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 3, Name = "Charlie" },
-                new RecipeModel { Id = 1, Name = "Alice" },
-                new RecipeModel { Id = 2, Name = "Bob" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "Charlie" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "Alice" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "Bob" }
             }.AsQueryable();
 
             var sorting = new[]
@@ -138,8 +138,8 @@ namespace Common.Pagination.Tests
         {
             var data = new[]
             {
-                new RecipeModel { Id = 2, Name = "B" },
-                new RecipeModel { Id = 1, Name = "A" }
+                new RecipeModel { Id = Guid.NewGuid(), Name = "B" },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "A" }
             }.AsQueryable();
 
             var sorting = new[]

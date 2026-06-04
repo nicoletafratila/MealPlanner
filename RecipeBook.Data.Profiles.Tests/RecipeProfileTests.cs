@@ -61,9 +61,10 @@ namespace RecipeBook.Data.Profiles.Tests
         public void Recipe_To_RecipeModel_Maps_Category_And_Image()
         {
             var categoryId = Guid.NewGuid();
+            var recipeId = Guid.NewGuid();
             var recipe = new Recipe
             {
-                Id = 1,
+                Id = recipeId,
                 Name = "Test",
                 ImageContent = [1, 2, 3],
                 RecipeCategory = new RecipeCategory { Id = categoryId, Name = "Dessert" }
@@ -73,7 +74,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(1));
+                Assert.That(result.Id, Is.EqualTo(recipeId));
                 Assert.That(result.Name, Is.EqualTo("Test"));
                 Assert.That(result.RecipeCategoryId, Is.EqualTo(categoryId.ToString()));
                 Assert.That(result.RecipeCategoryName, Is.EqualTo("Dessert"));
@@ -89,9 +90,10 @@ namespace RecipeBook.Data.Profiles.Tests
                 RecipeCategory = new RecipeCategory { Name = "OriginalCategory" }
             };
 
+            var modelId = Guid.NewGuid();
             var model = new RecipeModel
             {
-                Id = 99,
+                Id = modelId,
                 Name = "Updated"
             };
 
@@ -99,7 +101,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(99));
+                Assert.That(result.Id, Is.EqualTo(modelId));
                 Assert.That(result.RecipeCategory!.Name, Is.EqualTo("OriginalCategory"));
             }
         }

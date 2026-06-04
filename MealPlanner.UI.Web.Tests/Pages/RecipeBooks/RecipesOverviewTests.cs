@@ -129,13 +129,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(RecipesOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var model = new RecipeModel { Id = 42 };
+            var recipeId = Guid.NewGuid();
+            var model = new RecipeModel { Id = recipeId };
 
             // Act
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [model]));
 
             // Assert
-            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}42"));
+            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}{recipeId}"));
         }
 
         // ---------- DeleteCoreAsync (core delete logic) ----------
@@ -143,7 +144,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task DeleteCoreAsync_WhenDeleteSucceeds_ShowsInfo_AndRefreshesGrid()
         {
             // Arrange
-            var recipe = new RecipeModel { Id = 5 };
+            var recipe = new RecipeModel { Id = Guid.NewGuid() };
 
             _recipeServiceMock
                 .Setup(s => s.DeleteAsync(recipe.Id, CancellationToken.None))
@@ -173,7 +174,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task DeleteCoreAsync_WhenDeleteFails_ShowsError()
         {
             // Arrange
-            var recipe = new RecipeModel { Id = 7 };
+            var recipe = new RecipeModel { Id = Guid.NewGuid() };
             var response = new CommandResponse { Succeeded = false, Message = "delete failed" };
 
             _recipeServiceMock
@@ -201,7 +202,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task DeleteCoreAsync_WhenResponseIsNull_ShowsGenericError()
         {
             // Arrange
-            var recipe = new RecipeModel { Id = 9 };
+            var recipe = new RecipeModel { Id = Guid.NewGuid() };
 
             _recipeServiceMock
                 .Setup(s => s.DeleteAsync(recipe.Id, CancellationToken.None))
@@ -230,8 +231,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Arrange
             var items = new List<RecipeModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 },
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() },
             };
 
             var metadata = new Metadata
@@ -289,7 +290,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task AddToMealPlanAsync_WhenNoCurrentPlan_CreatesPlanWithRecipeAndShowsCreatedMessage()
         {
             // Arrange
-            var recipe = new RecipeModel { Id = 1, Name = "Pasta" };
+            var recipe = new RecipeModel { Id = Guid.NewGuid(), Name = "Pasta" };
 
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
@@ -329,7 +330,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task AddToMealPlanAsync_WhenNoCurrentPlan_InvokesRefreshCallback()
         {
             // Arrange
-            var recipe = new RecipeModel { Id = 2 };
+            var recipe = new RecipeModel { Id = Guid.NewGuid() };
             var refreshCalled = false;
 
             _mealPlanServiceMock
@@ -355,7 +356,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task AddToMealPlanAsync_WhenNoCurrentPlan_AndCreateFails_ShowsError()
         {
             // Arrange
-            var recipe = new RecipeModel { Id = 3 };
+            var recipe = new RecipeModel { Id = Guid.NewGuid() };
 
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
@@ -386,7 +387,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             // Arrange
             var planId = Guid.NewGuid();
-            var recipe = new RecipeModel { Id = 5, Name = "Salad" };
+            var recipe = new RecipeModel { Id = Guid.NewGuid(), Name = "Salad" };
             var currentPlan = new MealPlanModel { Id = planId, Name = "This week" };
             var editModel = new MealPlanEditModel { Id = planId, Name = "This week", Recipes = [] };
 
@@ -425,12 +426,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             // Arrange
             var planId = Guid.NewGuid();
-            var recipe = new RecipeModel { Id = 7 };
+            var recipeId = Guid.NewGuid();
+            var recipe = new RecipeModel { Id = recipeId };
             var currentPlan = new MealPlanModel { Id = planId };
             var editModel = new MealPlanEditModel
             {
                 Id = planId,
-                Recipes = [new RecipeModel { Id = 7 }]
+                Recipes = [new RecipeModel { Id = recipeId }]
             };
 
             _mealPlanServiceMock
@@ -459,7 +461,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             // Arrange
             var planId = Guid.NewGuid();
-            var recipe = new RecipeModel { Id = 8 };
+            var recipe = new RecipeModel { Id = Guid.NewGuid() };
             var currentPlan = new MealPlanModel { Id = planId };
             var editModel = new MealPlanEditModel { Id = planId, Recipes = [] };
 

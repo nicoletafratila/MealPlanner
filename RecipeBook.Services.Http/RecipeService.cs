@@ -15,20 +15,20 @@ namespace RecipeBook.Services.Http
     {
         private readonly string _controller = RecipeBookControllers.RecipeUrl;
 
-        public async Task<RecipeModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<RecipeModel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try { return await GetAsync<RecipeModel>(url, cancellationToken); }
             catch (Exception ex) { logger.LogError(ex, "Failed to fetch RecipeModel for id {RecipeId}", id); return null; }
         }
 
-        public async Task<RecipeEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<RecipeEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<RecipeEditModel>(url, cancellationToken);
         }
 
-        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(int recipeId, Guid shopId, CancellationToken cancellationToken = default)
+        public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid recipeId, Guid shopId, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{RecipeBookControllers.ShoppingListProductsRoute}",
                 new Dictionary<string, string?> { [ApiQueryParams.RecipeId] = recipeId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });
@@ -50,7 +50,7 @@ namespace RecipeBook.Services.Http
             catch (Exception ex) { logger.LogError(ex, "Recipe UpdateAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try { return await DeleteAsync(url, cancellationToken); }

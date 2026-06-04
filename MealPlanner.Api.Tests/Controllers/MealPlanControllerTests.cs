@@ -169,7 +169,8 @@ namespace MealPlanner.Api.Tests.Controllers
                 .ReturnsAsync(models);
 
             // Act
-            var result = await _controller.SearchByRecipeIdAsync(10, CancellationToken.None);
+            var recipeId = Guid.NewGuid();
+            var result = await _controller.SearchByRecipeIdAsync(recipeId, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -180,7 +181,7 @@ namespace MealPlanner.Api.Tests.Controllers
 
                 Assert.That(captured, Is.Not.Null);
             }
-            Assert.That(captured!.RecipeId, Is.EqualTo(10));
+            Assert.That(captured!.RecipeId, Is.EqualTo(recipeId));
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchByRecipeIdQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }

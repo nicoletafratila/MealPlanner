@@ -85,7 +85,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("searchbyid")]
         public async Task<ActionResult<IList<MealPlanModel>>> SearchByRecipeIdAsync(
-            [FromQuery] int recipeId,
+            [FromQuery] Guid recipeId,
             CancellationToken cancellationToken)
         {
             var query = new SearchByRecipeIdQuery { RecipeId = recipeId };

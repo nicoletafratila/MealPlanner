@@ -15,25 +15,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         }
 
         [Test]
-        public void RecipeId_Zero_HasValidationError()
+        public void RecipeId_Empty_HasValidationError()
         {
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 0,
-                ShopId = Guid.NewGuid()
-            };
-
-            var result = _validator.TestValidate(query);
-
-            result.ShouldHaveValidationErrorFor(x => x.RecipeId);
-        }
-
-        [Test]
-        public void RecipeId_Negative_HasValidationError()
-        {
-            var query = new GetShoppingListProductsQuery
-            {
-                RecipeId = -1,
+                RecipeId = Guid.Empty,
                 ShopId = Guid.NewGuid()
             };
 
@@ -47,7 +33,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         {
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 1,
+                RecipeId = Guid.NewGuid(),
                 ShopId = Guid.Empty
             };
 
@@ -61,7 +47,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         {
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 5,
+                RecipeId = Guid.NewGuid(),
                 ShopId = Guid.NewGuid()
             };
 

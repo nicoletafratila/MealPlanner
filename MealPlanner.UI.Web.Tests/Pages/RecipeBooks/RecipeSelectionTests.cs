@@ -89,8 +89,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var recipes = new List<RecipeModel>
             {
-                new() { Id = 10, Name = "A" },
-                new() { Id = 11, Name = "B" }
+                new() { Id = Guid.NewGuid(), Name = "A" },
+                new() { Id = Guid.NewGuid(), Name = "B" }
             };
 
             _recipeServiceMock

@@ -37,7 +37,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         {
             var model = new RecipeEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 Ingredients = null
             };
@@ -53,7 +53,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         {
             var model = new RecipeEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 Ingredients = []
             };
@@ -67,15 +67,16 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         [Test]
         public void Map_MapsIngredientCoreFields()
         {
+            var ingredientRecipeId = Guid.NewGuid();
             var model = new RecipeEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Milkshake",
                 Ingredients =
                 [
                     new RecipeIngredientEditModel
                     {
-                        RecipeId = 5,
+                        RecipeId = ingredientRecipeId,
                         Quantity = 2.5m,
                         UnitId = Guid.NewGuid()
                     }
@@ -87,7 +88,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(ingredient.RecipeId, Is.EqualTo(5));
+                Assert.That(ingredient.RecipeId, Is.EqualTo(ingredientRecipeId));
                 Assert.That(ingredient.Quantity, Is.EqualTo(2.5m));
                 Assert.That(ingredient.UnitId, Is.Not.EqualTo(Guid.Empty));
             }
@@ -98,13 +99,13 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         {
             var model = new RecipeEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Smoothie",
                 Ingredients =
                 [
                     new RecipeIngredientEditModel
                     {
-                        RecipeId = 10,
+                        RecipeId = Guid.NewGuid(),
                         Quantity = 1m,
                         UnitId = Guid.NewGuid(),
                         Unit = new UnitModel { Id = Guid.NewGuid(), Name = "Cup" },

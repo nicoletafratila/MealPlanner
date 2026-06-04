@@ -15,10 +15,12 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
             var resolver = new EditMealPlanModelToMealPlanResolver();
             ResolutionContext context = default!;
 
+            var recipeId1 = Guid.NewGuid();
+            var recipeId2 = Guid.NewGuid();
             var recipes = new List<RecipeModel>
             {
-                new() { Id = 10 },
-                new() { Id = 20 }
+                new() { Id = recipeId1 },
+                new() { Id = recipeId2 }
             };
 
             var id = Guid.NewGuid();
@@ -38,9 +40,9 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Has.Count.EqualTo(2));
-                Assert.That(result![0].RecipeId, Is.EqualTo(10));
+                Assert.That(result![0].RecipeId, Is.EqualTo(recipeId1));
                 Assert.That(result[0].MealPlanId, Is.EqualTo(id));
-                Assert.That(result[1].RecipeId, Is.EqualTo(20));
+                Assert.That(result[1].RecipeId, Is.EqualTo(recipeId2));
                 Assert.That(result[1].MealPlanId, Is.EqualTo(id));
             }
         }

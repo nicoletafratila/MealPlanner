@@ -37,7 +37,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         {
             var recipe = new Recipe
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 RecipeIngredients = null
             };
@@ -53,7 +53,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
         {
             var recipe = new Recipe
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 RecipeIngredients = []
             };
@@ -72,7 +72,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
 
             var recipe = new Recipe
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Complex Recipe",
                 RecipeIngredients =
                 [

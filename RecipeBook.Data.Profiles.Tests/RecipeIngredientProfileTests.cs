@@ -32,9 +32,10 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var productId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
+            var recipeId = Guid.NewGuid();
             var entity = new RecipeIngredient
             {
-                RecipeId = 11,
+                RecipeId = recipeId,
                 ProductId = productId,
                 UnitId = unitId,
                 Quantity = 4.5m
@@ -44,7 +45,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.RecipeId, Is.EqualTo(11));
+                Assert.That(result.RecipeId, Is.EqualTo(recipeId));
                 Assert.That(result.Product, Is.Null);
                 Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(4.5m));
@@ -59,9 +60,10 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var productId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
+            var recipeId = Guid.NewGuid();
             var model = new RecipeIngredientEditModel
             {
-                RecipeId = 55,
+                RecipeId = recipeId,
                 Product = new ProductModel() { Id = productId },
                 UnitId = unitId,
                 Quantity = 10
@@ -71,7 +73,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.RecipeId, Is.EqualTo(55));
+                Assert.That(result.RecipeId, Is.EqualTo(recipeId));
                 Assert.That(result.ProductId, Is.EqualTo(productId));
                 Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(10));

@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId
         public SearchByRecipeIdValidator()
         {
             RuleFor(x => x.RecipeId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.MealPlanMessages.RecipeIdGreaterThanZero);
         }
     }

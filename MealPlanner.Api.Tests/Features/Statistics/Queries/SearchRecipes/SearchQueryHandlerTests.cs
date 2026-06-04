@@ -129,7 +129,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 {
                     Recipe = new RecipeBook.Data.Entities.Recipe
                     {
-                        Id = 1,
+                        Id = Guid.NewGuid(),
                         Name = "R1",
                         RecipeCategoryId = cat1Id
                     }
@@ -138,7 +138,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 {
                     Recipe = new RecipeBook.Data.Entities.Recipe
                     {
-                        Id = 2,
+                        Id = Guid.NewGuid(),
                         Name = "R1",
                         RecipeCategoryId = cat1Id
                     }
@@ -147,7 +147,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 {
                     Recipe = new RecipeBook.Data.Entities.Recipe
                     {
-                        Id = 3,
+                        Id = Guid.NewGuid(),
                         Name = "R2",
                         RecipeCategoryId = cat1Id
                     }
@@ -156,7 +156,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 {
                     Recipe = new RecipeBook.Data.Entities.Recipe
                     {
-                        Id = 4,
+                        Id = Guid.NewGuid(),
                         Name = "D1",
                         RecipeCategoryId = cat2Id
                     }

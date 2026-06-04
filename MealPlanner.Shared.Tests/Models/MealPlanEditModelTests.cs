@@ -43,7 +43,7 @@ namespace MealPlanner.Shared.Tests.Models
                 Name = "Weekly Plan",
                 Recipes =
                 [
-                    new() { Id = 10, Name = "Recipe1" }
+                    new() { Id = Guid.NewGuid(), Name = "Recipe1" }
                 ]
             };
 
@@ -65,7 +65,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = Guid.NewGuid(),
                 Name = "",
-                Recipes = [new() { Id = 1, Name = "R1" }]
+                Recipes = [new() { Id = Guid.NewGuid(), Name = "R1" }]
             };
 
             // Empty name -> invalid
@@ -119,7 +119,7 @@ namespace MealPlanner.Shared.Tests.Models
             }
 
             // One recipe -> valid
-            model.Recipes = [new() { Id = 1, Name = "R1" }];
+            model.Recipes = [new() { Id = Guid.NewGuid(), Name = "R1" }];
             isValid = TryValidate(model, out results);
             Assert.That(isValid, Is.True);
         }
@@ -158,7 +158,7 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Id = Guid.NewGuid(),
                 Name = "My Plan",
-                Recipes = [new() { Id = 1, Name = "R1" }]
+                Recipes = [new() { Id = Guid.NewGuid(), Name = "R1" }]
             };
 
             Assert.That(model.ToString(), Is.EqualTo("My Plan"));

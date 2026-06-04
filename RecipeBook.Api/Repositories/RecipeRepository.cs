@@ -9,7 +9,7 @@ namespace RecipeBook.Api.Repositories
     /// Async repository for <see cref="Recipe"/> entities with eager-loading helpers.
     /// </summary>
     public class RecipeRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<Recipe, int>(dbContext), IRecipeRepository
+        : BaseAsyncRepository<Recipe, Guid>(dbContext), IRecipeRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
@@ -32,7 +32,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public override async Task<Recipe?> GetByIdAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.Recipes
@@ -86,7 +86,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public async Task<Recipe?> GetByIdIncludeIngredientsAsync(
-            int? id,
+            Guid? id,
             CancellationToken cancellationToken)
         {
             if (id is null)

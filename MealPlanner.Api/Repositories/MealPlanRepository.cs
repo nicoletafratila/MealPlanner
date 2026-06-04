@@ -153,7 +153,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(
-            int recipeId,
+            Guid recipeId,
             string userId,
             CancellationToken cancellationToken)
         {

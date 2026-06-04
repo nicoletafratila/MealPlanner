@@ -59,7 +59,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         public async Task Handle_RecipeNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
             _repoMock
@@ -74,11 +74,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+                Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(It.IsAny<Guid>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
             _repoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
         }
 
@@ -86,7 +86,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         public async Task Handle_RecipeUsedInMealPlans_ReturnsFailedResponse_AndDoesNotDelete()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
             var recipe = new RecipeBook.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
@@ -122,7 +122,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         public async Task Handle_RecipeNotUsedInMealPlans_DeletesAndReturnsSuccess()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
             var recipe = new RecipeBook.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
@@ -155,7 +155,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
         public async Task Handle_ExceptionDuringDelete_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
             var recipe = new RecipeBook.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };

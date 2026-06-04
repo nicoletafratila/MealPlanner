@@ -320,7 +320,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
 
             var recipeIdString = result.Data.ToString();
-            if (!int.TryParse(recipeIdString, out var recipeId))
+            if (!Guid.TryParse(recipeIdString, out var recipeId))
             {
                 await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectRecipe);
                 return;
