@@ -71,7 +71,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             // Arrange
             var model = new UnitEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -80,7 +80,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
 
             var existingUnits = new List<RecipeBook.Data.Entities.Unit>
             {
-                new() { Id = 1, Name = "Kg", UnitType = Common.Constants.Units.UnitType.Weight }
+                new() { Id = Guid.NewGuid(), Name = "Kg", UnitType = Common.Constants.Units.UnitType.Weight }
             };
 
             _repoMock
@@ -109,7 +109,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             // Arrange
             var model = new UnitEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -124,7 +124,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.Unit
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -155,7 +155,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             // Arrange
             var model = new UnitEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "g",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -170,7 +170,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.Unit
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "g",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };

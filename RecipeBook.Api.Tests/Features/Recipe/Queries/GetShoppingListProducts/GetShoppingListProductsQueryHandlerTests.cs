@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
 
             var unit = new RecipeBook.Data.Entities.Unit()
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };

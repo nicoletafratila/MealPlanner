@@ -49,7 +49,7 @@ namespace RecipeBook.Shared.Tests.Models
                 RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
-                    new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                    new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
                 ]
             };
 
@@ -75,7 +75,7 @@ namespace RecipeBook.Shared.Tests.Models
                 RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
-                    new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                    new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
                 ]
             };
 
@@ -113,7 +113,7 @@ namespace RecipeBook.Shared.Tests.Models
                 RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
-                    new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                    new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
                 ],
                 Source = new string('a', 257)
             };
@@ -141,7 +141,7 @@ namespace RecipeBook.Shared.Tests.Models
                 RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
-                    new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                    new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
                 ]
             };
 
@@ -179,7 +179,7 @@ namespace RecipeBook.Shared.Tests.Models
                 RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
-                    new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                    new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
                 ]
             };
 
@@ -219,7 +219,7 @@ namespace RecipeBook.Shared.Tests.Models
             // One ingredient -> valid
             model.Ingredients =
             [
-                new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
             ];
 
             isValid = TryValidate(model, out results);
@@ -237,7 +237,7 @@ namespace RecipeBook.Shared.Tests.Models
                 RecipeCategoryId = Guid.NewGuid(),
                 Ingredients =
                 [
-                    new() { RecipeId = 1, Quantity = 1m, UnitId = 1 }
+                    new() { RecipeId = 1, Quantity = 1m, UnitId = Guid.NewGuid() }
                 ]
             };
 

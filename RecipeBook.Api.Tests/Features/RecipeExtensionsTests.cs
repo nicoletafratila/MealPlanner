@@ -34,7 +34,7 @@ namespace RecipeBook.Api.Tests.Features
         {
             var categoryId = Guid.NewGuid();
             var category = new RecipeBook.Data.Entities.ProductCategory { Id = categoryId };
-            var baseUnit = new RecipeBook.Data.Entities.Unit { Id = 1, Name = "kg" };
+            var baseUnit = new RecipeBook.Data.Entities.Unit { Id = Guid.NewGuid(), Name = "kg" };
             var product = new RecipeBook.Data.Entities.Product { Id = 5, Name = "Flour", ProductCategory = category, BaseUnit = baseUnit };
             var recipe = new RecipeBook.Data.Entities.Recipe
             {
@@ -58,7 +58,7 @@ namespace RecipeBook.Api.Tests.Features
         [Test]
         public void MakeShoppingList_DuplicateIngredient_AccumulatesQuantity()
         {
-            var baseUnit = new RecipeBook.Data.Entities.Unit { Id = 1, Name = "kg" };
+            var baseUnit = new RecipeBook.Data.Entities.Unit { Id = Guid.NewGuid(), Name = "kg" };
             var product = new RecipeBook.Data.Entities.Product { Id = 5, Name = "Flour", BaseUnit = baseUnit };
             var recipe = new RecipeBook.Data.Entities.Recipe
             {

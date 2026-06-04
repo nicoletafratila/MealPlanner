@@ -90,13 +90,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(UnitsOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var model = new UnitModel { Id = 42 };
+            var unitId = Guid.NewGuid();
+            var model = new UnitModel { Id = unitId };
 
             // Act
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [model]));
 
             // Assert
-            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}42"));
+            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}{unitId}"));
         }
 
         // ---------- DeleteAsync ----------
@@ -104,7 +105,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task DeleteCoreAsync_WhenDeleteSucceeds_ShowsInfo_AndRefreshesGrid()
         {
             // Arrange
-            var unit = new UnitModel { Id = 5 };
+            var unit = new UnitModel { Id = Guid.NewGuid() };
 
             _unitServiceMock
                 .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
@@ -142,7 +143,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task DeleteAsync_WhenDeleteFails_ShowsError()
         {
             // Arrange
-            var unit = new UnitModel { Id = 7 };
+            var unit = new UnitModel { Id = Guid.NewGuid() };
             var response = new CommandResponse { Succeeded = false, Message = "delete failed" };
 
             _unitServiceMock
@@ -172,8 +173,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Arrange
             var items = new List<UnitModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             var metadata = new Metadata

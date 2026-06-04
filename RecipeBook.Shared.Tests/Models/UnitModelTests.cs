@@ -1,4 +1,4 @@
-﻿using Common.Constants.Units;
+using Common.Constants.Units;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
@@ -15,7 +15,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(unit.Id, Is.Zero);
+                Assert.That(unit.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(unit.Name, Is.EqualTo(string.Empty));
                 Assert.That(unit.UnitType, Is.Default);
 
@@ -29,7 +29,7 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             const string name = "kg";
             const UnitType type = UnitType.Weight;
 
@@ -51,7 +51,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange
             var unit = new UnitModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Liter",
                 UnitType = UnitType.Volume
             };
@@ -69,7 +69,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Act / Assert
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new UnitModel(1, null!, UnitType.Weight);
+                _ = new UnitModel(Guid.NewGuid(), null!, UnitType.Weight);
             });
         }
     }

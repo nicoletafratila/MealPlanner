@@ -46,7 +46,7 @@ namespace RecipeBook.Services.Http.Tests
         {
             // Arrange
             const string token = "my-jwt-token";
-            var unitId = 42;
+            var unitId = Guid.NewGuid();
             var expected = new UnitEditModel { Id = unitId };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -183,7 +183,7 @@ namespace RecipeBook.Services.Http.Tests
 
             // Act — populate cache, then invalidate via Add, then search again
             await service.SearchAsync();
-            await service.AddAsync(new UnitEditModel { Id = 1 });
+            await service.AddAsync(new UnitEditModel { Id = Guid.NewGuid() });
             await service.SearchAsync();
 
             // Assert — all three HTTP calls were made
@@ -216,7 +216,7 @@ namespace RecipeBook.Services.Http.Tests
 
             // Act
             await service.SearchAsync();
-            await service.UpdateAsync(new UnitEditModel { Id = 1 });
+            await service.UpdateAsync(new UnitEditModel { Id = Guid.NewGuid() });
             await service.SearchAsync();
 
             // Assert
@@ -229,6 +229,7 @@ namespace RecipeBook.Services.Http.Tests
             // Arrange
             var paged = new PagedList<UnitModel>([new UnitModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
             var deleteResponse = new CommandResponse { Succeeded = true };
+            var deleteId = Guid.NewGuid();
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -249,7 +250,7 @@ namespace RecipeBook.Services.Http.Tests
 
             // Act
             await service.SearchAsync();
-            await service.DeleteAsync(1);
+            await service.DeleteAsync(deleteId);
             await service.SearchAsync();
 
             // Assert
@@ -261,7 +262,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 1 };
+            var model = new UnitEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -295,7 +296,7 @@ namespace RecipeBook.Services.Http.Tests
         public void AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 1 };
+            var model = new UnitEditModel { Id = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -315,7 +316,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task UpdateAsync_PutsModel_AndReturnsCommandResponse()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 2 };
+            var model = new UnitEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -345,7 +346,7 @@ namespace RecipeBook.Services.Http.Tests
         public void UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 2 };
+            var model = new UnitEditModel { Id = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -365,7 +366,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task DeleteAsync_SendsDeleteWithId_AndReturnsCommandResponse()
         {
             // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
@@ -390,7 +391,7 @@ namespace RecipeBook.Services.Http.Tests
         public void DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
 
             var mockHttp = new MockHttpMessageHandler();
 

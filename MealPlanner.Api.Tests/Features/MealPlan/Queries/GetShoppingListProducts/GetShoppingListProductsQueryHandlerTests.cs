@@ -111,7 +111,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             var cat2Id = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery { MealPlanId = mealPlanId, ShopId = shopId };
 
-            var baseUnit = new Unit { Id = 1, Name = "kg" };
+            var baseUnit = new Unit { Id = Guid.NewGuid(), Name = "kg" };
             var product1 = new Product
             {
                 Id = 5,

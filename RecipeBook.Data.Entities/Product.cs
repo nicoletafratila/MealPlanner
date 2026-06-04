@@ -12,7 +12,7 @@ namespace RecipeBook.Data.Entities
 
         [ForeignKey(nameof(BaseUnitId))]
         public Unit? BaseUnit { get; set; }
-        public int BaseUnitId { get; set; }
+        public Guid BaseUnitId { get; set; }
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory? ProductCategory { get; set; }

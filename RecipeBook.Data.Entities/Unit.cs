@@ -2,7 +2,7 @@ using Common.Constants.Units;
 
 namespace RecipeBook.Data.Entities
 {
-    public sealed class Unit : Common.Data.Entities.Entity<int>
+    public sealed class Unit : Common.Data.Entities.Entity<Guid>
     {
         public string? Name { get; set; } = string.Empty;
 

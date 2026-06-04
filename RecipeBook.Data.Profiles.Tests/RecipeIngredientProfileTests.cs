@@ -30,11 +30,12 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeIngredient_To_RecipeIngredientEditModel_Maps_Properties()
         {
+            var unitId = Guid.NewGuid();
             var entity = new RecipeIngredient
             {
                 RecipeId = 11,
                 ProductId = 22,
-                UnitId = 33,
+                UnitId = unitId,
                 Quantity = 4.5m
             };
 
@@ -44,7 +45,7 @@ namespace RecipeBook.Data.Profiles.Tests
             {
                 Assert.That(result.RecipeId, Is.EqualTo(11));
                 Assert.That(result.Product, Is.Null);
-                Assert.That(result.UnitId, Is.EqualTo(33));
+                Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(4.5m));
 
                 Assert.That(result.Index, Is.Zero);
@@ -58,11 +59,12 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeIngredientEditModel_To_RecipeIngredient_Maps_Properties()
         {
+            var unitId = Guid.NewGuid();
             var model = new RecipeIngredientEditModel
             {
                 RecipeId = 55,
                 Product = new ProductModel() { Id = 66 },
-                UnitId = 77,
+                UnitId = unitId,
                 Quantity = 10
             };
 
@@ -72,7 +74,7 @@ namespace RecipeBook.Data.Profiles.Tests
             {
                 Assert.That(result.RecipeId, Is.EqualTo(55));
                 Assert.That(result.ProductId, Is.EqualTo(66));
-                Assert.That(result.UnitId, Is.EqualTo(77));
+                Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(10));
 
                 Assert.That(result.Recipe, Is.Null);
@@ -84,10 +86,11 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeIngredient_To_ShoppingListProductEditModel_Maps_Properties()
         {
+            var unitId = Guid.NewGuid();
             var entity = new RecipeIngredient
             {
                 ProductId = 7,
-                UnitId = 8,
+                UnitId = unitId,
                 Quantity = 3.25m
             };
 
@@ -96,7 +99,7 @@ namespace RecipeBook.Data.Profiles.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Product, Is.Null);
-                Assert.That(result.UnitId, Is.EqualTo(8));
+                Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(3.25m));
 
                 Assert.That(result.Index, Is.Zero);
@@ -113,10 +116,11 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void ShoppingListProductEditModel_To_RecipeIngredient_Maps_Properties()
         {
+            var unitId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
                 Product = new ProductModel() { Id = 91 },
-                UnitId = 92,
+                UnitId = unitId,
                 Quantity = 12.5m
             };
 
@@ -125,7 +129,7 @@ namespace RecipeBook.Data.Profiles.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.ProductId, Is.EqualTo(91));
-                Assert.That(result.UnitId, Is.EqualTo(92));
+                Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(12.5m));
 
                 Assert.That(result.Recipe, Is.Null);

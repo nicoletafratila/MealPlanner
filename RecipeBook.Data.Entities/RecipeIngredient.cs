@@ -16,6 +16,6 @@ namespace RecipeBook.Data.Entities
 
         [ForeignKey(nameof(UnitId))]
         public Unit? Unit { get; set; }
-        public int UnitId { get; set; }
+        public Guid UnitId { get; set; }
     }
 }

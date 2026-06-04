@@ -45,7 +45,7 @@ namespace MealPlanner.Shared.Tests.Models
                 ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
                 ]
             };
 
@@ -70,7 +70,7 @@ namespace MealPlanner.Shared.Tests.Models
                 ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
                 ]
             };
 
@@ -128,7 +128,7 @@ namespace MealPlanner.Shared.Tests.Models
             // One product -> valid
             model.Products =
             [
-                new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
             ];
 
             isValid = TryValidate(model, out results);
@@ -174,7 +174,7 @@ namespace MealPlanner.Shared.Tests.Models
                 ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
                 ]
             };
 

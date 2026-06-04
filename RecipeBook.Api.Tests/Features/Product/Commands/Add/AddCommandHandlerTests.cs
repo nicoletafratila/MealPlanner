@@ -85,7 +85,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             {
                 Id = 0,
                 Name = "Milk",
-                BaseUnitId = 1,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -118,7 +118,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             {
                 Id = 0,
                 Name = "Bread",
-                BaseUnitId = 1,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -133,7 +133,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Id = 5,
                 Name = "Bread",
                 ProductCategoryId = Guid.NewGuid(),
-                BaseUnitId = 1
+                BaseUnitId = Guid.NewGuid()
             };
 
             _mapperMock
@@ -161,7 +161,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             {
                 Id = 0,
                 Name = "ErrorProduct",
-                BaseUnitId = 1,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -176,7 +176,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Id = 7,
                 Name = "ErrorProduct",
                 ProductCategoryId = Guid.NewGuid(),
-                BaseUnitId = 1
+                BaseUnitId = Guid.NewGuid()
             };
 
             _mapperMock

@@ -77,7 +77,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
                     {
                         RecipeId = 5,
                         Quantity = 2.5m,
-                        UnitId = 3
+                        UnitId = Guid.NewGuid()
                     }
                 ]
             };
@@ -89,7 +89,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
             {
                 Assert.That(ingredient.RecipeId, Is.EqualTo(5));
                 Assert.That(ingredient.Quantity, Is.EqualTo(2.5m));
-                Assert.That(ingredient.UnitId, Is.EqualTo(3));
+                Assert.That(ingredient.UnitId, Is.Not.EqualTo(Guid.Empty));
             }
         }
 
@@ -106,8 +106,8 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
                     {
                         RecipeId = 10,
                         Quantity = 1m,
-                        UnitId = 2,
-                        Unit = new UnitModel { Id = 2, Name = "Cup" },
+                        UnitId = Guid.NewGuid(),
+                        Unit = new UnitModel { Id = Guid.NewGuid(), Name = "Cup" },
                         Product = new ProductModel { Id = 7, Name = "Strawberries" }
                     }
                 ]

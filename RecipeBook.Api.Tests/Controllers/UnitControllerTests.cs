@@ -1,4 +1,4 @@
-﻿using Common.Models;
+using Common.Models;
 using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +30,15 @@ namespace RecipeBook.Api.Tests.Controllers
         public async Task GetEditAsync_SendsGetEditQuery_WithCorrectId()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 5, Name = "kg" };
+            var id = Guid.NewGuid();
+            var model = new UnitEditModel { Id = id, Name = "kg" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(model);
 
             // Act
-            var result = await _controller.GetEditAsync(5, CancellationToken.None);
+            var result = await _controller.GetEditAsync(id, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -105,7 +106,7 @@ namespace RecipeBook.Api.Tests.Controllers
         public async Task PostAsync_SendsAddCommand_WithModel()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 0, Name = "kg" };
+            var model = new UnitEditModel { Id = Guid.Empty, Name = "kg" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -127,7 +128,7 @@ namespace RecipeBook.Api.Tests.Controllers
         public async Task PutAsync_SendsUpdateCommand_WithModel()
         {
             // Arrange
-            var model = new UnitEditModel { Id = 1, Name = "g" };
+            var model = new UnitEditModel { Id = Guid.NewGuid(), Name = "g" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -149,14 +150,15 @@ namespace RecipeBook.Api.Tests.Controllers
         public async Task DeleteAsync_SendsDeleteCommand_WithId()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var response = CommandResponse.Success();
 
             _senderMock
-                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == 7), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.DeleteAsync(7, CancellationToken.None);
+            var result = await _controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;

@@ -35,7 +35,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 new BreadcrumbItem { Text = Resources.UnitEdit.BreadcrumbUnit, IsCurrentPage = true },
             ];
 
-            if (!int.TryParse(Id, out var id) || id == 0)
+            if (!Guid.TryParse(Id, out var id) || id == Guid.Empty)
             {
                 Unit = new UnitEditModel();
             }
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             Common.Models.CommandResponse? response;
 
-            if (unit.Id == 0)
+            if (unit.Id == Guid.Empty)
             {
                 response = await UnitService.AddAsync(unit);
             }
@@ -81,7 +81,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteAsync()
         {
-            if (Unit.Id == 0)
+            if (Unit.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteCoreAsync(UnitEditModel unit)
         {
-            if (unit.Id == 0)
+            if (unit.Id == Guid.Empty)
                 return;
 
             var response = await UnitService.DeleteAsync(unit.Id);

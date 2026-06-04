@@ -1,4 +1,4 @@
-﻿using RecipeBook.Api.Features.Unit.Commands.Add;
+using RecipeBook.Api.Features.Unit.Commands.Add;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             // Arrange
             var model = new UnitEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -50,7 +50,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             var command = new AddCommand();
             var model = new UnitEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "g",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };

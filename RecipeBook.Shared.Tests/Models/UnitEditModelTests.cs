@@ -19,10 +19,10 @@ namespace RecipeBook.Shared.Tests.Models
             var model = new UnitEditModel();
             var isValid = TryValidate(model, out var results);
 
-            // Assert: Id=0, Name="", UnitType=default, but Required/Range will fail
+            // Assert: Name="", UnitType=default - Required/Range will fail
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.UnitType, Is.Default);
                 Assert.That(isValid, Is.False);
@@ -34,7 +34,8 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties_AndValidates_WhenWithinConstraints()
         {
             // Arrange
-            var model = new UnitEditModel(1, "Kilogram", UnitType.Weight);
+            var id = Guid.NewGuid();
+            var model = new UnitEditModel(id, "Kilogram", UnitType.Weight);
 
             // Act
             var isValid = TryValidate(model, out var results);
@@ -44,7 +45,7 @@ namespace RecipeBook.Shared.Tests.Models
             {
                 Assert.That(isValid, Is.True, "Model should be valid.");
                 Assert.That(results, Is.Empty);
-                Assert.That(model.Id, Is.EqualTo(1));
+                Assert.That(model.Id, Is.EqualTo(id));
                 Assert.That(model.Name, Is.EqualTo("Kilogram"));
                 Assert.That(model.UnitType, Is.EqualTo(UnitType.Weight));
             }
@@ -56,7 +57,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange: missing name
             var model = new UnitEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 UnitType = UnitType.Weight
             };
@@ -91,7 +92,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange: valid UnitType (assuming enum underlying values 0..3)
             var model = new UnitEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Unit",
                 UnitType = (UnitType)2
             };
@@ -126,7 +127,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange
             var model = new UnitEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Liter",
                 UnitType = UnitType.Volume
             };
@@ -144,7 +145,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Act / Assert
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new UnitEditModel(1, null!, UnitType.Weight);
+                _ = new UnitEditModel(Guid.NewGuid(), null!, UnitType.Weight);
             });
         }
     }

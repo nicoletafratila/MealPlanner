@@ -69,9 +69,10 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
         public async Task Handle_EntityNotFound_ReturnsFailedResponse()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var model = new UnitEditModel
             {
-                Id = 10,
+                Id = id,
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -79,7 +80,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             var command = new UpdateCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(10, CancellationToken.None))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync((RecipeBook.Data.Entities.Unit?)null);
 
             // Act
@@ -90,10 +91,10 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Does.StartWith("Could not find unit with id 10"));
+                Assert.That(result.Message, Does.Contain(id.ToString()));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(10, CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<UnitEditModel>(), It.IsAny<RecipeBook.Data.Entities.Unit>()), Times.Never);
             _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None), Times.Never);
         }
@@ -102,9 +103,10 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var model = new UnitEditModel
             {
-                Id = 1,
+                Id = id,
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -113,13 +115,13 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             var existing = new RecipeBook.Data.Entities.Unit
             {
-                Id = 1,
+                Id = id,
                 Name = "old",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(1, CancellationToken.None))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -137,7 +139,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdAsync(1, CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, CancellationToken.None), Times.Once);
         }
@@ -146,9 +148,10 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
         public async Task Handle_ExceptionDuringUpdate_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var model = new UnitEditModel
             {
-                Id = 2,
+                Id = id,
                 Name = "g",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
@@ -157,13 +160,13 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
 
             var existing = new RecipeBook.Data.Entities.Unit
             {
-                Id = 2,
+                Id = id,
                 Name = "old",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
 
             _repoMock
-                .Setup(r => r.GetByIdAsync(2, CancellationToken.None))
+                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -185,7 +188,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Update
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the product category."));
             }
 
-            _repoMock.Verify(r => r.GetByIdAsync(2, CancellationToken.None), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
 

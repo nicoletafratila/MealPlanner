@@ -22,9 +22,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Selected unit id for this product.
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.UnitRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
-        public int UnitId { get; set; }
+        public Guid UnitId { get; set; }
 
         /// <summary>
         /// Indicates whether this product has been collected in the shopping list.
@@ -55,7 +53,7 @@ namespace MealPlanner.Shared.Models
         public ShoppingListProductEditModel(
             Guid shoppingListId,
             decimal quantity,
-            int unitId,
+            Guid unitId,
             int displaySequence)
         {
             ShoppingListId = shoppingListId;

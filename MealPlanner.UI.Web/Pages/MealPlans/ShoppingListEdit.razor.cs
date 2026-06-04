@@ -252,7 +252,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 if (product is null)
                     return;
 
-                await AddProductAsync(product, decimal.Parse(Quantity!), int.Parse(UnitId!));
+                await AddProductAsync(product, decimal.Parse(Quantity!), Guid.Parse(UnitId!));
             }
         }
 
@@ -339,7 +339,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
-        private async Task AddProductAsync(ProductModel product, decimal quantity, int unitId)
+        private async Task AddProductAsync(ProductModel product, decimal quantity, Guid unitId)
         {
             if (ShoppingList?.Products is null || BaseUnits?.Items is null)
                 return;

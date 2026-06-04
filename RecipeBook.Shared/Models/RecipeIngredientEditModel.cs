@@ -24,9 +24,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Selected unit id for this ingredient.
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.IngredientUnitRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int UnitId { get; set; }
+        public Guid UnitId { get; set; }
 
         /// <summary>
         /// Selected unit details (optional, for display/UI).
@@ -42,7 +40,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public RecipeIngredientEditModel(int recipeId, decimal quantity, int unitId)
+        public RecipeIngredientEditModel(int recipeId, decimal quantity, Guid unitId)
         {
             RecipeId = recipeId;
             Quantity = quantity;

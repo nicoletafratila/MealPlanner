@@ -28,11 +28,12 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void ShoppingListProduct_To_ShoppingListProductEditModel_Maps_All_Properties()
         {
+            var unitId = Guid.NewGuid();
             var entity = new ShoppingListProduct
             {
                 ShoppingListId = Guid.NewGuid(),
                 Quantity = 2.5m,
-                UnitId = 10,
+                UnitId = unitId,
                 ProductId = 99,
                 Collected = true,
                 DisplaySequence = 4
@@ -57,11 +58,12 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void ShoppingListProductEditModel_To_ShoppingListProduct_Maps_All_Properties()
         {
+            var unitId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
                 ShoppingListId = Guid.NewGuid(),
                 Quantity = 11.75m,
-                UnitId = 3,
+                UnitId = unitId,
                 Product = new ProductModel() { Id = 41 },
                 Collected = false,
                 DisplaySequence = 2
@@ -88,10 +90,11 @@ namespace MealPlanner.Data.Profiles.Tests
         public void Null_SourceValue_Does_Not_Overwrite_Destination()
         {
             var shoppingListId = Guid.NewGuid();
+            var destUnitId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
                 Quantity = 0,
-                UnitId = 1,
+                UnitId = Guid.NewGuid(),
                 Product = new ProductModel() { Id = 1 },
                 DisplaySequence = 1,
                 ShoppingListId = shoppingListId,
@@ -101,7 +104,7 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 ShoppingListId = shoppingListId,
                 Quantity = 10,
-                UnitId = 5,
+                UnitId = destUnitId,
                 ProductId = 8,
                 Collected = false,
                 DisplaySequence = 10,

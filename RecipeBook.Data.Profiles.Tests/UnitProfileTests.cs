@@ -23,7 +23,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var unit = new Unit
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Gram",
             };
 
@@ -41,7 +41,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var model = new UnitModel
             {
-                Id = 10,
+                Id = Guid.NewGuid(),
                 Name = "Milliliter",
             };
 
@@ -59,7 +59,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var unit = new Unit
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Cup",
             };
 
@@ -77,7 +77,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var model = new UnitEditModel
             {
-                Id = 3,
+                Id = Guid.NewGuid(),
                 Name = "Tablespoon",
             };
 
@@ -93,15 +93,16 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void Null_SourceValue_Does_Not_Overwrite_Destination()
         {
+            var sharedId = Guid.NewGuid();
             var model = new UnitModel
             {
-                Id = 5,
+                Id = sharedId,
                 Name = null!,
             };
 
             var destination = new Unit
             {
-                Id = 5,
+                Id = sharedId,
                 Name = "Liter",
             };
 

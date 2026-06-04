@@ -35,9 +35,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Base unit id for this product (e.g., kg, liter).
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductUnitRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int BaseUnitId { get; set; }
+        public Guid BaseUnitId { get; set; }
 
         /// <summary>
         /// Product category id.
@@ -49,7 +47,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public ProductEditModel(int id, string name, int baseUnitId, Guid productCategoryId)
+        public ProductEditModel(int id, string name, Guid baseUnitId, Guid productCategoryId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

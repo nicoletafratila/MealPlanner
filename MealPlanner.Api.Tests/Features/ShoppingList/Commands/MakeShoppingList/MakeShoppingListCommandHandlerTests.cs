@@ -169,12 +169,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         public async Task Handle_WithIngredients_RestoresProductAndUnitOnShoppingListProducts()
         {
             // Arrange
-            var pieceUnit = new RecipeBook.Data.Entities.Unit { Id = 1, Name = "piece", UnitType = Common.Constants.Units.UnitType.Piece };
+            var pieceUnit = new RecipeBook.Data.Entities.Unit { Id = Guid.NewGuid(), Name = "piece", UnitType = Common.Constants.Units.UnitType.Piece };
             var product = new RecipeBook.Data.Entities.Product
             {
                 Id = 5,
                 Name = "Milk",
-                BaseUnitId = 1,
+                BaseUnitId = pieceUnit.Id,
                 BaseUnit = pieceUnit
             };
             var ingredient = new RecipeBook.Data.Entities.RecipeIngredient
@@ -182,7 +182,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
                 ProductId = 5,
                 Product = product,
                 Unit = pieceUnit,
-                UnitId = 1,
+                UnitId = pieceUnit.Id,
                 Quantity = 2
             };
             var recipe = new RecipeBook.Data.Entities.Recipe

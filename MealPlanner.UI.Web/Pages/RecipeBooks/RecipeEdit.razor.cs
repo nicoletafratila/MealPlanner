@@ -217,7 +217,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var existing = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == productId);
             if (existing != null)
             {
-                if (existing.Unit!.Id == int.Parse(UnitId!))
+                if (existing.Unit!.Id == Guid.Parse(UnitId!))
                 {
                     existing.Quantity += decimal.Parse(Quantity!);
                 }
@@ -235,8 +235,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 RecipeId = Recipe.Id,
                 Product = Products?.Items?.FirstOrDefault(i => i.Id == productId),
                 Quantity = decimal.Parse(Quantity!),
-                UnitId = int.Parse(UnitId!),
-                Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!))
+                UnitId = Guid.Parse(UnitId!),
+                Unit = Units?.FirstOrDefault(i => i.Id == Guid.Parse(UnitId!))
             };
 
             Recipe.Ingredients.Add(ingredient);

@@ -1,4 +1,4 @@
-﻿using FluentValidation.TestHelper;
+using FluentValidation.TestHelper;
 using RecipeBook.Api.Features.Unit.Commands.Add;
 using RecipeBook.Shared.Models;
 
@@ -39,7 +39,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             {
                 Model = new UnitEditModel
                 {
-                    Id = 0,
+                    Id = Guid.Empty,
                     Name = "kg",
                     UnitType = Common.Constants.Units.UnitType.Weight
                 }

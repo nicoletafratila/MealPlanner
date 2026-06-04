@@ -83,8 +83,8 @@ namespace Common.Services.Tests.Converters
         [Test]
         public void Convert_UnitModel_Weight_kg_to_gr()
         {
-            var from = new UnitModel(1, "kg", UnitType.Weight);
-            var to = new UnitModel(2, "gr", UnitType.Weight);
+            var from = new UnitModel(Guid.NewGuid(), "kg", UnitType.Weight);
+            var to = new UnitModel(Guid.NewGuid(), "gr", UnitType.Weight);
 
             Assert.That(UnitConverter.Convert(1m, from, to), Is.EqualTo(1000m));
         }
@@ -92,8 +92,8 @@ namespace Common.Services.Tests.Converters
         [Test]
         public void Convert_UnitModel_Liquid_l_to_ml()
         {
-            var from = new UnitModel(1, "l", UnitType.Liquid);
-            var to = new UnitModel(2, "ml", UnitType.Liquid);
+            var from = new UnitModel(Guid.NewGuid(), "l", UnitType.Liquid);
+            var to = new UnitModel(Guid.NewGuid(), "ml", UnitType.Liquid);
 
             Assert.That(UnitConverter.Convert(2m, from, to), Is.EqualTo(2000m));
         }
@@ -101,8 +101,8 @@ namespace Common.Services.Tests.Converters
         [Test]
         public void Convert_UnitModel_Volume_tbsp_to_tsp()
         {
-            var from = new UnitModel(1, "tbsp", UnitType.Volume);
-            var to = new UnitModel(2, "tsp", UnitType.Volume);
+            var from = new UnitModel(Guid.NewGuid(), "tbsp", UnitType.Volume);
+            var to = new UnitModel(Guid.NewGuid(), "tsp", UnitType.Volume);
 
             Assert.That(UnitConverter.Convert(2m, from, to), Is.EqualTo(6m));
         }
@@ -110,8 +110,8 @@ namespace Common.Services.Tests.Converters
         [Test]
         public void Convert_UnitModel_Piece_Is_Identity()
         {
-            var from = new UnitModel(1, "piece", UnitType.Piece);
-            var to = new UnitModel(2, "piece", UnitType.Piece);
+            var from = new UnitModel(Guid.NewGuid(), "piece", UnitType.Piece);
+            var to = new UnitModel(Guid.NewGuid(), "piece", UnitType.Piece);
 
             Assert.That(UnitConverter.Convert(5m, from, to), Is.EqualTo(5m));
         }
@@ -119,8 +119,8 @@ namespace Common.Services.Tests.Converters
         [Test]
         public void Convert_UnitModel_Throws_When_UnitTypes_Differ()
         {
-            var from = new UnitModel(1, "kg", UnitType.Weight);
-            var to = new UnitModel(2, "ml", UnitType.Liquid);
+            var from = new UnitModel(Guid.NewGuid(), "kg", UnitType.Weight);
+            var to = new UnitModel(Guid.NewGuid(), "ml", UnitType.Liquid);
 
             Assert.That(
                 () => UnitConverter.Convert(1m, from, to),
@@ -131,7 +131,7 @@ namespace Common.Services.Tests.Converters
         [Test]
         public void Convert_UnitModel_Throws_When_UnitModel_Is_Null()
         {
-            var from = new UnitModel(1, "kg", UnitType.Weight);
+            var from = new UnitModel(Guid.NewGuid(), "kg", UnitType.Weight);
 
             Assert.That(
                 () => UnitConverter.Convert(1m, (UnitModel)null!, from),

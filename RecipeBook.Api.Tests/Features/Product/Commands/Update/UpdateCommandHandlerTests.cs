@@ -74,7 +74,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             {
                 Id = id,
                 Name = "Product1",
-                BaseUnitId = 1,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -109,7 +109,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             {
                 Id = id,
                 Name = "UpdatedProduct",
-                BaseUnitId = 1,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -120,7 +120,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 Id = id,
                 Name = "OldProduct",
                 ProductCategoryId = Guid.NewGuid(),
-                BaseUnitId = 1
+                BaseUnitId = Guid.NewGuid()
             };
 
             _repoMock
@@ -156,7 +156,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             {
                 Id = id,
                 Name = "ProductX",
-                BaseUnitId = 1,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -167,7 +167,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 Id = id,
                 Name = "OldX",
                 ProductCategoryId = Guid.NewGuid(),
-                BaseUnitId = 1
+                BaseUnitId = Guid.NewGuid()
             };
 
             _repoMock

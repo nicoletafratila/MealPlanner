@@ -24,7 +24,7 @@ namespace RecipeBook.Services.Http
             old.Dispose();
         }
 
-        public async Task<UnitEditModel?> GetEditAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<UnitEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<UnitEditModel>(url, cancellationToken);
@@ -60,7 +60,7 @@ namespace RecipeBook.Services.Http
             catch (Exception ex) { logger.LogError(ex, "Unit UpdateAsync failed. Model {@Model}", model); throw; }
         }
 
-        public async Task<CommandResponse?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try { var r = await DeleteAsync(url, cancellationToken); InvalidateCache(); return r; }

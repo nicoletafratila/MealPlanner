@@ -24,7 +24,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             {
                 Id = 1,
                 Name = "Product1",
-                BaseUnitId = 2,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 
@@ -53,7 +53,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             {
                 Id = 2,
                 Name = "Product2",
-                BaseUnitId = 5,
+                BaseUnitId = Guid.NewGuid(),
                 ProductCategoryId = Guid.NewGuid()
             };
 

@@ -17,7 +17,7 @@ namespace RecipeBook.Data.Entities.Tests
                 Assert.That(product.ImageContent, Is.Null);
 
                 Assert.That(product.BaseUnit, Is.Null);
-                Assert.That(product.BaseUnitId, Is.Zero);
+                Assert.That(product.BaseUnitId, Is.EqualTo(Guid.Empty));
 
                 Assert.That(product.ProductCategory, Is.Null);
                 Assert.That(product.ProductCategoryId, Is.EqualTo(Guid.Empty));
@@ -28,7 +28,7 @@ namespace RecipeBook.Data.Entities.Tests
         public void Properties_Can_Be_Set_And_Read()
         {
             // Arrange
-            var baseUnit = new Unit { Id = 2, Name = "g" };
+            var baseUnit = new Unit { Id = Guid.NewGuid(), Name = "g" };
             var category = new ProductCategory { Id = Guid.NewGuid(), Name = "Flour" };
             var image = new byte[] { 1, 2, 3 };
 
@@ -63,12 +63,13 @@ namespace RecipeBook.Data.Entities.Tests
         public void ToString_Contains_Name_Id_CategoryId_And_BaseUnitId()
         {
             var categoryId = Guid.NewGuid();
+            var baseUnitId = Guid.NewGuid();
             var product = new Product
             {
                 Id = 5,
                 Name = "Sugar",
                 ProductCategoryId = categoryId,
-                BaseUnitId = 20
+                BaseUnitId = baseUnitId
             };
 
             var text = product.ToString();
@@ -78,7 +79,7 @@ namespace RecipeBook.Data.Entities.Tests
                 Assert.That(text, Does.Contain("Sugar"));
                 Assert.That(text, Does.Contain("5"));
                 Assert.That(text, Does.Contain(categoryId.ToString()));
-                Assert.That(text, Does.Contain("20"));
+                Assert.That(text, Does.Contain(baseUnitId.ToString()));
             }
         }
     }

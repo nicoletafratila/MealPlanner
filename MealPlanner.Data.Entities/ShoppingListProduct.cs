@@ -17,7 +17,7 @@ namespace MealPlanner.Data.Entities
 
         [ForeignKey(nameof(UnitId))]
         public Unit? Unit { get; set; }
-        public int UnitId { get; set; }
+        public Guid UnitId { get; set; }
 
         public bool Collected { get; set; }
         public int DisplaySequence { get; set; }
