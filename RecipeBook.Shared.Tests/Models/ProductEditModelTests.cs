@@ -22,7 +22,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.ImageContent, Is.Null);
                 Assert.That(model.ImageUrl, Is.Null);
@@ -40,7 +40,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Milk",
                 ImageContent = new byte[10],
                 BaseUnitId = Guid.NewGuid(),
@@ -63,7 +63,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 ImageContent = new byte[10],
                 BaseUnitId = Guid.NewGuid(),
@@ -98,7 +98,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 ImageContent = null,
                 BaseUnitId = Guid.NewGuid(),
@@ -133,7 +133,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 ImageContent = new byte[10],
                 BaseUnitId = Guid.NewGuid(),
@@ -148,7 +148,7 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             const string name = "Cheese";
             var baseUnitId = Guid.NewGuid();
             var productCategoryId = Guid.NewGuid();
@@ -171,7 +171,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ProductEditModel(1, null!, Guid.NewGuid(), Guid.NewGuid());
+                _ = new ProductEditModel(Guid.NewGuid(), null!, Guid.NewGuid(), Guid.NewGuid());
             });
         }
 
@@ -180,7 +180,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Bread",
                 ImageContent = new byte[1],
                 BaseUnitId = Guid.NewGuid(),

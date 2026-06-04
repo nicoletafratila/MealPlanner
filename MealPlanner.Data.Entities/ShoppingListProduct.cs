@@ -11,7 +11,7 @@ namespace MealPlanner.Data.Entities
 
         [ForeignKey(nameof(ProductId))]
         public Product? Product { get; set; }
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         public decimal Quantity { get; set; }
 

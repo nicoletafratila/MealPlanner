@@ -6,10 +6,8 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void DefaultCtor_Sets_Expected_Defaults()
         {
-            // Act
             var list = new ShoppingList();
 
-            // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(list.Id, Is.EqualTo(Guid.Empty));
@@ -24,18 +22,16 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void Properties_Can_Be_Set_And_Read()
         {
-            // Arrange
             var shop = new Shop();
             var productList = new List<ShoppingListProduct>
             {
-                new() { ProductId = 1 },
-                new() { ProductId = 2 }
+                new() { ProductId = Guid.NewGuid() },
+                new() { ProductId = Guid.NewGuid() }
             };
 
             var shopId = Guid.NewGuid();
             var id = Guid.NewGuid();
 
-            // Act
             var list = new ShoppingList
             {
                 Id = id,
@@ -45,7 +41,6 @@ namespace MealPlanner.Data.Entities.Tests
                 Products = productList
             };
 
-            // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(list.Id, Is.EqualTo(id));
@@ -62,12 +57,7 @@ namespace MealPlanner.Data.Entities.Tests
         {
             var shopId = Guid.NewGuid();
             var id = Guid.NewGuid();
-            var list = new ShoppingList
-            {
-                Id = id,
-                Name = "Test List",
-                ShopId = shopId
-            };
+            var list = new ShoppingList { Id = id, Name = "Test List", ShopId = shopId };
 
             var text = list.ToString();
 

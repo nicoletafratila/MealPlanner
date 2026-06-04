@@ -39,7 +39,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             {
                 Model = new ProductEditModel
                 {
-                    Id = 1,
+                    Id = Guid.NewGuid(),
                     Name = "Product1",
                     BaseUnitId = Guid.NewGuid(),
                     ProductCategoryId = Guid.NewGuid()

@@ -108,7 +108,7 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
                         Quantity = 1m,
                         UnitId = Guid.NewGuid(),
                         Unit = new UnitModel { Id = Guid.NewGuid(), Name = "Cup" },
-                        Product = new ProductModel { Id = 7, Name = "Strawberries" }
+                        Product = new ProductModel { Id = Guid.NewGuid(), Name = "Strawberries" }
                     }
                 ]
             };

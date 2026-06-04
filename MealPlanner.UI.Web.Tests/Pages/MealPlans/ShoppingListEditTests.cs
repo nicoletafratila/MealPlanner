@@ -542,7 +542,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             ArrangeLookups();
 
-            var products = new PagedList<ProductModel>([new() { Id = 1 }], new Metadata());
+            var products = new PagedList<ProductModel>([new() { Id = Guid.NewGuid() }], new Metadata());
 
             _productServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))

@@ -6,7 +6,7 @@ namespace RecipeBook.Api.Repositories
     /// <summary>
     /// Repository contract for querying and manipulating <see cref="Product"/> entities.
     /// </summary>
-    public interface IProductRepository : IAsyncRepository<Product, int>
+    public interface IProductRepository : IAsyncRepository<Product, Guid>
     {
         Task<IReadOnlyList<Product>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
 

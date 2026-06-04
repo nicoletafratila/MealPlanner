@@ -129,10 +129,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 [
                     new RecipeIngredient()
                     {
-                        ProductId = 1,
+                        ProductId = Guid.NewGuid(),
                         Product = new RecipeBook.Data.Entities.Product ()
                         {
-                            Id = 1,
+                            Id = Guid.NewGuid(),
                             Name = "B",
                             BaseUnit = unit
                         },
@@ -141,10 +141,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                     },
                     new RecipeIngredient()
                     {
-                        ProductId = 2,
+                        ProductId = Guid.NewGuid(),
                         Product = new RecipeBook.Data.Entities.Product ()
                         {
-                            Id = 2,
+                            Id = Guid.NewGuid(),
                             Name = "A",
                             BaseUnit = unit
                         },

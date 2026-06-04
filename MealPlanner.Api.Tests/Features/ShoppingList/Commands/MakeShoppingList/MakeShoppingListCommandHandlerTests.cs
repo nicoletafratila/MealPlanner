@@ -170,16 +170,17 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         {
             // Arrange
             var pieceUnit = new RecipeBook.Data.Entities.Unit { Id = Guid.NewGuid(), Name = "piece", UnitType = Common.Constants.Units.UnitType.Piece };
+            var productId = Guid.NewGuid();
             var product = new RecipeBook.Data.Entities.Product
             {
-                Id = 5,
+                Id = productId,
                 Name = "Milk",
                 BaseUnitId = pieceUnit.Id,
                 BaseUnit = pieceUnit
             };
             var ingredient = new RecipeBook.Data.Entities.RecipeIngredient
             {
-                ProductId = 5,
+                ProductId = productId,
                 Product = product,
                 Unit = pieceUnit,
                 UnitId = pieceUnit.Id,
@@ -200,7 +201,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             var shopId = Guid.NewGuid();
             var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" };
 
-            var savedProduct = new MealPlanner.Data.Entities.ShoppingListProduct { ProductId = 5 };
+            var savedProduct = new MealPlanner.Data.Entities.ShoppingListProduct { ProductId = productId };
             var savedListId = Guid.NewGuid();
             var savedList = new MealPlanner.Data.Entities.ShoppingList
             {

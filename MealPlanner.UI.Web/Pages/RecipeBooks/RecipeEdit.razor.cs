@@ -212,7 +212,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 Recipe.Ingredients = [];
             }
 
-            var productId = int.Parse(ProductId!);
+            var productId = Guid.Parse(ProductId!);
 
             var existing = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == productId);
             if (existing != null)
@@ -329,7 +329,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 return;
             }
 
-            var product = await ProductService.GetEditAsync(int.Parse(productId));
+            var product = await ProductService.GetEditAsync(Guid.Parse(productId));
             if (product == null || BaseUnits?.Items == null)
             {
                 StateHasChanged();

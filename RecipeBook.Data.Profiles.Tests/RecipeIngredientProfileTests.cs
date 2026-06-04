@@ -30,11 +30,12 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeIngredient_To_RecipeIngredientEditModel_Maps_Properties()
         {
+            var productId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
             var entity = new RecipeIngredient
             {
                 RecipeId = 11,
-                ProductId = 22,
+                ProductId = productId,
                 UnitId = unitId,
                 Quantity = 4.5m
             };
@@ -47,11 +48,8 @@ namespace RecipeBook.Data.Profiles.Tests
                 Assert.That(result.Product, Is.Null);
                 Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(4.5m));
-
                 Assert.That(result.Index, Is.Zero);
                 Assert.That(result.IsSelected, Is.False);
-
-                Assert.That(result.Product, Is.Null);
                 Assert.That(result.Unit, Is.Null);
             }
         }
@@ -59,11 +57,12 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeIngredientEditModel_To_RecipeIngredient_Maps_Properties()
         {
+            var productId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
             var model = new RecipeIngredientEditModel
             {
                 RecipeId = 55,
-                Product = new ProductModel() { Id = 66 },
+                Product = new ProductModel() { Id = productId },
                 UnitId = unitId,
                 Quantity = 10
             };
@@ -73,10 +72,9 @@ namespace RecipeBook.Data.Profiles.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.RecipeId, Is.EqualTo(55));
-                Assert.That(result.ProductId, Is.EqualTo(66));
+                Assert.That(result.ProductId, Is.EqualTo(productId));
                 Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(10));
-
                 Assert.That(result.Recipe, Is.Null);
                 Assert.That(result.Product, Is.Null);
                 Assert.That(result.Unit, Is.Null);
@@ -86,10 +84,11 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeIngredient_To_ShoppingListProductEditModel_Maps_Properties()
         {
+            var productId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
             var entity = new RecipeIngredient
             {
-                ProductId = 7,
+                ProductId = productId,
                 UnitId = unitId,
                 Quantity = 3.25m
             };
@@ -101,14 +100,10 @@ namespace RecipeBook.Data.Profiles.Tests
                 Assert.That(result.Product, Is.Null);
                 Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(3.25m));
-
                 Assert.That(result.Index, Is.Zero);
                 Assert.That(result.IsSelected, Is.False);
-
                 Assert.That(result.Collected, Is.False);
                 Assert.That(result.DisplaySequence, Is.Zero);
-
-                Assert.That(result.Product, Is.Null);
                 Assert.That(result.Unit, Is.Null);
             }
         }
@@ -116,10 +111,11 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void ShoppingListProductEditModel_To_RecipeIngredient_Maps_Properties()
         {
+            var productId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
-                Product = new ProductModel() { Id = 91 },
+                Product = new ProductModel() { Id = productId },
                 UnitId = unitId,
                 Quantity = 12.5m
             };
@@ -128,10 +124,9 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.ProductId, Is.EqualTo(91));
+                Assert.That(result.ProductId, Is.EqualTo(productId));
                 Assert.That(result.UnitId, Is.EqualTo(unitId));
                 Assert.That(result.Quantity, Is.EqualTo(12.5m));
-
                 Assert.That(result.Recipe, Is.Null);
                 Assert.That(result.Product, Is.Null);
                 Assert.That(result.Unit, Is.Null);

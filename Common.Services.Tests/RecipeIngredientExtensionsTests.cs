@@ -10,7 +10,7 @@ namespace Common.Services.Tests
         public void ToShoppingListProduct_Maps_Fields_And_Uses_BaseUnit()
         {
             var baseUnit = new Unit { Id = Guid.NewGuid(), Name = "gr" };
-            var product = new Product { Id = 10, Name = "Flour", BaseUnit = baseUnit };
+            var product = new Product { Id = Guid.NewGuid(), Name = "Flour", BaseUnit = baseUnit };
             var ingredient = new RecipeIngredient
             {
                 Product = product,
@@ -50,7 +50,7 @@ namespace Common.Services.Tests
         {
             var ingredient = new RecipeIngredient
             {
-                Product = new Product { Id = 10, BaseUnit = null },
+                Product = new Product { Id = Guid.NewGuid(), BaseUnit = null },
                 Unit = new Unit(),
                 Quantity = 1m
             };
@@ -67,7 +67,7 @@ namespace Common.Services.Tests
             var baseUnit = new Unit { Id = Guid.NewGuid(), Name = "g" };
             var ingredient = new RecipeIngredient
             {
-                Product = new Product { Id = 10, BaseUnit = baseUnit },
+                Product = new Product { Id = Guid.NewGuid(), BaseUnit = baseUnit },
                 Unit = null,
                 Quantity = 1m
             };

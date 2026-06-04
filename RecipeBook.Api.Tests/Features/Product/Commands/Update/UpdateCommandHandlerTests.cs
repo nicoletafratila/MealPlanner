@@ -22,77 +22,56 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
             _loggerMock = new Mock<ILogger<UpdateCommandHandler>>(MockBehavior.Loose);
 
-            _handler = new UpdateCommandHandler(
-                _repoMock.Object,
-                _mapperMock.Object,
-                _loggerMock.Object);
+            _handler = new UpdateCommandHandler(_repoMock.Object, _mapperMock.Object, _loggerMock.Object);
         }
 
         [Test]
         public void Ctor_NullRepository_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new UpdateCommandHandler(null!, _mapperMock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>(() => _ = new UpdateCommandHandler(null!, _mapperMock.Object, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new UpdateCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>(() => _ = new UpdateCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullLogger_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new UpdateCommandHandler(_repoMock.Object, _mapperMock.Object, null!));
+            Assert.Throws<ArgumentNullException>(() => _ = new UpdateCommandHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
         [Test]
         public void Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await _handler.Handle(null!, CancellationToken.None));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
         public void Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new UpdateCommand { Model = null! };
-
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await _handler.Handle(command, CancellationToken.None));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(command, CancellationToken.None));
         }
 
         [Test]
         public async Task Handle_EntityNotFound_ReturnsFailedResponse()
         {
-            // Arrange
-            const int id = 5;
-            var model = new ProductEditModel
-            {
-                Id = id,
-                Name = "Product1",
-                BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = Guid.NewGuid()
-            };
-
+            var id = Guid.NewGuid();
+            var model = new ProductEditModel { Id = id, Name = "Product1", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
 
-            _repoMock
-                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+                Assert.That(result.Message, Does.Contain(id.ToString()));
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
@@ -103,42 +82,17 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
         [Test]
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
-            // Arrange
-            const int id = 2;
-            var model = new ProductEditModel
-            {
-                Id = id,
-                Name = "UpdatedProduct",
-                BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = Guid.NewGuid()
-            };
-
+            var id = Guid.NewGuid();
+            var model = new ProductEditModel { Id = id, Name = "UpdatedProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
+            var existing = new RecipeBook.Data.Entities.Product { Id = id, Name = "OldProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
-            var existing = new RecipeBook.Data.Entities.Product
-            {
-                Id = id,
-                Name = "OldProduct",
-                ProductCategoryId = Guid.NewGuid(),
-                BaseUnitId = Guid.NewGuid()
-            };
+            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);
+            _repoMock.Setup(r => r.UpdateAsync(existing, CancellationToken.None)).Returns(Task.CompletedTask);
 
-            _repoMock
-                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync(existing);
-
-            _mapperMock
-                .Setup(m => m.Map(model, existing))
-                .Returns(existing);
-
-            _repoMock
-                .Setup(r => r.UpdateAsync(existing, CancellationToken.None))
-                .Returns(Task.CompletedTask);
-
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
@@ -150,42 +104,17 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
         [Test]
         public async Task Handle_ExceptionDuringUpdate_LogsError_AndReturnsFailedResponse()
         {
-            // Arrange
-            const int id = 3;
-            var model = new ProductEditModel
-            {
-                Id = id,
-                Name = "ProductX",
-                BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = Guid.NewGuid()
-            };
-
+            var id = Guid.NewGuid();
+            var model = new ProductEditModel { Id = id, Name = "ProductX", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
+            var existing = new RecipeBook.Data.Entities.Product { Id = id, Name = "OldX", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
-            var existing = new RecipeBook.Data.Entities.Product
-            {
-                Id = id,
-                Name = "OldX",
-                ProductCategoryId = Guid.NewGuid(),
-                BaseUnitId = Guid.NewGuid()
-            };
+            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);
+            _repoMock.Setup(r => r.UpdateAsync(existing, CancellationToken.None)).ThrowsAsync(new InvalidOperationException("DB error"));
 
-            _repoMock
-                .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync(existing);
-
-            _mapperMock
-                .Setup(m => m.Map(model, existing))
-                .Returns(existing);
-
-            _repoMock
-                .Setup(r => r.UpdateAsync(existing, CancellationToken.None))
-                .ThrowsAsync(new InvalidOperationException("DB error"));
-
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -198,12 +127,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             _repoMock.Verify(r => r.UpdateAsync(existing, CancellationToken.None), Times.Once);
 
             _loggerMock.Verify(
-                l => l.Log(
-                    It.Is<LogLevel>(ll => ll == LogLevel.Error),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                l => l.Log(It.Is<LogLevel>(ll => ll == LogLevel.Error), It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
     }

@@ -26,7 +26,7 @@ namespace RecipeBook.Api.Repositories
         /// Gets all recipe ingredients for a given product id.
         /// </summary>
         public async Task<IReadOnlyList<RecipeIngredient>> SearchAsync(
-            int productId,
+            Guid productId,
             CancellationToken cancellationToken)
         {
             return await _dbContext.RecipeIngredients

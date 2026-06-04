@@ -111,31 +111,33 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
             var cat2Id = Guid.NewGuid();
             var query = new GetShoppingListProductsQuery { MealPlanId = mealPlanId, ShopId = shopId };
 
+            var product1Id = Guid.NewGuid();
+            var product2Id = Guid.NewGuid();
             var baseUnit = new Unit { Id = Guid.NewGuid(), Name = "kg" };
             var product1 = new Product
             {
-                Id = 5,
+                Id = product1Id,
                 Name = "Flour",
                 ProductCategory = new ProductCategory { Id = cat1Id, Name = "Cat1" },
                 BaseUnit = baseUnit
             };
             var product2 = new Product
             {
-                Id = 6,
+                Id = product2Id,
                 Name = "Egg",
                 ProductCategory = new ProductCategory { Id = cat2Id, Name = "Cat2" },
                 BaseUnit = baseUnit
             };
             var ingredient1 = new RecipeIngredient
             {
-                ProductId = 5,
+                ProductId = product1Id,
                 Product = product1,
                 Quantity = 2,
                 Unit = baseUnit
             };
             var ingredient2 = new RecipeIngredient
             {
-                ProductId = 6,
+                ProductId = product2Id,
                 Product = product2,
                 Quantity = 4,
                 Unit = baseUnit
@@ -169,32 +171,23 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
                     It.IsAny<ShoppingListProduct>()))
                 .Returns((ShoppingListProduct src) =>
                 {
-                    return src.ProductId switch
-                    {
-                        5 => new ShoppingListProductEditModel
+                    if (src.ProductId == product1Id)
+                        return new ShoppingListProductEditModel
                         {
                             Collected = src.Collected,
                             DisplaySequence = src.DisplaySequence,
                             Quantity = ingredient1.Quantity,
-                            Product = new ProductModel
-                            {
-                                Id = product1.Id,
-                                Name = product1.Name!,
-                            },
-                        },
-                        6 => new ShoppingListProductEditModel
+                            Product = new ProductModel { Id = product1.Id, Name = product1.Name! },
+                        };
+                    if (src.ProductId == product2Id)
+                        return new ShoppingListProductEditModel
                         {
                             Collected = src.Collected,
                             DisplaySequence = src.DisplaySequence,
                             Quantity = ingredient2.Quantity,
-                            Product = new ProductModel
-                            {
-                                Id = product2.Id,
-                                Name = product2.Name!,
-                            },
-                        },
-                        _ => throw new NotImplementedException()
-                    };
+                            Product = new ProductModel { Id = product2.Id, Name = product2.Name! },
+                        };
+                    throw new NotImplementedException();
                 });
 
             // Act

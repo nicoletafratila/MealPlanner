@@ -14,7 +14,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.ImageUrl, Is.Null);
                 Assert.That(model.BaseUnit, Is.Null);
@@ -33,7 +33,7 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsIdAndName()
         {
             // Arrange
-            const int id = 10;
+            var id = Guid.NewGuid();
             const string name = "Flour";
 
             // Act
@@ -54,7 +54,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Act / Assert
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ProductModel(1, null!);
+                _ = new ProductModel(Guid.NewGuid(), null!);
             });
         }
 

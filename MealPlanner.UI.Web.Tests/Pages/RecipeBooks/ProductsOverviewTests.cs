@@ -87,18 +87,19 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(ProductsOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var model = new ProductModel { Id = 42 };
+            var productId = Guid.NewGuid();
+            var model = new ProductModel { Id = productId };
 
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [model]));
 
-            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}42"));
+            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}{productId}"));
         }
 
-        // ---------- DeleteCoreAsync (core delete logic) ----------
+        // ---------- DeleteCoreAsync ----------
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteSucceeds_ShowsInfo_AndRefreshesGrid()
         {
-            var product = new ProductModel { Id = 5 };
+            var product = new ProductModel { Id = Guid.NewGuid() };
 
             _productServiceMock
                 .Setup(s => s.DeleteAsync(product.Id, CancellationToken.None))
@@ -107,7 +108,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var cut = RenderWithMessageComponent();
 
             var method = typeof(ProductsOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.That(method, Is.Not.Null, "DeleteCoreAsync method not found via reflection.");
+            Assert.That(method, Is.Not.Null);
 
             await cut.InvokeAsync(async () =>
             {
@@ -115,26 +116,17 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageComponentMock.Verify(
-                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
-                Times.Once);
-
+            _messageComponentMock.Verify(m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
             _productServiceMock.Verify(s => s.DeleteAsync(product.Id, CancellationToken.None), Times.Once);
         }
 
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteFails_ShowsError()
         {
-            var product = new ProductModel { Id = 7 };
-            var response = new Common.Models.CommandResponse
-            {
-                Succeeded = false,
-                Message = "delete failed"
-            };
+            var product = new ProductModel { Id = Guid.NewGuid() };
+            var response = new Common.Models.CommandResponse { Succeeded = false, Message = "delete failed" };
 
-            _productServiceMock
-                .Setup(s => s.DeleteAsync(product.Id, CancellationToken.None))
-                .ReturnsAsync(response);
+            _productServiceMock.Setup(s => s.DeleteAsync(product.Id, CancellationToken.None)).ReturnsAsync(response);
 
             var cut = RenderWithMessageComponent();
 
@@ -154,11 +146,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenResponseIsNull_ShowsGenericError()
         {
-            var product = new ProductModel { Id = 9 };
+            var product = new ProductModel { Id = Guid.NewGuid() };
 
-            _productServiceMock
-                .Setup(s => s.DeleteAsync(product.Id, CancellationToken.None))
-                .ReturnsAsync((Common.Models.CommandResponse?)null);
+            _productServiceMock.Setup(s => s.DeleteAsync(product.Id, CancellationToken.None)).ReturnsAsync((Common.Models.CommandResponse?)null);
 
             var cut = RenderWithMessageComponent();
 
@@ -171,29 +161,15 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            _messageComponentMock.Verify(
-                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
-                Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- DataProviderAsync ----------
         [Test]
         public async Task DataProviderAsync_CallsService_SavesQuery_InSessionStorage_AndReturnsData()
         {
-            var items = new List<ProductModel>
-            {
-                new() { Id = 1 },
-                new() { Id = 2 },
-            };
-
-            var metadata = new Metadata
-            {
-                PageNumber = 1,
-                PageSize = 20,
-                TotalCount = 2
-            };
-
-            var paged = new PagedList<ProductModel>(items, metadata);
+            var items = new List<ProductModel> { new() { Id = Guid.NewGuid() }, new() { Id = Guid.NewGuid() } };
+            var paged = new PagedList<ProductModel>(items, new Metadata { PageNumber = 1, PageSize = 20, TotalCount = 2 });
 
             _productServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
@@ -204,11 +180,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(ProductsOverview).GetMethod("DataProviderAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var request = new GridDataProviderRequest<ProductModel>
-            {
-                PageNumber = 1,
-                PageSize = 20
-            };
+            var request = new GridDataProviderRequest<ProductModel> { PageNumber = 1, PageSize = 20 };
 
             var result = await cut.InvokeAsync(async () =>
             {
@@ -217,13 +189,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             _productServiceMock.Verify(
-                s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(q =>
-                    q.PageNumber == 1 && q.PageSize == 20), CancellationToken.None),
+                s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(q => q.PageNumber == 1 && q.PageSize == 20), CancellationToken.None),
                 Times.Exactly(2));
 
-            _sessionStorageMock.Verify(
-                s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
-                Times.Once);
+            _sessionStorageMock.Verify(s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
 
             using (Assert.EnterMultipleScope())
             {

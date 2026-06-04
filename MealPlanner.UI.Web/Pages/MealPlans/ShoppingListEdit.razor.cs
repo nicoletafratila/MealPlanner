@@ -248,7 +248,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 ProductId != "0" &&
                 UnitId != "0")
             {
-                var product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId));
+                var product = Products?.Items?.FirstOrDefault(i => i.Id == Guid.Parse(ProductId));
                 if (product is null)
                     return;
 
@@ -489,7 +489,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            var product = await ProductService.GetEditAsync(int.Parse(productId));
+            var product = await ProductService.GetEditAsync(Guid.Parse(productId));
             if (product == null || BaseUnits?.Items == null)
             {
                 StateHasChanged();

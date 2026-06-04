@@ -10,7 +10,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Product name. Defaults to empty string to avoid null checks.
@@ -57,7 +57,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public ProductModel(int id, string name)
+        public ProductModel(Guid id, string name)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

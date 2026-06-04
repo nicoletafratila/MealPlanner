@@ -20,21 +20,12 @@ namespace RecipeBook.Services.Http.Tests
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 
-        private static ProductService CreateService(
-            MockHttpMessageHandler mockHttp,
-            string token = "test-token")
+        private static ProductService CreateService(MockHttpMessageHandler mockHttp, string token = "test-token")
         {
-            var httpClient = new HttpClient(mockHttp)
-            {
-                BaseAddress = new Uri(BaseAddress)
-            };
-
+            var httpClient = new HttpClient(mockHttp) { BaseAddress = new Uri(BaseAddress) };
             var tokenProvider = new Mock<ITokenProvider>();
-            tokenProvider
-                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
-                .ReturnsAsync(token);
+            tokenProvider.Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>())).ReturnsAsync(token);
             var logger = Mock.Of<ILogger<ProductService>>();
-
             return new ProductService(httpClient, tokenProvider.Object, logger);
         }
 
@@ -42,31 +33,24 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public async Task GetEditAsync_ReturnsDeserializedModel_AndSendsAuthHeader()
         {
-            // Arrange
             const string token = "my-jwt-token";
-            var id = 42;
+            var id = Guid.NewGuid();
             var expected = new ProductEditModel { Id = id };
 
             var mockHttp = new MockHttpMessageHandler();
-
             mockHttp
                 .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/edit*")
                 .With(m =>
                 {
                     var auth = m.Headers.Authorization;
-                    return auth is not null
-                           && auth.Scheme == "Bearer"
-                           && auth.Parameter == token
+                    return auth is not null && auth.Scheme == "Bearer" && auth.Parameter == token
                            && m.RequestUri!.Query.Contains($"id={id}");
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expected, JsonOptions));
 
             var service = CreateService(mockHttp, token);
-
-            // Act
             var result = await service.GetEditAsync(id);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Id, Is.EqualTo(expected.Id));
             mockHttp.VerifyNoOutstandingExpectation();
@@ -77,33 +61,16 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public async Task SearchAsync_DeserializesPagedList_OnSuccess()
         {
-            // Arrange
-            var metadata = new Metadata
-            {
-                PageNumber = 1,
-                PageSize = 10,
-                TotalCount = 2
-            };
-
-            var paged = new PagedList<ProductModel>(
-                [
-                    new ProductModel(),
-                    new ProductModel()
-                ],
-                metadata);
+            var paged = new PagedList<ProductModel>([new ProductModel(), new ProductModel()],
+                new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 });
 
             var mockHttp = new MockHttpMessageHandler();
-
-            mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
 
             var service = CreateService(mockHttp);
-
-            // Act
             var result = await service.SearchAsync();
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -116,16 +83,9 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public void SearchAsync_Throws_OnNonSuccessStatusCode()
         {
-            // Arrange
             var mockHttp = new MockHttpMessageHandler();
-
-            mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
-                .Respond(HttpStatusCode.InternalServerError);
-
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*").Respond(HttpStatusCode.InternalServerError);
             var service = CreateService(mockHttp);
-
-            // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -134,28 +94,22 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()
         {
-            // Arrange
-            var model = new ProductEditModel { Id = 1 };
+            var model = new ProductEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
 
             var mockHttp = new MockHttpMessageHandler();
-
             mockHttp
                 .Expect(HttpMethod.Post, $"{BaseAddress}{ProductPath}")
                 .With(m =>
                 {
-                    var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ProductEditModel>(body, JsonOptions);
+                    var deserialized = JsonSerializer.Deserialize<ProductEditModel>(m.Content!.ReadAsStringAsync().Result, JsonOptions);
                     return deserialized is not null && deserialized.Id == model.Id;
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
 
             var service = CreateService(mockHttp);
-
-            // Act
             var result = await service.AddAsync(model);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
@@ -168,18 +122,10 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public void AddAsync_Throws_OnNonSuccessStatusCode()
         {
-            // Arrange
-            var model = new ProductEditModel { Id = 1 };
-
+            var model = new ProductEditModel { Id = Guid.NewGuid() };
             var mockHttp = new MockHttpMessageHandler();
-
-            mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ProductPath}")
-                .Respond(HttpStatusCode.BadRequest);
-
+            mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{ProductPath}").Respond(HttpStatusCode.BadRequest);
             var service = CreateService(mockHttp);
-
-            // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -188,28 +134,22 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public async Task UpdateAsync_PutsModel_AndReturnsCommandResponse()
         {
-            // Arrange
-            var model = new ProductEditModel { Id = 2 };
+            var model = new ProductEditModel { Id = Guid.NewGuid() };
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
-
             mockHttp
                 .Expect(HttpMethod.Put, $"{BaseAddress}{ProductPath}")
                 .With(m =>
                 {
-                    var body = m.Content!.ReadAsStringAsync().Result;
-                    var deserialized = JsonSerializer.Deserialize<ProductEditModel>(body, JsonOptions);
+                    var deserialized = JsonSerializer.Deserialize<ProductEditModel>(m.Content!.ReadAsStringAsync().Result, JsonOptions);
                     return deserialized is not null && deserialized.Id == model.Id;
                 })
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
 
             var service = CreateService(mockHttp);
-
-            // Act
             var result = await service.UpdateAsync(model);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
             mockHttp.VerifyNoOutstandingExpectation();
@@ -218,18 +158,10 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public void UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
-            // Arrange
-            var model = new ProductEditModel { Id = 2 };
-
+            var model = new ProductEditModel { Id = Guid.NewGuid() };
             var mockHttp = new MockHttpMessageHandler();
-
-            mockHttp
-                .Expect(HttpMethod.Put, $"{BaseAddress}{ProductPath}")
-                .Respond(HttpStatusCode.BadRequest);
-
+            mockHttp.Expect(HttpMethod.Put, $"{BaseAddress}{ProductPath}").Respond(HttpStatusCode.BadRequest);
             var service = CreateService(mockHttp);
-
-            // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -238,23 +170,18 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public async Task DeleteAsync_SendsDeleteWithId_AndReturnsCommandResponse()
         {
-            // Arrange
-            var id = 7;
+            var id = Guid.NewGuid();
             var expectedResponse = new CommandResponse { Succeeded = true };
 
             var mockHttp = new MockHttpMessageHandler();
-
             mockHttp
                 .Expect(HttpMethod.Delete, $"{BaseAddress}{ProductPath}*")
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
 
             var service = CreateService(mockHttp);
-
-            // Act
             var result = await service.DeleteAsync(id);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
             mockHttp.VerifyNoOutstandingExpectation();
@@ -263,19 +190,13 @@ namespace RecipeBook.Services.Http.Tests
         [Test]
         public void DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
-            // Arrange
-            var id = 7;
-
+            var id = Guid.NewGuid();
             var mockHttp = new MockHttpMessageHandler();
-
             mockHttp
                 .Expect(HttpMethod.Delete, $"{BaseAddress}{ProductPath}*")
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond(HttpStatusCode.NotFound);
-
             var service = CreateService(mockHttp);
-
-            // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
             mockHttp.VerifyNoOutstandingExpectation();
         }

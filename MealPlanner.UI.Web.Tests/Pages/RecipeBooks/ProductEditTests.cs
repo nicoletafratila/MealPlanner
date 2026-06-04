@@ -40,359 +40,210 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             return _ctx.Render<ProductEdit>(ps =>
             {
-                if (id is not null)
-                {
-                    ps.Add(p => p.Id, id);
-                }
-
+                if (id is not null) ps.Add(p => p.Id, id);
                 ps.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
             });
         }
 
+        private void SetupDefaultServices()
+        {
+            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+            _categoryServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
+        }
+
         // ---------- OnInitializedAsync ----------
         [Test]
-        public void OnInitializedAsync_WithNullOrZeroId_CreatesNewProduct()
+        public void OnInitializedAsync_WithNullOrEmptyId_CreatesNewProduct()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
+            SetupDefaultServices();
+            var cut = RenderComponent(id: Guid.Empty.ToString());
 
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
-
-            // Act
-            var cut = RenderComponent(id: "0");
-
-            // Assert
             Assert.That(cut.Instance.Product, Is.Not.Null);
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(cut.Instance.Product.Id, Is.Zero);
-                Assert.That(cut.Instance.Units, Is.SameAs(units));
-                Assert.That(cut.Instance.Categories, Is.SameAs(categories));
-            }
+            Assert.That(cut.Instance.Product.Id, Is.EqualTo(Guid.Empty));
 
-            _productServiceMock.Verify(
-                s => s.GetEditAsync(It.IsAny<int>(), CancellationToken.None),
-                Times.Never);
+            _productServiceMock.Verify(s => s.GetEditAsync(It.IsAny<Guid>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
         public void OnInitializedAsync_WithValidId_LoadsProduct()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
+            SetupDefaultServices();
+            var id = Guid.NewGuid();
+            var existing = new ProductEditModel { Id = id, Name = "Loaded Product" };
 
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            _productServiceMock.Setup(s => s.GetEditAsync(id, CancellationToken.None)).ReturnsAsync(existing);
 
-            var existing = new ProductEditModel
-            {
-                Id = 5,
-                Name = "Loaded Product"
-            };
-
-            _productServiceMock
-                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
-                .ReturnsAsync(existing);
-
-            // Act
-            var cut = RenderComponent(id: "5");
+            var cut = RenderComponent(id: id.ToString());
 
             using (Assert.EnterMultipleScope())
             {
-                // Assert
-                Assert.That(cut.Instance.Product.Id, Is.EqualTo(5));
+                Assert.That(cut.Instance.Product.Id, Is.EqualTo(id));
                 Assert.That(cut.Instance.Product.Name, Is.EqualTo("Loaded Product"));
             }
 
-            _productServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
+            _productServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
         }
 
         [Test]
         public void OnInitializedAsync_WithValidId_NullFromService_FallsBackToProductWithId()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
+            SetupDefaultServices();
+            var id = Guid.NewGuid();
 
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            _productServiceMock.Setup(s => s.GetEditAsync(id, CancellationToken.None)).ReturnsAsync((ProductEditModel?)null);
 
-            _productServiceMock
-                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
-                .ReturnsAsync((ProductEditModel?)null);
+            var cut = RenderComponent(id: id.ToString());
 
-            // Act
-            var cut = RenderComponent(id: "5");
-
-            // Assert
-            Assert.That(cut.Instance.Product.Id, Is.EqualTo(5));
-            _productServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
+            Assert.That(cut.Instance.Product.Id, Is.EqualTo(id));
+            _productServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
         }
 
         // ---------- SaveCoreAsync ----------
         [Test]
-        public async Task SaveCoreAsync_AddsProduct_WhenIdIsZero()
+        public async Task SaveCoreAsync_AddsProduct_WhenIdIsEmpty()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
-
+            SetupDefaultServices();
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
+            _productServiceMock.Setup(s => s.AddAsync(It.IsAny<ProductEditModel>(), CancellationToken.None)).ReturnsAsync(response);
 
-            _productServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<ProductEditModel>(), CancellationToken.None))
-                .ReturnsAsync(response);
-
-            var cut = RenderComponent(id: "0");
-
-            var product = new ProductEditModel { Id = 0, Name = "New Product" };
+            var cut = RenderComponent(id: Guid.Empty.ToString());
+            var product = new ProductEditModel { Id = Guid.Empty, Name = "New Product" };
 
             var method = typeof(ProductEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _productServiceMock.Verify(
-                s => s.AddAsync(It.Is<ProductEditModel>(p => p.Name == "New Product"), CancellationToken.None),
-                Times.Once);
-
-            _messageComponentMock.Verify(
-                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
-                Times.Once);
+            _productServiceMock.Verify(s => s.AddAsync(It.Is<ProductEditModel>(p => p.Name == "New Product"), CancellationToken.None), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
             Assert.That(nav.Uri, Does.EndWith("recipebooks/productsoverview"));
         }
 
         [Test]
-        public async Task SaveCoreAsync_UpdatesProduct_WhenIdIsNonZero()
+        public async Task SaveCoreAsync_UpdatesProduct_WhenIdIsNonEmpty()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
-
+            SetupDefaultServices();
+            var id = Guid.NewGuid();
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
+            var existing = new ProductEditModel { Id = id, Name = "Loaded Product" };
 
-            var existing = new ProductEditModel
-            {
-                Id = 5,
-                Name = "Loaded Product"
-            };
+            _productServiceMock.Setup(s => s.GetEditAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _productServiceMock.Setup(s => s.UpdateAsync(It.IsAny<ProductEditModel>(), CancellationToken.None)).ReturnsAsync(response);
 
-            _productServiceMock
-                .Setup(s => s.GetEditAsync(5, CancellationToken.None))
-                .ReturnsAsync(existing);
-
-            _productServiceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<ProductEditModel>(), CancellationToken.None))
-                .ReturnsAsync(response);
-
-            var cut = RenderComponent(id: "5");
-
-            var product = new ProductEditModel { Id = 5, Name = "Updated Product" };
+            var cut = RenderComponent(id: id.ToString());
+            var product = new ProductEditModel { Id = id, Name = "Updated Product" };
 
             var method = typeof(ProductEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _productServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
-            _productServiceMock.Verify(
-                s => s.UpdateAsync(It.Is<ProductEditModel>(p => p.Id == 5), CancellationToken.None),
-                Times.Once);
-
-            _messageComponentMock.Verify(
-                m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
-                Times.Once);
+            _productServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
+            _productServiceMock.Verify(s => s.UpdateAsync(It.Is<ProductEditModel>(p => p.Id == id), CancellationToken.None), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
         }
 
         [Test]
         public async Task SaveCoreAsync_ShowsGenericError_WhenResponseIsNull()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            SetupDefaultServices();
+            _productServiceMock.Setup(s => s.AddAsync(It.IsAny<ProductEditModel>(), CancellationToken.None)).ReturnsAsync((CommandResponse?)null);
 
-            _productServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<ProductEditModel>(), CancellationToken.None))
-                .ReturnsAsync((CommandResponse?)null);
-
-            var cut = RenderComponent(id: "0");
-
-            var product = new ProductEditModel { Id = 0, Name = "New Product" };
+            var cut = RenderComponent(id: Guid.Empty.ToString());
+            var product = new ProductEditModel { Id = Guid.Empty, Name = "New Product" };
 
             var method = typeof(ProductEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _messageComponentMock.Verify(
-                m => m.ShowErrorAsync("Save failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
-                Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("Save failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         [Test]
         public async Task SaveCoreAsync_ShowsResponseMessage_WhenFailed()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            SetupDefaultServices();
+            var response = new CommandResponse { Succeeded = false, Message = "Validation error" };
+            _productServiceMock.Setup(s => s.AddAsync(It.IsAny<ProductEditModel>(), CancellationToken.None)).ReturnsAsync(response);
 
-            var response = new CommandResponse
-            {
-                Succeeded = false,
-                Message = "Validation error"
-            };
-
-            _productServiceMock
-                .Setup(s => s.AddAsync(It.IsAny<ProductEditModel>(), CancellationToken.None))
-                .ReturnsAsync(response);
-
-            var cut = RenderComponent(id: "0");
-
-            var product = new ProductEditModel { Id = 0, Name = "New Product" };
+            var cut = RenderComponent(id: Guid.Empty.ToString());
+            var product = new ProductEditModel { Id = Guid.Empty, Name = "New Product" };
 
             var method = typeof(ProductEdit).GetMethod("SaveCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _messageComponentMock.Verify(
-                m => m.ShowErrorAsync("Validation error", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
-                Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("Validation error", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- DeleteAsync / DeleteCoreAsync ----------
         [Test]
-        public async Task DeleteAsync_DoesNothing_WhenProductIdIsZero()
+        public async Task DeleteAsync_DoesNothing_WhenProductIdIsEmpty()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
-
-            var cut = RenderComponent(id: "0");
-            cut.Instance.Product = new ProductEditModel { Id = 0 };
+            SetupDefaultServices();
+            var cut = RenderComponent(id: Guid.Empty.ToString());
+            cut.Instance.Product = new ProductEditModel { Id = Guid.Empty };
 
             var method = typeof(ProductEdit).GetMethod("DeleteAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [])!;
                 await task;
             });
 
-            // Assert
-            _productServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
-                Times.Never);
+            _productServiceMock.Verify(s => s.DeleteAsync(It.IsAny<Guid>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
         public async Task DeleteCoreAsync_Deletes_WhenResponseSucceeded()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            SetupDefaultServices();
+            var id = Guid.NewGuid();
+            var response = new CommandResponse { Succeeded = true, Message = "ok" };
+            var existing = new ProductEditModel { Id = id, Name = "Loaded Product" };
 
-            var response = new CommandResponse
-            {
-                Succeeded = true,
-                Message = "ok"
-            };
+            _productServiceMock.Setup(s => s.GetEditAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _productServiceMock.Setup(s => s.DeleteAsync(id, CancellationToken.None)).ReturnsAsync(response);
 
-            var existing = new ProductEditModel
-            {
-                Id = 5,
-                Name = "Loaded Product"
-            };
-
-            _productServiceMock
-               .Setup(s => s.GetEditAsync(5, CancellationToken.None))
-               .ReturnsAsync(existing);
-
-            _productServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
-                .ReturnsAsync(response);
-
-            var cut = RenderComponent(id: "5");
-
-            var product = new ProductEditModel { Id = 5, Name = "ToDelete" };
+            var cut = RenderComponent(id: id.ToString());
+            var product = new ProductEditModel { Id = id, Name = "ToDelete" };
 
             var method = typeof(ProductEdit).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _productServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
-            _productServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
-            _messageComponentMock.Verify(
-                m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
-                Times.Once);
+            _productServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
+            _productServiceMock.Verify(s => s.DeleteAsync(id, CancellationToken.None), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
 
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
             Assert.That(nav.Uri, Does.EndWith("recipebooks/productsoverview"));
@@ -401,123 +252,69 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_ShowsGenericError_WhenResponseNull()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            SetupDefaultServices();
+            var id = Guid.NewGuid();
+            var existing = new ProductEditModel { Id = id, Name = "Loaded Product" };
 
-            var existing = new ProductEditModel
-            {
-                Id = 5,
-                Name = "Loaded Product"
-            };
+            _productServiceMock.Setup(s => s.GetEditAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _productServiceMock.Setup(s => s.DeleteAsync(id, CancellationToken.None)).ReturnsAsync((CommandResponse?)null);
 
-            _productServiceMock
-               .Setup(s => s.GetEditAsync(5, CancellationToken.None))
-               .ReturnsAsync(existing);
-
-            _productServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
-                .ReturnsAsync((CommandResponse?)null);
-
-            var cut = RenderComponent(id: "5");
-
-            var product = new ProductEditModel { Id = 5 };
+            var cut = RenderComponent(id: id.ToString());
+            var product = new ProductEditModel { Id = id };
 
             var method = typeof(ProductEdit).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _productServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
-            _messageComponentMock.Verify(
-                m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
-                Times.Once);
+            _productServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("Delete failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         [Test]
         public async Task DeleteCoreAsync_ShowsResponseMessage_WhenFailed()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            SetupDefaultServices();
+            var id = Guid.NewGuid();
+            var response = new CommandResponse { Succeeded = false, Message = "Delete failed because of dependency" };
+            var existing = new ProductEditModel { Id = id, Name = "Loaded Product" };
 
-            var response = new CommandResponse
-            {
-                Succeeded = false,
-                Message = "Delete failed because of dependency"
-            };
+            _productServiceMock.Setup(s => s.GetEditAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _productServiceMock.Setup(s => s.DeleteAsync(id, CancellationToken.None)).ReturnsAsync(response);
 
-            var existing = new ProductEditModel
-            {
-                Id = 5,
-                Name = "Loaded Product"
-            };
-
-            _productServiceMock
-               .Setup(s => s.GetEditAsync(5, CancellationToken.None))
-               .ReturnsAsync(existing);
-
-            _productServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
-                .ReturnsAsync(response);
-
-            var cut = RenderComponent(id: "5");
-
-            var product = new ProductEditModel { Id = 5 };
+            var cut = RenderComponent(id: id.ToString());
+            var product = new ProductEditModel { Id = id };
 
             var method = typeof(ProductEdit).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [product])!;
                 await task;
             });
 
-            // Assert
-            _productServiceMock.Verify(s => s.GetEditAsync(5, CancellationToken.None), Times.Once);
-            _messageComponentMock.Verify(
-                m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
-                Times.Once);
+            _productServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
+            _messageComponentMock.Verify(m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None), Times.Once);
         }
 
         // ---------- NavigateToOverview ----------
         [Test]
         public void NavigateToOverview_NavigatesToOverviewUrl()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
-
-            var cut = RenderComponent(id: "0");
+            SetupDefaultServices();
+            var cut = RenderComponent(id: Guid.Empty.ToString());
             var nav = _ctx.Services.GetRequiredService<NavigationManager>();
 
             var method = typeof(ProductEdit).GetMethod("NavigateToOverview", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, []));
 
-            // Assert
             Assert.That(nav.Uri, Does.EndWith("recipebooks/productsoverview"));
         }
 
@@ -525,16 +322,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task OnInputFileChangeAsync_SetsImageContent_WhenWithinLimit()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
-
-            var cut = RenderComponent("0");
-            cut.Instance.Product = new ProductEditModel { Id = 1 };
+            SetupDefaultServices();
+            var cut = RenderComponent(Guid.Empty.ToString());
+            cut.Instance.Product = new ProductEditModel { Id = Guid.NewGuid() };
 
             var bytes = new byte[] { 1, 2, 3, 4 };
             var file = new FakeBrowserFile(bytes, "img.png", "image/png");
@@ -543,14 +333,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(ProductEdit).GetMethod("OnInputFileChangeAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 Task task = (Task)method!.Invoke(cut.Instance, [args])!;
                 await task;
             });
 
-            // Assert
             Assert.That(cut.Instance.Product.ImageContent, Is.Not.Null);
             Assert.That(cut.Instance.Product.ImageContent!.SequenceEqual(bytes), Is.True);
         }
@@ -558,32 +346,23 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task OnInputFileChangeAsync_ShowsError_WhenFileTooLargeOrError()
         {
-            // Arrange
-            var units = new PagedList<UnitModel>([], new Metadata());
-            var categories = new PagedList<ProductCategoryModel>([], new Metadata());
-            _unitServiceMock.Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None)).ReturnsAsync(units);
-            _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(categories);
+            SetupDefaultServices();
+            var cut = RenderComponent(Guid.Empty.ToString());
+            cut.Instance.Product = new ProductEditModel { Id = Guid.NewGuid() };
 
-            var cut = RenderComponent("0");
-            cut.Instance.Product = new ProductEditModel { Id = 1 };
-
-            var bigBytes = new byte[1024 * 1024 * 5]; // 5 MB
+            var bigBytes = new byte[1024 * 1024 * 5];
             var file = new FakeBrowserFile(bigBytes, "big.bin", "application/octet-stream", throwOnOpen: true);
             var args = new InputFileChangeEventArgs([file]);
 
             var method = typeof(ProductEdit).GetMethod("OnInputFileChangeAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act
             await cut.InvokeAsync(async () =>
             {
                 var task = (Task)method!.Invoke(cut.Instance, [args])!;
                 await task;
             });
 
-            // Assert
             _messageComponentMock.Verify(
                 m => m.ShowErrorAsync(It.Is<string>(msg => msg.Contains("Maximum allowed size")), It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);

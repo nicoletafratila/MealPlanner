@@ -75,7 +75,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task GetShoppingListProductsAsync_SendsQuery_WithToken()
         {
-            var items = new[] { new ShoppingListProductEditModel { Product = new ProductModel() { Id = 1 } } };
+            var items = new[] { new ShoppingListProductEditModel { Product = new ProductModel() { Id = Guid.NewGuid() } } };
             _controller.HttpContext.Request.Headers.Authorization = "Bearer token123";
 
             var shopId = Guid.NewGuid();

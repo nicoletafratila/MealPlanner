@@ -1,4 +1,4 @@
-﻿using FluentValidation.TestHelper;
+using FluentValidation.TestHelper;
 using RecipeBook.Api.Features.Product.Queries.GetEdit;
 
 namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
@@ -15,41 +15,16 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
         }
 
         [Test]
-        public void Id_Zero_HasValidationError()
+        public void Id_Empty_HasValidationError()
         {
-            // Arrange
-            var query = new GetEditQuery { Id = 0 };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
+            var result = _validator.TestValidate(new GetEditQuery { Id = Guid.Empty });
             result.ShouldHaveValidationErrorFor(x => x.Id);
         }
 
         [Test]
-        public void Id_Negative_HasValidationError()
+        public void Id_NotEmpty_HasNoValidationError()
         {
-            // Arrange
-            var query = new GetEditQuery { Id = -1 };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Id);
-        }
-
-        [Test]
-        public void Id_GreaterThanZero_HasNoValidationError()
-        {
-            // Arrange
-            var query = new GetEditQuery { Id = 5 };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
+            var result = _validator.TestValidate(new GetEditQuery { Id = Guid.NewGuid() });
             result.ShouldNotHaveValidationErrorFor(x => x.Id);
         }
     }

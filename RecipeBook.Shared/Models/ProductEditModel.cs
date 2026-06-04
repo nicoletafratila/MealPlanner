@@ -10,8 +10,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity (0 for new products).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Product name (required, max 100 characters).
@@ -47,7 +46,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public ProductEditModel(int id, string name, Guid baseUnitId, Guid productCategoryId)
+        public ProductEditModel(Guid id, string name, Guid baseUnitId, Guid productCategoryId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

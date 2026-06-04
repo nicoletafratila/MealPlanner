@@ -78,15 +78,15 @@ namespace RecipeBook.Data.Profiles.Tests.Resolvers
                 [
                     new RecipeIngredient
                     {
-                        Product = new Product { Id = 10, Name = "Zeta", ProductCategory = catB }
+                        Product = new Product { Id = Guid.NewGuid(), Name = "Zeta", ProductCategory = catB }
                     },
                     new RecipeIngredient
                     {
-                        Product = new Product { Id = 11, Name = "Alpha", ProductCategory = catB }
+                        Product = new Product { Id = Guid.NewGuid(), Name = "Alpha", ProductCategory = catB }
                     },
                     new RecipeIngredient
                     {
-                        Product = new Product { Id = 12, Name = "Beta", ProductCategory = catA }
+                        Product = new Product { Id = Guid.NewGuid(), Name = "Beta", ProductCategory = catA }
                     },
                     new RecipeIngredient
                     {

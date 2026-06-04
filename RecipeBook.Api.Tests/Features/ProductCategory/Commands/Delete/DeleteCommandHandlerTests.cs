@@ -92,8 +92,8 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
 
             var products = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "Milk", ProductCategoryId = id },
-                new() { Id = 2, Name = "Bread", ProductCategoryId = Guid.NewGuid() }
+                new() { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = id },
+                new() { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = Guid.NewGuid() }
             };
 
             _categoryRepoMock
@@ -131,7 +131,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
 
             var products = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "Milk", ProductCategoryId = Guid.NewGuid() }
+                new() { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = Guid.NewGuid() }
             };
 
             _categoryRepoMock

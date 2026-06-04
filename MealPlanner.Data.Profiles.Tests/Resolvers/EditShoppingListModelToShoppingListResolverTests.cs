@@ -67,6 +67,8 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         [Test]
         public void Map_MapsAllProducts()
         {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
             var model = new ShoppingListEditModel
             {
                 Id = Guid.NewGuid(),
@@ -75,13 +77,13 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
                 [
                     new ShoppingListProductEditModel
                     {
-                        Product = new ProductModel { Id = 10 },
+                        Product = new ProductModel { Id = id1 },
                         Quantity = 2,
                         IsSelected = false
                     },
                     new ShoppingListProductEditModel
                     {
-                        Product = new ProductModel{ Id = 20 },
+                        Product = new ProductModel{ Id = id2 },
                         Quantity = 5,
                         IsSelected = true
                     }
@@ -94,11 +96,11 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
             {
                 Assert.That(result.Products!, Has.Count.EqualTo(2));
 
-                Assert.That(result.Products![0].ProductId, Is.EqualTo(10));
+                Assert.That(result.Products![0].ProductId, Is.EqualTo(id1));
                 Assert.That(result.Products[0].Quantity, Is.EqualTo(2));
                 Assert.That(result.Products[0].Collected, Is.False);
 
-                Assert.That(result.Products[1].ProductId, Is.EqualTo(20));
+                Assert.That(result.Products[1].ProductId, Is.EqualTo(id2));
                 Assert.That(result.Products[1].Quantity, Is.EqualTo(5));
                 Assert.That(result.Products[1].Collected, Is.False);
             }

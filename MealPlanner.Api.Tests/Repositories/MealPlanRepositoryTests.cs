@@ -77,6 +77,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
         // Maps the int seed used throughout these tests to a deterministic Unit Guid.
         private static Guid UnitGuid(int seed) => new(seed * 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid ProductGuid(int seed) => new(seed * 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         private static (MealPlan plan, Recipe recipe, Product product) CreateMealPlanGraph(
             Guid mealPlanId,
@@ -119,7 +120,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
             var product = new Product
             {
-                Id = productCategoryId * 10,
+                Id = ProductGuid(productCategoryId),
                 Name = "Flour",
                 ProductCategoryId = productCategory.Id,
                 ProductCategory = productCategory,

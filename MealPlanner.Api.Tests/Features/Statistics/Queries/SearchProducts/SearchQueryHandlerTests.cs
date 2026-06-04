@@ -129,9 +129,9 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                 .ReturnsAsync(categories);
 
             // Two mealplans with products in Dairy and one in Bakery
-            var p1 = new RecipeBook.Data.Entities.Product { Id = 1, Name = "Milk", ProductCategoryId = dairyId };
-            var p2 = new RecipeBook.Data.Entities.Product { Id = 2, Name = "Cheese", ProductCategoryId = dairyId };
-            var p3 = new RecipeBook.Data.Entities.Product { Id = 3, Name = "Bread", ProductCategoryId = bakeryId };
+            var p1 = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = dairyId };
+            var p2 = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Cheese", ProductCategoryId = dairyId };
+            var p3 = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = bakeryId };
 
             var mp1 = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan1" };
             var mp2 = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan2" };

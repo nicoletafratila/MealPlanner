@@ -38,6 +38,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
         private static Guid RecipeCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         private static Guid UnitGuid(int seed) => new(seed * 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid ProductGuid(int seed) => new(seed * 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         private static Recipe CreateRecipeGraph(
             int id,
@@ -229,14 +230,14 @@ namespace RecipeBook.Api.Tests.Repositories
             ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
             ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
             ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
-            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = UnitGuid(1), Quantity = 1m });
+            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m});
             await ctx.SaveChangesAsync();
 
             var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
             entity!.RecipeIngredients =
             [
-                new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = UnitGuid(1), Quantity = 1m },
-                new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = UnitGuid(1), Quantity = 2m }
+                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m },
+                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(200), UnitId = UnitGuid(1), Quantity = 2m }
             ];
 
             // Act
@@ -245,7 +246,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Assert
             var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == 1).ToList();
             Assert.That(rows, Has.Count.EqualTo(2));
-            Assert.That(rows.Select(ri => ri.ProductId), Is.EquivalentTo(new[] { 100, 200 }));
+            Assert.That(rows.Select(ri => ri.ProductId), Is.EquivalentTo(new[] { ProductGuid(100), ProductGuid(200) }));
         }
 
         [Test]
@@ -257,12 +258,12 @@ namespace RecipeBook.Api.Tests.Repositories
             ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
             ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = UnitGuid(1), Quantity = 1m },
-                new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = UnitGuid(1), Quantity = 2m });
+                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m },
+                new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(200), UnitId = UnitGuid(1), Quantity = 2m });
             await ctx.SaveChangesAsync();
 
             var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
-            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = UnitGuid(1), Quantity = 1m }];
+            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m}];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
@@ -270,7 +271,7 @@ namespace RecipeBook.Api.Tests.Repositories
             // Assert
             var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == 1).ToList();
             Assert.That(rows, Has.Count.EqualTo(1));
-            Assert.That(rows.Single().ProductId, Is.EqualTo(100));
+            Assert.That(rows.Single().ProductId, Is.EqualTo(ProductGuid(100)));
         }
 
         [Test]
@@ -283,17 +284,17 @@ namespace RecipeBook.Api.Tests.Repositories
                 new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 },
                 new Unit { Id = UnitGuid(2), Name = "g", UnitType = 0 });
             ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
-            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = UnitGuid(1), Quantity = 1m });
+            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m});
             await ctx.SaveChangesAsync();
 
             var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
-            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = UnitGuid(2), Quantity = 500m }];
+            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = ProductGuid(100), UnitId = UnitGuid(2), Quantity = 500m}];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var row = ctx.RecipeIngredients.Single(ri => ri.RecipeId == 1 && ri.ProductId == 100);
+            var row = ctx.RecipeIngredients.Single(ri => ri.RecipeId == 1 && ri.ProductId == ProductGuid(100));
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(row.Quantity, Is.EqualTo(500m));

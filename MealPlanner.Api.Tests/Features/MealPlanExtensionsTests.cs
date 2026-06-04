@@ -40,7 +40,7 @@ namespace MealPlanner.Api.Tests.Features
             var category = new RecipeBook.Data.Entities.ProductCategory { Id = Guid.NewGuid() };
             var product = new RecipeBook.Data.Entities.Product
             {
-                Id = 10, Name = "Flour",
+                Id = Guid.NewGuid(), Name = "Flour",
                 BaseUnit = baseUnit, BaseUnitId = baseUnit.Id,
                 ProductCategory = category, ProductCategoryId = category.Id
             };

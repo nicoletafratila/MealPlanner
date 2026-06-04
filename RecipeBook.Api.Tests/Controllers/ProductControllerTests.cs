@@ -1,4 +1,4 @@
-﻿using Common.Models;
+using Common.Models;
 using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,13 +29,14 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task GetEditAsync_SendsGetEditQuery()
         {
-            var model = new ProductEditModel { Id = 5, Name = "P1" };
+            var id = Guid.NewGuid();
+            var model = new ProductEditModel { Id = id, Name = "P1" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(model);
 
-            var result = await _controller.GetEditAsync(5, CancellationToken.None);
+            var result = await _controller.GetEditAsync(id, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -70,12 +71,7 @@ namespace RecipeBook.Api.Tests.Controllers
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(ok!.Value, Is.SameAs(paged));
-
                 Assert.That(captured, Is.Not.Null);
-            }
-
-            using (Assert.EnterMultipleScope())
-            {
                 Assert.That(captured!.QueryParameters!.PageSize, Is.EqualTo(10));
                 Assert.That(captured!.QueryParameters!.PageNumber, Is.EqualTo(2));
             }
@@ -86,7 +82,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task PostAsync_SendsAddCommand()
         {
-            var model = new ProductEditModel { Id = 0, Name = "NewP" };
+            var model = new ProductEditModel { Id = Guid.Empty, Name = "NewP" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -105,7 +101,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task PutAsync_SendsUpdateCommand()
         {
-            var model = new ProductEditModel { Id = 2, Name = "Updated" };
+            var model = new ProductEditModel { Id = Guid.NewGuid(), Name = "Updated" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -124,13 +120,14 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task DeleteAsync_SendsDeleteCommand()
         {
+            var id = Guid.NewGuid();
             var response = CommandResponse.Success();
 
             _senderMock
-                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == 9), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.DeleteAsync(9, CancellationToken.None);
+            var result = await _controller.DeleteAsync(id, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);

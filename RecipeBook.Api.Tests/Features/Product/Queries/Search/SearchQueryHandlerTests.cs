@@ -31,22 +31,19 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         [Test]
         public void Ctor_NullRepository_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
+            Assert.Throws<ArgumentNullException>(() => _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
+            Assert.Throws<ArgumentNullException>(() => _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullCurrentUserService_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-                _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
+            Assert.Throws<ArgumentNullException>(() => _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
         [Test]
@@ -66,11 +63,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         [Test]
         public async Task Handle_NullQueryParameters_ReturnsEmptyPagedList()
         {
-            var query = new SearchQuery
-            {
-                CategoryId = null,
-                QueryParameters = null
-            };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = null };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -86,46 +79,32 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         [Test]
         public async Task Handle_NoFiltersSortingOrCategory_MapsAndPaginatesAllResults()
         {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
             var entities = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = 2, Name = "P2", ProductCategoryId = Guid.NewGuid() }
+                new() { Id = id1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = id2, Name = "P2", ProductCategoryId = Guid.NewGuid() }
             };
 
             var models = new List<ProductModel>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = "10" },
-                new() { Id = 2, Name = "P2", ProductCategoryId = "20" }
+                new() { Id = id1, Name = "P1", ProductCategoryId = "cat1" },
+                new() { Id = id2, Name = "P2", ProductCategoryId = "cat2" }
             };
 
-            _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ProductModel>>(entities))
-                .Returns(models);
-
-            var qp = new QueryParameters<ProductModel>
-            {
-                Filters = null,
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                CategoryId = null,
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.That(result.Items, Has.Count.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 2]));
+                Assert.That(result.Items.Select(x => x.Name), Is.EquivalentTo(["P1", "P2"]));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
@@ -136,46 +115,33 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         [Test]
         public async Task Handle_CategoryFilter_AppliesFilter()
         {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var id3 = Guid.NewGuid();
             var entities = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = 2, Name = "P2", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = 3, Name = "P3", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = id1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = id2, Name = "P2", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = id3, Name = "P3", ProductCategoryId = Guid.NewGuid() },
             };
 
             var models = new List<ProductModel>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = "10" },
-                new() { Id = 2, Name = "P2", ProductCategoryId = "20" },
-                new() { Id = 3, Name = "P3", ProductCategoryId = "10" },
+                new() { Id = id1, Name = "P1", ProductCategoryId = "10" },
+                new() { Id = id2, Name = "P2", ProductCategoryId = "20" },
+                new() { Id = id3, Name = "P3", ProductCategoryId = "10" },
             };
 
-            _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ProductModel>>(entities))
-                .Returns(models);
-
-            var qp = new QueryParameters<ProductModel>
-            {
-                Filters = null,
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                CategoryId = "10",
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = "10", QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.That(result.Items, Has.Count.EqualTo(2));
-            Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 3]));
+            Assert.That(result.Items.Select(x => x.Name), Is.EquivalentTo(["P1", "P3"]));
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductModel>>(entities), Times.Once);
@@ -186,30 +152,14 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "P1", ProductCategoryId = Guid.NewGuid() }
+                new() { Id = Guid.NewGuid(), Name = "P1", ProductCategoryId = Guid.NewGuid() }
             };
 
-            _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>?>(entities)).Returns((IList<ProductModel>?)null);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ProductModel>?>(entities))
-                .Returns((IList<ProductModel>?)null);
-
-            var qp = new QueryParameters<ProductModel>
-            {
-                Filters = null,
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                CategoryId = null,
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
