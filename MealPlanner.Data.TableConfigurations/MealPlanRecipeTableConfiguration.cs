@@ -9,7 +9,9 @@ namespace MealPlanner.Data.TableConfigurations
     {
         public void Configure(EntityTypeBuilder<MealPlanRecipe> builder)
         {
-            builder.HasKey(x => new { x.MealPlanId, x.RecipeId });
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.HasIndex(x => x.MealPlanId);
             builder.HasIndex(x => x.RecipeId);
         }
     }

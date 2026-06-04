@@ -53,6 +53,8 @@
     <Compile Include="Migrations\20260604085608_ProductIdToGuid.Designer.cs" />
     <Compile Include="Migrations\20260604101320_UpdateRecipeIdToGuid.cs" />
     <Compile Include="Migrations\20260604101320_UpdateRecipeIdToGuid.Designer.cs" />
+    <Compile Include="Migrations\20260604121125_MealPlanRecipe_AddId.cs" />
+    <Compile Include="Migrations\20260604121125_MealPlanRecipe_AddId.Designer.cs" />
     <Compile Include="Migrations\20260604143856_LogIdToGuid.cs" />
     <Compile Include="Migrations\20260604143856_LogIdToGuid.Designer.cs" />
     <Compile Include="Migrations\MealPlannerDbContextModelSnapshot.cs" />

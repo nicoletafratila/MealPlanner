@@ -5,6 +5,8 @@ namespace MealPlanner.Data.Entities
 {
     public class MealPlanRecipe
     {
+        public Guid Id { get; set; }
+
         [ForeignKey(nameof(MealPlanId))]
         public MealPlan? MealPlan { get; set; }
         public Guid MealPlanId { get; set; }
@@ -14,6 +16,6 @@ namespace MealPlanner.Data.Entities
         public Guid RecipeId { get; set; }
 
         public override string ToString() =>
-            $"MealPlanId={MealPlanId}, RecipeId={RecipeId}";
+            $"Id={Id}, MealPlanId={MealPlanId}, RecipeId={RecipeId}";
     }
 }

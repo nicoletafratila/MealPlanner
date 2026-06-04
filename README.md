@@ -16,7 +16,7 @@ PM> Script-migration
 
 
 
-allow same recipe multiple times on the menu
+
 when delete a pratent, recipe, meal plan, do i delete the relation to the children also?
 
 

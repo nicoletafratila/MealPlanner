@@ -25,6 +25,7 @@ namespace MealPlanner.Data.Profiles.Resolvers
             return sourceValue
                 .Select(r => new MealPlanRecipe
                 {
+                    Id = Guid.NewGuid(),
                     RecipeId = r.Id,
                     MealPlanId = source.Id
                 })
