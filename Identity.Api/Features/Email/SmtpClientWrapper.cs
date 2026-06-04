@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Identity.Api.Features.Email
 {
-    public sealed class SmtpClientWrapper(string host, int port) : ISmtpClient
+    public class SmtpClientWrapper(string host, int port) : ISmtpClient
     {
         private readonly SmtpClient _client = new(host, port);
 

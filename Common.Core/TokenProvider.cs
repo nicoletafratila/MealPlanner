@@ -3,7 +3,7 @@ using Common.Http;
 
 namespace Common.Core
 {
-    public sealed class TokenProvider(ISessionStorageService sessionStorage) : ITokenProvider
+    public class TokenProvider(ISessionStorageService sessionStorage) : ITokenProvider
     {
         private readonly ISessionStorageService _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
 

@@ -3,7 +3,7 @@ using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Data.Entities
 {
-    public sealed class ShopDisplaySequence
+    public class ShopDisplaySequence
     {
         public int Value { get; set; }
 

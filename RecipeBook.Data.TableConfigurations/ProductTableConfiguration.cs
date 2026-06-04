@@ -4,7 +4,7 @@ using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Data.TableConfigurations
 {
-    public sealed class ProductTableConfiguration
+    public class ProductTableConfiguration
         : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)

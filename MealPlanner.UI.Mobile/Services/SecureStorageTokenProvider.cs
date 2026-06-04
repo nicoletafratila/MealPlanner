@@ -2,7 +2,7 @@ using Common.Http;
 
 namespace MealPlanner.UI.Mobile.Services
 {
-    public sealed class SecureStorageTokenProvider : ITokenProvider
+    public class SecureStorageTokenProvider : ITokenProvider
     {
         private const string TokenKey = "authToken";
 

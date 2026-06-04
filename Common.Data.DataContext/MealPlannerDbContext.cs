@@ -7,7 +7,7 @@ using RecipeBook.Data.Entities;
 
 namespace Common.Data.DataContext
 {
-    public sealed class MealPlannerDbContext(
+    public class MealPlannerDbContext(
         DbContextOptions<MealPlannerDbContext> options,
         TableConfigurationAssemblies? tableConfigurationAssemblies = null)
                 : IdentityDbContext<ApplicationUser>(options)

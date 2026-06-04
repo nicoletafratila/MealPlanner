@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecipeBook.Data.Entities
 {
-    public sealed class Product : Common.Data.Entities.Entity<int>
+    public class Product : Common.Data.Entities.Entity<int>
     {
         public string? UserId { get; set; }
 

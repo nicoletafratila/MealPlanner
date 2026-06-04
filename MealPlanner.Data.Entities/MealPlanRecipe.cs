@@ -3,7 +3,7 @@ using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Data.Entities
 {
-    public sealed class MealPlanRecipe
+    public class MealPlanRecipe
     {
         [ForeignKey(nameof(MealPlanId))]
         public MealPlan? MealPlan { get; set; }

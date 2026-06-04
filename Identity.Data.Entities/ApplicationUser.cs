@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Data.Entities
 {
-    public sealed class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [Display(Name = nameof(FirstName))]
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessageResourceName = nameof(Resources.EntityMessages.FirstNameAlphaOnly), ErrorMessageResourceType = typeof(Resources.EntityMessages))]

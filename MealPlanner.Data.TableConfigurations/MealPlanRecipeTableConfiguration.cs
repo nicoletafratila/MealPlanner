@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Data.TableConfigurations
 {
-    public sealed class MealPlanRecipeTableConfiguration
+    public class MealPlanRecipeTableConfiguration
         : IEntityTypeConfiguration<MealPlanRecipe>
     {
         public void Configure(EntityTypeBuilder<MealPlanRecipe> builder)
