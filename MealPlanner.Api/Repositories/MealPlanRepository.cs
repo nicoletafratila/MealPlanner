@@ -48,9 +48,10 @@ namespace MealPlanner.Api.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            await Context.MealPlanRecipes
+            var existing = await Context.MealPlanRecipes
                 .Where(mpr => mpr.MealPlanId == entity.Id)
-                .ExecuteDeleteAsync(cancellationToken);
+                .ToListAsync(cancellationToken);
+            Context.MealPlanRecipes.RemoveRange(existing);
 
             var newRecipes = entity.MealPlanRecipes?
                 .Select(mpr => new MealPlanRecipe { RecipeId = mpr.RecipeId, MealPlanId = entity.Id })

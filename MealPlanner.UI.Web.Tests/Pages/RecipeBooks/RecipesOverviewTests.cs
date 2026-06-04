@@ -422,7 +422,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         }
 
         [Test]
-        public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AndRecipeAlreadyAdded_DoesNotUpdate()
+        public async Task AddToMealPlanAsync_WhenCurrentPlanExists_AndRecipeAlreadyAdded_AddsAgainAndUpdates()
         {
             // Arrange
             var planId = Guid.NewGuid();
@@ -441,19 +441,22 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _mealPlanServiceMock
                 .Setup(s => s.GetEditAsync(planId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
+            _mealPlanServiceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithMessageComponent();
 
             // Act
             await InvokeAddToMealPlanAsync(cut, recipe);
 
-            // Assert — duplicate silently ignored
+            // Assert — duplicate is allowed; plan is updated with the extra copy
             _mealPlanServiceMock.Verify(
                 s => s.UpdateAsync(It.IsAny<MealPlanEditModel>(), It.IsAny<CancellationToken>()),
-                Times.Never);
+                Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None),
-                Times.Never);
+                Times.Once);
         }
 
         [Test]

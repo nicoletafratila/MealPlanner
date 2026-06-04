@@ -7,6 +7,9 @@ namespace Common.Data.DataContext
     {
         public static async Task EnsureSqlServerDatabaseCreatedAsync(this DbContext context)
         {
+            if (!context.Database.IsRelational())
+                return;
+
             var connectionString = context.Database.GetConnectionString();
             if (string.IsNullOrEmpty(connectionString))
                 return;

@@ -1,4 +1,14 @@
-using System.Security.Claims;using Common.Data.DataContext; using Duende.IdentityModel; using Identity.Data.Entities; using MealPlanner.Data.TableConfigurations; using Microsoft.AspNetCore.Identity; using Microsoft.EntityFrameworkCore; using Microsoft.Extensions.DependencyInjection; using RecipeBook.Data.TableConfigurations;
+using System.Security.Claims;
+using Common.Data.DataContext;
+using Common.Data.Repository;
+using Duende.IdentityModel;
+using Identity.Data.Entities;
+using MealPlanner.Data.TableConfigurations;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace Identity.Api.Tests
 {
@@ -26,6 +36,10 @@ namespace Identity.Api.Tests
                 .AddDefaultTokenProviders();
 
             services.AddLogging();
+            services.AddScoped<IAsyncRepository<ProductCategory, Guid>>(sp =>
+                new BaseAsyncRepository<ProductCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
+            services.AddScoped<IAsyncRepository<RecipeCategory, Guid>>(sp =>
+                new BaseAsyncRepository<RecipeCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
             _provider = services.BuildServiceProvider();
         }
 
