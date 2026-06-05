@@ -27,8 +27,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "QuantityPositiveNumber")]
         public string? Quantity { get; set; }
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
+        [Required(ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
         public string? UnitId { get; set; }
 
         public IList<UnitModel>? Units { get; set; }
