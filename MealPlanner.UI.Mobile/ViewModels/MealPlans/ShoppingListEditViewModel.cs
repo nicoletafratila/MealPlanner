@@ -272,10 +272,6 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         }
 
         [RelayCommand]
-        private void ToggleProductCollected(ShoppingListProductEditModel product) =>
-            product.Collected = !product.Collected;
-
-        [RelayCommand]
         private void RemoveProduct(ShoppingListProductEditModel product) =>
             Model.Products?.Remove(product);
     }

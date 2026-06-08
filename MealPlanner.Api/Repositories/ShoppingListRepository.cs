@@ -21,6 +21,17 @@ namespace MealPlanner.Api.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public override async Task DeleteAsync(ShoppingList entity, CancellationToken cancellationToken)
+        {
+            await Ctx.ShoppingListProducts
+                .Where(p => p.ShoppingListId == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await Ctx.ShoppingLists
+                .Where(sl => sl.Id == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+        }
+
         public override async Task UpdateAsync(ShoppingList entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
@@ -45,6 +56,7 @@ namespace MealPlanner.Api.Repositories
                     tracked.UnitId = item.UnitId;
                     tracked.Collected = item.Collected;
                     tracked.DisplaySequence = item.DisplaySequence;
+                    Ctx.Entry(tracked).State = EntityState.Modified;
                 }
                 else
                 {

@@ -415,28 +415,34 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             StateHasChanged();
         }
 
-        private async Task CheckboxChangedAsync(ShoppingListProductEditModel model)
+        private async Task CheckboxChangedAsync(ShoppingListProductEditModel model, bool newValue)
         {
             var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
-
-            if (itemToChange is not null)
-            {
-                itemToChange.Collected = !itemToChange.Collected;
-            }
-
-            if (ShoppingList is null)
+            if (itemToChange is null || ShoppingList is null)
                 return;
 
+            var oldValue = itemToChange.Collected;
+            itemToChange.Collected = newValue;
+
             var response = await ShoppingListService.UpdateAsync(ShoppingList);
-            if (response != null && !response.Succeeded)
+            if (response is null || !response.Succeeded)
             {
-                await ShowErrorAsync(response.Message!);
-            }
-            else
-            {
-                await OnInitializedAsync();
+                await ShowErrorAsync(response?.Message ?? Resources.ShoppingListEdit.SaveFailed);
+                itemToChange.Collected = oldValue;
                 StateHasChanged();
+                return;
             }
+
+            if (ShoppingList.Products is { Count: > 0 })
+            {
+                ShoppingList.Products = ShoppingList.Products
+                    .OrderBy(item => item.Collected)
+                    .ThenBy(item => item.DisplaySequence)
+                    .ThenBy(item => item.Product?.Name)
+                    .ToList();
+            }
+
+            StateHasChanged();
         }
 
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)

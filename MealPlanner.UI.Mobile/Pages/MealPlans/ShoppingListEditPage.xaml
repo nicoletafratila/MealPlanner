@@ -75,8 +75,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:ShoppingListProductEditModel">
                     <Grid ColumnDefinitions="Auto,*,Auto" Padding="8,6">
-                        <CheckBox Grid.Column="0" IsChecked="{Binding Collected}"
-                                  CheckedChanged="OnProductCheckedChanged" />
+                        <CheckBox Grid.Column="0" IsChecked="{Binding Collected}" />
                         <VerticalStackLayout Grid.Column="1" Margin="8,0" VerticalOptions="Center">
                             <Label Text="{Binding Product.Name}" FontAttributes="Bold"
                                    TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />

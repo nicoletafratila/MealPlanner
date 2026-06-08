@@ -65,6 +65,46 @@ namespace MealPlanner.Data.Profiles.Tests.Resolvers
         }
 
         [Test]
+        public void Map_WhenDestinationHasExistingProducts_UpdatesInPlace()
+        {
+            var productId = Guid.NewGuid();
+            var existingProduct = new ShoppingListProduct
+            {
+                ProductId = productId,
+                Quantity = 1,
+                Collected = false,
+                DisplaySequence = 1
+            };
+
+            var destination = new ShoppingList { Products = [existingProduct] };
+
+            var model = new ShoppingListEditModel
+            {
+                Products =
+                [
+                    new ShoppingListProductEditModel
+                    {
+                        Product = new ProductModel { Id = productId },
+                        Quantity = 3,
+                        Collected = true,
+                        DisplaySequence = 2
+                    }
+                ]
+            };
+
+            _mapper.Map(model, destination);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(destination.Products!, Has.Count.EqualTo(1));
+                Assert.That(destination.Products![0], Is.SameAs(existingProduct));
+                Assert.That(destination.Products[0].Collected, Is.True);
+                Assert.That(destination.Products[0].Quantity, Is.EqualTo(3));
+                Assert.That(destination.Products[0].DisplaySequence, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
         public void Map_MapsAllProducts()
         {
             var id1 = Guid.NewGuid();

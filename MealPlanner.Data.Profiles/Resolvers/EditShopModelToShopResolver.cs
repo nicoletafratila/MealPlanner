@@ -22,8 +22,12 @@ namespace MealPlanner.Data.Profiles.Resolvers
                 return [];
 
             return source.DisplaySequence
-                .Select(s => context.Mapper.Map<ShopDisplaySequence>(s))
-                .OrderBy(i => i.Value)
+                .Select((s, idx) =>
+                {
+                    var entity = context.Mapper.Map<ShopDisplaySequence>(s);
+                    entity.Value = idx + 1;
+                    return entity;
+                })
                 .ToList();
         }
     }
