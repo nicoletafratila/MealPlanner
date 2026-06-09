@@ -13,8 +13,6 @@ PM> Script-migration
 
 
 shop category nu isi salveaza pozitia daca o modific
-shopping list fara produse nu e aliniat la mijloc
-
 
 
 The edit / selection / statistics pages (RecipeEdit, ProductEdit, MealPlanEdit, ShoppingListEdit, RecipeSelection, ShopSelection, MealPlanSelection, RecipeCategoriesOverview, RecipeStatistics, ProductStatistics) also call SearchAsync, but in their OnInitialized load path — a different code path, with varied

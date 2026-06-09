@@ -510,6 +510,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             Units = BaseUnits.Items.Where(x => x.UnitType == baseUnit.UnitType).ToList();
 
+            UnitId = baseUnit.Id.ToString();
+            var selectedUnit = Units.FirstOrDefault(x => x.Id == baseUnit.Id);
+            selectedUnit?.IsSelected = true;
+
             StateHasChanged();
         }
 

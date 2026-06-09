@@ -143,7 +143,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             return index > 0;
         }
 
-        private void MoveUp(ShopDisplaySequenceEditModel item)
+        private async Task MoveUp(ShopDisplaySequenceEditModel item)
         {
             if (Shop.DisplaySequence is not { Count: > 1 })
                 return;
@@ -155,6 +155,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shop.DisplaySequence.RemoveAt(index);
             Shop.DisplaySequence.Insert(index - 1, item);
             Shop.DisplaySequence.SetIndexes();
+            await AutoSaveSequenceAsync();
         }
 
         private bool CanMoveDown(ShopDisplaySequenceEditModel item)
@@ -166,7 +167,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             return index >= 0 && index < Shop.DisplaySequence.Count - 1;
         }
 
-        private void MoveDown(ShopDisplaySequenceEditModel item)
+        private async Task MoveDown(ShopDisplaySequenceEditModel item)
         {
             if (Shop.DisplaySequence is not { Count: > 1 })
                 return;
@@ -178,6 +179,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shop.DisplaySequence.RemoveAt(index);
             Shop.DisplaySequence.Insert(index + 1, item);
             Shop.DisplaySequence.SetIndexes();
+            await AutoSaveSequenceAsync();
+        }
+
+        private async Task AutoSaveSequenceAsync()
+        {
+            if (Shop.Id == Guid.Empty)
+                return;
+
+            var response = await ShopService.UpdateAsync(Shop);
+            if (response is null || !response.Succeeded)
+                await ShowErrorAsync(Resources.ShopEdit.SaveFailedMessage);
         }
 
         private void NavigateToOverview()

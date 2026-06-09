@@ -25,11 +25,11 @@ namespace MealPlanner.Api.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
+            var desired = entity.DisplaySequence ?? [];
+
             var existing = await Context.ShopDisplaySequences
                 .Where(s => s.ShopId == entity.Id)
                 .ToListAsync(cancellationToken);
-
-            var desired = entity.DisplaySequence ?? [];
             var desiredCategoryIds = desired.Select(s => s.ProductCategoryId).ToHashSet();
 
             Context.ShopDisplaySequences.RemoveRange(

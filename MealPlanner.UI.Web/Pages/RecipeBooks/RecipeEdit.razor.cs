@@ -1,4 +1,14 @@
-using System.ComponentModel.DataAnnotations;using BlazorBootstrap; using Common.Models; using Common.Pagination; using Common.UI; using Microsoft.AspNetCore.Authorization; using Microsoft.AspNetCore.Components.Forms; using Microsoft.AspNetCore.Components; using Microsoft.JSInterop; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;
+using BlazorBootstrap;
+using Common.Models;
+using Common.Pagination;
+using Common.UI;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using RecipeBook.Services.Http;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
 {
@@ -345,6 +355,10 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             Units = BaseUnits.Items
                 .Where(x => x.UnitType == baseUnit.UnitType)
                 .ToList();
+
+            UnitId = product.BaseUnitId.ToString();
+            var selectedUnit = Units.FirstOrDefault(x => x.Id == product.BaseUnitId);
+            selectedUnit?.IsSelected = true;
 
             StateHasChanged();
         }
