@@ -22,7 +22,17 @@ namespace MealPlanner.Data.Profiles.Resolvers
                 return [];
 
             return source.Products
-                .Select(p => context.Mapper.Map<ShoppingListProduct>(p))
+                .Select(p =>
+                {
+                    var productId = p.Product?.Id ?? Guid.Empty;
+                    var existing = destValue?.FirstOrDefault(d => d.ProductId == productId);
+                    if (existing != null)
+                    {
+                        context.Mapper.Map(p, existing);
+                        return existing;
+                    }
+                    return context.Mapper.Map<ShoppingListProduct>(p);
+                })
                 .ToList();
         }
     }

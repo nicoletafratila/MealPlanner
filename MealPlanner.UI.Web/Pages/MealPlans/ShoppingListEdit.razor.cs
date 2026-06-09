@@ -512,7 +512,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             UnitId = baseUnit.Id.ToString();
             var selectedUnit = Units.FirstOrDefault(x => x.Id == baseUnit.Id);
-            selectedUnit?.IsSelected = true;
+            if (selectedUnit != null)
+                selectedUnit.IsSelected = true;
 
             StateHasChanged();
         }

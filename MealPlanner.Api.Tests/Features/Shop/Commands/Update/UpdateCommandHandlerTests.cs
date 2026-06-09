@@ -79,7 +79,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             var command = new UpdateCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
 
             // Act
@@ -90,7 +90,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             Assert.That(result!.Succeeded, Is.False);
             Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
 
-            _repoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<ShopEditModel>(), It.IsAny<MealPlanner.Data.Entities.Shop>()), Times.Never);
             _repoMock.Verify(r => r.UpdateAsync(It.IsAny<MealPlanner.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -115,7 +115,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -133,7 +133,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -158,7 +158,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -177,7 +177,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             Assert.That(result!.Succeeded, Is.False);
             Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shop."));
 
-            _repoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
 

@@ -358,7 +358,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             UnitId = product.BaseUnitId.ToString();
             var selectedUnit = Units.FirstOrDefault(x => x.Id == product.BaseUnitId);
-            selectedUnit?.IsSelected = true;
+            if (selectedUnit != null)
+                selectedUnit.IsSelected = true;
 
             StateHasChanged();
         }

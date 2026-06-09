@@ -36,50 +36,58 @@ namespace MealPlanner.Api.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            var existing = await Ctx.ShoppingListProducts
-                .Where(p => p.ShoppingListId == entity.Id)
-                .ToListAsync(cancellationToken);
-
-            var desired = entity.Products ?? [];
-            var desiredProductIds = desired.Select(p => p.ProductId).ToHashSet();
-
-            Ctx.ShoppingListProducts.RemoveRange(
-                existing.Where(p => !desiredProductIds.Contains(p.ProductId)));
-
-            var existingByProduct = existing.ToDictionary(p => p.ProductId);
-            var toAdd = new List<ShoppingListProduct>();
-            foreach (var item in desired)
+            Ctx.ChangeTracker.AutoDetectChangesEnabled = false;
+            try
             {
-                if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
+                var existing = await Ctx.ShoppingListProducts
+                    .Where(p => p.ShoppingListId == entity.Id)
+                    .ToListAsync(cancellationToken);
+
+                var desired = entity.Products ?? [];
+                var desiredProductIds = desired.Select(p => p.ProductId).ToHashSet();
+
+                Ctx.ShoppingListProducts.RemoveRange(
+                    existing.Where(p => !desiredProductIds.Contains(p.ProductId)));
+
+                var existingByProduct = existing.ToDictionary(p => p.ProductId);
+                var toAdd = new List<ShoppingListProduct>();
+                foreach (var item in desired)
                 {
-                    tracked.Quantity = item.Quantity;
-                    tracked.UnitId = item.UnitId;
-                    tracked.Collected = item.Collected;
-                    tracked.DisplaySequence = item.DisplaySequence;
-                    Ctx.Entry(tracked).State = EntityState.Modified;
-                }
-                else
-                {
-                    toAdd.Add(new ShoppingListProduct
+                    if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
                     {
-                        ShoppingListId = entity.Id,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        UnitId = item.UnitId,
-                        Collected = item.Collected,
-                        DisplaySequence = item.DisplaySequence
-                    });
+                        tracked.Quantity = item.Quantity;
+                        tracked.UnitId = item.UnitId;
+                        tracked.Collected = item.Collected;
+                        tracked.DisplaySequence = item.DisplaySequence;
+                        Ctx.Entry(tracked).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        toAdd.Add(new ShoppingListProduct
+                        {
+                            ShoppingListId = entity.Id,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity,
+                            UnitId = item.UnitId,
+                            Collected = item.Collected,
+                            DisplaySequence = item.DisplaySequence
+                        });
+                    }
                 }
+                await Ctx.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
+
+                entity.Products = existing
+                    .Where(p => desiredProductIds.Contains(p.ProductId))
+                    .Concat(toAdd)
+                    .ToList();
+
+                Ctx.Entry(entity).State = EntityState.Modified;
+                await Ctx.SaveChangesAsync(cancellationToken);
             }
-            await Ctx.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
-
-            entity.Products = existing
-                .Where(p => desiredProductIds.Contains(p.ProductId))
-                .Concat(toAdd)
-                .ToList();
-
-            Ctx.Entry(entity).State = EntityState.Modified;
-            await Ctx.SaveChangesAsync(cancellationToken);
+            finally
+            {
+                Ctx.ChangeTracker.AutoDetectChangesEnabled = true;
+            }
         }
 
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
