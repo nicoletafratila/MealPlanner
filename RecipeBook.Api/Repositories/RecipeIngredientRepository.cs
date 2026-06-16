@@ -7,9 +7,10 @@ namespace RecipeBook.Api.Repositories
     /// <summary>
     /// Async repository for <see cref="RecipeIngredient"/> entities.
     /// </summary>
-    public class RecipeIngredientRepository(MealPlannerDbContext dbContext) : IRecipeIngredientRepository
+    public class RecipeIngredientRepository(MealPlannerDbContext dbContext) 
+        : IRecipeIngredientRepository
     {
-        private readonly MealPlannerDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        protected readonly MealPlannerDbContext DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
         /// <summary>
         /// Gets all recipe ingredients, including their units.
@@ -17,7 +18,7 @@ namespace RecipeBook.Api.Repositories
         public async Task<IReadOnlyList<RecipeIngredient>> GetAllAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.RecipeIngredients
+            return await DbContext.RecipeIngredients
                 .Include(x => x.Unit)
                 .ToListAsync(cancellationToken);
         }
@@ -29,7 +30,7 @@ namespace RecipeBook.Api.Repositories
             Guid productId,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.RecipeIngredients
+            return await DbContext.RecipeIngredients
                 .Include(x => x.Unit)
                 .Where(x => x.ProductId == productId)
                 .ToListAsync(cancellationToken);

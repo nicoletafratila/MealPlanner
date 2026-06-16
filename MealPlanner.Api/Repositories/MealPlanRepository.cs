@@ -9,9 +9,7 @@ namespace MealPlanner.Api.Repositories
     public class MealPlanRepository(MealPlannerDbContext dbContext)
         : BaseAsyncRepository<MealPlan, Guid>(dbContext), IMealPlanRepository
     {
-        private MealPlannerDbContext Context =>
-            DbContext as MealPlannerDbContext
-            ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+        private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
         public async Task<IReadOnlyList<MealPlan>> GetAllByUserAsync(
             string userId,
