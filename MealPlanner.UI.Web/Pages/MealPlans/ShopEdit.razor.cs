@@ -155,6 +155,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shop.DisplaySequence.RemoveAt(index);
             Shop.DisplaySequence.Insert(index - 1, item);
             Shop.DisplaySequence.SetIndexes();
+            for (var i = 0; i < Shop.DisplaySequence.Count; i++)
+                Shop.DisplaySequence[i].Value = i + 1;
             await AutoSaveSequenceAsync();
         }
 
@@ -179,6 +181,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shop.DisplaySequence.RemoveAt(index);
             Shop.DisplaySequence.Insert(index + 1, item);
             Shop.DisplaySequence.SetIndexes();
+            for (var i = 0; i < Shop.DisplaySequence.Count; i++)
+                Shop.DisplaySequence[i].Value = i + 1;
             await AutoSaveSequenceAsync();
         }
 

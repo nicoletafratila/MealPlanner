@@ -51,7 +51,6 @@ namespace MealPlanner.Api
         {
             services.AddTransient<EditMealPlanModelToMealPlanResolver>();
             services.AddTransient<EditRecipeModelToRecipeResolver>();
-            services.AddTransient<EditShopModelToShopResolver>();
             services.AddTransient<EditShoppingListModelToShoppingListResolver>();
             services.AddTransient<MealPlanToEditMealPlanModelResolver>();
             services.AddTransient<RecipeToEditRecipeModelResolver>();

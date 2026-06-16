@@ -514,29 +514,29 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             ArrangeCategories();
             var cut = RenderComponent("0");
 
-            var seq = new List<ShopDisplaySequenceEditModel>
-            {
-                new() { Value = 1 },
-                new() { Value = 2 },
-                new() { Value = 3 }
-            };
-
-            cut.Instance.Shop.DisplaySequence = seq;
+            var item0 = new ShopDisplaySequenceEditModel { Value = 1 };
+            var item1 = new ShopDisplaySequenceEditModel { Value = 2 };
+            var item2 = new ShopDisplaySequenceEditModel { Value = 3 };
+            cut.Instance.Shop.DisplaySequence = [item0, item1, item2];
 
             var method = typeof(ShopEdit).GetMethod("MoveUp", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act: move middle item up (Value = 2)
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [seq[1]]));
+            // Act: move middle item up (item1, Value = 2)
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [item1]));
 
             var newSeq = cut.Instance.Shop.DisplaySequence;
 
-            // Assert: order should now be (2, 1, 3) by Value,
-            // and Index should be reset 1..3 in that order.
+            // Assert: item1 moved to position 0, item0 moved to position 1.
+            // Values are renumbered to reflect the new positions (1..3),
+            // and Index is reset 1..3 in that order.
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(newSeq[0].Value, Is.EqualTo(2));
-                Assert.That(newSeq[1].Value, Is.EqualTo(1));
+                Assert.That(newSeq[0], Is.SameAs(item1));
+                Assert.That(newSeq[1], Is.SameAs(item0));
+
+                Assert.That(newSeq[0].Value, Is.EqualTo(1));
+                Assert.That(newSeq[1].Value, Is.EqualTo(2));
                 Assert.That(newSeq[2].Value, Is.EqualTo(3));
 
                 Assert.That(newSeq[0].Index, Is.EqualTo(1));
@@ -552,30 +552,30 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             ArrangeCategories();
             var cut = RenderComponent("0");
 
-            var seq = new List<ShopDisplaySequenceEditModel>
-            {
-                new() { Value = 1 },
-                new() {  Value = 2 },
-                new() {  Value = 3 }
-            };
-
-            cut.Instance.Shop.DisplaySequence = seq;
+            var item0 = new ShopDisplaySequenceEditModel { Value = 1 };
+            var item1 = new ShopDisplaySequenceEditModel { Value = 2 };
+            var item2 = new ShopDisplaySequenceEditModel { Value = 3 };
+            cut.Instance.Shop.DisplaySequence = [item0, item1, item2];
 
             var method = typeof(ShopEdit).GetMethod("MoveDown", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            // Act: move middle item down (Value = 2)
-            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [seq[1]]));
+            // Act: move middle item down (item1, Value = 2)
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [item1]));
 
             var newSeq = cut.Instance.Shop.DisplaySequence;
 
-            // Assert: order should now be (1, 3, 2) by Value,
-            // and Index should be reset 1..3 in that order.
+            // Assert: item2 moved to position 1, item1 moved to position 2.
+            // Values are renumbered to reflect the new positions (1..3),
+            // and Index is reset 1..3 in that order.
             using (Assert.EnterMultipleScope())
             {
+                Assert.That(newSeq[1], Is.SameAs(item2));
+                Assert.That(newSeq[2], Is.SameAs(item1));
+
                 Assert.That(newSeq[0].Value, Is.EqualTo(1));
-                Assert.That(newSeq[1].Value, Is.EqualTo(3));
-                Assert.That(newSeq[2].Value, Is.EqualTo(2));
+                Assert.That(newSeq[1].Value, Is.EqualTo(2));
+                Assert.That(newSeq[2].Value, Is.EqualTo(3));
 
                 Assert.That(newSeq[0].Index, Is.EqualTo(1));
                 Assert.That(newSeq[1].Index, Is.EqualTo(2));

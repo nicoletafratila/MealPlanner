@@ -24,38 +24,18 @@ namespace MealPlanner.Api.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            var desired = entity.DisplaySequence ?? [];
-
             var existing = await Context.ShopDisplaySequences
                 .Where(s => s.ShopId == entity.Id)
                 .ToListAsync(cancellationToken);
-            var desiredCategoryIds = desired.Select(s => s.ProductCategoryId).ToHashSet();
+            Context.ShopDisplaySequences.RemoveRange(existing);
 
-            entity.DisplaySequence = existing;
-
-            Context.ShopDisplaySequences.RemoveRange(
-                existing.Where(s => !desiredCategoryIds.Contains(s.ProductCategoryId)));
-
-            var existingByCategory = existing.ToDictionary(s => s.ProductCategoryId);
-            var toAdd = new List<ShopDisplaySequence>();
-            foreach (var item in desired)
+            if (entity.DisplaySequence?.Count > 0)
             {
-                if (existingByCategory.TryGetValue(item.ProductCategoryId, out var tracked))
-                {
-                    tracked.Value = item.Value;
-                    Context.Entry(tracked).Property(s => s.Value).IsModified = true;
-                }
-                else
-                {
-                    toAdd.Add(new ShopDisplaySequence { ShopId = entity.Id, ProductCategoryId = item.ProductCategoryId, Value = item.Value });
-                }
-            }
-            await Context.ShopDisplaySequences.AddRangeAsync(toAdd, cancellationToken);
+                foreach (var seq in entity.DisplaySequence)
+                    seq.ShopId = entity.Id;
 
-            entity.DisplaySequence = existing
-                .Where(s => desiredCategoryIds.Contains(s.ProductCategoryId))
-                .Concat(toAdd)
-                .ToList();
+                await Context.ShopDisplaySequences.AddRangeAsync(entity.DisplaySequence, cancellationToken);
+            }
 
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync(cancellationToken);

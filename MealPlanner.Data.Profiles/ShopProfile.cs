@@ -22,10 +22,7 @@ namespace MealPlanner.Data.Profiles
                     opt => opt.MapFrom<ShopToEditShopModelResolver, IList<ShopDisplaySequence>?>(src => src.DisplaySequence!)
                 )
                 .ReverseMap()
-                .ForMember(
-                    dest => dest.DisplaySequence,
-                    opt => opt.MapFrom<EditShopModelToShopResolver, IList<ShopDisplaySequenceEditModel>>(src => src.DisplaySequence!)
-                );
+                .ForMember(dest => dest.DisplaySequence, opt => opt.MapFrom(src => src.DisplaySequence));
         }
     }
 }

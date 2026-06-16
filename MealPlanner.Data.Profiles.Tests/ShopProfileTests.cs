@@ -11,7 +11,6 @@ namespace MealPlanner.Data.Profiles.Tests
     {
         private IMapper _mapper = null!;
         private FakeShopToEditShopModelResolver _fakeResolver = null!;
-        private FakeEditShopModelToShopResolver _fakeReverseResolver = null!;
 
         [SetUp]
         public void SetUp()
@@ -24,23 +23,14 @@ namespace MealPlanner.Data.Profiles.Tests
                 ]
             };
 
-            _fakeReverseResolver = new FakeEditShopModelToShopResolver
-            {
-                ReturnedValue =
-                [
-                    new() { Value = 42 }
-                ]
-            };
-
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ShopProfile>();
+                cfg.AddProfile<ShopDisplaySequenceProfile>();
 
                 cfg.ConstructServicesUsing(type =>
                     type == typeof(ShopToEditShopModelResolver)
                         ? _fakeResolver
-                    : type == typeof(EditShopModelToShopResolver)
-                        ? _fakeReverseResolver
                         : Activator.CreateInstance(type)!);
             });
 
@@ -125,13 +115,14 @@ namespace MealPlanner.Data.Profiles.Tests
         }
 
         [Test]
-        public void ShopEditModel_To_Shop_Uses_Fake_Reverse_Resolver()
+        public void ShopEditModel_To_Shop_Maps_DisplaySequence()
         {
             var editModel = new ShopEditModel
             {
                 DisplaySequence =
                 [
-                    new ShopDisplaySequenceEditModel { Value = 10 }
+                    new ShopDisplaySequenceEditModel { Value = 1 },
+                    new ShopDisplaySequenceEditModel { Value = 2 }
                 ]
             };
 
@@ -139,9 +130,9 @@ namespace MealPlanner.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_fakeReverseResolver.WasCalled, Is.True);
-                Assert.That(result.DisplaySequence, Has.Count.EqualTo(1));
-                Assert.That(result.DisplaySequence![0].Value, Is.EqualTo(42));
+                Assert.That(result.DisplaySequence, Is.Not.Null);
+                Assert.That(result.DisplaySequence!, Has.Count.EqualTo(2));
+                Assert.That(result.DisplaySequence!.Select(s => s.Value), Is.EqualTo(new[] { 1, 2 }).AsCollection);
             }
         }
     }
