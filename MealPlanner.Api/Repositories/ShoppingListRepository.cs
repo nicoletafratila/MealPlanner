@@ -34,58 +34,51 @@ namespace MealPlanner.Api.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            Context.ChangeTracker.AutoDetectChangesEnabled = false;
-            try
+            var existing = await Context.ShoppingListProducts
+                .Where(p => p.ShoppingListId == entity.Id)
+                .ToListAsync(cancellationToken);
+
+            var desired = entity.Products ?? [];
+            var desiredProductIds = desired.Select(p => p.ProductId).ToHashSet();
+            entity.Products = existing;
+
+            Context.ShoppingListProducts.RemoveRange(
+                existing.Where(p => !desiredProductIds.Contains(p.ProductId)));
+
+            var existingByProduct = existing.ToDictionary(p => p.ProductId);
+            var toAdd = new List<ShoppingListProduct>();
+            foreach (var item in desired)
             {
-                var existing = await Context.ShoppingListProducts
-                    .Where(p => p.ShoppingListId == entity.Id)
-                    .ToListAsync(cancellationToken);
-
-                var desired = entity.Products ?? [];
-                var desiredProductIds = desired.Select(p => p.ProductId).ToHashSet();
-
-                Context.ShoppingListProducts.RemoveRange(
-                    existing.Where(p => !desiredProductIds.Contains(p.ProductId)));
-
-                var existingByProduct = existing.ToDictionary(p => p.ProductId);
-                var toAdd = new List<ShoppingListProduct>();
-                foreach (var item in desired)
+                if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
                 {
-                    if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
-                    {
-                        tracked.Quantity = item.Quantity;
-                        tracked.UnitId = item.UnitId;
-                        tracked.Collected = item.Collected;
-                        tracked.DisplaySequence = item.DisplaySequence;
-                        Context.Entry(tracked).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        toAdd.Add(new ShoppingListProduct
-                        {
-                            ShoppingListId = entity.Id,
-                            ProductId = item.ProductId,
-                            Quantity = item.Quantity,
-                            UnitId = item.UnitId,
-                            Collected = item.Collected,
-                            DisplaySequence = item.DisplaySequence
-                        });
-                    }
+                    tracked.Quantity = item.Quantity;
+                    tracked.UnitId = item.UnitId;
+                    tracked.Collected = item.Collected;
+                    tracked.DisplaySequence = item.DisplaySequence;
+                    Context.Entry(tracked).State = EntityState.Modified;
                 }
-                await Context.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
-
-                entity.Products = existing
-                    .Where(p => desiredProductIds.Contains(p.ProductId))
-                    .Concat(toAdd)
-                    .ToList();
-
-                Context.Entry(entity).State = EntityState.Modified;
-                await Context.SaveChangesAsync(cancellationToken);
+                else
+                {
+                    toAdd.Add(new ShoppingListProduct
+                    {
+                        ShoppingListId = entity.Id,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitId = item.UnitId,
+                        Collected = item.Collected,
+                        DisplaySequence = item.DisplaySequence
+                    });
+                }
             }
-            finally
-            {
-                Context.ChangeTracker.AutoDetectChangesEnabled = true;
-            }
+            await Context.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
+
+            entity.Products = existing
+                .Where(p => desiredProductIds.Contains(p.ProductId))
+                .Concat(toAdd)
+                .ToList();
+
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
