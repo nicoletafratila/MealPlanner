@@ -1,6 +1,7 @@
 using AutoMapper;
 using Common.Data.Entities;
 using Common.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Common.Data.Profiles.Tests
 {
@@ -15,7 +16,7 @@ namespace Common.Data.Profiles.Tests
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<LogProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();

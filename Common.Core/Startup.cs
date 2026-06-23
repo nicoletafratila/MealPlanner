@@ -1,5 +1,6 @@
 using AutoMapper;
 using Blazored.SessionStorage;
+using Microsoft.Extensions.Logging.Abstractions;
 using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Repository;
@@ -46,7 +47,7 @@ namespace Common.Core
             {
                 c.AddProfile<LogProfile>();
                 ConfigureMapper(c);
-            });
+            }, NullLoggerFactory.Instance);
             services.AddSingleton(s => config.CreateMapper());
 
             services.AddScoped<ITokenProvider, TokenProvider>();

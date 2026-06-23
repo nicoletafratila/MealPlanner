@@ -1,6 +1,7 @@
 using AutoMapper;
 using MealPlanner.Data.Entities;
 using MealPlanner.Shared.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
@@ -17,7 +18,7 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 c.AddProfile<ShopDisplaySequenceProfile>();
                 c.AddProfile<RecipeBook.Data.Profiles.ProductCategoryProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();

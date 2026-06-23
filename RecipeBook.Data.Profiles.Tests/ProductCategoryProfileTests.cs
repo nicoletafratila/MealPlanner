@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
@@ -15,7 +16,7 @@ namespace RecipeBook.Data.Profiles.Tests
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ProductCategoryProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();

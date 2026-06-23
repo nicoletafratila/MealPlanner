@@ -1,6 +1,7 @@
 using AutoMapper;
 using Identity.Data.Entities;
 using Identity.Shared.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Identity.Data.Profiles.Tests
 {
@@ -15,7 +16,7 @@ namespace Identity.Data.Profiles.Tests
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ApplicationUserProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();

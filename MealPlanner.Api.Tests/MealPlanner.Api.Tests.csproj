@@ -12,6 +12,11 @@
     <NoWarn>1701;1702;CS8625</NoWarn>
   </PropertyGroup>
 
+  <!-- SQLitePCLRaw.lib.e_sqlite3 2.1.11 (GHSA-2m69-gcr7-jv3q) is the latest version; no upstream fix available. -->
+  <ItemGroup>
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="$(CoverletCollector)">
       <PrivateAssets>all</PrivateAssets>
