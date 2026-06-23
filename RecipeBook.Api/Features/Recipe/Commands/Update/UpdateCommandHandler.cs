@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Update
 
             try
             {
-                var existingItem = await _repository.GetByIdIncludeIngredientsAsync(request.Model.Id, cancellationToken);
+                var existingItem = await _repository.GetByIdAsync(request.Model.Id, cancellationToken);
                 if (existingItem is null)
                 {
                     return CommandResponse.Failed(string.Format(RecipeMessages.NotFoundById, request.Model.Id));
