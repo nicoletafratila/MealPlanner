@@ -1,7 +1,5 @@
 using AutoMapper;
 using MealPlanner.Data.Entities;
-using MealPlanner.Data.Profiles.Resolvers;
-using MealPlanner.Data.Profiles.Tests.FakeResolvers;
 using MealPlanner.Shared.Models;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
@@ -12,46 +10,17 @@ namespace MealPlanner.Data.Profiles.Tests
     public class ShoppingListProfileTests
     {
         private IMapper _mapper = null!;
-        private FakeShoppingListToEditShoppingListResolver _fakeResolver = null!;
-        private FakeEditShoppingListModelToShoppingListResolver _fakeReverseResolver = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _fakeResolver = new FakeShoppingListToEditShoppingListResolver
-            {
-                ReturnedValue =
-                [
-                    new ShoppingListProductEditModel
-                    {
-                        DisplaySequence = 7,
-                        Product = new ProductModel { Name = "InjectedForward" }
-                    }
-                ]
-            };
-
-            _fakeReverseResolver = new FakeEditShoppingListModelToShoppingListResolver
-            {
-                ReturnedValue =
-                [
-                    new ShoppingListProduct
-                    {
-                        DisplaySequence = 3,
-                        Product = new Product { Name = "InjectedReverse" }
-                    }
-                ]
-            };
-
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ShoppingListProfile>();
-
-                cfg.ConstructServicesUsing(type =>
-                    type == typeof(ShoppingListToEditShoppingListModelResolver)
-                        ? _fakeResolver
-                    : type == typeof(EditShoppingListModelToShoppingListResolver)
-                        ? _fakeReverseResolver
-                        : Activator.CreateInstance(type)!);
+                cfg.AddProfile<ShoppingListProductProfile>();
+                cfg.AddProfile<RecipeBook.Data.Profiles.UnitProfile>();
+                cfg.AddProfile<RecipeBook.Data.Profiles.ProductProfile>();
+                cfg.AddProfile<RecipeBook.Data.Profiles.ProductCategoryProfile>();
             });
 
             config.AssertConfigurationIsValid();
@@ -113,14 +82,28 @@ namespace MealPlanner.Data.Profiles.Tests
         }
 
         [Test]
-        public void ShoppingList_To_ShoppingListEditModel_Uses_Fake_Resolver()
+        public void ShoppingList_To_ShoppingListEditModel_WhenProductsNull_ReturnsEmptyList()
+        {
+            var list = new ShoppingList { Name = "Test", Products = null };
+
+            var result = _mapper.Map<ShoppingListEditModel>(list);
+
+            Assert.That(result.Products, Is.Not.Null);
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void ShoppingList_To_ShoppingListEditModel_OrdersByCollected_ThenDisplaySequence_ThenProductName()
         {
             var list = new ShoppingList
             {
-                Name = "sp1",
+                Name = "Daily items",
                 Products =
                 [
-                    new ShoppingListProduct { Product = new Product() { Name = "P1" }, DisplaySequence = 10 }
+                    new ShoppingListProduct { Collected = true,  DisplaySequence = 5,  Product = new Product { Name = "Bananas" } },
+                    new ShoppingListProduct { Collected = false, DisplaySequence = 10, Product = new Product { Name = "Apples" } },
+                    new ShoppingListProduct { Collected = false, DisplaySequence = 3,  Product = new Product { Name = "Zucchini" } },
+                    new ShoppingListProduct { Collected = true,  DisplaySequence = 1,  Product = new Product { Name = "Avocado" } }
                 ]
             };
 
@@ -128,21 +111,51 @@ namespace MealPlanner.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_fakeResolver.WasCalled, Is.True);
-                Assert.That(result.Products, Has.Count.EqualTo(1));
-                Assert.That(result.Products![0].DisplaySequence, Is.EqualTo(7));
-                Assert.That(result.Products[0].Product!.Name, Is.EqualTo("InjectedForward"));
+                Assert.That(
+                    result.Products!.Select(p => p.Product?.Name),
+                    Is.EqualTo(["Zucchini", "Apples", "Avocado", "Bananas"]).AsCollection
+                );
+                Assert.That(
+                    result.Products!.Select(p => p.DisplaySequence),
+                    Is.EqualTo([3, 10, 1, 5]).AsCollection
+                );
             }
         }
 
         [Test]
-        public void ShoppingListEditModel_To_ShoppingList_Uses_Fake_Reverse_Resolver()
+        public void ShoppingListEditModel_To_ShoppingList_WhenProductsNull_ReturnsEmptyList()
         {
+            var edit = new ShoppingListEditModel { Products = null };
+
+            var result = _mapper.Map<ShoppingList>(edit);
+
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void ShoppingListEditModel_To_ShoppingList_WhenProductsEmpty_ReturnsEmptyList()
+        {
+            var edit = new ShoppingListEditModel { Products = [] };
+
+            var result = _mapper.Map<ShoppingList>(edit);
+
+            Assert.That(result.Products, Is.Empty);
+        }
+
+        [Test]
+        public void ShoppingListEditModel_To_ShoppingList_NewProduct_CreatesMappedProduct()
+        {
+            var productId = Guid.NewGuid();
             var edit = new ShoppingListEditModel
             {
                 Products =
                 [
-                    new ShoppingListProductEditModel { DisplaySequence = 50 }
+                    new ShoppingListProductEditModel
+                    {
+                        Product = new ProductModel { Id = productId },
+                        Quantity = 2,
+                        DisplaySequence = 1
+                    }
                 ]
             };
 
@@ -150,10 +163,45 @@ namespace MealPlanner.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_fakeReverseResolver.WasCalled, Is.True);
                 Assert.That(result.Products, Has.Count.EqualTo(1));
-                Assert.That(result.Products![0].DisplaySequence, Is.EqualTo(3));
-                Assert.That(result.Products[0].Product!.Name, Is.EqualTo("InjectedReverse"));
+                Assert.That(result.Products![0].Quantity, Is.EqualTo(2));
+                Assert.That(result.Products[0].DisplaySequence, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void ShoppingListEditModel_To_ShoppingList_ExistingProduct_UpdatesInPlace()
+        {
+            var productId = Guid.NewGuid();
+            var existing = new ShoppingListProduct
+            {
+                ProductId = productId,
+                Quantity = 1,
+                DisplaySequence = 5
+            };
+
+            var edit = new ShoppingListEditModel
+            {
+                Products =
+                [
+                    new ShoppingListProductEditModel
+                    {
+                        Product = new ProductModel { Id = productId },
+                        Quantity = 3,
+                        DisplaySequence = 10
+                    }
+                ]
+            };
+
+            var dest = new ShoppingList { Products = [existing] };
+            _mapper.Map(edit, dest);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(dest.Products, Has.Count.EqualTo(1));
+                Assert.That(dest.Products![0], Is.SameAs(existing));
+                Assert.That(dest.Products[0].Quantity, Is.EqualTo(3));
+                Assert.That(dest.Products[0].DisplaySequence, Is.EqualTo(10));
             }
         }
     }

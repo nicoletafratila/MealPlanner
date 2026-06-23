@@ -1,7 +1,5 @@
 using AutoMapper;
 using MealPlanner.Data.Entities;
-using MealPlanner.Data.Profiles.Resolvers;
-using MealPlanner.Data.Profiles.Tests.FakeResolvers;
 using MealPlanner.Shared.Models;
 
 namespace MealPlanner.Data.Profiles.Tests
@@ -10,28 +8,15 @@ namespace MealPlanner.Data.Profiles.Tests
     public class ShopProfileTests
     {
         private IMapper _mapper = null!;
-        private FakeShopToEditShopModelResolver _fakeResolver = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _fakeResolver = new FakeShopToEditShopModelResolver
-            {
-                ReturnedValue =
-                [
-                    new() { Value = 99 }
-                ]
-            };
-
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ShopProfile>();
                 cfg.AddProfile<ShopDisplaySequenceProfile>();
-
-                cfg.ConstructServicesUsing(type =>
-                    type == typeof(ShopToEditShopModelResolver)
-                        ? _fakeResolver
-                        : Activator.CreateInstance(type)!);
+                cfg.AddProfile<RecipeBook.Data.Profiles.ProductCategoryProfile>();
             });
 
             config.AssertConfigurationIsValid();
@@ -94,13 +79,15 @@ namespace MealPlanner.Data.Profiles.Tests
         }
 
         [Test]
-        public void Shop_To_ShopEditModel_Uses_Fake_Resolver()
+        public void Shop_To_ShopEditModel_Orders_By_Value_And_Sets_Index()
         {
             var shop = new Shop
             {
                 DisplaySequence =
                 [
-                    new() { Value = 1 }
+                    new() { Value = 3 },
+                    new() { Value = 1 },
+                    new() { Value = 2 }
                 ]
             };
 
@@ -108,9 +95,13 @@ namespace MealPlanner.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_fakeResolver.WasCalled, Is.True);
-                Assert.That(result.DisplaySequence, Has.Count.EqualTo(1));
-                Assert.That(result.DisplaySequence![0].Value, Is.EqualTo(99));
+                Assert.That(result.DisplaySequence, Has.Count.EqualTo(3));
+                Assert.That(result.DisplaySequence![0].Value, Is.EqualTo(1));
+                Assert.That(result.DisplaySequence![1].Value, Is.EqualTo(2));
+                Assert.That(result.DisplaySequence![2].Value, Is.EqualTo(3));
+                Assert.That(result.DisplaySequence![0].Index, Is.EqualTo(1));
+                Assert.That(result.DisplaySequence![1].Index, Is.EqualTo(2));
+                Assert.That(result.DisplaySequence![2].Index, Is.EqualTo(3));
             }
         }
 

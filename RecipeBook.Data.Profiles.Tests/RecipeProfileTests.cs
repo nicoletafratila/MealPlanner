@@ -1,7 +1,5 @@
 using AutoMapper;
 using RecipeBook.Data.Entities;
-using RecipeBook.Data.Profiles.Resolvers;
-using RecipeBook.Data.Profiles.Tests.FakeResolvers;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Data.Profiles.Tests
@@ -10,47 +8,18 @@ namespace RecipeBook.Data.Profiles.Tests
     public class RecipeProfileTests
     {
         private IMapper _mapper = null!;
-        private FakeRecipeToEditRecipeModelResolver _fakeForwardResolver = null!;
-        private FakeEditRecipeModelToRecipeResolver _fakeReverseResolver = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _fakeForwardResolver = new FakeRecipeToEditRecipeModelResolver
-            {
-                ReturnedValue =
-                [
-                    new RecipeIngredientEditModel
-                    {
-                        Quantity = 5,
-                        Product = new ProductModel { Name = "InjectedForward" }
-                    }
-                ]
-            };
-
-            _fakeReverseResolver = new FakeEditRecipeModelToRecipeResolver
-            {
-                ReturnedValue =
-                [
-                    new RecipeIngredient
-                    {
-                        Quantity = 3,
-                        Product = new Product { Name = "InjectedReverse" }
-                    }
-                ]
-            };
-
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<RecipeCategoryProfile>();
                 cfg.AddProfile<RecipeProfile>();
-
-                cfg.ConstructServicesUsing(type =>
-                    type == typeof(RecipeToEditRecipeModelResolver)
-                        ? _fakeForwardResolver
-                    : type == typeof(EditRecipeModelToRecipeResolver)
-                        ? _fakeReverseResolver
-                        : Activator.CreateInstance(type)!);
+                cfg.AddProfile<RecipeIngredientProfile>();
+                cfg.AddProfile<ProductProfile>();
+                cfg.AddProfile<ProductCategoryProfile>();
+                cfg.AddProfile<UnitProfile>();
             });
 
             config.AssertConfigurationIsValid();
@@ -91,11 +60,7 @@ namespace RecipeBook.Data.Profiles.Tests
             };
 
             var modelId = Guid.NewGuid();
-            var model = new RecipeModel
-            {
-                Id = modelId,
-                Name = "Updated"
-            };
+            var model = new RecipeModel { Id = modelId, Name = "Updated" };
 
             var result = _mapper.Map(model, dest);
 
@@ -107,14 +72,30 @@ namespace RecipeBook.Data.Profiles.Tests
         }
 
         [Test]
-        public void Recipe_To_RecipeEditModel_Uses_Fake_Forward_Resolver()
+        public void Recipe_To_RecipeEditModel_WhenIngredientsNull_ReturnsEmptyList()
         {
+            var recipe = new Recipe { Name = "Test", RecipeIngredients = null };
+
+            var result = _mapper.Map<RecipeEditModel>(recipe);
+
+            Assert.That(result.Ingredients, Is.Empty);
+        }
+
+        [Test]
+        public void Recipe_To_RecipeEditModel_OrdersByCategoryThenName_AndSetsIndexes()
+        {
+            var catA = new ProductCategory { Name = "Category A" };
+            var catB = new ProductCategory { Name = "Category B" };
+
             var recipe = new Recipe
             {
-                Name = "R1",
+                Name = "Test Recipe",
                 RecipeIngredients =
                 [
-                    new RecipeIngredient { Quantity = 1 }
+                    new RecipeIngredient { Product = new Product { Name = "Zeta",  ProductCategory = catB } },
+                    new RecipeIngredient { Product = new Product { Name = "Alpha", ProductCategory = catB } },
+                    new RecipeIngredient { Product = new Product { Name = "Beta",  ProductCategory = catA } },
+                    new RecipeIngredient { Product = null }
                 ]
             };
 
@@ -122,32 +103,55 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_fakeForwardResolver.WasCalled, Is.True);
-                Assert.That(result.Ingredients, Has.Count.EqualTo(1));
-                Assert.That(result.Ingredients![0].Quantity, Is.EqualTo(5));
-                Assert.That(result.Ingredients[0].Product!.Name, Is.EqualTo("InjectedForward"));
+                Assert.That(
+                    result.Ingredients!.Select(i => i.Product?.Name ?? ""),
+                    Is.EqualTo(["", "Beta", "Alpha", "Zeta"]).AsCollection
+                );
+                Assert.That(
+                    result.Ingredients!.Select(i => i.Index),
+                    Is.EqualTo(Enumerable.Range(1, result.Ingredients!.Count)).AsCollection
+                );
             }
         }
 
         [Test]
-        public void RecipeEditModel_To_Recipe_Uses_Fake_Reverse_Resolver()
+        public void RecipeEditModel_To_Recipe_WhenIngredientsNull_ReturnsEmptyList()
         {
+            var edit = new RecipeEditModel { Name = "Test", Ingredients = null };
+
+            var result = _mapper.Map<Recipe>(edit);
+
+            Assert.That(result.RecipeIngredients, Is.Empty);
+        }
+
+        [Test]
+        public void RecipeEditModel_To_Recipe_Maps_Ingredients()
+        {
+            var recipeId = Guid.NewGuid();
+            var unitId = Guid.NewGuid();
+
             var edit = new RecipeEditModel
             {
+                Name = "Milkshake",
                 Ingredients =
                 [
-                    new RecipeIngredientEditModel { Quantity = 10 }
+                    new RecipeIngredientEditModel
+                    {
+                        RecipeId = recipeId,
+                        Quantity = 2.5m,
+                        UnitId = unitId
+                    }
                 ]
             };
 
             var result = _mapper.Map<Recipe>(edit);
+            var ingredient = result.RecipeIngredients!.Single();
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_fakeReverseResolver.WasCalled, Is.True);
-                Assert.That(result.RecipeIngredients, Has.Count.EqualTo(1));
-                Assert.That(result.RecipeIngredients![0].Quantity, Is.EqualTo(3));
-                Assert.That(result.RecipeIngredients[0].Product!.Name, Is.EqualTo("InjectedReverse"));
+                Assert.That(ingredient.RecipeId, Is.EqualTo(recipeId));
+                Assert.That(ingredient.Quantity, Is.EqualTo(2.5m));
+                Assert.That(ingredient.UnitId, Is.EqualTo(unitId));
             }
         }
     }

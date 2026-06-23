@@ -6,7 +6,6 @@ using Duende.IdentityModel;
 using Identity.Data.Profiles;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
-using MealPlanner.Data.Profiles.Resolvers;
 using MealPlanner.Data.Profiles;
 using MealPlanner.Data.TableConfigurations;
 using MediatR;
@@ -14,7 +13,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using RecipeBook.Data.Profiles.Resolvers;
 using RecipeBook.Data.Profiles;
 using RecipeBook.Data.TableConfigurations;
 using Serilog;
@@ -49,14 +47,6 @@ namespace MealPlanner.Api
 
         protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddTransient<EditMealPlanModelToMealPlanResolver>();
-            services.AddTransient<EditRecipeModelToRecipeResolver>();
-            services.AddTransient<EditShoppingListModelToShoppingListResolver>();
-            services.AddTransient<MealPlanToEditMealPlanModelResolver>();
-            services.AddTransient<RecipeToEditRecipeModelResolver>();
-            services.AddTransient<ShoppingListToEditShoppingListModelResolver>();
-            services.AddTransient<ShopToEditShopModelResolver>();
-
             services.AddSingleton<RecipeBookClientConfig>();
 
             services.AddHttpClient<IRecipeBookClient, RecipeBookClient>()
