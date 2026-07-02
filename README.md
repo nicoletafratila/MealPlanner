@@ -12,6 +12,10 @@ PM> Script-migration
 
 
 
+add meal plan to shopping list
+add recipe to shopping list
+
+
 
 The edit / selection / statistics pages (RecipeEdit, ProductEdit, MealPlanEdit, ShoppingListEdit, RecipeSelection, ShopSelection, MealPlanSelection, RecipeCategoriesOverview, RecipeStatistics, ProductStatistics) also call SearchAsync, but in their OnInitialized load path — a different code path, with varied
 shapes (multiple calls, property assignment, some with no MessageComponent). They aren't the grid-render crash you reported. They'd still throw if a backend is down — but handling them cleanly is a separate, larger change.

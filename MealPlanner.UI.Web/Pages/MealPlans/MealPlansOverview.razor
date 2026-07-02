@@ -37,12 +37,12 @@
                 <GridColumn TItem="MealPlanModel" HeaderText="@Resources.MealPlansOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="MealPlanModel" HeaderText="@Resources.MealPlansOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="MealPlanModel" HeaderText="@Resources.MealPlansOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Name
                     </div>
                 </GridColumn>
-                <GridColumn TItem="MealPlanModel" HeaderText="@Resources.MealPlansOverview.ColumnCreatedAt" PropertyName="CreatedAt" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt">
+                <GridColumn TItem="MealPlanModel" HeaderText="@Resources.MealPlansOverview.ColumnCreatedAt" PropertyName="CreatedAt" IsDefaultSortColumn="true" SortDirection="@_createdAtSortDirection" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt">
                     @context.CreatedAt?.ToString("d")
                 </GridColumn>
                 <GridColumn TItem="MealPlanModel" Filterable="false">

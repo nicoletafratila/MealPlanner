@@ -24,12 +24,7 @@ namespace MealPlanner.UI.Mobile
 
             builder
                 .UseMauiApp<App>()
-                .UseMauiCommunityToolkit()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+                .UseMauiCommunityToolkit();
 
             // Load appsettings.json embedded resource
             var assembly = typeof(MauiProgram).Assembly;
