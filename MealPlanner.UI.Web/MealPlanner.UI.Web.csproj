@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web" InitialTargets="EnsureMinCssExists">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -371,7 +371,7 @@
 
   <!-- After dotnet clean, BuildBundlerMinifier deletes site.min.css but DefineStaticWebAssets
        runs before the bundler regenerates it. Copy site.css as a fallback so the asset exists. -->
-  <Target Name="EnsureMinCssExists" BeforeTargets="DefineStaticWebAssets">
+  <Target Name="EnsureMinCssExists">
     <Copy SourceFiles="wwwroot\css\site.css" DestinationFiles="wwwroot\css\site.min.css" Condition="!Exists('$(MSBuildProjectDirectory)\wwwroot\css\site.min.css')" />
   </Target>
 

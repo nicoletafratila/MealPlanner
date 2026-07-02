@@ -58,7 +58,7 @@ namespace Identity.Api.Tests.Features.Email
             _emailSectionMock.Setup(s => s["Password"]).Returns("smtp-pass");
 
             _configurationMock = new Mock<IConfiguration>(MockBehavior.Loose);
-            _configurationMock.Setup(c => c["IdentityApi:BaseUrl"]).Returns("https://localhost:5001");
+            _configurationMock.Setup(c => c["IdentityApi:BaseUrl"]).Returns("https://localhost:6001");
             _configurationMock.Setup(c => c.GetSection("Email")).Returns(_emailSectionMock.Object);
 
             _environmentMock = new Mock<IWebHostEnvironment>(MockBehavior.Loose);
@@ -143,7 +143,7 @@ namespace Identity.Api.Tests.Features.Email
 
             await _service.SendEmailConfirmationAsync("user@test.com", "user-id", "token");
 
-            var expectedUrl = "https://localhost:5001/api/authentication/confirm-email?userId=user-id&token=token";
+            var expectedUrl = "https://localhost:6001/api/authentication/confirm-email?userId=user-id&token=token";
             Assert.That(captured!.Body, Does.Contain(expectedUrl));
         }
 
@@ -256,7 +256,7 @@ namespace Identity.Api.Tests.Features.Email
 
             await _service.SendPasswordResetAsync("user@test.com", "user-id", "token");
 
-            var expectedUrl = "https://localhost:5001/api/authentication/reset-password-redirect?userId=user-id&token=token";
+            var expectedUrl = "https://localhost:6001/api/authentication/reset-password-redirect?userId=user-id&token=token";
             Assert.That(captured!.Body, Does.Contain(expectedUrl));
         }
 
