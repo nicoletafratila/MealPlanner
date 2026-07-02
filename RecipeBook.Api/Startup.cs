@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecipeBook.Api.Abstractions;
 using RecipeBook.Api.Repositories;
+using MealPlanner.Data.Profiles;
 using RecipeBook.Data.Profiles;
 using RecipeBook.Data.TableConfigurations;
 using Serilog;
@@ -35,6 +36,9 @@ namespace RecipeBook.Api
             cfg.AddProfile<RecipeProfile>();
             cfg.AddProfile<RecipeCategoryProfile>();
             cfg.AddProfile<UnitProfile>();
+            cfg.AddProfile<ShopProfile>();
+            cfg.AddProfile<ShopDisplaySequenceProfile>();
+            cfg.AddProfile<ShoppingListProductProfile>();
         }
 
         protected override void RegisterServices(IServiceCollection services)

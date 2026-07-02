@@ -39,6 +39,21 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetShoppingListProducts
                 if (products is null)
                     return Array.Empty<ShoppingListProductEditModel>();
 
+                var ingredientsByProductId = (mealPlan.MealPlanRecipes ?? [])
+                    .SelectMany(mpr => mpr.Recipe?.RecipeIngredients ?? [])
+                    .Where(i => i.Product != null)
+                    .GroupBy(i => i.ProductId)
+                    .ToDictionary(g => g.Key, g => g.First());
+
+                foreach (var item in products)
+                {
+                    if (ingredientsByProductId.TryGetValue(item.ProductId, out var ingredient))
+                    {
+                        item.Product = ingredient.Product;
+                        item.Unit = ingredient.Product!.BaseUnit;
+                    }
+                }
+
                 var results = products
                     .Select(_mapper.Map<ShoppingListProduct, ShoppingListProductEditModel>)
                     .OrderBy(item => item.Collected)
