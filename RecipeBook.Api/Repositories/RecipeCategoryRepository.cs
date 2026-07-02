@@ -19,6 +19,7 @@ namespace RecipeBook.Api.Repositories
         {
             return await Context.RecipeCategories
                 .Where(c => c.UserId == userId)
+                .OrderBy(c => c.DisplaySequence)
                 .ToListAsync(cancellationToken);
         }
 
@@ -43,11 +44,9 @@ namespace RecipeBook.Api.Repositories
                 return;
 
             foreach (var entity in entities)
-            {
-                DbContext.Entry(entity).State = EntityState.Modified;
-            }
+                Context.Entry(entity).Property(c => c.DisplaySequence).IsModified = true;
 
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

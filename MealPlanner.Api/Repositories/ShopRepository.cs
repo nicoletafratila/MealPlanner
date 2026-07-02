@@ -10,7 +10,6 @@ namespace MealPlanner.Api.Repositories
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
-
         public async Task<IReadOnlyList<Shop>> GetAllByUserAsync(
             string userId,
             CancellationToken cancellationToken)
@@ -48,10 +47,7 @@ namespace MealPlanner.Api.Repositories
             if (id is null)
                 throw new ArgumentNullException(nameof(id));
 
-            var ctx = DbContext as MealPlannerDbContext
-                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
-
-            return await ctx.Shops
+            return await Context.Shops
                 .Include(x => x.DisplaySequence)!
                     .ThenInclude(x => x.ProductCategory)
                 .FirstOrDefaultAsync(item => item.Id == id, cancellationToken);

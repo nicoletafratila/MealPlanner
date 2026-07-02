@@ -1,4 +1,9 @@
-using System.Text;using AutoMapper; using Common.Models; using MediatR; using RecipeBook.Api.Features.RecipeCategory.Resources; using RecipeBook.Api.Repositories;
+using System.Text;
+using AutoMapper;
+using Common.Models;
+using MediatR;
+using RecipeBook.Api.Features.RecipeCategory.Resources;
+using RecipeBook.Api.Repositories;
 
 namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
 {
@@ -35,7 +40,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.UpdateAll
                 var existingById = existingItems.ToDictionary(e => e.Id);
 
                 var errors = new StringBuilder();
-                var itemsToUpdate = new List<RecipeBook.Data.Entities.RecipeCategory>();
+                var itemsToUpdate = new List<Data.Entities.RecipeCategory>();
 
                 foreach (var category in request.Models)
                 {
