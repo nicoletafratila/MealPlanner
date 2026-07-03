@@ -1,5 +1,6 @@
-using System.Net.Http.Json;using Common.Models; using Common.Pagination; using MealPlanner.Shared.Models; using Microsoft.Extensions.Logging;
-
+using Common.Models;
+using Common.Pagination;
+using MealPlanner.Shared.Models;
 namespace MealPlanner.Services.Http
 {
     public interface IShopService

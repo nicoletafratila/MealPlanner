@@ -1,6 +1,5 @@
 using AutoMapper;
 using Blazored.SessionStorage;
-using Microsoft.Extensions.Logging.Abstractions;
 using Common.Data.DataContext;
 using Common.Data.Profiles;
 using Common.Data.Repository;
@@ -9,6 +8,7 @@ using Common.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Common.Core
 {

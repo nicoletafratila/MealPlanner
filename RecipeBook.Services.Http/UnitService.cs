@@ -4,10 +4,10 @@ using Common.Models;
 using Common.Pagination;
 using Common.Services;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
-using Microsoft.Extensions.Logging;
 
 namespace RecipeBook.Services.Http
 {

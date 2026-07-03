@@ -1,7 +1,6 @@
 using MealPlanner.Data.Entities;
-using MealPlanner.Data.TableConfigurations;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace MealPlanner.Data.TableConfigurations.Tests
 {

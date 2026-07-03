@@ -1,3 +1,4 @@
+using Common.Constants;
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
@@ -6,7 +7,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     public partial class ForgotPasswordViewModel(AuthenticationService authService) : BaseViewModel
     {
-        public ForgotPasswordModel Model { get; } = new();
+        public ForgotPasswordModel Model { get; } = new() { Source = InputSource.Mobile };
 
         [RelayCommand]
         private async Task SendAsync()

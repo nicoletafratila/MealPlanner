@@ -11,7 +11,7 @@ PM> Script-migration
 
 
 forgot pass de pe mobile app
-
+mesajele de eroare sa fie foar textul
 
 
 

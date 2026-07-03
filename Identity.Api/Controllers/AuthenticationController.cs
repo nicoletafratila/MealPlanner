@@ -70,10 +70,14 @@ namespace Identity.Api.Controllers
         [HttpGet("reset-password-redirect")]
         public IActionResult ResetPasswordRedirect(
             [FromQuery] string userId,
-            [FromQuery] string token)
+            [FromQuery] string token,
+            [FromQuery] string? source)
         {
-            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
             var encodedToken = Uri.EscapeDataString(token);
+            if (Enum.TryParse<Common.Constants.InputSource>(source, ignoreCase: true, out var parsed) && parsed == Common.Constants.InputSource.Mobile)
+                return Redirect($"mealplanner://reset-password?userId={userId}&token={encodedToken}");
+
+            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
             return Redirect($"{uiBaseUrl}/identities/reset-password?userId={userId}&token={encodedToken}");
         }
 

@@ -26,7 +26,7 @@ namespace Identity.Api.Features.Authentication.Commands.ForgotPassword
                     var token = await userManager.GeneratePasswordResetTokenAsync(user);
                     try
                     {
-                        await emailService.SendPasswordResetAsync(user.Email!, user.Id, token, cancellationToken);
+                        await emailService.SendPasswordResetAsync(user.Email!, user.Id, token, request.Model.Source, cancellationToken);
                     }
                     catch (Exception ex)
                     {

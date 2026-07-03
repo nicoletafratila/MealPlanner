@@ -2,8 +2,8 @@ using BlazorBootstrap;
 using Common.Pagination;
 using Common.UI;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 

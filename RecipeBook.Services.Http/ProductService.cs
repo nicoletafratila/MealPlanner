@@ -3,9 +3,9 @@ using Common.Http;
 using Common.Models;
 using Common.Pagination;
 using Common.Services;
+using Microsoft.Extensions.Logging;
 using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
-using Microsoft.Extensions.Logging;
 
 namespace RecipeBook.Services.Http
 {

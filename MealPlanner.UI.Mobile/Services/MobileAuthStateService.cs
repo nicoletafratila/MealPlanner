@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
 using Common.Http;
 
 namespace MealPlanner.UI.Mobile.Services

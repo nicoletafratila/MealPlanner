@@ -3,7 +3,6 @@ using System.Text.Json;
 using Common.Http;
 using Common.Models;
 using Common.Pagination;
-using Identity.Services.Http;
 using Identity.Shared.Constants;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;

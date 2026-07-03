@@ -1,4 +1,16 @@
-using System.Security.Claims;using Bunit.TestDoubles; using Bunit; using Common.Models; using Common.UI; using Identity.Services.Http; using Identity.Shared.Models; using MealPlanner.UI.Web.Pages.Identities; using Microsoft.AspNetCore.Components.Authorization; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Microsoft.Extensions.Logging; using Moq;
+using System.Security.Claims;
+using Bunit; 
+using Bunit.TestDoubles; 
+using Common.Models; 
+using Common.UI; 
+using Identity.Services.Http; 
+using Identity.Shared.Models; 
+using MealPlanner.UI.Web.Pages.Identities; 
+using Microsoft.AspNetCore.Components; 
+using Microsoft.AspNetCore.Components.Authorization; 
+using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.Logging; 
+using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.Identities
 {

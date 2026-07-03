@@ -1,4 +1,3 @@
-using System;
 using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore.Migrations;
 

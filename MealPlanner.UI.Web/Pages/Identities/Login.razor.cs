@@ -2,8 +2,8 @@ using Common.UI;
 using Identity.Services.Http;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace MealPlanner.UI.Web.Pages.Identities

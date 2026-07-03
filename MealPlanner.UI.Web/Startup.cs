@@ -1,7 +1,7 @@
 using Blazored.Modal;
-using MealPlanner.UI.Web.Services;
 using Identity.Services.Http;
 using MealPlanner.Services.Http;
+using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using RecipeBook.Services.Http;
 using Serilog;

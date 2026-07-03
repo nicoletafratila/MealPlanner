@@ -1,5 +1,7 @@
-using System.Data.Common;using Microsoft.Data.SqlClient; using Microsoft.EntityFrameworkCore.Migrations; using Microsoft.EntityFrameworkCore;
-
+using System.Data.Common;
+using Microsoft.Data.SqlClient; 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations; 
 namespace Common.Data.DataContext
 {
     public static class MigrationBuilderExtensions

@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using RecipeBook.Data.Entities;
-using RecipeBook.Data.TableConfigurations;
 
 namespace RecipeBook.Data.TableConfigurations.Tests
 {

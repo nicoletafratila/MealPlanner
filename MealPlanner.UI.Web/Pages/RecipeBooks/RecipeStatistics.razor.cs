@@ -1,6 +1,5 @@
 using BlazorBootstrap;
 using Blazored.SessionStorage;
-using Common.Models;
 using Common.Pagination;
 using MealPlanner.Services.Http;
 using MealPlanner.UI.Web.Models;

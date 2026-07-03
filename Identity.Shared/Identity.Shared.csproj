@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
+    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
-using Blazored.Modal.Services;
 using Blazored.Modal;
+using Blazored.Modal.Services;
 
 namespace MealPlanner.UI.Web.Pages
 {

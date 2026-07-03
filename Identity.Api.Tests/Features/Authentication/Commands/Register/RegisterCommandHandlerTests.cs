@@ -1,4 +1,12 @@
-using System.Security.Claims;using Common.Data.Repository; using Identity.Api.Features.Authentication.Commands.Register; using Identity.Api.Features.Email; using Identity.Data.Entities; using Identity.Shared.Models; using Microsoft.AspNetCore.Identity; using Microsoft.Extensions.Logging; using Moq; using RecipeBook.Data.Entities;
+using System.Security.Claims;
+using Common.Data.Repository;
+using Identity.Api.Features.Authentication.Commands.Register;
+using Identity.Api.Features.Email;
+using Identity.Shared.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Moq;
+using RecipeBook.Data.Entities;
 
 namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 {

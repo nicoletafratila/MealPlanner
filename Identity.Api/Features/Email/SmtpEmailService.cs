@@ -1,5 +1,6 @@
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
+using Common.Constants;
 using Identity.Api.Features.Authentication.Resources;
 using Identity.Api.Features.ContactUs.Resources;
 
@@ -42,13 +43,14 @@ namespace Identity.Api.Features.Email
             logger.LogDebug("Confirmation email sent to {Email}", toEmail);
         }
 
-        public async Task SendPasswordResetAsync(string toEmail, string userId, string token, CancellationToken cancellationToken = default)
+        public async Task SendPasswordResetAsync(string toEmail, string userId, string token, InputSource? source = null, CancellationToken cancellationToken = default)
         {
             var emailSettings = configuration.GetSection("Email");
             var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:6001";
 
             var encodedToken = Uri.EscapeDataString(token);
-            var resetUrl = $"{baseUrl}/api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}";
+            var sourceParam = source.HasValue ? $"&source={source.Value.ToString().ToLowerInvariant()}" : string.Empty;
+            var resetUrl = $"{baseUrl}/api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}{sourceParam}";
 
             var templatePath = Path.Combine(environment.ContentRootPath, "Features", "Email", "EmailTemplates", "PasswordReset.html");
             var body = (await File.ReadAllTextAsync(templatePath, cancellationToken))

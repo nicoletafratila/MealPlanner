@@ -4,9 +4,17 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class ResetPasswordViewModel(AuthenticationService authService) : BaseViewModel
+    public partial class ResetPasswordViewModel(AuthenticationService authService) : BaseViewModel, IQueryAttributable
     {
         public ResetPasswordModel Model { get; } = new();
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (query.TryGetValue("userId", out var userId))
+                Model.UserId = Uri.UnescapeDataString(userId.ToString()!);
+            if (query.TryGetValue("token", out var token))
+                Model.Token = Uri.UnescapeDataString(token.ToString()!);
+        }
 
         [RelayCommand]
         private async Task ResetAsync()

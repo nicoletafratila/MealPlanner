@@ -1,4 +1,3 @@
-using Common.Core;
 using Common.Http;
 using Common.Models;
 using MediatR;

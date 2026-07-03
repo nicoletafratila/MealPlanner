@@ -1,5 +1,4 @@
 using System.Net.Http.Headers;
-using Common.Http;
 using Moq;
 
 namespace Common.Http.Tests

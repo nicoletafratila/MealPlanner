@@ -1,12 +1,10 @@
 using System.Net;
 using System.Text.Json;
 using Common.Http;
-using RecipeBook.Services.Http;
 using Common.Models;
 using Common.Pagination;
 using Microsoft.Extensions.Logging;
 using Moq;
-using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
 using RichardSzalay.MockHttp;
 

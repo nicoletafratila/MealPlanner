@@ -1,5 +1,5 @@
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 using Identity.Api.Features.Email;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
