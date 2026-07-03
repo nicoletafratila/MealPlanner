@@ -1,5 +1,5 @@
-using System.Net;
 using System.Net.Mail;
+using System.Net;
 using Identity.Api.Features.Authentication.Resources;
 using Identity.Api.Features.ContactUs.Resources;
 
@@ -10,7 +10,7 @@ namespace Identity.Api.Features.Email
         public async Task SendEmailConfirmationAsync(string toEmail, string userId, string token, CancellationToken cancellationToken = default)
         {
             var emailSettings = configuration.GetSection("Email");
-            var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:5001";
+            var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:6001";
 
             var encodedToken = Uri.EscapeDataString(token);
             var confirmUrl = $"{baseUrl}/api/authentication/confirm-email?userId={userId}&token={encodedToken}";
@@ -45,7 +45,7 @@ namespace Identity.Api.Features.Email
         public async Task SendPasswordResetAsync(string toEmail, string userId, string token, CancellationToken cancellationToken = default)
         {
             var emailSettings = configuration.GetSection("Email");
-            var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:5001";
+            var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:6001";
 
             var encodedToken = Uri.EscapeDataString(token);
             var resetUrl = $"{baseUrl}/api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}";

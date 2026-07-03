@@ -1,9 +1,4 @@
-﻿using System.Security.Claims;
-using Bunit;
-using MealPlanner.UI.Web.Pages.Identities;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;using Bunit; using MealPlanner.UI.Web.Pages.Identities; using Microsoft.AspNetCore.Components.Authorization; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection;
 
 namespace MealPlanner.UI.Web.Tests.Pages.Identities
 {

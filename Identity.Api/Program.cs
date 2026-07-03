@@ -1,6 +1,6 @@
-﻿using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
+using Serilog;
 
 namespace Identity.Api
 {
@@ -44,7 +44,8 @@ namespace Identity.Api
                           sinkOptions: new MSSqlServerSinkOptions
                           {
                               TableName = "Logs",
-                              SchemaName = "dbo"
+                              SchemaName = "dbo",
+                              AutoCreateSqlTable = false
                           },
                           restrictedToMinimumLevel: LogEventLevel.Error);
                 });

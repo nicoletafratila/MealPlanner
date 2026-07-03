@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecipeBook.Data.Entities
 {
-    public sealed class Product : Common.Data.Entities.Entity<int>
+    public class Product : Common.Data.Entities.Entity<Guid>
     {
         public string? UserId { get; set; }
 
@@ -12,11 +12,11 @@ namespace RecipeBook.Data.Entities
 
         [ForeignKey(nameof(BaseUnitId))]
         public Unit? BaseUnit { get; set; }
-        public int BaseUnitId { get; set; }
+        public Guid BaseUnitId { get; set; }
 
         [ForeignKey(nameof(ProductCategoryId))]
         public ProductCategory? ProductCategory { get; set; }
-        public int ProductCategoryId { get; set; }
+        public Guid ProductCategoryId { get; set; }
 
         public override string ToString() =>
             $"{Name} (Id: {Id}, CategoryId: {ProductCategoryId}, BaseUnitId: {BaseUnitId})";

@@ -18,7 +18,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
         {
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Shop1"
             };
 
@@ -42,7 +42,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             var command = new UpdateCommand();
             var model = new ShopEditModel
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "UpdatedShop"
             };
 

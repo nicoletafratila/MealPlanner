@@ -1,16 +1,14 @@
-﻿using Common.Data.DataContext;
-using MealPlanner.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
+using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api.Repositories
 {
     public class ShopRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<Shop, int>(dbContext), IShopRepository
+        : BaseAsyncRepository<Shop, Guid>(dbContext), IShopRepository
     {
-        private MealPlannerDbContext Context =>
-            DbContext as MealPlannerDbContext
-            ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+        private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
         public async Task<IReadOnlyList<Shop>> GetAllByUserAsync(
             string userId,
@@ -28,44 +26,28 @@ namespace MealPlanner.Api.Repositories
             var existing = await Context.ShopDisplaySequences
                 .Where(s => s.ShopId == entity.Id)
                 .ToListAsync(cancellationToken);
+            Context.ShopDisplaySequences.RemoveRange(existing);
 
-            var desired = entity.DisplaySequence ?? [];
-            var desiredCategoryIds = desired.Select(s => s.ProductCategoryId).ToHashSet();
-
-            Context.ShopDisplaySequences.RemoveRange(
-                existing.Where(s => !desiredCategoryIds.Contains(s.ProductCategoryId)));
-
-            var existingByCategory = existing.ToDictionary(s => s.ProductCategoryId);
-            var toAdd = new List<ShopDisplaySequence>();
-            foreach (var item in desired)
+            if (entity.DisplaySequence?.Count > 0)
             {
-                if (existingByCategory.TryGetValue(item.ProductCategoryId, out var tracked))
-                    tracked.Value = item.Value;
-                else
-                    toAdd.Add(new ShopDisplaySequence { ShopId = entity.Id, ProductCategoryId = item.ProductCategoryId, Value = item.Value });
-            }
-            await Context.ShopDisplaySequences.AddRangeAsync(toAdd, cancellationToken);
+                foreach (var seq in entity.DisplaySequence)
+                    seq.ShopId = entity.Id;
 
-            entity.DisplaySequence = existing
-                .Where(s => desiredCategoryIds.Contains(s.ProductCategoryId))
-                .Concat(toAdd)
-                .ToList();
+                await Context.ShopDisplaySequences.AddRangeAsync(entity.DisplaySequence, cancellationToken);
+            }
 
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Shop?> GetByIdIncludeDisplaySequenceAsync(
-            int? id,
+            Guid? id,
             CancellationToken cancellationToken)
         {
             if (id is null)
                 throw new ArgumentNullException(nameof(id));
 
-            var ctx = DbContext as MealPlannerDbContext
-                      ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
-
-            return await ctx.Shops
+            return await Context.Shops
                 .Include(x => x.DisplaySequence)!
                     .ThenInclude(x => x.ProductCategory)
                 .FirstOrDefaultAsync(item => item.Id == id, cancellationToken);

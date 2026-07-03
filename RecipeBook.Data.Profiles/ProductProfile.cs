@@ -1,7 +1,7 @@
 using AutoMapper;
+using Common.Data.Profiles;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
-using Common.Data.Profiles;
 
 namespace RecipeBook.Data.Profiles
 {

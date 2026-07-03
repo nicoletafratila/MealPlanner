@@ -1,9 +1,4 @@
-﻿using System.Diagnostics;
-using MealPlanner.UI.Web.Pages;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using Moq;
+using System.Diagnostics;using MealPlanner.UI.Web.Pages; using Microsoft.AspNetCore.Http; using Microsoft.AspNetCore.Mvc.RazorPages; using Microsoft.Extensions.Logging; using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages
 {

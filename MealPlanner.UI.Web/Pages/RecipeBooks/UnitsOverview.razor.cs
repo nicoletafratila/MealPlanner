@@ -3,11 +3,11 @@ using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using Common.UI;
-using Identity.Services;
+using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<UnitModel>? _unitsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
-        private SortDirection _nameSortDirection = SortDirection.Ascending;
+        private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
 
@@ -49,7 +49,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var stored = await SessionStorage.GetItemAsync<QueryParameters<UnitModel>>();
             var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
-            var direction = nameSort?.Direction ?? SortDirection.Ascending;
+            var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
 
             if (direction != _nameSortDirection)
             {
@@ -60,7 +60,10 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         }
 
         private async Task<GridSettings?> SettingsProviderAsync()
-            => await SessionStorage.GetItemAsync<QueryParameters<UnitModel>>();
+        {
+            var qp = await SessionStorage.GetItemAsync<QueryParameters<UnitModel>>();
+            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+        }
 
         private void New()
         {
@@ -125,10 +128,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             var queryParameters = new QueryParameters<UnitModel>
             {
-                Filters = request.Filters,
+                Filters = request.Filters?
+                    .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList(),
                 Sorting = request.Sorting?
-                    .Select(QueryParameters<UnitModel>.ToModel)
-                    .ToList()!,
+                    .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
+                    .ToList() ?? [],
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
             };

@@ -39,13 +39,14 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task GetByIdAsync_SendsGetByIdQuery()
         {
-            var model = new RecipeModel { Id = 5, Name = "R1" };
+            var recipeId = Guid.NewGuid();
+            var model = new RecipeModel { Id = recipeId, Name = "R1" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetByIdQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetByIdQuery>(q => q.Id == recipeId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(model);
 
-            var result = await _controller.GetByIdAsync(5, CancellationToken.None);
+            var result = await _controller.GetByIdAsync(recipeId, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -57,13 +58,14 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task GetEditAsync_SendsGetEditQuery()
         {
-            var model = new RecipeEditModel { Id = 7, Name = "EditRecipe" };
+            var editId = Guid.NewGuid();
+            var model = new RecipeEditModel { Id = editId, Name = "EditRecipe" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 7), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == editId), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(model);
 
-            var result = await _controller.GetEditAsync(7, CancellationToken.None);
+            var result = await _controller.GetEditAsync(editId, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -75,19 +77,21 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task GetShoppingListProductsAsync_SendsQuery_WithToken()
         {
-            var items = new[] { new ShoppingListProductEditModel { Product = new ProductModel() { Id = 1 } } };
+            var items = new[] { new ShoppingListProductEditModel { Product = new ProductModel() { Id = Guid.NewGuid() } } };
             _controller.HttpContext.Request.Headers.Authorization = "Bearer token123";
 
+            var shopId = Guid.NewGuid();
+            var slpRecipeId = Guid.NewGuid();
             _senderMock
                 .Setup(m => m.Send(
                     It.Is<GetShoppingListProductsQuery>(q =>
-                        q.RecipeId == 1 &&
-                        q.ShopId == 2 &&
+                        q.RecipeId == slpRecipeId &&
+                        q.ShopId == shopId &&
                         q.AuthToken == "token123"),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(items);
 
-            var result = await _controller.GetShoppingListProductsAsync(1, 2, CancellationToken.None);
+            var result = await _controller.GetShoppingListProductsAsync(slpRecipeId, shopId, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -137,7 +141,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task PostAsync_SendsAddCommand()
         {
-            var model = new RecipeEditModel { Id = 0, Name = "NewR" };
+            var model = new RecipeEditModel { Id = Guid.Empty, Name = "NewR" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -156,7 +160,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task PutAsync_SendsUpdateCommand()
         {
-            var model = new RecipeEditModel { Id = 2, Name = "Updated" };
+            var model = new RecipeEditModel { Id = Guid.NewGuid(), Name = "Updated" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -178,13 +182,14 @@ namespace RecipeBook.Api.Tests.Controllers
             var response = CommandResponse.Success();
             _controller.HttpContext.Request.Headers.Authorization = "Bearer tok";
 
+            var deleteId = Guid.NewGuid();
             _senderMock
                 .Setup(m => m.Send(
-                    It.Is<DeleteCommand>(c => c.Id == 9 && c.AuthToken == "tok"),
+                    It.Is<DeleteCommand>(c => c.Id == deleteId && c.AuthToken == "tok"),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.DeleteAsync(9, CancellationToken.None);
+            var result = await _controller.DeleteAsync(deleteId, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);

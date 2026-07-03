@@ -50,6 +50,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Add
                 }
 
                 var mapped = _mapper.Map<RecipeBook.Data.Entities.ProductCategory>(request.Model);
+                mapped.Id = Guid.NewGuid();
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
+             xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.RecipesOverviewPage"
+             x:DataType="vm:RecipesOverviewViewModel"
+             Title="Recipes">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddRecipeCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <!-- Search -->
+        <SearchBar Grid.Row="0" Placeholder="Search recipes..."
+                   Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}"
+                   Margin="12,8" />
+
+        <!-- Category filter -->
+        <Picker Grid.Row="1" Title="All categories"
+                ItemsSource="{Binding Categories}"
+                SelectedItem="{Binding SelectedCategory}"
+                ItemDisplayBinding="{Binding Name}"
+                Margin="12,0,12,8" />
+
+        <!-- Recipe list -->
+        <RefreshView Grid.Row="2" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <Label Text="No recipes found." HorizontalOptions="Center"
+                           VerticalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,40" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:RecipeModel">
+                        <SwipeView Margin="12,4">
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" BackgroundColor="{StaticResource ErrorColor}"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=DeleteRecipeCommand}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame Style="{StaticResource CardFrame}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=OpenRecipeCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <Grid ColumnDefinitions="56,*">
+                                    <Image Grid.Column="0" Source="{Binding ImageUrl}"
+                                           WidthRequest="48" HeightRequest="48"
+                                           Aspect="AspectFill" />
+                                    <VerticalStackLayout Grid.Column="1" Padding="8,0" Spacing="2">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <Label Text="{Binding RecipeCategoryName}"
+                                               FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <Label Grid.Row="3" Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}"
+               Margin="12,4" />
+    </Grid>
+</ContentPage>

@@ -1,14 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Bunit;
-using Common.Pagination;
-using Common.UI;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using BlazorBootstrap; using Bunit; using Common.Pagination; using Common.UI; using MealPlanner.UI.Web.Pages.RecipeBooks; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -85,18 +75,19 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(RecipeCategoriesOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var model = new RecipeCategoryModel { Id = 42 };
+            var id = Guid.NewGuid();
+            var model = new RecipeCategoryModel { Id = id };
 
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [model]));
 
-            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}42"));
+            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}{id}"));
         }
 
         // ---------- DeleteCoreAsync ----------
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteSucceeds_ShowsInfo_AndRefreshes()
         {
-            var category = new RecipeCategoryModel { Id = 5 };
+            var category = new RecipeCategoryModel { Id = Guid.NewGuid() };
 
             _serviceMock
                 .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
@@ -120,7 +111,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteFails_ShowsError()
         {
-            var category = new RecipeCategoryModel { Id = 7 };
+            var category = new RecipeCategoryModel { Id = Guid.NewGuid() };
             var response = new Common.Models.CommandResponse
             {
                 Succeeded = false,
@@ -151,8 +142,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             var categories = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             _serviceMock
@@ -185,9 +176,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             var categories = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 },
-                new() { Id = 3 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             _serviceMock
@@ -215,9 +206,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             var categories = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 },
-                new() { Id = 3 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             _serviceMock

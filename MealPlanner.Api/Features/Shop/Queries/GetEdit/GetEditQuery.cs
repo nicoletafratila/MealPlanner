@@ -11,13 +11,13 @@ namespace MealPlanner.Api.Features.Shop.Queries.GetEdit
         /// <summary>
         /// Id of the shop to edit.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public GetEditQuery()
         {
         }
 
-        public GetEditQuery(int id)
+        public GetEditQuery(Guid id)
         {
             Id = id;
         }

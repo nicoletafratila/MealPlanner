@@ -4,12 +4,12 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
-using MealPlanner.Services;
+using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
@@ -28,6 +28,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter(Name = "RefreshCurrentMealPlan")]
+        private Func<Task>? RefreshCurrentMealPlan { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -72,7 +75,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                     new SortingModel
                     {
                         PropertyName = "DisplaySequence",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -81,13 +84,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             Categories = await RecipeCategoryService.SearchAsync(queryParameters);
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            _ = Guid.TryParse(Id, out var id);
+            if (id == Guid.Empty)
             {
                 MealPlan = new MealPlanEditModel
                 {
                     Recipes = [],
-                    Name = GetMenuName(),
+                    Name = MealPlanService.GetMenuName(Resources.MealPlanEdit.MenuName),
                 };
             }
             else
@@ -111,7 +114,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             CommandResponse? response;
 
-            if (mealPlan.Id == 0)
+            if (mealPlan.Id == Guid.Empty)
             {
                 response = await MealPlanService.AddAsync(mealPlan);
             }
@@ -132,13 +135,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
+            if (RefreshCurrentMealPlan is not null)
+                await RefreshCurrentMealPlan();
             await ShowInfoAsync(Resources.MealPlanEdit.SaveSucceeded);
             NavigateToOverview();
         }
 
         private async Task DeleteAsync()
         {
-            if (MealPlan is null || MealPlan.Id == 0)
+            if (MealPlan is null || MealPlan.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -163,7 +168,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteCoreAsync(MealPlanEditModel mealPlan)
         {
-            if (mealPlan.Id == 0)
+            if (mealPlan.Id == Guid.Empty)
                 return;
 
             var response = await MealPlanService.DeleteAsync(mealPlan.Id);
@@ -179,6 +184,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
+            if (RefreshCurrentMealPlan is not null)
+                await RefreshCurrentMealPlan();
             await ShowInfoAsync(Resources.MealPlanEdit.DeleteSucceeded);
             NavigateToOverview();
         }
@@ -212,14 +219,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             MealPlan.Recipes ??= [];
 
-            var recipeId = int.Parse(RecipeId!);
-            var existing = MealPlan.Recipes.FirstOrDefault(r => r.Id == recipeId);
-            if (existing is not null)
-            {
-                StateHasChanged();
-                return;
-            }
-
+            var recipeId = Guid.Parse(RecipeId!);
             var recipe = await RecipeService.GetByIdAsync(recipeId);
             if (recipe is null)
             {
@@ -285,13 +285,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (result.Cancelled || !result.Confirmed || result.Data is null)
                 return;
 
-            if (!int.TryParse(result.Data.ToString(), out var shopId))
+            if (!Guid.TryParse(result.Data.ToString(), out var shopId))
                 return;
 
             var addedEntity = await ShoppingListService.MakeShoppingListAsync(
                 new ShoppingListCreateModel { MealPlanId = MealPlan.Id, ShopId = shopId });
 
-            if (addedEntity is not null && addedEntity.Id > 0)
+            if (addedEntity is not null && addedEntity.Id != Guid.Empty)
             {
                 NavigationManager.NavigateTo($"mealplans/shoppinglistedit/{addedEntity.Id}");
             }
@@ -326,14 +326,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var recipeCategoryId = e.Value?.ToString();
             RecipeId = string.Empty;
 
-            var filters = new List<FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new FilterItem(
+                filters.Add(new Common.Pagination.FilterItem(
                     "RecipeCategoryId",
                     recipeCategoryId,
-                    FilterOperator.Equals,
+                    Common.Pagination.FilterOperator.Equals,
                     StringComparison.OrdinalIgnoreCase));
             }
 
@@ -345,7 +345,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageNumber = 1,
@@ -362,12 +362,5 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task ShowInfoAsync(string message)
             => await MessageComponent!.ShowInfoAsync(message);
 
-        private static string GetMenuName()
-        {
-            var now = DateTime.Now;
-            var calendar = System.Globalization.CultureInfo.InvariantCulture.Calendar;
-            int week = calendar.GetWeekOfYear(now, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-            return $"{Resources.MealPlansOverview.MenuName} {now.Year}/{week}";
-        }
     }
 }

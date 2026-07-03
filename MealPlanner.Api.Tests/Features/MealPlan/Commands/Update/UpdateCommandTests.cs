@@ -16,7 +16,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
         [Test]
         public void Ctor_SetsModel()
         {
-            var model = new MealPlanEditModel { Id = 1, Name = "Plan1" };
+            var model = new MealPlanEditModel { Id = Guid.NewGuid(), Name = "Plan1" };
 
             var command = new UpdateCommand(model);
 
@@ -36,7 +36,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
         public void Can_Set_And_Get_Model()
         {
             var command = new UpdateCommand();
-            var model = new MealPlanEditModel { Id = 2, Name = "Plan2" };
+            var model = new MealPlanEditModel { Id = Guid.NewGuid(), Name = "Plan2" };
 
             command.Model = model;
 

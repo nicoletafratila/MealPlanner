@@ -15,9 +15,9 @@ namespace MealPlanner.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(link.MealPlan, Is.Null);
-                Assert.That(link.MealPlanId, Is.Zero);
+                Assert.That(link.MealPlanId, Is.EqualTo(Guid.Empty));
                 Assert.That(link.Recipe, Is.Null);
-                Assert.That(link.RecipeId, Is.Zero);
+                Assert.That(link.RecipeId, Is.EqualTo(Guid.Empty));
             }
         }
 
@@ -27,41 +27,45 @@ namespace MealPlanner.Data.Entities.Tests
             // Arrange
             var mealPlan = new MealPlan();
             var recipe = new Recipe();
+            var mealPlanId = Guid.NewGuid();
 
             // Act
+            var recipeId = Guid.NewGuid();
             var link = new MealPlanRecipe
             {
                 MealPlan = mealPlan,
-                MealPlanId = 1,
+                MealPlanId = mealPlanId,
                 Recipe = recipe,
-                RecipeId = 2
+                RecipeId = recipeId
             };
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(link.MealPlan, Is.SameAs(mealPlan));
-                Assert.That(link.MealPlanId, Is.EqualTo(1));
+                Assert.That(link.MealPlanId, Is.EqualTo(mealPlanId));
                 Assert.That(link.Recipe, Is.SameAs(recipe));
-                Assert.That(link.RecipeId, Is.EqualTo(2));
+                Assert.That(link.RecipeId, Is.EqualTo(recipeId));
             }
         }
 
         [Test]
         public void ToString_Contains_MealPlanId_And_RecipeId()
         {
+            var mealPlanId = Guid.NewGuid();
+            var recipeId = Guid.NewGuid();
             var link = new MealPlanRecipe
             {
-                MealPlanId = 10,
-                RecipeId = 20
+                MealPlanId = mealPlanId,
+                RecipeId = recipeId
             };
 
             var text = link.ToString();
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(text, Does.Contain("10"));
-                Assert.That(text, Does.Contain("20"));
+                Assert.That(text, Does.Contain(mealPlanId.ToString()));
+                Assert.That(text, Does.Contain(recipeId.ToString()));
             }
         }
     }

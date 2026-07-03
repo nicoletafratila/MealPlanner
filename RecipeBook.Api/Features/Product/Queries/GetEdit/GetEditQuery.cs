@@ -11,13 +11,13 @@ namespace RecipeBook.Api.Features.Product.Queries.GetEdit
         /// <summary>
         /// Id of the product to edit.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public GetEditQuery()
         {
         }
 
-        public GetEditQuery(int id)
+        public GetEditQuery(Guid id)
         {
             Id = id;
         }

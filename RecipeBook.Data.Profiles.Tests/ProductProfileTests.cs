@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
@@ -17,7 +18,7 @@ namespace RecipeBook.Data.Profiles.Tests
                 cfg.AddProfile<ProductProfile>();
                 cfg.AddProfile<UnitProfile>();
                 cfg.AddProfile<ProductCategoryProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();
@@ -28,7 +29,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var entity = new Product
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Flour",
                 ImageContent = [1, 2, 3],
                 ProductCategory = new ProductCategory { Name = "Baking" }
@@ -38,7 +39,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(1));
+                Assert.That(result.Id, Is.EqualTo(entity.Id));
                 Assert.That(result.Name, Is.EqualTo("Flour"));
                 Assert.That(result.ImageUrl, Does.StartWith("data:image/jpg;base64,"));
                 Assert.That(result.Index, Is.Zero);
@@ -51,7 +52,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var model = new ProductModel
             {
-                Id = 10,
+                Id = Guid.NewGuid(),
                 Name = "Sugar",
                 ImageUrl = "ignored"
             };
@@ -60,9 +61,8 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(10));
+                Assert.That(result.Id, Is.EqualTo(model.Id));
                 Assert.That(result.Name, Is.EqualTo("Sugar"));
-
                 Assert.That(result.ImageContent, Is.Null);
                 Assert.That(result.BaseUnit, Is.Null);
                 Assert.That(result.ProductCategory, Is.Null);
@@ -74,7 +74,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var entity = new Product
             {
-                Id = 7,
+                Id = Guid.NewGuid(),
                 Name = "Yogurt",
                 ImageContent = [5, 5, 5]
             };
@@ -83,7 +83,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(7));
+                Assert.That(result.Id, Is.EqualTo(entity.Id));
                 Assert.That(result.Name, Is.EqualTo("Yogurt"));
                 Assert.That(result.ImageUrl, Does.StartWith("data:image/jpg;base64,"));
                 Assert.That(result.Index, Is.Zero);
@@ -95,7 +95,7 @@ namespace RecipeBook.Data.Profiles.Tests
         {
             var model = new ProductEditModel
             {
-                Id = 20,
+                Id = Guid.NewGuid(),
                 Name = "Milk",
                 ImageUrl = "ignored"
             };
@@ -104,9 +104,8 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(20));
+                Assert.That(result.Id, Is.EqualTo(model.Id));
                 Assert.That(result.Name, Is.EqualTo("Milk"));
-
                 Assert.That(result.BaseUnit, Is.Null);
                 Assert.That(result.ProductCategory, Is.Null);
             }
@@ -115,30 +114,17 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void ImageUrl_Is_Generated_From_ImageContent()
         {
-            var entity = new Product
-            {
-                ImageContent = [10, 20, 30]
-            };
-
+            var entity = new Product { ImageContent = [10, 20, 30] };
             var model = _mapper.Map<ProductModel>(entity);
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(model.ImageUrl, Contains.Substring("data:image/jpg;base64,"));
-            }
+            Assert.That(model.ImageUrl, Contains.Substring("data:image/jpg;base64,"));
         }
 
         [Test]
         public void Null_ImageContent_Does_Not_Throw_And_Generates_Empty_Base64()
         {
             var entity = new Product();
-
             var model = _mapper.Map<ProductEditModel>(entity);
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(model.ImageUrl, Is.EqualTo("data:image/jpg;base64,"));
-            }
+            Assert.That(model.ImageUrl, Is.EqualTo("data:image/jpg;base64,"));
         }
     }
 }

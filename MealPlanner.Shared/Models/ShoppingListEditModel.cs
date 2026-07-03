@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using Common.Validators;
-using MealPlanner.Shared.Resources;
+using System.ComponentModel.DataAnnotations;using Common.Models; using Common.Validators; using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.Shared.Models
 {
@@ -11,10 +8,9 @@ namespace MealPlanner.Shared.Models
     public class ShoppingListEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new lists).
+        /// Database identity (empty for new lists).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Shopping list name (required, max 100 characters).
@@ -27,7 +23,7 @@ namespace MealPlanner.Shared.Models
         /// Linked shop id (required).
         /// </summary>
         [Required]
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         /// <summary>
         /// List of products in this shopping list.
@@ -41,7 +37,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public ShoppingListEditModel(int id, string name, int shopId)
+        public ShoppingListEditModel(Guid id, string name, Guid shopId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

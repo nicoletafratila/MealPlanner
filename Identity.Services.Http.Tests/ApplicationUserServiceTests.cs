@@ -1,0 +1,345 @@
+using System.Net;
+using System.Text.Json;
+using Common.Http;
+using Common.Models;
+using Common.Pagination;
+using Identity.Services.Http;
+using Identity.Shared.Constants;
+using Identity.Shared.Models;
+using Microsoft.Extensions.Logging;
+using Moq;
+using RichardSzalay.MockHttp;
+
+namespace Identity.Services.Http.Tests
+{
+    [TestFixture]
+    public class ApplicationUserServiceTests
+    {
+        private const string BaseAddress = "https://api.test/";
+        private const string UserPath = IdentityControllers.ApplicationUserUrl;
+
+        private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
+
+        private static ApplicationUserService CreateService(
+            MockHttpMessageHandler mockHttp,
+            string token = "test-token")
+        {
+            var httpClient = new HttpClient(mockHttp)
+            {
+                BaseAddress = new Uri(BaseAddress)
+            };
+
+            var tokenProvider = new Mock<ITokenProvider>();
+            tokenProvider
+                .Setup(t => t.GetTokenAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(token);
+            var logger = Mock.Of<ILogger<ApplicationUserService>>();
+
+            return new ApplicationUserService(httpClient, tokenProvider.Object, logger);
+        }
+
+        // ---------- SearchAsync ----------
+
+        [Test]
+        public async Task SearchAsync_ReturnsDeserializedPagedList_AndSendsAuthHeader()
+        {
+            const string token = "my-jwt-token";
+            var expected = new PagedList<ApplicationUserModel>(
+                [new() { UserId = "1", Username = "alice" }],
+                new Metadata { TotalCount = 1, PageSize = 10, PageNumber = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(expected, JsonOptions));
+
+            var service = CreateService(mockHttp, token: token);
+
+            var result = await service.SearchAsync(new QueryParameters<ApplicationUserModel>
+            {
+                PageNumber = 1,
+                PageSize = 10
+            });
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Items, Has.Count.EqualTo(1));
+                Assert.That(result.Items[0].Username, Is.EqualTo("alice"));
+                Assert.That(result.Metadata.TotalCount, Is.EqualTo(1));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_DefaultParameters_UsesMaxPageSize()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/search*")
+                .With(m => m.RequestUri!.Query.Contains($"pageSize={int.MaxValue}"))
+                .Respond("application/json", JsonSerializer.Serialize(
+                    new PagedList<ApplicationUserModel>([], new Metadata()), JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void SearchAsync_OnNonSuccessStatusCode_Throws()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/search*")
+                .Respond(HttpStatusCode.Forbidden);
+
+            var service = CreateService(mockHttp);
+
+            Assert.ThrowsAsync<HttpRequestException>(async () =>
+                await service.SearchAsync(new QueryParameters<ApplicationUserModel>
+                {
+                    PageNumber = 1,
+                    PageSize = 10
+                }));
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- GetEditAsync ----------
+        [Test]
+        public async Task GetEditAsync_ReturnsDeserializedModel_AndSendsAuthHeader()
+        {
+            // Arrange
+            const string token = "my-jwt-token";
+            const string userName = "john.doe@example.com";
+            var expected = new ApplicationUserEditModel { Username = userName };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/edit*")
+                .With(m =>
+                {
+                    var query = Uri.UnescapeDataString(m.RequestUri!.Query);
+                    return query.Contains($"username={userName}");
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expected, JsonOptions));
+
+            var service = CreateService(mockHttp, token: token);
+
+            // Act
+            var result = await service.GetEditAsync(userName);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Username, Is.EqualTo(expected.Username));
+            mockHttp.VerifyNoOutstandingExpectation();
+            mockHttp.VerifyNoOutstandingRequest();
+        }
+
+        [Test]
+        public void GetEditAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            const string userName = "john.doe@example.com";
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/edit*")
+                .Respond(HttpStatusCode.InternalServerError);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetEditAsync(userName));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- UpdateAsync ----------
+        [Test]
+        public async Task UpdateAsync_OnSuccess_DeserializesAndReturnsResponse()
+        {
+            // Arrange
+            var model = new ApplicationUserEditModel { Username = "john" };
+            var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Put, $"{BaseAddress}{UserPath}")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var deserialized = JsonSerializer.Deserialize<ApplicationUserEditModel>(body, JsonOptions);
+                    return deserialized is not null && deserialized.Username == model.Username;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.UpdateAsync(model);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("ok"));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task UpdateAsync_OnNonSuccessStatusCode_ReturnsFailedWithErrorBody()
+        {
+            // Arrange
+            var model = new ApplicationUserEditModel { Username = "john" };
+            const string errorBody = "update error";
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Put, $"{BaseAddress}{UserPath}")
+                .Respond(HttpStatusCode.BadRequest, "text/plain", errorBody);
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.UpdateAsync(model);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo(errorBody));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task UpdateAsync_OnInvalidJson_ReturnsFailedInvalidResponse()
+        {
+            // Arrange
+            var model = new ApplicationUserEditModel { Username = "john" };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            // Return invalid JSON so deserialization fails
+            mockHttp
+                .Expect(HttpMethod.Put, $"{BaseAddress}{UserPath}")
+                .Respond("application/json", "{ invalid json ");
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.UpdateAsync(model);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Invalid response from user update endpoint."));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- UnlockAsync ----------
+
+        [Test]
+        public void UnlockAsync_EmptyUserId_ThrowsArgumentException()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+            var service = CreateService(mockHttp);
+
+            Assert.ThrowsAsync<ArgumentException>(async () =>
+                await service.UnlockAsync(""));
+        }
+
+        [Test]
+        public async Task UnlockAsync_Success_ReturnsCommandResponse()
+        {
+            const string userId = "user-1";
+            var expectedResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{UserPath}/unlock")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var doc = System.Text.Json.JsonDocument.Parse(body);
+                    return doc.RootElement.TryGetProperty("userId", out var val)
+                           && val.GetString() == userId;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.UnlockAsync(userId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task UnlockAsync_NonSuccessStatusCode_ReturnsFailedResponse()
+        {
+            const string userId = "user-1";
+            const string errorBody = "Unlock error";
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{UserPath}/unlock")
+                .Respond(HttpStatusCode.BadRequest, "text/plain", errorBody);
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.UnlockAsync(userId);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo(errorBody));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task UnlockAsync_OnInvalidJson_ReturnsFailedResponse()
+        {
+            const string userId = "user-1";
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{UserPath}/unlock")
+                .Respond("application/json", "{ invalid json ");
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.UnlockAsync(userId);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Unlock user failed."));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+    }
+}

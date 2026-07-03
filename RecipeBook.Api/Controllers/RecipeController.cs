@@ -1,5 +1,5 @@
-﻿using BlazorBootstrap;
-using Common.Api;
+using Common.Core;
+using Common.Http;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
@@ -28,7 +28,7 @@ namespace RecipeBook.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult<RecipeModel>> GetByIdAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var query = new GetByIdQuery(id);
@@ -38,7 +38,7 @@ namespace RecipeBook.Api.Controllers
 
         [HttpGet("edit")]
         public async Task<ActionResult<RecipeEditModel>> GetEditAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var query = new GetEditQuery(id);
@@ -48,8 +48,8 @@ namespace RecipeBook.Api.Controllers
 
         [HttpGet("shoppingListProducts")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
-            [FromQuery] int recipeId,
-            [FromQuery] int shopId,
+            [FromQuery] Guid recipeId,
+            [FromQuery] Guid shopId,
             CancellationToken cancellationToken)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
@@ -127,7 +127,7 @@ namespace RecipeBook.Api.Controllers
 
         [HttpDelete]
         public async Task<ActionResult<CommandResponse?>> DeleteAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();

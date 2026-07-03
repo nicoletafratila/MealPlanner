@@ -10,11 +10,11 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList
         public MakeShoppingListCommandValidator()
         {
             RuleFor(x => x.MealPlanId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.ShoppingListMessages.MealPlanIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.ShoppingListMessages.ShopIdGreaterThanZero);
         }
     }

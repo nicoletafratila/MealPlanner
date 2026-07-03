@@ -1,8 +1,8 @@
 using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Tests.Repositories
 {
@@ -36,10 +36,15 @@ namespace RecipeBook.Api.Tests.Repositories
             return new RecipeRepository(context);
         }
 
+        private static Guid RecipeCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid UnitGuid(int seed) => new(seed * 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid ProductGuid(int seed) => new(seed * 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid RecipeGuid(int seed) => new(seed * 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static Recipe CreateRecipeGraph(
-            int id,
+            Guid id,
             string name,
-            int categoryId,
+            Guid categoryId,
             string categoryName)
         {
             var category = new RecipeCategory
@@ -51,7 +56,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
             return new Recipe
             {
-                Id = id,
+                Id = id, // Guid
                 Name = name,
                 RecipeCategoryId = categoryId,
                 RecipeCategory = category,
@@ -79,8 +84,8 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "R1", 10, "Main");
-            var r2 = CreateRecipeGraph(2, "R2", 20, "Dessert");
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
             ctx.Recipes.AddRange(r1, r2);
             await ctx.SaveChangesAsync();
 
@@ -98,12 +103,12 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "R1", 10, "Main");
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
             ctx.Recipes.Add(r1);
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdAsync(1, CancellationToken.None);
+            var found = await repo.GetByIdAsync(RecipeGuid(1), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -122,12 +127,12 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var recipe = CreateRecipeGraph(1, "R1", 10, "Main");
+            var recipe = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
             ctx.Recipes.Add(recipe);
             await ctx.SaveChangesAsync();
 
             // Act
-            var found = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
+            var found = await repo.GetByIdIncludeIngredientsAsync(RecipeGuid(1), CancellationToken.None);
 
             // Assert
             Assert.That(found, Is.Not.Null);
@@ -164,13 +169,13 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "R1", 10, "Main");
-            var r2 = CreateRecipeGraph(2, "R2", 20, "Dessert");
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
             ctx.Recipes.AddRange(r1, r2);
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(10, CancellationToken.None);
+            var result = await repo.SearchAsync(RecipeCategoryGuid(10), CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -184,8 +189,8 @@ namespace RecipeBook.Api.Tests.Repositories
             // Arrange
             var repo = CreateRepository(out var ctx);
 
-            var r1 = CreateRecipeGraph(1, "My Recipe", 10, "Main");
-            var r2 = CreateRecipeGraph(2, "Other", 20, "Dessert");
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "My Recipe", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "Other", RecipeCategoryGuid(20), "Dessert");
             r1.UserId = "user1";
             r2.UserId = "user1";
             ctx.Recipes.AddRange(r1, r2);
@@ -196,7 +201,7 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Id, Is.EqualTo(1));
+            Assert.That(result!.Id, Is.EqualTo(RecipeGuid(1)));
         }
 
         [Test]
@@ -223,26 +228,26 @@ namespace RecipeBook.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
-            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
-            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
+            ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
+            ctx.Recipes.Add(new Recipe { Id = RecipeGuid(1), Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
+            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m});
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdIncludeIngredientsAsync(RecipeGuid(1), CancellationToken.None);
             entity!.RecipeIngredients =
             [
-                new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m },
-                new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = 1, Quantity = 2m }
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m },
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(200), UnitId = UnitGuid(1), Quantity = 2m }
             ];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == 1).ToList();
+            var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == RecipeGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(2));
-            Assert.That(rows.Select(ri => ri.ProductId), Is.EquivalentTo(new[] { 100, 200 }));
+            Assert.That(rows.Select(ri => ri.ProductId), Is.EquivalentTo(new[] { ProductGuid(100), ProductGuid(200) }));
         }
 
         [Test]
@@ -250,24 +255,24 @@ namespace RecipeBook.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
-            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
+            ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
+            ctx.Recipes.Add(new Recipe { Id = RecipeGuid(1), Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m },
-                new RecipeIngredient { RecipeId = 1, ProductId = 200, UnitId = 1, Quantity = 2m });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m },
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(200), UnitId = UnitGuid(1), Quantity = 2m });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
-            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m }];
+            var entity = await repo.GetByIdIncludeIngredientsAsync(RecipeGuid(1), CancellationToken.None);
+            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m}];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == 1).ToList();
+            var rows = ctx.RecipeIngredients.Where(ri => ri.RecipeId == RecipeGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(1));
-            Assert.That(rows.Single().ProductId, Is.EqualTo(100));
+            Assert.That(rows.Single().ProductId, Is.EqualTo(ProductGuid(100)));
         }
 
         [Test]
@@ -275,26 +280,26 @@ namespace RecipeBook.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.RecipeCategories.Add(new RecipeCategory { Id = 10, Name = "Main", DisplaySequence = 1 });
+            ctx.RecipeCategories.Add(new RecipeCategory { Id = RecipeCategoryGuid(10), Name = "Main", DisplaySequence = 1 });
             ctx.Units.AddRange(
-                new Unit { Id = 1, Name = "kg", UnitType = 0 },
-                new Unit { Id = 2, Name = "g", UnitType = 0 });
-            ctx.Recipes.Add(new Recipe { Id = 1, Name = "R1", RecipeCategoryId = 10 });
-            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 1, Quantity = 1m });
+                new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 },
+                new Unit { Id = UnitGuid(2), Name = "g", UnitType = 0 });
+            ctx.Recipes.Add(new Recipe { Id = RecipeGuid(1), Name = "R1", RecipeCategoryId = RecipeCategoryGuid(10) });
+            ctx.RecipeIngredients.Add(new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(100), UnitId = UnitGuid(1), Quantity = 1m});
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeIngredientsAsync(1, CancellationToken.None);
-            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = 1, ProductId = 100, UnitId = 2, Quantity = 500m }];
+            var entity = await repo.GetByIdIncludeIngredientsAsync(RecipeGuid(1), CancellationToken.None);
+            entity!.RecipeIngredients = [new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(100), UnitId = UnitGuid(2), Quantity = 500m}];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var row = ctx.RecipeIngredients.Single(ri => ri.RecipeId == 1 && ri.ProductId == 100);
+            var row = ctx.RecipeIngredients.Single(ri => ri.RecipeId == RecipeGuid(1) && ri.ProductId == ProductGuid(100));
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(row.Quantity, Is.EqualTo(500m));
-                Assert.That(row.UnitId, Is.EqualTo(2));
+                Assert.That(row.UnitId, Is.EqualTo(UnitGuid(2)));
             }
         }
 

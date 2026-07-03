@@ -30,7 +30,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
         {
             var command = new UpdateCommand
             {
-                Model = new MealPlanEditModel { Id = 1, Name = "Plan1" }
+                Model = new MealPlanEditModel { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
             var result = _validator.TestValidate(command);

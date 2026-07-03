@@ -1,15 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.Modal;
-using Bunit;
-using Common.Pagination;
-using MealPlanner.UI.Web.Pages;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using BlazorBootstrap; using Blazored.Modal; using Bunit; using Common.Pagination; using MealPlanner.UI.Web.Pages.RecipeBooks; using MealPlanner.UI.Web.Pages; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Http; using RecipeBook.Shared.Models; using SortDirection = Common.Pagination.SortDirection;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -57,8 +46,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Arrange
             var categoryItems = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             var categories = new PagedList<RecipeCategoryModel>(
@@ -90,7 +79,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task OnRecipeCategoryChangedAsync_WithCategoryId_LoadsRecipes_WithCorrectFilterAndSorting()
         {
             // Arrange
-            var categoryItems = new List<RecipeCategoryModel> { new() { Id = 1 } };
+            var categoryItems = new List<RecipeCategoryModel> { new() { Id = Guid.NewGuid() } };
             var categories = new PagedList<RecipeCategoryModel>(
                 categoryItems, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
 
@@ -100,8 +89,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var recipes = new List<RecipeModel>
             {
-                new() { Id = 10, Name = "A" },
-                new() { Id = 11, Name = "B" }
+                new() { Id = Guid.NewGuid(), Name = "A" },
+                new() { Id = Guid.NewGuid(), Name = "B" }
             };
 
             _recipeServiceMock
@@ -130,7 +119,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                     qp.Filters != null &&
                     qp.Filters.Count() == 1 &&
                     qp.Filters.First().PropertyName == "RecipeCategoryId" &&
-                    (string)qp.Filters.First().Value == "1" &&
+                    qp.Filters.First().Value as string == "1" &&
                     qp.Sorting != null &&
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&

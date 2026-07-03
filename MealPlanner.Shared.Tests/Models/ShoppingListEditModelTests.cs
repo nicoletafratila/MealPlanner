@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MealPlanner.Shared.Models;
+using System.ComponentModel.DataAnnotations;using MealPlanner.Shared.Models;
 
 namespace MealPlanner.Shared.Tests.Models
 {
@@ -23,9 +22,9 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
-                Assert.That(model.ShopId, Is.Zero);
+                Assert.That(model.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Products, Is.Not.Null);
                 Assert.That(model.Products, Is.Empty);
 
@@ -41,12 +40,12 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Weekly Groceries",
-                ShopId = 10,
+                ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
                 ]
             };
 
@@ -66,12 +65,12 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
                 ]
             };
 
@@ -103,9 +102,9 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
-                ShopId = 1,
+                ShopId = Guid.NewGuid(),
                 Products = []
             };
 
@@ -129,7 +128,7 @@ namespace MealPlanner.Shared.Tests.Models
             // One product -> valid
             model.Products =
             [
-                new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
             ];
 
             isValid = TryValidate(model, out results);
@@ -140,9 +139,9 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
             const string name = "Party List";
-            const int shopId = 3;
+            var shopId = Guid.NewGuid();
 
             // Act
             var model = new ShoppingListEditModel(id, name, shopId);
@@ -161,7 +160,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ShoppingListEditModel(1, null!, 1);
+                _ = new ShoppingListEditModel(Guid.NewGuid(), null!, Guid.NewGuid());
             });
         }
 
@@ -170,12 +169,12 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShoppingListEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Holiday Shopping",
-                ShopId = 2,
+                ShopId = Guid.NewGuid(),
                 Products =
                 [
-                    new() { ShoppingListId = 1, Quantity = 1m, UnitId = 1, DisplaySequence = 0 }
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
                 ]
             };
 

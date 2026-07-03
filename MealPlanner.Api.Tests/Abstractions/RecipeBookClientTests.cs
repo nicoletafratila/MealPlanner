@@ -1,9 +1,4 @@
-﻿using System.Text.Json;
-using RecipeBook.Shared.Constants;
-using MealPlanner.Api.Abstractions;
-using Microsoft.Extensions.Configuration;
-using RecipeBook.Shared.Models;
-using RichardSzalay.MockHttp;
+using System.Text.Json;using MealPlanner.Api.Abstractions; using Microsoft.Extensions.Configuration; using RecipeBook.Shared.Constants; using RecipeBook.Shared.Models; using RichardSzalay.MockHttp;
 
 namespace MealPlanner.Api.Tests.Abstractions
 {
@@ -56,8 +51,8 @@ namespace MealPlanner.Api.Tests.Abstractions
 
             var categories = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Main" },
-                new() { Id = 2, Name = "Dessert" }
+                new() { Id = Guid.NewGuid(), Name = "Main" },
+                new() { Id = Guid.NewGuid(), Name = "Dessert" }
             };
 
             var url = $"{BaseAddress}{RecipeCategoryPath}/searchbycategories?categoryIds=1%2C2";
@@ -110,8 +105,8 @@ namespace MealPlanner.Api.Tests.Abstractions
 
             var categories = new List<ProductCategoryModel>
             {
-                new() { Id = 10, Name = "Dairy" },
-                new() { Id = 11, Name = "Bakery" }
+                new() { Id = Guid.NewGuid(), Name = "Dairy" },
+                new() { Id = Guid.NewGuid(), Name = "Bakery" }
             };
 
             var url = $"{BaseAddress}{ProductCategoryPath}/searchbycategories?categoryIds=10%2C11";

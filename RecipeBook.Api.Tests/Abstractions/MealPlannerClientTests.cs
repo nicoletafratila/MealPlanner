@@ -1,9 +1,4 @@
-﻿using System.Text.Json;
-using MealPlanner.Shared.Constants;
-using MealPlanner.Shared.Models;
-using Microsoft.Extensions.Configuration;
-using RecipeBook.Api.Abstractions;
-using RichardSzalay.MockHttp;
+using System.Text.Json;using MealPlanner.Shared.Constants; using MealPlanner.Shared.Models; using Microsoft.Extensions.Configuration; using RecipeBook.Api.Abstractions; using RichardSzalay.MockHttp;
 
 namespace RecipeBook.Api.Tests.Abstractions
 {
@@ -71,7 +66,7 @@ namespace RecipeBook.Api.Tests.Abstractions
             var (client, _, _) = CreateClient();
 
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-                await client.GetShopAsync(0, "token", CancellationToken.None));
+                await client.GetShopAsync(Guid.Empty, "token", CancellationToken.None));
         }
 
         [Test]
@@ -80,26 +75,27 @@ namespace RecipeBook.Api.Tests.Abstractions
             // Arrange
             var (client, mockHttp, _) = CreateClient();
 
+            var shopId = Guid.NewGuid();
             var expectedShop = new ShopEditModel
             {
-                Id = 5,
+                Id = shopId,
                 Name = "TestShop"
             };
 
-            var url = $"{BaseAddress}{ShopPath}/edit?id=5";
+            var url = $"{BaseAddress}{ShopPath}/edit?id={shopId}";
 
             mockHttp.When(HttpMethod.Get, url)
                 .WithHeaders("Authorization", "Bearer abc")
                 .Respond("application/json", JsonSerializer.Serialize(expectedShop, JsonOptions));
 
             // Act
-            var result = await client.GetShopAsync(5, "abc", CancellationToken.None);
+            var result = await client.GetShopAsync(shopId, "abc", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result!.Id, Is.EqualTo(5));
+                Assert.That(result!.Id, Is.EqualTo(shopId));
                 Assert.That(result.Name, Is.EqualTo("TestShop"));
             }
 
@@ -113,7 +109,7 @@ namespace RecipeBook.Api.Tests.Abstractions
             var (client, _, _) = CreateClient();
 
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-                await client.GetMealPlansByRecipeIdAsync(0, "token", CancellationToken.None));
+                await client.GetMealPlansByRecipeIdAsync(Guid.Empty, "token", CancellationToken.None));
         }
 
         [Test]
@@ -124,17 +120,18 @@ namespace RecipeBook.Api.Tests.Abstractions
 
             var plans = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
-            var url = $"{BaseAddress}{MealPlanPath}/searchbyid?id=7";
+            var recipeId = Guid.NewGuid();
+            var url = $"{BaseAddress}{MealPlanPath}/searchbyid?id={recipeId}";
 
             mockHttp.When(HttpMethod.Get, url)
                 .WithHeaders("Authorization", "Bearer tok")
                 .Respond("application/json", JsonSerializer.Serialize(plans, JsonOptions));
 
             // Act
-            var result = await client.GetMealPlansByRecipeIdAsync(7, "tok", CancellationToken.None);
+            var result = await client.GetMealPlansByRecipeIdAsync(recipeId, "tok", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);

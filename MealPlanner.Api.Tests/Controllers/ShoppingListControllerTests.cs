@@ -37,14 +37,15 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task GetEditAsync_SendsGetEditQuery()
         {
             // Arrange
-            var editModel = new ShoppingListEditModel { Id = 5, Name = "List1" };
+            var id = Guid.NewGuid();
+            var editModel = new ShoppingListEditModel { Id = id, Name = "List1" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(editModel);
 
             // Act
-            var result = await _controller.GetEditAsync(5, CancellationToken.None);
+            var result = await _controller.GetEditAsync(id, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;
@@ -106,15 +107,17 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task MakeShoppingListAsync_SendsMakeShoppingListCommand()
         {
             // Arrange
+            var mealPlanId = Guid.NewGuid();
+            var shopId = Guid.NewGuid();
             var createModel = new ShoppingListCreateModel
             {
-                MealPlanId = 3,
-                ShopId = 7
+                MealPlanId = mealPlanId,
+                ShopId = shopId
             };
 
             var editModel = new ShoppingListEditModel
             {
-                Id = 10,
+                Id = Guid.NewGuid(),
                 Name = "AutoList"
             };
 
@@ -142,8 +145,8 @@ namespace MealPlanner.Api.Tests.Controllers
             }
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(captured!.MealPlanId, Is.EqualTo(3));
-                Assert.That(captured!.ShopId, Is.EqualTo(7));
+                Assert.That(captured!.MealPlanId, Is.EqualTo(mealPlanId));
+                Assert.That(captured!.ShopId, Is.EqualTo(shopId));
             }
 
             _senderMock.Verify(m => m.Send(It.IsAny<MakeShoppingListCommand>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -153,7 +156,7 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task PostAsync_SendsAddCommand()
         {
             // Arrange
-            var model = new ShoppingListEditModel { Id = 0, Name = "NewList" };
+            var model = new ShoppingListEditModel { Id = Guid.Empty, Name = "NewList" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -175,7 +178,7 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task PutAsync_SendsUpdateCommand()
         {
             // Arrange
-            var model = new ShoppingListEditModel { Id = 2, Name = "UpdatedList" };
+            var model = new ShoppingListEditModel { Id = Guid.NewGuid(), Name = "UpdatedList" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -197,14 +200,15 @@ namespace MealPlanner.Api.Tests.Controllers
         public async Task DeleteAsync_SendsDeleteCommand()
         {
             // Arrange
+            var id = Guid.NewGuid();
             var response = CommandResponse.Success();
 
             _senderMock
-                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == 9), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.DeleteAsync(9, CancellationToken.None);
+            var result = await _controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
             var ok = result.Result as OkObjectResult;

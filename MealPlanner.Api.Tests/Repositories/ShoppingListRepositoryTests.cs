@@ -1,11 +1,11 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
-using MealPlanner.Data.TableConfigurations;
-using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using MealPlanner.Api.Repositories;
+using MealPlanner.Data.Entities;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests.Repositories
 {
@@ -44,27 +44,33 @@ namespace MealPlanner.Api.Tests.Repositories
             return new ShoppingListRepository(context);
         }
 
+        // Deterministic mapping so a given int seed always maps to the same Guid,
+        // preserving the linkage between ShoppingList.Id and ShoppingListProduct.ShoppingListId.
+        private static Guid ShoppingListGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid UnitGuid(int seed) => new(seed * 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid ProductGuid(int seed) => new(seed * 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         private static ShoppingList CreateShoppingListGraph(
-            int id,
+            Guid id,
             string name,
             string shopName)
         {
             var category = new ProductCategory
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Category1"
             };
 
             var baseUnit = new Unit
             {
-                Id = 1,
+                Id = UnitGuid(1),
                 Name = "kg",
                 UnitType = 0
             };
 
             var product = new Product
             {
-                Id = 10,
+                Id = ProductGuid(10),
                 Name = "Flour",
                 ProductCategoryId = category.Id,
                 ProductCategory = category,
@@ -74,14 +80,14 @@ namespace MealPlanner.Api.Tests.Repositories
 
             var unit = new Unit
             {
-                Id = 2,
+                Id = UnitGuid(2),
                 Name = "g",
                 UnitType = 0
             };
 
             var shop = new Shop
             {
-                Id = 5,
+                Id = Guid.NewGuid(),
                 Name = shopName
             };
 
@@ -111,7 +117,7 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             var repo = CreateRepository(out var ctx);
 
-            var list = CreateShoppingListGraph(1, "Weekly", "MyShop");
+            var list = CreateShoppingListGraph(ShoppingListGuid(1), "Weekly", "MyShop");
 
             ctx.ProductCategories.Add(list.Products![0].Product!.ProductCategory!);
             ctx.Units.Add(list.Products[0].Product!.BaseUnit!);
@@ -122,7 +128,7 @@ namespace MealPlanner.Api.Tests.Repositories
 
             await ctx.SaveChangesAsync();
 
-            var found = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
+            var found = await repo.GetByIdIncludeProductsAsync(ShoppingListGuid(1), CancellationToken.None);
 
             Assert.That(found, Is.Not.Null);
             using (Assert.EnterMultipleScope())
@@ -147,11 +153,11 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             var repo = CreateRepository(out var ctx);
 
-            var list = CreateShoppingListGraph(1, "Existing", "Shop");
+            var list = CreateShoppingListGraph(ShoppingListGuid(1), "Existing", "Shop");
             ctx.ShoppingLists.Add(list);
             await ctx.SaveChangesAsync();
 
-            var found = await repo.GetByIdIncludeProductsAsync(999, CancellationToken.None);
+            var found = await repo.GetByIdIncludeProductsAsync(ShoppingListGuid(999), CancellationToken.None);
 
             Assert.That(found, Is.Null);
         }
@@ -162,15 +168,15 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             var repo = CreateRepository(out var ctx);
 
-            var l1 = new ShoppingList { Id = 1, Name = "Weekly", UserId = "user1" };
-            var l2 = new ShoppingList { Id = 2, Name = "Other", UserId = "user1" };
+            var l1 = new ShoppingList { Id = ShoppingListGuid(1), Name = "Weekly", UserId = "user1" };
+            var l2 = new ShoppingList { Id = ShoppingListGuid(2), Name = "Other", UserId = "user1" };
             ctx.ShoppingLists.AddRange(l1, l2);
             await ctx.SaveChangesAsync();
 
             var result = await repo.SearchAsync("weekly", "user1", CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Id, Is.EqualTo(1));
+            Assert.That(result!.Id, Is.EqualTo(ShoppingListGuid(1)));
         }
 
         [Test]
@@ -178,7 +184,7 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             var repo = CreateRepository(out var ctx);
 
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "Weekly", UserId = "user1" });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "Weekly", UserId = "user1" });
             await ctx.SaveChangesAsync();
 
             var result = await repo.SearchAsync("does-not-exist", "user1", CancellationToken.None);
@@ -204,27 +210,28 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
-            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            var shopId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
+            ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", ShopId = shopId, UserId = "user1" });
             ctx.ShoppingListProducts.Add(
-                new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m });
+                new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(10), UnitId = UnitGuid(1), Quantity = 1m });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdIncludeProductsAsync(ShoppingListGuid(1), CancellationToken.None);
             entity!.Products =
             [
-                new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m },
-                new ShoppingListProduct { ShoppingListId = 1, ProductId = 20, UnitId = 1, Quantity = 3m }
+                new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(10), UnitId = UnitGuid(1), Quantity = 1m },
+                new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(20), UnitId = UnitGuid(1), Quantity = 3m }
             ];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.ShoppingListProducts.Where(p => p.ShoppingListId == 1).ToList();
+            var rows = ctx.ShoppingListProducts.Where(p => p.ShoppingListId == ShoppingListGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(2));
-            Assert.That(rows.Select(p => p.ProductId), Is.EquivalentTo(new[] { 10, 20 }));
+            Assert.That(rows.Select(p => p.ProductId), Is.EquivalentTo(new[] { ProductGuid(10), ProductGuid(20) }));
         }
 
         [Test]
@@ -232,24 +239,25 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
-            ctx.Units.Add(new Unit { Id = 1, Name = "kg", UnitType = 0 });
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+            var shopId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
+            ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", ShopId = shopId, UserId = "user1" });
             ctx.ShoppingListProducts.AddRange(
-                new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m },
-                new ShoppingListProduct { ShoppingListId = 1, ProductId = 20, UnitId = 1, Quantity = 2m });
+                new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(10), UnitId = UnitGuid(1), Quantity = 1m },
+                new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(20), UnitId = UnitGuid(1), Quantity = 2m });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
-            entity!.Products = [new ShoppingListProduct { ShoppingListId = 1, ProductId = 10, UnitId = 1, Quantity = 1m }];
+            var entity = await repo.GetByIdIncludeProductsAsync(ShoppingListGuid(1), CancellationToken.None);
+            entity!.Products = [new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(10), UnitId = UnitGuid(1), Quantity = 1m }];
 
             // Act
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var rows = ctx.ShoppingListProducts.Where(p => p.ShoppingListId == 1).ToList();
+            var rows = ctx.ShoppingListProducts.Where(p => p.ShoppingListId == ShoppingListGuid(1)).ToList();
             Assert.That(rows, Has.Count.EqualTo(1));
-            Assert.That(rows.Single().ProductId, Is.EqualTo(10));
+            Assert.That(rows.Single().ProductId, Is.EqualTo(ProductGuid(10)));
         }
 
         [Test]
@@ -257,30 +265,31 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             // Arrange
             var repo = CreateRepository(out var ctx);
-            ctx.Shops.Add(new Shop { Id = 5, Name = "Shop" });
+            var shopId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
             ctx.Units.AddRange(
-                new Unit { Id = 1, Name = "kg", UnitType = 0 },
-                new Unit { Id = 2, Name = "g", UnitType = 0 });
-            ctx.ShoppingLists.Add(new ShoppingList { Id = 1, Name = "List1", ShopId = 5, UserId = "user1" });
+                new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 },
+                new Unit { Id = UnitGuid(2), Name = "g", UnitType = 0 });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", ShopId = shopId, UserId = "user1" });
             ctx.ShoppingListProducts.Add(new ShoppingListProduct
             {
-                ShoppingListId = 1,
-                ProductId = 10,
-                UnitId = 1,
+                ShoppingListId = ShoppingListGuid(1),
+                ProductId = ProductGuid(10),
+                UnitId = UnitGuid(1),
                 Quantity = 1m,
                 Collected = false,
                 DisplaySequence = 1
             });
             await ctx.SaveChangesAsync();
 
-            var entity = await repo.GetByIdIncludeProductsAsync(1, CancellationToken.None);
+            var entity = await repo.GetByIdIncludeProductsAsync(ShoppingListGuid(1), CancellationToken.None);
             entity!.Products =
             [
                 new ShoppingListProduct
                 {
-                    ShoppingListId = 1,
-                    ProductId = 10,
-                    UnitId = 2,
+                    ShoppingListId = ShoppingListGuid(1),
+                    ProductId = ProductGuid(10),
+                    UnitId = UnitGuid(2),
                     Quantity = 5m,
                     Collected = true,
                     DisplaySequence = 3
@@ -291,11 +300,11 @@ namespace MealPlanner.Api.Tests.Repositories
             await repo.UpdateAsync(entity, CancellationToken.None);
 
             // Assert
-            var row = ctx.ShoppingListProducts.Single(p => p.ShoppingListId == 1 && p.ProductId == 10);
+            var row = ctx.ShoppingListProducts.Single(p => p.ShoppingListId == ShoppingListGuid(1) && p.ProductId == ProductGuid(10));
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(row.Quantity, Is.EqualTo(5m));
-                Assert.That(row.UnitId, Is.EqualTo(2));
+                Assert.That(row.UnitId, Is.EqualTo(UnitGuid(2)));
                 Assert.That(row.Collected, Is.True);
                 Assert.That(row.DisplaySequence, Is.EqualTo(3));
             }

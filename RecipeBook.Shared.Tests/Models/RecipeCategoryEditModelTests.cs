@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
 {
@@ -23,7 +22,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.DisplaySequence, Is.Zero);
 
@@ -39,7 +38,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange
             var model = new RecipeCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Breakfast",
                 DisplaySequence = 2
             };
@@ -60,7 +59,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new RecipeCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 DisplaySequence = 0
             };
@@ -94,7 +93,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange: negative value
             var model = new RecipeCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 DisplaySequence = -1
             };
@@ -119,7 +118,7 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 10;
+            var id = Guid.NewGuid();
             const string name = "Dessert";
             const int seq = 5;
 
@@ -141,7 +140,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Act / Assert
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new RecipeCategoryEditModel(1, null!, 0);
+                _ = new RecipeCategoryEditModel(Guid.NewGuid(), null!, 0);
             });
         }
 
@@ -150,7 +149,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new RecipeCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Main Course",
                 DisplaySequence = 3
             };

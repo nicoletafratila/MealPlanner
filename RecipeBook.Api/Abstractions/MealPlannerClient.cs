@@ -1,7 +1,4 @@
-﻿using System.Net.Http.Headers;
-using Common.Api;
-using MealPlanner.Shared.Constants;
-using MealPlanner.Shared.Models;
+using System.Net.Http.Headers;using Common.Http; using MealPlanner.Shared.Constants; using MealPlanner.Shared.Models;
 
 namespace RecipeBook.Api.Abstractions
 {
@@ -10,10 +7,10 @@ namespace RecipeBook.Api.Abstractions
         private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         private readonly MealPlannerClientConfig _apiConfig = apiConfig ?? throw new ArgumentNullException(nameof(apiConfig));
 
-        public async Task<ShopEditModel?> GetShopAsync(int shopId, string? authToken, CancellationToken cancellationToken)
+        public async Task<ShopEditModel?> GetShopAsync(Guid shopId, string? authToken, CancellationToken cancellationToken)
         {
-            if (shopId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(shopId), "shopId must be greater than zero.");
+            if (shopId == Guid.Empty)
+                throw new ArgumentOutOfRangeException(nameof(shopId), "shopId must not be empty.");
 
             ConfigureClient(authToken);
 
@@ -24,12 +21,12 @@ namespace RecipeBook.Api.Abstractions
         }
 
         public async Task<IList<MealPlanModel>?> GetMealPlansByRecipeIdAsync(
-            int recipeId,
+            Guid recipeId,
             string? authToken,
             CancellationToken cancellationToken)
         {
-            if (recipeId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(recipeId), "recipeId must be greater than zero.");
+            if (recipeId == Guid.Empty)
+                throw new ArgumentOutOfRangeException(nameof(recipeId), "recipeId must not be empty.");
 
             ConfigureClient(authToken);
 

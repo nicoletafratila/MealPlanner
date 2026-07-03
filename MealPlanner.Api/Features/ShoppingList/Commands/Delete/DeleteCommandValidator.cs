@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Delete
         public DeleteCommandValidator()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.ShoppingListMessages.IdGreaterThanZero);
         }
     }

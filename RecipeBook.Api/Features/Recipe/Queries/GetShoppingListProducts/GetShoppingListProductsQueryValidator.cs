@@ -11,11 +11,11 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetShoppingListProducts
         public GetShoppingListProductsQueryValidator()
         {
             RuleFor(x => x.RecipeId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(RecipeMessages.RecipeIdGreaterThanZero);
 
             RuleFor(x => x.ShopId)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(RecipeMessages.ShopIdGreaterThanZero);
         }
     }

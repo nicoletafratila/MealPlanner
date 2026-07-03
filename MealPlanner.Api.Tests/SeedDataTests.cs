@@ -1,9 +1,10 @@
-﻿using Common.Constants.Units;
+using Common.Constants.Units;
 using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests
 {
@@ -21,7 +22,7 @@ namespace MealPlanner.Api.Tests
                 typeof(MealPlanTableConfiguration).Assembly
             ]));
 
-            services.AddDbContext<MealPlannerDbContext>(opts =>  opts.UseInMemoryDatabase($"MealPlanner_{Guid.NewGuid()}"));
+            services.AddDbContext<MealPlannerDbContext>(opts => opts.UseInMemoryDatabase($"MealPlanner_{Guid.NewGuid()}"));
 
             _provider = services.BuildServiceProvider();
         }
@@ -32,12 +33,28 @@ namespace MealPlanner.Api.Tests
             _provider.Dispose();
         }
 
+        private static void SeedProductCategories(MealPlannerDbContext context)
+        {
+            string[] names =
+            [
+                "Lactate", "Mezeluri", "Legume", "Fructe", "Condimente", "Carne", "Conserve", "Ulei/Otet",
+                "Fructe uscate", "Paste", "Branzeturi", "Fainoase", "Sosuri", "Congelate", "Apa",
+                "Cofetarie/Patiserie", "Brutarie", "Peste", "Produse bucatarie", "Cereale", "Rechizite",
+                "Jucarii", "Detergenti", "Haine", "Alcool", "Produse igena", "Sucuri", "Ceai/Cafea",
+                "Hartie/Servetele", "Snaks", "Dulciuri"
+            ];
+
+            context.ProductCategories.AddRange(names.Select(n => new ProductCategory { Id = Guid.NewGuid(), Name = n }));
+            context.SaveChanges();
+        }
+
         [Test]
         public async Task EnsureSeedDataAsync_SeedsUnitsAndShops_WhenEmpty()
         {
             // Arrange
             using var scope = _provider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
+            SeedProductCategories(context);
 
             // Act
             await SeedData.EnsureSeedDataAsync(scope);
@@ -61,11 +78,14 @@ namespace MealPlanner.Api.Tests
             var ctx1 = scope1.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
             var ctx2 = scope2.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
 
+            SeedProductCategories(ctx1);
+
             // Act
             await SeedData.EnsureSeedDataAsync(scope1);
             var unitsCountFirst = ctx1.Units.Count();
             var shopsCountFirst = ctx1.Shops.Count();
 
+            SeedProductCategories(ctx2);
             await SeedData.EnsureSeedDataAsync(scope2);
             var unitsCountSecond = ctx2.Units.Count();
             var shopsCountSecond = ctx2.Shops.Count();

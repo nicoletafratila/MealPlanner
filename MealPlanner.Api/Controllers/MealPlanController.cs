@@ -1,5 +1,4 @@
-﻿using BlazorBootstrap;
-using Common.Models;
+﻿using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api.Controllers.Resources;
 using MealPlanner.Api.Features.MealPlan.Commands.Add;
@@ -26,7 +25,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("edit")]
         public async Task<ActionResult<MealPlanEditModel>> GetEditAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var query = new GetEditQuery { Id = id };
@@ -36,8 +35,8 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("shoppingListProducts")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
-            [FromQuery] int mealPlanId,
-            [FromQuery] int shopId,
+            [FromQuery] Guid mealPlanId,
+            [FromQuery] Guid shopId,
             CancellationToken cancellationToken)
         {
             var query = new GetShoppingListProductsQuery
@@ -86,7 +85,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("searchbyid")]
         public async Task<ActionResult<IList<MealPlanModel>>> SearchByRecipeIdAsync(
-            [FromQuery] int recipeId,
+            [FromQuery] Guid recipeId,
             CancellationToken cancellationToken)
         {
             var query = new SearchByRecipeIdQuery { RecipeId = recipeId };
@@ -116,7 +115,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpDelete]
         public async Task<ActionResult<CommandResponse?>> DeleteAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var command = new DeleteCommand { Id = id };

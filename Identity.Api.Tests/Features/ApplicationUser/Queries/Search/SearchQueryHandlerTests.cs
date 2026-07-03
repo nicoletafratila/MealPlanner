@@ -1,5 +1,4 @@
 using AutoMapper;
-using BlazorBootstrap;
 using Common.Pagination;
 using Identity.Api.Features.ApplicationUser.Queries.Search;
 using Identity.Shared.Models;

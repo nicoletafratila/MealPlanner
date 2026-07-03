@@ -14,7 +14,7 @@ namespace RecipeBook.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(unit.Id, Is.Zero);
+                Assert.That(unit.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(unit.Name, Is.EqualTo(string.Empty));
                 Assert.That(unit.UnitType, Is.Default);
             }
@@ -25,11 +25,12 @@ namespace RecipeBook.Data.Entities.Tests
         {
             // Arrange
             var expectedType = (UnitType)1;
+            var expectedId = Guid.NewGuid();
 
             // Act
             var unit = new Unit
             {
-                Id = 5,
+                Id = expectedId,
                 Name = "Test unit",
                 UnitType = expectedType
             };
@@ -37,7 +38,7 @@ namespace RecipeBook.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(unit.Id, Is.EqualTo(5));
+                Assert.That(unit.Id, Is.EqualTo(expectedId));
                 Assert.That(unit.Name, Is.EqualTo("Test unit"));
                 Assert.That(unit.UnitType, Is.EqualTo(expectedType));
             }

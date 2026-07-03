@@ -22,9 +22,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             // Arrange
             var model = new RecipeEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "My Recipe",
-                RecipeCategoryId = 2
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             // Act
@@ -50,9 +50,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             var command = new UpdateCommand();
             var model = new RecipeEditModel
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Another Recipe",
-                RecipeCategoryId = 3
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             // Act

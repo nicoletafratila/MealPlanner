@@ -3,15 +3,15 @@ using BlazorBootstrap;
 using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
+using Common.Services.Converters;
 using Common.UI;
-using MealPlanner.Services;
+using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using RecipeBook.Services;
-using RecipeBook.Shared.Converters;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
@@ -45,8 +45,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(Resources.ShoppingListEdit), ErrorMessageResourceName = "QuantityPositiveNumber")]
         public string? Quantity { get; set; }
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Resources.ShoppingListEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
+        [Required(ErrorMessageResourceType = typeof(Resources.ShoppingListEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
         public string? UnitId { get; set; }
 
         public IList<UnitModel>? Units { get; set; }
@@ -95,7 +94,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -106,8 +105,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shops = await ShopService.SearchAsync();
             BaseUnits = await UnitService.SearchAsync();
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            _ = Guid.TryParse(Id, out var id);
+            if (id == Guid.Empty)
             {
                 ShoppingList = new ShoppingListEditModel
                 {
@@ -136,7 +135,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             CommandResponse? response;
 
-            if (shoppingList.Id == 0)
+            if (shoppingList.Id == Guid.Empty)
             {
                 response = await ShoppingListService.AddAsync(shoppingList);
             }
@@ -163,7 +162,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteAsync()
         {
-            if (ShoppingList is null || ShoppingList.Id == 0)
+            if (ShoppingList is null || ShoppingList.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -188,7 +187,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task DeleteCoreAsync(ShoppingListEditModel shoppingList)
         {
-            if (shoppingList.Id == 0)
+            if (shoppingList.Id == Guid.Empty)
                 return;
 
             var response = await ShoppingListService.DeleteAsync(shoppingList.Id);
@@ -248,15 +247,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 ProductId != "0" &&
                 UnitId != "0")
             {
-                var product = Products?.Items?.FirstOrDefault(i => i.Id == int.Parse(ProductId));
+                var product = Products?.Items?.FirstOrDefault(i => i.Id == Guid.Parse(ProductId));
                 if (product is null)
                     return;
 
-                await AddProductAsync(product, decimal.Parse(Quantity!), int.Parse(UnitId!));
+                await AddProductAsync(product, decimal.Parse(Quantity!), Guid.Parse(UnitId!));
             }
         }
 
-        private bool CanAddMealPlan => ShoppingList?.ShopId != 0;
+        private bool CanAddMealPlan => ShoppingList?.ShopId != Guid.Empty;
 
         private async Task AddMealPlanAsync()
         {
@@ -278,7 +277,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            if (!int.TryParse(result.Data.ToString(), out var mealPlanId))
+            if (!Guid.TryParse(result.Data.ToString(), out var mealPlanId))
             {
                 await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectMealPlan);
                 return;
@@ -297,7 +296,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
-        private bool CanAddRecipe => ShoppingList?.ShopId != 0;
+        private bool CanAddRecipe => ShoppingList?.ShopId != Guid.Empty;
 
         private async Task AddRecipeAsync()
         {
@@ -320,7 +319,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
 
             var recipeIdString = result.Data.ToString();
-            if (!int.TryParse(recipeIdString, out var recipeId))
+            if (!Guid.TryParse(recipeIdString, out var recipeId))
             {
                 await ShowErrorAsync(Resources.ShoppingListEdit.MustSelectRecipe);
                 return;
@@ -339,7 +338,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
-        private async Task AddProductAsync(ProductModel product, decimal quantity, int unitId)
+        private async Task AddProductAsync(ProductModel product, decimal quantity, Guid unitId)
         {
             if (ShoppingList?.Products is null || BaseUnits?.Items is null)
                 return;
@@ -416,41 +415,47 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             StateHasChanged();
         }
 
-        private async Task CheckboxChangedAsync(ShoppingListProductEditModel model)
+        private async Task CheckboxChangedAsync(ShoppingListProductEditModel model, bool newValue)
         {
             var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
-
-            if (itemToChange is not null)
-            {
-                itemToChange.Collected = !itemToChange.Collected;
-            }
-
-            if (ShoppingList is null)
+            if (itemToChange is null || ShoppingList is null)
                 return;
 
+            var oldValue = itemToChange.Collected;
+            itemToChange.Collected = newValue;
+
             var response = await ShoppingListService.UpdateAsync(ShoppingList);
-            if (response != null && !response.Succeeded)
+            if (response is null || !response.Succeeded)
             {
-                await ShowErrorAsync(response.Message!);
-            }
-            else
-            {
-                await OnInitializedAsync();
+                await ShowErrorAsync(response?.Message ?? Resources.ShoppingListEdit.SaveFailed);
+                itemToChange.Collected = oldValue;
                 StateHasChanged();
+                return;
             }
+
+            if (ShoppingList.Products is { Count: > 0 })
+            {
+                ShoppingList.Products = ShoppingList.Products
+                    .OrderBy(item => item.Collected)
+                    .ThenBy(item => item.DisplaySequence)
+                    .ThenBy(item => item.Product?.Name)
+                    .ToList();
+            }
+
+            StateHasChanged();
         }
 
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
             var productCategoryId = e.Value?.ToString();
-            var filters = new List<FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem(
+                filters.Add(new Common.Pagination.FilterItem(
                     "ProductCategoryId",
                     productCategoryId,
-                    FilterOperator.Equals,
+                    Common.Pagination.FilterOperator.Equals,
                     StringComparison.OrdinalIgnoreCase));
             }
 
@@ -462,7 +467,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -489,7 +494,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            var product = await ProductService.GetEditAsync(int.Parse(productId));
+            var product = await ProductService.GetEditAsync(Guid.Parse(productId));
             if (product == null || BaseUnits?.Items == null)
             {
                 StateHasChanged();
@@ -505,12 +510,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             Units = BaseUnits.Items.Where(x => x.UnitType == baseUnit.UnitType).ToList();
 
+            UnitId = baseUnit.Id.ToString();
+            var selectedUnit = Units.FirstOrDefault(x => x.Id == baseUnit.Id);
+            if (selectedUnit != null)
+                selectedUnit.IsSelected = true;
+
             StateHasChanged();
         }
 
         private async Task OnShopChangedAsync(ChangeEventArgs e)
         {
-            if (!int.TryParse(e.Value?.ToString(), out var shopId))
+            if (!Guid.TryParse(e.Value?.ToString(), out var shopId))
                 return;
 
             if (ShoppingList is null)

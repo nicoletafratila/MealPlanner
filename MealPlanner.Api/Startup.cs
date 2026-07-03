@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using Common.Data.DataContext;
@@ -7,7 +7,6 @@ using Identity.Data.Profiles;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Profiles;
-using MealPlanner.Data.Profiles.Resolvers;
 using MealPlanner.Data.TableConfigurations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,13 +14,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecipeBook.Data.Profiles;
-using RecipeBook.Data.Profiles.Resolvers;
 using RecipeBook.Data.TableConfigurations;
 using Serilog;
 
 namespace MealPlanner.Api
 {
-    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
+    public class Startup(IConfiguration configuration) : Common.Core.Startup(configuration)
     {
         protected override void RegisterTableConfigurationAssemblies(IServiceCollection services)
         {
@@ -49,15 +47,6 @@ namespace MealPlanner.Api
 
         protected override void RegisterServices(IServiceCollection services)
         {
-            services.AddTransient<EditMealPlanModelToMealPlanResolver>();
-            services.AddTransient<EditRecipeModelToRecipeResolver>();
-            services.AddTransient<EditShopModelToShopResolver>();
-            services.AddTransient<EditShoppingListModelToShoppingListResolver>();
-            services.AddTransient<MealPlanToEditMealPlanModelResolver>();
-            services.AddTransient<RecipeToEditRecipeModelResolver>();
-            services.AddTransient<ShoppingListToEditShoppingListModelResolver>();
-            services.AddTransient<ShopToEditShopModelResolver>();
-
             services.AddSingleton<RecipeBookClientConfig>();
 
             services.AddHttpClient<IRecipeBookClient, RecipeBookClient>()

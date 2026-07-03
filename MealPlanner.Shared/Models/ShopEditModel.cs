@@ -1,8 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using Common.Validators;
-using MealPlanner.Shared.Resources;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using Common.Models; using Common.Validators; using MealPlanner.Shared.Resources; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
@@ -12,10 +8,9 @@ namespace MealPlanner.Shared.Models
     public class ShopEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new shops).
+        /// Database identity (empty for new shops).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Shop name (required, max 100 characters).
@@ -67,7 +62,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Returns the display sequence entry for a given category id, or null if not found.
         /// </summary>
-        public ShopDisplaySequenceEditModel? GetDisplaySequence(int? categoryId)
+        public ShopDisplaySequenceEditModel? GetDisplaySequence(Guid? categoryId)
         {
             if (categoryId is null || DisplaySequence is null)
                 return null;

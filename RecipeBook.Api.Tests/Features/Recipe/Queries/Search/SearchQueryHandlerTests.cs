@@ -86,16 +86,19 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
+            var cat10 = Guid.NewGuid();
+            var cat20 = Guid.NewGuid();
+
             var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = 10 },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = 20 }
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = cat10 },
+                new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = cat20 }
             };
 
             var models = new List<RecipeModel>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = "10" },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = "20" }
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = cat10.ToString() },
+                new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = cat20.ToString() }
             };
 
             _repoMock
@@ -125,7 +128,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
             Assert.That(result.Items, Has.Count.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 2]));
+                Assert.That(result.Items.Select(x => x.Name), Is.EquivalentTo(["R1", "R2"]));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
@@ -136,18 +139,21 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_CategoryFilter_AppliesFilterBeforePaging()
         {
+            var cat10 = Guid.NewGuid();
+            var cat20 = Guid.NewGuid();
+
             var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = 10 },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = 20 },
-                new() { Id = 3, Name = "R3", RecipeCategoryId = 10 },
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = cat10 },
+                new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = cat20 },
+                new() { Id = Guid.NewGuid(), Name = "R3", RecipeCategoryId = cat10 },
             };
 
             var models = new List<RecipeModel>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = "10" },
-                new() { Id = 2, Name = "R2", RecipeCategoryId = "20" },
-                new() { Id = 3, Name = "R3", RecipeCategoryId = "10" },
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = cat10.ToString() },
+                new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = cat20.ToString() },
+                new() { Id = Guid.NewGuid(), Name = "R3", RecipeCategoryId = cat10.ToString() },
             };
 
             _repoMock
@@ -168,14 +174,14 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
 
             var query = new SearchQuery
             {
-                CategoryId = "10",
+                CategoryId = cat10.ToString(),
                 QueryParameters = qp
             };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.That(result.Items, Has.Count.EqualTo(2));
-            Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 3]));
+            Assert.That(result.Items.Select(x => x.Name), Is.EquivalentTo(["R1", "R3"]));
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<RecipeModel>>(entities), Times.Once);
@@ -186,7 +192,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         {
             var entities = new List<RecipeBook.Data.Entities.Recipe>
             {
-                new() { Id = 1, Name = "R1", RecipeCategoryId = 10 }
+                new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = Guid.NewGuid() }
             };
 
             _repoMock

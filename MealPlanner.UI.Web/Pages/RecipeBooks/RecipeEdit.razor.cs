@@ -4,10 +4,10 @@ using Common.Models;
 using Common.Pagination;
 using Common.UI;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using RecipeBook.Services;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -37,8 +37,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "QuantityPositiveNumber")]
         public string? Quantity { get; set; }
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
+        [Required(ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "SelectUnitOfMeasurement")]
         public string? UnitId { get; set; }
 
         public IList<UnitModel>? Units { get; set; }
@@ -81,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "DisplaySequence",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -98,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -108,8 +107,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             ProductCategories = await ProductCategoryService.SearchAsync(queryParametersProduct);
             BaseUnits = await UnitService.SearchAsync();
 
-            _ = int.TryParse(Id, out var id);
-            if (id == 0)
+            _ = Guid.TryParse(Id, out var id);
+            if (id == Guid.Empty)
             {
                 Recipe = new RecipeEditModel();
             }
@@ -132,7 +131,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             CommandResponse? response;
 
-            if (recipe.Id == 0)
+            if (recipe.Id == Guid.Empty)
             {
                 response = await RecipeService.AddAsync(recipe);
             }
@@ -159,7 +158,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteAsync()
         {
-            if (Recipe is null || Recipe.Id == 0)
+            if (Recipe is null || Recipe.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -184,7 +183,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteCoreAsync(RecipeEditModel recipe)
         {
-            if (recipe.Id == 0)
+            if (recipe.Id == Guid.Empty)
                 return;
 
             var response = await RecipeService.DeleteAsync(recipe.Id);
@@ -222,12 +221,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 Recipe.Ingredients = [];
             }
 
-            var productId = int.Parse(ProductId!);
+            var productId = Guid.Parse(ProductId!);
 
             var existing = Recipe.Ingredients.FirstOrDefault(i => i.Product?.Id == productId);
             if (existing != null)
             {
-                if (existing.Unit!.Id == int.Parse(UnitId!))
+                if (existing.Unit!.Id == Guid.Parse(UnitId!))
                 {
                     existing.Quantity += decimal.Parse(Quantity!);
                 }
@@ -245,8 +244,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 RecipeId = Recipe.Id,
                 Product = Products?.Items?.FirstOrDefault(i => i.Id == productId),
                 Quantity = decimal.Parse(Quantity!),
-                UnitId = int.Parse(UnitId!),
-                Unit = Units?.FirstOrDefault(i => i.Id == int.Parse(UnitId!))
+                UnitId = Guid.Parse(UnitId!),
+                Unit = Units?.FirstOrDefault(i => i.Id == Guid.Parse(UnitId!))
             };
 
             Recipe.Ingredients.Add(ingredient);
@@ -293,14 +292,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
             var productCategoryId = e.Value?.ToString();
-            var filters = new List<FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
-                filters.Add(new FilterItem(
+                filters.Add(new Common.Pagination.FilterItem(
                     "ProductCategoryId",
                     productCategoryId,
-                    FilterOperator.Equals,
+                    Common.Pagination.FilterOperator.Equals,
                     StringComparison.OrdinalIgnoreCase));
             }
 
@@ -312,7 +311,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -339,7 +338,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 return;
             }
 
-            var product = await ProductService.GetEditAsync(int.Parse(productId));
+            var product = await ProductService.GetEditAsync(Guid.Parse(productId));
             if (product == null || BaseUnits?.Items == null)
             {
                 StateHasChanged();
@@ -356,6 +355,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             Units = BaseUnits.Items
                 .Where(x => x.UnitType == baseUnit.UnitType)
                 .ToList();
+
+            UnitId = product.BaseUnitId.ToString();
+            var selectedUnit = Units.FirstOrDefault(x => x.Id == product.BaseUnitId);
+            if (selectedUnit != null)
+                selectedUnit.IsSelected = true;
 
             StateHasChanged();
         }

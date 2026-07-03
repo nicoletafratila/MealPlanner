@@ -96,9 +96,9 @@ namespace Common.Services.Tests
         [Test]
         public async Task GetLogAsync_Returns_Mapped_Model_When_Found()
         {
-            const int id = 5;
+            var id = Guid.NewGuid();
             var entity = new Log();
-            var mapped = new LogModel { Id = 5 };
+            var mapped = new LogModel { Id = id };
 
             _repositoryMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -123,7 +123,7 @@ namespace Common.Services.Tests
         [Test]
         public async Task GetLogAsync_Returns_Null_When_Not_Found()
         {
-            const int id = 5;
+            var id = Guid.NewGuid();
 
             _repositoryMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))

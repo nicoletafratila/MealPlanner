@@ -1,4 +1,4 @@
-﻿using Identity.Api.Features.Authentication.Commands.ResetPassword;
+using Identity.Api.Features.Authentication.Commands.ResetPassword;
 using Identity.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

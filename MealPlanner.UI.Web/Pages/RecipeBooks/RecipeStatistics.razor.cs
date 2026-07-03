@@ -2,10 +2,11 @@ using BlazorBootstrap;
 using Blazored.SessionStorage;
 using Common.Models;
 using Common.Pagination;
-using MealPlanner.Services;
+using MealPlanner.Services.Http;
+using MealPlanner.UI.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -16,7 +17,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Parameter]
         public QueryParameters<RecipeCategoryModel>? QueryParameters { get; set; } = new();
 
-        public IList<StatisticModel> Statistics { get; private set; } = [];
+        public IList<ChartStatisticModel> Statistics { get; private set; } = [];
         public PagedList<RecipeCategoryModel>? Categories { get; private set; }
 
         [Inject]
@@ -41,7 +42,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "DisplaySequence",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = 3,
@@ -62,7 +63,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private static Task InitializeChartsAsync(IEnumerable<StatisticModel> statistics)
+        private static Task InitializeChartsAsync(IEnumerable<ChartStatisticModel> statistics)
         {
             var tasks = statistics
                 .Where(s => s.Chart is not null && s.ChartData is not null && s.ChartOptions is not null)
@@ -82,12 +83,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var items = Categories.Items ?? [];
             var data = await StatisticsService.GetFavoriteRecipesAsync(items) ?? [];
 
+            var chartItems = new List<ChartStatisticModel>(data.Count);
             foreach (var item in data)
             {
-                item.GenerateChartData();
+                var chartItem = new ChartStatisticModel(item);
+                chartItem.GenerateChartData();
+                chartItems.Add(chartItem);
             }
 
-            Statistics = data;
+            Statistics = chartItems;
             StateHasChanged();
         }
 

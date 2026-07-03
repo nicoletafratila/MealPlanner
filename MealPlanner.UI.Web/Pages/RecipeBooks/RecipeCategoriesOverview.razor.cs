@@ -3,7 +3,7 @@ using Common.Models;
 using Common.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -126,7 +126,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             return index > 0;
         }
 
-        private void MoveUp(RecipeCategoryModel item)
+        private async Task MoveUp(RecipeCategoryModel item)
         {
             if (Categories is null)
                 return;
@@ -138,6 +138,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             Categories.RemoveAt(index);
             Categories.Insert(index - 1, item);
             Categories.SetIndexes();
+            for (var i = 0; i < Categories.Count; i++)
+                Categories[i].DisplaySequence = i + 1;
+            await AutoSaveDisplaySequenceAsync();
         }
 
         private bool CanMoveDown(RecipeCategoryModel item)
@@ -149,7 +152,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             return index >= 0 && index < Categories.Count - 1;
         }
 
-        private void MoveDown(RecipeCategoryModel item)
+        private async Task MoveDown(RecipeCategoryModel item)
         {
             if (Categories is null)
                 return;
@@ -161,6 +164,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             Categories.RemoveAt(index);
             Categories.Insert(index + 1, item);
             Categories.SetIndexes();
+            for (var i = 0; i < Categories.Count; i++)
+                Categories[i].DisplaySequence = i + 1;
+            await AutoSaveDisplaySequenceAsync();
+        }
+
+        private async Task AutoSaveDisplaySequenceAsync()
+        {
+            var response = await RecipeCategoriesService.UpdateAsync(Categories);
+            if (response is null || !response.Succeeded)
+                await ShowErrorAsync(Resources.RecipeCategoriesOverview.SaveFailedMessage);
         }
 
         private async Task RefreshAsync()

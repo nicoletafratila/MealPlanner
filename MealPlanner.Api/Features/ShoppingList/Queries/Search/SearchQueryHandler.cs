@@ -59,12 +59,8 @@ namespace MealPlanner.Api.Features.ShoppingList.Queries.Search
             if (parameters.Sorting is null || !parameters.Sorting.Any())
                 return source;
 
-            var sortingItems = parameters.Sorting
-                .Select(QueryParameters<ShoppingListModel>.FromModel)
-                .ToList();
-
             return source.AsQueryable()
-                         .ApplySorting(sortingItems)!
+                         .ApplySorting(parameters.Sorting)!
                          .ToList();
         }
     }

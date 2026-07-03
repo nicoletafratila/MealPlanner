@@ -15,7 +15,6 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         private Mock<IMapper> _mapperMock = null!;
         private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchQueryHandler _handler = null!;
-        private static readonly int[] expected = [1, 2];
 
         [SetUp]
         public void SetUp()
@@ -86,16 +85,18 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
             var entities = new List<MealPlanner.Data.Entities.Shop>
             {
-                new() { Id = 1, Name = "Shop1" },
-                new() { Id = 2, Name = "Shop2" }
+                new() { Id = id1, Name = "Shop1" },
+                new() { Id = id2, Name = "Shop2" }
             };
 
             var models = new List<ShopModel>
             {
-                new() { Id = 1, Name = "Shop1" },
-                new() { Id = 2, Name = "Shop2" }
+                new() { Id = id1, Name = "Shop1" },
+                new() { Id = id2, Name = "Shop2" }
             };
 
             _repoMock
@@ -124,7 +125,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
             Assert.That(result.Items.Count, Is.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(expected));
+                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(new[] { id1, id2 }));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
@@ -137,7 +138,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         {
             var entities = new List<MealPlanner.Data.Entities.Shop>
             {
-                new() { Id = 1, Name = "Shop1" }
+                new() { Id = Guid.NewGuid(), Name = "Shop1" }
             };
 
             _repoMock

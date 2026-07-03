@@ -1,7 +1,7 @@
 using Bunit;
 using Common.Models;
 using Common.UI;
-using Identity.Services;
+using Identity.Services.Http;
 using Identity.Shared.Models;
 using MealPlanner.UI.Web.Pages;
 using Microsoft.Extensions.DependencyInjection;

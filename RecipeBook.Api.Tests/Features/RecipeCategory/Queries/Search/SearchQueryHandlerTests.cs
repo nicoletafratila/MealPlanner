@@ -17,6 +17,8 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.Search
         private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchQueryHandler _handler = null!;
 
+        private static Guid RecipeCategoryGuid(int seed) => new(seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         [SetUp]
         public void SetUp()
         {
@@ -88,14 +90,14 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.Search
         {
             var entities = new List<RecipeCategoryEntity>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
             };
 
             var models = new List<RecipeCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 },
-                new() { Id = 2, Name = "Cat2", DisplaySequence = 2 }
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
             };
 
             _repoMock
@@ -124,7 +126,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.Search
             Assert.That(result.Items, Has.Count.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 2]));
+                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(new[] { RecipeCategoryGuid(1), RecipeCategoryGuid(2) }));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
@@ -137,7 +139,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.Search
         {
             var entities = new List<RecipeCategoryEntity>
             {
-                new() { Id = 1, Name = "Cat1", DisplaySequence = 1 }
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 }
             };
 
             _repoMock

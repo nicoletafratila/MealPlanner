@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             x:Class="MealPlanner.UI.Mobile.Pages.Identity.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="Sign In"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="32,60,32,32" Spacing="16">
+
+            <Label Text="MealPlanner" FontSize="32" FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}" HorizontalOptions="Center" />
+            <Label Text="Sign in to continue" TextColor="{StaticResource DarkGray}"
+                   HorizontalOptions="Center" Margin="0,0,0,24" />
+
+            <Label Text="Username" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Username}" Placeholder="Enter username"
+                   ReturnType="Next" />
+
+            <Label Text="Password" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Password}" Placeholder="Enter password"
+                   IsPassword="True" ReturnType="Go"
+                   ReturnCommand="{Binding LoginCommand}" />
+
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
+            <Button Text="Sign In" Command="{Binding LoginCommand}"
+                    IsEnabled="{Binding IsNotBusy}" Margin="0,8,0,0" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4" Margin="0,16,0,0">
+                <Label Text="Don't have an account?" VerticalOptions="Center" />
+                <Button Text="Register" Style="{StaticResource OutlineButton}"
+                        Command="{Binding GoToRegisterCommand}" Padding="8,4" />
+            </HorizontalStackLayout>
+
+            <Button Text="Forgot Password?" Style="{StaticResource OutlineButton}"
+                    Command="{Binding GoToForgotPasswordCommand}"
+                    HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -22,7 +22,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Update
             // Arrange
             var model = new ProductCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Category1"
             };
 
@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Update
             var command = new UpdateCommand();
             var model = new ProductCategoryEditModel
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Category2"
             };
 

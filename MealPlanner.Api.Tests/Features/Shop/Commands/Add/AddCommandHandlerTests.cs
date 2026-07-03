@@ -82,12 +82,12 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
         public async Task Handle_ExistingShop_ReturnsFailedResponse_AndDoesNotAdd()
         {
             // Arrange
-            var model = new ShopEditModel { Id = 0, Name = "Shop1" };
+            var model = new ShopEditModel { Id = Guid.Empty, Name = "Shop1" };
             var command = new AddCommand { Model = model };
 
             var existingShops = new List<MealPlanner.Data.Entities.Shop>
             {
-                new() { Id = 1, Name = "Shop1", UserId = "user1" }
+                new() { Id = Guid.NewGuid(), Name = "Shop1", UserId = "user1" }
             };
 
             _repoMock
@@ -111,14 +111,14 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
         public async Task Handle_NewShop_AddsAndReturnsSuccess()
         {
             // Arrange
-            var model = new ShopEditModel { Id = 0, Name = "NewShop" };
+            var model = new ShopEditModel { Id = Guid.Empty, Name = "NewShop" };
             var command = new AddCommand { Model = model };
 
             _repoMock
                 .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
-            var mappedEntity = new MealPlanner.Data.Entities.Shop { Id = 5, Name = "NewShop" };
+            var mappedEntity = new MealPlanner.Data.Entities.Shop { Id = Guid.NewGuid(), Name = "NewShop" };
 
             _mapperMock
                 .Setup(m => m.Map<MealPlanner.Data.Entities.Shop>(model))
@@ -144,14 +144,14 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            var model = new ShopEditModel { Id = 0, Name = "ErrorShop" };
+            var model = new ShopEditModel { Id = Guid.Empty, Name = "ErrorShop" };
             var command = new AddCommand { Model = model };
 
             _repoMock
                 .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
-            var mappedEntity = new MealPlanner.Data.Entities.Shop { Id = 7, Name = "ErrorShop" };
+            var mappedEntity = new MealPlanner.Data.Entities.Shop { Id = Guid.NewGuid(), Name = "ErrorShop" };
 
             _mapperMock
                 .Setup(m => m.Map<MealPlanner.Data.Entities.Shop>(model))

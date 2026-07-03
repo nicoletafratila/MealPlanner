@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
+             xmlns:model="clr-namespace:Identity.Shared.Models;assembly=Identity.Shared"
+             x:Class="MealPlanner.UI.Mobile.Pages.Identity.UsersOverviewPage"
+             x:DataType="vm:UsersOverviewViewModel"
+             Title="Users">
+
+    <Grid RowDefinitions="*,Auto">
+        <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Users}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ApplicationUserModel">
+                        <Frame Style="{StaticResource CardFrame}" Margin="12,6">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Username}" FontAttributes="Bold" />
+                                    <Label Text="{Binding EmailAddress}" FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                    <Label Text="Locked" TextColor="{StaticResource ErrorColor}" FontSize="11"
+                                           IsVisible="{Binding IsLockedOut}" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="Unlock"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=UnlockUserCommand}"
+                                        CommandParameter="{Binding UserId}"
+                                        IsVisible="{Binding IsLockedOut}"
+                                        Style="{StaticResource OutlineButton}" Padding="8,4" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Pagination -->
+        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="16" Padding="12">
+            <Button Text="&lt; Prev" Command="{Binding PreviousPageCommand}"
+                    IsVisible="{Binding HasPreviousPage}" Style="{StaticResource OutlineButton}" />
+            <Button Text="Next &gt;" Command="{Binding NextPageCommand}"
+                    IsVisible="{Binding HasNextPage}" Style="{StaticResource OutlineButton}" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>

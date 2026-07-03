@@ -1,7 +1,7 @@
 using AutoMapper;
+using Common.Data.Profiles;
 using Identity.Data.Entities;
 using Identity.Shared.Models;
-using Common.Data.Profiles;
 
 namespace Identity.Data.Profiles
 {

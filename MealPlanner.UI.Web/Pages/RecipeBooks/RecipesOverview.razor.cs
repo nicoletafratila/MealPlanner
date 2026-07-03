@@ -4,12 +4,13 @@ using Common.Constants;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
-using Identity.Services;
-using MealPlanner.Services;
+using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using RecipeBook.Services;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -21,7 +22,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<RecipeModel>? _recipesGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
-        private SortDirection _nameSortDirection = SortDirection.Ascending;
+        private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
         private int _pageBeforeFilter = 1;
@@ -30,6 +31,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter(Name = "RefreshCurrentMealPlan")]
+        private Func<Task>? RefreshCurrentMealPlan { get; set; }
 
         [Inject]
         public IRecipeService RecipeService { get; set; } = default!;
@@ -57,7 +61,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var stored = await SessionStorage.GetItemAsync<QueryParameters<RecipeModel>>();
             var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
-            var direction = nameSort?.Direction ?? SortDirection.Ascending;
+            var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
 
             if (direction != _nameSortDirection)
             {
@@ -68,7 +72,10 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         }
 
         private async Task<GridSettings?> SettingsProviderAsync()
-            => await SessionStorage.GetItemAsync<QueryParameters<RecipeModel>>();
+        {
+            var qp = await SessionStorage.GetItemAsync<QueryParameters<RecipeModel>>();
+            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+        }
 
         private void New()
         {
@@ -144,7 +151,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 {
                     Filters = [],
                     Sorting = request.Sorting?
-                        .Select(QueryParameters<RecipeModel>.ToModel)
+                        .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
                         .ToList() ?? [],
                     PageNumber = _pageBeforeFilter,
                     PageSize = _pageSize
@@ -161,19 +168,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 var resetParameters = new QueryParameters<RecipeModel>
                 {
-                    Filters = request.Filters,
+                    Filters = request.Filters?
+                        .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                        .ToList(),
                     Sorting = request.Sorting?
-                        .Select(QueryParameters<RecipeModel>.ToModel)
+                        .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
                         .ToList() ?? [],
                     PageNumber = 1,
                     PageSize = _pageSize
                 };
                 await SessionStorage.SetItemAsync(resetParameters);
-                _lastFiltersKey = filtersKey;
-                _firstLoad = true;
-                _gridKey++;
-                StateHasChanged();
-                return new GridDataProviderResult<RecipeModel> { Data = [], TotalCount = 0 };
             }
 
             _lastFiltersKey = filtersKey;
@@ -183,10 +187,12 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             var queryParameters = new QueryParameters<RecipeModel>
             {
-                Filters = request.Filters?.ToList() ?? [],
+                Filters = request.Filters?
+                    .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList() ?? [],
                 Sorting = request.Sorting?
-                    .Select(QueryParameters<RecipeModel>.ToModel)
-                    .ToList()!,
+                    .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
+                    .ToList() ?? [],
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize
             };
@@ -203,7 +209,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 var sessionParameters = new QueryParameters<RecipeModel>
                 {
-                    Filters = request.Filters,
+                    Filters = request.Filters?
+                        .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                        .ToList(),
                     Sorting = queryParameters.Sorting,
                     PageNumber = request.PageNumber,
                     PageSize = _pageSize
@@ -229,9 +237,23 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 return;
 
             var mealPlan = await MealPlanService.GetCurrentAsync();
+
             if (mealPlan is null)
             {
-                await ShowErrorAsync(Resources.RecipesOverview.NoCurrentMealPlan);
+                var newPlan = new MealPlanEditModel
+                {
+                    Name = MealPlanService.GetMenuName(Resources.RecipesOverview.MenuName),
+                    Recipes = [recipe]
+                };
+                var createResponse = await MealPlanService.AddAsync(newPlan);
+                if (createResponse is null || !createResponse.Succeeded)
+                {
+                    await ShowErrorAsync(createResponse?.Message ?? Resources.RecipesOverview.SaveFailedMessage);
+                    return;
+                }
+                if (RefreshCurrentMealPlan is not null)
+                    await RefreshCurrentMealPlan();
+                await ShowInfoAsync(Resources.RecipesOverview.MealPlanCreatedAndRecipeAdded);
                 return;
             }
 
@@ -243,10 +265,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             mealPlanToAdd.Recipes ??= [];
-
-            var existing = mealPlanToAdd.Recipes.FirstOrDefault(r => r.Id == recipe.Id);
-            if (existing is not null)
-                return;
 
             mealPlanToAdd.Recipes.Add(recipe);
             mealPlanToAdd.Recipes.SetIndexes();
@@ -267,7 +285,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private async Task ShowInfoAsync(string message)
             => await MessageComponent!.ShowInfoAsync(message);
 
-        private string GetFiltersKey(IEnumerable<FilterItem>? filters)
+        private string GetFiltersKey(IEnumerable<BlazorBootstrap.FilterItem>? filters)
         {
             if (filters == null) return "";
             return string.Join("|", filters

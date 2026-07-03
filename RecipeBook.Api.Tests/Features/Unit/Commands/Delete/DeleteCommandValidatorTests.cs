@@ -1,4 +1,4 @@
-﻿using FluentValidation.TestHelper;
+using FluentValidation.TestHelper;
 using RecipeBook.Api.Features.Unit.Commands.Delete;
 
 namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
@@ -15,10 +15,10 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         }
 
         [Test]
-        public void Id_Zero_HasValidationError()
+        public void Id_Empty_HasValidationError()
         {
             // Arrange
-            var command = new DeleteCommand { Id = 0 };
+            var command = new DeleteCommand { Id = Guid.Empty };
 
             // Act
             var result = _validator.TestValidate(command);
@@ -28,23 +28,10 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         }
 
         [Test]
-        public void Id_Negative_HasValidationError()
+        public void Id_NotEmpty_HasNoValidationError()
         {
             // Arrange
-            var command = new DeleteCommand { Id = -1 };
-
-            // Act
-            var result = _validator.TestValidate(command);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Id);
-        }
-
-        [Test]
-        public void Id_GreaterThanZero_HasNoValidationError()
-        {
-            // Arrange
-            var command = new DeleteCommand { Id = 5 };
+            var command = new DeleteCommand { Id = Guid.NewGuid() };
 
             // Act
             var result = _validator.TestValidate(command);

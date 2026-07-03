@@ -1,0 +1,43 @@
+using System.Net.Http.Headers;
+
+namespace Common.Http
+{
+    public static class HttpClientExtensions
+    {
+        private const string BearerScheme = "Bearer";
+
+        public static async Task EnsureAuthorizationHeaderAsync(
+            this HttpClient httpClient,
+            ITokenProvider tokenProvider,
+            CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(httpClient);
+            ArgumentNullException.ThrowIfNull(tokenProvider);
+            cancellationToken.ThrowIfCancellationRequested();
+            var token = await tokenProvider.GetTokenAsync(cancellationToken).ConfigureAwait(false);
+            httpClient.EnsureAuthorizationHeader(token);
+        }
+
+        public static void EnsureAuthorizationHeader(this HttpClient httpClient, string? token)
+        {
+            ArgumentNullException.ThrowIfNull(httpClient);
+            if (!string.IsNullOrWhiteSpace(token) &&
+                (httpClient.DefaultRequestHeaders.Authorization == null ||
+                 httpClient.DefaultRequestHeaders.Authorization.Parameter != token))
+            {
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(BearerScheme, token);
+            }
+        }
+
+        public static string GetCleanToken(string? authHeader)
+        {
+            if (!string.IsNullOrWhiteSpace(authHeader) &&
+                authHeader.StartsWith(BearerScheme + " ", StringComparison.OrdinalIgnoreCase))
+            {
+                return authHeader[(BearerScheme.Length + 1)..].Trim();
+            }
+            return string.Empty;
+        }
+    }
+}

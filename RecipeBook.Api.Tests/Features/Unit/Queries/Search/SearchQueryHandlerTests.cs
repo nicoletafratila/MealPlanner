@@ -67,14 +67,14 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.Search
             // Arrange
             var entities = new List<UnitEntity>
             {
-                new() { Id = 1, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
-                new() { Id = 2, Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
+                new() { Id = Guid.NewGuid(), Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
             };
 
             var models = new List<UnitModel>
             {
-                new() { Id = 1, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
-                new() { Id = 2, Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
+                new() { Id = Guid.NewGuid(), Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
             };
 
             _repoMock
@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.Search
             // Arrange
             var entities = new List<UnitEntity>
             {
-                new() { Id = 1, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight }
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight }
             };
 
             _repoMock

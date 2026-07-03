@@ -11,7 +11,7 @@ namespace RecipeBook.Api.Features.Product.Queries.GetEdit
         public GetEditQueryValidator()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(ProductMessages.IdGreaterThanZero);
         }
     }

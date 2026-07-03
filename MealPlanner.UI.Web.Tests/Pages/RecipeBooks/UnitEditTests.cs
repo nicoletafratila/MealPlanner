@@ -1,13 +1,4 @@
-using System.Reflection;
-using Bunit;
-using Common.Models;
-using Common.UI;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using Bunit; using Common.Models; using Common.UI; using MealPlanner.UI.Web.Pages.RecipeBooks; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -54,27 +45,27 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
         // ---------- Initialization ----------
         [Test]
-        public void OnInitializedAsync_WithNullOrZeroId_CreatesNewUnit()
+        public void OnInitializedAsync_WithNullOrEmptyId_CreatesNewUnit()
         {
             var cut = RenderWithMessageComponent(null);
 
             Assert.That(cut.Instance.Unit, Is.Not.Null);
-            Assert.That(cut.Instance.Unit.Id, Is.Zero);
+            Assert.That(cut.Instance.Unit.Id, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void OnInitializedAsync_WithInvalidId_CreatesNewUnit()
         {
-            var cut = RenderWithMessageComponent("not-a-number");
+            var cut = RenderWithMessageComponent("not-a-guid");
 
             Assert.That(cut.Instance.Unit, Is.Not.Null);
-            Assert.That(cut.Instance.Unit.Id, Is.Zero);
+            Assert.That(cut.Instance.Unit.Id, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void OnInitializedAsync_WithExistingId_LoadsUnit()
         {
-            const int id = 5;
+            var id = Guid.NewGuid();
             var loaded = new UnitEditModel { Id = id };
 
             _unitServiceMock
@@ -89,9 +80,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
         // ---------- SaveCoreAsync ----------
         [Test]
-        public async Task SaveCoreAsync_WhenIdZero_CallsAddAsync_AndShowsInfo_AndNavigates()
+        public async Task SaveCoreAsync_WhenIdEmpty_CallsAddAsync_AndShowsInfo_AndNavigates()
         {
-            var unit = new UnitEditModel { Id = 0 };
+            var unit = new UnitEditModel { Id = Guid.Empty };
 
             _unitServiceMock
                 .Setup(s => s.AddAsync(unit, CancellationToken.None))
@@ -120,9 +111,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         }
 
         [Test]
-        public async Task SaveCoreAsync_WhenIdNonZero_CallsUpdateAsync_AndShowsInfo_AndNavigates()
+        public async Task SaveCoreAsync_WhenIdNotEmpty_CallsUpdateAsync_AndShowsInfo_AndNavigates()
         {
-            var unit = new UnitEditModel { Id = 10 };
+            var id = Guid.NewGuid();
+            var unit = new UnitEditModel { Id = id };
 
             _unitServiceMock
                .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
@@ -131,7 +123,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .Setup(s => s.UpdateAsync(unit, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
-            var cut = RenderWithMessageComponent("10");
+            var cut = RenderWithMessageComponent(id.ToString());
 
             cut.Instance.GetType()
                 .GetProperty(nameof(UnitEdit.Unit))!
@@ -156,7 +148,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task SaveCoreAsync_WhenResponseFailed_ShowsError()
         {
-            var unit = new UnitEditModel { Id = 10 };
+            var id = Guid.NewGuid();
+            var unit = new UnitEditModel { Id = id };
             var response = new CommandResponse { Succeeded = false, Message = "save failed" };
 
             _unitServiceMock
@@ -166,7 +159,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .Setup(s => s.UpdateAsync(unit, CancellationToken.None))
                 .ReturnsAsync(response);
 
-            var cut = RenderWithMessageComponent("10");
+            var cut = RenderWithMessageComponent(id.ToString());
 
             cut.Instance.GetType()
                 .GetProperty(nameof(UnitEdit.Unit))!
@@ -187,7 +180,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task SaveCoreAsync_WhenResponseNull_ShowsGenericError()
         {
-            var unit = new UnitEditModel { Id = 0 };
+            var unit = new UnitEditModel { Id = Guid.Empty };
 
             _unitServiceMock
                 .Setup(s => s.AddAsync(unit, CancellationToken.None))
@@ -215,7 +208,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteSucceeds_ShowsInfo_AndNavigates()
         {
-            var unit = new UnitEditModel { Id = 7 };
+            var id = Guid.NewGuid();
+            var unit = new UnitEditModel { Id = id };
 
             _unitServiceMock
                 .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
@@ -224,7 +218,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
-            var cut = RenderWithMessageComponent("7");
+            var cut = RenderWithMessageComponent(id.ToString());
 
             cut.Instance.GetType()
                 .GetProperty(nameof(UnitEdit.Unit))!
@@ -249,7 +243,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenResponseFailed_ShowsError()
         {
-            var unit = new UnitEditModel { Id = 7 };
+            var id = Guid.NewGuid();
+            var unit = new UnitEditModel { Id = id };
             var response = new CommandResponse { Succeeded = false, Message = "delete failed" };
 
             _unitServiceMock
@@ -259,7 +254,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync(response);
 
-            var cut = RenderWithMessageComponent("7");
+            var cut = RenderWithMessageComponent(id.ToString());
 
             cut.Instance.GetType()
                 .GetProperty(nameof(UnitEdit.Unit))!
@@ -280,7 +275,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenResponseNull_ShowsGenericError()
         {
-            var unit = new UnitEditModel { Id = 7 };
+            var id = Guid.NewGuid();
+            var unit = new UnitEditModel { Id = id };
 
             _unitServiceMock
                .Setup(s => s.GetEditAsync(unit.Id, CancellationToken.None))
@@ -289,7 +285,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .Setup(s => s.DeleteAsync(unit.Id, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
-            var cut = RenderWithMessageComponent("7");
+            var cut = RenderWithMessageComponent(id.ToString());
 
             cut.Instance.GetType()
                 .GetProperty(nameof(UnitEdit.Unit))!

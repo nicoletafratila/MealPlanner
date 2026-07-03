@@ -82,16 +82,18 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = id1, Name = "Plan1" },
+                new() { Id = id2, Name = "Plan2" }
             };
 
             var models = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = id1, Name = "Plan1" },
+                new() { Id = id2, Name = "Plan2" }
             };
 
             _repoMock
@@ -117,7 +119,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.Search
             Assert.That(result.Items.Count, Is.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo([1, 2]));
+                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(new[] { id1, id2 }));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
@@ -130,7 +132,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.Search
         {
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
-                new() { Id = 1, Name = "Plan1" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
             _repoMock

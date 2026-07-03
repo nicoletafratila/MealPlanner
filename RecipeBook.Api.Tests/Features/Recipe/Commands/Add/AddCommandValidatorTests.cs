@@ -39,9 +39,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             {
                 Model = new RecipeEditModel
                 {
-                    Id = 0,
+                    Id = Guid.Empty,
                     Name = "My Recipe",
-                    RecipeCategoryId = 1
+                    RecipeCategoryId = Guid.NewGuid()
                 }
             };
 

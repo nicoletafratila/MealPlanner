@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MealPlanner.Shared.Models;
+using System.ComponentModel.DataAnnotations;using MealPlanner.Shared.Models;
 
 namespace MealPlanner.Shared.Tests.Models
 {
@@ -23,7 +22,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.Recipes, Is.Not.Null);
                 Assert.That(model.Recipes, Is.Empty);
@@ -40,11 +39,11 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new MealPlanEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Weekly Plan",
                 Recipes =
                 [
-                    new() { Id = 10, Name = "Recipe1" }
+                    new() { Id = Guid.NewGuid(), Name = "Recipe1" }
                 ]
             };
 
@@ -64,9 +63,9 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new MealPlanEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
-                Recipes = [new() { Id = 1, Name = "R1" }]
+                Recipes = [new() { Id = Guid.NewGuid(), Name = "R1" }]
             };
 
             // Empty name -> invalid
@@ -97,7 +96,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new MealPlanEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 Recipes = []
             };
@@ -120,7 +119,7 @@ namespace MealPlanner.Shared.Tests.Models
             }
 
             // One recipe -> valid
-            model.Recipes = [new() { Id = 1, Name = "R1" }];
+            model.Recipes = [new() { Id = Guid.NewGuid(), Name = "R1" }];
             isValid = TryValidate(model, out results);
             Assert.That(isValid, Is.True);
         }
@@ -129,7 +128,7 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             const string name = "Plan";
 
             // Act
@@ -148,7 +147,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new MealPlanEditModel(1, null!);
+                _ = new MealPlanEditModel(Guid.NewGuid(), null!);
             });
         }
 
@@ -157,9 +156,9 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new MealPlanEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "My Plan",
-                Recipes = [new() { Id = 1, Name = "R1" }]
+                Recipes = [new() { Id = Guid.NewGuid(), Name = "R1" }]
             };
 
             Assert.That(model.ToString(), Is.EqualTo("My Plan"));

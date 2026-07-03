@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
@@ -15,7 +16,7 @@ namespace RecipeBook.Data.Profiles.Tests
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<RecipeCategoryProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();
@@ -24,9 +25,10 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeCategory_To_RecipeCategoryModel_Maps_Properties()
         {
+            var id = Guid.NewGuid();
             var entity = new RecipeCategory
             {
-                Id = 10,
+                Id = id,
                 Name = "Vegetarian"
             };
 
@@ -34,7 +36,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(10));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Vegetarian"));
                 Assert.That(result.Index, Is.Zero);
                 Assert.That(result.IsSelected, Is.False);
@@ -44,9 +46,10 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeCategoryModel_To_RecipeCategory_Maps_Properties()
         {
+            var id = Guid.NewGuid();
             var model = new RecipeCategoryModel
             {
-                Id = 15,
+                Id = id,
                 Name = "Dessert"
             };
 
@@ -54,7 +57,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(15));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Dessert"));
             }
         }
@@ -62,9 +65,10 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeCategory_To_RecipeCategoryEditModel_Maps_Properties()
         {
+            var id = Guid.NewGuid();
             var entity = new RecipeCategory
             {
-                Id = 7,
+                Id = id,
                 Name = "Pasta"
             };
 
@@ -72,7 +76,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(7));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Pasta"));
                 Assert.That(result.Index, Is.Zero);
                 Assert.That(result.IsSelected, Is.False);
@@ -82,9 +86,10 @@ namespace RecipeBook.Data.Profiles.Tests
         [Test]
         public void RecipeCategoryEditModel_To_RecipeCategory_Maps_Properties()
         {
+            var id = Guid.NewGuid();
             var model = new RecipeCategoryEditModel
             {
-                Id = 22,
+                Id = id,
                 Name = "Soups"
             };
 
@@ -92,7 +97,7 @@ namespace RecipeBook.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Id, Is.EqualTo(22));
+                Assert.That(result.Id, Is.EqualTo(id));
                 Assert.That(result.Name, Is.EqualTo("Soups"));
             }
         }

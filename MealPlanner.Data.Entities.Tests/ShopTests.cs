@@ -12,7 +12,7 @@ namespace MealPlanner.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(shop.Id, Is.Zero);
+                Assert.That(shop.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(shop.Name, Is.Null);
                 Assert.That(shop.DisplaySequence, Is.Not.Null);
                 Assert.That(shop.DisplaySequence, Is.Empty);
@@ -27,7 +27,7 @@ namespace MealPlanner.Data.Entities.Tests
                 DisplaySequence = []
             };
 
-            var result = shop.GetDisplaySequence(1);
+            var result = shop.GetDisplaySequence(Guid.NewGuid());
 
             Assert.That(result, Is.Null);
         }
@@ -39,7 +39,7 @@ namespace MealPlanner.Data.Entities.Tests
             {
                 DisplaySequence =
                 [
-                    new() { ProductCategoryId = 1, Value = 10 }
+                    new() { ProductCategoryId = Guid.NewGuid(), Value = 10 }
                 ]
             };
 
@@ -52,20 +52,21 @@ namespace MealPlanner.Data.Entities.Tests
         public void GetDisplaySequence_Returns_Matching_Sequence()
         {
             // Arrange
-            var match = new ShopDisplaySequence { ProductCategoryId = 2, Value = 20 };
+            var categoryId = Guid.NewGuid();
+            var match = new ShopDisplaySequence { ProductCategoryId = categoryId, Value = 20 };
 
             var shop = new Shop
             {
                 DisplaySequence =
                 [
-                    new() { ProductCategoryId = 1, Value = 10 },
+                    new() { ProductCategoryId = Guid.NewGuid(), Value = 10 },
                     match,
-                    new() { ProductCategoryId = 3, Value = 30 }
+                    new() { ProductCategoryId = Guid.NewGuid(), Value = 30 }
                 ]
             };
 
             // Act
-            var result = shop.GetDisplaySequence(2);
+            var result = shop.GetDisplaySequence(categoryId);
 
             // Assert
             using (Assert.EnterMultipleScope())
@@ -82,12 +83,12 @@ namespace MealPlanner.Data.Entities.Tests
             {
                 DisplaySequence =
                 [
-                    new() { ProductCategoryId = 1, Value = 10 },
-                    new() { ProductCategoryId = 2, Value = 20 }
+                    new() { ProductCategoryId = Guid.NewGuid(), Value = 10 },
+                    new() { ProductCategoryId = Guid.NewGuid(), Value = 20 }
                 ]
             };
 
-            var result = shop.GetDisplaySequence(99);
+            var result = shop.GetDisplaySequence(Guid.NewGuid());
 
             Assert.That(result, Is.Null);
         }

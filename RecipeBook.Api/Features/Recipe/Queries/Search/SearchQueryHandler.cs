@@ -42,7 +42,7 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
             if (string.IsNullOrWhiteSpace(categoryId))
                 return source;
 
-            if (!int.TryParse(categoryId, out var id))
+            if (!Guid.TryParse(categoryId, out var id))
                 return source;
 
             return source.Where(r => r.RecipeCategoryId == id.ToString()).ToList();
@@ -73,12 +73,8 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
             if (parameters.Sorting is null || !parameters.Sorting.Any())
                 return source;
 
-            var sortingItems = parameters.Sorting
-                .Select(QueryParameters<RecipeModel>.FromModel)
-                .ToList();
-
             return source.AsQueryable()
-                         .ApplySorting(sortingItems)!
+                         .ApplySorting(parameters.Sorting)!
                          .ToList();
         }
     }

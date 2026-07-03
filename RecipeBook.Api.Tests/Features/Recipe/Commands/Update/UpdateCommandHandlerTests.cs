@@ -70,18 +70,18 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
         public async Task Handle_EntityNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var model = new RecipeEditModel
             {
                 Id = id,
                 Name = "My Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             var command = new UpdateCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((RecipeEntity?)null);
 
             // Act
@@ -92,11 +92,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+                Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
             }
 
             _repoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mapperMock.Verify(m => m.Map(It.IsAny<RecipeEditModel>(), It.IsAny<RecipeEntity>()), Times.Never);
             _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeEntity>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -106,12 +106,13 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
-            const int id = 2;
+            var id = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
             var model = new RecipeEditModel
             {
                 Id = id,
                 Name = "Updated Recipe",
-                RecipeCategoryId = 3
+                RecipeCategoryId = categoryId
             };
 
             var command = new UpdateCommand { Model = model };
@@ -120,11 +121,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             {
                 Id = id,
                 Name = "Old Name",
-                RecipeCategoryId = 3
+                RecipeCategoryId = categoryId
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -143,7 +144,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
@@ -153,12 +154,13 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
         public async Task Handle_ExceptionDuringUpdate_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
             var model = new RecipeEditModel
             {
                 Id = id,
                 Name = "Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = categoryId
             };
 
             var command = new UpdateCommand { Model = model };
@@ -167,11 +169,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             {
                 Id = id,
                 Name = "OldRecipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = categoryId
             };
 
             _repoMock
-                .Setup(r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             _mapperMock
@@ -194,7 +196,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             }
 
             _repoMock.Verify(
-                r => r.GetByIdIncludeIngredientsAsync(id, It.IsAny<CancellationToken>()),
+                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
                 Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);

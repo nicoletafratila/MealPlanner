@@ -1,5 +1,5 @@
 using Common.UI;
-using MealPlanner.Services;
+using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -24,6 +24,18 @@ namespace MealPlanner.UI.Web.Shared
             catch
             {
             }
+        }
+
+        public async Task RefreshCurrentMealPlanAsync()
+        {
+            try
+            {
+                _currentMealPlan = await MealPlanService.GetCurrentAsync();
+            }
+            catch
+            {
+            }
+            await InvokeAsync(StateHasChanged);
         }
 
         public bool IsErrorActive { get; private set; }

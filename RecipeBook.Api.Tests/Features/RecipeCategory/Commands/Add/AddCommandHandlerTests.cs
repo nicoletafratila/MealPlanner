@@ -83,7 +83,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         {
             var model = new RecipeCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Breakfast",
                 DisplaySequence = 1
             };
@@ -92,7 +92,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
 
             var existing = new List<RecipeBook.Data.Entities.RecipeCategory>
             {
-                new() { Id = 1, Name = "breakfast", DisplaySequence = 1 }
+                new() { Id = Guid.NewGuid(), Name = "breakfast", DisplaySequence = 1 }
             };
 
             _repoMock
@@ -118,7 +118,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         {
             var model = new RecipeCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Lunch",
                 DisplaySequence = 2
             };
@@ -131,7 +131,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.RecipeCategory
             {
-                Id = 5,
+                Id = Guid.NewGuid(),
                 Name = "Lunch",
                 DisplaySequence = 2
             };
@@ -159,7 +159,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         {
             var model = new RecipeCategoryEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "Dinner",
                 DisplaySequence = 3
             };
@@ -172,7 +172,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.RecipeCategory
             {
-                Id = 7,
+                Id = Guid.NewGuid(),
                 Name = "Dinner",
                 DisplaySequence = 3
             };

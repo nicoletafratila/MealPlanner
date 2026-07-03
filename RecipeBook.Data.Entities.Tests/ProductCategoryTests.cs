@@ -12,7 +12,7 @@ namespace RecipeBook.Data.Entities.Tests
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(category.Id, Is.Zero);
+                Assert.That(category.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(category.Name, Is.Null);
             }
         }
@@ -20,17 +20,20 @@ namespace RecipeBook.Data.Entities.Tests
         [Test]
         public void Properties_Can_Be_Set_And_Read()
         {
+            // Arrange
+            var id = Guid.NewGuid();
+
             // Act
             var category = new ProductCategory
             {
-                Id = 7,
+                Id = id,
                 Name = "Vegetables"
             };
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(category.Id, Is.EqualTo(7));
+                Assert.That(category.Id, Is.EqualTo(id));
                 Assert.That(category.Name, Is.EqualTo("Vegetables"));
             }
         }
@@ -38,9 +41,10 @@ namespace RecipeBook.Data.Entities.Tests
         [Test]
         public void ToString_Contains_Name_And_Id()
         {
+            var id = Guid.NewGuid();
             var category = new ProductCategory
             {
-                Id = 3,
+                Id = id,
                 Name = "Fruits"
             };
 
@@ -49,7 +53,7 @@ namespace RecipeBook.Data.Entities.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(text, Does.Contain("Fruits"));
-                Assert.That(text, Does.Contain("3"));
+                Assert.That(text, Does.Contain(id.ToString()));
             }
         }
     }

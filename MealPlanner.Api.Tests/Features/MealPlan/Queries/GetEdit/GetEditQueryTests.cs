@@ -1,4 +1,4 @@
-﻿using MealPlanner.Api.Features.MealPlan.Queries.GetEdit;
+using MealPlanner.Api.Features.MealPlan.Queries.GetEdit;
 
 namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetEdit
 {
@@ -6,16 +6,16 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetEdit
     public class GetEditQueryTests
     {
         [Test]
-        public void DefaultCtor_InitializesIdToZero()
+        public void DefaultCtor_InitializesIdToEmpty()
         {
             var query = new GetEditQuery();
-            Assert.That(query.Id, Is.EqualTo(0));
+            Assert.That(query.Id, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void Ctor_SetsId()
         {
-            const int id = 7;
+            var id = Guid.NewGuid();
             var query = new GetEditQuery(id);
             Assert.That(query.Id, Is.EqualTo(id));
         }
@@ -23,11 +23,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetEdit
         [Test]
         public void Can_Set_And_Get_Id()
         {
+            var id = Guid.NewGuid();
             var query = new GetEditQuery
             {
-                Id = 42
+                Id = id
             };
-            Assert.That(query.Id, Is.EqualTo(42));
+            Assert.That(query.Id, Is.EqualTo(id));
         }
     }
 }

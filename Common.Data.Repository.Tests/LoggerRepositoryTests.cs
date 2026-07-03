@@ -1,9 +1,9 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
-using MealPlanner.Data.TableConfigurations;
+using Common.Data.DataContext;
 using Common.Data.Entities;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.TableConfigurations;
 
 namespace Common.Data.Repository.Tests
 {
@@ -60,7 +60,7 @@ namespace Common.Data.Repository.Tests
             using (Assert.EnterMultipleScope())
             {
                 // Assert
-                Assert.That(added.Id, Is.Not.Zero);
+                Assert.That(added.Id, Is.Not.EqualTo(Guid.Empty));
                 Assert.That(ctx.Set<Log>().Count(), Is.EqualTo(1));
             }
         }

@@ -15,7 +15,6 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         private Mock<IMapper> _mapperMock = null!;
         private Mock<ICurrentUserService> _currentUserMock = null!;
         private SearchQueryHandler _handler = null!;
-        private static readonly int[] expected = [1, 2];
 
         [SetUp]
         public void SetUp()
@@ -86,16 +85,20 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var expected = new[] { id1, id2 };
+
             var entities = new List<MealPlanner.Data.Entities.ShoppingList>
             {
-                new() { Id = 1, Name = "List1" },
-                new() { Id = 2, Name = "List2" }
+                new() { Id = id1, Name = "List1" },
+                new() { Id = id2, Name = "List2" }
             };
 
             var models = new List<ShoppingListModel>
             {
-                new() { Id = 1, Name = "List1" },
-                new() { Id = 2, Name = "List2" }
+                new() { Id = id1, Name = "List1" },
+                new() { Id = id2, Name = "List2" }
             };
 
             _repoMock
@@ -137,7 +140,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         {
             var entities = new List<MealPlanner.Data.Entities.ShoppingList>
             {
-                new() { Id = 1, Name = "List1" }
+                new() { Id = Guid.NewGuid(), Name = "List1" }
             };
 
             _repoMock

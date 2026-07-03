@@ -1,5 +1,4 @@
-﻿using BlazorBootstrap;
-using Common.Models;
+﻿using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api.Controllers.Resources;
 using MealPlanner.Api.Features.ShoppingList.Commands.Add;
@@ -25,7 +24,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpGet("edit")]
         public async Task<ActionResult<ShoppingListEditModel>> GetEditAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var query = new GetEditQuery { Id = id };
@@ -105,7 +104,7 @@ namespace MealPlanner.Api.Controllers
 
         [HttpDelete]
         public async Task<ActionResult<CommandResponse?>> DeleteAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var command = new DeleteCommand { Id = id };

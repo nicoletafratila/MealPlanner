@@ -59,19 +59,19 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         public async Task Handle_ReturnsMappedMealPlans_WithIndexesSet()
         {
             // Arrange
-            const int recipeId = 10;
+            var recipeId = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(recipeId);
 
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" },
+                new() { Id = Guid.NewGuid(), Name = "Plan2" }
             };
 
             var models = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" },
+                new() { Id = Guid.NewGuid(), Name = "Plan2" }
             };
 
             _repoMock
@@ -98,12 +98,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
             // Arrange
-            const int recipeId = 10;
+            var recipeId = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(recipeId);
 
             var entities = new List<MealPlanner.Data.Entities.MealPlan>
             {
-                new() { Id = 1, Name = "Plan1" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
             _repoMock

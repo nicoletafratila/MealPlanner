@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.SessionStorage" Version="$(BlazoredSessionStorage)" />
+    <PackageReference Include="Serilog.AspNetCore" Version="$(SerilogAspNetCore)" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftAspNetCoreAuthenticationJwtBearer)" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="$(MicrosoftAspNetCoreComponentsWebAssemblyAuthentication)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftEFCoreSqlServer)" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="$(DuendeIdentityServerAspNetIdentity)" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(MicrosoftAspNetCoreDiagnosticsEntityFrameworkCore)" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="$(MicrosoftAspNetCoreIdentityUI)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Http\Common.Http.csproj" />
+    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
+    <ProjectReference Include="..\Common.Services\Common.Services.csproj" />
+    <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
+    <ProjectReference Include="..\Common.Data.Profiles\Common.Data.Profiles.csproj" />
+    <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
+  </ItemGroup>
+</Project>

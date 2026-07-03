@@ -6,20 +6,20 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.GetEdit
     public class GetEditQueryTests
     {
         [Test]
-        public void DefaultCtor_InitializesIdToZero()
+        public void DefaultCtor_InitializesIdToEmpty()
         {
             // Act
             var query = new GetEditQuery();
 
             // Assert
-            Assert.That(query.Id, Is.EqualTo(0));
+            Assert.That(query.Id, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void Ctor_SetsId()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
 
             // Act
             var query = new GetEditQuery(id);
@@ -33,12 +33,13 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.GetEdit
         {
             // Arrange
             var query = new GetEditQuery();
+            var id = Guid.NewGuid();
 
             // Act
-            query.Id = 42;
+            query.Id = id;
 
             // Assert
-            Assert.That(query.Id, Is.EqualTo(42));
+            Assert.That(query.Id, Is.EqualTo(id));
         }
     }
 }

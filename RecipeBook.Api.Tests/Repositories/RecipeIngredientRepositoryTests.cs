@@ -1,10 +1,10 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
+using Common.Data.DataContext;
 using MealPlanner.Data.TableConfigurations;
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace RecipeBook.Api.Tests.Repositories
 {
@@ -43,6 +43,9 @@ namespace RecipeBook.Api.Tests.Repositories
             return new RecipeIngredientRepository(context);
         }
 
+        private static Guid ProductGuid(int seed) => new(seed * 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        private static Guid RecipeGuid(int seed) => new(seed * 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         [Test]
         public async Task GetAllAsync_ReturnsAllIngredients_WithUnitsIncluded()
         {
@@ -53,8 +56,8 @@ namespace RecipeBook.Api.Tests.Repositories
             ctx.Units.Add(unit);
 
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = 1, Unit = unit, Quantity = 1 },
-                new RecipeIngredient { RecipeId = 1, ProductId = 2, Unit = unit, Quantity = 2 });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(1), Unit = unit, Quantity = 1 },
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(2), Unit = unit, Quantity = 2 });
 
             await ctx.SaveChangesAsync();
 
@@ -76,18 +79,18 @@ namespace RecipeBook.Api.Tests.Repositories
             ctx.Units.Add(unit);
 
             ctx.RecipeIngredients.AddRange(
-                new RecipeIngredient { RecipeId = 1, ProductId = 1, Unit = unit, Quantity = 1 },
-                new RecipeIngredient { RecipeId = 2, ProductId = 1, Unit = unit, Quantity = 2 },
-                new RecipeIngredient { RecipeId = 3, ProductId = 2, Unit = unit, Quantity = 3 });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(1), Unit = unit, Quantity = 1 },
+                new RecipeIngredient { RecipeId = RecipeGuid(2), ProductId = ProductGuid(1), Unit = unit, Quantity = 2 },
+                new RecipeIngredient { RecipeId = RecipeGuid(3), ProductId = ProductGuid(2), Unit = unit, Quantity = 3 });
 
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(1, CancellationToken.None);
+            var result = await repo.SearchAsync(ProductGuid(1), CancellationToken.None);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(2));
-            Assert.That(result.All(i => i.ProductId == 1), Is.True);
+            Assert.That(result.All(i => i.ProductId == ProductGuid(1)), Is.True);
             Assert.That(result.All(i => i.Unit != null), Is.True);
         }
 
@@ -98,11 +101,11 @@ namespace RecipeBook.Api.Tests.Repositories
             var repo = CreateRepository(out var ctx);
 
             ctx.RecipeIngredients.Add(
-                new RecipeIngredient { RecipeId = 1, ProductId = 5, Quantity = 1 });
+                new RecipeIngredient { RecipeId = RecipeGuid(1), ProductId = ProductGuid(5), Quantity = 1 });
             await ctx.SaveChangesAsync();
 
             // Act
-            var result = await repo.SearchAsync(999, CancellationToken.None);
+            var result = await repo.SearchAsync(ProductGuid(999), CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);

@@ -115,7 +115,7 @@
                 <br />
 
                 <div class="card-body">
-                    <TableTemplate Data="@ShoppingList.Products">
+                    <TableTemplate Data="@ShoppingList.Products" ColumnCount="3">
                         <TableCaption>@Resources.ShoppingListEdit.TableCaptionProducts</TableCaption>
                         <TableHeader>
                             <th style="width: 40px"></th>
@@ -126,7 +126,7 @@
                             @if (ProductModel != null && ProductModel.Product != null)
                             {
                                 <td style="vertical-align:middle; text-align: center">
-                                    <input type="checkbox" checked="@ProductModel.Collected" @onchange="async () => await CheckboxChangedAsync(ProductModel)" />
+                                    <input type="checkbox" checked="@ProductModel.Collected" @onchange="async (e) => await CheckboxChangedAsync(ProductModel, (bool)(e.Value ?? false))" />
                                 </td>
                                 <td style="vertical-align:middle">
                                     <div style="display:flex; align-items: center">

@@ -81,9 +81,9 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         [Test]
         public async Task Handle_ExistingList_ReturnsFailedResponse_AndDoesNotAdd()
         {
-            var model = new ShoppingListEditModel { Id = 0, Name = "Weekly" };
+            var model = new ShoppingListEditModel { Id = Guid.Empty, Name = "Weekly" };
             var command = new AddCommand { Model = model };
-            var existing = new MealPlanner.Data.Entities.ShoppingList { Id = 10, Name = "Weekly" };
+            var existing = new MealPlanner.Data.Entities.ShoppingList { Id = Guid.NewGuid(), Name = "Weekly" };
 
             _repoMock
                 .Setup(r => r.SearchAsync("Weekly", "user1", It.IsAny<CancellationToken>()))
@@ -103,14 +103,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         [Test]
         public async Task Handle_NewList_AddsAndReturnsSuccess()
         {
-            var model = new ShoppingListEditModel { Id = 0, Name = "NewList" };
+            var model = new ShoppingListEditModel { Id = Guid.Empty, Name = "NewList" };
             var command = new AddCommand { Model = model };
 
             _repoMock
                 .Setup(r => r.SearchAsync("NewList", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanner.Data.Entities.ShoppingList?)null);
 
-            var mappedEntity = new MealPlanner.Data.Entities.ShoppingList { Id = 5, Name = "NewList" };
+            var mappedEntity = new MealPlanner.Data.Entities.ShoppingList { Id = Guid.NewGuid(), Name = "NewList" };
 
             _mapperMock
                 .Setup(m => m.Map<MealPlanner.Data.Entities.ShoppingList>(model))
@@ -133,14 +133,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         [Test]
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
-            var model = new ShoppingListEditModel { Id = 0, Name = "ErrorList" };
+            var model = new ShoppingListEditModel { Id = Guid.Empty, Name = "ErrorList" };
             var command = new AddCommand { Model = model };
 
             _repoMock
                 .Setup(r => r.SearchAsync("ErrorList", "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanner.Data.Entities.ShoppingList?)null);
 
-            var mappedEntity = new MealPlanner.Data.Entities.ShoppingList { Id = 7, Name = "ErrorList" };
+            var mappedEntity = new MealPlanner.Data.Entities.ShoppingList { Id = Guid.NewGuid(), Name = "ErrorList" };
 
             _mapperMock
                 .Setup(m => m.Map<MealPlanner.Data.Entities.ShoppingList>(model))

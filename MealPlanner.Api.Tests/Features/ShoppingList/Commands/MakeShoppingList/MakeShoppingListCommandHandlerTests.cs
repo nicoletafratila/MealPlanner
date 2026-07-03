@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
 using MealPlanner.Api.Repositories;
@@ -78,57 +78,63 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         [Test]
         public async Task Handle_MealPlanNotFound_ReturnsNull()
         {
-            var command = new MakeShoppingListCommand { MealPlanId = 1, ShopId = 2 };
+            var mealPlanId = Guid.NewGuid();
+            var command = new MakeShoppingListCommand { MealPlanId = mealPlanId, ShopId = Guid.NewGuid() };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Null);
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);
-            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(It.IsAny<int?>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()), Times.Once);
+            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(It.IsAny<Guid?>(), It.IsAny<CancellationToken>()), Times.Never);
             _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_ShopNotFound_ReturnsNull()
         {
-            var command = new MakeShoppingListCommand { MealPlanId = 1, ShopId = 2 };
-            var mealPlan = new MealPlanner.Data.Entities.MealPlan { Id = 1, Name = "Plan1" };
+            var mealPlanId = Guid.NewGuid();
+            var shopId = Guid.NewGuid();
+            var command = new MakeShoppingListCommand { MealPlanId = mealPlanId, ShopId = shopId };
+            var mealPlan = new MealPlanner.Data.Entities.MealPlan { Id = mealPlanId, Name = "Plan1" };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlan);
 
             _shopRepoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Null);
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);
-            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()), Times.Once);
+            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()), Times.Once);
+            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()), Times.Once);
             _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_SuccessfulFlow_ReturnsMappedEditModel()
         {
-            var command = new MakeShoppingListCommand { MealPlanId = 1, ShopId = 2 };
-            var mealPlan = new MealPlanner.Data.Entities.MealPlan { Id = 1, Name = "Plan1" };
-            var shop = new MealPlanner.Data.Entities.Shop { Id = 2, Name = "Shop1" };
-            var newList = new MealPlanner.Data.Entities.ShoppingList { Id = 10, Name = "Generated", Products = [] };
-            var mappedEdit = new ShoppingListEditModel { Id = 10, Name = "Generated" };
+            var mealPlanId = Guid.NewGuid();
+            var shopId = Guid.NewGuid();
+            var command = new MakeShoppingListCommand { MealPlanId = mealPlanId, ShopId = shopId };
+            var mealPlan = new MealPlanner.Data.Entities.MealPlan { Id = mealPlanId, Name = "Plan1" };
+            var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" };
+            var newListId = Guid.NewGuid();
+            var newList = new MealPlanner.Data.Entities.ShoppingList { Id = newListId, Name = "Generated", Products = [] };
+            var mappedEdit = new ShoppingListEditModel { Id = newListId, Name = "Generated" };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlan);
 
             _shopRepoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(shop);
 
             _shoppingListRepoMock
@@ -148,14 +154,14 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result!.Id, Is.EqualTo(10));
+                Assert.That(result!.Id, Is.EqualTo(newListId));
                 Assert.That(result.Name, Is.EqualTo("Generated"));
             }
 
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);
-            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()), Times.Once);
+            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()), Times.Once);
+            _shopRepoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()), Times.Once);
             _shoppingListRepoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()), Times.Once);
-            _shoppingListRepoMock.Verify(r => r.GetByIdIncludeProductsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _shoppingListRepoMock.Verify(r => r.GetByIdIncludeProductsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
             _mapperMock.Verify(m => m.Map<ShoppingListEditModel>(newList), Times.Once);
         }
 
@@ -163,50 +169,54 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         public async Task Handle_WithIngredients_RestoresProductAndUnitOnShoppingListProducts()
         {
             // Arrange
-            var pieceUnit = new RecipeBook.Data.Entities.Unit { Id = 1, Name = "piece", UnitType = Common.Constants.Units.UnitType.Piece };
+            var pieceUnit = new RecipeBook.Data.Entities.Unit { Id = Guid.NewGuid(), Name = "piece", UnitType = Common.Constants.Units.UnitType.Piece };
+            var productId = Guid.NewGuid();
             var product = new RecipeBook.Data.Entities.Product
             {
-                Id = 5,
+                Id = productId,
                 Name = "Milk",
-                BaseUnitId = 1,
+                BaseUnitId = pieceUnit.Id,
                 BaseUnit = pieceUnit
             };
             var ingredient = new RecipeBook.Data.Entities.RecipeIngredient
             {
-                ProductId = 5,
+                ProductId = productId,
                 Product = product,
                 Unit = pieceUnit,
-                UnitId = 1,
+                UnitId = pieceUnit.Id,
                 Quantity = 2
             };
             var recipe = new RecipeBook.Data.Entities.Recipe
             {
-                Id = 10,
+                Id = Guid.NewGuid(),
                 RecipeIngredients = [ingredient]
             };
+            var mealPlanId = Guid.NewGuid();
             var mealPlan = new MealPlanner.Data.Entities.MealPlan
             {
-                Id = 1,
+                Id = mealPlanId,
                 Name = "Plan1",
-                MealPlanRecipes = [new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = 10, Recipe = recipe }]
+                MealPlanRecipes = [new MealPlanner.Data.Entities.MealPlanRecipe { RecipeId = recipe.Id, Recipe = recipe }]
             };
-            var shop = new MealPlanner.Data.Entities.Shop { Id = 2, Name = "Shop1" };
+            var shopId = Guid.NewGuid();
+            var shop = new MealPlanner.Data.Entities.Shop { Id = shopId, Name = "Shop1" };
 
-            var savedProduct = new MealPlanner.Data.Entities.ShoppingListProduct { ProductId = 5 };
+            var savedProduct = new MealPlanner.Data.Entities.ShoppingListProduct { ProductId = productId };
+            var savedListId = Guid.NewGuid();
             var savedList = new MealPlanner.Data.Entities.ShoppingList
             {
-                Id = 10,
+                Id = savedListId,
                 Name = "Plan1 Shop1",
                 Products = [savedProduct]
             };
-            var mappedEdit = new ShoppingListEditModel { Id = 10 };
+            var mappedEdit = new ShoppingListEditModel { Id = savedListId };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mealPlan);
 
             _shopRepoMock
-                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(2, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(shop);
 
             _shoppingListRepoMock
@@ -217,12 +227,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
                 .Setup(m => m.Map<ShoppingListEditModel>(savedList))
                 .Returns(mappedEdit);
 
-            var command = new MakeShoppingListCommand { MealPlanId = 1, ShopId = 2 };
+            var command = new MakeShoppingListCommand { MealPlanId = mealPlanId, ShopId = shopId };
 
             // Act
             await _handler.Handle(command, CancellationToken.None);
 
-            // Assert � nav props must be restored from the in-memory meal plan graph
+            // Assert ? nav props must be restored from the in-memory meal plan graph
             Assert.That(savedProduct.Product, Is.SameAs(product));
             Assert.That(savedProduct.Unit, Is.SameAs(pieceUnit));
         }
@@ -230,16 +240,17 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         [Test]
         public async Task Handle_Exception_LogsError_AndReturnsNull()
         {
-            var command = new MakeShoppingListCommand { MealPlanId = 1, ShopId = 2 };
+            var mealPlanId = Guid.NewGuid();
+            var command = new MakeShoppingListCommand { MealPlanId = mealPlanId, ShopId = Guid.NewGuid() };
 
             _mealPlanRepoMock
-                .Setup(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()))
+                .Setup(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
             Assert.That(result, Is.Null);
-            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+            _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(
                 l => l.Log(

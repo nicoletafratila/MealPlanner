@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="card-body">
-                    <TableTemplate Data="@Shop.DisplaySequence" ShowIndex="true">
+                    <TableTemplate Data="@Shop.DisplaySequence" ShowIndex="true" ColumnCount="2">
                         <TableHeader>
                             <th>@Resources.ShopEdit.ColumnName</th>
                             <th style="width: 80px"></th>
@@ -44,8 +44,8 @@
                             <td>
                                 @if (DisplaySequence.IsSelected)
                                 {
-                                    <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(DisplaySequence)" disabled="@(!CanMoveUp(DisplaySequence))">&#9650;</button>
-                                    <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(DisplaySequence)" disabled="@(!CanMoveDown(DisplaySequence))">&#9660;</button>
+                                    <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await MoveUp(DisplaySequence)" disabled="@(!CanMoveUp(DisplaySequence))">&#9650;</button>
+                                    <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="async () => await MoveDown(DisplaySequence)" disabled="@(!CanMoveDown(DisplaySequence))">&#9660;</button>
                                 }
                             </td>
                         </RowTemplate>

@@ -83,14 +83,14 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
         {
             var model = new RecipeEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "My Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             var command = new AddCommand { Model = model };
 
-            var existing = new RecipeBook.Data.Entities.Recipe { Id = 10, Name = "My Recipe", RecipeCategoryId = 1 };
+            var existing = new RecipeBook.Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe", RecipeCategoryId = Guid.NewGuid() };
 
             _repoMock
                 .Setup(r => r.SearchAsync("My Recipe", "user1", It.IsAny<CancellationToken>()))
@@ -115,9 +115,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
         {
             var model = new RecipeEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "New Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             var command = new AddCommand { Model = model };
@@ -128,9 +128,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.Recipe
             {
-                Id = 5,
+                Id = Guid.NewGuid(),
                 Name = "New Recipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             _mapperMock
@@ -156,9 +156,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
         {
             var model = new RecipeEditModel
             {
-                Id = 0,
+                Id = Guid.Empty,
                 Name = "ErrorRecipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             var command = new AddCommand { Model = model };
@@ -169,9 +169,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 
             var mappedEntity = new RecipeBook.Data.Entities.Recipe
             {
-                Id = 7,
+                Id = Guid.NewGuid(),
                 Name = "ErrorRecipe",
-                RecipeCategoryId = 1
+                RecipeCategoryId = Guid.NewGuid()
             };
 
             _mapperMock

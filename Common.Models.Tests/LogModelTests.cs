@@ -12,7 +12,7 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(log.Id, Is.EqualTo(0));
+                Assert.That(log.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(log.Message, Is.EqualTo(string.Empty));
                 Assert.That(log.MessageTemplate, Is.EqualTo(string.Empty));
                 Assert.That(log.Level, Is.EqualTo(string.Empty));
@@ -29,9 +29,10 @@
             var timestamp = new DateTime(2025, 1, 2, 3, 4, 5, DateTimeKind.Utc);
 
             // Act
+            var id = Guid.NewGuid();
             var log = new LogModel
             {
-                Id = 42,
+                Id = id,
                 Message = "Message",
                 MessageTemplate = "Template {Value}",
                 Level = "Information",
@@ -43,7 +44,7 @@
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(log.Id, Is.EqualTo(42));
+                Assert.That(log.Id, Is.EqualTo(id));
                 Assert.That(log.Message, Is.EqualTo("Message"));
                 Assert.That(log.MessageTemplate, Is.EqualTo("Template {Value}"));
                 Assert.That(log.Level, Is.EqualTo("Information"));

@@ -11,13 +11,13 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.SearchByRecipeId
         /// <summary>
         /// Id of the recipe to search meal plans for.
         /// </summary>
-        public int RecipeId { get; set; }
+        public Guid RecipeId { get; set; }
 
         public SearchByRecipeIdQuery()
         {
         }
 
-        public SearchByRecipeIdQuery(int recipeId)
+        public SearchByRecipeIdQuery(Guid recipeId)
         {
             RecipeId = recipeId;
         }

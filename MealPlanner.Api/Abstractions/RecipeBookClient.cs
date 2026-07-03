@@ -1,6 +1,6 @@
-﻿using Common.Api;
-using RecipeBook.Shared.Constants;
+using Common.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Abstractions

@@ -1,38 +1,48 @@
-﻿using Common.Data.DataContext;
-using MealPlanner.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
+using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Api.Repositories
 {
     public class ShoppingListRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<ShoppingList, int>(dbContext), IShoppingListRepository
+        : BaseAsyncRepository<ShoppingList, Guid>(dbContext), IShoppingListRepository
     {
-        private MealPlannerDbContext Ctx =>
-            DbContext as MealPlannerDbContext
-            ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+        private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
         public async Task<IReadOnlyList<ShoppingList>> GetAllByUserAsync(
             string userId,
             CancellationToken cancellationToken)
         {
-            return await Ctx.ShoppingLists
+            return await Context.ShoppingLists
                 .Where(sl => sl.UserId == userId)
                 .ToListAsync(cancellationToken);
+        }
+
+        public override async Task DeleteAsync(ShoppingList entity, CancellationToken cancellationToken)
+        {
+            await Context.ShoppingListProducts
+                .Where(p => p.ShoppingListId == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await Context.ShoppingLists
+                .Where(sl => sl.Id == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
         }
 
         public override async Task UpdateAsync(ShoppingList entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            var existing = await Ctx.ShoppingListProducts
+            var existing = await Context.ShoppingListProducts
                 .Where(p => p.ShoppingListId == entity.Id)
                 .ToListAsync(cancellationToken);
 
             var desired = entity.Products ?? [];
             var desiredProductIds = desired.Select(p => p.ProductId).ToHashSet();
+            entity.Products = existing;
 
-            Ctx.ShoppingListProducts.RemoveRange(
+            Context.ShoppingListProducts.RemoveRange(
                 existing.Where(p => !desiredProductIds.Contains(p.ProductId)));
 
             var existingByProduct = existing.ToDictionary(p => p.ProductId);
@@ -45,6 +55,7 @@ namespace MealPlanner.Api.Repositories
                     tracked.UnitId = item.UnitId;
                     tracked.Collected = item.Collected;
                     tracked.DisplaySequence = item.DisplaySequence;
+                    Context.Entry(tracked).State = EntityState.Modified;
                 }
                 else
                 {
@@ -59,22 +70,22 @@ namespace MealPlanner.Api.Repositories
                     });
                 }
             }
-            await Ctx.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
+            await Context.ShoppingListProducts.AddRangeAsync(toAdd, cancellationToken);
 
             entity.Products = existing
                 .Where(p => desiredProductIds.Contains(p.ProductId))
                 .Concat(toAdd)
                 .ToList();
 
-            Ctx.Entry(entity).State = EntityState.Modified;
-            await Ctx.SaveChangesAsync(cancellationToken);
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
-            return await Ctx.ShoppingLists
+            return await Context.ShoppingLists
                 .Include(x => x.Shop)
                 .Include(x => x.Products)!
                     .ThenInclude(p => p.Product)!
@@ -95,7 +106,7 @@ namespace MealPlanner.Api.Repositories
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name must not be null or empty.", nameof(name));
 
-            return await Ctx.ShoppingLists
+            return await Context.ShoppingLists
                 .FirstOrDefaultAsync(
                     x => x.UserId == userId &&
                          x.Name != null &&

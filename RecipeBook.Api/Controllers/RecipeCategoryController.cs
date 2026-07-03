@@ -1,5 +1,4 @@
-﻿using BlazorBootstrap;
-using Common.Models;
+﻿using Common.Models;
 using Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +25,7 @@ namespace RecipeBook.Api.Controllers
 
         [HttpGet("edit")]
         public async Task<ActionResult<RecipeCategoryEditModel>> GetEditAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var query = new GetEditQuery(id);
@@ -119,7 +118,7 @@ namespace RecipeBook.Api.Controllers
 
         [HttpDelete]
         public async Task<ActionResult<CommandResponse?>> DeleteAsync(
-            [FromQuery] int id,
+            [FromQuery] Guid id,
             CancellationToken cancellationToken)
         {
             var command = new DeleteCommand { Id = id };

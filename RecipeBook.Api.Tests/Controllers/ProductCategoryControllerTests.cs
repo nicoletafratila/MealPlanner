@@ -30,13 +30,14 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task GetEditAsync_SendsGetEditQuery()
         {
-            var model = new ProductCategoryEditModel { Id = 5, Name = "Dairy" };
+            var id = Guid.NewGuid();
+            var model = new ProductCategoryEditModel { Id = id, Name = "Dairy" };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == 5), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetEditQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(model);
 
-            var result = await _controller.GetEditAsync(5, CancellationToken.None);
+            var result = await _controller.GetEditAsync(id, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -89,7 +90,7 @@ namespace RecipeBook.Api.Tests.Controllers
         {
             var models = new List<ProductCategoryModel>
             {
-                new() { Id = 1, Name = "Dairy" }
+                new() { Id = Guid.NewGuid(), Name = "Dairy" }
             };
 
             _senderMock
@@ -108,7 +109,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task PostAsync_SendsAddCommand()
         {
-            var model = new ProductCategoryEditModel { Id = 0, Name = "NewCat" };
+            var model = new ProductCategoryEditModel { Id = Guid.Empty, Name = "NewCat" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -127,7 +128,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task PutAsync_SendsUpdateCommand()
         {
-            var model = new ProductCategoryEditModel { Id = 2, Name = "UpdatedCat" };
+            var model = new ProductCategoryEditModel { Id = Guid.NewGuid(), Name = "UpdatedCat" };
             var response = CommandResponse.Success();
 
             _senderMock
@@ -146,13 +147,14 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task DeleteAsync_SendsDeleteCommand()
         {
+            var id = Guid.NewGuid();
             var response = CommandResponse.Success();
 
             _senderMock
-                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == 9), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<DeleteCommand>(c => c.Id == id), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            var result = await _controller.DeleteAsync(9, CancellationToken.None);
+            var result = await _controller.DeleteAsync(id, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);

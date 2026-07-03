@@ -52,7 +52,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
         public async Task Handle_EntityFound_ReturnsMappedModel()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var entity = new RecipeBook.Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
             var mapped = new UnitEditModel { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
 
@@ -85,7 +85,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
         public async Task Handle_EntityNotFound_ReturnsEmptyEditModelWithId()
         {
             // Arrange
-            const int id = 10;
+            var id = Guid.NewGuid();
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
@@ -112,7 +112,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
         public async Task Handle_MapperReturnsNull_FallsBackToEmptyModelWithId()
         {
             // Arrange
-            const int id = 7;
+            var id = Guid.NewGuid();
             var entity = new RecipeBook.Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
 
             _repoMock

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
 {
@@ -23,12 +22,12 @@ namespace RecipeBook.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.ImageContent, Is.Null);
                 Assert.That(model.ImageUrl, Is.Null);
-                Assert.That(model.BaseUnitId, Is.Zero);
-                Assert.That(model.ProductCategoryId, Is.Zero);
+                Assert.That(model.BaseUnitId, Is.EqualTo(Guid.Empty));
+                Assert.That(model.ProductCategoryId, Is.EqualTo(Guid.Empty));
 
                 Assert.That(isValid, Is.False);
                 Assert.That(results, Is.Not.Empty);
@@ -41,11 +40,11 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Milk",
                 ImageContent = new byte[10],
-                BaseUnitId = 2,
-                ProductCategoryId = 3
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
             // Act
@@ -64,11 +63,11 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 ImageContent = new byte[10],
-                BaseUnitId = 1,
-                ProductCategoryId = 1
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
             // Empty name -> invalid
@@ -99,11 +98,11 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 ImageContent = null,
-                BaseUnitId = 1,
-                ProductCategoryId = 1
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
             // Null -> invalid (Required)
@@ -130,50 +129,18 @@ namespace RecipeBook.Shared.Tests.Models
         }
 
         [Test]
-        public void BaseUnitId_MustBeAtLeast1()
+        public void ProductCategoryId_Guid_IsAccepted()
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Test",
                 ImageContent = new byte[10],
-                BaseUnitId = 0,
-                ProductCategoryId = 1
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
-            var isValid = TryValidate(model, out var results);
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.BaseUnitId))), Is.True);
-            }
-
-            model.BaseUnitId = 1;
-            isValid = TryValidate(model, out results);
-            Assert.That(isValid, Is.True);
-        }
-
-        [Test]
-        public void ProductCategoryId_MustBeAtLeast1()
-        {
-            var model = new ProductEditModel
-            {
-                Id = 1,
-                Name = "Test",
-                ImageContent = new byte[10],
-                BaseUnitId = 1,
-                ProductCategoryId = 0
-            };
-
-            var isValid = TryValidate(model, out var results);
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ProductCategoryId))), Is.True);
-            }
-
-            model.ProductCategoryId = 1;
-            isValid = TryValidate(model, out results);
+            var isValid = TryValidate(model, out _);
             Assert.That(isValid, Is.True);
         }
 
@@ -181,10 +148,10 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             const string name = "Cheese";
-            const int baseUnitId = 2;
-            const int productCategoryId = 3;
+            var baseUnitId = Guid.NewGuid();
+            var productCategoryId = Guid.NewGuid();
 
             // Act
             var model = new ProductEditModel(id, name, baseUnitId, productCategoryId);
@@ -204,7 +171,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ProductEditModel(1, null!, 1, 1);
+                _ = new ProductEditModel(Guid.NewGuid(), null!, Guid.NewGuid(), Guid.NewGuid());
             });
         }
 
@@ -213,11 +180,11 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Bread",
                 ImageContent = new byte[1],
-                BaseUnitId = 1,
-                ProductCategoryId = 1
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
             Assert.That(model.ToString(), Is.EqualTo("Bread"));

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
 {
@@ -23,7 +22,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
 
                 Assert.That(isValid, Is.False);
@@ -37,7 +36,7 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange
             var model = new ProductCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Dairy"
             };
 
@@ -57,7 +56,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = ""
             };
 
@@ -88,7 +87,7 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             const string name = "Snacks";
 
             // Act
@@ -107,7 +106,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                _ = new ProductCategoryEditModel(1, null!);
+                _ = new ProductCategoryEditModel(Guid.NewGuid(), null!);
             });
         }
 
@@ -116,7 +115,7 @@ namespace RecipeBook.Shared.Tests.Models
         {
             var model = new ProductCategoryEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Beverages"
             };
 

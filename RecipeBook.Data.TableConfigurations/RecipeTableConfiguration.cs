@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Data.TableConfigurations
 {
-    public sealed class RecipeTableConfiguration
+    public class RecipeTableConfiguration
         : IEntityTypeConfiguration<Recipe>
     {
         public void Configure(EntityTypeBuilder<Recipe> builder)

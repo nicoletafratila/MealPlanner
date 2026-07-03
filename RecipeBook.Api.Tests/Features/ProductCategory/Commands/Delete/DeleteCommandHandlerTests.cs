@@ -58,7 +58,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
         public async Task Handle_CategoryNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             _categoryRepoMock
@@ -73,7 +73,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5."));
+                Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}."));
             }
 
             _categoryRepoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
@@ -85,15 +85,15 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
         public async Task Handle_CategoryUsedInProducts_ReturnsFailedResponse_AndDoesNotDelete()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             var category = new RecipeBook.Data.Entities.ProductCategory { Id = id, Name = "Dairy" };
 
             var products = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "Milk", ProductCategoryId = id },
-                new() { Id = 2, Name = "Bread", ProductCategoryId = 999 }
+                new() { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = id },
+                new() { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = Guid.NewGuid() }
             };
 
             _categoryRepoMock
@@ -124,14 +124,14 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
         public async Task Handle_CategoryNotUsedInProducts_DeletesAndReturnsSuccess()
         {
             // Arrange
-            const int id = 4;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             var category = new RecipeBook.Data.Entities.ProductCategory { Id = id, Name = "Snacks" };
 
             var products = new List<RecipeBook.Data.Entities.Product>
             {
-                new() { Id = 1, Name = "Milk", ProductCategoryId = 999 }
+                new() { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = Guid.NewGuid() }
             };
 
             _categoryRepoMock
@@ -162,7 +162,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Commands.Delete
         public async Task Handle_ExceptionDuringDelete_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 6;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             var category = new RecipeBook.Data.Entities.ProductCategory { Id = id, Name = "Frozen" };

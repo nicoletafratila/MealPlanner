@@ -1,7 +1,7 @@
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Data.TableConfigurations.Tests
 {
@@ -9,7 +9,7 @@ namespace MealPlanner.Data.TableConfigurations.Tests
     public class MealPlanRecipeTableConfigurationTests
     {
         [Test]
-        public void Configure_SetsCompositePrimaryKey()
+        public void Configure_SetsSinglePrimaryKey()
         {
             var conventionSet = new ConventionSet();
             var modelBuilder = new ModelBuilder(conventionSet);
@@ -26,7 +26,7 @@ namespace MealPlanner.Data.TableConfigurations.Tests
             Assert.That(key, Is.Not.Null, "Primary key not configured for MealPlanRecipe.");
 
             var keyPropertyNames = key!.Properties.Select(p => p.Name).ToArray();
-            Assert.That(keyPropertyNames, Is.EqualTo(new[] { "MealPlanId", "RecipeId" }));
+            Assert.That(keyPropertyNames, Is.EqualTo(new[] { "Id" }));
         }
 
         [Test]

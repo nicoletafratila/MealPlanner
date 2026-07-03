@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web" InitialTargets="EnsureMinCssExists">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -40,8 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="$(BlazorBootstrap)" />
     <PackageReference Include="BuildBundlerMinifier" Version="$(BuildBundlerMinifier)" />
     <PackageReference Include="Blazored.Modal" Version="$(BlazoredModal)" />
+    <PackageReference Include="Blazored.SessionStorage" Version="$(BlazoredSessionStorage)" />
     <PackageReference Include="bootstrap-dialog" Version="$(BootstrapDialog)" />
     <PackageReference Include="MudBlazor" Version="$(MudBlazor)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJson)" />
@@ -49,17 +51,134 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\Common.Core\Common.Core.csproj" />
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\Common.UI\Common.UI.csproj" />
-    <ProjectReference Include="..\Identity.Services\Identity.Services.csproj" />
+    <ProjectReference Include="..\Identity.Services.Http\Identity.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Api\MealPlanner.Api.csproj" />
     <ProjectReference Include="..\RecipeBook.Api\RecipeBook.Api.csproj" />
-    <ProjectReference Include="..\MealPlanner.Services\MealPlanner.Services.csproj" />
+    <ProjectReference Include="..\MealPlanner.Services.Http\MealPlanner.Services.Http.csproj" />
+<ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
-    <ProjectReference Include="..\RecipeBook.Services\RecipeBook.Services.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\AuditTrail.razor.cs">
+      <DependentUpon>AuditTrail.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\ContactUs.razor.cs">
+      <DependentUpon>ContactUs.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\ChangePassword.razor.cs">
+      <DependentUpon>ChangePassword.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\ForgotPassword.razor.cs">
+      <DependentUpon>ForgotPassword.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\Login.razor.cs">
+      <DependentUpon>Login.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\LoginDisplay.razor.cs">
+      <DependentUpon>LoginDisplay.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\RedirectToLogin.razor.cs">
+      <DependentUpon>RedirectToLogin.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\Register.razor.cs">
+      <DependentUpon>Register.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\ResetPassword.razor.cs">
+      <DependentUpon>ResetPassword.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\UserProfile.razor.cs">
+      <DependentUpon>UserProfile.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identities\UsersOverview.razor.cs">
+      <DependentUpon>UsersOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\MealPlanEdit.razor.cs">
+      <DependentUpon>MealPlanEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\MealPlanSelection.razor.cs">
+      <DependentUpon>MealPlanSelection.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\MealPlansOverview.razor.cs">
+      <DependentUpon>MealPlansOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShopEdit.razor.cs">
+      <DependentUpon>ShopEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShopSelection.razor.cs">
+      <DependentUpon>ShopSelection.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShoppingListEdit.razor.cs">
+      <DependentUpon>ShoppingListEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShoppingListsOverview.razor.cs">
+      <DependentUpon>ShoppingListsOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShopsOverview.razor.cs">
+      <DependentUpon>ShopsOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\ProductCategoriesOverview.razor.cs">
+      <DependentUpon>ProductCategoriesOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\ProductCategoryEdit.razor.cs">
+      <DependentUpon>ProductCategoryEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\ProductEdit.razor.cs">
+      <DependentUpon>ProductEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\ProductsOverview.razor.cs">
+      <DependentUpon>ProductsOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\ProductStatistics.razor.cs">
+      <DependentUpon>ProductStatistics.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipeCategoriesOverview.razor.cs">
+      <DependentUpon>RecipeCategoriesOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipeCategoryEdit.razor.cs">
+      <DependentUpon>RecipeCategoryEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipeEdit.razor.cs">
+      <DependentUpon>RecipeEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipePreview.razor.cs">
+      <DependentUpon>RecipePreview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipeSelection.razor.cs">
+      <DependentUpon>RecipeSelection.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipesOverview.razor.cs">
+      <DependentUpon>RecipesOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipeStatistics.razor.cs">
+      <DependentUpon>RecipeStatistics.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\UnitEdit.razor.cs">
+      <DependentUpon>UnitEdit.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\UnitsOverview.razor.cs">
+      <DependentUpon>UnitsOverview.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\BlazoredModalInstanceWrapper.razor.cs">
+      <DependentUpon>BlazoredModalInstanceWrapper.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\GridTemplate.razor.cs">
+      <DependentUpon>GridTemplate.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\MainLayout.razor.cs">
+      <DependentUpon>MainLayout.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\NavMenu.razor.cs">
+      <DependentUpon>NavMenu.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\TableTemplate.razor.cs">
+      <DependentUpon>TableTemplate.razor</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -87,6 +206,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MainLayout.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Shared\Resources\Messages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Update="Pages\RecipeBooks\Resources\RecipeEdit.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -239,7 +363,17 @@
     <Content Update="wwwroot\css\site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\css\site.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
   </ItemGroup>
+
+  <!-- After dotnet clean, BuildBundlerMinifier deletes site.min.css but DefineStaticWebAssets
+       runs before the bundler regenerates it. Copy site.css as a fallback so the asset exists. -->
+  <Target Name="EnsureMinCssExists">
+    <Copy SourceFiles="wwwroot\css\site.css" DestinationFiles="wwwroot\css\site.min.css" Condition="!Exists('$(MSBuildProjectDirectory)\wwwroot\css\site.min.css')" />
+  </Target>
 
   <ItemGroup>
     <EmbeddedResource Update="Pages\Identities\Resources\ForgotPassword.resx">
@@ -261,6 +395,10 @@
     <EmbeddedResource Update="Shared\Resources\MainLayout.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MainLayout.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Shared\Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\RecipeBooks\Resources\RecipeEdit.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,6 +1,7 @@
 using AutoMapper;
 using MealPlanner.Data.Entities;
 using MealPlanner.Shared.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using RecipeBook.Data.Entities;
 using RecipeBook.Shared.Models;
 
@@ -19,7 +20,7 @@ namespace MealPlanner.Data.Profiles.Tests
                 c.AddProfile<RecipeBook.Data.Profiles.UnitProfile>();
                 c.AddProfile<RecipeBook.Data.Profiles.ProductProfile>();
                 c.AddProfile<RecipeBook.Data.Profiles.ProductCategoryProfile>();
-            });
+            }, NullLoggerFactory.Instance);
 
             config.AssertConfigurationIsValid();
             _mapper = config.CreateMapper();
@@ -28,12 +29,14 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void ShoppingListProduct_To_ShoppingListProductEditModel_Maps_All_Properties()
         {
+            var unitId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
             var entity = new ShoppingListProduct
             {
-                ShoppingListId = 5,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 2.5m,
-                UnitId = 10,
-                ProductId = 99,
+                UnitId = unitId,
+                ProductId = productId,
                 Collected = true,
                 DisplaySequence = 4
             };
@@ -48,21 +51,21 @@ namespace MealPlanner.Data.Profiles.Tests
                 Assert.That(result.Product, Is.Null);
                 Assert.That(result.Collected, Is.EqualTo(entity.Collected));
                 Assert.That(result.DisplaySequence, Is.EqualTo(entity.DisplaySequence));
-
                 Assert.That(result.Unit, Is.Null);
-                Assert.That(result.Product, Is.Null);
             }
         }
 
         [Test]
         public void ShoppingListProductEditModel_To_ShoppingListProduct_Maps_All_Properties()
         {
+            var unitId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 8,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 11.75m,
-                UnitId = 3,
-                Product = new ProductModel() { Id = 41 },
+                UnitId = unitId,
+                Product = new ProductModel() { Id = productId },
                 Collected = false,
                 DisplaySequence = 2
             };
@@ -77,7 +80,6 @@ namespace MealPlanner.Data.Profiles.Tests
                 Assert.That(result.ProductId, Is.EqualTo(model.Product.Id));
                 Assert.That(result.Collected, Is.EqualTo(model.Collected));
                 Assert.That(result.DisplaySequence, Is.EqualTo(model.DisplaySequence));
-
                 Assert.That(result.ShoppingList, Is.Null);
                 Assert.That(result.Unit, Is.Null);
                 Assert.That(result.Product, Is.Null);
@@ -87,21 +89,25 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void Null_SourceValue_Does_Not_Overwrite_Destination()
         {
+            var shoppingListId = Guid.NewGuid();
+            var destUnitId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var destProductId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel
             {
                 Quantity = 0,
-                UnitId = 1,
-                Product = new ProductModel() { Id = 1 },
+                UnitId = Guid.NewGuid(),
+                Product = new ProductModel() { Id = productId },
                 DisplaySequence = 1,
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
             };
 
             var destination = new ShoppingListProduct
             {
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
                 Quantity = 10,
-                UnitId = 5,
-                ProductId = 8,
+                UnitId = destUnitId,
+                ProductId = destProductId,
                 Collected = false,
                 DisplaySequence = 10,
                 Product = new Product { Name = "Existing Product" },
@@ -117,7 +123,6 @@ namespace MealPlanner.Data.Profiles.Tests
                 Assert.That(destination.ProductId, Is.EqualTo(model.Product!.Id));
                 Assert.That(destination.DisplaySequence, Is.EqualTo(model.DisplaySequence));
                 Assert.That(destination.ShoppingListId, Is.EqualTo(model.ShoppingListId));
-
                 Assert.That(destination.Product!.Name, Is.EqualTo("Existing Product"));
                 Assert.That(destination.Unit!.Name, Is.EqualTo("Existing Unit"));
             }

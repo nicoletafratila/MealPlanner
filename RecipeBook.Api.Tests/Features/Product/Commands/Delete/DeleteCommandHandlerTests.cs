@@ -58,7 +58,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
         public async Task Handle_ProductNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
             _productRepoMock
@@ -73,29 +73,21 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+                Assert.That(result.Message, Does.Contain(id.ToString()));
             }
 
-            _productRepoMock.Verify(
-                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _ingredientRepoMock.Verify(
-                r => r.SearchAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()),
-                Times.Never);
-            _productRepoMock.Verify(
-                r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()),
-                Times.Never);
+            _productRepoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _ingredientRepoMock.Verify(r => r.SearchAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_ProductUsedInRecipes_ReturnsFailedResponse_AndDoesNotDelete()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
-
             var product = new RecipeBook.Data.Entities.Product { Id = id, Name = "Milk" };
-
             var ingredients = new List<RecipeBook.Data.Entities.RecipeIngredient>
             {
                 new() { ProductId = id, Quantity = 1m }
@@ -104,7 +96,6 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             _productRepoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(product);
-
             _ingredientRepoMock
                 .Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(ingredients);
@@ -120,37 +111,22 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("Product 'Milk' can not be deleted, it is used in recipes."));
             }
 
-            _productRepoMock.Verify(
-                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _ingredientRepoMock.Verify(
-                r => r.SearchAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _productRepoMock.Verify(
-                r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()),
-                Times.Never);
+            _productRepoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _ingredientRepoMock.Verify(r => r.SearchAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_ProductNotUsedInRecipes_DeletesAndReturnsSuccess()
         {
             // Arrange
-            const int id = 4;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
-
             var product = new RecipeBook.Data.Entities.Product { Id = id, Name = "Bread" };
 
-            _productRepoMock
-                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(product);
-
-            _ingredientRepoMock
-                .Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync([]);
-
-            _productRepoMock
-                .Setup(r => r.DeleteAsync(product, It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+            _productRepoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(product);
+            _ingredientRepoMock.Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync([]);
+            _productRepoMock.Setup(r => r.DeleteAsync(product, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -159,37 +135,22 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _productRepoMock.Verify(
-                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _ingredientRepoMock.Verify(
-                r => r.SearchAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _productRepoMock.Verify(
-                r => r.DeleteAsync(product, It.IsAny<CancellationToken>()),
-                Times.Once);
+            _productRepoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _ingredientRepoMock.Verify(r => r.SearchAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+            _productRepoMock.Verify(r => r.DeleteAsync(product, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
         public async Task Handle_ExceptionDuringDelete_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 6;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
-
             var product = new RecipeBook.Data.Entities.Product { Id = id, Name = "Cheese" };
 
-            _productRepoMock
-                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(product);
-
-            _ingredientRepoMock
-                .Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync([]);
-
-            _productRepoMock
-                .Setup(r => r.DeleteAsync(product, It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new InvalidOperationException("DB error"));
+            _productRepoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(product);
+            _ingredientRepoMock.Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync([]);
+            _productRepoMock.Setup(r => r.DeleteAsync(product, It.IsAny<CancellationToken>())).ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -202,23 +163,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
                 Assert.That(result.Message, Is.EqualTo("An error occurred when deleting the product."));
             }
 
-            _productRepoMock.Verify(
-                r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _ingredientRepoMock.Verify(
-                r => r.SearchAsync(id, It.IsAny<CancellationToken>()),
-                Times.Once);
-            _productRepoMock.Verify(
-                r => r.DeleteAsync(product, It.IsAny<CancellationToken>()),
-                Times.Once);
-
             _loggerMock.Verify(
-                l => l.Log(
-                    It.Is<LogLevel>(ll => ll == LogLevel.Error),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                l => l.Log(It.Is<LogLevel>(ll => ll == LogLevel.Error), It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
     }

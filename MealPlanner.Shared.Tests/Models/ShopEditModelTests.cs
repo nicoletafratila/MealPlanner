@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MealPlanner.Shared.Models;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using MealPlanner.Shared.Models; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Tests.Models
 {
@@ -24,7 +22,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(model.Id, Is.Zero);
+                Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
                 Assert.That(model.DisplaySequence, Is.Not.Null);
                 Assert.That(model.DisplaySequence, Is.Empty);
@@ -40,11 +38,11 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "My Shop",
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 10, Name = "Cat1" } }
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat1" } }
                 ]
             };
 
@@ -64,11 +62,11 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "",
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat" } }
                 ]
             };
 
@@ -100,7 +98,7 @@ namespace MealPlanner.Shared.Tests.Models
         {
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Shop",
                 DisplaySequence = []
             };
@@ -125,7 +123,7 @@ namespace MealPlanner.Shared.Tests.Models
             // Valid list
             model.DisplaySequence =
             [
-                new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
+                new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat" } }
             ];
 
             isValid = TryValidate(model, out results);
@@ -136,10 +134,12 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_WithCategories_CreatesDisplaySequence()
         {
             // Arrange
+            var cat1Id = Guid.NewGuid();
+            var cat2Id = Guid.NewGuid();
             var categories = new List<ProductCategoryModel>
             {
-                new() { Id = 1, Name = "Cat1" },
-                new() { Id = 2, Name = "Cat2" }
+                new() { Id = cat1Id, Name = "Cat1" },
+                new() { Id = cat2Id, Name = "Cat2" }
             };
 
             // Act
@@ -153,11 +153,11 @@ namespace MealPlanner.Shared.Tests.Models
 
                 Assert.That(model.DisplaySequence![0].Index, Is.EqualTo(1));
                 Assert.That(model.DisplaySequence[0].Value, Is.EqualTo(1));
-                Assert.That(model.DisplaySequence[0].ProductCategory!.Id, Is.EqualTo(1));
+                Assert.That(model.DisplaySequence[0].ProductCategory!.Id, Is.EqualTo(cat1Id));
 
                 Assert.That(model.DisplaySequence[1].Index, Is.EqualTo(2));
                 Assert.That(model.DisplaySequence[1].Value, Is.EqualTo(2));
-                Assert.That(model.DisplaySequence[1].ProductCategory!.Id, Is.EqualTo(2));
+                Assert.That(model.DisplaySequence[1].ProductCategory!.Id, Is.EqualTo(cat2Id));
             }
         }
 
@@ -165,32 +165,32 @@ namespace MealPlanner.Shared.Tests.Models
         public void GetDisplaySequence_ReturnsMatchingItem()
         {
             // Arrange
-            var cat1 = new ProductCategoryModel { Id = 1, Name = "Cat1" };
-            var cat2 = new ProductCategoryModel { Id = 2, Name = "Cat2" };
+            var cat1 = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat1" };
+            var cat2 = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat2" };
 
             var model = new ShopEditModel
             {
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = cat1 },
-                    new() { ShopId = 1, Value = 2, ProductCategory = cat2 },
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = cat1 },
+                    new() { ShopId = Guid.NewGuid(), Value = 2, ProductCategory = cat2 },
                 ]
             };
 
             // Act
-            var seq1 = model.GetDisplaySequence(1);
-            var seq2 = model.GetDisplaySequence(2);
-            var seqNone = model.GetDisplaySequence(999);
+            var seq1 = model.GetDisplaySequence(cat1.Id);
+            var seq2 = model.GetDisplaySequence(cat2.Id);
+            var seqNone = model.GetDisplaySequence(Guid.NewGuid());
             var seqNull = model.GetDisplaySequence(null);
 
             // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(seq1, Is.Not.Null);
-                Assert.That(seq1!.ProductCategory!.Id, Is.EqualTo(1));
+                Assert.That(seq1!.ProductCategory!.Id, Is.EqualTo(cat1.Id));
 
                 Assert.That(seq2, Is.Not.Null);
-                Assert.That(seq2!.ProductCategory!.Id, Is.EqualTo(2));
+                Assert.That(seq2!.ProductCategory!.Id, Is.EqualTo(cat2.Id));
 
                 Assert.That(seqNone, Is.Null);
                 Assert.That(seqNull, Is.Null);
@@ -203,11 +203,11 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange
             var model = new ShopEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = null!,
                 DisplaySequence =
                 [
-                    new() { ShopId = 1, Value = 1, ProductCategory = new ProductCategoryModel { Id = 1, Name = "Cat" } }
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat" } }
                 ]
             };
 

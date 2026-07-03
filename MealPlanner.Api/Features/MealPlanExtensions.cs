@@ -1,6 +1,6 @@
-using Common.Services;
-using Common.Services.Converters;
 using Common.Services.Converters.Resources;
+using Common.Services.Converters;
+using Common.Services;
 
 namespace MealPlanner.Api.Features
 {
@@ -23,7 +23,7 @@ namespace MealPlanner.Api.Features
                 };
             }
 
-            var productsById = new Dictionary<int, MealPlanner.Data.Entities.ShoppingListProduct>();
+            var productsById = new Dictionary<Guid, MealPlanner.Data.Entities.ShoppingListProduct>();
 
             foreach (var mealPlanRecipe in mealPlan.MealPlanRecipes)
             {

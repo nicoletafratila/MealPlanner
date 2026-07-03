@@ -15,12 +15,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         }
 
         [Test]
-        public void MealPlanId_Zero_HasValidationError()
+        public void MealPlanId_Empty_HasValidationError()
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = 0,
-                ShopId = 1
+                MealPlanId = Guid.Empty,
+                ShopId = Guid.NewGuid()
             };
 
             var result = _validator.TestValidate(command);
@@ -29,26 +29,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         }
 
         [Test]
-        public void MealPlanId_Negative_HasValidationError()
+        public void ShopId_Empty_HasValidationError()
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = -1,
-                ShopId = 1
-            };
-
-            var result = _validator.TestValidate(command);
-
-            result.ShouldHaveValidationErrorFor(x => x.MealPlanId);
-        }
-
-        [Test]
-        public void ShopId_Zero_HasValidationError()
-        {
-            var command = new MakeShoppingListCommand
-            {
-                MealPlanId = 1,
-                ShopId = 0
+                MealPlanId = Guid.NewGuid(),
+                ShopId = Guid.Empty
             };
 
             var result = _validator.TestValidate(command);
@@ -57,26 +43,12 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
         }
 
         [Test]
-        public void ShopId_Negative_HasValidationError()
+        public void BothIds_Valid_HasNoValidationErrors()
         {
             var command = new MakeShoppingListCommand
             {
-                MealPlanId = 1,
-                ShopId = -2
-            };
-
-            var result = _validator.TestValidate(command);
-
-            result.ShouldHaveValidationErrorFor(x => x.ShopId);
-        }
-
-        [Test]
-        public void BothIds_GreaterThanZero_HasNoValidationErrors()
-        {
-            var command = new MakeShoppingListCommand
-            {
-                MealPlanId = 3,
-                ShopId = 4
+                MealPlanId = Guid.NewGuid(),
+                ShopId = Guid.NewGuid()
             };
 
             var result = _validator.TestValidate(command);

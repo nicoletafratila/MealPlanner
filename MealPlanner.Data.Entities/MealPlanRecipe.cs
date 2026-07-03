@@ -3,17 +3,19 @@ using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Data.Entities
 {
-    public sealed class MealPlanRecipe
+    public class MealPlanRecipe
     {
+        public Guid Id { get; set; }
+
         [ForeignKey(nameof(MealPlanId))]
         public MealPlan? MealPlan { get; set; }
-        public int MealPlanId { get; set; }
+        public Guid MealPlanId { get; set; }
 
         [ForeignKey(nameof(RecipeId))]
         public Recipe? Recipe { get; set; }
-        public int RecipeId { get; set; }
+        public Guid RecipeId { get; set; }
 
         public override string ToString() =>
-            $"MealPlanId={MealPlanId}, RecipeId={RecipeId}";
+            $"Id={Id}, MealPlanId={MealPlanId}, RecipeId={RecipeId}";
     }
 }

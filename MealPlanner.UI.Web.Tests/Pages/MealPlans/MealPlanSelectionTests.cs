@@ -1,13 +1,4 @@
-using System.Reflection;
-using Blazored.Modal;
-using Bunit;
-using Common.Pagination;
-using MealPlanner.Services;
-using MealPlanner.Shared.Models;
-using MealPlanner.UI.Web.Pages;
-using MealPlanner.UI.Web.Pages.MealPlans;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using System.Reflection;using Blazored.Modal; using Bunit; using Common.Pagination; using MealPlanner.Services.Http; using MealPlanner.Shared.Models; using MealPlanner.UI.Web.Pages.MealPlans; using MealPlanner.UI.Web.Pages; using Microsoft.Extensions.DependencyInjection; using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 {
@@ -50,8 +41,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var items = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" },
-                new() { Id = 2, Name = "Plan2" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" },
+                new() { Id = Guid.NewGuid(), Name = "Plan2" }
             };
 
             var mealPlans = new PagedList<MealPlanModel>(

@@ -10,11 +10,9 @@ PM> Script-migration
 
 
 
-schimba ids in guid
-warning cu automapper
-Error occurred while getting package vulnerability data: Unable to load the service index for source https://suvoda-005514975141.d.codeartifact.eu-west-1.amazonaws.com/nuget/sv-framework-nuget/v3/index.json.
-create the weeks menu on first click on the recipe if not yet created
-update on the banner after weeks menu is created
-allow same recipe multiple times on the menu
 
+
+The edit / selection / statistics pages (RecipeEdit, ProductEdit, MealPlanEdit, ShoppingListEdit, RecipeSelection, ShopSelection, MealPlanSelection, RecipeCategoriesOverview, RecipeStatistics, ProductStatistics) also call SearchAsync, but in their OnInitialized load path — a different code path, with varied
+shapes (multiple calls, property assignment, some with no MessageComponent). They aren't the grid-render crash you reported. They'd still throw if a backend is down — but handling them cleanly is a separate, larger change.
+Want me to extend the same helper to those init-path pages too? It's doable but touches more varied code, so I kept it out of this pass unless you want it.
 

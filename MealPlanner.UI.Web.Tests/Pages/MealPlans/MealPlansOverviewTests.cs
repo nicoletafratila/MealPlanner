@@ -1,16 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.SessionStorage;
-using Bunit;
-using Common.Models;
-using Common.Pagination;
-using Common.UI;
-using MealPlanner.Services;
-using MealPlanner.Shared.Models;
-using MealPlanner.UI.Web.Pages.MealPlans;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Models; using Common.Pagination; using Common.UI; using MealPlanner.Services.Http; using MealPlanner.Shared.Models; using MealPlanner.UI.Web.Pages.MealPlans; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 {
@@ -104,13 +92,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(MealPlansOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var mealPlan = new MealPlanModel { Id = 7 };
+            var id = Guid.NewGuid();
+            var mealPlan = new MealPlanModel { Id = id };
 
             // Act
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [mealPlan]));
 
             // Assert
-            Assert.That(nav.Uri, Does.EndWith("mealplans/mealplanedit/7"));
+            Assert.That(nav.Uri, Does.EndWith($"mealplans/mealplanedit/{id}"));
         }
 
         // ---------- DeleteAsync / DeleteCoreAsync ----------
@@ -132,7 +121,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _mealPlanServiceMock.Verify(
-                s => s.DeleteAsync(It.IsAny<int>(), CancellationToken.None),
+                s => s.DeleteAsync(It.IsAny<Guid>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -142,8 +131,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var response = new CommandResponse { Succeeded = true, Message = "ok" };
 
+            var id = Guid.NewGuid();
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
+                .Setup(s => s.DeleteAsync(id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -151,7 +141,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(MealPlansOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var item = new MealPlanModel { Id = 5, Name = "Plan" };
+            var item = new MealPlanModel { Id = id, Name = "Plan" };
 
             // Act
             await cut.InvokeAsync(async () =>
@@ -161,7 +151,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             });
 
             // Assert
-            _mealPlanServiceMock.Verify(s => s.DeleteAsync(5, CancellationToken.None), Times.Once);
+            _mealPlanServiceMock.Verify(s => s.DeleteAsync(id, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync("Data has been deleted successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
@@ -171,8 +161,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         public async Task DeleteCoreAsync_ShowsGenericError_WhenResponseNull()
         {
             // Arrange
+            var id = Guid.NewGuid();
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
+                .Setup(s => s.DeleteAsync(id, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderComponent();
@@ -180,7 +171,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(MealPlansOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var item = new MealPlanModel { Id = 5 };
+            var item = new MealPlanModel { Id = id };
 
             // Act
             await cut.InvokeAsync(async () =>
@@ -205,8 +196,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Message = "Delete failed because of dependency"
             };
 
+            var id = Guid.NewGuid();
             _mealPlanServiceMock
-                .Setup(s => s.DeleteAsync(5, CancellationToken.None))
+                .Setup(s => s.DeleteAsync(id, CancellationToken.None))
                 .ReturnsAsync(response);
 
             var cut = RenderComponent();
@@ -214,7 +206,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var method = typeof(MealPlansOverview).GetMethod("DeleteCoreAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var item = new MealPlanModel { Id = 5 };
+            var item = new MealPlanModel { Id = id };
 
             // Act
             await cut.InvokeAsync(async () =>
@@ -275,7 +267,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Arrange
             var items = new List<MealPlanModel>
             {
-                new() { Id = 1, Name = "Plan1" }
+                new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };
 
             var paged = new PagedList<MealPlanModel>(

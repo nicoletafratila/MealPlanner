@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Constants.Units;
-using Common.Models;
-using RecipeBook.Shared.Resources;
+using System.ComponentModel.DataAnnotations;using Common.Constants.Units; using Common.Models; using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -10,8 +7,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity or zero for new entities.
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Display name of the unit (e.g., "Kilogram", "Liter").
@@ -31,7 +27,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public UnitEditModel(int id, string name, UnitType unitType)
+        public UnitEditModel(Guid id, string name, UnitType unitType)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

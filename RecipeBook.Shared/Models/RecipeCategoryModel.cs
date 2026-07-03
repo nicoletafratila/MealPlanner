@@ -10,7 +10,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Category name (e.g., "Desert", "Fel principal").
@@ -26,7 +26,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public RecipeCategoryModel(int id, string name, int displaySequence = 0)
+        public RecipeCategoryModel(Guid id, string name, int displaySequence = 0)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

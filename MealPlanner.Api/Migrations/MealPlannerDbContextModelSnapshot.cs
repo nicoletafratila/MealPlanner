@@ -17,12 +17,41 @@ namespace MealPlanner.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Common.Data.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("Common.Data.Entities.Log", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Level")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MessageTemplate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
+                });
+
+            modelBuilder.Entity("Identity.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -99,44 +128,11 @@ namespace MealPlanner.Api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.Log", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.MealPlan", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Exception")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Level")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MessageTemplate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Properties")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Logs");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.MealPlan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -157,163 +153,32 @@ namespace MealPlanner.Api.Migrations
                     b.ToTable("MealPlans");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.MealPlanRecipe", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.MealPlanRecipe", b =>
                 {
-                    b.Property<int>("MealPlanId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MealPlanId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("MealPlanId", "RecipeId");
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MealPlanId");
 
                     b.HasIndex("RecipeId");
 
                     b.ToTable("MealPlanRecipes");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.Product", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.Shop", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BaseUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("ImageContent")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProductCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BaseUnitId");
-
-                    b.HasIndex("ProductCategoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.ProductCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProductCategories");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.Recipe", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("ImageContent")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RecipeCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipeCategoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Recipes");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.RecipeCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DisplaySequence")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RecipeCategories");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.RecipeIngredient", b =>
-                {
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Quantity")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UnitId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UnitId");
-
-                    b.ToTable("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.Shop", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -328,13 +193,13 @@ namespace MealPlanner.Api.Migrations
                     b.ToTable("Shops");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.ShopDisplaySequence", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShopDisplaySequence", b =>
                 {
-                    b.Property<int>("ShopId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ProductCategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductCategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
@@ -346,19 +211,17 @@ namespace MealPlanner.Api.Migrations
                     b.ToTable("ShopDisplaySequences");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.ShoppingList", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShoppingList", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShopId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -372,13 +235,13 @@ namespace MealPlanner.Api.Migrations
                     b.ToTable("ShoppingLists");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.ShoppingListProduct", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShoppingListProduct", b =>
                 {
-                    b.Property<int>("ShoppingListId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ShoppingListId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Collected")
                         .HasColumnType("bit");
@@ -390,8 +253,8 @@ namespace MealPlanner.Api.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UnitId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ShoppingListId", "ProductId");
 
@@ -400,25 +263,6 @@ namespace MealPlanner.Api.Migrations
                     b.HasIndex("UnitId");
 
                     b.ToTable("ShoppingListProducts");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.Unit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UnitType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Units");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -554,15 +398,159 @@ namespace MealPlanner.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.MealPlanRecipe", b =>
+            modelBuilder.Entity("RecipeBook.Data.Entities.Product", b =>
                 {
-                    b.HasOne("Common.Data.Entities.MealPlan", "MealPlan")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BaseUnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ImageContent")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BaseUnitId");
+
+                    b.HasIndex("ProductCategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.ProductCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.Recipe", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ImageContent")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RecipeCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeCategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.RecipeCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DisplaySequence")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecipeCategories");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.RecipeIngredient", b =>
+                {
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RecipeId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.Unit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UnitType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Units");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Entities.MealPlanRecipe", b =>
+                {
+                    b.HasOne("MealPlanner.Data.Entities.MealPlan", "MealPlan")
                         .WithMany("MealPlanRecipes")
                         .HasForeignKey("MealPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Common.Data.Entities.Recipe", "Recipe")
+                    b.HasOne("RecipeBook.Data.Entities.Recipe", "Recipe")
                         .WithMany()
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -573,72 +561,15 @@ namespace MealPlanner.Api.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.Product", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShopDisplaySequence", b =>
                 {
-                    b.HasOne("Common.Data.Entities.Unit", "BaseUnit")
-                        .WithMany()
-                        .HasForeignKey("BaseUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Common.Data.Entities.ProductCategory", "ProductCategory")
+                    b.HasOne("RecipeBook.Data.Entities.ProductCategory", "ProductCategory")
                         .WithMany()
                         .HasForeignKey("ProductCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BaseUnit");
-
-                    b.Navigation("ProductCategory");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.Recipe", b =>
-                {
-                    b.HasOne("Common.Data.Entities.RecipeCategory", "RecipeCategory")
-                        .WithMany()
-                        .HasForeignKey("RecipeCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RecipeCategory");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.RecipeIngredient", b =>
-                {
-                    b.HasOne("Common.Data.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Common.Data.Entities.Recipe", "Recipe")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Common.Data.Entities.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Recipe");
-
-                    b.Navigation("Unit");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.ShopDisplaySequence", b =>
-                {
-                    b.HasOne("Common.Data.Entities.ProductCategory", "ProductCategory")
-                        .WithMany()
-                        .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Common.Data.Entities.Shop", "Shop")
+                    b.HasOne("MealPlanner.Data.Entities.Shop", "Shop")
                         .WithMany("DisplaySequence")
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -649,9 +580,9 @@ namespace MealPlanner.Api.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.ShoppingList", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShoppingList", b =>
                 {
-                    b.HasOne("Common.Data.Entities.Shop", "Shop")
+                    b.HasOne("MealPlanner.Data.Entities.Shop", "Shop")
                         .WithMany()
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -660,24 +591,24 @@ namespace MealPlanner.Api.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.ShoppingListProduct", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShoppingListProduct", b =>
                 {
-                    b.HasOne("Common.Data.Entities.Product", "Product")
+                    b.HasOne("RecipeBook.Data.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Common.Data.Entities.ShoppingList", "ShoppingList")
+                    b.HasOne("MealPlanner.Data.Entities.ShoppingList", "ShoppingList")
                         .WithMany("Products")
                         .HasForeignKey("ShoppingListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Common.Data.Entities.Unit", "Unit")
+                    b.HasOne("RecipeBook.Data.Entities.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -698,7 +629,7 @@ namespace MealPlanner.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Common.Data.Entities.ApplicationUser", null)
+                    b.HasOne("Identity.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -707,7 +638,7 @@ namespace MealPlanner.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Common.Data.Entities.ApplicationUser", null)
+                    b.HasOne("Identity.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -722,7 +653,7 @@ namespace MealPlanner.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Common.Data.Entities.ApplicationUser", null)
+                    b.HasOne("Identity.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -731,31 +662,88 @@ namespace MealPlanner.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Common.Data.Entities.ApplicationUser", null)
+                    b.HasOne("Identity.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.MealPlan", b =>
+            modelBuilder.Entity("RecipeBook.Data.Entities.Product", b =>
+                {
+                    b.HasOne("RecipeBook.Data.Entities.Unit", "BaseUnit")
+                        .WithMany()
+                        .HasForeignKey("BaseUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RecipeBook.Data.Entities.ProductCategory", "ProductCategory")
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BaseUnit");
+
+                    b.Navigation("ProductCategory");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.Recipe", b =>
+                {
+                    b.HasOne("RecipeBook.Data.Entities.RecipeCategory", "RecipeCategory")
+                        .WithMany()
+                        .HasForeignKey("RecipeCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RecipeCategory");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.RecipeIngredient", b =>
+                {
+                    b.HasOne("RecipeBook.Data.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RecipeBook.Data.Entities.Recipe", "Recipe")
+                        .WithMany("RecipeIngredients")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RecipeBook.Data.Entities.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("MealPlanner.Data.Entities.MealPlan", b =>
                 {
                     b.Navigation("MealPlanRecipes");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.Recipe", b =>
-                {
-                    b.Navigation("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("Common.Data.Entities.Shop", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.Shop", b =>
                 {
                     b.Navigation("DisplaySequence");
                 });
 
-            modelBuilder.Entity("Common.Data.Entities.ShoppingList", b =>
+            modelBuilder.Entity("MealPlanner.Data.Entities.ShoppingList", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("RecipeBook.Data.Entities.Recipe", b =>
+                {
+                    b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,7 +10,7 @@ namespace MealPlanner.Api.Features.MealPlan.Queries.GetEdit
         public GetEditQueryValidator()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0)
+                .NotEqual(Guid.Empty)
                 .WithMessage(Resources.MealPlanMessages.IdGreaterThanZero);
         }
     }

@@ -1,7 +1,7 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
 {
@@ -9,7 +9,7 @@ namespace RecipeBook.Api.Repositories
     /// Async repository for <see cref="Recipe"/> entities with eager-loading helpers.
     /// </summary>
     public class RecipeRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<Recipe, int>(dbContext), IRecipeRepository
+        : BaseAsyncRepository<Recipe, Guid>(dbContext), IRecipeRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
@@ -32,7 +32,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public override async Task<Recipe?> GetByIdAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.Recipes
@@ -48,45 +48,22 @@ namespace RecipeBook.Api.Repositories
                 .Where(ri => ri.RecipeId == entity.Id)
                 .ToListAsync(cancellationToken);
 
-            var desired = entity.RecipeIngredients ?? [];
-            var desiredProductIds = desired.Select(ri => ri.ProductId).ToHashSet();
+            Context.RecipeIngredients.RemoveRange(existing);
 
-            Context.RecipeIngredients.RemoveRange(
-                existing.Where(ri => !desiredProductIds.Contains(ri.ProductId)));
-
-            var existingByProduct = existing.ToDictionary(ri => ri.ProductId);
-            var toAdd = new List<RecipeIngredient>();
-            foreach (var item in desired)
+            if (entity.RecipeIngredients?.Count > 0)
             {
-                if (existingByProduct.TryGetValue(item.ProductId, out var tracked))
-                {
-                    tracked.Quantity = item.Quantity;
-                    tracked.UnitId = item.UnitId;
-                }
-                else
-                {
-                    toAdd.Add(new RecipeIngredient
-                    {
-                        RecipeId = entity.Id,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        UnitId = item.UnitId
-                    });
-                }
-            }
-            await Context.RecipeIngredients.AddRangeAsync(toAdd, cancellationToken);
+                foreach (var ri in entity.RecipeIngredients)
+                    ri.RecipeId = entity.Id;
 
-            entity.RecipeIngredients = existing
-                .Where(ri => desiredProductIds.Contains(ri.ProductId))
-                .Concat(toAdd)
-                .ToList();
+                await Context.RecipeIngredients.AddRangeAsync(entity.RecipeIngredients, cancellationToken);
+            }
 
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Recipe?> GetByIdIncludeIngredientsAsync(
-            int? id,
+            Guid? id,
             CancellationToken cancellationToken)
         {
             if (id is null)
@@ -102,7 +79,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public async Task<IReadOnlyList<Recipe>> SearchAsync(
-            int categoryId,
+            Guid categoryId,
             CancellationToken cancellationToken)
         {
             return await Context.Recipes

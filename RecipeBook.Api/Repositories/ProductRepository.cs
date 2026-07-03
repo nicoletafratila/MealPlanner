@@ -1,7 +1,7 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
 {
@@ -9,7 +9,7 @@ namespace RecipeBook.Api.Repositories
     /// Async repository for <see cref="Product"/> entities.
     /// </summary>
     public class ProductRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<Product, int>(dbContext), IProductRepository
+        : BaseAsyncRepository<Product, Guid>(dbContext), IProductRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
@@ -34,7 +34,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public override async Task<Product?> GetByIdAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.Products
@@ -44,7 +44,7 @@ namespace RecipeBook.Api.Repositories
         }
 
         public async Task<IReadOnlyList<Product>> SearchAsync(
-            int categoryId,
+            Guid categoryId,
             CancellationToken cancellationToken)
         {
             return await Context.Products

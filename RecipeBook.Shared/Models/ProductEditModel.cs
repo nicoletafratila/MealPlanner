@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using RecipeBook.Shared.Resources;
+using System.ComponentModel.DataAnnotations;using Common.Models; using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -12,8 +10,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity (0 for new products).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Product name (required, max 100 characters).
@@ -37,22 +34,19 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Base unit id for this product (e.g., kg, liter).
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductUnitRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int BaseUnitId { get; set; }
+        public Guid BaseUnitId { get; set; }
 
         /// <summary>
         /// Product category id.
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
-        public int ProductCategoryId { get; set; }
+        public Guid ProductCategoryId { get; set; }
 
         public ProductEditModel()
         {
         }
 
-        public ProductEditModel(int id, string name, int baseUnitId, int productCategoryId)
+        public ProductEditModel(Guid id, string name, Guid baseUnitId, Guid productCategoryId)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

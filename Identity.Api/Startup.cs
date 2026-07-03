@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using Common.Data.DataContext;
@@ -19,7 +19,7 @@ using Serilog;
 
 namespace Identity.Api
 {
-    public class Startup(IConfiguration configuration) : Common.Api.Startup(configuration)
+    public class Startup(IConfiguration configuration) : Common.Core.Startup(configuration)
     {
         protected override void RegisterTableConfigurationAssemblies(IServiceCollection services)
         {
@@ -77,10 +77,10 @@ namespace Identity.Api
 
         protected override void RegisterRepositories(IServiceCollection services)
         {
-            services.AddScoped<IAsyncRepository<ProductCategory, int>>(sp =>
-                new BaseAsyncRepository<ProductCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
-            services.AddScoped<IAsyncRepository<RecipeCategory, int>>(sp =>
-                new BaseAsyncRepository<RecipeCategory, int>(sp.GetRequiredService<MealPlannerDbContext>()));
+            services.AddScoped<IAsyncRepository<ProductCategory, Guid>>(sp =>
+                new BaseAsyncRepository<ProductCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
+            services.AddScoped<IAsyncRepository<RecipeCategory, Guid>>(sp =>
+                new BaseAsyncRepository<RecipeCategory, Guid>(sp.GetRequiredService<MealPlannerDbContext>()));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     {

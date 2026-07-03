@@ -72,7 +72,7 @@
       AllowPaging="@AllowPaging"
       AutoHidePaging="true"
       Class="@(!string.IsNullOrEmpty(TableGridClass) ? TableGridClass : "")"
-      DataProvider="@DataProvider"
+      DataProvider="DataProviderWrapperAsync"
       SettingsProvider="SettingsProviderWrapperAsync"
       PageSize="@PageSize"
       PageSizeSelectorVisible="true"

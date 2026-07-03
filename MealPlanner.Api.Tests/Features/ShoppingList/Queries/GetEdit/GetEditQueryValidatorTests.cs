@@ -1,4 +1,4 @@
-﻿using FluentValidation.TestHelper;
+using FluentValidation.TestHelper;
 using MealPlanner.Api.Features.ShoppingList.Queries.GetEdit;
 
 namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
@@ -15,10 +15,10 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         }
 
         [Test]
-        public void Id_Zero_HasValidationError()
+        public void Id_Empty_HasValidationError()
         {
             // Arrange
-            var query = new GetEditQuery { Id = 0 };
+            var query = new GetEditQuery { Id = Guid.Empty };
 
             // Act
             var result = _validator.TestValidate(query);
@@ -28,23 +28,10 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.GetEdit
         }
 
         [Test]
-        public void Id_Negative_HasValidationError()
+        public void Id_NotEmpty_HasNoValidationError()
         {
             // Arrange
-            var query = new GetEditQuery { Id = -1 };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Id);
-        }
-
-        [Test]
-        public void Id_GreaterThanZero_HasNoValidationError()
-        {
-            // Arrange
-            var query = new GetEditQuery { Id = 5 };
+            var query = new GetEditQuery { Id = Guid.NewGuid() };
 
             // Act
             var result = _validator.TestValidate(query);

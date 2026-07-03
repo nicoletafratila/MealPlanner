@@ -1,4 +1,4 @@
-using Common.Api;
+using Common.Core;
 using MealPlanner.Shared.Constants;
 
 namespace RecipeBook.Api.Abstractions

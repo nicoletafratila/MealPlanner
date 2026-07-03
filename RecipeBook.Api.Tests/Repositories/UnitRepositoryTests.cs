@@ -1,10 +1,10 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
+using Common.Data.DataContext;
 using MealPlanner.Data.TableConfigurations;
-using RecipeBook.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace RecipeBook.Api.Tests.Repositories
 {
@@ -61,7 +61,7 @@ namespace RecipeBook.Api.Tests.Repositories
             using (Assert.EnterMultipleScope())
             {
                 // Assert
-                Assert.That(added.Id, Is.Not.Zero);
+                Assert.That(added.Id, Is.Not.EqualTo(Guid.Empty));
                 Assert.That(ctx.Set<Unit>().Count(), Is.EqualTo(1));
                 Assert.That(ctx.Set<Unit>().Single().Name, Is.EqualTo("Kilogram"));
             }

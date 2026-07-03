@@ -1,7 +1,7 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
 {
@@ -9,7 +9,7 @@ namespace RecipeBook.Api.Repositories
     /// Async repository for <see cref="RecipeCategory"/> entities.
     /// </summary>
     public class RecipeCategoryRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<RecipeCategory, int>(dbContext), IRecipeCategoryRepository
+        : BaseAsyncRepository<RecipeCategory, Guid>(dbContext), IRecipeCategoryRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
@@ -19,11 +19,12 @@ namespace RecipeBook.Api.Repositories
         {
             return await Context.RecipeCategories
                 .Where(c => c.UserId == userId)
+                .OrderBy(c => c.DisplaySequence)
                 .ToListAsync(cancellationToken);
         }
 
         public async Task<IReadOnlyList<RecipeCategory>> GetByIdsAsync(
-            IList<int> ids,
+            IList<Guid> ids,
             CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(ids);
@@ -43,11 +44,9 @@ namespace RecipeBook.Api.Repositories
                 return;
 
             foreach (var entity in entities)
-            {
-                DbContext.Entry(entity).State = EntityState.Modified;
-            }
+                Context.Entry(entity).Property(c => c.DisplaySequence).IsModified = true;
 
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class RecipesOverview {
@@ -160,11 +160,38 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Week&apos;s menu has been created and the recipe has been added successfully..
+        /// </summary>
+        internal static string MealPlanCreatedAndRecipeAdded {
+            get {
+                return ResourceManager.GetString("MealPlanCreatedAndRecipeAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meniu.
+        /// </summary>
+        internal static string MenuName {
+            get {
+                return ResourceManager.GetString("MenuName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
         internal static string NewButton {
             get {
                 return ResourceManager.GetString("NewButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No meal plan found for the current week. Please create a meal plan first..
+        /// </summary>
+        internal static string NoCurrentMealPlan {
+            get {
+                return ResourceManager.GetString("NoCurrentMealPlan", resourceCulture);
             }
         }
         
@@ -177,15 +204,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to No meal plan found for the current week. Please create a meal plan first..
-        /// </summary>
-        internal static string NoCurrentMealPlan {
-            get {
-                return ResourceManager.GetString("NoCurrentMealPlan", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Recipe has been added successfully.
         /// </summary>

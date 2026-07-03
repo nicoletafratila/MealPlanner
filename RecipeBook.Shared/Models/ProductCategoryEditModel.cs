@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Common.Models;
+using System.ComponentModel.DataAnnotations;using Common.Models;
 
 namespace RecipeBook.Shared.Models
 {
@@ -9,10 +8,9 @@ namespace RecipeBook.Shared.Models
     public class ProductCategoryEditModel : BaseModel
     {
         /// <summary>
-        /// Database identity (0 for new categories).
+        /// Database identity (empty for new categories).
         /// </summary>
-        [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Category name (required, max 100 characters).
@@ -25,7 +23,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public ProductCategoryEditModel(int id, string name)
+        public ProductCategoryEditModel(Guid id, string name)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

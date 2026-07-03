@@ -15,13 +15,13 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         }
 
         [Test]
-        public void MealPlanId_Zero_HasValidationError()
+        public void MealPlanId_Empty_HasValidationError()
         {
             // Arrange
             var query = new GetShoppingListProductsQuery
             {
-                MealPlanId = 0,
-                ShopId = 1
+                MealPlanId = Guid.Empty,
+                ShopId = Guid.NewGuid()
             };
 
             // Act
@@ -32,30 +32,13 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         }
 
         [Test]
-        public void MealPlanId_Negative_HasValidationError()
+        public void ShopId_Empty_HasValidationError()
         {
             // Arrange
             var query = new GetShoppingListProductsQuery
             {
-                MealPlanId = -1,
-                ShopId = 1
-            };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.MealPlanId);
-        }
-
-        [Test]
-        public void ShopId_Zero_HasValidationError()
-        {
-            // Arrange
-            var query = new GetShoppingListProductsQuery
-            {
-                MealPlanId = 1,
-                ShopId = 0
+                MealPlanId = Guid.NewGuid(),
+                ShopId = Guid.Empty
             };
 
             // Act
@@ -66,30 +49,13 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.GetShoppingListProduct
         }
 
         [Test]
-        public void ShopId_Negative_HasValidationError()
+        public void BothIds_Valid_HasNoValidationErrors()
         {
             // Arrange
             var query = new GetShoppingListProductsQuery
             {
-                MealPlanId = 1,
-                ShopId = -2
-            };
-
-            // Act
-            var result = _validator.TestValidate(query);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.ShopId);
-        }
-
-        [Test]
-        public void BothIds_GreaterThanZero_HasNoValidationErrors()
-        {
-            // Arrange
-            var query = new GetShoppingListProductsQuery
-            {
-                MealPlanId = 3,
-                ShopId = 4
+                MealPlanId = Guid.NewGuid(),
+                ShopId = Guid.NewGuid()
             };
 
             // Act

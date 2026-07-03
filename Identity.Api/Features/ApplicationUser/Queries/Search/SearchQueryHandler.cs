@@ -55,12 +55,8 @@ namespace Identity.Api.Features.ApplicationUser.Queries.Search
             if (parameters.Sorting is null || !parameters.Sorting.Any())
                 return source;
 
-            var sortingItems = parameters.Sorting
-                .Select(QueryParameters<ApplicationUserModel>.FromModel)
-                .ToList();
-
             return source.AsQueryable()
-                         .ApplySorting(sortingItems)!
+                         .ApplySorting(parameters.Sorting)!
                          .ToList();
         }
     }

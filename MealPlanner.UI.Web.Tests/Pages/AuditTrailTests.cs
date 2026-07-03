@@ -1,11 +1,4 @@
-﻿using System.Reflection;
-using Bunit;
-using Common.Models;
-using Common.Services;
-using MealPlanner.UI.Web.Pages;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Moq;
+using System.Reflection;using Bunit; using Common.Models; using Common.Services; using MealPlanner.UI.Web.Pages; using Microsoft.Extensions.DependencyInjection; using Microsoft.Extensions.Logging; using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages
 {
@@ -20,7 +13,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
         {
             return new LogModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Message = message,
                 MessageTemplate = message,
                 Level = level,

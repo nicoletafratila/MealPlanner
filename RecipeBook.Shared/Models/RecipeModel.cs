@@ -7,7 +7,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Recipe display name. Defaults to empty string to avoid null handling.
@@ -54,7 +54,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public RecipeModel(int id, string name)
+        public RecipeModel(Guid id, string name)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

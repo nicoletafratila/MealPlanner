@@ -3,8 +3,9 @@ using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using Common.UI;
-using Identity.Services;
-using MealPlanner.Services;
+using MealPlanner.UI.Web.Services;
+using Identity.Services.Http;
+using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ShoppingListModel>? _shoppingListsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
-        private SortDirection _nameSortDirection = SortDirection.Ascending;
+        private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
         private bool showCopiedMessage;
@@ -54,7 +55,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             var stored = await SessionStorage.GetItemAsync<QueryParameters<ShoppingListModel>>();
             var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
-            var direction = nameSort?.Direction ?? SortDirection.Ascending;
+            var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
 
             if (direction != _nameSortDirection)
             {
@@ -65,7 +66,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         }
 
         private async Task<GridSettings?> SettingsProviderAsync()
-            => await SessionStorage.GetItemAsync<QueryParameters<ShoppingListModel>>();
+        {
+            var qp = await SessionStorage.GetItemAsync<QueryParameters<ShoppingListModel>>();
+            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+        }
 
         private void New()
         {
@@ -131,10 +135,12 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         {
             var queryParameters = new QueryParameters<ShoppingListModel>
             {
-                Filters = request.Filters,
+                Filters = request.Filters?
+                    .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList(),
                 Sorting = request.Sorting?
-                    .Select(QueryParameters<ShoppingListModel>.ToModel)
-                    .ToList()!,
+                    .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
+                    .ToList() ?? [],
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
             };

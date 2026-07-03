@@ -6,16 +6,16 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
     public class SearchByRecipeIdQueryTests
     {
         [Test]
-        public void DefaultCtor_InitializesRecipeIdToZero()
+        public void DefaultCtor_InitializesRecipeIdToEmpty()
         {
             var query = new SearchByRecipeIdQuery();
-            Assert.That(query.RecipeId, Is.EqualTo(0));
+            Assert.That(query.RecipeId, Is.EqualTo(Guid.Empty));
         }
 
         [Test]
         public void Ctor_SetsRecipeId()
         {
-            const int id = 10;
+            var id = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(id);
             Assert.That(query.RecipeId, Is.EqualTo(id));
         }
@@ -23,11 +23,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
         [Test]
         public void Can_Set_And_Get_RecipeId()
         {
+            var id = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery
             {
-                RecipeId = 7
+                RecipeId = id
             };
-            Assert.That(query.RecipeId, Is.EqualTo(7));
+            Assert.That(query.RecipeId, Is.EqualTo(id));
         }
     }
 }

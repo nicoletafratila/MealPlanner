@@ -22,10 +22,10 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             // Arrange
             var model = new ProductEditModel
             {
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Name = "Product1",
-                BaseUnitId = 2,
-                ProductCategoryId = 3
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
             // Act
@@ -51,10 +51,10 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var command = new UpdateCommand();
             var model = new ProductEditModel
             {
-                Id = 2,
+                Id = Guid.NewGuid(),
                 Name = "Product2",
-                BaseUnitId = 5,
-                ProductCategoryId = 6
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid()
             };
 
             // Act

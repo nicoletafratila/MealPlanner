@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using MealPlanner.Shared.Resources;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using Common.Models; using MealPlanner.Shared.Resources; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
@@ -13,9 +10,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Parent shopping list id.
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
-        public int ShoppingListId { get; set; }
+        public Guid ShoppingListId { get; set; }
 
         /// <summary>
         /// Quantity for the product. Must be a positive number (0 or greater).
@@ -27,9 +22,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Selected unit id for this product.
         /// </summary>
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(MealPlannerSharedMessages.UnitRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
-        public int UnitId { get; set; }
+        public Guid UnitId { get; set; }
 
         /// <summary>
         /// Indicates whether this product has been collected in the shopping list.
@@ -58,9 +51,9 @@ namespace MealPlanner.Shared.Models
         }
 
         public ShoppingListProductEditModel(
-            int shoppingListId,
+            Guid shoppingListId,
             decimal quantity,
-            int unitId,
+            Guid unitId,
             int displaySequence)
         {
             ShoppingListId = shoppingListId;

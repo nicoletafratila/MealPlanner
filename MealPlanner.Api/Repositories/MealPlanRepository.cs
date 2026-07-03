@@ -1,17 +1,15 @@
-﻿using Common.Data.DataContext;
-using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
+using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Api.Repositories
 {
     public class MealPlanRepository(MealPlannerDbContext dbContext)
-        : BaseAsyncRepository<MealPlan, int>(dbContext), IMealPlanRepository
+        : BaseAsyncRepository<MealPlan, Guid>(dbContext), IMealPlanRepository
     {
-        private MealPlannerDbContext Context =>
-            DbContext as MealPlannerDbContext
-            ?? throw new InvalidOperationException("DbContext is not MealPlannerDbContext.");
+        private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 
         public async Task<IReadOnlyList<MealPlan>> GetAllByUserAsync(
             string userId,
@@ -23,7 +21,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public override async Task<MealPlan?> GetByIdAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.MealPlans!
@@ -33,45 +31,39 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(mp => mp.Id == id, cancellationToken);
         }
 
+        public override async Task DeleteAsync(MealPlan entity, CancellationToken cancellationToken)
+        {
+            await Context.MealPlanRecipes
+                .Where(mpr => mpr.MealPlanId == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            await Context.MealPlans
+                .Where(mp => mp.Id == entity.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+        }
+
         public override async Task UpdateAsync(MealPlan entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            var desiredRecipeIds = entity.MealPlanRecipes?
-                .Select(mpr => mpr.RecipeId)
-                .ToHashSet() ?? [];
-
-            var existingRecipes = await Context.MealPlanRecipes
+            var existing = await Context.MealPlanRecipes
                 .Where(mpr => mpr.MealPlanId == entity.Id)
                 .ToListAsync(cancellationToken);
+            Context.MealPlanRecipes.RemoveRange(existing);
 
-            var existingRecipeIds = existingRecipes
-                .Select(mpr => mpr.RecipeId)
-                .ToHashSet();
+            var newRecipes = entity.MealPlanRecipes?
+                .Select(mpr => new MealPlanRecipe { RecipeId = mpr.RecipeId, MealPlanId = entity.Id })
+                .ToList() ?? [];
 
-            Context.MealPlanRecipes.RemoveRange(
-                existingRecipes.Where(mpr => !desiredRecipeIds.Contains(mpr.RecipeId)));
-
-            var newRecipes = desiredRecipeIds
-                .Where(id => !existingRecipeIds.Contains(id))
-                .Select(id => new MealPlanRecipe { RecipeId = id, MealPlanId = entity.Id })
-                .ToList();
             await Context.MealPlanRecipes.AddRangeAsync(newRecipes, cancellationToken);
 
-            // Restore navigation collection to already-tracked instances so that DetectChanges
-            // (triggered by Entry) doesn't attempt to re-track the untracked AutoMapper objects,
-            // which would cause an identity conflict on composite-key entities.
-            entity.MealPlanRecipes = existingRecipes
-                .Where(mpr => desiredRecipeIds.Contains(mpr.RecipeId))
-                .Concat(newRecipes)
-                .ToList();
-
+            entity.MealPlanRecipes = newRecipes;
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<MealPlan?> GetByIdIncludeRecipesAsync(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await Context.MealPlans
@@ -97,7 +89,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(
-            IList<int> categoryIds,
+            IList<Guid> categoryIds,
             string userId,
             CancellationToken cancellationToken)
         {
@@ -116,7 +108,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(
-            IList<int> categoryIds,
+            IList<Guid> categoryIds,
             string userId,
             CancellationToken cancellationToken)
         {
@@ -142,7 +134,7 @@ namespace MealPlanner.Api.Repositories
         }
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(
-            int recipeId,
+            Guid recipeId,
             string userId,
             CancellationToken cancellationToken)
         {

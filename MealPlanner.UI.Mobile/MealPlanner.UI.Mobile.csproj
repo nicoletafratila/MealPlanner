@@ -1,0 +1,144 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- iOS requires macOS + Xcode; add net10.0-ios back when building on a Mac CI agent -->
+	  <TargetFrameworks>net10.0-android36.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MealPlanner.UI.Mobile</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>MVVMTK0045</NoWarn>
+    <Nullable>enable</Nullable>
+
+    <ApplicationTitle>MealPlanner</ApplicationTitle>
+    <ApplicationId>com.mealplanner.mobile</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+    <MauiImage Include="Resources\Images\*" />
+    <MauiFont Include="Resources\Fonts\*" />
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="AppShell.xaml.cs">
+      <DependentUpon>AppShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Platforms\Windows\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\ChangePasswordPage.xaml.cs">
+      <DependentUpon>ChangePasswordPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\ForgotPasswordPage.xaml.cs">
+      <DependentUpon>ForgotPasswordPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\RegisterPage.xaml.cs">
+      <DependentUpon>RegisterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\ResetPasswordPage.xaml.cs">
+      <DependentUpon>ResetPasswordPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\UserProfilePage.xaml.cs">
+      <DependentUpon>UserProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\UsersOverviewPage.xaml.cs">
+      <DependentUpon>UsersOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\MealPlanEditPage.xaml.cs">
+      <DependentUpon>MealPlanEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\MealPlansOverviewPage.xaml.cs">
+      <DependentUpon>MealPlansOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShopEditPage.xaml.cs">
+      <DependentUpon>ShopEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShoppingListEditPage.xaml.cs">
+      <DependentUpon>ShoppingListEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShoppingListsOverviewPage.xaml.cs">
+      <DependentUpon>ShoppingListsOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\ShopsOverviewPage.xaml.cs">
+      <DependentUpon>ShopsOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\ProductCategoriesOverviewPage.xaml.cs">
+      <DependentUpon>ProductCategoriesOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\ProductCategoryEditPage.xaml.cs">
+      <DependentUpon>ProductCategoryEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\ProductEditPage.xaml.cs">
+      <DependentUpon>ProductEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\ProductsOverviewPage.xaml.cs">
+      <DependentUpon>ProductsOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\ProductStatisticsPage.xaml.cs">
+      <DependentUpon>ProductStatisticsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\RecipeCategoriesOverviewPage.xaml.cs">
+      <DependentUpon>RecipeCategoriesOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\RecipeCategoryEditPage.xaml.cs">
+      <DependentUpon>RecipeCategoryEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\RecipeDetailPage.xaml.cs">
+      <DependentUpon>RecipeDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\RecipeEditPage.xaml.cs">
+      <DependentUpon>RecipeEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\RecipesOverviewPage.xaml.cs">
+      <DependentUpon>RecipesOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\RecipeStatisticsPage.xaml.cs">
+      <DependentUpon>RecipeStatisticsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\UnitEditPage.xaml.cs">
+      <DependentUpon>UnitEditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\UnitsOverviewPage.xaml.cs">
+      <DependentUpon>UnitsOverviewPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MicrosoftMaui)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MicrosoftMaui)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="14.1.1" />
+  </ItemGroup>
+
+  <!-- Common.Constants has no ASP.NET or EF dependencies — safe to reference from MAUI -->
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
+    <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
+    <ProjectReference Include="..\Common.Http\Common.Http.csproj" />
+    <ProjectReference Include="..\Identity.Services.Http\Identity.Services.Http.csproj" />
+    <ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
+    <ProjectReference Include="..\MealPlanner.Services.Http\MealPlanner.Services.Http.csproj" />
+  </ItemGroup>
+
+</Project>

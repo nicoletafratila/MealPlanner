@@ -69,7 +69,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
         public async Task Handle_EntityNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 5;
+            var id = Guid.NewGuid();
             var model = new MealPlanEditModel { Id = id, Name = "Plan1" };
 
             var command = new UpdateCommand { Model = model };
@@ -86,7 +86,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 5"));
+                Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
@@ -98,7 +98,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
-            const int id = 2;
+            var id = Guid.NewGuid();
             var model = new MealPlanEditModel { Id = id, Name = "UpdatedPlan" };
 
             var command = new UpdateCommand { Model = model };
@@ -133,7 +133,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Update
         public async Task Handle_ExceptionDuringUpdate_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             var model = new MealPlanEditModel { Id = id, Name = "PlanX" };
             var command = new UpdateCommand { Model = model };
 

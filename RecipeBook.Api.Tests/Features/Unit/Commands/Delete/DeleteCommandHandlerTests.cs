@@ -1,8 +1,8 @@
-using RecipeBook.Data.Entities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Unit.Commands.Delete;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
 {
@@ -59,7 +59,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         public async Task Handle_UnitNotFound_ReturnsFailedResponse()
         {
             // Arrange
-            const int id = 10;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
             _unitRepoMock
@@ -74,7 +74,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Could not find with id 10."));
+                Assert.That(result.Message, Does.Contain(id.ToString()));
             }
 
             _unitRepoMock.Verify(
@@ -92,7 +92,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         public async Task Handle_UnitUsedInIngredients_ReturnsFailedResponse_AndDoesNotDelete()
         {
             // Arrange
-            const int id = 2;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
             var unit = new RecipeBook.Data.Entities.Unit
@@ -105,7 +105,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var ingredients = new List<RecipeIngredient>
             {
                 new() { UnitId = id, Quantity = 1 },
-                new() { UnitId = 999, Quantity = 2 }
+                new() { UnitId = Guid.NewGuid(), Quantity = 2 }
             };
 
             _unitRepoMock
@@ -142,7 +142,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         public async Task Handle_UnitNotUsedInIngredients_DeletesAndReturnsSuccess()
         {
             // Arrange
-            const int id = 3;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
             var unit = new RecipeBook.Data.Entities.Unit
@@ -154,7 +154,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
 
             var ingredients = new List<RecipeIngredient>
             {
-                new() { UnitId = 999, Quantity = 1 }
+                new() { UnitId = Guid.NewGuid(), Quantity = 1 }
             };
 
             _unitRepoMock
@@ -191,7 +191,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
         public async Task Handle_ExceptionDuringDelete_LogsError_AndReturnsFailedResponse()
         {
             // Arrange
-            const int id = 4;
+            var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
             var unit = new RecipeBook.Data.Entities.Unit

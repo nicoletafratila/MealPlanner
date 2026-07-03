@@ -8,19 +8,17 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void DefaultCtor_Sets_Expected_Defaults()
         {
-            // Act
             var item = new ShoppingListProduct();
 
-            // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(item.ShoppingList, Is.Null);
                 Assert.That(item.Product, Is.Null);
                 Assert.That(item.Unit, Is.Null);
 
-                Assert.That(item.ShoppingListId, Is.Zero);
-                Assert.That(item.ProductId, Is.Zero);
-                Assert.That(item.UnitId, Is.Zero);
+                Assert.That(item.ShoppingListId, Is.EqualTo(Guid.Empty));
+                Assert.That(item.ProductId, Is.EqualTo(Guid.Empty));
+                Assert.That(item.UnitId, Is.EqualTo(Guid.Empty));
 
                 Assert.That(item.Quantity, Is.Zero);
                 Assert.That(item.Collected, Is.False);
@@ -31,36 +29,36 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void Properties_Can_Be_Set_And_Read()
         {
-            // Arrange
             var shoppingList = new ShoppingList();
             var product = new Product();
             var unit = new Unit();
+            var shoppingListId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var unitId = Guid.NewGuid();
 
-            // Act
             var item = new ShoppingListProduct
             {
                 ShoppingList = shoppingList,
-                ShoppingListId = 1,
+                ShoppingListId = shoppingListId,
                 Product = product,
-                ProductId = 2,
+                ProductId = productId,
                 Unit = unit,
-                UnitId = 3,
+                UnitId = unitId,
                 Quantity = 4.5m,
                 Collected = true,
                 DisplaySequence = 10
             };
 
-            // Assert
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(item.ShoppingList, Is.SameAs(shoppingList));
-                Assert.That(item.ShoppingListId, Is.EqualTo(1));
+                Assert.That(item.ShoppingListId, Is.EqualTo(shoppingListId));
 
                 Assert.That(item.Product, Is.SameAs(product));
-                Assert.That(item.ProductId, Is.EqualTo(2));
+                Assert.That(item.ProductId, Is.EqualTo(productId));
 
                 Assert.That(item.Unit, Is.SameAs(unit));
-                Assert.That(item.UnitId, Is.EqualTo(3));
+                Assert.That(item.UnitId, Is.EqualTo(unitId));
 
                 Assert.That(item.Quantity, Is.EqualTo(4.5m));
                 Assert.That(item.Collected, Is.True);
@@ -71,11 +69,14 @@ namespace MealPlanner.Data.Entities.Tests
         [Test]
         public void ToString_Contains_Key_Information()
         {
+            var shoppingListId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var unitId = Guid.NewGuid();
             var item = new ShoppingListProduct
             {
-                ShoppingListId = 1,
-                ProductId = 2,
-                UnitId = 3,
+                ShoppingListId = shoppingListId,
+                ProductId = productId,
+                UnitId = unitId,
                 Quantity = 4m
             };
 
@@ -83,9 +84,9 @@ namespace MealPlanner.Data.Entities.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(text, Does.Contain("1"));
-                Assert.That(text, Does.Contain("2"));
-                Assert.That(text, Does.Contain("3"));
+                Assert.That(text, Does.Contain(shoppingListId.ToString()));
+                Assert.That(text, Does.Contain(productId.ToString()));
+                Assert.That(text, Does.Contain(unitId.ToString()));
                 Assert.That(text, Does.Contain("4"));
             }
         }

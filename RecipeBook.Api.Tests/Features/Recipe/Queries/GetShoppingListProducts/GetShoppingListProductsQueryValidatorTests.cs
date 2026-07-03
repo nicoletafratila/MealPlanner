@@ -15,12 +15,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         }
 
         [Test]
-        public void RecipeId_Zero_HasValidationError()
+        public void RecipeId_Empty_HasValidationError()
         {
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 0,
-                ShopId = 1
+                RecipeId = Guid.Empty,
+                ShopId = Guid.NewGuid()
             };
 
             var result = _validator.TestValidate(query);
@@ -29,26 +29,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         }
 
         [Test]
-        public void RecipeId_Negative_HasValidationError()
+        public void ShopId_Empty_HasValidationError()
         {
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = -1,
-                ShopId = 1
-            };
-
-            var result = _validator.TestValidate(query);
-
-            result.ShouldHaveValidationErrorFor(x => x.RecipeId);
-        }
-
-        [Test]
-        public void ShopId_Zero_HasValidationError()
-        {
-            var query = new GetShoppingListProductsQuery
-            {
-                RecipeId = 1,
-                ShopId = 0
+                RecipeId = Guid.NewGuid(),
+                ShopId = Guid.Empty
             };
 
             var result = _validator.TestValidate(query);
@@ -57,26 +43,12 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
         }
 
         [Test]
-        public void ShopId_Negative_HasValidationError()
+        public void BothIds_Valid_HasNoValidationErrors()
         {
             var query = new GetShoppingListProductsQuery
             {
-                RecipeId = 1,
-                ShopId = -1
-            };
-
-            var result = _validator.TestValidate(query);
-
-            result.ShouldHaveValidationErrorFor(x => x.ShopId);
-        }
-
-        [Test]
-        public void BothIds_GreaterThanZero_HasNoValidationErrors()
-        {
-            var query = new GetShoppingListProductsQuery
-            {
-                RecipeId = 5,
-                ShopId = 10
+                RecipeId = Guid.NewGuid(),
+                ShopId = Guid.NewGuid()
             };
 
             var result = _validator.TestValidate(query);

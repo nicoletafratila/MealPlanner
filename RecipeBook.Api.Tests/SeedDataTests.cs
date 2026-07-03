@@ -1,8 +1,8 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.TableConfigurations;
+using Common.Data.DataContext;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Data.TableConfigurations;
 
 namespace RecipeBook.Api.Tests
 {

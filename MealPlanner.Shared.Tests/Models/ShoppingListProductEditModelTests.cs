@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MealPlanner.Shared.Models;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using MealPlanner.Shared.Models; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Tests.Models
 {
@@ -25,8 +23,6 @@ namespace MealPlanner.Shared.Tests.Models
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.ShoppingListId))), Is.True);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.UnitId))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.DisplaySequence))), Is.True);
             }
         }
@@ -35,10 +31,12 @@ namespace MealPlanner.Shared.Tests.Models
         public void Ctor_SetsProperties_AndValidates_WhenWithinConstraints()
         {
             // Arrange
+            var shoppingListId = Guid.NewGuid();
+            var unitId = Guid.NewGuid();
             var model = new ShoppingListProductEditModel(
-                shoppingListId: 1,
+                shoppingListId: shoppingListId,
                 quantity: 2.5m,
-                unitId: 3,
+                unitId: unitId,
                 displaySequence: 1);
 
             // Act
@@ -49,9 +47,9 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(isValid, Is.True);
                 Assert.That(results, Is.Empty);
-                Assert.That(model.ShoppingListId, Is.EqualTo(1));
+                Assert.That(model.ShoppingListId, Is.EqualTo(shoppingListId));
                 Assert.That(model.Quantity, Is.EqualTo(2.5m));
-                Assert.That(model.UnitId, Is.EqualTo(3));
+                Assert.That(model.UnitId, Is.EqualTo(unitId));
                 Assert.That(model.DisplaySequence, Is.EqualTo(1));
             }
         }
@@ -62,8 +60,8 @@ namespace MealPlanner.Shared.Tests.Models
             // Arrange: negative quantity
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 1,
-                UnitId = 2,
+                ShoppingListId = Guid.NewGuid(),
+                UnitId = Guid.NewGuid(),
                 DisplaySequence = 1,
                 Quantity = -1m
             };
@@ -89,46 +87,14 @@ namespace MealPlanner.Shared.Tests.Models
         }
 
         [Test]
-        public void UnitId_MustBeAtLeastOne()
-        {
-            // Arrange
-            var model = new ShoppingListProductEditModel
-            {
-                ShoppingListId = 1,
-                Quantity = 1m,
-                UnitId = 0,
-                DisplaySequence = 1
-            };
-
-            // Act
-            var isValid = TryValidate(model, out var results);
-
-            using (Assert.EnterMultipleScope())
-            {
-                // Assert
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.UnitId))), Is.True);
-            }
-
-            // Arrange valid
-            model.UnitId = 1;
-
-            // Act
-            isValid = TryValidate(model, out results);
-
-            // Assert
-            Assert.That(isValid, Is.True);
-        }
-
-        [Test]
         public void DisplaySequence_MustBeGratherThanZero()
         {
             // Arrange: negative
             var model = new ShoppingListProductEditModel
             {
-                ShoppingListId = 1,
+                ShoppingListId = Guid.NewGuid(),
                 Quantity = 1m,
-                UnitId = 1,
+                UnitId = Guid.NewGuid(),
                 DisplaySequence = -1
             };
 

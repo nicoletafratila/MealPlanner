@@ -10,7 +10,7 @@
     .about-cell {
         width: 1%;
         white-space: nowrap;
-        padding: 0; 
+        padding: 0;
         text-align: end;
         vertical-align: middle;
         align-content: flex-end;
@@ -19,7 +19,7 @@
         .contact-cell a,
         .about-cell a {
             display: inline-block;
-            padding-left: 0.5em; 
+            padding-left: 0.5em;
         }
 
     .motto-text {
@@ -126,12 +126,14 @@
                                     </Alert>
                                 </div>
                             }
-                            <CascadingValue Value="this" Name="MessageComponent">
-                                <div>
+                            <CascadingValue Value="(Func<Task>)RefreshCurrentMealPlanAsync" Name="RefreshCurrentMealPlan">
+                                <CascadingValue Value="this" Name="MessageComponent">
                                     <div>
-                                        @Body
+                                        <div>
+                                            @Body
+                                        </div>
                                     </div>
-                                </div>
+                                </CascadingValue>
                             </CascadingValue>
                         </div>
                     </main>

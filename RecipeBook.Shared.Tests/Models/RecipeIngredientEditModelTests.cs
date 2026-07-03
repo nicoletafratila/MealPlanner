@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
 {
@@ -14,12 +13,13 @@ namespace RecipeBook.Shared.Tests.Models
         }
 
         [Test]
-        public void DefaultCtor_IsInvalid_BecauseRequiredFieldsMissing()
+        public void DefaultCtor_IsInvalid_WhenQuantityIsNegative()
         {
             // Act
             var model = new RecipeIngredientEditModel
             {
-                RecipeId = -1
+                RecipeId = Guid.NewGuid(),
+                Quantity = -1m
             };
             var isValid = TryValidate(model, out var results);
 
@@ -27,8 +27,7 @@ namespace RecipeBook.Shared.Tests.Models
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.RecipeId))), Is.True);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.UnitId))), Is.True);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.Quantity))), Is.True);
             }
         }
 
@@ -36,7 +35,9 @@ namespace RecipeBook.Shared.Tests.Models
         public void Ctor_SetsProperties_AndValidates_WhenWithinConstraints()
         {
             // Arrange
-            var model = new RecipeIngredientEditModel(recipeId: 1, quantity: 2.5m, unitId: 3);
+            var recipeId = Guid.NewGuid();
+            var unitId = Guid.NewGuid();
+            var model = new RecipeIngredientEditModel(recipeId: recipeId, quantity: 2.5m, unitId: unitId);
 
             // Act
             var isValid = TryValidate(model, out var results);
@@ -46,9 +47,9 @@ namespace RecipeBook.Shared.Tests.Models
             {
                 Assert.That(isValid, Is.True);
                 Assert.That(results, Is.Empty);
-                Assert.That(model.RecipeId, Is.EqualTo(1));
+                Assert.That(model.RecipeId, Is.EqualTo(recipeId));
                 Assert.That(model.Quantity, Is.EqualTo(2.5m));
-                Assert.That(model.UnitId, Is.EqualTo(3));
+                Assert.That(model.UnitId, Is.EqualTo(unitId));
             }
         }
 
@@ -58,8 +59,8 @@ namespace RecipeBook.Shared.Tests.Models
             // Arrange: negative quantity
             var model = new RecipeIngredientEditModel
             {
-                RecipeId = 1,
-                UnitId = 2,
+                RecipeId = Guid.NewGuid(),
+                UnitId = Guid.NewGuid(),
                 Quantity = -1m
             };
 
@@ -75,37 +76,6 @@ namespace RecipeBook.Shared.Tests.Models
 
             // Arrange: zero quantity is allowed by Range(0, int.MaxValue)
             model.Quantity = 0m;
-
-            // Act
-            isValid = TryValidate(model, out results);
-
-            // Assert
-            Assert.That(isValid, Is.True);
-        }
-
-        [Test]
-        public void UnitId_MustBeAtLeastOne()
-        {
-            // Arrange: invalid unit = 0
-            var model = new RecipeIngredientEditModel
-            {
-                RecipeId = 1,
-                Quantity = 1m,
-                UnitId = 0
-            };
-
-            // Act
-            var isValid = TryValidate(model, out var results);
-
-            using (Assert.EnterMultipleScope())
-            {
-                // Assert
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.UnitId))), Is.True);
-            }
-
-            // Arrange: valid unit id
-            model.UnitId = 1;
 
             // Act
             isValid = TryValidate(model, out results);

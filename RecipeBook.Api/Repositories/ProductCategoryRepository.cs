@@ -1,14 +1,15 @@
-﻿using Common.Data.DataContext;
-using RecipeBook.Data.Entities;
+using Common.Data.DataContext;
 using Common.Data.Repository;
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
 {
     /// <summary>
     /// Async repository for <see cref="ProductCategory"/> entities.
     /// </summary>
-    public class ProductCategoryRepository(MealPlannerDbContext dbContext) : BaseAsyncRepository<ProductCategory, int>(dbContext), IProductCategoryRepository
+    public class ProductCategoryRepository(MealPlannerDbContext dbContext)
+        : BaseAsyncRepository<ProductCategory, Guid>(dbContext), IProductCategoryRepository
     {
         private MealPlannerDbContext Context => (MealPlannerDbContext)DbContext;
 

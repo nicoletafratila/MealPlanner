@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Common.Models;
-using MealPlanner.Shared.Resources;
-using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;using Common.Models; using MealPlanner.Shared.Resources; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {
@@ -14,7 +11,7 @@ namespace MealPlanner.Shared.Models
         /// Parent shop id.
         /// </summary>
         [Required]
-        public int ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         /// <summary>
         /// Display index for the product category (0 or greater).
@@ -32,7 +29,7 @@ namespace MealPlanner.Shared.Models
         {
         }
 
-        public ShopDisplaySequenceEditModel(int shopId, int value, ProductCategoryModel? category)
+        public ShopDisplaySequenceEditModel(Guid shopId, int value, ProductCategoryModel? category)
         {
             ShopId = shopId;
             Value = value;

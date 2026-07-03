@@ -1,10 +1,10 @@
 using MealPlanner.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace MealPlanner.Data.TableConfigurations
 {
-    public sealed class ShopDisplaySequenceTableConfiguration
+    public class ShopDisplaySequenceTableConfiguration
         : IEntityTypeConfiguration<ShopDisplaySequence>
     {
         public void Configure(EntityTypeBuilder<ShopDisplaySequence> builder)

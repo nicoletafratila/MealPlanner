@@ -11,13 +11,13 @@ namespace RecipeBook.Api.Features.Recipe.Queries.GetById
         /// <summary>
         /// Id of the recipe to retrieve.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public GetByIdQuery()
         {
         }
 
-        public GetByIdQuery(int id)
+        public GetByIdQuery(Guid id)
         {
             Id = id;
         }

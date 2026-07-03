@@ -2,9 +2,9 @@ using BlazorBootstrap;
 using Common.Pagination;
 using Common.UI;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using RecipeBook.Services;
+using Microsoft.AspNetCore.Components;
+using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = SortDirection.Ascending
+                        Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,
@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             Categories = await CategoryService.SearchAsync(queryParameters);
 
-            if (!int.TryParse(Id, out var id) || id == 0)
+            if (!Guid.TryParse(Id, out var id) || id == Guid.Empty)
             {
                 Product = new ProductEditModel();
             }
@@ -87,7 +87,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         {
             Common.Models.CommandResponse? response;
 
-            if (product.Id == 0)
+            if (product.Id == Guid.Empty)
             {
                 response = await ProductService.AddAsync(product);
             }
@@ -114,7 +114,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteAsync()
         {
-            if (Product.Id == 0)
+            if (Product.Id == Guid.Empty)
                 return;
 
             var options = new ConfirmDialogOptions
@@ -139,7 +139,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task DeleteCoreAsync(ProductEditModel product)
         {
-            if (product.Id == 0)
+            if (product.Id == Guid.Empty)
                 return;
 
             var response = await ProductService.DeleteAsync(product.Id);

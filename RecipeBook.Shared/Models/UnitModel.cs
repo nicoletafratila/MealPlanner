@@ -11,7 +11,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Database identity for the unit.
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Display name of the unit (e.g., "Kilogram", "Liter").
@@ -27,7 +27,7 @@ namespace RecipeBook.Shared.Models
         {
         }
 
-        public UnitModel(int id, string name, UnitType unitType)
+        public UnitModel(Guid id, string name, UnitType unitType)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));

@@ -5,7 +5,11 @@
       "Bash(dotnet test *)",
       "Bash(dotnet restore *)",
       "PowerShell(Get-ChildItem *)",
-      "PowerShell(dotnet build *)"
+      "PowerShell(dotnet build *)",
+      "Read(//c/Users/nfratila/.claude/skills/**)",
+      "Read(//c/Users/nfratila/.claude/**)",
+      "Bash(xargs ls)",
+      "Bash(dotnet sln *)"
     ]
   }
 }

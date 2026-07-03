@@ -1,15 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.SessionStorage;
-using Bunit;
-using Common.Pagination;
-using Common.UI;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Pagination; using Common.UI; using MealPlanner.UI.Web.Pages.RecipeBooks; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Http; using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -98,18 +87,19 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var method = typeof(ProductCategoriesOverview).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            var model = new ProductCategoryModel { Id = 42 };
+            var id = Guid.NewGuid();
+            var model = new ProductCategoryModel { Id = id };
 
             cut.InvokeAsync(() => method!.Invoke(cut.Instance, [model]));
 
-            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}42"));
+            Assert.That(navManager.Uri, Does.EndWith($"{EditBaseUrl}{id}"));
         }
 
         // ---------- DeleteCoreAsync ----------
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteSucceeds_ShowsInfo_AndRefreshesGrid()
         {
-            var category = new ProductCategoryModel { Id = 5 };
+            var category = new ProductCategoryModel { Id = Guid.NewGuid() };
 
             _serviceMock
                 .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
@@ -137,7 +127,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenDeleteFails_ShowsError()
         {
-            var category = new ProductCategoryModel { Id = 7 };
+            var category = new ProductCategoryModel { Id = Guid.NewGuid() };
             var response = new Common.Models.CommandResponse
             {
                 Succeeded = false,
@@ -166,7 +156,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         [Test]
         public async Task DeleteCoreAsync_WhenResponseIsNull_ShowsGenericError()
         {
-            var category = new ProductCategoryModel { Id = 9 };
+            var category = new ProductCategoryModel { Id = Guid.NewGuid() };
 
             _serviceMock
                 .Setup(s => s.DeleteAsync(category.Id, CancellationToken.None))
@@ -194,8 +184,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             var items = new List<ProductCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             var metadata = new Metadata

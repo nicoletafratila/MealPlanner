@@ -1,15 +1,4 @@
-using System.Reflection;
-using BlazorBootstrap;
-using Blazored.SessionStorage;
-using Bunit;
-using Common.Models;
-using Common.Pagination;
-using MealPlanner.Services;
-using MealPlanner.UI.Web.Pages.RecipeBooks;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using RecipeBook.Services;
-using RecipeBook.Shared.Models;
+using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Models; using Common.Pagination; using MealPlanner.Services.Http; using MealPlanner.UI.Web.Models; using MealPlanner.UI.Web.Pages.RecipeBooks; using Microsoft.Extensions.DependencyInjection; using Moq; using RecipeBook.Services.Http; using RecipeBook.Shared.Models; using SortDirection = Common.Pagination.SortDirection;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 {
@@ -94,8 +83,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Arrange
             var categoryItems = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 },
-                new() { Id = 2 }
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
             };
 
             var categories = new PagedList<RecipeCategoryModel>(categoryItems, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 });
@@ -132,7 +121,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             // Arrange
             var categoryItems = new List<RecipeCategoryModel>
             {
-                new() { Id = 1 }
+                new() { Id = Guid.NewGuid() }
             };
 
             var categories = new PagedList<RecipeCategoryModel>(categoryItems, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
@@ -167,15 +156,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         public async Task OnAfterRenderAsync_WithStatistics_InitializesCharts_AndHidesPreload()
         {
             // Arrange
-            var categoryItems = new List<RecipeCategoryModel> { new() { Id = 1 } };
+            var categoryItems = new List<RecipeCategoryModel> { new() { Id = Guid.NewGuid() } };
             var categories = new PagedList<RecipeCategoryModel>(categoryItems, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
 
             var stat = new StatisticModel
             {
-                Title = "S1",
-                Chart = new DoughnutChart(),
-                ChartData = new ChartData(),
-                ChartOptions = new DoughnutChartOptions()
+                Title = "S1"
             };
 
             _categoryServiceMock

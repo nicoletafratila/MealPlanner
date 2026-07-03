@@ -1,8 +1,8 @@
 using BlazorBootstrap;
-using Bunit;
 using Bunit.TestDoubles;
-using Identity.Services;
-using MealPlanner.Services;
+using Bunit;
+using Identity.Services.Http;
+using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
@@ -173,7 +173,8 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task OnInitializedAsync_WhenMealPlanExists_ShowsMealPlanNameAsLink()
         {
             // Arrange
-            var plan = new MealPlanModel { Id = 3, Name = "Week 20 Menu" };
+            var id = Guid.NewGuid();
+            var plan = new MealPlanModel { Id = id, Name = "Week 20 Menu" };
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(plan);
@@ -187,7 +188,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             {
                 Assert.That(cut.Markup, Does.Contain("This week's menu:"));
                 Assert.That(cut.Markup, Does.Contain("Week 20 Menu"));
-                Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/3"));
+                Assert.That(cut.Markup, Does.Contain($"mealplans/mealplanedit/{id}"));
                 Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
             }
         }
@@ -229,6 +230,62 @@ namespace MealPlanner.UI.Web.Tests.Shared
             {
                 Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
                 Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
+            }
+        }
+
+        // ---------- RefreshCurrentMealPlanAsync ----------
+
+        [Test]
+        public async Task RefreshCurrentMealPlanAsync_UpdatesLabelWhenPlanBecomesAvailable()
+        {
+            // Arrange — first call (OnInitializedAsync) returns null, second call (refresh) returns a plan
+            var id = Guid.NewGuid();
+            _mealPlanServiceMock
+                .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((MealPlanModel?)null)
+                .ReturnsAsync(new MealPlanModel { Id = id, Name = "Meniu 2025/23" });
+
+            var cut = _ctx.Render<MainLayout>();
+            await cut.InvokeAsync(() => Task.CompletedTask);
+
+            Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"),
+                "Label should be absent before refresh.");
+
+            // Act
+            await cut.InvokeAsync(() => cut.Instance.RefreshCurrentMealPlanAsync());
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("Meniu 2025/23"));
+                Assert.That(cut.Markup, Does.Contain($"mealplans/mealplanedit/{id}"));
+            }
+        }
+
+        [Test]
+        public async Task RefreshCurrentMealPlanAsync_ClearsLabelWhenPlanIsDeleted()
+        {
+            // Arrange — first call returns a plan, second call (after delete) returns null
+            _mealPlanServiceMock
+                .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new MealPlanModel { Id = Guid.NewGuid(), Name = "Meniu 2025/1" })
+                .ReturnsAsync((MealPlanModel?)null);
+
+            var cut = _ctx.Render<MainLayout>();
+            await cut.InvokeAsync(() => Task.CompletedTask);
+
+            Assert.That(cut.Markup, Does.Contain("This week's menu:"),
+                "Label should be present before refresh.");
+
+            // Act
+            await cut.InvokeAsync(() => cut.Instance.RefreshCurrentMealPlanAsync());
+
+            // Assert — plan gone, "not yet created" prompt appears
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("You have not created"));
             }
         }
 

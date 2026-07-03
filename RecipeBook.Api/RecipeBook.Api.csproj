@@ -93,7 +93,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\Common.Core\Common.Core.csproj" />
+    <ProjectReference Include="..\MealPlanner.Data.Profiles\MealPlanner.Data.Profiles.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Profiles\RecipeBook.Data.Profiles.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.TableConfigurations\RecipeBook.Data.TableConfigurations.csproj" />
     <ProjectReference Include="..\MealPlanner.Data.TableConfigurations\MealPlanner.Data.TableConfigurations.csproj" />
