@@ -15,7 +15,7 @@ namespace Identity.Api.Features.Email
             var encodedToken = Uri.EscapeDataString(token);
             var confirmUrl = $"{baseUrl}/api/authentication/confirm-email?userId={userId}&token={encodedToken}";
 
-            var templatePath = Path.Combine(environment.ContentRootPath, "EmailTemplates", "EmailConfirmation.html");
+            var templatePath = Path.Combine(environment.ContentRootPath, "Features", "Email", "EmailTemplates", "EmailConfirmation.html");
             var body = (await File.ReadAllTextAsync(templatePath, cancellationToken))
                 .Replace("{{ConfirmUrl}}", confirmUrl)
                 .Replace("{{EmailConfirmation_Title}}", AuthenticationMessages.EmailConfirmation_Title)
@@ -50,7 +50,7 @@ namespace Identity.Api.Features.Email
             var encodedToken = Uri.EscapeDataString(token);
             var resetUrl = $"{baseUrl}/api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}";
 
-            var templatePath = Path.Combine(environment.ContentRootPath, "EmailTemplates", "PasswordReset.html");
+            var templatePath = Path.Combine(environment.ContentRootPath, "Features", "Email", "EmailTemplates", "PasswordReset.html");
             var body = (await File.ReadAllTextAsync(templatePath, cancellationToken))
                 .Replace("{{ResetUrl}}", resetUrl)
                 .Replace("{{PasswordReset_Title}}", AuthenticationMessages.PasswordReset_Title)
