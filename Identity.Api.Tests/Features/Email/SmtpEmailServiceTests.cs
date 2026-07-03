@@ -44,7 +44,7 @@ namespace Identity.Api.Tests.Features.Email
         public void SetUp()
         {
             _tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            var templateDir = Path.Combine(_tempDir, "EmailTemplates");
+            var templateDir = Path.Combine(_tempDir, "Features", "Email", "EmailTemplates");
             Directory.CreateDirectory(templateDir);
             File.WriteAllText(Path.Combine(templateDir, "EmailConfirmation.html"), TemplateContent);
             File.WriteAllText(Path.Combine(templateDir, "PasswordReset.html"), ResetTemplateContent);

@@ -71,7 +71,7 @@ namespace Identity.Api.Controllers
         public IActionResult ResetPasswordRedirect(
             [FromQuery] string userId,
             [FromQuery] string token,
-            [FromQuery] string? source)
+            [FromQuery] string? source = null)
         {
             var encodedToken = Uri.EscapeDataString(token);
             if (Enum.TryParse<Common.Constants.InputSource>(source, ignoreCase: true, out var parsed) && parsed == Common.Constants.InputSource.Mobile)
