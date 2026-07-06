@@ -3,7 +3,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 
-namespace MealPlanner.UI.Mobile
+namespace MealPlanner.UI.Mobile.Platforms.Android
 {
     [Activity(
         Theme = "@style/Maui.SplashTheme",

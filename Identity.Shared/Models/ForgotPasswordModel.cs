@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Common.Constants;
 
 namespace Identity.Shared.Models
 {
@@ -8,7 +7,5 @@ namespace Identity.Shared.Models
         [Required]
         [EmailAddress]
         public string EmailAddress { get; set; } = string.Empty;
-
-        public InputSource? Source { get; set; }
     }
 }

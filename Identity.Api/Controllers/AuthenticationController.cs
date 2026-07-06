@@ -1,4 +1,17 @@
-using System.Security.Claims;using Common.Models; using Identity.Api.Features.Authentication.Commands.ChangePassword; using Identity.Api.Features.Authentication.Commands.ConfirmEmail; using Identity.Api.Features.Authentication.Commands.ForgotPassword; using Identity.Api.Features.Authentication.Commands.Login; using Identity.Api.Features.Authentication.Commands.Logout; using Identity.Api.Features.Authentication.Commands.Register; using Identity.Api.Features.Authentication.Commands.ResetPassword; using Identity.Shared.Models; using MediatR; using Microsoft.AspNetCore.Authentication; using Microsoft.AspNetCore.Identity; using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Common.Models;
+using Identity.Api.Features.Authentication.Commands.ChangePassword;
+using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
+using Identity.Api.Features.Authentication.Commands.ForgotPassword;
+using Identity.Api.Features.Authentication.Commands.Login;
+using Identity.Api.Features.Authentication.Commands.Logout;
+using Identity.Api.Features.Authentication.Commands.Register;
+using Identity.Api.Features.Authentication.Commands.ResetPassword;
+using Identity.Shared.Models;
+using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Api.Controllers
 {
@@ -70,14 +83,10 @@ namespace Identity.Api.Controllers
         [HttpGet("reset-password-redirect")]
         public IActionResult ResetPasswordRedirect(
             [FromQuery] string userId,
-            [FromQuery] string token,
-            [FromQuery] string? source = null)
+            [FromQuery] string token)
         {
-            var encodedToken = Uri.EscapeDataString(token);
-            if (Enum.TryParse<Common.Constants.InputSource>(source, ignoreCase: true, out var parsed) && parsed == Common.Constants.InputSource.Mobile)
-                return Redirect($"mealplanner://reset-password?userId={userId}&token={encodedToken}");
-
             var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
+            var encodedToken = Uri.EscapeDataString(token);
             return Redirect($"{uiBaseUrl}/identities/reset-password?userId={userId}&token={encodedToken}");
         }
 

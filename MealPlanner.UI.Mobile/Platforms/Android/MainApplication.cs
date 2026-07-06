@@ -1,7 +1,7 @@
 using Android.App;
 using Android.Runtime;
 
-namespace MealPlanner.UI.Mobile
+namespace MealPlanner.UI.Mobile.Platforms.Android
 {
     [Application]
     public class MainApplication(IntPtr handle, JniHandleOwnership ownership)

@@ -1,4 +1,3 @@
-using Common.Constants;
 using Identity.Api.Features.Authentication.Commands.ForgotPassword;
 using Identity.Api.Features.Email;
 using Identity.Shared.Models;
@@ -63,7 +62,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
             Assert.That(result!.Succeeded, Is.True);
 
             _emailServiceMock.Verify(
-                e => e.SendPasswordResetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<InputSource?>(), It.IsAny<CancellationToken>()),
+                e => e.SendPasswordResetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -81,7 +80,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
                 .ReturnsAsync("reset-token");
 
             _emailServiceMock
-                .Setup(e => e.SendPasswordResetAsync("user@example.com", "user-id", "reset-token", It.IsAny<InputSource?>(), It.IsAny<CancellationToken>()))
+                .Setup(e => e.SendPasswordResetAsync("user@example.com", "user-id", "reset-token", It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             var command = BuildCommand("user@example.com");
@@ -92,7 +91,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
             Assert.That(result!.Succeeded, Is.True);
 
             _emailServiceMock.Verify(
-                e => e.SendPasswordResetAsync("user@example.com", "user-id", "reset-token", It.IsAny<InputSource?>(), It.IsAny<CancellationToken>()),
+                e => e.SendPasswordResetAsync("user@example.com", "user-id", "reset-token", It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -110,7 +109,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
                 .ReturnsAsync("reset-token");
 
             _emailServiceMock
-                .Setup(e => e.SendPasswordResetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<InputSource?>(), It.IsAny<CancellationToken>()))
+                .Setup(e => e.SendPasswordResetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("SMTP failure"));
 
             var command = BuildCommand("user@example.com");
@@ -138,7 +137,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ForgotPassword
                 .Setup(m => m.GeneratePasswordResetTokenAsync(user))
                 .ReturnsAsync("token");
             _emailServiceMock
-                .Setup(e => e.SendPasswordResetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<InputSource?>(), It.IsAny<CancellationToken>()))
+                .Setup(e => e.SendPasswordResetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             var resultForKnown = await _handler.Handle(BuildCommand("real@example.com"), CancellationToken.None);
