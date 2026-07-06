@@ -17,16 +17,30 @@ namespace MealPlanner.Services.Http
         {
             var url = BuildUrl($"{_controller}/{MealPlannerControllers.FavoriteRecipesRoute}",
                 new Dictionary<string, string?> { [ApiQueryParams.CategoryIds] = string.Join(",", categories.Select(c => c.Id)) });
-            try { return await GetAsync<IList<StatisticModel>>(url, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "GetFavoriteRecipesAsync failed"); throw; }
+            try
+            {
+                return await GetAsync<IList<StatisticModel>>(url, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "GetFavoriteRecipesAsync failed");
+                throw;
+            }
         }
 
         public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{MealPlannerControllers.FavoriteProductsRoute}",
                 new Dictionary<string, string?> { [ApiQueryParams.CategoryIds] = string.Join(",", categories.Select(c => c.Id)) });
-            try { return await GetAsync<IList<StatisticModel>>(url, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "GetFavoriteProductsAsync failed"); throw; }
+            try
+            {
+                return await GetAsync<IList<StatisticModel>>(url, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "GetFavoriteProductsAsync failed");
+                throw;
+            }
         }
     }
 }

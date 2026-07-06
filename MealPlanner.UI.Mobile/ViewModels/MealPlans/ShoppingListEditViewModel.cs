@@ -40,9 +40,15 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];
 
-        partial void OnShoppingListIdChanged(Guid value) { IsNew = value == Guid.Empty; _ = LoadAsync(); }
+        partial void OnShoppingListIdChanged(Guid value)
+        {
+            IsNew = value == Guid.Empty; _ = LoadAsync();
+        }
 
-        partial void OnSelectedShopChanged(ShopModel? value) { if (value is not null) Model.ShopId = value.Id; }
+        partial void OnSelectedShopChanged(ShopModel? value)
+        {
+            if (value is not null) Model.ShopId = value.Id;
+        }
 
         partial void OnSelectedProductCategoryChanged(ProductCategoryModel? value) =>
             _ = LoadProductsByCategoryAsync(value?.Id);
@@ -80,8 +86,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     Model.Products ??= [];
                 }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private async Task LoadProductsByCategoryAsync(Guid? categoryId)
@@ -153,10 +165,16 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private async Task AddFromMealPlanAsync()
         {
-            if (Model.ShopId == Guid.Empty) { SetError("Select a shop first."); return; }
+            if (Model.ShopId == Guid.Empty)
+            {
+                SetError("Select a shop first."); return;
+            }
 
             var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200, Sorting = DefaultSorting });
-            if (plans is null || plans.Items.Count == 0) { SetError("No meal plans found."); return; }
+            if (plans is null || plans.Items.Count == 0)
+            {
+                SetError("No meal plans found."); return;
+            }
 
             var names = plans.Items.Select(p => p.Name).ToArray();
             var picked = await Shell.Current.DisplayActionSheetAsync("Select meal plan", "Cancel", null, names);
@@ -171,14 +189,23 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 var products = await mealPlanService.GetShoppingListProductsAsync(plan.Id, Model.ShopId);
                 if (products is not null) MergeProducts(products);
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
         private async Task AddFromRecipeAsync()
         {
-            if (Model.ShopId == Guid.Empty) { SetError("Select a shop first."); return; }
+            if (Model.ShopId == Guid.Empty)
+            {
+                SetError("Select a shop first."); return;
+            }
 
             var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
             string[]? catNames = categories?.Items?.Select(c => c.Name).ToArray();
@@ -197,7 +224,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 Sorting = DefaultSorting,
                 Filters = recipeCategoryId.HasValue ? [new FilterItem("RecipeCategoryId", recipeCategoryId.ToString(), FilterOperator.Equals)] : null
             });
-            if (recipes is null || recipes.Items.Count == 0) { SetError("No recipes found."); return; }
+            if (recipes is null || recipes.Items.Count == 0)
+            {
+                SetError("No recipes found."); return;
+            }
 
             var names = recipes.Items.Select(r => r.Name).ToArray();
             var picked = await Shell.Current.DisplayActionSheetAsync("Select recipe", "Cancel", null, names);
@@ -212,8 +242,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 var products = await recipeService.GetShoppingListProductsAsync(recipe.Id, Model.ShopId);
                 if (products is not null) MergeProducts(products);
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private void MergeProducts(IList<ShoppingListProductEditModel> incoming)
@@ -242,7 +278,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -258,7 +297,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]

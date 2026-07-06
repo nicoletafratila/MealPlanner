@@ -28,9 +28,21 @@ namespace Identity.Services.Http
                 }
                 return CommandResponse.Failed(loginResponse.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed);
             }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during LoginAsync."); return CommandResponse.Failed(ex.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed); }
-            catch (TaskCanceledException ex) { logger.LogError(ex, "Timeout during LoginAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorAuthentication); }
-            catch (JsonException ex) { logger.LogError(ex, "Deserialization error during LoginAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseAuthentication); }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during LoginAsync.");
+                return CommandResponse.Failed(ex.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed);
+            }
+            catch (TaskCanceledException ex)
+            {
+                logger.LogError(ex, "Timeout during LoginAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorAuthentication);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Deserialization error during LoginAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.InvalidResponseAuthentication);
+            }
         }
 
         public async Task<CommandResponse?> LogoutAsync(CancellationToken cancellationToken = default)
@@ -48,31 +60,63 @@ namespace Identity.Services.Http
                 if (result?.Succeeded == true) await TokenProvider.RemoveTokenAsync(cancellationToken);
                 return result ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.LogoutFailed);
             }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during LogoutAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorLogout); }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during LogoutAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorLogout);
+            }
         }
 
         public async Task<CommandResponse?> RegisterAsync(RegistrationModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PostAsync($"{_controller}/{IdentityControllers.RegisterRoute}", model, cancellationToken); }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during RegisterAsync."); return CommandResponse.Failed(ex.Message ?? Resources.AuthenticationServiceMessages.RegistrationFailed); }
+            try
+            {
+                return await PostAsync($"{_controller}/{IdentityControllers.RegisterRoute}", model, cancellationToken);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during RegisterAsync.");
+                return CommandResponse.Failed(ex.Message ?? Resources.AuthenticationServiceMessages.RegistrationFailed);
+            }
         }
 
         public async Task<CommandResponse?> ForgotPasswordAsync(ForgotPasswordModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PostAsync($"{_controller}/{IdentityControllers.ForgotPasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed); }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during ForgotPasswordAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed); }
+            try
+            {
+                return await PostAsync($"{_controller}/{IdentityControllers.ForgotPasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during ForgotPasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+            }
         }
 
         public async Task<CommandResponse?> ResetPasswordAsync(ResetPasswordModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PostAsync($"{_controller}/{IdentityControllers.ResetPasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed); }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during ResetPasswordAsync."); return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed); }
+            try
+            {
+                return await PostAsync($"{_controller}/{IdentityControllers.ResetPasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during ResetPasswordAsync.");
+                return CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+            }
         }
 
         public async Task<CommandResponse?> ChangePasswordAsync(ChangePasswordModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PostAsync($"{_controller}/{IdentityControllers.ChangePasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed); }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during ChangePasswordAsync."); return CommandResponse.Failed(ex.Message ?? Resources.AuthenticationServiceMessages.ChangePasswordFailed); }
+            try
+            {
+                return await PostAsync($"{_controller}/{IdentityControllers.ChangePasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during ChangePasswordAsync.");
+                return CommandResponse.Failed(ex.Message ?? Resources.AuthenticationServiceMessages.ChangePasswordFailed);
+            }
         }
     }
 }

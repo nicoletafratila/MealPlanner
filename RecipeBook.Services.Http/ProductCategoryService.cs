@@ -25,21 +25,39 @@ namespace RecipeBook.Services.Http
 
         public async Task<CommandResponse?> AddAsync(ProductCategoryEditModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PostAsync(_controller, model, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "ProductCategory AddAsync failed. Model {@Model}", model); throw; }
+            try
+            {
+                return await PostAsync(_controller, model, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "ProductCategory AddAsync failed. Model {@Model}", model); throw;
+            }
         }
 
         public async Task<CommandResponse?> UpdateAsync(ProductCategoryEditModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PutAsync(_controller, model, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "ProductCategory UpdateAsync failed. Model {@Model}", model); throw; }
+            try
+            {
+                return await PutAsync(_controller, model, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "ProductCategory UpdateAsync failed. Model {@Model}", model); throw;
+            }
         }
 
         public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
-            try { return await DeleteAsync(url, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "ProductCategory DeleteAsync failed. Id {Id}", id); throw; }
+            try
+            {
+                return await DeleteAsync(url, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "ProductCategory DeleteAsync failed. Id {Id}", id); throw;
+            }
         }
     }
 }

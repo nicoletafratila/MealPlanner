@@ -20,9 +20,18 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         {
             if (RecipeId == Guid.Empty) return;
             IsBusy = true;
-            try { Recipe = await recipeService.GetEditAsync(RecipeId); }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            try
+            {
+                Recipe = await recipeService.GetEditAsync(RecipeId);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]

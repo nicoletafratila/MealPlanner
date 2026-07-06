@@ -14,14 +14,28 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private async Task LoadAsync()
         {
-            if (IsBusy) return; IsBusy = true; ClearMessages();
+            if (IsBusy)
+            {
+                return;
+            }
+            IsBusy = true;
+            ClearMessages();
             try
             {
                 var result = await unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 200, Sorting = DefaultSorting });
-                if (result is not null) Units = new ObservableCollection<UnitModel>(result.Items);
+                if (result is not null)
+                {
+                    Units = new ObservableCollection<UnitModel>(result.Items);
+                }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync("UnitEdit?id=0");
@@ -31,8 +45,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private async Task DeleteAsync(UnitModel u)
         {
             var result = await unitService.DeleteAsync(u.Id);
-            if (result?.Succeeded == true) Units.Remove(u);
-            else SetError(result?.Message);
+            if (result?.Succeeded == true)
+            {
+                Units.Remove(u);
+            }
+            else
+            {
+                SetError(result?.Message);
+            }
         }
     }
 }

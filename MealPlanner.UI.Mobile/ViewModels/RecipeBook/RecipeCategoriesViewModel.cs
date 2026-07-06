@@ -23,8 +23,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (result is not null)
                     Categories = new ObservableCollection<RecipeCategoryModel>(result.Items);
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]

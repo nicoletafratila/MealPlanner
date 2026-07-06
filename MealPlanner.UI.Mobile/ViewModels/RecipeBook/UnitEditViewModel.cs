@@ -12,15 +12,28 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty] private UnitEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
-        partial void OnUnitIdChanged(Guid value) { IsNew = value == Guid.Empty; if (!IsNew) _ = LoadAsync(); }
+        partial void OnUnitIdChanged(Guid value)
+        {
+            IsNew = value == Guid.Empty;
+            if (!IsNew) _ = LoadAsync();
+        }
 
         [RelayCommand]
         private async Task LoadAsync()
         {
             IsBusy = true;
-            try { Model = await unitService.GetEditAsync(UnitId) ?? new(); }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            try
+            {
+                Model = await unitService.GetEditAsync(UnitId) ?? new();
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -33,7 +46,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

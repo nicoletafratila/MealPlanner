@@ -17,7 +17,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         public async Task LoadAsync()
         {
-            if (IsBusy) return; IsBusy = true; ClearMessages();
+            if (IsBusy)
+            {
+                return;
+            }
+            IsBusy = true; ClearMessages();
             try
             {
                 var categories = await productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 500 });
@@ -26,8 +30,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                     ? new ObservableCollection<StatisticEntryModel>(FlattenStatistics(data))
                     : [];
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private static IEnumerable<StatisticEntryModel> FlattenStatistics(IEnumerable<Common.Models.StatisticModel> statistics)

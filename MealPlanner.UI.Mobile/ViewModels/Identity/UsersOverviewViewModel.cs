@@ -32,8 +32,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                     HasPreviousPage = result.Metadata.HasPreviousPage;
                 }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -44,7 +50,21 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             else SetError(result?.Message);
         }
 
-        [RelayCommand] private async Task NextPageAsync() { CurrentPage++; await LoadAsync(); }
-        [RelayCommand] private async Task PreviousPageAsync() { if (CurrentPage > 1) { CurrentPage--; await LoadAsync(); } }
+        [RelayCommand]
+        private async Task NextPageAsync()
+        {
+            CurrentPage++;
+            await LoadAsync();
+        }
+
+        [RelayCommand]
+        private async Task PreviousPageAsync()
+        {
+            if (CurrentPage > 1)
+            {
+                CurrentPage--;
+                await LoadAsync();
+            }
+        }
     }
 }

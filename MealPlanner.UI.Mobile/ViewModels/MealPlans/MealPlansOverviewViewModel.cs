@@ -16,14 +16,30 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private async Task LoadAsync()
         {
-            if (IsBusy) return; IsBusy = true; CurrentPage = 1; ClearMessages();
+            if (IsBusy)
+            {
+                return;
+            }
+            IsBusy = true;
+            CurrentPage = 1;
+            ClearMessages();
             try
             {
                 var result = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageNumber = CurrentPage, Sorting = DefaultSorting });
-                if (result is not null) { MealPlans = new ObservableCollection<MealPlanModel>(result.Items); HasNextPage = result.Metadata.HasNextPage; }
+                if (result is not null)
+                {
+                    MealPlans = new ObservableCollection<MealPlanModel>(result.Items);
+                    HasNextPage = result.Metadata.HasNextPage;
+                }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"MealPlanEdit?id={Guid.Empty}");
@@ -33,8 +49,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private async Task DeleteAsync(MealPlanModel mp)
         {
             var result = await mealPlanService.DeleteAsync(mp.Id);
-            if (result?.Succeeded == true) MealPlans.Remove(mp);
-            else SetError(result?.Message);
+            if (result?.Succeeded == true)
+            {
+                MealPlans.Remove(mp);
+            }
+            else
+            {
+                SetError(result?.Message);
+            }
         }
     }
 }

@@ -27,7 +27,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty] private RecipeModel? _selectedRecipe;
         [ObservableProperty] private bool _isNew;
 
-        partial void OnMealPlanIdChanged(Guid value) { IsNew = value == Guid.Empty; _ = LoadAsync(); }
+        partial void OnMealPlanIdChanged(Guid value)
+        {
+            IsNew = value == Guid.Empty; _ = LoadAsync();
+        }
 
         partial void OnSelectedCategoryChanged(RecipeCategoryModel? value)
         {
@@ -68,8 +71,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     Model = await mealPlanService.GetEditAsync(MealPlanId) ?? new();
                 Model.Recipes ??= [];
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -95,7 +104,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -111,14 +123,20 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
         private async Task MakeShoppingListAsync()
         {
             if (IsNew || !(Model.Recipes?.Count > 0)) return;
-            if (Shops.Count == 0) { SetError("No shops available."); return; }
+            if (Shops.Count == 0)
+            {
+                SetError("No shops available."); return;
+            }
 
             var shopNames = Shops.Select(s => s.Name).ToArray();
             var picked = await Shell.Current.DisplayActionSheetAsync("Select shop", "Cancel", null, shopNames);
@@ -136,7 +154,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 else
                     SetError("Failed to generate shopping list.");
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

@@ -22,8 +22,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 if (userName is not null)
                     Model = await userService.GetEditAsync(userName);
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -38,8 +44,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 if (result?.Succeeded == true) SetSuccess("Profile updated.");
                 else SetError(result?.Message);
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]

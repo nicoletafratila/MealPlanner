@@ -77,7 +77,10 @@ namespace Common.Services
 
         private static async Task EnsureSuccessAsync(HttpResponseMessage response, CancellationToken cancellationToken)
         {
-            if (response.IsSuccessStatusCode) return;
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
             var message = await ReadErrorMessageAsync(response, cancellationToken)
                 ?? $"Request failed with status {(int)response.StatusCode}.";
             throw new HttpRequestException(message, null, response.StatusCode);
@@ -86,13 +89,18 @@ namespace Common.Services
         protected static async Task<string?> ReadErrorMessageAsync(HttpResponseMessage response, CancellationToken cancellationToken)
         {
             var body = await response.Content.ReadAsStringAsync(cancellationToken);
-            if (string.IsNullOrWhiteSpace(body)) return null;
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                return null;
+            }
             try
             {
                 using var doc = JsonDocument.Parse(body);
                 var root = doc.RootElement;
                 if (root.TryGetProperty("detail", out var detail) && detail.ValueKind == JsonValueKind.String)
+                {
                     return detail.GetString();
+                }
                 if (root.TryGetProperty("errors", out var errors) && errors.ValueKind == JsonValueKind.Object)
                 {
                     var messages = errors.EnumerateObject()
@@ -102,12 +110,19 @@ namespace Common.Services
                                 .Where(s => !string.IsNullOrWhiteSpace(s))
                             : [])
                         .ToList();
-                    if (messages.Count > 0) return string.Join(Environment.NewLine, messages);
+                    if (messages.Count > 0)
+                    {
+                        return string.Join(Environment.NewLine, messages);
+                    }
                 }
                 if (root.TryGetProperty("title", out var title) && title.ValueKind == JsonValueKind.String)
+                {
                     return title.GetString();
+                }
             }
-            catch (JsonException) { }
+            catch (JsonException)
+            {
+            }
             return body;
         }
 

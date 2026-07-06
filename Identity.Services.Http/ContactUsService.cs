@@ -30,8 +30,16 @@ namespace Identity.Services.Http
                 return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken)
                     ?? CommandResponse.Failed(Resources.ContactUsServiceMessages.SendFailed);
             }
-            catch (HttpRequestException ex) { logger.LogError(ex, "HTTP error during SendAsync."); return CommandResponse.Failed(Resources.ContactUsServiceMessages.NetworkError); }
-            catch (System.Text.Json.JsonException ex) { logger.LogError(ex, "Deserialization error during SendAsync."); return CommandResponse.Failed(Resources.ContactUsServiceMessages.InvalidResponse); }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during SendAsync.");
+                return CommandResponse.Failed(Resources.ContactUsServiceMessages.NetworkError);
+            }
+            catch (System.Text.Json.JsonException ex)
+            {
+                logger.LogError(ex, "Deserialization error during SendAsync.");
+                return CommandResponse.Failed(Resources.ContactUsServiceMessages.InvalidResponse);
+            }
         }
     }
 }

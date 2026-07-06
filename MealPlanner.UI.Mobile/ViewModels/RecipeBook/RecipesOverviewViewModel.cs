@@ -30,8 +30,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
                 await SearchAsync();
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -53,8 +59,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                     HasNextPage = result.Metadata.HasNextPage;
                 }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -73,7 +85,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             else SetError(result?.Message);
         }
 
-        [RelayCommand] private async Task NextPageAsync() { CurrentPage++; await RefreshPageAsync(); }
+        [RelayCommand]
+        private async Task NextPageAsync()
+        {
+            CurrentPage++;
+            await RefreshPageAsync();
+        }
+
         private async Task RefreshPageAsync()
         {
             var filters = new List<FilterItem>();

@@ -23,10 +23,19 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 var filters = string.IsNullOrWhiteSpace(SearchText) ? null : new[] { new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase) };
                 var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters, Sorting = DefaultSorting });
-                if (result is not null) { Products = new ObservableCollection<ProductModel>(result.Items); HasNextPage = result.Metadata.HasNextPage; }
+                if (result is not null)
+                {
+                    Products = new ObservableCollection<ProductModel>(result.Items); HasNextPage = result.Metadata.HasNextPage;
+                }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync("ProductEdit?id=0");

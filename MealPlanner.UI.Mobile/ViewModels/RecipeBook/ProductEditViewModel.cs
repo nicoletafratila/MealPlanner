@@ -16,7 +16,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty] private ProductCategoryModel? _selectedCategory;
         [ObservableProperty] private bool _isNew;
 
-        partial void OnProductIdChanged(Guid value) { IsNew = value == Guid.Empty; _ = LoadAsync(); }
+        partial void OnProductIdChanged(Guid value)
+        {
+            IsNew = value == Guid.Empty; _ = LoadAsync();
+        }
 
         partial void OnSelectedCategoryChanged(ProductCategoryModel? value)
         {
@@ -34,8 +37,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (!IsNew) Model = await productService.GetEditAsync(ProductId) ?? new();
                 SelectedCategory = Categories.FirstOrDefault(c => c.Id == Model.ProductCategoryId);
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -48,7 +57,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

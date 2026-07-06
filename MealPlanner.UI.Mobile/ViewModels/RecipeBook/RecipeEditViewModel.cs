@@ -38,8 +38,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (!IsNew)
                     Model = await recipeService.GetEditAsync(RecipeId) ?? new();
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]
@@ -56,7 +62,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
-            finally { IsBusy = false; }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand]

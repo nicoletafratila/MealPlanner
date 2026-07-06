@@ -18,8 +18,14 @@ namespace RecipeBook.Services.Http
         public async Task<RecipeModel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
-            try { return await GetAsync<RecipeModel>(url, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "Failed to fetch RecipeModel for id {RecipeId}", id); return null; }
+            try
+            {
+                return await GetAsync<RecipeModel>(url, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to fetch RecipeModel for id {RecipeId}", id); return null;
+            }
         }
 
         public async Task<RecipeEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
@@ -40,21 +46,39 @@ namespace RecipeBook.Services.Http
 
         public async Task<CommandResponse?> AddAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PostAsync(_controller, model, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "Recipe AddAsync failed. Model {@Model}", model); throw; }
+            try
+            {
+                return await PostAsync(_controller, model, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Recipe AddAsync failed. Model {@Model}", model); throw;
+            }
         }
 
         public async Task<CommandResponse?> UpdateAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
         {
-            try { return await PutAsync(_controller, model, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "Recipe UpdateAsync failed. Model {@Model}", model); throw; }
+            try
+            {
+                return await PutAsync(_controller, model, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Recipe UpdateAsync failed. Model {@Model}", model); throw;
+            }
         }
 
         public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
-            try { return await DeleteAsync(url, cancellationToken); }
-            catch (Exception ex) { logger.LogError(ex, "Recipe DeleteAsync failed. Id {Id}", id); throw; }
+            try
+            {
+                return await DeleteAsync(url, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Recipe DeleteAsync failed. Id {Id}", id); throw;
+            }
         }
     }
 }

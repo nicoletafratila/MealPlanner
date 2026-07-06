@@ -14,14 +14,25 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private async Task LoadAsync()
         {
-            if (IsBusy) return; IsBusy = true; ClearMessages();
+            if (IsBusy) return;
+            IsBusy = true;
+            ClearMessages();
             try
             {
                 var result = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
-                if (result is not null) Categories = new ObservableCollection<ProductCategoryModel>(result.Items);
+                if (result is not null)
+                {
+                    Categories = new ObservableCollection<ProductCategoryModel>(result.Items);
+                }
             }
-            catch (Exception ex) { SetError(ex.Message); }
-            finally { IsBusy = false; }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"ProductCategoryEdit?id={Guid.Empty}");
@@ -31,8 +42,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private async Task DeleteAsync(ProductCategoryModel c)
         {
             var result = await categoryService.DeleteAsync(c.Id);
-            if (result?.Succeeded == true) Categories.Remove(c);
-            else SetError(result?.Message);
+            if (result?.Succeeded == true)
+            {
+                Categories.Remove(c);
+            }
+            else
+            {
+                SetError(result?.Message);
+            }
         }
     }
 }
