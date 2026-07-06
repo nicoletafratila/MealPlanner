@@ -11,7 +11,7 @@ PM> Script-migration
 
 
 
-mesajele de eroare sa fie doar textul
+format brakes on new lines
 
 
 

@@ -161,7 +161,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("Invalid email; Another error"));
+                Assert.That(result.Message, Is.EqualTo("Invalid email\r\nAnother error"));
             }
 
             _userManagerMock.Verify(m => m.FindByIdAsync("1"), Times.Once);
@@ -173,7 +173,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         public async Task Handle_SuccessfulUpdate_ReturnsSuccess()
         {
             // Arrange
-            var existing = new Identity.Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
+            var existing = new Data.Entities.ApplicationUser { Id = "1", UserName = "user" };
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel

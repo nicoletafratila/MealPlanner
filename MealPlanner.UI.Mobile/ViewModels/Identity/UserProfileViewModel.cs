@@ -38,6 +38,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 if (result?.Succeeded == true) SetSuccess("Profile updated.");
                 else SetError(result?.Message);
             }
+            catch (Exception ex) { SetError(ex.Message); }
             finally { IsBusy = false; }
         }
 
@@ -48,8 +49,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         private async Task LogoutAsync()
         {
             await authService.LogoutAsync();
-            Application.Current!.Windows[0].Page = new NavigationPage(
-                IPlatformApplication.Current!.Services.GetRequiredService<Pages.Identity.LoginPage>());
+            await Shell.Current.GoToAsync("//Login");
         }
     }
 }

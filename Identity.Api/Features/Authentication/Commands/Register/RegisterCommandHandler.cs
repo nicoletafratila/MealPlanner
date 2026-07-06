@@ -52,7 +52,7 @@ namespace Identity.Api.Features.Authentication.Commands.Register
                 var createResult = await userManager.CreateAsync(user, model.Password!);
                 if (!createResult.Succeeded)
                 {
-                    var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
+                    var errors = string.Join(Environment.NewLine, createResult.Errors.Select(e => e.Description));
                     logger.LogWarning("Failed to create user {Username}: {Errors}", model.Username, errors);
                     return CommandResponse.Failed(errors);
                 }

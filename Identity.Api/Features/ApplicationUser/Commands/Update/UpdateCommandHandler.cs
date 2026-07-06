@@ -36,7 +36,7 @@ namespace Identity.Api.Features.ApplicationUser.Commands.Update
                 var updateResult = await _userManager.UpdateAsync(existingItem);
                 if (!updateResult.Succeeded)
                 {
-                    var errors = string.Join("; ", updateResult.Errors.Select(e => e.Description));
+                    var errors = string.Join(Environment.NewLine, updateResult.Errors.Select(e => e.Description));
                     _logger.LogWarning("Failed to update user {UserId}: {Errors}", request.Model.UserId, errors);
                     return CommandResponse.Failed(errors);
                 }

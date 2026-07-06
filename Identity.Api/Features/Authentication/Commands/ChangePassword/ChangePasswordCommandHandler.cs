@@ -28,7 +28,7 @@ namespace Identity.Api.Features.Authentication.Commands.ChangePassword
                 var result = await _userManager.ChangePasswordAsync(user, request.Model.CurrentPassword, request.Model.NewPassword);
                 if (!result.Succeeded)
                 {
-                    var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                    var errors = string.Join(Environment.NewLine, result.Errors.Select(e => e.Description));
                     _logger.LogWarning("Password change failed for user {UserId}: {Errors}", request.Model.UserId, errors);
                     return CommandResponse.Failed(errors);
                 }
