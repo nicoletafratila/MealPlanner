@@ -9,7 +9,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class UnitsOverviewViewModel(UnitService unitService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<UnitModel> _units = [];
+        [ObservableProperty]
+        private ObservableCollection<UnitModel> _units = [];
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -38,8 +39,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync("UnitEdit?id=0");
-        [RelayCommand] private Task EditAsync(UnitModel u) => Shell.Current.GoToAsync($"UnitEdit?id={u.Id}");
+        [RelayCommand]
+        private Task AddAsync() => Shell.Current.GoToAsync("UnitEdit?id=0");
+
+        [RelayCommand]
+        private Task EditAsync(UnitModel u) => Shell.Current.GoToAsync($"UnitEdit?id={u.Id}");
 
         [RelayCommand]
         private async Task DeleteAsync(UnitModel u)

@@ -9,9 +9,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     public partial class ShoppingListsOverviewViewModel(IShoppingListService shoppingListService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<ShoppingListModel> _shoppingLists = [];
-        [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private bool _hasNextPage;
+        [ObservableProperty]
+        private ObservableCollection<ShoppingListModel> _shoppingLists = [];
+
+        [ObservableProperty]
+        private int _currentPage = 1;
+
+        [ObservableProperty]
+        private bool _hasNextPage;
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -39,8 +44,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"ShoppingListEdit?id={Guid.Empty}");
-        [RelayCommand] private Task EditAsync(ShoppingListModel sl) => Shell.Current.GoToAsync($"ShoppingListEdit?id={sl.Id}");
+        [RelayCommand]
+        private Task AddAsync() => Shell.Current.GoToAsync($"ShoppingListEdit?id={Guid.Empty}");
+
+        [RelayCommand]
+        private Task EditAsync(ShoppingListModel sl) => Shell.Current.GoToAsync($"ShoppingListEdit?id={sl.Id}");
 
         [RelayCommand]
         private async Task DeleteAsync(ShoppingListModel sl)

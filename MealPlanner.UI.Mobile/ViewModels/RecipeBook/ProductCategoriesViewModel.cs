@@ -9,7 +9,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class ProductCategoriesViewModel(ProductCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<ProductCategoryModel> _categories = [];
+        [ObservableProperty]
+        private ObservableCollection<ProductCategoryModel> _categories = [];
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -35,8 +36,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"ProductCategoryEdit?id={Guid.Empty}");
-        [RelayCommand] private Task EditAsync(ProductCategoryModel c) => Shell.Current.GoToAsync($"ProductCategoryEdit?id={c.Id}");
+        [RelayCommand]
+        private Task AddAsync() => Shell.Current.GoToAsync($"ProductCategoryEdit?id={Guid.Empty}");
+
+        [RelayCommand]
+        private Task EditAsync(ProductCategoryModel c) => Shell.Current.GoToAsync($"ProductCategoryEdit?id={c.Id}");
 
         [RelayCommand]
         private async Task DeleteAsync(ProductCategoryModel c)

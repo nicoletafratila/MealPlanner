@@ -9,7 +9,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class RecipeCategoriesViewModel(RecipeCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<RecipeCategoryModel> _categories = [];
+        [ObservableProperty]
+        private ObservableCollection<RecipeCategoryModel> _categories = [];
 
         [RelayCommand]
         private async Task LoadAsync()

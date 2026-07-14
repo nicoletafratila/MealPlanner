@@ -8,7 +8,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, AuthenticationService authService, SecureStorageTokenProvider tokenProvider) : BaseViewModel
     {
-        [ObservableProperty] private ApplicationUserEditModel? _model;
+        [ObservableProperty]
+        private ApplicationUserEditModel? _model;
 
         [RelayCommand]
         private async Task LoadAsync()

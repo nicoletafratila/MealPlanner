@@ -10,11 +10,20 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(ProductId), "id")]
     public partial class ProductEditViewModel(ProductService productService, ProductCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private string _productId = string.Empty;
-        [ObservableProperty] private ProductEditModel _model = new();
-        [ObservableProperty] private ObservableCollection<ProductCategoryModel> _categories = [];
-        [ObservableProperty] private ProductCategoryModel? _selectedCategory;
-        [ObservableProperty] private bool _isNew;
+        [ObservableProperty]
+        private string _productId = string.Empty;
+
+        [ObservableProperty]
+        private ProductEditModel _model = new();
+
+        [ObservableProperty]
+        private ObservableCollection<ProductCategoryModel> _categories = [];
+
+        [ObservableProperty]
+        private ProductCategoryModel? _selectedCategory;
+
+        [ObservableProperty]
+        private bool _isNew;
 
         partial void OnProductIdChanged(string value)
         {

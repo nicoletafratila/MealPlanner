@@ -9,9 +9,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     public partial class MealPlansOverviewViewModel(IMealPlanService mealPlanService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<MealPlanModel> _mealPlans = [];
-        [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private bool _hasNextPage;
+        [ObservableProperty]
+        private ObservableCollection<MealPlanModel> _mealPlans = [];
+
+        [ObservableProperty]
+        private int _currentPage = 1;
+
+        [ObservableProperty]
+        private bool _hasNextPage;
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -42,8 +47,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"MealPlanEdit?id={Guid.Empty}");
-        [RelayCommand] private Task EditAsync(MealPlanModel mp) => Shell.Current.GoToAsync($"MealPlanEdit?id={mp.Id}");
+        [RelayCommand]
+        private Task AddAsync() => Shell.Current.GoToAsync($"MealPlanEdit?id={Guid.Empty}");
+
+        [RelayCommand]
+        private Task EditAsync(MealPlanModel mp) => Shell.Current.GoToAsync($"MealPlanEdit?id={mp.Id}");
 
         [RelayCommand]
         private async Task DeleteAsync(MealPlanModel mp)

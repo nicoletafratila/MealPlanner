@@ -20,22 +20,43 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         RecipeService recipeService,
         RecipeCategoryService recipeCategoryService) : BaseViewModel
     {
-        [ObservableProperty] private string _shoppingListId = string.Empty;
-        [ObservableProperty] private ShoppingListEditModel _model = new();
-        [ObservableProperty] private bool _isNew;
+        [ObservableProperty]
+        private string _shoppingListId = string.Empty;
+
+        [ObservableProperty]
+        private ShoppingListEditModel _model = new();
+
+        [ObservableProperty]
+        private bool _isNew;
 
         // Shop selection
-        [ObservableProperty] private ObservableCollection<ShopModel> _shops = [];
-        [ObservableProperty] private ShopModel? _selectedShop;
+        [ObservableProperty]
+        private ObservableCollection<ShopModel> _shops = [];
+
+        [ObservableProperty]
+        private ShopModel? _selectedShop;
 
         // Product add
-        [ObservableProperty] private ObservableCollection<ProductCategoryModel> _productCategories = [];
-        [ObservableProperty] private ProductCategoryModel? _selectedProductCategory;
-        [ObservableProperty] private ObservableCollection<ProductModel> _productsByCategory = [];
-        [ObservableProperty] private ProductModel? _selectedProduct;
-        [ObservableProperty] private ObservableCollection<UnitModel> _unitsForProduct = [];
-        [ObservableProperty] private UnitModel? _selectedUnit;
-        [ObservableProperty] private string _quantityText = string.Empty;
+        [ObservableProperty]
+        private ObservableCollection<ProductCategoryModel> _productCategories = [];
+
+        [ObservableProperty]
+        private ProductCategoryModel? _selectedProductCategory;
+
+        [ObservableProperty]
+        private ObservableCollection<ProductModel> _productsByCategory = [];
+
+        [ObservableProperty]
+        private ProductModel? _selectedProduct;
+
+        [ObservableProperty]
+        private ObservableCollection<UnitModel> _unitsForProduct = [];
+
+        [ObservableProperty]
+        private UnitModel? _selectedUnit;
+
+        [ObservableProperty]
+        private string _quantityText = string.Empty;
 
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];

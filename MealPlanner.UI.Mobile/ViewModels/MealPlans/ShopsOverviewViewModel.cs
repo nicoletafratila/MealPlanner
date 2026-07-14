@@ -9,7 +9,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     public partial class ShopsOverviewViewModel(IShopService shopService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<ShopModel> _shops = [];
+        [ObservableProperty]
+        private ObservableCollection<ShopModel> _shops = [];
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -35,8 +36,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync($"ShopEdit?id={Guid.Empty}");
-        [RelayCommand] private Task EditAsync(ShopModel s) => Shell.Current.GoToAsync($"ShopEdit?id={s.Id}");
+        [RelayCommand]
+        private Task AddAsync() => Shell.Current.GoToAsync($"ShopEdit?id={Guid.Empty}");
+
+        [RelayCommand]
+        private Task EditAsync(ShopModel s) => Shell.Current.GoToAsync($"ShopEdit?id={s.Id}");
 
         [RelayCommand]
         private async Task DeleteAsync(ShopModel s)

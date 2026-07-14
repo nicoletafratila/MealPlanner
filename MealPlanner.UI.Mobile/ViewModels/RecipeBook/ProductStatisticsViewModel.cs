@@ -12,7 +12,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         IStatisticsService statisticsService,
         ProductCategoryService productCategoryService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<StatisticEntryModel> _entries = [];
+        [ObservableProperty]
+        private ObservableCollection<StatisticEntryModel> _entries = [];
 
         [RelayCommand]
         public async Task LoadAsync()

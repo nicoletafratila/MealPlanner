@@ -9,12 +9,23 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class RecipesOverviewViewModel(RecipeService recipeService, RecipeCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<RecipeModel> _recipes = [];
-        [ObservableProperty] private ObservableCollection<RecipeCategoryModel> _categories = [];
-        [ObservableProperty] private string? _searchText;
-        [ObservableProperty] private RecipeCategoryModel? _selectedCategory;
-        [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private bool _hasNextPage;
+        [ObservableProperty]
+        private ObservableCollection<RecipeModel> _recipes = [];
+
+        [ObservableProperty]
+        private ObservableCollection<RecipeCategoryModel> _categories = [];
+
+        [ObservableProperty]
+        private string? _searchText;
+
+        [ObservableProperty]
+        private RecipeCategoryModel? _selectedCategory;
+
+        [ObservableProperty]
+        private int _currentPage = 1;
+
+        [ObservableProperty]
+        private bool _hasNextPage;
 
         [RelayCommand]
         private async Task LoadAsync()

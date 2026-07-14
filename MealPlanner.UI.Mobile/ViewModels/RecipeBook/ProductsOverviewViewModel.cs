@@ -9,10 +9,17 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class ProductsOverviewViewModel(ProductService productService) : BaseViewModel
     {
-        [ObservableProperty] private ObservableCollection<ProductModel> _products = [];
-        [ObservableProperty] private string? _searchText;
-        [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private bool _hasNextPage;
+        [ObservableProperty]
+        private ObservableCollection<ProductModel> _products = [];
+
+        [ObservableProperty]
+        private string? _searchText;
+
+        [ObservableProperty]
+        private int _currentPage = 1;
+
+        [ObservableProperty]
+        private bool _hasNextPage;
 
         [RelayCommand]
         private async Task LoadAsync()
@@ -38,8 +45,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand] private Task AddAsync() => Shell.Current.GoToAsync("ProductEdit?id=0");
-        [RelayCommand] private Task EditAsync(ProductModel p) => Shell.Current.GoToAsync($"ProductEdit?id={p.Id}");
+        [RelayCommand]
+        private Task AddAsync() => Shell.Current.GoToAsync("ProductEdit?id=0");
+
+        [RelayCommand]
+        private Task EditAsync(ProductModel p) => Shell.Current.GoToAsync($"ProductEdit?id={p.Id}");
 
         [RelayCommand]
         private async Task DeleteAsync(ProductModel p)

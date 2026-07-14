@@ -8,10 +8,12 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(RecipeId), "id")]
     public partial class RecipeDetailViewModel(RecipeService recipeService) : BaseViewModel
     {
-        [ObservableProperty] private string _recipeId = string.Empty;
+        [ObservableProperty]
+        private string _recipeId = string.Empty;
         // Detail view shows ingredient lines, so we deserialize the edit model
         // (which carries Ingredients). The page only ever reads from it.
-        [ObservableProperty] private RecipeEditModel? _recipe;
+        [ObservableProperty]
+        private RecipeEditModel? _recipe;
 
         partial void OnRecipeIdChanged(string value) => _ = LoadAsync();
 

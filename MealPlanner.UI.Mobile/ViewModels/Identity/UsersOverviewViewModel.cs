@@ -11,10 +11,17 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
     {
         private static readonly List<SortingModel> _defaultSorting = [new SortingModel { PropertyName = "Username", Direction = SortDirection.Ascending }];
 
-        [ObservableProperty] private ObservableCollection<ApplicationUserModel> _users = [];
-        [ObservableProperty] private int _currentPage = 1;
-        [ObservableProperty] private bool _hasNextPage;
-        [ObservableProperty] private bool _hasPreviousPage;
+        [ObservableProperty]
+        private ObservableCollection<ApplicationUserModel> _users = [];
+
+        [ObservableProperty]
+        private int _currentPage = 1;
+
+        [ObservableProperty]
+        private bool _hasNextPage;
+
+        [ObservableProperty]
+        private bool _hasPreviousPage;
 
         [RelayCommand]
         private async Task LoadAsync()

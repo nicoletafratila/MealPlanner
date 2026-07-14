@@ -8,9 +8,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(CategoryId), "id")]
     public partial class RecipeCategoryEditViewModel(RecipeCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private string _categoryId = string.Empty;
-        [ObservableProperty] private RecipeCategoryEditModel _model = new();
-        [ObservableProperty] private bool _isNew;
+        [ObservableProperty]
+        private string _categoryId = string.Empty;
+
+        [ObservableProperty]
+        private RecipeCategoryEditModel _model = new();
+
+        [ObservableProperty]
+        private bool _isNew;
 
         partial void OnCategoryIdChanged(string value)
         {

@@ -8,9 +8,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     [QueryProperty(nameof(ShopId), "id")]
     public partial class ShopEditViewModel(IShopService shopService) : BaseViewModel
     {
-        [ObservableProperty] private string _shopId = string.Empty;
-        [ObservableProperty] private ShopEditModel _model = new();
-        [ObservableProperty] private bool _isNew;
+        [ObservableProperty]
+        private string _shopId = string.Empty;
+
+        [ObservableProperty]
+        private ShopEditModel _model = new();
+
+        [ObservableProperty]
+        private bool _isNew;
 
         partial void OnShopIdChanged(string value)
         {

@@ -12,9 +12,11 @@ namespace MealPlanner.UI.Mobile.ViewModels
         [NotifyPropertyChangedFor(nameof(IsNotBusy))]
         private bool _isBusy;
 
-        [ObservableProperty] private string? _errorMessage;
+        [ObservableProperty]
+        private string? _errorMessage;
 
-        [ObservableProperty] private string? _successMessage;
+        [ObservableProperty]
+        private string? _successMessage;
 
         public bool IsNotBusy => !IsBusy;
 
