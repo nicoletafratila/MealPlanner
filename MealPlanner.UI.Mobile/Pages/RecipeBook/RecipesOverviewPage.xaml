@@ -20,11 +20,20 @@
                    Margin="12,8" />
 
         <!-- Category filter -->
-        <Picker Grid.Row="1" Title="All categories"
-                ItemsSource="{Binding Categories}"
-                SelectedItem="{Binding SelectedCategory}"
-                ItemDisplayBinding="{Binding Name}"
-                Margin="12,0,12,8" />
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="12,0,12,8">
+            <Picker Grid.Column="0" Title="All categories"
+                    ItemsSource="{Binding Categories}"
+                    SelectedItem="{Binding SelectedCategory}"
+                    ItemDisplayBinding="{Binding Name}" />
+            <Button Grid.Column="1" Text="✕"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource DarkGray}"
+                    FontSize="16"
+                    Padding="8,0"
+                    MinimumHeightRequest="0"
+                    IsVisible="{Binding SelectedCategory, Converter={x:Static converters:NotNullConverter.Instance}}"
+                    Command="{Binding ClearCategoryCommand}" />
+        </Grid>
 
         <!-- Recipe list -->
         <RefreshView Grid.Row="2" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
@@ -43,22 +52,34 @@
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
-                            <Frame Style="{StaticResource CardFrame}">
+                            <Frame Style="{StaticResource CardFrame}" Padding="0">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=OpenRecipeCommand}"
                                         CommandParameter="{Binding .}" />
                                 </Frame.GestureRecognizers>
-                                <Grid ColumnDefinitions="56,*">
-                                    <Image Grid.Column="0" Source="{Binding ImageUrl}"
-                                           WidthRequest="48" HeightRequest="48"
-                                           Aspect="AspectFill" />
-                                    <VerticalStackLayout Grid.Column="1" Padding="8,0" Spacing="2">
-                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                <VerticalStackLayout Spacing="0">
+                                    <Image Source="{Binding ImageUrl}"
+                                           HeightRequest="160"
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="Fill" />
+                                    <VerticalStackLayout Padding="12,8" Spacing="4">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Center" />
+                                            <Button Grid.Column="1" Text="↗"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource Primary}"
+                                                    FontSize="16"
+                                                    Padding="4,0"
+                                                    MinimumHeightRequest="0"
+                                                    IsVisible="{Binding Source, Converter={x:Static converters:StringNotNullConverter.Instance}}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=OpenSourceCommand}"
+                                                    CommandParameter="{Binding Source}" />
+                                        </Grid>
                                         <Label Text="{Binding RecipeCategoryName}"
                                                FontSize="12" TextColor="{StaticResource DarkGray}" />
                                     </VerticalStackLayout>
-                                </Grid>
+                                </VerticalStackLayout>
                             </Frame>
                         </SwipeView>
                     </DataTemplate>

@@ -10,9 +10,9 @@ PM> Script-migration
 
 
 
-
-format brakes on new lines
-
+remember me pe mobile app
+buton delete
+buton add la menu
 
 
 The edit / selection / statistics pages (RecipeEdit, ProductEdit, MealPlanEdit, ShoppingListEdit, RecipeSelection, ShopSelection, MealPlanSelection, RecipeCategoriesOverview, RecipeStatistics, ProductStatistics) also call SearchAsync, but in their OnInitialized load path — a different code path, with varied

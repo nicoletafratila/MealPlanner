@@ -69,9 +69,28 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
+        partial void OnSearchTextChanged(string? value)
+        {
+            if (string.IsNullOrEmpty(value))
+                SearchCommand.Execute(null);
+        }
+
+        [RelayCommand]
+        private void ClearCategory() => SelectedCategory = null;
+
+        partial void OnSelectedCategoryChanged(RecipeCategoryModel? value) =>
+          SearchCommand.Execute(null);
+
         [RelayCommand]
         private Task OpenRecipeAsync(RecipeModel recipe) =>
             Shell.Current.GoToAsync($"RecipeDetail?id={recipe.Id}");
+
+        [RelayCommand]
+        private async Task OpenSourceAsync(string? url)
+        {
+            if (!string.IsNullOrWhiteSpace(url))
+                await Launcher.OpenAsync(new Uri(url));
+        }
 
         [RelayCommand]
         private Task AddRecipeAsync() =>
