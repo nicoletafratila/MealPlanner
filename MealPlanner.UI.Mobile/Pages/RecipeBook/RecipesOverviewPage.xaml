@@ -36,8 +36,16 @@
         </Grid>
 
         <!-- Recipe list -->
-        <RefreshView Grid.Row="2" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
-            <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None">
+        <RefreshView Grid.Row="2" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None"
+                            RemainingItemsThreshold="2"
+                            RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
+                <CollectionView.Footer>
+                    <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                       IsVisible="{Binding IsLoadingMore}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,8" />
+                </CollectionView.Footer>
                 <CollectionView.EmptyView>
                     <Label Text="No recipes found." HorizontalOptions="Center"
                            VerticalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,40" />

@@ -27,6 +27,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty]
         private bool _hasNextPage;
 
+        [ObservableProperty]
+        private bool _isLoadingMore;
+
         [RelayCommand]
         private async Task LoadAsync()
         {
@@ -58,11 +61,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             CurrentPage = 1;
             try
             {
-                var filters = new List<FilterItem>();
-                if (!string.IsNullOrWhiteSpace(SearchText))
-                    filters.Add(new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase));
-                if (SelectedCategory is not null && SelectedCategory.Id != Guid.Empty)
-                    filters.Add(new FilterItem("RecipeCategoryId", SelectedCategory.Id.ToString(), FilterOperator.Equals));
+                var filters = BuildFilters();
                 var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
                 if (result is not null)
                 {
@@ -118,23 +117,39 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private async Task NextPageAsync()
         {
-            CurrentPage++;
-            await RefreshPageAsync();
+            if (IsLoadingMore || IsBusy || !HasNextPage) return;
+            IsLoadingMore = true;
+            try
+            {
+                CurrentPage++;
+                await AppendPageAsync();
+            }
+            finally
+            {
+                IsLoadingMore = false;
+            }
         }
 
-        private async Task RefreshPageAsync()
+        private async Task AppendPageAsync()
+        {
+            var filters = BuildFilters();
+            var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
+            if (result is not null)
+            {
+                foreach (var item in result.Items)
+                    Recipes.Add(item);
+                HasNextPage = result.Metadata.HasNextPage;
+            }
+        }
+
+        private List<FilterItem> BuildFilters()
         {
             var filters = new List<FilterItem>();
             if (!string.IsNullOrWhiteSpace(SearchText))
                 filters.Add(new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase));
             if (SelectedCategory is not null && SelectedCategory.Id != Guid.Empty)
                 filters.Add(new FilterItem("RecipeCategoryId", SelectedCategory.Id.ToString(), FilterOperator.Equals));
-            var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
-            if (result is not null)
-            {
-                Recipes = new ObservableCollection<RecipeModel>(result.Items);
-                HasNextPage = result.Metadata.HasNextPage;
-            }
+            return filters;
         }
     }
 }
