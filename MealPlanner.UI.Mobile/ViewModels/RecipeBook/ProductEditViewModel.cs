@@ -10,15 +10,17 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(ProductId), "id")]
     public partial class ProductEditViewModel(ProductService productService, ProductCategoryService categoryService) : BaseViewModel
     {
-        [ObservableProperty] private Guid _productId;
+        [ObservableProperty] private string _productId = string.Empty;
         [ObservableProperty] private ProductEditModel _model = new();
         [ObservableProperty] private ObservableCollection<ProductCategoryModel> _categories = [];
         [ObservableProperty] private ProductCategoryModel? _selectedCategory;
         [ObservableProperty] private bool _isNew;
 
-        partial void OnProductIdChanged(Guid value)
+        partial void OnProductIdChanged(string value)
         {
-            IsNew = value == Guid.Empty; _ = LoadAsync();
+            Guid.TryParse(value, out var id);
+            IsNew = id == Guid.Empty;
+            _ = LoadAsync();
         }
 
         partial void OnSelectedCategoryChanged(ProductCategoryModel? value)
@@ -34,7 +36,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 var cats = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
                 if (cats is not null) Categories = new ObservableCollection<ProductCategoryModel>(cats.Items);
-                if (!IsNew) Model = await productService.GetEditAsync(ProductId) ?? new();
+                Guid.TryParse(ProductId, out var id);
+                if (!IsNew) Model = await productService.GetEditAsync(id) ?? new();
                 SelectedCategory = Categories.FirstOrDefault(c => c.Id == Model.ProductCategoryId);
             }
             catch (Exception ex)

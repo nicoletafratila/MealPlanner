@@ -1,12 +1,23 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class LoginViewModel(AuthenticationService authService) : BaseViewModel
+    public partial class LoginViewModel(AuthenticationService authService, SecureStorageTokenProvider tokenProvider) : BaseViewModel
     {
         public LoginModel Model { get; } = new();
+
+        [ObservableProperty]
+        private bool _rememberMe;
+
+        public async Task InitializeAsync()
+        {
+            var (username, _) = await tokenProvider.GetCredentialsAsync();
+            RememberMe = username != null;
+        }
 
         [RelayCommand]
         private async Task LoginAsync()
@@ -18,7 +29,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             {
                 var result = await authService.LoginAsync(Model);
                 if (result?.Succeeded == true)
+                {
+                    if (RememberMe)
+                        await tokenProvider.SaveCredentialsAsync(Model.Username, Model.Password ?? string.Empty);
+                    else
+                        tokenProvider.ClearCredentials();
                     await Shell.Current.GoToAsync("//RecipesOverview");
+                }
                 else
                     SetError(result?.Message);
             }

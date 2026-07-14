@@ -8,13 +8,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(UnitId), "id")]
     public partial class UnitEditViewModel(UnitService unitService) : BaseViewModel
     {
-        [ObservableProperty] private Guid _unitId;
+        [ObservableProperty] private string _unitId = string.Empty;
         [ObservableProperty] private UnitEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
-        partial void OnUnitIdChanged(Guid value)
+        partial void OnUnitIdChanged(string value)
         {
-            IsNew = value == Guid.Empty;
+            Guid.TryParse(value, out var id);
+            IsNew = id == Guid.Empty;
             if (!IsNew) _ = LoadAsync();
         }
 
@@ -24,7 +25,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             IsBusy = true;
             try
             {
-                Model = await unitService.GetEditAsync(UnitId) ?? new();
+                Guid.TryParse(UnitId, out var id);
+                Model = await unitService.GetEditAsync(id) ?? new();
             }
             catch (Exception ex)
             {

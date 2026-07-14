@@ -10,20 +10,21 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
     [QueryProperty(nameof(RecipeId), "id")]
     public partial class RecipeEditViewModel(RecipeService recipeService, RecipeCategoryService categoryService, UnitService unitService, ProductService productService) : BaseViewModel
     {
-        [ObservableProperty] private Guid _recipeId;
+        [ObservableProperty] private string _recipeId = string.Empty;
         [ObservableProperty] private RecipeEditModel _model = new();
         [ObservableProperty] private ObservableCollection<RecipeCategoryModel> _categories = [];
         [ObservableProperty] private ObservableCollection<UnitModel> _units = [];
         [ObservableProperty] private ObservableCollection<ProductModel> _products = [];
         [ObservableProperty] private bool _isNew;
 
-        partial void OnRecipeIdChanged(Guid value) => _ = LoadAsync();
+        partial void OnRecipeIdChanged(string value) => _ = LoadAsync();
 
         [RelayCommand]
         private async Task LoadAsync()
         {
             IsBusy = true;
-            IsNew = RecipeId == Guid.Empty;
+            Guid.TryParse(RecipeId, out var id);
+            IsNew = id == Guid.Empty;
             try
             {
                 var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
@@ -36,7 +37,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (prodTask.Result is not null) Products = new ObservableCollection<ProductModel>(prodTask.Result.Items);
 
                 if (!IsNew)
-                    Model = await recipeService.GetEditAsync(RecipeId) ?? new();
+                    Model = await recipeService.GetEditAsync(id) ?? new();
             }
             catch (Exception ex)
             {

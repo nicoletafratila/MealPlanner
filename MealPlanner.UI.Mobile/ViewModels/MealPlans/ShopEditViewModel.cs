@@ -8,13 +8,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     [QueryProperty(nameof(ShopId), "id")]
     public partial class ShopEditViewModel(IShopService shopService) : BaseViewModel
     {
-        [ObservableProperty] private Guid _shopId;
+        [ObservableProperty] private string _shopId = string.Empty;
         [ObservableProperty] private ShopEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
-        partial void OnShopIdChanged(Guid value)
+        partial void OnShopIdChanged(string value)
         {
-            IsNew = value == Guid.Empty;
+            Guid.TryParse(value, out var id);
+            IsNew = id == Guid.Empty;
             if (!IsNew)
                 _ = LoadAsync();
         }
@@ -25,7 +26,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true;
             try
             {
-                Model = await shopService.GetEditAsync(ShopId) ?? new();
+                Guid.TryParse(ShopId, out var id);
+                Model = await shopService.GetEditAsync(id) ?? new();
             }
             catch (Exception ex)
             {

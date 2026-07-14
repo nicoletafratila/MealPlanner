@@ -20,7 +20,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         RecipeService recipeService,
         RecipeCategoryService recipeCategoryService) : BaseViewModel
     {
-        [ObservableProperty] private Guid _shoppingListId;
+        [ObservableProperty] private string _shoppingListId = string.Empty;
         [ObservableProperty] private ShoppingListEditModel _model = new();
         [ObservableProperty] private bool _isNew;
 
@@ -40,9 +40,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];
 
-        partial void OnShoppingListIdChanged(Guid value)
+        partial void OnShoppingListIdChanged(string value)
         {
-            IsNew = value == Guid.Empty; _ = LoadAsync();
+            Guid.TryParse(value, out var id);
+            IsNew = id == Guid.Empty;
+            _ = LoadAsync();
         }
 
         partial void OnSelectedShopChanged(ShopModel? value)
@@ -77,7 +79,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
                 if (!IsNew)
                 {
-                    Model = await shoppingListService.GetEditAsync(ShoppingListId) ?? new();
+                    Guid.TryParse(ShoppingListId, out var id);
+                    Model = await shoppingListService.GetEditAsync(id) ?? new();
                     Model.Products ??= [];
                     SelectedShop = Shops.FirstOrDefault(s => s.Id == Model.ShopId);
                 }
@@ -293,7 +296,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true; ClearMessages();
             try
             {
-                var result = await shoppingListService.DeleteAsync(ShoppingListId);
+                Guid.TryParse(ShoppingListId, out var deleteId);
+                var result = await shoppingListService.DeleteAsync(deleteId);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }

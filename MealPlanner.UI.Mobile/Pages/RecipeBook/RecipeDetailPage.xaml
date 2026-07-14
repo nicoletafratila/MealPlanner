@@ -22,8 +22,19 @@
             <VerticalStackLayout Padding="20" Spacing="12">
                 <Label Text="{Binding Recipe.Name}" FontSize="22" FontAttributes="Bold" />
 
-                <Label Text="{Binding Recipe.Source}" FontSize="12" TextColor="{StaticResource DarkGray}"
-                       IsVisible="{Binding Recipe.Source, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                <Grid ColumnDefinitions="*,Auto"
+                      IsVisible="{Binding Recipe.Source, Converter={x:Static converters:StringNotNullConverter.Instance}}">
+                    <Label Grid.Column="0" Text="{Binding Recipe.Source}" FontSize="12" TextColor="{StaticResource DarkGray}"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1" Text="↗"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Primary}"
+                            FontSize="16"
+                            Padding="4,0"
+                            MinimumHeightRequest="0"
+                            Command="{Binding OpenSourceCommand}"
+                            CommandParameter="{Binding Recipe.Source}" />
+                </Grid>
 
                 <Label Text="Ingredients" Style="{StaticResource SectionHeaderLabel}" />
                 <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
@@ -31,8 +42,14 @@
                         <DataTemplate x:DataType="model:RecipeIngredientEditModel">
                             <Grid ColumnDefinitions="*,Auto" Padding="0,4">
                                 <Label Grid.Column="0" Text="{Binding Product.Name}" />
-                                <Label Grid.Column="1" Text="{Binding Quantity, StringFormat='{0} {1}', ConverterParameter={Binding Unit.Name}}"
-                                       TextColor="{StaticResource DarkGray}" />
+                                <Label Grid.Column="1" TextColor="{StaticResource DarkGray}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="Quantity" />
+                                            <Binding Path="Unit.Name" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

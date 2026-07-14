@@ -26,6 +26,11 @@
                    IsPassword="True" ReturnType="Go"
                    ReturnCommand="{Binding LoginCommand}" />
 
+            <HorizontalStackLayout Spacing="8">
+                <CheckBox IsChecked="{Binding RememberMe}" VerticalOptions="Center" />
+                <Label Text="Remember me" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                    IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 

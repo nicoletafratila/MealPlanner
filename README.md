@@ -10,7 +10,7 @@ PM> Script-migration
 
 
 
-remember me pe mobile app
+
 buton delete
 buton add la menu
 

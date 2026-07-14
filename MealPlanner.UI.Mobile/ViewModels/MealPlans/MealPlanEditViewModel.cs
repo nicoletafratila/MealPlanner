@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         IShopService shopService,
         IShoppingListService shoppingListService) : BaseViewModel
     {
-        [ObservableProperty] private Guid _mealPlanId;
+        [ObservableProperty] private string _mealPlanId = string.Empty;
         [ObservableProperty] private MealPlanEditModel _model = new();
         [ObservableProperty] private ObservableCollection<RecipeCategoryModel> _categories = [];
         [ObservableProperty] private ObservableCollection<RecipeModel> _allRecipes = [];
@@ -27,9 +27,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty] private RecipeModel? _selectedRecipe;
         [ObservableProperty] private bool _isNew;
 
-        partial void OnMealPlanIdChanged(Guid value)
+        partial void OnMealPlanIdChanged(string value)
         {
-            IsNew = value == Guid.Empty; _ = LoadAsync();
+            Guid.TryParse(value, out var id);
+            IsNew = id == Guid.Empty;
+            _ = LoadAsync();
         }
 
         partial void OnSelectedCategoryChanged(RecipeCategoryModel? value)
@@ -68,7 +70,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     Shops = new ObservableCollection<ShopModel>(shopTask.Result.Items);
 
                 if (!IsNew)
-                    Model = await mealPlanService.GetEditAsync(MealPlanId) ?? new();
+                {
+                    Guid.TryParse(MealPlanId, out var id);
+                    Model = await mealPlanService.GetEditAsync(id) ?? new();
+                }
                 Model.Recipes ??= [];
             }
             catch (Exception ex)
@@ -119,7 +124,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true; ClearMessages();
             try
             {
-                var result = await mealPlanService.DeleteAsync(MealPlanId);
+                Guid.TryParse(MealPlanId, out var deleteId);
+                var result = await mealPlanService.DeleteAsync(deleteId);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
             }
@@ -148,7 +154,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true; ClearMessages();
             try
             {
-                var list = await shoppingListService.MakeShoppingListAsync(new ShoppingListCreateModel { MealPlanId = MealPlanId, ShopId = shop.Id });
+                Guid.TryParse(MealPlanId, out var mealPlanGuid);
+                var list = await shoppingListService.MakeShoppingListAsync(new ShoppingListCreateModel { MealPlanId = mealPlanGuid, ShopId = shop.Id });
                 if (list is not null)
                     await Shell.Current.GoToAsync($"ShoppingListEdit?id={list.Id}");
                 else

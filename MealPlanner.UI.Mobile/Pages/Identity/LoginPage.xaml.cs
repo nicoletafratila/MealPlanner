@@ -9,5 +9,15 @@ namespace MealPlanner.UI.Mobile.Pages.Identity
             InitializeComponent();
             BindingContext = viewModel;
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            try
+            {
+                await ((LoginViewModel)BindingContext).InitializeAsync();
+            }
+            catch { }
+        }
     }
 }
