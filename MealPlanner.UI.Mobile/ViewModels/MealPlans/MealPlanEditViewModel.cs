@@ -11,6 +11,7 @@ using RecipeBook.Shared.Models;
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     [QueryProperty(nameof(MealPlanId), "id")]
+    [QueryProperty(nameof(PreselectedRecipeId), "recipeId")]
     public partial class MealPlanEditViewModel(
         IMealPlanService mealPlanService,
         RecipeService recipeService,
@@ -41,6 +42,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         [ObservableProperty]
         private RecipeModel? _selectedRecipe;
+
+        [ObservableProperty]
+        private string _preselectedRecipeId = string.Empty;
 
         [ObservableProperty]
         private bool _isNew;
@@ -93,6 +97,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     Model = await mealPlanService.GetEditAsync(id) ?? new();
                 }
                 Model.Recipes ??= [];
+
+                if (Guid.TryParse(PreselectedRecipeId, out var preselectedId))
+                {
+                    var recipe = AllRecipes.FirstOrDefault(r => r.Id == preselectedId);
+                    if (recipe != null && Model.Recipes.All(r => r.Id != recipe.Id))
+                        Model.Recipes.Add(recipe);
+                }
             }
             catch (Exception ex)
             {

@@ -106,6 +106,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private Task AddRecipeAsync() =>
             Shell.Current.GoToAsync("RecipeEdit?id=0");
 
+        [RelayCommand]
+        private Task AddToMealPlanAsync(RecipeModel recipe) =>
+            Shell.Current.GoToAsync($"MealPlanEdit?id={Guid.Empty}&recipeId={recipe.Id}");
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteRecipeAsync(RecipeModel recipe)
         {

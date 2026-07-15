@@ -10,6 +10,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Edit" Command="{Binding EditCommand}" />
+        <ToolbarItem Text="Delete" Command="{Binding DeleteCommand}" IsDestructive="True" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -30,6 +31,8 @@
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenSourceCommand}"
                                               CommandParameter="{Binding Recipe.Source}" />
+                        <PointerGestureRecognizer PointerEntered="OnSourcePointerEntered"
+                                                  PointerExited="OnSourcePointerExited" />
                     </Label.GestureRecognizers>
                 </Label>
 

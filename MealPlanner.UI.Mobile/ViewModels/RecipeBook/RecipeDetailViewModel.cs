@@ -45,5 +45,30 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         [RelayCommand]
         private Task EditAsync() => Shell.Current.GoToAsync($"RecipeEdit?id={RecipeId}");
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task DeleteAsync()
+        {
+            var confirm = await Shell.Current.DisplayAlertAsync("Delete", "Delete this recipe?", "Delete", "Cancel");
+            if (!confirm) return;
+            if (!Guid.TryParse(RecipeId, out var id) || id == Guid.Empty) return;
+            IsBusy = true;
+            try
+            {
+                var result = await recipeService.DeleteAsync(id);
+                if (result?.Succeeded == true)
+                    await Shell.Current.GoToAsync("..");
+                else
+                    SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
     }
 }
