@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty]
         private ObservableCollection<RecipeCategoryModel> _categories = [];
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (IsBusy) return;
@@ -40,7 +40,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private Task EditAsync(RecipeCategoryModel cat) => Shell.Current.GoToAsync($"RecipeCategoryEdit?id={cat.Id}");
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync(RecipeCategoryModel cat)
         {
             var result = await categoryService.DeleteAsync(cat.Id);

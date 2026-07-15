@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
@@ -12,7 +12,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [ObservableProperty]
         private ApplicationUserEditModel? _model;
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (IsBusy) return;
@@ -34,7 +34,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy || Model is null) return;
@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [RelayCommand]
         private Task ChangePasswordAsync() => Shell.Current.GoToAsync("ChangePassword");
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LogoutAsync()
         {
             await authService.LogoutAsync();

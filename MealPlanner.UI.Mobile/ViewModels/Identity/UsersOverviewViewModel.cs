@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -23,7 +23,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [ObservableProperty]
         private bool _hasPreviousPage;
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (IsBusy) return;
@@ -49,7 +49,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task UnlockUserAsync(string userId)
         {
             var result = await userService.UnlockAsync(userId);
@@ -57,14 +57,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             else SetError(result?.Message);
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task NextPageAsync()
         {
             CurrentPage++;
             await LoadAsync();
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task PreviousPageAsync()
         {
             if (CurrentPage > 1)

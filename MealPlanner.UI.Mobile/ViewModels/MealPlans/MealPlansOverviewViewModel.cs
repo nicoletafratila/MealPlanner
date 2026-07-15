@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private bool _hasNextPage;
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (IsBusy)
@@ -53,7 +53,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private Task EditAsync(MealPlanModel mp) => Shell.Current.GoToAsync($"MealPlanEdit?id={mp.Id}");
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync(MealPlanModel mp)
         {
             var result = await mealPlanService.DeleteAsync(mp.Id);

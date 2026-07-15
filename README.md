@@ -1,5 +1,4 @@
 
-afiseaza doar units din acceasi categorie
 authenticate all time when openning on mobile
 buton delete
 buton add la menu

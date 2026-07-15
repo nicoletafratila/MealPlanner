@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
@@ -27,7 +27,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             IsBusy = true;
@@ -46,7 +46,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return; IsBusy = true; ClearMessages();

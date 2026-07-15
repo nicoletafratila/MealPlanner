@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -62,7 +62,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             SelectedRecipe = null;
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             IsBusy = true;
@@ -117,7 +117,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         private void RemoveRecipe(RecipeModel recipe) => Model.Recipes?.Remove(recipe);
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return; IsBusy = true; ClearMessages();
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync()
         {
             if (IsNew) return;
@@ -153,7 +153,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task MakeShoppingListAsync()
         {
             if (IsNew || !(Model.Recipes?.Count > 0)) return;

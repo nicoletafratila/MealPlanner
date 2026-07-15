@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             if (value is not null) Model.ProductCategoryId = value.Id;
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             IsBusy = true;
@@ -59,7 +59,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return; IsBusy = true; ClearMessages();

@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
 using MealPlanner.Shared.Resources;
@@ -9,7 +9,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
     {
         public ForgotPasswordModel Model { get; } = new();
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SendAsync()
         {
             if (IsBusy) return;

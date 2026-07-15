@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -187,7 +187,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             SelectedProduct = null;
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task AddFromMealPlanAsync()
         {
             if (Model.ShopId == Guid.Empty)
@@ -224,7 +224,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task AddFromRecipeAsync()
         {
             if (Model.ShopId == Guid.Empty)
@@ -293,7 +293,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return; IsBusy = true; ClearMessages();
@@ -309,7 +309,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync()
         {
             if (IsNew) return;
@@ -329,7 +329,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task ExportAsync()
         {
             if (Model.Products is not { Count: > 0 }) return;

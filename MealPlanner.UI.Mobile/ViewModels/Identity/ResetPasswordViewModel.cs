@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
 using MealPlanner.Shared.Resources;
@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 Model.Token = Uri.UnescapeDataString(token.ToString()!);
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task ResetAsync()
         {
             if (IsBusy) return;

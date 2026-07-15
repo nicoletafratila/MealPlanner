@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -40,7 +40,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         partial void OnRecipeIdChanged(string value) => _ = LoadAsync();
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             IsBusy = true;
@@ -83,7 +83,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task PickImageAsync()
         {
             try
@@ -103,26 +103,33 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return;
-            IsBusy = true;
             ClearMessages();
+
+            if (SelectedCategory is null)
+            {
+                SetError(RecipeBookSharedMessages.RecipeCategoryRequired);
+                return;
+            }
+
+            if (RecipeIngredients.Count == 0)
+            {
+                SetError(RecipeBookSharedMessages.RecipeRequiresIngredients);
+                return;
+            }
+
+            if (RecipeIngredients.Any(r => r.Quantity <= 0))
+            {
+                SetError(RecipeBookSharedMessages.IngredientQuantityPositive);
+                return;
+            }
+
+            IsBusy = true;
             try
             {
-                if (SelectedCategory is null)
-                {
-                    SetError(RecipeBookSharedMessages.RecipeCategoryRequired);
-                    return;
-                }
-
-                if (RecipeIngredients.Count == 0)
-                {
-                    SetError(RecipeBookSharedMessages.RecipeRequiresIngredients);
-                    return;
-                }
-
                 Model.RecipeCategoryId = SelectedCategory.Id;
 
                 Model.Ingredients = RecipeIngredients.Select(row =>

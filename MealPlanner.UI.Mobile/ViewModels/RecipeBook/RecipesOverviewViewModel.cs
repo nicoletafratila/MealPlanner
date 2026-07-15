@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -30,7 +30,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty]
         private bool _isLoadingMore;
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (IsBusy) return;
@@ -54,7 +54,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SearchAsync()
         {
             IsBusy = true;
@@ -95,7 +95,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private Task OpenRecipeAsync(RecipeModel recipe) =>
             Shell.Current.GoToAsync($"RecipeDetail?id={recipe.Id}");
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task OpenSourceAsync(string? url)
         {
             if (!string.IsNullOrWhiteSpace(url))
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private Task AddRecipeAsync() =>
             Shell.Current.GoToAsync("RecipeEdit?id=0");
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteRecipeAsync(RecipeModel recipe)
         {
             var result = await recipeService.DeleteAsync(recipe.Id);
@@ -114,7 +114,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             else SetError(result?.Message);
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task NextPageAsync()
         {
             if (IsLoadingMore || IsBusy || !HasNextPage) return;

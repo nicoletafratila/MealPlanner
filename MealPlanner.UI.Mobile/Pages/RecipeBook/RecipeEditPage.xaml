@@ -42,7 +42,7 @@
                                     SelectedItem="{Binding SelectedProduct}"
                                     ItemDisplayBinding="{Binding Name}" />
                             <Picker Grid.Column="1" Title="Unit"
-                                    ItemsSource="{Binding Units}"
+                                    ItemsSource="{Binding CompatibleUnits}"
                                     SelectedItem="{Binding SelectedUnit}"
                                     ItemDisplayBinding="{Binding Name}" />
                             <Entry Grid.Column="2" Text="{Binding Quantity, StringFormat='{0}'}"

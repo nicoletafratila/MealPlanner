@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         partial void OnRecipeIdChanged(string value) => _ = LoadAsync();
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (!Guid.TryParse(RecipeId, out var id) || id == Guid.Empty) return;
@@ -36,7 +36,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task OpenSourceAsync(string? url)
         {
             if (!string.IsNullOrWhiteSpace(url))

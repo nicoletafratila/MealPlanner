@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             RememberMe = username != null;
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoginAsync()
         {
             if (IsBusy) return;
