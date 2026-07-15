@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.Shared.Resources;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -191,13 +192,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         {
             if (Model.ShopId == Guid.Empty)
             {
-                SetError("Select a shop first."); return;
+                SetError(MealPlannerSharedMessages.SelectShopFirst); return;
             }
 
             var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200, Sorting = DefaultSorting });
             if (plans is null || plans.Items.Count == 0)
             {
-                SetError("No meal plans found."); return;
+                SetError(MealPlannerSharedMessages.NoMealPlansFound); return;
             }
 
             var names = plans.Items.Select(p => p.Name).ToArray();
@@ -228,7 +229,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         {
             if (Model.ShopId == Guid.Empty)
             {
-                SetError("Select a shop first."); return;
+                SetError(MealPlannerSharedMessages.SelectShopFirst); return;
             }
 
             var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
@@ -250,7 +251,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             });
             if (recipes is null || recipes.Items.Count == 0)
             {
-                SetError("No recipes found."); return;
+                SetError(MealPlannerSharedMessages.NoRecipesFound); return;
             }
 
             var names = recipes.Items.Select(r => r.Name).ToArray();

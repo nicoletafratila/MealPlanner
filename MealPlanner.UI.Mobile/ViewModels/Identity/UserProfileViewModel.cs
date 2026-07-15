@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
+using MealPlanner.Shared.Resources;
 using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
@@ -42,7 +43,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             try
             {
                 var result = await userService.UpdateAsync(Model);
-                if (result?.Succeeded == true) SetSuccess("Profile updated.");
+                if (result?.Succeeded == true) SetSuccess(MealPlannerSharedMessages.ProfileUpdatedSuccess);
                 else SetError(result?.Message);
             }
             catch (Exception ex)

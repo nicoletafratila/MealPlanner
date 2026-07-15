@@ -52,4 +52,40 @@
   <data name="UnitRequired" xml:space="preserve">
     <value>Please select a unit of measurement for the product.</value>
   </data>
+  <data name="NoShopsAvailable" xml:space="preserve">
+    <value>No shops available.</value>
+  </data>
+  <data name="ShoppingListGenerateFailed" xml:space="preserve">
+    <value>Failed to generate shopping list.</value>
+  </data>
+  <data name="SelectShopFirst" xml:space="preserve">
+    <value>Select a shop first.</value>
+  </data>
+  <data name="NoMealPlansFound" xml:space="preserve">
+    <value>No meal plans found.</value>
+  </data>
+  <data name="NoRecipesFound" xml:space="preserve">
+    <value>No recipes found.</value>
+  </data>
+  <data name="NewPasswordsDoNotMatch" xml:space="preserve">
+    <value>New passwords do not match.</value>
+  </data>
+  <data name="PasswordChangedSuccess" xml:space="preserve">
+    <value>Password changed successfully.</value>
+  </data>
+  <data name="ProfileUpdatedSuccess" xml:space="preserve">
+    <value>Profile updated.</value>
+  </data>
+  <data name="ForgotPasswordEmailSent" xml:space="preserve">
+    <value>If the email exists, a reset link has been sent.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="PasswordResetSuccess" xml:space="preserve">
+    <value>Password reset successfully. Please log in.</value>
+  </data>
+  <data name="RegistrationSuccess" xml:space="preserve">
+    <value>Registration successful. Please log in.</value>
+  </data>
 </root>

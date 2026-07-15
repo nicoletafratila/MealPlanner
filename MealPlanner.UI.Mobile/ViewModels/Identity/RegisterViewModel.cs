@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
+using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
@@ -15,7 +16,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             ClearMessages();
             if (Model.Password != Model.ConfirmPassword)
             {
-                SetError("Passwords do not match.");
+                SetError(MealPlannerSharedMessages.PasswordsDoNotMatch);
                 return;
             }
             IsBusy = true;
@@ -24,7 +25,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 var result = await authService.RegisterAsync(Model);
                 if (result?.Succeeded == true)
                 {
-                    SetSuccess("Registration successful. Please log in.");
+                    SetSuccess(MealPlannerSharedMessages.RegistrationSuccess);
                     await Shell.Current.GoToAsync("..");
                 }
                 else SetError(result?.Message);

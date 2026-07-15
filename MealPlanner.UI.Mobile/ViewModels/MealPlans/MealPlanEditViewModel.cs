@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.Shared.Resources;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -158,7 +159,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (IsNew || !(Model.Recipes?.Count > 0)) return;
             if (Shops.Count == 0)
             {
-                SetError("No shops available."); return;
+                SetError(MealPlannerSharedMessages.NoShopsAvailable); return;
             }
 
             var shopNames = Shops.Select(s => s.Name).ToArray();
@@ -176,7 +177,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 if (list is not null)
                     await Shell.Current.GoToAsync($"ShoppingListEdit?id={list.Id}");
                 else
-                    SetError("Failed to generate shopping list.");
+                    SetError(MealPlannerSharedMessages.ShoppingListGenerateFailed);
             }
             finally
             {
