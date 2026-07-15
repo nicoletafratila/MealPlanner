@@ -18,11 +18,11 @@
                    HorizontalOptions="Center" Margin="0,0,0,24" />
 
             <Label Text="Username" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Username}" Placeholder="Enter username"
+            <Entry Text="{Binding Username}" Placeholder="Enter username"
                    ReturnType="Next" />
 
             <Label Text="Password" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Password}" Placeholder="Enter password"
+            <Entry Text="{Binding Password}" Placeholder="Enter password"
                    IsPassword="True" ReturnType="Go"
                    ReturnCommand="{Binding LoginCommand}" />
 

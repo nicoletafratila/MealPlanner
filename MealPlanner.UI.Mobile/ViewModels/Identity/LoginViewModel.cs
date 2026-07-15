@@ -8,15 +8,24 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     public partial class LoginViewModel(AuthenticationService authService, SecureStorageTokenProvider tokenProvider) : BaseViewModel
     {
-        public LoginModel Model { get; } = new();
+        [ObservableProperty]
+        private string _username = string.Empty;
+
+        [ObservableProperty]
+        private string _password = string.Empty;
 
         [ObservableProperty]
         private bool _rememberMe;
 
         public async Task InitializeAsync()
         {
-            var (username, _) = await tokenProvider.GetCredentialsAsync();
-            RememberMe = username != null;
+            var (username, password) = await tokenProvider.GetCredentialsAsync();
+            if (username != null)
+            {
+                Username = username;
+                Password = password ?? string.Empty;
+                RememberMe = true;
+            }
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
@@ -27,11 +36,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var result = await authService.LoginAsync(Model);
+                var result = await authService.LoginAsync(new LoginModel { Username = Username, Password = Password });
                 if (result?.Succeeded == true)
                 {
                     if (RememberMe)
-                        await tokenProvider.SaveCredentialsAsync(Model.Username, Model.Password ?? string.Empty);
+                        await tokenProvider.SaveCredentialsAsync(Username, Password);
                     else
                         tokenProvider.ClearCredentials();
                     await Shell.Current.GoToAsync("//RecipesOverview");
