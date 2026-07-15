@@ -40,9 +40,14 @@
                 <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:RecipeIngredientEditModel">
-                            <Grid ColumnDefinitions="*,Auto" Padding="0,4">
-                                <Label Grid.Column="0" Text="{Binding Product.Name}" />
-                                <Label Grid.Column="1" TextColor="{StaticResource DarkGray}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,4" ColumnSpacing="8">
+                                <Image Grid.Column="0"
+                                       Source="{Binding Product.ImageUrl}"
+                                       WidthRequest="36" HeightRequest="36"
+                                       Aspect="AspectFill"
+                                       IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                <Label Grid.Column="1" Text="{Binding Product.Name}" VerticalOptions="Center" />
+                                <Label Grid.Column="2" TextColor="{StaticResource DarkGray}" VerticalOptions="Center">
                                     <Label.Text>
                                         <MultiBinding StringFormat="{}{0} {1}">
                                             <Binding Path="Quantity" />

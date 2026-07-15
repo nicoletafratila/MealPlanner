@@ -1,6 +1,5 @@
 
-recipedetailsrecipe sa arate poze cu produse
-la edit sa puna base unit la ingredient
+afiseaza doar units din acceasi categorie
 authenticate all time when openning on mobile
 buton delete
 buton add la menu

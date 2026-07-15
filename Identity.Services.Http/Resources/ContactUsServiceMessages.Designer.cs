@@ -22,7 +22,7 @@ namespace Identity.Services.Http.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ContactUsServiceMessages {
+    public class ContactUsServiceMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Identity.Services.Http.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Identity.Services.Http.Resources.ContactUsServiceMessages", typeof(ContactUsServiceMessages).Assembly);
@@ -51,7 +51,7 @@ namespace Identity.Services.Http.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to An unexpected error occurred. Please try again..
         /// </summary>
-        internal static string InvalidResponse {
+        public static string InvalidResponse {
             get {
                 return ResourceManager.GetString("InvalidResponse", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to A network error occurred. Please check your connection and try again..
         /// </summary>
-        internal static string NetworkError {
+        public static string NetworkError {
             get {
                 return ResourceManager.GetString("NetworkError", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Failed to send your message. Please try again..
         /// </summary>
-        internal static string SendFailed {
+        public static string SendFailed {
             get {
                 return ResourceManager.GetString("SendFailed", resourceCulture);
             }

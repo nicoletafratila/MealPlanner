@@ -137,6 +137,7 @@
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
     <ProjectReference Include="..\Common.Http\Common.Http.csproj" />
     <ProjectReference Include="..\Identity.Services.Http\Identity.Services.Http.csproj" />
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Services.Http\MealPlanner.Services.Http.csproj" />
   </ItemGroup>

@@ -19,10 +19,10 @@ namespace Identity.Shared.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class IdentitySharedMessages {
+    public class IdentitySharedMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Identity.Shared.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Identity.Shared.Resources.IdentitySharedMessages", typeof(IdentitySharedMessages).Assembly);
@@ -51,7 +51,7 @@ namespace Identity.Shared.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Identity.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Password and confirm password do not match..
         /// </summary>
-        internal static string ConfirmPasswordMismatch {
+        public static string ConfirmPasswordMismatch {
             get {
                 return ResourceManager.GetString("ConfirmPasswordMismatch", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Identity.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Confirm password is required..
         /// </summary>
-        internal static string ConfirmPasswordRequired {
+        public static string ConfirmPasswordRequired {
             get {
                 return ResourceManager.GetString("ConfirmPasswordRequired", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Identity.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Email address is not valid..
         /// </summary>
-        internal static string EmailAddressInvalid {
+        public static string EmailAddressInvalid {
             get {
                 return ResourceManager.GetString("EmailAddressInvalid", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Identity.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to First Name must be alpha characters only..
         /// </summary>
-        internal static string FirstNameAlphaOnly {
+        public static string FirstNameAlphaOnly {
             get {
                 return ResourceManager.GetString("FirstNameAlphaOnly", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Identity.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Last Name must be alpha characters only..
         /// </summary>
-        internal static string LastNameAlphaOnly {
+        public static string LastNameAlphaOnly {
             get {
                 return ResourceManager.GetString("LastNameAlphaOnly", resourceCulture);
             }

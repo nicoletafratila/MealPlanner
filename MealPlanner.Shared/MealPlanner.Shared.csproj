@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\MealPlannerSharedMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>MealPlannerSharedMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

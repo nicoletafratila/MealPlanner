@@ -22,7 +22,7 @@ namespace Identity.Services.Http.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ApplicationUserServiceMessages {
+    public class ApplicationUserServiceMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Identity.Services.Http.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Identity.Services.Http.Resources.ApplicationUserServiceMessages", typeof(ApplicationUserServiceMessages).Assembly);
@@ -51,7 +51,7 @@ namespace Identity.Services.Http.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Invalid response from user update endpoint..
         /// </summary>
-        internal static string InvalidResponseUserUpdate {
+        public static string InvalidResponseUserUpdate {
             get {
                 return ResourceManager.GetString("InvalidResponseUserUpdate", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Unlock user failed..
         /// </summary>
-        internal static string UnlockUserFailed {
+        public static string UnlockUserFailed {
             get {
                 return ResourceManager.GetString("UnlockUserFailed", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Update user failed..
         /// </summary>
-        internal static string UpdateUserFailed {
+        public static string UpdateUserFailed {
             get {
                 return ResourceManager.GetString("UpdateUserFailed", resourceCulture);
             }

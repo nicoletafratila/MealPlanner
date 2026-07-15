@@ -19,24 +19,24 @@ namespace MealPlanner.Shared.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class MealPlannerSharedMessages {
+    public class MealPlannerSharedMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal MealPlannerSharedMessages() {
+        public MealPlannerSharedMessages() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MealPlanner.Shared.Resources.MealPlannerSharedMessages", typeof(MealPlannerSharedMessages).Assembly);
@@ -51,7 +51,7 @@ namespace MealPlanner.Shared.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,34 +63,142 @@ namespace MealPlanner.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The display index for the product category must be a positive number..
         /// </summary>
-        internal static string DisplayIndexPositive {
+        public static string DisplayIndexPositive {
             get {
                 return ResourceManager.GetString("DisplayIndexPositive", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If the email exists, a reset link has been sent..
+        /// </summary>
+        public static string ForgotPasswordEmailSent {
+            get {
+                return ResourceManager.GetString("ForgotPasswordEmailSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The meal plan requires at least one recipe..
         /// </summary>
-        internal static string MealPlanRequiresRecipes {
+        public static string MealPlanRequiresRecipes {
             get {
                 return ResourceManager.GetString("MealPlanRequiresRecipes", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New passwords do not match..
+        /// </summary>
+        public static string NewPasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("NewPasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No meal plans found..
+        /// </summary>
+        public static string NoMealPlansFound {
+            get {
+                return ResourceManager.GetString("NoMealPlansFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No recipes found..
+        /// </summary>
+        public static string NoRecipesFound {
+            get {
+                return ResourceManager.GetString("NoRecipesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No shops available..
+        /// </summary>
+        public static string NoShopsAvailable {
+            get {
+                return ResourceManager.GetString("NoShopsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password changed successfully..
+        /// </summary>
+        public static string PasswordChangedSuccess {
+            get {
+                return ResourceManager.GetString("PasswordChangedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password reset successfully. Please log in..
+        /// </summary>
+        public static string PasswordResetSuccess {
+            get {
+                return ResourceManager.GetString("PasswordResetSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords do not match..
+        /// </summary>
+        public static string PasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The quantity for the product must be a positive number..
         /// </summary>
-        internal static string ProductQuantityPositive {
+        public static string ProductQuantityPositive {
             get {
                 return ResourceManager.GetString("ProductQuantityPositive", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Profile updated..
+        /// </summary>
+        public static string ProfileUpdatedSuccess {
+            get {
+                return ResourceManager.GetString("ProfileUpdatedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration successful. Please log in..
+        /// </summary>
+        public static string RegistrationSuccess {
+            get {
+                return ResourceManager.GetString("RegistrationSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a shop first..
+        /// </summary>
+        public static string SelectShopFirst {
+            get {
+                return ResourceManager.GetString("SelectShopFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to generate shopping list..
+        /// </summary>
+        public static string ShoppingListGenerateFailed {
+            get {
+                return ResourceManager.GetString("ShoppingListGenerateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select a shopping list for the product..
         /// </summary>
-        internal static string ShoppingListRequired {
+        public static string ShoppingListRequired {
             get {
                 return ResourceManager.GetString("ShoppingListRequired", resourceCulture);
             }
@@ -99,7 +207,7 @@ namespace MealPlanner.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The recipe requires at least one product..
         /// </summary>
-        internal static string ShoppingListRequiresProducts {
+        public static string ShoppingListRequiresProducts {
             get {
                 return ResourceManager.GetString("ShoppingListRequiresProducts", resourceCulture);
             }
@@ -108,7 +216,7 @@ namespace MealPlanner.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The shop requires at least product category order..
         /// </summary>
-        internal static string ShopRequiresCategoryOrder {
+        public static string ShopRequiresCategoryOrder {
             get {
                 return ResourceManager.GetString("ShopRequiresCategoryOrder", resourceCulture);
             }
@@ -117,7 +225,7 @@ namespace MealPlanner.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Please select a unit of measurement for the product..
         /// </summary>
-        internal static string UnitRequired {
+        public static string UnitRequired {
             get {
                 return ResourceManager.GetString("UnitRequired", resourceCulture);
             }

@@ -19,6 +19,12 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         public IReadOnlyList<ProductModel> Products { get; }
         public IReadOnlyList<UnitModel> Units { get; }
 
+        partial void OnSelectedProductChanged(ProductModel? value)
+        {
+            if (value?.BaseUnit is { } baseUnit)
+                SelectedUnit = Units.FirstOrDefault(u => u.Id == baseUnit.Id);
+        }
+
         public RecipeIngredientEditViewModel(IReadOnlyList<ProductModel> products, IReadOnlyList<UnitModel> units)
         {
             Products = products;

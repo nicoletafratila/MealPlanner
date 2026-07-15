@@ -22,7 +22,7 @@ namespace Identity.Services.Http.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AuthenticationServiceMessages {
+    public class AuthenticationServiceMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Identity.Services.Http.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Identity.Services.Http.Resources.AuthenticationServiceMessages", typeof(AuthenticationServiceMessages).Assembly);
@@ -51,7 +51,7 @@ namespace Identity.Services.Http.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Authentication failed..
         /// </summary>
-        internal static string AuthenticationFailed {
+        public static string AuthenticationFailed {
             get {
                 return ResourceManager.GetString("AuthenticationFailed", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Failed to change password. Please try again..
         /// </summary>
-        internal static string ChangePasswordFailed {
+        public static string ChangePasswordFailed {
             get {
                 return ResourceManager.GetString("ChangePasswordFailed", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Failed to send password reset link. Please try again..
         /// </summary>
-        internal static string ForgotPasswordFailed {
+        public static string ForgotPasswordFailed {
             get {
                 return ResourceManager.GetString("ForgotPasswordFailed", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Invalid response from authentication server..
         /// </summary>
-        internal static string InvalidResponseAuthentication {
+        public static string InvalidResponseAuthentication {
             get {
                 return ResourceManager.GetString("InvalidResponseAuthentication", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Invalid response from registration server..
         /// </summary>
-        internal static string InvalidResponseRegistration {
+        public static string InvalidResponseRegistration {
             get {
                 return ResourceManager.GetString("InvalidResponseRegistration", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Logout failed..
         /// </summary>
-        internal static string LogoutFailed {
+        public static string LogoutFailed {
             get {
                 return ResourceManager.GetString("LogoutFailed", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Network error during authentication..
         /// </summary>
-        internal static string NetworkErrorAuthentication {
+        public static string NetworkErrorAuthentication {
             get {
                 return ResourceManager.GetString("NetworkErrorAuthentication", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Network error during logout..
         /// </summary>
-        internal static string NetworkErrorLogout {
+        public static string NetworkErrorLogout {
             get {
                 return ResourceManager.GetString("NetworkErrorLogout", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Network error during registration..
         /// </summary>
-        internal static string NetworkErrorRegistration {
+        public static string NetworkErrorRegistration {
             get {
                 return ResourceManager.GetString("NetworkErrorRegistration", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Registration failed..
         /// </summary>
-        internal static string RegistrationFailed {
+        public static string RegistrationFailed {
             get {
                 return ResourceManager.GetString("RegistrationFailed", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace Identity.Services.Http.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Failed to reset password. Please try again..
         /// </summary>
-        internal static string ResetPasswordFailed {
+        public static string ResetPasswordFailed {
             get {
                 return ResourceManager.GetString("ResetPasswordFailed", resourceCulture);
             }

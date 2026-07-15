@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\IdentitySharedMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IdentitySharedMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
