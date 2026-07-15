@@ -1,4 +1,9 @@
-using System.Text.Json;using MealPlanner.Api.Abstractions; using Microsoft.Extensions.Configuration; using RecipeBook.Shared.Constants; using RecipeBook.Shared.Models; using RichardSzalay.MockHttp;
+using System.Text.Json;
+using MealPlanner.Api.Abstractions;
+using Microsoft.Extensions.Configuration;
+using RecipeBook.Shared.Constants;
+using RecipeBook.Shared.Models;
+using RichardSzalay.MockHttp;
 
 namespace MealPlanner.Api.Tests.Abstractions
 {

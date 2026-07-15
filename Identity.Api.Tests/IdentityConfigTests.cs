@@ -1,4 +1,5 @@
-using System.Security.Claims;using Duende.IdentityServer.Models;
+using System.Security.Claims;
+using Duende.IdentityServer.Models;
 
 namespace Identity.Api.Tests
 {

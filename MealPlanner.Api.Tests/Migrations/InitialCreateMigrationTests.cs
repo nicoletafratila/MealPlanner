@@ -1,4 +1,9 @@
-using System.Data;using Common.Data.DataContext; using MealPlanner.Data.TableConfigurations; using Microsoft.Data.Sqlite; using Microsoft.EntityFrameworkCore; using RecipeBook.Data.TableConfigurations;
+using System.Data;
+using Common.Data.DataContext;
+using MealPlanner.Data.TableConfigurations;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using RecipeBook.Data.TableConfigurations;
 
 namespace MealPlanner.Api.Tests.Migrations
 {

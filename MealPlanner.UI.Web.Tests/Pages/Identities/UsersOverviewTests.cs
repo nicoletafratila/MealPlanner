@@ -1,4 +1,14 @@
-using System.Reflection;using BlazorBootstrap; using Blazored.SessionStorage; using Bunit; using Common.Pagination; using Identity.Services.Http; using Identity.Shared.Models; using MealPlanner.UI.Web.Pages.Identities; using Microsoft.AspNetCore.Components; using Microsoft.Extensions.DependencyInjection; using Moq;
+using System.Reflection;
+using BlazorBootstrap;
+using Blazored.SessionStorage;
+using Bunit;
+using Common.Pagination;
+using Identity.Services.Http;
+using Identity.Shared.Models;
+using MealPlanner.UI.Web.Pages.Identities;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.Identities
 {

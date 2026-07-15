@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;
+using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Shared.Tests.Models
 {

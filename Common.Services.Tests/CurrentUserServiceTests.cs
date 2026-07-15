@@ -1,4 +1,6 @@
-using System.Security.Claims;using Microsoft.AspNetCore.Http; using Moq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Moq;
 
 namespace Common.Services.Tests
 {

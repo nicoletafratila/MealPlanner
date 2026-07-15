@@ -1,4 +1,6 @@
-using System.ComponentModel.DataAnnotations;using Common.Models; using RecipeBook.Shared.Resources;
+using System.ComponentModel.DataAnnotations;
+using Common.Models;
+using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -19,6 +21,11 @@ namespace RecipeBook.Shared.Models
         [Required]
         [Range(0, int.MaxValue, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.IngredientQuantityPositive), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public decimal Quantity { get; set; }
+
+        /// <summary>
+        /// Selected product id for this ingredient.
+        /// </summary>
+        public Guid ProductId { get; set; }
 
         /// <summary>
         /// Selected unit id for this ingredient.

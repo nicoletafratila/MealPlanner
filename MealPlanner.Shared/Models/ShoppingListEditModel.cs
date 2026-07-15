@@ -1,4 +1,7 @@
-using System.ComponentModel.DataAnnotations;using Common.Models; using Common.Validators; using MealPlanner.Shared.Resources;
+using System.ComponentModel.DataAnnotations;
+using Common.Models;
+using Common.Validators;
+using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.Shared.Models
 {

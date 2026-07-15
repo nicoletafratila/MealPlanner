@@ -1,4 +1,7 @@
-using System.ComponentModel.DataAnnotations;using Common.Models; using MealPlanner.Shared.Resources; using RecipeBook.Shared.Models;
+using System.ComponentModel.DataAnnotations;
+using Common.Models;
+using MealPlanner.Shared.Resources;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Shared.Models
 {

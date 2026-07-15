@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
+using RecipeBook.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
@@ -24,6 +25,15 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         [ObservableProperty]
         private ObservableCollection<ProductModel> _products = [];
+
+        [ObservableProperty]
+        private ObservableCollection<RecipeIngredientEditViewModel> _recipeIngredients = [];
+
+        [ObservableProperty]
+        private RecipeCategoryModel? _selectedCategory;
+
+        [ObservableProperty]
+        private ImageSource? _recipeImage;
 
         [ObservableProperty]
         private bool _isNew;
@@ -48,7 +58,20 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 if (prodTask.Result is not null) Products = new ObservableCollection<ProductModel>(prodTask.Result.Items);
 
                 if (!IsNew)
+                {
                     Model = await recipeService.GetEditAsync(id) ?? new();
+                    SelectedCategory = Categories.FirstOrDefault(c => c.Id == Model.RecipeCategoryId);
+                    if (Model.ImageContent is { Length: > 0 })
+                        RecipeImage = ImageSource.FromStream(() => new MemoryStream(Model.ImageContent));
+                    var rows = Model.Ingredients?
+                        .Select(i => new RecipeIngredientEditViewModel(i, Products, Units))
+                        ?? [];
+                    RecipeIngredients = new ObservableCollection<RecipeIngredientEditViewModel>(rows);
+                }
+                else
+                {
+                    RecipeIngredients = [];
+                }
             }
             catch (Exception ex)
             {
@@ -61,6 +84,26 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         }
 
         [RelayCommand]
+        private async Task PickImageAsync()
+        {
+            try
+            {
+                var results = await MediaPicker.Default.PickPhotosAsync();
+                var result = results?.FirstOrDefault();
+                if (result is null) return;
+                await using var stream = await result.OpenReadAsync();
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                Model.ImageContent = ms.ToArray();
+                RecipeImage = ImageSource.FromStream(() => new MemoryStream(Model.ImageContent));
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+        }
+
+        [RelayCommand]
         private async Task SaveAsync()
         {
             if (IsBusy) return;
@@ -68,11 +111,38 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             ClearMessages();
             try
             {
+                if (SelectedCategory is null)
+                {
+                    SetError(RecipeBookSharedMessages.RecipeCategoryRequired);
+                    return;
+                }
+
+                if (RecipeIngredients.Count == 0)
+                {
+                    SetError(RecipeBookSharedMessages.RecipeRequiresIngredients);
+                    return;
+                }
+
+                Model.RecipeCategoryId = SelectedCategory.Id;
+
+                Model.Ingredients = RecipeIngredients.Select(row =>
+                {
+                    var m = row.Model;
+                    m.Quantity = row.Quantity;
+                    if (row.SelectedProduct is not null) m.ProductId = row.SelectedProduct.Id;
+                    if (row.SelectedUnit is not null) m.UnitId = row.SelectedUnit.Id;
+                    return m;
+                }).ToList();
+
                 var result = IsNew
                     ? await recipeService.AddAsync(Model)
                     : await recipeService.UpdateAsync(Model);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally
             {
@@ -81,14 +151,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         }
 
         [RelayCommand]
-        private void AddIngredient()
-        {
-            Model.Ingredients ??= [];
-            Model.Ingredients.Add(new RecipeIngredientEditModel());
-        }
+        private void AddIngredient() =>
+            RecipeIngredients.Add(new RecipeIngredientEditViewModel(Products, Units));
 
         [RelayCommand]
-        private void RemoveIngredient(RecipeIngredientEditModel ingredient) =>
-            Model.Ingredients?.Remove(ingredient);
+        private void RemoveIngredient(RecipeIngredientEditViewModel row) =>
+            RecipeIngredients.Remove(row);
     }
 }

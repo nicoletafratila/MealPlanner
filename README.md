@@ -11,6 +11,7 @@ PM> Script-migration
 
 
 
+authenticate all time when openning on mobile
 buton delete
 buton add la menu
 

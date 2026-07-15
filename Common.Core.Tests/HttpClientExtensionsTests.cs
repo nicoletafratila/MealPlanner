@@ -1,4 +1,8 @@
-using System.Net.Http.Headers;using Blazored.SessionStorage; using Common.Http; using Microsoft.AspNetCore.Authentication.JwtBearer; using Moq;
+using System.Net.Http.Headers;
+using Blazored.SessionStorage;
+using Common.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Moq;
 
 namespace Common.Core.Tests
 {

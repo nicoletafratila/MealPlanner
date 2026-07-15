@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;using MealPlanner.Shared.Models;
+using System.ComponentModel.DataAnnotations;
+using MealPlanner.Shared.Models;
 
 namespace MealPlanner.Shared.Tests.Models
 {

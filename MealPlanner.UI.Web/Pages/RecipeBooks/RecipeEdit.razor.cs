@@ -242,6 +242,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 Index = Recipe.Ingredients.Count + 1,
                 RecipeId = Recipe.Id,
+                ProductId = productId,
                 Product = Products?.Items?.FirstOrDefault(i => i.Id == productId),
                 Quantity = decimal.Parse(Quantity!),
                 UnitId = Guid.Parse(UnitId!),

@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;using Identity.Shared.Models;
+using System.ComponentModel.DataAnnotations;
+using Identity.Shared.Models;
 
 namespace Identity.Shared.Tests.Models
 {
