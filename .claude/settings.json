@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File \".claude\\hooks\\fix-cs-usings.ps1\""
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File \".claude\\hooks\\warn-hardcoded-strings.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -23,7 +23,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Commands.Update
             ArgumentNullException.ThrowIfNull(request);
 
             if (request.Model is null)
-                throw new ArgumentNullException(nameof(request), "Model cannot be null.");
+                throw new ArgumentNullException(nameof(request), ProductCategoryMessages.ModelCannotBeNull);
 
             try
             {

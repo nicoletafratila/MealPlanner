@@ -22,7 +22,7 @@ namespace MealPlanner.Api.Features.MealPlan.Commands.Update
             ArgumentNullException.ThrowIfNull(request);
 
             if (request.Model is null)
-                throw new ArgumentNullException(nameof(request), "Model cannot be null.");
+                throw new ArgumentNullException(nameof(request), Resources.MealPlanMessages.ModelCannotBeNull);
 
             try
             {

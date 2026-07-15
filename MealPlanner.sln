@@ -31,8 +31,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Pagination", "Common
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A7F2579-685B-486A-A06B-96363DE78544}"
 	ProjectSection(SolutionItems) = preProject
+		CLAUDE.md = CLAUDE.md
 		Directory.Build.props = Directory.Build.props
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".claude", ".claude", "{3FEE2DD7-2730-4FD1-AAAE-969B2946CB74}"
+	ProjectSection(SolutionItems) = preProject
+		.claude\settings.json = .claude\settings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "commands", "commands", "{C96171F5-F491-4783-8033-BFEDCAABB728}"
+	ProjectSection(SolutionItems) = preProject
+		.claude\commands\fix-cs-usings.md = .claude\commands\fix-cs-usings.md
+		.claude\commands\use-resx-strings.md = .claude\commands\use-resx-strings.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hooks", "hooks", "{9DBAB6D5-88F0-4236-975A-F2C3A884BA76}"
+	ProjectSection(SolutionItems) = preProject
+		.claude\hooks\fix-cs-usings.ps1 = .claude\hooks\fix-cs-usings.ps1
+		.claude\hooks\warn-hardcoded-strings.ps1 = .claude\hooks\warn-hardcoded-strings.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Models", "Common.Models\Common.Models.csproj", "{3F8CA764-17D1-4D58-A22D-C9FBDAD065EE}"
@@ -775,6 +793,7 @@ Global
 		{8A08A3A4-02F7-4069-BF4E-F01ACD567533}.Release|x86.Build.0 = Release|Any CPU
 		{96A8A656-9B82-1933-D1B8-25639DBEA04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96A8A656-9B82-1933-D1B8-25639DBEA04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A8A656-9B82-1933-D1B8-25639DBEA04E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{96A8A656-9B82-1933-D1B8-25639DBEA04E}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{96A8A656-9B82-1933-D1B8-25639DBEA04E}.Debug|x64.Build.0 = Debug|Any CPU
 		{96A8A656-9B82-1933-D1B8-25639DBEA04E}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -934,6 +953,8 @@ Global
 		{F6A8957A-85CC-4EE2-8E0E-C950AB75DED5} = {E4E00C09-AB1F-4EA1-81FF-540E43F1AB11}
 		{62C70A12-9760-429F-99EA-2FD4BE9C67ED} = {9888F8E6-BCF7-4924-B312-DD8AACE1A4D3}
 		{629E1112-6E28-46F1-A258-BBAE2812D812} = {8DB5CDD6-DE3F-4BC8-A13A-3484F27E9CF5}
+		{C96171F5-F491-4783-8033-BFEDCAABB728} = {3FEE2DD7-2730-4FD1-AAAE-969B2946CB74}
+		{9DBAB6D5-88F0-4236-975A-F2C3A884BA76} = {3FEE2DD7-2730-4FD1-AAAE-969B2946CB74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A96BA33-54B2-46FE-A2F7-DFE62EBD3CBB}
