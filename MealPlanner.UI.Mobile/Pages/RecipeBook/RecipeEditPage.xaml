@@ -37,10 +37,36 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:RecipeIngredientEditViewModel">
                         <Grid ColumnDefinitions="*,Auto,80,Auto" Spacing="8" Padding="0,4">
-                            <Picker Grid.Column="0" Title="Product"
-                                    ItemsSource="{Binding Products}"
-                                    SelectedItem="{Binding SelectedProduct}"
-                                    ItemDisplayBinding="{Binding Name}" />
+                            <Border Grid.Column="0"
+                                    Stroke="{StaticResource MidGray}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="10,0"
+                                    MinimumHeightRequest="44"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSelectProductTapped" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                    <Image Grid.Column="0"
+                                           Source="{Binding SelectedProduct.ImageUrl}"
+                                           WidthRequest="26" HeightRequest="26"
+                                           Aspect="AspectFill" VerticalOptions="Center"
+                                           IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                    <Label Grid.Column="1" VerticalOptions="Center"
+                                           LineBreakMode="TailTruncation"
+                                           Text="{Binding SelectedProduct.Name, TargetNullValue='Select product'}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding SelectedProduct}" Value="{x:Null}">
+                                                <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
+                                           FontSize="14" TextColor="{StaticResource DarkGray}" />
+                                </Grid>
+                            </Border>
                             <Picker Grid.Column="1" Title="Unit"
                                     ItemsSource="{Binding CompatibleUnits}"
                                     SelectedItem="{Binding SelectedUnit}"

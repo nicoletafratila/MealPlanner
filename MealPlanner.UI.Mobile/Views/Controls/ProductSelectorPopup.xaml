@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
+               xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+               x:Class="MealPlanner.UI.Mobile.Views.Controls.ProductSelectorPopup"
+               x:TypeArguments="model:ProductModel"
+               CanBeDismissedByTappingOutsideOfPopup="True">
+
+    <Border WidthRequest="320" Padding="0"
+            StrokeShape="RoundRectangle 12"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}">
+        <VerticalStackLayout Padding="12" Spacing="8">
+            <Label Text="Select product" Style="{StaticResource SectionHeaderLabel}" />
+            <SearchBar x:Name="ProductSearch"
+                       Placeholder="Search by name"
+                       TextChanged="OnSearchTextChanged" />
+            <CollectionView x:Name="ProductsView"
+                            SelectionMode="Single"
+                            SelectionChanged="OnProductSelected"
+                            HeightRequest="360">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ProductModel">
+                        <Grid Padding="6,10" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Image Grid.Column="0"
+                                   Source="{Binding ImageUrl}"
+                                   WidthRequest="32" HeightRequest="32"
+                                   Aspect="AspectFill"
+                                   IsVisible="{Binding ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                            <Label Grid.Column="1" Text="{Binding Name}" VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="No products found" Padding="6,10" TextColor="{StaticResource DarkGray}" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

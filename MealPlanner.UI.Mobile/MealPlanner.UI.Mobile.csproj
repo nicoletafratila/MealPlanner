@@ -110,6 +110,9 @@
     <Compile Update="Pages\RecipeBook\RecipesOverviewPage.xaml.cs">
       <DependentUpon>RecipesOverviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Controls\ProductSelectorPopup.xaml.cs">
+      <DependentUpon>ProductSelectorPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Pages\RecipeBook\RecipeStatisticsPage.xaml.cs">
       <DependentUpon>RecipeStatisticsPage.xaml</DependentUpon>
     </Compile>
