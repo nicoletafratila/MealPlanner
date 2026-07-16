@@ -55,7 +55,7 @@
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
                                 <Label Text="{Binding EffectiveCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
                             </VerticalStackLayout>
-                            <Button Grid.Column="1" Text="✕" Style="{StaticResource DangerButton}"
+                            <Button Grid.Column="1" Text="🗑" BackgroundColor="Transparent"
                                     Padding="8,4"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlanEditViewModel}}, Path=RemoveRecipeCommand}"
                                     CommandParameter="{Binding .}" />

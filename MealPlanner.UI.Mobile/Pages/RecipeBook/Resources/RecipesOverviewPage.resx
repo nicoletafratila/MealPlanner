@@ -42,9 +42,6 @@
   <data name="AllCategoriesTitle" xml:space="preserve">
     <value>All categories</value>
   </data>
-  <data name="DeleteButton" xml:space="preserve">
-    <value>Delete</value>
-  </data>
   <data name="EmptyLabel" xml:space="preserve">
     <value>No recipes found.</value>
   </data>

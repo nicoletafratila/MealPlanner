@@ -56,7 +56,7 @@
                         <SwipeView Margin="12,4">
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="{x:Static res:RecipesOverviewPage.DeleteButton}" BackgroundColor="{StaticResource ErrorColor}"
+                                    <SwipeItem Text="🗑" BackgroundColor="{StaticResource ErrorColor}"
                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=DeleteRecipeCommand}"
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
@@ -106,8 +106,8 @@
                                                     IsVisible="{Binding Source, Converter={x:Static converters:StringNotNullConverter.Instance}}"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=OpenSourceCommand}"
                                                     CommandParameter="{Binding Source}" />
-                                            <Button Grid.Column="2" Text="✕"
-                                                    Style="{StaticResource DangerButton}"
+                                            <Button Grid.Column="2" Text="🗑"
+                                                    BackgroundColor="Transparent"
                                                     FontSize="16"
                                                     Padding="0"
                                                     WidthRequest="32"

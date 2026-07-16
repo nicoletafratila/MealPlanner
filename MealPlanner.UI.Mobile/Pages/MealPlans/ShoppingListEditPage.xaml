@@ -87,7 +87,7 @@
                                        TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
-                        <Button Grid.Column="2" Text="✕" Style="{StaticResource DangerButton}"
+                        <Button Grid.Column="2" Text="🗑" BackgroundColor="Transparent"
                                 Padding="6,2"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=RemoveProductCommand}"
                                 CommandParameter="{Binding .}" />

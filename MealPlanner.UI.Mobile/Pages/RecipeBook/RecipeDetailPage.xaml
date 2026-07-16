@@ -11,7 +11,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:RecipeDetailPage.EditButton}" Command="{Binding EditCommand}" />
-        <ToolbarItem Text="{x:Static res:RecipeDetailPage.DeleteButton}" Command="{Binding DeleteCommand}" IsDestructive="True" />
+        <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}" IsDestructive="True" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>

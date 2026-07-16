@@ -61,15 +61,6 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete.
-        /// </summary>
-        internal static string DeleteButton {
-            get {
-                return ResourceManager.GetString("DeleteButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No shopping lists..
         /// </summary>
         internal static string EmptyLabel {

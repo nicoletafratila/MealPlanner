@@ -19,7 +19,7 @@
                     <SwipeView Margin="12,4">
                         <SwipeView.RightItems>
                             <SwipeItems>
-                                <SwipeItem Text="{x:Static res:ProductCategoriesOverviewPage.DeleteButton}" BackgroundColor="{StaticResource ErrorColor}"
+                                <SwipeItem Text="🗑" BackgroundColor="{StaticResource ErrorColor}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductCategoriesViewModel}}, Path=DeleteCommand}"
                                            CommandParameter="{Binding .}" />
                             </SwipeItems>
