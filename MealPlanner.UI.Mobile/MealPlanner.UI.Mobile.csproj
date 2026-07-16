@@ -32,6 +32,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- UI executable → internal accessor (ResXFileCodeGenerator) per CLAUDE.md -->
+    <EmbeddedResource Update="Resources\Strings\AppStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Resources\Strings\AppStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AppStrings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

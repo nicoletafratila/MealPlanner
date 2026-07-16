@@ -6,6 +6,7 @@ using MealPlanner.UI.Mobile.Pages.Identity;
 using MealPlanner.UI.Mobile.Pages.MealPlans;
 using MealPlanner.UI.Mobile.Pages.RecipeBook;
 using MealPlanner.UI.Mobile.Services;
+using MealPlanner.UI.Mobile.ViewModels;
 using MealPlanner.UI.Mobile.ViewModels.Identity;
 using MealPlanner.UI.Mobile.ViewModels.MealPlans;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
@@ -136,6 +137,7 @@ namespace MealPlanner.UI.Mobile
             services.AddTransient<ShoppingListEditPage>();
 
             // Shell
+            services.AddSingleton<AppShellViewModel>();
             services.AddSingleton<AppShell>();
 
 #if DEBUG

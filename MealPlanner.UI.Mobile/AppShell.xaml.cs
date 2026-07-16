@@ -1,15 +1,31 @@
+using System.ComponentModel;
 using MealPlanner.UI.Mobile.Pages.Identity;
 using MealPlanner.UI.Mobile.Pages.MealPlans;
 using MealPlanner.UI.Mobile.Pages.RecipeBook;
+using MealPlanner.UI.Mobile.ViewModels;
 
 namespace MealPlanner.UI.Mobile
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        private readonly AppShellViewModel _viewModel;
+
+        public AppShell(AppShellViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            BindingContext = viewModel;
+            CurrentMenuHeader.BindingContext = viewModel;
             RegisterRoutes();
+            PropertyChanged += OnShellPropertyChanged;
+        }
+
+        private async void OnShellPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(FlyoutIsPresented) && FlyoutIsPresented)
+            {
+                await _viewModel.LoadCurrentCommand.ExecuteAsync(null);
+            }
         }
 
         private static void RegisterRoutes()

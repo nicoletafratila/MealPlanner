@@ -4,9 +4,42 @@
        xmlns:identity="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity"
        xmlns:recipebook="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook"
        xmlns:mealplans="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans"
+       xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels"
+       xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+       xmlns:strings="clr-namespace:MealPlanner.UI.Mobile.Resources.Strings"
        x:Class="MealPlanner.UI.Mobile.AppShell"
        Shell.FlyoutBehavior="Flyout"
        Title="MealPlanner">
+
+    <!-- Current menu (first flyout option) -->
+    <Shell.FlyoutHeader>
+        <Grid x:Name="CurrentMenuHeader"
+              x:DataType="vm:AppShellViewModel"
+              Padding="20,16"
+              RowSpacing="2"
+              RowDefinitions="Auto,Auto"
+              BackgroundColor="{StaticResource Primary}">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding OpenCurrentCommand}" />
+            </Grid.GestureRecognizers>
+            <Label Grid.Row="0"
+                   Text="{x:Static strings:AppStrings.CurrentMenuLabel}"
+                   TextColor="{StaticResource White}"
+                   FontSize="13" />
+            <Label Grid.Row="1"
+                   Text="{Binding CurrentMealPlan.Name}"
+                   IsVisible="{Binding HasCurrentMealPlan}"
+                   TextColor="{StaticResource White}"
+                   FontSize="18"
+                   FontAttributes="Bold" />
+            <Label Grid.Row="1"
+                   Text="{x:Static strings:AppStrings.NoMenuYetPrompt}"
+                   IsVisible="{Binding HasCurrentMealPlan, Converter={x:Static converters:InvertBoolConverter.Instance}}"
+                   TextColor="{StaticResource White}"
+                   FontSize="15"
+                   FontAttributes="Italic" />
+        </Grid>
+    </Shell.FlyoutHeader>
 
     <!-- Pre-auth (hidden from flyout) -->
     <ShellContent Route="Login"
