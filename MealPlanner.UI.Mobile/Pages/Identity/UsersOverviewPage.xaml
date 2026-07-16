@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
              xmlns:model="clr-namespace:Identity.Shared.Models;assembly=Identity.Shared"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.Identity.UsersOverviewPage"
              x:DataType="vm:UsersOverviewViewModel"
-             Title="Users">
+             Title="{x:Static res:UsersOverviewPage.PageTitle}">
 
     <Grid RowDefinitions="*,Auto">
         <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
@@ -17,10 +18,10 @@
                                 <VerticalStackLayout Grid.Column="0" Spacing="2">
                                     <Label Text="{Binding Username}" FontAttributes="Bold" />
                                     <Label Text="{Binding EmailAddress}" FontSize="12" TextColor="{StaticResource DarkGray}" />
-                                    <Label Text="Locked" TextColor="{StaticResource ErrorColor}" FontSize="11"
+                                    <Label Text="{x:Static res:UsersOverviewPage.LockedLabel}" TextColor="{StaticResource ErrorColor}" FontSize="11"
                                            IsVisible="{Binding IsLockedOut}" />
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="Unlock"
+                                <Button Grid.Column="1" Text="{x:Static res:UsersOverviewPage.UnlockButton}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=UnlockUserCommand}"
                                         CommandParameter="{Binding UserId}"
                                         IsVisible="{Binding IsLockedOut}"
@@ -34,9 +35,9 @@
 
         <!-- Pagination -->
         <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="16" Padding="12">
-            <Button Text="&lt; Prev" Command="{Binding PreviousPageCommand}"
+            <Button Text="{x:Static res:UsersOverviewPage.PreviousButton}" Command="{Binding PreviousPageCommand}"
                     IsVisible="{Binding HasPreviousPage}" Style="{StaticResource OutlineButton}" />
-            <Button Text="Next &gt;" Command="{Binding NextPageCommand}"
+            <Button Text="{x:Static res:UsersOverviewPage.NextButton}" Command="{Binding NextPageCommand}"
                     IsVisible="{Binding HasNextPage}" Style="{StaticResource OutlineButton}" />
         </HorizontalStackLayout>
     </Grid>

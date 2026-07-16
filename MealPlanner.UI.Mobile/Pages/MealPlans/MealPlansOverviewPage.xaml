@@ -4,9 +4,10 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
              xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.MealPlansOverviewPage"
              x:DataType="vm:MealPlansOverviewViewModel"
-             Title="Meal Plans">
+             Title="{x:Static res:MealPlansOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
@@ -16,7 +17,7 @@
         <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
             <CollectionView ItemsSource="{Binding MealPlans}">
                 <CollectionView.EmptyView>
-                    <Label Text="No meal plans yet." HorizontalOptions="Center" VerticalOptions="Center"
+                    <Label Text="{x:Static res:MealPlansOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"
                            TextColor="{StaticResource DarkGray}" Margin="0,40" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
@@ -24,7 +25,7 @@
                         <SwipeView Margin="12,4">
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete" BackgroundColor="{StaticResource ErrorColor}"
+                                    <SwipeItem Text="{x:Static res:MealPlansOverviewPage.DeleteButton}" BackgroundColor="{StaticResource ErrorColor}"
                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlansOverviewViewModel}}, Path=DeleteCommand}"
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
@@ -49,7 +50,7 @@
 
         <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="16" Padding="12"
                                IsVisible="{Binding HasNextPage}">
-            <Button Text="Next >" Command="{Binding NextPageCommand}" Style="{StaticResource OutlineButton}" />
+            <Button Text="{x:Static res:MealPlansOverviewPage.NextButton}" Command="{Binding NextPageCommand}" Style="{StaticResource OutlineButton}" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

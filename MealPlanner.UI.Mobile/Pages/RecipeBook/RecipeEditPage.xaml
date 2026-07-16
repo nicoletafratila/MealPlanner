@@ -3,36 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.RecipeEditPage"
              x:DataType="vm:RecipeEditViewModel"
              Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Recipe|Edit Recipe'}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:RecipeEditPage.SaveButton}" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="12">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
-            <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Name}" Placeholder="Recipe name" />
+            <Label Text="{x:Static res:RecipeEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderName}" />
 
-            <Label Text="Category" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:RecipeEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Picker ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCategory}"
                     ItemDisplayBinding="{Binding Name}"
-                    Title="Select category" />
+                    Title="{x:Static res:RecipeEditPage.SelectCategoryTitle}" />
 
-            <Label Text="Source" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Source}" Placeholder="Optional source / URL" />
+            <Label Text="{x:Static res:RecipeEditPage.SourceLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Source}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderSource}" />
 
-            <Label Text="Image" Style="{StaticResource SectionHeaderLabel}" />
-            <Button Text="Pick Image" Command="{Binding PickImageCommand}" HorizontalOptions="Start" />
+            <Label Text="{x:Static res:RecipeEditPage.ImageLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Button Text="{x:Static res:RecipeEditPage.PickImageButton}" Command="{Binding PickImageCommand}" HorizontalOptions="Start" />
             <Image Source="{Binding RecipeImage}" HeightRequest="150" Aspect="AspectFit"
                    IsVisible="{Binding RecipeImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
 
-            <Label Text="Ingredients" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:RecipeEditPage.IngredientsLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <CollectionView ItemsSource="{Binding RecipeIngredients}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:RecipeIngredientEditViewModel">
@@ -67,12 +68,12 @@
                                            FontSize="14" TextColor="{StaticResource DarkGray}" />
                                 </Grid>
                             </Border>
-                            <Picker Grid.Column="1" Title="Unit"
+                            <Picker Grid.Column="1" Title="{x:Static res:RecipeEditPage.UnitTitle}"
                                     ItemsSource="{Binding CompatibleUnits}"
                                     SelectedItem="{Binding SelectedUnit}"
                                     ItemDisplayBinding="{Binding Name}" />
                             <Entry Grid.Column="2" Text="{Binding Quantity, StringFormat='{0}'}"
-                                   Keyboard="Numeric" Placeholder="Qty" />
+                                   Keyboard="Numeric" Placeholder="{x:Static res:RecipeEditPage.PlaceholderQuantity}" />
                             <Button Grid.Column="3" Text="✕" Style="{StaticResource DangerButton}"
                                     Padding="8,4"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveIngredientCommand}"
@@ -82,7 +83,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button Text="+ Add Ingredient" Style="{StaticResource OutlineButton}"
+            <Button Text="{x:Static res:RecipeEditPage.AddIngredientButton}" Style="{StaticResource OutlineButton}"
                     Command="{Binding AddIngredientCommand}" />
 
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"

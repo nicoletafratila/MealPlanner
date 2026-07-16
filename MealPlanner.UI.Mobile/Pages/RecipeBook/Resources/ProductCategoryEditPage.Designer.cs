@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MealPlanner.UI.Mobile.Resources.Strings {
+namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class AppStrings {
+    internal class ProductCategoryEditPage {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AppStrings() {
+        internal ProductCategoryEditPage() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MealPlanner.UI.Mobile.Resources.Strings.AppStrings", typeof(AppStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MealPlanner.UI.Mobile.Pages.RecipeBook.Resources.ProductCategoryEditPage", typeof(ProductCategoryEditPage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,29 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This week&apos;s menu:.
+        ///   Looks up a localized string similar to Name.
         /// </summary>
-        internal static string CurrentMenuLabel {
+        internal static string NameLabel {
             get {
-                return ResourceManager.GetString("CurrentMenuLabel", resourceCulture);
+                return ResourceManager.GetString("NameLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No menu yet — tap to create one.
+        ///   Looks up a localized string similar to Category name.
         /// </summary>
-        internal static string NoMenuYetPrompt {
+        internal static string PlaceholderName {
             get {
-                return ResourceManager.GetString("NoMenuYetPrompt", resourceCulture);
+                return ResourceManager.GetString("PlaceholderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string SaveButton {
+            get {
+                return ResourceManager.GetString("SaveButton", resourceCulture);
             }
         }
     }

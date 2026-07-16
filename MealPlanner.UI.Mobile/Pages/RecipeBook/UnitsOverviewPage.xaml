@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.UnitsOverviewPage"
              x:DataType="vm:UnitsOverviewViewModel"
-             Title="Units">
+             Title="{x:Static res:UnitsOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
@@ -18,7 +19,7 @@
                     <SwipeView Margin="12,4">
                         <SwipeView.RightItems>
                             <SwipeItems>
-                                <SwipeItem Text="Delete" BackgroundColor="{StaticResource ErrorColor}"
+                                <SwipeItem Text="{x:Static res:UnitsOverviewPage.DeleteButton}" BackgroundColor="{StaticResource ErrorColor}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UnitsOverviewViewModel}}, Path=DeleteCommand}"
                                            CommandParameter="{Binding .}" />
                             </SwipeItems>

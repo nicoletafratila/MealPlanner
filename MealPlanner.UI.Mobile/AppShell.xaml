@@ -9,7 +9,7 @@
        xmlns:strings="clr-namespace:MealPlanner.UI.Mobile.Resources.Strings"
        x:Class="MealPlanner.UI.Mobile.AppShell"
        Shell.FlyoutBehavior="Flyout"
-       Title="MealPlanner">
+       Title="{x:Static strings:NavStrings.AppTitle}">
 
     <!-- Current menu (first flyout option) -->
     <Shell.FlyoutHeader>
@@ -23,7 +23,7 @@
                 <TapGestureRecognizer Command="{Binding OpenCurrentCommand}" />
             </Grid.GestureRecognizers>
             <Label Grid.Row="0"
-                   Text="{x:Static strings:AppStrings.CurrentMenuLabel}"
+                   Text="{x:Static strings:NavStrings.CurrentMenuLabel}"
                    TextColor="{StaticResource White}"
                    FontSize="13" />
             <Label Grid.Row="1"
@@ -33,7 +33,7 @@
                    FontSize="18"
                    FontAttributes="Bold" />
             <Label Grid.Row="1"
-                   Text="{x:Static strings:AppStrings.NoMenuYetPrompt}"
+                   Text="{x:Static strings:NavStrings.NoMenuYetPrompt}"
                    IsVisible="{Binding HasCurrentMealPlan, Converter={x:Static converters:InvertBoolConverter.Instance}}"
                    TextColor="{StaticResource White}"
                    FontSize="15"
@@ -47,53 +47,53 @@
                   ContentTemplate="{DataTemplate identity:LoginPage}" />
 
     <!-- Recipes -->
-    <FlyoutItem Title="Recipes" Icon="recipe.png">
-        <ShellContent Title="Recipes" ContentTemplate="{DataTemplate recipebook:RecipesOverviewPage}" Route="RecipesOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Recipes}" Icon="recipe.png">
+        <ShellContent Title="{x:Static strings:NavStrings.Recipes}" ContentTemplate="{DataTemplate recipebook:RecipesOverviewPage}" Route="RecipesOverview" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Meal Plans" Icon="mealplan.png">
-        <ShellContent Title="Meal Plans" ContentTemplate="{DataTemplate mealplans:MealPlansOverviewPage}" Route="MealPlansOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.MealPlans}" Icon="mealplan.png">
+        <ShellContent Title="{x:Static strings:NavStrings.MealPlans}" ContentTemplate="{DataTemplate mealplans:MealPlansOverviewPage}" Route="MealPlansOverview" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Shopping Lists" Icon="shopping.png">
-        <ShellContent Title="Shopping Lists" ContentTemplate="{DataTemplate mealplans:ShoppingListsOverviewPage}" Route="ShoppingListsOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.ShoppingLists}" Icon="shopping.png">
+        <ShellContent Title="{x:Static strings:NavStrings.ShoppingLists}" ContentTemplate="{DataTemplate mealplans:ShoppingListsOverviewPage}" Route="ShoppingListsOverview" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Shops" Icon="shop.png">
-        <ShellContent Title="Shops" ContentTemplate="{DataTemplate mealplans:ShopsOverviewPage}" Route="ShopsOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Shops}" Icon="shop.png">
+        <ShellContent Title="{x:Static strings:NavStrings.Shops}" ContentTemplate="{DataTemplate mealplans:ShopsOverviewPage}" Route="ShopsOverview" />
     </FlyoutItem>
 
     <!-- Reference data -->
-    <FlyoutItem Title="Products" Icon="product.png">
-        <ShellContent Title="Products" ContentTemplate="{DataTemplate recipebook:ProductsOverviewPage}" Route="ProductsOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Products}" Icon="product.png">
+        <ShellContent Title="{x:Static strings:NavStrings.Products}" ContentTemplate="{DataTemplate recipebook:ProductsOverviewPage}" Route="ProductsOverview" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Categories" Icon="category.png">
-        <Tab Title="Categories">
-            <ShellContent Title="Recipe Categories" ContentTemplate="{DataTemplate recipebook:RecipeCategoriesOverviewPage}" Route="RecipeCategoriesOverview" />
-            <ShellContent Title="Product Categories" ContentTemplate="{DataTemplate recipebook:ProductCategoriesOverviewPage}" Route="ProductCategoriesOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Categories}" Icon="category.png">
+        <Tab Title="{x:Static strings:NavStrings.Categories}">
+            <ShellContent Title="{x:Static strings:NavStrings.RecipeCategories}" ContentTemplate="{DataTemplate recipebook:RecipeCategoriesOverviewPage}" Route="RecipeCategoriesOverview" />
+            <ShellContent Title="{x:Static strings:NavStrings.ProductCategories}" ContentTemplate="{DataTemplate recipebook:ProductCategoriesOverviewPage}" Route="ProductCategoriesOverview" />
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Title="Units" Icon="unit.png">
-        <ShellContent Title="Units" ContentTemplate="{DataTemplate recipebook:UnitsOverviewPage}" Route="UnitsOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Units}" Icon="unit.png">
+        <ShellContent Title="{x:Static strings:NavStrings.Units}" ContentTemplate="{DataTemplate recipebook:UnitsOverviewPage}" Route="UnitsOverview" />
     </FlyoutItem>
 
     <!-- Statistics -->
-    <FlyoutItem Title="Statistics" Icon="recipe.png">
-        <Tab Title="Statistics">
-            <ShellContent Title="Recipe Statistics" ContentTemplate="{DataTemplate recipebook:RecipeStatisticsPage}" Route="RecipeStatistics" />
-            <ShellContent Title="Product Statistics" ContentTemplate="{DataTemplate recipebook:ProductStatisticsPage}" Route="ProductStatistics" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Statistics}" Icon="recipe.png">
+        <Tab Title="{x:Static strings:NavStrings.Statistics}">
+            <ShellContent Title="{x:Static strings:NavStrings.RecipeStatistics}" ContentTemplate="{DataTemplate recipebook:RecipeStatisticsPage}" Route="RecipeStatistics" />
+            <ShellContent Title="{x:Static strings:NavStrings.ProductStatistics}" ContentTemplate="{DataTemplate recipebook:ProductStatisticsPage}" Route="ProductStatistics" />
         </Tab>
     </FlyoutItem>
 
     <!-- Account -->
-    <FlyoutItem Title="Profile" Icon="profile.png">
-        <ShellContent Title="My Profile" ContentTemplate="{DataTemplate identity:UserProfilePage}" Route="UserProfile" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Profile}" Icon="profile.png">
+        <ShellContent Title="{x:Static strings:NavStrings.MyProfile}" ContentTemplate="{DataTemplate identity:UserProfilePage}" Route="UserProfile" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Users" Icon="users.png">
-        <ShellContent Title="Users" ContentTemplate="{DataTemplate identity:UsersOverviewPage}" Route="UsersOverview" />
+    <FlyoutItem Title="{x:Static strings:NavStrings.Users}" Icon="users.png">
+        <ShellContent Title="{x:Static strings:NavStrings.Users}" ContentTemplate="{DataTemplate identity:UsersOverviewPage}" Route="UsersOverview" />
     </FlyoutItem>
 
 </Shell>

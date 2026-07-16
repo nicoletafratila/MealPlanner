@@ -4,13 +4,14 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.RecipeDetailPage"
              x:DataType="vm:RecipeDetailViewModel"
              Title="{Binding Recipe.Name}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Edit" Command="{Binding EditCommand}" />
-        <ToolbarItem Text="Delete" Command="{Binding DeleteCommand}" IsDestructive="True" />
+        <ToolbarItem Text="{x:Static res:RecipeDetailPage.EditButton}" Command="{Binding EditCommand}" />
+        <ToolbarItem Text="{x:Static res:RecipeDetailPage.DeleteButton}" Command="{Binding DeleteCommand}" IsDestructive="True" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -36,7 +37,7 @@
                     </Label.GestureRecognizers>
                 </Label>
 
-                <Label Text="Ingredients" Style="{StaticResource SectionHeaderLabel}" />
+                <Label Text="{x:Static res:RecipeDetailPage.IngredientsLabel}" Style="{StaticResource SectionHeaderLabel}" />
                 <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:RecipeIngredientEditModel">

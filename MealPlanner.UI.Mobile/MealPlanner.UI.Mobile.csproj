@@ -31,16 +31,261 @@
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
+  <!-- Localized XAML strings. UI executable → internal accessor (ResXFileCodeGenerator) per CLAUDE.md.
+       Each page has a colocated per-page resx; NavStrings holds shell/navigation strings. -->
   <ItemGroup>
-    <!-- UI executable → internal accessor (ResXFileCodeGenerator) per CLAUDE.md -->
-    <EmbeddedResource Update="Resources\Strings\AppStrings.resx">
+    <EmbeddedResource Update="Resources\Strings\NavStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AppStrings.Designer.cs</LastGenOutput>
+      <LastGenOutput>NavStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Update="Resources\Strings\AppStrings.Designer.cs">
+    <EmbeddedResource Update="Pages\Identity\Resources\ChangePasswordPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ChangePasswordPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\ForgotPasswordPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ForgotPasswordPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\LoginPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LoginPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\RegisterPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RegisterPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\ResetPasswordPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResetPasswordPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\UserProfilePage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserProfilePage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\UsersOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UsersOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\MealPlanEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MealPlanEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\MealPlansOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MealPlansOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\ShopEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShopEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\ShoppingListEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShoppingListEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\ShoppingListsOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShoppingListsOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MealPlans\Resources\ShopsOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShopsOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\ProductCategoryEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductCategoryEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\ProductEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\RecipeCategoryEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeCategoryEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\RecipeEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\UnitEditPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitEditPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\ProductCategoriesOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductCategoriesOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\ProductsOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductsOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\ProductStatisticsPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductStatisticsPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\RecipeCategoriesOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeCategoriesOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\RecipeDetailPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeDetailPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\RecipesOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipesOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\RecipeStatisticsPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeStatisticsPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBook\Resources\UnitsOverviewPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitsOverviewPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Controls\Resources\ProductSelectorPopup.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductSelectorPopup.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <Compile Update="Resources\Strings\NavStrings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>AppStrings.resx</DependentUpon>
+      <DependentUpon>NavStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\ChangePasswordPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChangePasswordPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\ForgotPasswordPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ForgotPasswordPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\LoginPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LoginPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\RegisterPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RegisterPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\ResetPasswordPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResetPasswordPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\UserProfilePage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserProfilePage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\UsersOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UsersOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\Resources\MealPlanEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MealPlanEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\Resources\MealPlansOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MealPlansOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\Resources\ShopEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShopEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\Resources\ShoppingListEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShoppingListEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\Resources\ShoppingListsOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShoppingListsOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\MealPlans\Resources\ShopsOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShopsOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\ProductCategoryEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductCategoryEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\ProductEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\RecipeCategoryEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeCategoryEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\RecipeEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\UnitEditPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UnitEditPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\ProductCategoriesOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductCategoriesOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\ProductsOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductsOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\ProductStatisticsPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductStatisticsPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\RecipeCategoriesOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeCategoriesOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\RecipeDetailPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeDetailPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\RecipesOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipesOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\RecipeStatisticsPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeStatisticsPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBook\Resources\UnitsOverviewPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UnitsOverviewPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Controls\Resources\ProductSelectorPopup.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProductSelectorPopup.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 

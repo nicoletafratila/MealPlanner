@@ -39,10 +39,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CurrentMenuLabel" xml:space="preserve">
-    <value>This week's menu:</value>
+  <data name="ChangePasswordButton" xml:space="preserve">
+    <value>Change Password</value>
   </data>
-  <data name="NoMenuYetPrompt" xml:space="preserve">
-    <value>No menu yet — tap to create one</value>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="FirstNameLabel" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="LastNameLabel" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+  <data name="PhoneLabel" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SignOutButton" xml:space="preserve">
+    <value>Sign Out</value>
+  </data>
+  <data name="UsernameLabel" xml:space="preserve">
+    <value>Username</value>
   </data>
 </root>

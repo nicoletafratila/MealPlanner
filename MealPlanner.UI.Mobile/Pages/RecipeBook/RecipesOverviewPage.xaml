@@ -4,9 +4,10 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.RecipesOverviewPage"
              x:DataType="vm:RecipesOverviewViewModel"
-             Title="Recipes">
+             Title="{x:Static res:RecipesOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddRecipeCommand}" />
@@ -14,14 +15,14 @@
 
     <Grid RowDefinitions="Auto,Auto,*,Auto">
         <!-- Search -->
-        <SearchBar Grid.Row="0" Placeholder="Search recipes..."
+        <SearchBar Grid.Row="0" Placeholder="{x:Static res:RecipesOverviewPage.PlaceholderSearch}"
                    Text="{Binding SearchText}"
                    SearchCommand="{Binding SearchCommand}"
                    Margin="12,8" />
 
         <!-- Category filter -->
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="12,0,12,8">
-            <Picker Grid.Column="0" Title="All categories"
+            <Picker Grid.Column="0" Title="{x:Static res:RecipesOverviewPage.AllCategoriesTitle}"
                     ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCategory}"
                     ItemDisplayBinding="{Binding Name}" />
@@ -47,7 +48,7 @@
                                        Margin="0,8" />
                 </CollectionView.Footer>
                 <CollectionView.EmptyView>
-                    <Label Text="No recipes found." HorizontalOptions="Center"
+                    <Label Text="{x:Static res:RecipesOverviewPage.EmptyLabel}" HorizontalOptions="Center"
                            VerticalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,40" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
@@ -55,7 +56,7 @@
                         <SwipeView Margin="12,4">
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete" BackgroundColor="{StaticResource ErrorColor}"
+                                    <SwipeItem Text="{x:Static res:RecipesOverviewPage.DeleteButton}" BackgroundColor="{StaticResource ErrorColor}"
                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=DeleteRecipeCommand}"
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>

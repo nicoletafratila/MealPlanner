@@ -4,12 +4,13 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
              xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.MealPlanEditPage"
              x:DataType="vm:MealPlanEditViewModel"
              Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Meal Plan|Edit Meal Plan'}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:MealPlanEditPage.SaveButton}" Command="{Binding SaveCommand}" />
         <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
                      IsDestructive="True"
                      IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
@@ -20,32 +21,32 @@
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
             <!-- Name -->
-            <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Name}" Placeholder="Meal plan name" />
+            <Label Text="{x:Static res:MealPlanEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:MealPlanEditPage.PlaceholderName}" />
 
             <!-- Recipe selection -->
-            <Label Text="Add recipe" Style="{StaticResource SectionHeaderLabel}" />
-            <Picker Title="Filter by category"
+            <Label Text="{x:Static res:MealPlanEditPage.AddRecipeLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Picker Title="{x:Static res:MealPlanEditPage.FilterByCategoryTitle}"
                     ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCategory}"
                     ItemDisplayBinding="{Binding Name}" />
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                 <Picker Grid.Column="0"
-                        Title="Select recipe"
+                        Title="{x:Static res:MealPlanEditPage.SelectRecipeTitle}"
                         ItemsSource="{Binding FilteredRecipes}"
                         SelectedItem="{Binding SelectedRecipe}"
                         ItemDisplayBinding="{Binding Name}" />
-                <Button Grid.Column="1" Text="Add"
+                <Button Grid.Column="1" Text="{x:Static res:MealPlanEditPage.AddButton}"
                         Command="{Binding AddRecipeCommand}"
                         IsEnabled="{Binding SelectedRecipe, Converter={x:Static converters:NotNullConverter.Instance}}"
                         Padding="14,10" />
             </Grid>
 
             <!-- Recipes in plan -->
-            <Label Text="Recipes in plan" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:MealPlanEditPage.RecipesInPlanLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <CollectionView ItemsSource="{Binding Model.Recipes}" SelectionMode="None">
                 <CollectionView.EmptyView>
-                    <Label Text="No recipes added yet." TextColor="{StaticResource DarkGray}" Margin="0,4" />
+                    <Label Text="{x:Static res:MealPlanEditPage.EmptyRecipes}" TextColor="{StaticResource DarkGray}" Margin="0,4" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:RecipeModel">
@@ -64,7 +65,7 @@
             </CollectionView>
 
             <!-- Make shopping list -->
-            <Button Text="Make Shopping List"
+            <Button Text="{x:Static res:MealPlanEditPage.MakeShoppingListButton}"
                     Style="{StaticResource OutlineButton}"
                     Command="{Binding MakeShoppingListCommand}"
                     IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}"

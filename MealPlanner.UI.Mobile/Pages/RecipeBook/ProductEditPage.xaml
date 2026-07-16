@@ -3,20 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.ProductEditPage"
              x:DataType="vm:ProductEditViewModel"
              Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Product|Edit Product'}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:ProductEditPage.SaveButton}" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="24" Spacing="12">
         <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
-        <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
-        <Entry Text="{Binding Model.Name}" Placeholder="Product name" />
-        <Label Text="Category" Style="{StaticResource SectionHeaderLabel}" />
-        <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" Title="Select category"
+        <Label Text="{x:Static res:ProductEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ProductEditPage.PlaceholderName}" />
+        <Label Text="{x:Static res:ProductEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
+        <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" Title="{x:Static res:ProductEditPage.SelectCategoryTitle}"
                 SelectedItem="{Binding SelectedCategory}" />
         <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />

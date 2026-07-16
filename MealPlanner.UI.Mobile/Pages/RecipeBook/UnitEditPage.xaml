@@ -3,17 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.UnitEditPage"
              x:DataType="vm:UnitEditViewModel"
              Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Unit|Edit Unit'}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:UnitEditPage.SaveButton}" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="24" Spacing="12">
-        <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
-        <Entry Text="{Binding Model.Name}" Placeholder="e.g. Gram" />
+        <Label Text="{x:Static res:UnitEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:UnitEditPage.PlaceholderName}" />
         <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
     </VerticalStackLayout>

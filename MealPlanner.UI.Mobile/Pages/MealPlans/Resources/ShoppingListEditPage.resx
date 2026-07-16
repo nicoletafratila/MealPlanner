@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddButton" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddProductLabel" xml:space="preserve">
+    <value>Add product</value>
+  </data>
+  <data name="EmptyProducts" xml:space="preserve">
+    <value>No products yet.</value>
+  </data>
+  <data name="FromMealPlanButton" xml:space="preserve">
+    <value>From Meal Plan</value>
+  </data>
+  <data name="FromRecipeButton" xml:space="preserve">
+    <value>From Recipe</value>
+  </data>
+  <data name="ImportLabel" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="PlaceholderName" xml:space="preserve">
+    <value>Shopping list name</value>
+  </data>
+  <data name="PlaceholderQuantity" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="ProductCategoryTitle" xml:space="preserve">
+    <value>Product category</value>
+  </data>
+  <data name="ProductsLabel" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="ProductTitle" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SelectShopTitle" xml:space="preserve">
+    <value>Select shop</value>
+  </data>
+  <data name="ShopLabel" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="UnitTitle" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+</root>

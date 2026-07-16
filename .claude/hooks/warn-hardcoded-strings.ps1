@@ -68,10 +68,16 @@ foreach ($line in $lines) {
         # Skip XML comment lines
         if ($line.TrimStart() -match '^<!--') { continue }
 
-        # Match e.g. Text="Some words"  but NOT Text="{Binding ...}" / Text="{x:Static ...}"
-        # Require the literal to contain at least one letter (skips emoji/symbol-only values).
-        if ($line -match "(?:$xamlAttrs)\s*=\s*`"(?!\s*\{)([^`"]*[A-Za-z][^`"]*)`"") {
-            $findings += "  Line ${lineNumber}: $($line.Trim())"
+        # Match e.g. Text="Some words"  but NOT Text="{Binding ...}" / Text="{x:Static ...}".
+        # A value is user-facing only if, after removing XML character/entity references
+        # (e.g. &#x25BE;, &gt;), it still contains a letter — this skips glyph/symbol-only
+        # values like "✕" or "&#x25BE;".
+        foreach ($m in [regex]::Matches($line, "(?:$xamlAttrs)\s*=\s*`"(?!\s*\{)([^`"]*)`"")) {
+            $stripped = [regex]::Replace($m.Groups[1].Value, '&#?[A-Za-z0-9]+;', '')
+            if ($stripped -match '[A-Za-z]') {
+                $findings += "  Line ${lineNumber}: $($line.Trim())"
+                break
+            }
         }
     }
 }

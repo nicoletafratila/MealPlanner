@@ -4,12 +4,13 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
              xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.ShoppingListEditPage"
              x:DataType="vm:ShoppingListEditViewModel"
              Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Shopping List|Shopping List'}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:ShoppingListEditPage.SaveButton}" Command="{Binding SaveCommand}" />
         <ToolbarItem Text="📋" Command="{Binding ExportCommand}" />
         <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
                      IsDestructive="True"
@@ -23,54 +24,54 @@
                 <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,8" />
 
                 <!-- Name -->
-                <Label Text="Name" Style="{StaticResource SectionHeaderLabel}" />
-                <Entry Text="{Binding Model.Name}" Placeholder="Shopping list name" />
+                <Label Text="{x:Static res:ShoppingListEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+                <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderName}" />
 
                 <!-- Shop -->
-                <Label Text="Shop" Style="{StaticResource SectionHeaderLabel}" />
+                <Label Text="{x:Static res:ShoppingListEditPage.ShopLabel}" Style="{StaticResource SectionHeaderLabel}" />
                 <Picker ItemsSource="{Binding Shops}" ItemDisplayBinding="{Binding Name}"
                         SelectedItem="{Binding SelectedShop}"
-                        Title="Select shop" />
+                        Title="{x:Static res:ShoppingListEditPage.SelectShopTitle}" />
 
                 <!-- Add product section -->
-                <Label Text="Add product" Style="{StaticResource SectionHeaderLabel}" />
-                <Picker Title="Product category"
+                <Label Text="{x:Static res:ShoppingListEditPage.AddProductLabel}" Style="{StaticResource SectionHeaderLabel}" />
+                <Picker Title="{x:Static res:ShoppingListEditPage.ProductCategoryTitle}"
                         ItemsSource="{Binding ProductCategories}"
                         SelectedItem="{Binding SelectedProductCategory}"
                         ItemDisplayBinding="{Binding Name}" />
-                <Picker Title="Product"
+                <Picker Title="{x:Static res:ShoppingListEditPage.ProductTitle}"
                         ItemsSource="{Binding ProductsByCategory}"
                         SelectedItem="{Binding SelectedProduct}"
                         ItemDisplayBinding="{Binding Name}" />
                 <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
-                    <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="Qty" Keyboard="Numeric" />
-                    <Picker Grid.Column="1" Title="Unit"
+                    <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderQuantity}" Keyboard="Numeric" />
+                    <Picker Grid.Column="1" Title="{x:Static res:ShoppingListEditPage.UnitTitle}"
                             ItemsSource="{Binding UnitsForProduct}"
                             SelectedItem="{Binding SelectedUnit}"
                             ItemDisplayBinding="{Binding Name}" />
-                    <Button Grid.Column="2" Text="Add"
+                    <Button Grid.Column="2" Text="{x:Static res:ShoppingListEditPage.AddButton}"
                             Command="{Binding AddProductCommand}"
                             IsEnabled="{Binding SelectedProduct, Converter={x:Static converters:NotNullConverter.Instance}}"
                             Padding="14,10" />
                 </Grid>
 
                 <!-- Import from meal plan / recipe -->
-                <Label Text="Import" Style="{StaticResource SectionHeaderLabel}" />
+                <Label Text="{x:Static res:ShoppingListEditPage.ImportLabel}" Style="{StaticResource SectionHeaderLabel}" />
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                    <Button Grid.Column="0" Text="From Meal Plan" Style="{StaticResource OutlineButton}"
+                    <Button Grid.Column="0" Text="{x:Static res:ShoppingListEditPage.FromMealPlanButton}" Style="{StaticResource OutlineButton}"
                             Command="{Binding AddFromMealPlanCommand}" />
-                    <Button Grid.Column="1" Text="From Recipe" Style="{StaticResource OutlineButton}"
+                    <Button Grid.Column="1" Text="{x:Static res:ShoppingListEditPage.FromRecipeButton}" Style="{StaticResource OutlineButton}"
                             Command="{Binding AddFromRecipeCommand}" />
                 </Grid>
 
-                <Label Text="Products" Style="{StaticResource SectionHeaderLabel}" />
+                <Label Text="{x:Static res:ShoppingListEditPage.ProductsLabel}" Style="{StaticResource SectionHeaderLabel}" />
             </VerticalStackLayout>
         </ScrollView>
 
         <!-- Products list -->
         <CollectionView Grid.Row="1" ItemsSource="{Binding Model.Products}" Margin="12,0">
             <CollectionView.EmptyView>
-                <Label Text="No products yet." HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16" />
+                <Label Text="{x:Static res:ShoppingListEditPage.EmptyProducts}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16" />
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:ShoppingListProductEditModel">

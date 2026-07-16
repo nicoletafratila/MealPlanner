@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
              xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.ShoppingListsOverviewPage"
              x:DataType="vm:ShoppingListsOverviewViewModel"
-             Title="Shopping Lists">
+             Title="{x:Static res:ShoppingListsOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
@@ -14,7 +15,7 @@
     <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
         <CollectionView ItemsSource="{Binding ShoppingLists}">
             <CollectionView.EmptyView>
-                <Label Text="No shopping lists." HorizontalOptions="Center" VerticalOptions="Center"
+                <Label Text="{x:Static res:ShoppingListsOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"
                        TextColor="{StaticResource DarkGray}" Margin="0,40" />
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
@@ -22,7 +23,7 @@
                     <SwipeView Margin="12,4">
                         <SwipeView.RightItems>
                             <SwipeItems>
-                                <SwipeItem Text="Delete" BackgroundColor="{StaticResource ErrorColor}"
+                                <SwipeItem Text="{x:Static res:ShoppingListsOverviewPage.DeleteButton}" BackgroundColor="{StaticResource ErrorColor}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListsOverviewViewModel}}, Path=DeleteCommand}"
                                            CommandParameter="{Binding .}" />
                             </SwipeItems>

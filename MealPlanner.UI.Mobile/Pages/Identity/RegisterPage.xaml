@@ -3,32 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.Identity.RegisterPage"
              x:DataType="vm:RegisterViewModel"
-             Title="Register">
+             Title="{x:Static res:RegisterPage.PageTitle}">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="12">
-            <Label Text="Create Account" Style="{StaticResource PageTitleLabel}" />
+            <Label Text="{x:Static res:RegisterPage.Heading}" Style="{StaticResource PageTitleLabel}" />
 
-            <Label Text="Username" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Username}" Placeholder="Choose a username" />
+            <Label Text="{x:Static res:RegisterPage.UsernameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Username}" Placeholder="{x:Static res:RegisterPage.PlaceholderUsername}" />
 
-            <Label Text="Email" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.EmailAddress}" Placeholder="Email address" Keyboard="Email" />
+            <Label Text="{x:Static res:RegisterPage.EmailLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.EmailAddress}" Placeholder="{x:Static res:RegisterPage.PlaceholderEmail}" Keyboard="Email" />
 
-            <Label Text="Password" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Password}" Placeholder="Password" IsPassword="True" />
+            <Label Text="{x:Static res:RegisterPage.PasswordLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Password}" Placeholder="{x:Static res:RegisterPage.PlaceholderPassword}" IsPassword="True" />
 
-            <Label Text="Confirm Password" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.ConfirmPassword}" Placeholder="Repeat password" IsPassword="True" />
+            <Label Text="{x:Static res:RegisterPage.ConfirmPasswordLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.ConfirmPassword}" Placeholder="{x:Static res:RegisterPage.PlaceholderConfirmPassword}" IsPassword="True" />
 
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                    IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
             <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
                    IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 
-            <Button Text="Register" Command="{Binding RegisterCommand}"
+            <Button Text="{x:Static res:RegisterPage.RegisterButton}" Command="{Binding RegisterCommand}"
                     IsEnabled="{Binding IsNotBusy}" Margin="0,8,0,0" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
         </VerticalStackLayout>
