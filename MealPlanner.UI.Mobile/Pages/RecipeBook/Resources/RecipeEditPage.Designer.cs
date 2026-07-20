@@ -70,6 +70,33 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select product.
+        /// </summary>
+        internal static string SelectProductTitle {
+            get {
+                return ResourceManager.GetString("SelectProductTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search by name.
+        /// </summary>
+        internal static string PlaceholderSearchProducts {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchProducts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No products found.
+        /// </summary>
+        internal static string EmptyProductsLabel {
+            get {
+                return ResourceManager.GetString("EmptyProductsLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
         internal static string CategoryLabel {

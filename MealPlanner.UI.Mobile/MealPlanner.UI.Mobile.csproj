@@ -142,14 +142,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UnitsOverviewPage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Controls\Resources\ProductSelectorPopup.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProductSelectorPopup.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Controls\Resources\RecipeSelectorPopup.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RecipeSelectorPopup.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
 
     <Compile Update="Resources\Strings\NavStrings.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -286,16 +278,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>UnitsOverviewPage.resx</DependentUpon>
     </Compile>
-    <Compile Update="Views\Controls\Resources\ProductSelectorPopup.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ProductSelectorPopup.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Controls\Resources\RecipeSelectorPopup.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RecipeSelectorPopup.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -377,11 +359,8 @@
     <Compile Update="Pages\RecipeBook\RecipesOverviewPage.xaml.cs">
       <DependentUpon>RecipesOverviewPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Controls\ProductSelectorPopup.xaml.cs">
-      <DependentUpon>ProductSelectorPopup.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Controls\RecipeSelectorPopup.xaml.cs">
-      <DependentUpon>RecipeSelectorPopup.xaml</DependentUpon>
+    <Compile Update="Views\Controls\SelectorPopup.xaml.cs">
+      <DependentUpon>SelectorPopup.xaml</DependentUpon>
     </Compile>
     <Compile Update="Pages\RecipeBook\RecipeStatisticsPage.xaml.cs">
       <DependentUpon>RecipeStatisticsPage.xaml</DependentUpon>

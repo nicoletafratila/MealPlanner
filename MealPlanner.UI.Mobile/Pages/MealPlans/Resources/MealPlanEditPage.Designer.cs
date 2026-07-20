@@ -88,6 +88,24 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No recipes found.
+        /// </summary>
+        internal static string EmptyRecipesSearchLabel {
+            get {
+                return ResourceManager.GetString("EmptyRecipesSearchLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search by name.
+        /// </summary>
+        internal static string PlaceholderSearchRecipes {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchRecipes", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Filter by category.
         /// </summary>
         internal static string FilterByCategoryTitle {

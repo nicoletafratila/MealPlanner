@@ -18,8 +18,14 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook
             if (e.Parameter is not RecipeIngredientEditViewModel row)
                 return;
 
-            var result = await this.ShowPopupAsync<ProductModel>(new ProductSelectorPopup(row.Products));
-            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is { } product)
+            var items = row.Products.Select(p => new SelectorItem(p, p.Name, p.EffectiveCategoryName, p.ImageUrl)).ToList();
+            var popup = new SelectorPopup(
+                items,
+                MealPlanner.UI.Mobile.Pages.RecipeBook.Resources.RecipeEditPage.SelectProductTitle,
+                MealPlanner.UI.Mobile.Pages.RecipeBook.Resources.RecipeEditPage.PlaceholderSearchProducts,
+                MealPlanner.UI.Mobile.Pages.RecipeBook.Resources.RecipeEditPage.EmptyProductsLabel);
+            var result = await this.ShowPopupAsync<object>(popup);
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is ProductModel product)
                 row.SelectedProduct = product;
         }
     }

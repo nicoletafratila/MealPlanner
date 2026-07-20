@@ -3,4 +3,4 @@ shapes (multiple calls, property assignment, some with no MessageComponent). The
 Want me to extend the same helper to those init-path pages too? It's doable but touches more varied code, so I kept it out of this pass unless you want it.
 
 
-puse acea iconita cu cosul de gunoi la toate deletes
+click new menu, fill the current week one

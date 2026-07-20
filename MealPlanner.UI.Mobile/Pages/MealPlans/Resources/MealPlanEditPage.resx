@@ -48,6 +48,12 @@
   <data name="EmptyRecipes" xml:space="preserve">
     <value>No recipes added yet.</value>
   </data>
+  <data name="EmptyRecipesSearchLabel" xml:space="preserve">
+    <value>No recipes found</value>
+  </data>
+  <data name="PlaceholderSearchRecipes" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
   <data name="FilterByCategoryTitle" xml:space="preserve">
     <value>Filter by category</value>
   </data>

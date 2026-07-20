@@ -42,6 +42,15 @@
   <data name="AddIngredientButton" xml:space="preserve">
     <value>+ Add Ingredient</value>
   </data>
+  <data name="SelectProductTitle" xml:space="preserve">
+    <value>Select product</value>
+  </data>
+  <data name="PlaceholderSearchProducts" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
+  <data name="EmptyProductsLabel" xml:space="preserve">
+    <value>No products found</value>
+  </data>
   <data name="CategoryLabel" xml:space="preserve">
     <value>Category</value>
   </data>
