@@ -31,11 +31,31 @@
                     SelectedItem="{Binding SelectedCategory}"
                     ItemDisplayBinding="{Binding Name}" />
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                <Picker Grid.Column="0"
-                        Title="{x:Static res:MealPlanEditPage.SelectRecipeTitle}"
-                        ItemsSource="{Binding FilteredRecipes}"
-                        SelectedItem="{Binding SelectedRecipe}"
-                        ItemDisplayBinding="{Binding Name}" />
+                <Border Grid.Column="0"
+                        Stroke="{StaticResource MidGray}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10,0"
+                        MinimumHeightRequest="44"
+                        VerticalOptions="Center"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSelectRecipeTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Grid.Column="0" VerticalOptions="Center"
+                               LineBreakMode="TailTruncation"
+                               Text="{Binding SelectedRecipe.Name, TargetNullValue={x:Static res:MealPlanEditPage.SelectRecipeTitle}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedRecipe}" Value="{x:Null}">
+                                    <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Grid.Column="1" Text="&#x25BE;" VerticalOptions="Center"
+                               FontSize="14" TextColor="{StaticResource DarkGray}" />
+                    </Grid>
+                </Border>
                 <Button Grid.Column="1" Text="{x:Static res:MealPlanEditPage.AddButton}"
                         Command="{Binding AddRecipeCommand}"
                         IsEnabled="{Binding SelectedRecipe, Converter={x:Static converters:NotNullConverter.Instance}}"
