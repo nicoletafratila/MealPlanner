@@ -79,6 +79,24 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Week's menu has been created and the recipe has been added successfully..
+        /// </summary>
+        internal static string MealPlanCreatedAndRecipeAdded {
+            get {
+                return ResourceManager.GetString("MealPlanCreatedAndRecipeAdded", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Menu.
+        /// </summary>
+        internal static string MenuName {
+            get {
+                return ResourceManager.GetString("MenuName", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Recipes.
         /// </summary>
         internal static string PageTitle {
@@ -86,13 +104,31 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Search recipes....
         /// </summary>
         internal static string PlaceholderSearch {
             get {
                 return ResourceManager.GetString("PlaceholderSearch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recipe has been added successfully.
+        /// </summary>
+        internal static string RecipeAdded {
+            get {
+                return ResourceManager.GetString("RecipeAdded", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save failed. Please try again..
+        /// </summary>
+        internal static string SaveFailedMessage {
+            get {
+                return ResourceManager.GetString("SaveFailedMessage", resourceCulture);
             }
         }
     }

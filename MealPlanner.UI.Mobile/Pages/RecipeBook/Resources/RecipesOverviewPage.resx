@@ -45,10 +45,22 @@
   <data name="EmptyLabel" xml:space="preserve">
     <value>No recipes found.</value>
   </data>
+  <data name="MealPlanCreatedAndRecipeAdded" xml:space="preserve">
+    <value>Week's menu has been created and the recipe has been added successfully.</value>
+  </data>
+  <data name="MenuName" xml:space="preserve">
+    <value>Menu</value>
+  </data>
   <data name="PageTitle" xml:space="preserve">
     <value>Recipes</value>
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
     <value>Search recipes...</value>
+  </data>
+  <data name="RecipeAdded" xml:space="preserve">
+    <value>Recipe has been added successfully</value>
+  </data>
+  <data name="SaveFailedMessage" xml:space="preserve">
+    <value>Save failed. Please try again.</value>
   </data>
 </root>

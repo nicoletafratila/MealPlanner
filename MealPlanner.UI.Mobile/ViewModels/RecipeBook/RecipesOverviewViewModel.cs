@@ -1,13 +1,17 @@
 ﻿using System.Collections.ObjectModel;
+using Common.Models;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Pages.RecipeBook.Resources;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    public partial class RecipesOverviewViewModel(RecipeService recipeService, RecipeCategoryService categoryService) : BaseViewModel
+    public partial class RecipesOverviewViewModel(RecipeService recipeService, RecipeCategoryService categoryService, IMealPlanService mealPlanService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<RecipeModel> _recipes = [];
@@ -106,9 +110,62 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private Task AddRecipeAsync() =>
             Shell.Current.GoToAsync("RecipeEdit?id=0");
 
-        [RelayCommand]
-        private Task AddToMealPlanAsync(RecipeModel recipe) =>
-            Shell.Current.GoToAsync($"MealPlanEdit?id={Guid.Empty}&recipeId={recipe.Id}");
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task AddToMealPlanAsync(RecipeModel recipe)
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            ClearMessages();
+            try
+            {
+                var mealPlan = await mealPlanService.GetCurrentAsync();
+
+                if (mealPlan is null)
+                {
+                    var newPlan = new MealPlanEditModel
+                    {
+                        Name = mealPlanService.GetMenuName(RecipesOverviewPage.MenuName),
+                        Recipes = [recipe]
+                    };
+                    var createResponse = await mealPlanService.AddAsync(newPlan);
+                    if (createResponse is null || !createResponse.Succeeded)
+                    {
+                        SetError(createResponse?.Message ?? RecipesOverviewPage.SaveFailedMessage);
+                        return;
+                    }
+                    SetSuccess(RecipesOverviewPage.MealPlanCreatedAndRecipeAdded);
+                    return;
+                }
+
+                var mealPlanToAdd = await mealPlanService.GetEditAsync(mealPlan.Id);
+                if (mealPlanToAdd is null)
+                {
+                    SetError(RecipesOverviewPage.SaveFailedMessage);
+                    return;
+                }
+
+                mealPlanToAdd.Recipes ??= [];
+                mealPlanToAdd.Recipes.Add(recipe);
+                mealPlanToAdd.Recipes.SetIndexes();
+
+                var response = await mealPlanService.UpdateAsync(mealPlanToAdd);
+                if (response is null || !response.Succeeded)
+                {
+                    SetError(response?.Message ?? RecipesOverviewPage.SaveFailedMessage);
+                    return;
+                }
+
+                SetSuccess(RecipesOverviewPage.RecipeAdded);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteRecipeAsync(RecipeModel recipe)

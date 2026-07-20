@@ -13,7 +13,7 @@
         <ToolbarItem Text="+" Command="{Binding AddRecipeCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
         <!-- Search -->
         <SearchBar Grid.Row="0" Placeholder="{x:Static res:RecipesOverviewPage.PlaceholderSearch}"
                    Text="{Binding SearchText}"
@@ -131,6 +131,9 @@
 
         <Label Grid.Row="3" Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}"
+               Margin="12,4" />
+        <Label Grid.Row="4" Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+               IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}"
                Margin="12,4" />
     </Grid>
 </ContentPage>
