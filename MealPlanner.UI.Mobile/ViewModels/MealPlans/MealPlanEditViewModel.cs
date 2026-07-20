@@ -19,6 +19,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         IShopService shopService,
         IShoppingListService shoppingListService) : BaseViewModel
     {
+        private static readonly List<SortingModel> DisplaySequenceSorting =
+            [new SortingModel { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending }];
+
         [ObservableProperty]
         private string _mealPlanId = string.Empty;
 
@@ -72,7 +75,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true;
             try
             {
-                var catTask = recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
+                var catTask = recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DisplaySequenceSorting });
                 var recipeTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = DefaultSorting });
                 var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200, Sorting = DefaultSorting });
                 await Task.WhenAll(catTask, recipeTask, shopTask);

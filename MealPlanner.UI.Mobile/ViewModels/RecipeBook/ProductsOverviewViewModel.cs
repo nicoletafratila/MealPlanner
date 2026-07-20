@@ -21,6 +21,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty]
         private bool _hasNextPage;
 
+        [ObservableProperty]
+        private bool _isLoadingMore;
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
@@ -28,7 +31,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             IsBusy = true; CurrentPage = 1; ClearMessages();
             try
             {
-                var filters = string.IsNullOrWhiteSpace(SearchText) ? null : new[] { new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase) };
+                var filters = BuildFilters();
                 var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null)
                 {
@@ -44,6 +47,39 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 IsBusy = false;
             }
         }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task NextPageAsync()
+        {
+            if (IsLoadingMore || IsBusy || !HasNextPage) return;
+            IsLoadingMore = true;
+            try
+            {
+                CurrentPage++;
+                await AppendPageAsync();
+            }
+            finally
+            {
+                IsLoadingMore = false;
+            }
+        }
+
+        private async Task AppendPageAsync()
+        {
+            var filters = BuildFilters();
+            var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters, Sorting = DefaultSorting });
+            if (result is not null)
+            {
+                foreach (var item in result.Items)
+                {
+                    Products.Add(item);
+                }
+                HasNextPage = result.Metadata.HasNextPage;
+            }
+        }
+
+        private FilterItem[]? BuildFilters() =>
+            string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
         [RelayCommand]
         private Task AddAsync() => Shell.Current.GoToAsync("ProductEdit?id=0");

@@ -13,8 +13,16 @@
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
-        <CollectionView ItemsSource="{Binding Categories}">
+    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None"
+                        RemainingItemsThreshold="2"
+                        RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
+            <CollectionView.Footer>
+                <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                   IsVisible="{Binding IsLoadingMore}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,8" />
+            </CollectionView.Footer>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:RecipeCategoryModel">
                     <SwipeView Margin="12,4">

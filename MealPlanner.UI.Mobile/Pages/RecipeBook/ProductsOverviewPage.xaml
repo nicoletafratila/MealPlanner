@@ -16,8 +16,16 @@
     <Grid RowDefinitions="Auto,*">
         <SearchBar Grid.Row="0" Placeholder="{x:Static res:ProductsOverviewPage.PlaceholderSearch}" Text="{Binding SearchText}"
                    SearchCommand="{Binding LoadCommand}" Margin="12,8" />
-        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
-            <CollectionView ItemsSource="{Binding Products}">
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <CollectionView ItemsSource="{Binding Products}" SelectionMode="None"
+                            RemainingItemsThreshold="2"
+                            RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
+                <CollectionView.Footer>
+                    <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                       IsVisible="{Binding IsLoadingMore}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,8" />
+                </CollectionView.Footer>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:ProductModel">
                         <SwipeView Margin="12,4">

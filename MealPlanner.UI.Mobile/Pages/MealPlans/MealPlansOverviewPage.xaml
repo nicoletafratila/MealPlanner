@@ -13,9 +13,22 @@
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="*,Auto">
-        <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
-            <CollectionView ItemsSource="{Binding MealPlans}">
+    <Grid RowDefinitions="Auto,*">
+        <SearchBar Grid.Row="0" Placeholder="{x:Static res:MealPlansOverviewPage.PlaceholderSearch}"
+                   Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}"
+                   Margin="12,8" />
+
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <CollectionView ItemsSource="{Binding MealPlans}" SelectionMode="None"
+                            RemainingItemsThreshold="2"
+                            RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
+                <CollectionView.Footer>
+                    <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                       IsVisible="{Binding IsLoadingMore}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,8" />
+                </CollectionView.Footer>
                 <CollectionView.EmptyView>
                     <Label Text="{x:Static res:MealPlansOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"
                            TextColor="{StaticResource DarkGray}" Margin="0,40" />
@@ -47,10 +60,5 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-
-        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="16" Padding="12"
-                               IsVisible="{Binding HasNextPage}">
-            <Button Text="{x:Static res:MealPlansOverviewPage.NextButton}" Command="{Binding NextPageCommand}" Style="{StaticResource OutlineButton}" />
-        </HorizontalStackLayout>
     </Grid>
 </ContentPage>

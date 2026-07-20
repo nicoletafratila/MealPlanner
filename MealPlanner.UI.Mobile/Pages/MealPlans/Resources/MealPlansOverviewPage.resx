@@ -42,10 +42,10 @@
   <data name="EmptyLabel" xml:space="preserve">
     <value>No meal plans yet.</value>
   </data>
-  <data name="NextButton" xml:space="preserve">
-    <value>Next &gt;</value>
-  </data>
   <data name="PageTitle" xml:space="preserve">
     <value>Meal Plans</value>
+  </data>
+  <data name="PlaceholderSearch" xml:space="preserve">
+    <value>Search meal plans...</value>
   </data>
 </root>

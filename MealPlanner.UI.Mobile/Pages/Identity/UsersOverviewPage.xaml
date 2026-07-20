@@ -9,7 +9,7 @@
              Title="{x:Static res:UsersOverviewPage.PageTitle}">
 
     <Grid RowDefinitions="*,Auto">
-        <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+        <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Users}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:ApplicationUserModel">

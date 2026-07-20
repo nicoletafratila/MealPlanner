@@ -12,8 +12,16 @@
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
-        <CollectionView ItemsSource="{Binding Units}">
+    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <CollectionView ItemsSource="{Binding Units}" SelectionMode="None"
+                        RemainingItemsThreshold="2"
+                        RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
+            <CollectionView.Footer>
+                <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                   IsVisible="{Binding IsLoadingMore}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,8" />
+            </CollectionView.Footer>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:UnitModel">
                     <SwipeView Margin="12,4">

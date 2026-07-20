@@ -12,7 +12,7 @@
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
         <CollectionView ItemsSource="{Binding ShoppingLists}">
             <CollectionView.EmptyView>
                 <Label Text="{x:Static res:ShoppingListsOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"

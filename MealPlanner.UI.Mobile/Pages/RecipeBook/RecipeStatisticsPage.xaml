@@ -8,7 +8,7 @@
              x:DataType="vm:RecipeStatisticsViewModel"
              Title="{x:Static res:RecipeStatisticsPage.PageTitle}">
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
         <CollectionView ItemsSource="{Binding Entries}" SelectionMode="None" Margin="16,8">
             <CollectionView.EmptyView>
                 <Label Text="{x:Static res:RecipeStatisticsPage.EmptyLabel}" HorizontalOptions="Center"

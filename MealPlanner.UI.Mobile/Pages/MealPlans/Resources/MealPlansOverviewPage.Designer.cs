@@ -70,20 +70,20 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next &gt;.
-        /// </summary>
-        internal static string NextButton {
-            get {
-                return ResourceManager.GetString("NextButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Meal Plans.
         /// </summary>
         internal static string PageTitle {
             get {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search meal plans....
+        /// </summary>
+        internal static string PlaceholderSearch {
+            get {
+                return ResourceManager.GetString("PlaceholderSearch", resourceCulture);
             }
         }
     }

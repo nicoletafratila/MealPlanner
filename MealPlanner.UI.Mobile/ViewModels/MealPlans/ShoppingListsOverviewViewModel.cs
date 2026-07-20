@@ -12,26 +12,18 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private ObservableCollection<ShoppingListModel> _shoppingLists = [];
 
-        [ObservableProperty]
-        private int _currentPage = 1;
-
-        [ObservableProperty]
-        private bool _hasNextPage;
-
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
             if (IsBusy) return;
             IsBusy = true;
-            CurrentPage = 1;
             ClearMessages();
             try
             {
-                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { PageNumber = CurrentPage, Sorting = DefaultSorting });
+                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { Sorting = DefaultSorting });
                 if (result is not null)
                 {
                     ShoppingLists = new ObservableCollection<ShoppingListModel>(result.Items);
-                    HasNextPage = result.Metadata.HasNextPage;
                 }
             }
             catch (Exception ex)
