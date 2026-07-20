@@ -59,6 +59,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private string _quantityText = string.Empty;
 
+        [ObservableProperty]
+        private ObservableCollection<ShoppingListProductEditModel> _shoppingListProducts = [];
+
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];
 
@@ -110,6 +113,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 {
                     Model.Products ??= [];
                 }
+
+                ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel>(Model.Products);
             }
             catch (Exception ex)
             {
@@ -163,15 +168,16 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (SelectedProduct is null || SelectedUnit is null) return;
             if (!decimal.TryParse(QuantityText, out var qty) || qty <= 0) return;
 
-            Model.Products ??= [];
-            var existing = Model.Products.FirstOrDefault(p => p.Product?.Id == SelectedProduct.Id);
+            var existing = ShoppingListProducts.FirstOrDefault(p => p.Product?.Id == SelectedProduct.Id);
             if (existing is not null)
             {
                 existing.Quantity += qty;
+                var index = ShoppingListProducts.IndexOf(existing);
+                ShoppingListProducts[index] = existing;
             }
             else
             {
-                Model.Products.Add(new ShoppingListProductEditModel
+                ShoppingListProducts.Add(new ShoppingListProductEditModel
                 {
                     ShoppingListId = Model.Id,
                     Product = SelectedProduct,
@@ -179,7 +185,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     UnitId = SelectedUnit.Id,
                     Unit = SelectedUnit,
                     Collected = false,
-                    DisplaySequence = Model.Products.Count + 1
+                    DisplaySequence = ShoppingListProducts.Count + 1
                 });
             }
 
@@ -279,16 +285,19 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         private void MergeProducts(IList<ShoppingListProductEditModel> incoming)
         {
-            Model.Products ??= [];
             foreach (var item in incoming)
             {
-                var existing = Model.Products.FirstOrDefault(p => p.Product?.Id == item.Product?.Id);
+                var existing = ShoppingListProducts.FirstOrDefault(p => p.Product?.Id == item.Product?.Id);
                 if (existing is not null)
+                {
                     existing.Quantity += item.Quantity;
+                    var index = ShoppingListProducts.IndexOf(existing);
+                    ShoppingListProducts[index] = existing;
+                }
                 else
                 {
                     item.ShoppingListId = Model.Id;
-                    Model.Products.Add(item);
+                    ShoppingListProducts.Add(item);
                 }
             }
         }
@@ -299,6 +308,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (IsBusy) return; IsBusy = true; ClearMessages();
             try
             {
+                Model.Products = ShoppingListProducts.ToList();
                 var result = IsNew ? await shoppingListService.AddAsync(Model) : await shoppingListService.UpdateAsync(Model);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
@@ -332,15 +342,15 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task ExportAsync()
         {
-            if (Model.Products is not { Count: > 0 }) return;
+            if (ShoppingListProducts.Count == 0) return;
             var text = string.Join(Environment.NewLine,
-                Model.Products.Select(p => $"{p.Product?.Name} - {p.Quantity} {p.Unit?.Name}"));
+                ShoppingListProducts.Select(p => $"{p.Product?.Name} - {p.Quantity} {p.Unit?.Name}"));
             await Clipboard.SetTextAsync(text);
             await Shell.Current.DisplayAlertAsync("Exported", "Shopping list copied to clipboard.", "OK");
         }
 
         [RelayCommand]
         private void RemoveProduct(ShoppingListProductEditModel product) =>
-            Model.Products?.Remove(product);
+            ShoppingListProducts.Remove(product);
     }
 }

@@ -64,7 +64,7 @@
 
             <!-- Recipes in plan -->
             <Label Text="{x:Static res:MealPlanEditPage.RecipesInPlanLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <CollectionView ItemsSource="{Binding Model.Recipes}" SelectionMode="None">
+            <CollectionView ItemsSource="{Binding PlanRecipes}" SelectionMode="None">
                 <CollectionView.EmptyView>
                     <Label Text="{x:Static res:MealPlanEditPage.EmptyRecipes}" TextColor="{StaticResource DarkGray}" Margin="0,4" />
                 </CollectionView.EmptyView>

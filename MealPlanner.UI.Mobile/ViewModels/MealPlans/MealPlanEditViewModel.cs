@@ -47,6 +47,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private RecipeModel? _selectedRecipe;
 
         [ObservableProperty]
+        private ObservableCollection<RecipeModel> _planRecipes = [];
+
+        [ObservableProperty]
         private string _preselectedRecipeId = string.Empty;
 
         [ObservableProperty]
@@ -107,6 +110,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     if (recipe != null && Model.Recipes.All(r => r.Id != recipe.Id))
                         Model.Recipes.Add(recipe);
                 }
+
+                PlanRecipes = new ObservableCollection<RecipeModel>(Model.Recipes);
             }
             catch (Exception ex)
             {
@@ -122,14 +127,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private void AddRecipe()
         {
             if (SelectedRecipe is null) return;
-            Model.Recipes ??= [];
-            if (Model.Recipes.Any(r => r.Id == SelectedRecipe.Id)) return;
-            Model.Recipes.Add(SelectedRecipe);
+            if (PlanRecipes.Any(r => r.Id == SelectedRecipe.Id)) return;
+            PlanRecipes.Add(SelectedRecipe);
             SelectedRecipe = null;
         }
 
         [RelayCommand]
-        private void RemoveRecipe(RecipeModel recipe) => Model.Recipes?.Remove(recipe);
+        private void RemoveRecipe(RecipeModel recipe) => PlanRecipes.Remove(recipe);
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
@@ -137,6 +141,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             if (IsBusy) return; IsBusy = true; ClearMessages();
             try
             {
+                Model.Recipes = PlanRecipes.ToList();
                 var result = IsNew ? await mealPlanService.AddAsync(Model) : await mealPlanService.UpdateAsync(Model);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
@@ -170,7 +175,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task MakeShoppingListAsync()
         {
-            if (IsNew || !(Model.Recipes?.Count > 0)) return;
+            if (IsNew || PlanRecipes.Count == 0) return;
             if (Shops.Count == 0)
             {
                 SetError(MealPlannerSharedMessages.NoShopsAvailable); return;

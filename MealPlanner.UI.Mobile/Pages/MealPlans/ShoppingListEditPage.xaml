@@ -69,7 +69,7 @@
         </ScrollView>
 
         <!-- Products list -->
-        <CollectionView Grid.Row="1" ItemsSource="{Binding Model.Products}" Margin="12,0">
+        <CollectionView Grid.Row="1" ItemsSource="{Binding ShoppingListProducts}" Margin="12,0">
             <CollectionView.EmptyView>
                 <Label Text="{x:Static res:ShoppingListEditPage.EmptyProducts}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16" />
             </CollectionView.EmptyView>

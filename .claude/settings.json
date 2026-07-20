@@ -11,6 +11,12 @@
           {
             "type": "command",
             "command": "powershell -NoProfile -File \".claude\\hooks\\warn-hardcoded-strings.ps1\""
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File \".claude\\hooks\\simplify-member-access.ps1\"",
+            "async": true,
+            "statusMessage": "Simplifying member access (dotnet format)..."
           }
         ]
       }
