@@ -44,7 +44,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new RecipeBook.Data.Entities.Product { Id = id, Name = "Product1", ProductCategoryId = Guid.NewGuid() };
+            var entity = new Data.Entities.Product { Id = id, Name = "Product1", ProductCategoryId = Guid.NewGuid() };
             var mapped = new ProductEditModel { Id = id, Name = "Product1", ProductCategoryId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(entity);
@@ -72,7 +72,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync((Data.Entities.Product?)null);
 
             var query = new GetEditQuery(id);
 
@@ -88,7 +88,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<ProductEditModel>(It.IsAny<RecipeBook.Data.Entities.Product>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<ProductEditModel>(It.IsAny<Data.Entities.Product>()), Times.Never);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new RecipeBook.Data.Entities.Product { Id = id, Name = "ProdX", ProductCategoryId = Guid.NewGuid() };
+            var entity = new Data.Entities.Product { Id = id, Name = "ProdX", ProductCategoryId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(entity);
             _mapperMock.Setup(m => m.Map<ProductEditModel?>(entity)).Returns((ProductEditModel?)null);

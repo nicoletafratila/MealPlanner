@@ -84,7 +84,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.Search
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var entities = new List<MealPlanner.Data.Entities.MealPlan>
+            var entities = new List<Data.Entities.MealPlan>
             {
                 new() { Id = id1, Name = "Plan1" },
                 new() { Id = id2, Name = "Plan2" }
@@ -130,7 +130,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<MealPlanner.Data.Entities.MealPlan>
+            var entities = new List<Data.Entities.MealPlan>
             {
                 new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };

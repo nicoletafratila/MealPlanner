@@ -80,14 +80,14 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
 
             var command = new UpdateAllCommand { Models = models };
 
-            var existing1 = new RecipeBook.Data.Entities.RecipeCategory { Id = id1, Name = "Old1", DisplaySequence = 10 };
-            var existing2 = new RecipeBook.Data.Entities.RecipeCategory { Id = id2, Name = "Old2", DisplaySequence = 20 };
+            var existing1 = new Data.Entities.RecipeCategory { Id = id1, Name = "Old1", DisplaySequence = 10 };
+            var existing2 = new Data.Entities.RecipeCategory { Id = id2, Name = "Old2", DisplaySequence = 20 };
 
             _repoMock
                 .Setup(r => r.GetByIdsAsync(
                     It.Is<IList<Guid>>(ids => ids.Contains(id1) && ids.Contains(id2)),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<RecipeBook.Data.Entities.RecipeCategory> { existing1, existing2 });
+                .ReturnsAsync(new List<Data.Entities.RecipeCategory> { existing1, existing2 });
 
             _mapperMock
                 .Setup(m => m.Map(models[0], existing1))
@@ -99,7 +99,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
 
             _repoMock
                 .Setup(r => r.UpdateAllAsync(
-                    It.Is<IList<RecipeBook.Data.Entities.RecipeCategory>>(list =>
+                    It.Is<IList<Data.Entities.RecipeCategory>>(list =>
                         list.Count == 2 &&
                         list.Contains(existing1) &&
                         list.Contains(existing2)),
@@ -117,7 +117,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _mapperMock.Verify(m => m.Map(models[1], existing2), Times.Once);
             _repoMock.Verify(
-                r => r.UpdateAllAsync(It.IsAny<IList<RecipeBook.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                r => r.UpdateAllAsync(It.IsAny<IList<Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -136,11 +136,11 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
 
             var command = new UpdateAllCommand { Models = models };
 
-            var existing1 = new RecipeBook.Data.Entities.RecipeCategory { Id = id1, Name = "Old1", DisplaySequence = 10 };
+            var existing1 = new Data.Entities.RecipeCategory { Id = id1, Name = "Old1", DisplaySequence = 10 };
 
             _repoMock
                 .Setup(r => r.GetByIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<RecipeBook.Data.Entities.RecipeCategory> { existing1 });
+                .ReturnsAsync(new List<Data.Entities.RecipeCategory> { existing1 });
 
             _mapperMock
                 .Setup(m => m.Map(models[0], existing1))
@@ -160,7 +160,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             _repoMock.Verify(r => r.GetByIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _repoMock.Verify(
-                r => r.UpdateAllAsync(It.IsAny<IList<RecipeBook.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                r => r.UpdateAllAsync(It.IsAny<IList<Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -182,7 +182,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
 
             _repoMock.Verify(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
             _repoMock.Verify(
-                r => r.UpdateAllAsync(It.IsAny<IList<RecipeBook.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                r => r.UpdateAllAsync(It.IsAny<IList<Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -199,18 +199,18 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
 
             var command = new UpdateAllCommand { Models = models };
 
-            var existing1 = new RecipeBook.Data.Entities.RecipeCategory { Id = id1, Name = "Old1", DisplaySequence = 10 };
+            var existing1 = new Data.Entities.RecipeCategory { Id = id1, Name = "Old1", DisplaySequence = 10 };
 
             _repoMock
                 .Setup(r => r.GetByIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<RecipeBook.Data.Entities.RecipeCategory> { existing1 });
+                .ReturnsAsync(new List<Data.Entities.RecipeCategory> { existing1 });
 
             _mapperMock
                 .Setup(m => m.Map(models[0], existing1))
                 .Returns(existing1);
 
             _repoMock
-                .Setup(r => r.UpdateAllAsync(It.IsAny<IList<RecipeBook.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()))
+                .Setup(r => r.UpdateAllAsync(It.IsAny<IList<Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
             // Act
@@ -227,7 +227,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             _repoMock.Verify(r => r.GetByIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(models[0], existing1), Times.Once);
             _repoMock.Verify(
-                r => r.UpdateAllAsync(It.IsAny<IList<RecipeBook.Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
+                r => r.UpdateAllAsync(It.IsAny<IList<Data.Entities.RecipeCategory>>(), It.IsAny<CancellationToken>()),
                 Times.Once);
 
             _loggerMock.Verify(

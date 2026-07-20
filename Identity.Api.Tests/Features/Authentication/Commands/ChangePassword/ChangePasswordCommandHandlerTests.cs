@@ -9,15 +9,15 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ChangePassword
     [TestFixture]
     public class ChangePasswordCommandHandlerTests
     {
-        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<ILogger<ChangePasswordCommandHandler>> _loggerMock = null!;
         private ChangePasswordCommandHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _loggerMock = new Mock<ILogger<ChangePasswordCommandHandler>>(MockBehavior.Loose);
@@ -46,7 +46,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ChangePassword
         {
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("unknown-id"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             var result = await _handler.Handle(BuildCommand(userId: "unknown-id"), CancellationToken.None);
 
@@ -59,7 +59,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ChangePassword
 
             _userManagerMock.Verify(
                 m => m.ChangePasswordAsync(
-                    It.IsAny<Identity.Data.Entities.ApplicationUser>(),
+                    It.IsAny<Data.Entities.ApplicationUser>(),
                     It.IsAny<string>(),
                     It.IsAny<string>()),
                 Times.Never);
@@ -68,7 +68,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ChangePassword
         [Test]
         public async Task Handle_ChangePasswordFails_ReturnsFailedResponseWithIdentityErrors()
         {
-            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id" };
+            var user = new Data.Entities.ApplicationUser { Id = "user-id" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))
@@ -91,7 +91,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ChangePassword
         [Test]
         public async Task Handle_Success_ReturnsSuccessResponse()
         {
-            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id" };
+            var user = new Data.Entities.ApplicationUser { Id = "user-id" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))
@@ -114,7 +114,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ChangePassword
         [Test]
         public async Task Handle_Success_CallsChangePasswordWithCorrectArguments()
         {
-            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id" };
+            var user = new Data.Entities.ApplicationUser { Id = "user-id" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.Authentication.Commands.ForgotPassword
 {
     public class ForgotPasswordCommandHandler(
-        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
+        UserManager<Data.Entities.ApplicationUser> userManager,
         IEmailService emailService,
         ILogger<ForgotPasswordCommandHandler> logger) : IRequestHandler<ForgotPasswordCommand, CommandResponse?>
     {

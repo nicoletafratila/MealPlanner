@@ -21,9 +21,9 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
             var items = viewModel.FilteredRecipes.Select(r => new SelectorItem(r, r.Name, r.EffectiveCategoryName, r.ImageUrl)).ToList();
             var popup = new SelectorPopup(
                 items,
-                MealPlanner.UI.Mobile.Pages.MealPlans.Resources.MealPlanEditPage.SelectRecipeTitle,
-                MealPlanner.UI.Mobile.Pages.MealPlans.Resources.MealPlanEditPage.PlaceholderSearchRecipes,
-                MealPlanner.UI.Mobile.Pages.MealPlans.Resources.MealPlanEditPage.EmptyRecipesSearchLabel);
+                MealPlans.Resources.MealPlanEditPage.SelectRecipeTitle,
+                MealPlans.Resources.MealPlanEditPage.PlaceholderSearchRecipes,
+                MealPlans.Resources.MealPlanEditPage.EmptyRecipesSearchLabel);
             var result = await this.ShowPopupAsync<object>(popup);
             if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is RecipeModel recipe)
                 viewModel.SelectedRecipe = recipe;

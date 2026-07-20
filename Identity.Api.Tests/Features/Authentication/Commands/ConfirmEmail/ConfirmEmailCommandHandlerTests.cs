@@ -8,15 +8,15 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
     [TestFixture]
     public class ConfirmEmailCommandHandlerTests
     {
-        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<ILogger<ConfirmEmailCommandHandler>> _loggerMock = null!;
         private ConfirmEmailCommandHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _loggerMock = new Mock<ILogger<ConfirmEmailCommandHandler>>(MockBehavior.Loose);
@@ -36,7 +36,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
         {
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("unknown-id"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "unknown-id", Token = "token" }, CancellationToken.None);
 
@@ -51,7 +51,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
         [Test]
         public async Task Handle_InvalidToken_ReturnsFailedResponse()
         {
-            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser" };
+            var user = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser" };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))
@@ -70,13 +70,13 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
                 Assert.That(result.Message, Is.EqualTo("Email confirmation failed. The link may be invalid or expired."));
             }
 
-            _userManagerMock.Verify(m => m.UpdateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
+            _userManagerMock.Verify(m => m.UpdateAsync(It.IsAny<Data.Entities.ApplicationUser>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_Success_ActivatesUserAndReturnsSuccess()
         {
-            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", IsActive = false };
+            var user = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", IsActive = false };
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("user-id"))
@@ -87,7 +87,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
                 .ReturnsAsync(IdentityResult.Success);
 
             _userManagerMock
-                .Setup(m => m.UpdateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>()))
+                .Setup(m => m.UpdateAsync(It.IsAny<Data.Entities.ApplicationUser>()))
                 .ReturnsAsync(IdentityResult.Success);
 
             var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "user-id", Token = "valid-token" }, CancellationToken.None);

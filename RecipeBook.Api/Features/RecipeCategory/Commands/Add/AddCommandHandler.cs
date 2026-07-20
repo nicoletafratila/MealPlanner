@@ -49,7 +49,7 @@ namespace RecipeBook.Api.Features.RecipeCategory.Commands.Add
                     }
                 }
 
-                var mapped = _mapper.Map<RecipeBook.Data.Entities.RecipeCategory>(request.Model);
+                var mapped = _mapper.Map<Data.Entities.RecipeCategory>(request.Model);
                 mapped.Id = Guid.NewGuid();
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);

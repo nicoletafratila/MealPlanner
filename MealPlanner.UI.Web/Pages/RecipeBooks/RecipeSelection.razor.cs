@@ -63,14 +63,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var recipeCategoryId = e.Value?.ToString();
             RecipeId = string.Empty;
 
-            var filters = new List<Common.Pagination.FilterItem>();
+            var filters = new List<FilterItem>();
 
             if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
-                filters.Add(new Common.Pagination.FilterItem(
+                filters.Add(new FilterItem(
                     propertyName: "RecipeCategoryId",
                     value: recipeCategoryId,
-                    Common.Pagination.FilterOperator.Equals,
+                    FilterOperator.Equals,
                     stringComparison: StringComparison.OrdinalIgnoreCase));
             }
 
@@ -82,7 +82,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                     new SortingModel
                     {
                         PropertyName = "Name",
-                        Direction = Common.Pagination.SortDirection.Ascending
+                        Direction = SortDirection.Ascending
                     }
                 ],
                 PageSize = int.MaxValue,

@@ -38,7 +38,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Add
                 if (existingItem is not null)
                     return CommandResponse.Failed(ProductMessages.ProductAlreadyExists);
 
-                var mapped = _mapper.Map<RecipeBook.Data.Entities.Product>(request.Model);
+                var mapped = _mapper.Map<Data.Entities.Product>(request.Model);
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

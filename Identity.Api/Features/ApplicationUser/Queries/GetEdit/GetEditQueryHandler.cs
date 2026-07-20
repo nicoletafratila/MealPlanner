@@ -9,10 +9,10 @@ namespace Identity.Api.Features.ApplicationUser.Queries.GetEdit
     /// Handles retrieving an application user for editing by username.
     /// </summary>
     public class GetEditQueryHandler(
-        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
+        UserManager<Data.Entities.ApplicationUser> userManager,
         IMapper mapper) : IRequestHandler<GetEditQuery, ApplicationUserEditModel>
     {
-        private readonly UserManager<Identity.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        private readonly UserManager<Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
         public async Task<ApplicationUserEditModel> Handle(GetEditQuery request, CancellationToken cancellationToken)

@@ -48,7 +48,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.SearchByCategori
         public async Task Handle_EmptyCategoryIds_ReturnsAllCategories()
         {
             // Arrange
-            var entities = new List<RecipeBook.Data.Entities.ProductCategory>
+            var entities = new List<Data.Entities.ProductCategory>
             {
                 new() { Id = ProductCategoryGuid(1), Name = "Cat1" },
                 new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
@@ -91,7 +91,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.SearchByCategori
             var id1 = ProductCategoryGuid(1);
             var id3 = ProductCategoryGuid(3);
 
-            var entities = new List<RecipeBook.Data.Entities.ProductCategory>
+            var entities = new List<Data.Entities.ProductCategory>
             {
                 new() { Id = id1, Name = "Cat1" },
                 new() { Id = ProductCategoryGuid(2), Name = "Cat2" },
@@ -110,7 +110,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.SearchByCategori
 
             _mapperMock
                 .Setup(m => m.Map<IList<ProductCategoryModel>>(
-                    It.Is<IList<RecipeBook.Data.Entities.ProductCategory>>(list =>
+                    It.Is<IList<Data.Entities.ProductCategory>>(list =>
                         list.Count == 2 &&
                         list.Any(e => e.Id == id1) &&
                         list.Any(e => e.Id == id3))))
@@ -138,7 +138,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.SearchByCategori
             // Arrange
             var id1 = ProductCategoryGuid(1);
 
-            var entities = new List<RecipeBook.Data.Entities.ProductCategory>
+            var entities = new List<Data.Entities.ProductCategory>
             {
                 new() { Id = id1, Name = "Cat1" },
                 new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
@@ -155,7 +155,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.SearchByCategori
 
             _mapperMock
                 .Setup(m => m.Map<IList<ProductCategoryModel>>(
-                    It.Is<IList<RecipeBook.Data.Entities.ProductCategory>>(list =>
+                    It.Is<IList<Data.Entities.ProductCategory>>(list =>
                         list.Count == 1 && list[0].Id == id1)))
                 .Returns(models);
 
@@ -184,7 +184,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.SearchByCategori
                 .ReturnsAsync([]);
 
             _mapperMock
-                .Setup(m => m.Map<IList<ProductCategoryModel>>(It.Is<IList<RecipeBook.Data.Entities.ProductCategory>>(list => list.Count == 0)))
+                .Setup(m => m.Map<IList<ProductCategoryModel>>(It.Is<IList<Data.Entities.ProductCategory>>(list => list.Count == 0)))
                 .Returns([]);
 
             var query = new SearchByCategoriesQuery

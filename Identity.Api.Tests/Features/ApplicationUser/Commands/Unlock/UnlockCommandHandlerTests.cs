@@ -8,15 +8,15 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Unlock
     [TestFixture]
     public class UnlockCommandHandlerTests
     {
-        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<ILogger<UnlockCommandHandler>> _loggerMock = null!;
         private UnlockCommandHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _loggerMock = new Mock<ILogger<UnlockCommandHandler>>(MockBehavior.Loose);
@@ -78,7 +78,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Unlock
 
             _userManagerMock
                 .Setup(m => m.FindByIdAsync("unknown-id"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -86,13 +86,13 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Unlock
             Assert.That(result!.Succeeded, Is.False);
 
             _userManagerMock.Verify(m => m.FindByIdAsync("unknown-id"), Times.Once);
-            _userManagerMock.Verify(m => m.ResetAccessFailedCountAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>()), Times.Never);
+            _userManagerMock.Verify(m => m.ResetAccessFailedCountAsync(It.IsAny<Data.Entities.ApplicationUser>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_Success_ResetsCountAndClearsLockout_AndReturnsSuccess()
         {
-            var user = new Identity.Data.Entities.ApplicationUser { Id = "user-1", UserName = "alice" };
+            var user = new Data.Entities.ApplicationUser { Id = "user-1", UserName = "alice" };
             var command = new UnlockCommand { UserId = "user-1" };
 
             _userManagerMock.Setup(m => m.FindByIdAsync("user-1")).ReturnsAsync(user);

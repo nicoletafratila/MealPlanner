@@ -40,7 +40,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.Services.AddSingleton(_productCategoryServiceMock.Object);
             _ctx.Services.AddSingleton(_productServiceMock.Object);
             _ctx.Services.AddSingleton(_unitServiceMock.Object);
-            _ctx.Services.AddSingleton<IMessageComponent>(_messageComponentMock.Object);
+            _ctx.Services.AddSingleton(_messageComponentMock.Object);
 
             _ctx.Services.AddBlazorBootstrap();
             _ctx.Services.AddLogging();

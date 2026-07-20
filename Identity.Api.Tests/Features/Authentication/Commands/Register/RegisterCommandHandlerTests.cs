@@ -13,7 +13,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
     [TestFixture]
     public class RegisterCommandHandlerTests
     {
-        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IAsyncRepository<ProductCategory, Guid>> _productCategoryRepoMock = null!;
         private Mock<IAsyncRepository<RecipeCategory, Guid>> _recipeCategoryRepoMock = null!;
         private Mock<IEmailService> _emailServiceMock = null!;
@@ -23,8 +23,8 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _productCategoryRepoMock = new Mock<IAsyncRepository<ProductCategory, Guid>>(MockBehavior.Loose);
@@ -63,7 +63,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock
                 .Setup(m => m.FindByNameAsync("newuser"))
-                .ReturnsAsync(new Identity.Data.Entities.ApplicationUser { UserName = "newuser" });
+                .ReturnsAsync(new Data.Entities.ApplicationUser { UserName = "newuser" });
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -76,7 +76,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock.Verify(m => m.FindByNameAsync("newuser"), Times.Once);
             _userManagerMock.Verify(
-                m => m.CreateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), It.IsAny<string>()),
+                m => m.CreateAsync(It.IsAny<Data.Entities.ApplicationUser>(), It.IsAny<string>()),
                 Times.Never);
         }
 
@@ -87,11 +87,11 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock
                 .Setup(m => m.FindByNameAsync("newuser"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("newuser@example.com"))
-                .ReturnsAsync(new Identity.Data.Entities.ApplicationUser { Email = "newuser@example.com" });
+                .ReturnsAsync(new Data.Entities.ApplicationUser { Email = "newuser@example.com" });
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -104,7 +104,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock.Verify(m => m.FindByEmailAsync("newuser@example.com"), Times.Once);
             _userManagerMock.Verify(
-                m => m.CreateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), It.IsAny<string>()),
+                m => m.CreateAsync(It.IsAny<Data.Entities.ApplicationUser>(), It.IsAny<string>()),
                 Times.Never);
         }
 
@@ -115,14 +115,14 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock
                 .Setup(m => m.FindByNameAsync("newuser"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("newuser@example.com"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             _userManagerMock
-                .Setup(m => m.CreateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), "Test123!"))
+                .Setup(m => m.CreateAsync(It.IsAny<Data.Entities.ApplicationUser>(), "Test123!"))
                 .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Password too weak." }));
 
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -135,7 +135,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
             }
 
             _userManagerMock.Verify(
-                m => m.AddToRoleAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), It.IsAny<string>()),
+                m => m.AddToRoleAsync(It.IsAny<Data.Entities.ApplicationUser>(), It.IsAny<string>()),
                 Times.Never);
         }
 
@@ -159,26 +159,26 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
 
             _userManagerMock
                 .Setup(m => m.FindByNameAsync("newuser"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             _userManagerMock
                 .Setup(m => m.FindByEmailAsync("newuser@example.com"))
-                .ReturnsAsync((Identity.Data.Entities.ApplicationUser?)null);
+                .ReturnsAsync((Data.Entities.ApplicationUser?)null);
 
             _userManagerMock
-                .Setup(m => m.CreateAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), "Test123!"))
+                .Setup(m => m.CreateAsync(It.IsAny<Data.Entities.ApplicationUser>(), "Test123!"))
                 .ReturnsAsync(IdentityResult.Success);
 
             _userManagerMock
-                .Setup(m => m.AddToRoleAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), "member"))
+                .Setup(m => m.AddToRoleAsync(It.IsAny<Data.Entities.ApplicationUser>(), "member"))
                 .ReturnsAsync(IdentityResult.Success);
 
             _userManagerMock
-                .Setup(m => m.AddClaimsAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), It.IsAny<IEnumerable<Claim>>()))
+                .Setup(m => m.AddClaimsAsync(It.IsAny<Data.Entities.ApplicationUser>(), It.IsAny<IEnumerable<Claim>>()))
                 .ReturnsAsync(IdentityResult.Success);
 
             _userManagerMock
-                .Setup(m => m.GenerateEmailConfirmationTokenAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>()))
+                .Setup(m => m.GenerateEmailConfirmationTokenAsync(It.IsAny<Data.Entities.ApplicationUser>()))
                 .ReturnsAsync("confirmation-token");
 
             _emailServiceMock
@@ -220,12 +220,12 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
                 Times.Exactly(2));
 
             _userManagerMock.Verify(
-                m => m.AddToRoleAsync(It.IsAny<Identity.Data.Entities.ApplicationUser>(), "member"),
+                m => m.AddToRoleAsync(It.IsAny<Data.Entities.ApplicationUser>(), "member"),
                 Times.Once);
 
             _userManagerMock.Verify(
                 m => m.CreateAsync(
-                    It.Is<Identity.Data.Entities.ApplicationUser>(u => !u.IsActive && !u.EmailConfirmed),
+                    It.Is<Data.Entities.ApplicationUser>(u => !u.IsActive && !u.EmailConfirmed),
                     It.IsAny<string>()),
                 Times.Once);
 

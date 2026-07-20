@@ -115,29 +115,29 @@ namespace MealPlanner.Api.Tests.Migrations
                 RecipeCategory = recipeCategory
             };
 
-            var mealPlan = new MealPlanner.Data.Entities.MealPlan
+            var mealPlan = new Data.Entities.MealPlan
             {
                 Name = "Weekly Plan"
             };
 
-            var mpr = new MealPlanner.Data.Entities.MealPlanRecipe
+            var mpr = new Data.Entities.MealPlanRecipe
             {
                 MealPlan = mealPlan,
                 Recipe = recipe
             };
 
-            var shop = new MealPlanner.Data.Entities.Shop
+            var shop = new Data.Entities.Shop
             {
                 Name = "Shop1"
             };
 
-            var shoppingList = new MealPlanner.Data.Entities.ShoppingList
+            var shoppingList = new Data.Entities.ShoppingList
             {
                 Name = "List1",
                 Shop = shop
             };
 
-            var slProduct = new MealPlanner.Data.Entities.ShoppingListProduct
+            var slProduct = new Data.Entities.ShoppingListProduct
             {
                 ShoppingList = shoppingList,
                 Product = product,

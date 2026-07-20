@@ -72,7 +72,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
         {
             var model = new ProductEditModel { Id = Guid.Empty, Name = "Milk", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new AddCommand { Model = model };
-            var existing = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = Guid.NewGuid() };
+            var existing = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>())).ReturnsAsync(existing);
 
@@ -86,8 +86,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Product>(It.IsAny<ProductEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Product>(It.IsAny<ProductEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -96,11 +96,11 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var model = new ProductEditModel { Id = Guid.Empty, Name = "Bread", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new AddCommand { Model = model };
 
-            _repoMock.Setup(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
 
-            var mappedEntity = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
+            var mappedEntity = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
-            _mapperMock.Setup(m => m.Map<RecipeBook.Data.Entities.Product>(model)).Returns(mappedEntity);
+            _mapperMock.Setup(m => m.Map<Data.Entities.Product>(model)).Returns(mappedEntity);
             _repoMock.Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>())).ReturnsAsync(mappedEntity);
 
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -109,7 +109,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Product>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -119,11 +119,11 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var model = new ProductEditModel { Id = Guid.Empty, Name = "ErrorProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new AddCommand { Model = model };
 
-            _repoMock.Setup(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
 
-            var mappedEntity = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "ErrorProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
+            var mappedEntity = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "ErrorProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
-            _mapperMock.Setup(m => m.Map<RecipeBook.Data.Entities.Product>(model)).Returns(mappedEntity);
+            _mapperMock.Setup(m => m.Map<Data.Entities.Product>(model)).Returns(mappedEntity);
             _repoMock.Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>())).ThrowsAsync(new InvalidOperationException("DB error"));
 
             var result = await _handler.Handle(command, CancellationToken.None);

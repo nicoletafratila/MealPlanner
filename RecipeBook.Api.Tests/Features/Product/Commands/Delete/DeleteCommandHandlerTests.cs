@@ -63,7 +63,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
 
             _productRepoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
+                .ReturnsAsync((Data.Entities.Product?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -78,7 +78,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
 
             _productRepoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _ingredientRepoMock.Verify(r => r.SearchAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
-            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
+            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -87,8 +87,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             // Arrange
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
-            var product = new RecipeBook.Data.Entities.Product { Id = id, Name = "Milk" };
-            var ingredients = new List<RecipeBook.Data.Entities.RecipeIngredient>
+            var product = new Data.Entities.Product { Id = id, Name = "Milk" };
+            var ingredients = new List<Data.Entities.RecipeIngredient>
             {
                 new() { ProductId = id, Quantity = 1m }
             };
@@ -113,7 +113,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
 
             _productRepoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _ingredientRepoMock.Verify(r => r.SearchAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
+            _productRepoMock.Verify(r => r.DeleteAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             // Arrange
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
-            var product = new RecipeBook.Data.Entities.Product { Id = id, Name = "Bread" };
+            var product = new Data.Entities.Product { Id = id, Name = "Bread" };
 
             _productRepoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(product);
             _ingredientRepoMock.Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync([]);
@@ -146,7 +146,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Delete
             // Arrange
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
-            var product = new RecipeBook.Data.Entities.Product { Id = id, Name = "Cheese" };
+            var product = new Data.Entities.Product { Id = id, Name = "Cheese" };
 
             _productRepoMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(product);
             _ingredientRepoMock.Setup(r => r.SearchAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync([]);

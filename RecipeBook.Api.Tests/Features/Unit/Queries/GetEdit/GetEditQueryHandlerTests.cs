@@ -53,7 +53,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new RecipeBook.Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
+            var entity = new Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
             var mapped = new UnitEditModel { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
 
             _repoMock
@@ -89,7 +89,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync((RecipeBook.Data.Entities.Unit?)null);
+                .ReturnsAsync((Data.Entities.Unit?)null);
 
             var query = new GetEditQuery(id);
 
@@ -105,7 +105,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<UnitEditModel>(It.IsAny<RecipeBook.Data.Entities.Unit>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<UnitEditModel>(It.IsAny<Data.Entities.Unit>()), Times.Never);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new RecipeBook.Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
+            var entity = new Data.Entities.Unit { Id = id, Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))

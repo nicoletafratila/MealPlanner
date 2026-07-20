@@ -34,21 +34,21 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.Search
         [Test]
         public void Ctor_NullRepository_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullCurrentUserService_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 

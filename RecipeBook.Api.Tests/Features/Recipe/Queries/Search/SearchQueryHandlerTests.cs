@@ -89,7 +89,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
             var cat10 = Guid.NewGuid();
             var cat20 = Guid.NewGuid();
 
-            var entities = new List<RecipeBook.Data.Entities.Recipe>
+            var entities = new List<Data.Entities.Recipe>
             {
                 new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = cat10 },
                 new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = cat20 }
@@ -142,7 +142,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
             var cat10 = Guid.NewGuid();
             var cat20 = Guid.NewGuid();
 
-            var entities = new List<RecipeBook.Data.Entities.Recipe>
+            var entities = new List<Data.Entities.Recipe>
             {
                 new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = cat10 },
                 new() { Id = Guid.NewGuid(), Name = "R2", RecipeCategoryId = cat20 },
@@ -190,7 +190,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<RecipeBook.Data.Entities.Recipe>
+            var entities = new List<Data.Entities.Recipe>
             {
                 new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = Guid.NewGuid() }
             };

@@ -7,7 +7,7 @@ namespace RecipeBook.Api.Features
 {
     public static class RecipeExtensions
     {
-        public static ShoppingList MakeShoppingList(this RecipeBook.Data.Entities.Recipe recipe, Shop shop)
+        public static ShoppingList MakeShoppingList(this Data.Entities.Recipe recipe, Shop shop)
         {
             ArgumentNullException.ThrowIfNull(shop);
 

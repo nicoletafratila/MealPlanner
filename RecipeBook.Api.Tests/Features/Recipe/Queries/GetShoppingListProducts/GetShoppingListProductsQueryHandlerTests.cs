@@ -56,7 +56,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
 
             _recipeRepoMock
                 .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
+                .ReturnsAsync((Data.Entities.Recipe?)null);
 
             // Act
             var result = await _handler.Handle(query, CancellationToken.None);
@@ -84,7 +84,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 AuthToken = "token"
             };
 
-            var recipe = new RecipeBook.Data.Entities.Recipe();
+            var recipe = new Data.Entities.Recipe();
 
             _recipeRepoMock
                 .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
@@ -120,20 +120,20 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                 AuthToken = "token"
             };
 
-            var unit = new RecipeBook.Data.Entities.Unit()
+            var unit = new Data.Entities.Unit()
             {
                 Id = Guid.NewGuid(),
                 Name = "kg",
                 UnitType = Common.Constants.Units.UnitType.Weight
             };
-            var recipe = new RecipeBook.Data.Entities.Recipe()
+            var recipe = new Data.Entities.Recipe()
             {
                 RecipeIngredients =
                 [
                     new RecipeIngredient()
                     {
                         ProductId = Guid.NewGuid(),
-                        Product = new RecipeBook.Data.Entities.Product ()
+                        Product = new Data.Entities.Product ()
                         {
                             Id = Guid.NewGuid(),
                             Name = "B",
@@ -145,7 +145,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetShoppingListProducts
                     new RecipeIngredient()
                     {
                         ProductId = Guid.NewGuid(),
-                        Product = new RecipeBook.Data.Entities.Product ()
+                        Product = new Data.Entities.Product ()
                         {
                             Id = Guid.NewGuid(),
                             Name = "A",

@@ -43,7 +43,7 @@ namespace RecipeBook.Api.Features.Unit.Commands.Add
                     }
                 }
 
-                var mapped = _mapper.Map<RecipeBook.Data.Entities.Unit>(request.Model);
+                var mapped = _mapper.Map<Data.Entities.Unit>(request.Model);
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

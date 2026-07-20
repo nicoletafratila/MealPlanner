@@ -33,21 +33,21 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         [Test]
         public void Ctor_NullRepository_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullCurrentUserService_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
@@ -87,7 +87,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         [Test]
         public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
         {
-            var entities = new List<RecipeBook.Data.Entities.ProductCategory>
+            var entities = new List<Data.Entities.ProductCategory>
             {
                 new() { Id = ProductCategoryGuid(1), Name = "Cat1" },
                 new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
@@ -136,7 +136,7 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<RecipeBook.Data.Entities.ProductCategory>
+            var entities = new List<Data.Entities.ProductCategory>
             {
                 new() { Id = ProductCategoryGuid(1), Name = "Cat1" }
             };

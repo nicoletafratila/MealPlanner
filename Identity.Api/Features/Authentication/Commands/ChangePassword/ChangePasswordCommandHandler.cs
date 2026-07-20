@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Identity;
 namespace Identity.Api.Features.Authentication.Commands.ChangePassword
 {
     public class ChangePasswordCommandHandler(
-        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
+        UserManager<Data.Entities.ApplicationUser> userManager,
         ILogger<ChangePasswordCommandHandler> logger) : IRequestHandler<ChangePasswordCommand, CommandResponse?>
     {
-        private readonly UserManager<Identity.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        private readonly UserManager<Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly ILogger<ChangePasswordCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)

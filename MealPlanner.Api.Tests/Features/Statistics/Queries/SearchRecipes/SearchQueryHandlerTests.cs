@@ -123,7 +123,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 .ReturnsAsync(categories);
 
             // MealPlanRecipes: 3 in Main (R1 * 2, R2 * 1) and 1 in Dessert (D1 * 1)
-            var mealPlanRecipes = new List<MealPlanner.Data.Entities.MealPlanRecipe>
+            var mealPlanRecipes = new List<Data.Entities.MealPlanRecipe>
             {
                 new()
                 {

@@ -78,7 +78,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
 
             var command = new AddCommand { Model = model };
 
-            var existingUnits = new List<RecipeBook.Data.Entities.Unit>
+            var existingUnits = new List<Data.Entities.Unit>
             {
                 new() { Id = Guid.NewGuid(), Name = "Kg", UnitType = Common.Constants.Units.UnitType.Weight }
             };
@@ -99,8 +99,8 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             }
 
             _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Unit>(It.IsAny<UnitEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), CancellationToken.None), Times.Never);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Unit>(It.IsAny<UnitEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Unit>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -116,13 +116,13 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
 
             var command = new AddCommand { Model = model };
 
-            var existingUnits = new List<RecipeBook.Data.Entities.Unit>(); // no duplicates
+            var existingUnits = new List<Data.Entities.Unit>(); // no duplicates
 
             _repoMock
                 .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(existingUnits);
 
-            var mappedEntity = new RecipeBook.Data.Entities.Unit
+            var mappedEntity = new Data.Entities.Unit
             {
                 Id = Guid.NewGuid(),
                 Name = "kg",
@@ -130,7 +130,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<RecipeBook.Data.Entities.Unit>(model))
+                .Setup(m => m.Map<Data.Entities.Unit>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -145,7 +145,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Unit>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Unit>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, CancellationToken.None), Times.Once);
         }
 
@@ -162,13 +162,13 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
 
             var command = new AddCommand { Model = model };
 
-            var existingUnits = new List<RecipeBook.Data.Entities.Unit>();
+            var existingUnits = new List<Data.Entities.Unit>();
 
             _repoMock
                 .Setup(r => r.GetAllAsync(CancellationToken.None))
                 .ReturnsAsync(existingUnits);
 
-            var mappedEntity = new RecipeBook.Data.Entities.Unit
+            var mappedEntity = new Data.Entities.Unit
             {
                 Id = Guid.NewGuid(),
                 Name = "g",
@@ -176,7 +176,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<RecipeBook.Data.Entities.Unit>(model))
+                .Setup(m => m.Map<Data.Entities.Unit>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -195,7 +195,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Add
             }
 
             _repoMock.Verify(r => r.GetAllAsync(CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Unit>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Unit>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, CancellationToken.None), Times.Once);
 
             _loggerMock.Verify(

@@ -10,15 +10,15 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
     [TestFixture]
     public class SearchQueryHandlerTests
     {
-        private Mock<UserManager<Identity.Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<IMapper> _mapperMock = null!;
         private SearchQueryHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
+            _userManagerMock = new Mock<UserManager<Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
             _mapperMock = new Mock<IMapper>(MockBehavior.Strict);
@@ -59,7 +59,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         {
             _userManagerMock
                 .Setup(m => m.Users)
-                .Returns(new List<Identity.Data.Entities.ApplicationUser>().AsQueryable());
+                .Returns(new List<Data.Entities.ApplicationUser>().AsQueryable());
 
             _mapperMock
                 .Setup(m => m.Map<IList<ApplicationUserModel>>(It.IsAny<object>()))
@@ -84,7 +84,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_ReturnsAllMappedUsers()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice", Email = "alice@example.com", IsActive = true },
                 new() { Id = "2", UserName = "bob",   Email = "bob@example.com",   IsActive = false }
@@ -128,7 +128,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         {
             _userManagerMock
                 .Setup(m => m.Users)
-                .Returns(new List<Identity.Data.Entities.ApplicationUser>().AsQueryable());
+                .Returns(new List<Data.Entities.ApplicationUser>().AsQueryable());
 
             _mapperMock
                 .Setup(m => m.Map<IList<ApplicationUserModel>>(It.IsAny<object>()))
@@ -153,7 +153,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_WithNameFilter_ReturnsOnlyMatchingUsers()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice" },
                 new() { Id = "2", UserName = "bob" }
@@ -199,7 +199,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_WithIsActiveFilter_ReturnsOnlyActiveUsers()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice" },
                 new() { Id = "2", UserName = "bob" }
@@ -245,7 +245,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_WithIsActiveSortingAscending_ReturnsFalseBeforeTrue()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice" },
                 new() { Id = "2", UserName = "bob" }
@@ -289,7 +289,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_WithIsLockedOutFilter_ReturnsOnlyLockedOutUsers()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice" },
                 new() { Id = "2", UserName = "bob" }
@@ -335,7 +335,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_WithIsLockedOutSortingAscending_ReturnsFalseBeforeTrue()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice" },
                 new() { Id = "2", UserName = "bob" }
@@ -379,7 +379,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
         [Test]
         public async Task Handle_WithPagination_ReturnsCorrectPage()
         {
-            var entities = new List<Identity.Data.Entities.ApplicationUser>
+            var entities = new List<Data.Entities.ApplicationUser>
             {
                 new() { Id = "1", UserName = "alice" },
                 new() { Id = "2", UserName = "bob" },

@@ -90,7 +90,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 
             var command = new AddCommand { Model = model };
 
-            var existing = new RecipeBook.Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe", RecipeCategoryId = Guid.NewGuid() };
+            var existing = new Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe", RecipeCategoryId = Guid.NewGuid() };
 
             _repoMock
                 .Setup(r => r.SearchAsync("My Recipe", "user1", It.IsAny<CancellationToken>()))
@@ -106,8 +106,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("My Recipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Recipe>(It.IsAny<RecipeEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<RecipeBook.Data.Entities.Recipe>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(It.IsAny<RecipeEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Recipe>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -124,9 +124,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("New Recipe", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
+                .ReturnsAsync((Data.Entities.Recipe?)null);
 
-            var mappedEntity = new RecipeBook.Data.Entities.Recipe
+            var mappedEntity = new Data.Entities.Recipe
             {
                 Id = Guid.NewGuid(),
                 Name = "New Recipe",
@@ -134,7 +134,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<RecipeBook.Data.Entities.Recipe>(model))
+                .Setup(m => m.Map<Data.Entities.Recipe>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -147,7 +147,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.SearchAsync("New Recipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Recipe>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -165,9 +165,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("ErrorRecipe", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
+                .ReturnsAsync((Data.Entities.Recipe?)null);
 
-            var mappedEntity = new RecipeBook.Data.Entities.Recipe
+            var mappedEntity = new Data.Entities.Recipe
             {
                 Id = Guid.NewGuid(),
                 Name = "ErrorRecipe",
@@ -175,7 +175,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             };
 
             _mapperMock
-                .Setup(m => m.Map<RecipeBook.Data.Entities.Recipe>(model))
+                .Setup(m => m.Map<Data.Entities.Recipe>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -192,7 +192,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("ErrorRecipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeBook.Data.Entities.Recipe>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(

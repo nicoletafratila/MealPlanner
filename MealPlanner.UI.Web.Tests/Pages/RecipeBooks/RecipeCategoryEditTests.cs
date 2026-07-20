@@ -27,7 +27,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _ctx.Services.AddSingleton(_recipeCategoryServiceMock.Object);
-            _ctx.Services.AddSingleton<IMessageComponent>(_messageComponentMock.Object);
+            _ctx.Services.AddSingleton(_messageComponentMock.Object);
 
             _ctx.Services.AddBlazorBootstrap();
             _ctx.Services.AddLogging();

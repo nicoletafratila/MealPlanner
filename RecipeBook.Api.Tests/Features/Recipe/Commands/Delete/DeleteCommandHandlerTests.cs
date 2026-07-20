@@ -64,7 +64,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
+                .ReturnsAsync((Data.Entities.Recipe?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -79,7 +79,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(It.IsAny<Guid>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
-            var recipe = new RecipeBook.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
+            var recipe = new Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
@@ -115,7 +115,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mealPlannerClientMock.Verify(c => c.GetMealPlansByRecipeIdAsync(id, "token", It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Data.Entities.Recipe>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
-            var recipe = new RecipeBook.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
+            var recipe = new Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
@@ -158,7 +158,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id, AuthToken = "token" };
 
-            var recipe = new RecipeBook.Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
+            var recipe = new Data.Entities.Recipe { Id = id, Name = "MyRecipe" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))

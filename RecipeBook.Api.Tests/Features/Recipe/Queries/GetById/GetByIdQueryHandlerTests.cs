@@ -47,7 +47,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetById
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new RecipeBook.Data.Entities.Recipe
+            var entity = new Data.Entities.Recipe
             {
                 Id = id,
                 Name = "My Recipe"
@@ -92,7 +92,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetById
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, CancellationToken.None))
-                .ReturnsAsync((RecipeBook.Data.Entities.Recipe?)null);
+                .ReturnsAsync((Data.Entities.Recipe?)null);
 
             var query = new GetByIdQuery(id);
 
@@ -108,7 +108,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetById
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map<RecipeModel>(It.IsAny<RecipeBook.Data.Entities.Recipe>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<RecipeModel>(It.IsAny<Data.Entities.Recipe>()), Times.Never);
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.GetById
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new RecipeBook.Data.Entities.Recipe
+            var entity = new Data.Entities.Recipe
             {
                 Id = id,
                 Name = "Some Recipe"

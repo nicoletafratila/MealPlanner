@@ -64,7 +64,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
 
             _unitRepoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((RecipeBook.Data.Entities.Unit?)null);
+                .ReturnsAsync((Data.Entities.Unit?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -84,7 +84,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
                 r => r.GetAllAsync(It.IsAny<CancellationToken>()),
                 Times.Never);
             _unitRepoMock.Verify(
-                r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), It.IsAny<CancellationToken>()),
+                r => r.DeleteAsync(It.IsAny<Data.Entities.Unit>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -95,7 +95,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
-            var unit = new RecipeBook.Data.Entities.Unit
+            var unit = new Data.Entities.Unit
             {
                 Id = id,
                 Name = "kg",
@@ -134,7 +134,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
                 r => r.GetAllAsync(It.IsAny<CancellationToken>()),
                 Times.Once);
             _unitRepoMock.Verify(
-                r => r.DeleteAsync(It.IsAny<RecipeBook.Data.Entities.Unit>(), It.IsAny<CancellationToken>()),
+                r => r.DeleteAsync(It.IsAny<Data.Entities.Unit>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -145,7 +145,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
-            var unit = new RecipeBook.Data.Entities.Unit
+            var unit = new Data.Entities.Unit
             {
                 Id = id,
                 Name = "g",
@@ -194,7 +194,7 @@ namespace RecipeBook.Api.Tests.Features.Unit.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand(id);
 
-            var unit = new RecipeBook.Data.Entities.Unit
+            var unit = new Data.Entities.Unit
             {
                 Id = id,
                 Name = "ml",

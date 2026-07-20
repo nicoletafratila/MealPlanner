@@ -63,7 +63,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var model = new ProductEditModel { Id = id, Name = "Product1", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
 
-            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync((RecipeBook.Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync((Data.Entities.Product?)null);
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -75,8 +75,8 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ProductEditModel>(), It.IsAny<RecipeBook.Data.Entities.Product>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeBook.Data.Entities.Product>(), CancellationToken.None), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<ProductEditModel>(), It.IsAny<Data.Entities.Product>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Data.Entities.Product>(), CancellationToken.None), Times.Never);
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var id = Guid.NewGuid();
             var model = new ProductEditModel { Id = id, Name = "UpdatedProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
-            var existing = new RecipeBook.Data.Entities.Product { Id = id, Name = "OldProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
+            var existing = new Data.Entities.Product { Id = id, Name = "OldProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
             _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);
@@ -107,7 +107,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var id = Guid.NewGuid();
             var model = new ProductEditModel { Id = id, Name = "ProductX", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
-            var existing = new RecipeBook.Data.Entities.Product { Id = id, Name = "OldX", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
+            var existing = new Data.Entities.Product { Id = id, Name = "OldX", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
             _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);

@@ -14,12 +14,12 @@ namespace Identity.Api.Features.Authentication.Commands.Login
     /// Handles user login and JWT issuance.
     /// </summary>
     public class LoginCommandHandler(
-        UserManager<Identity.Data.Entities.ApplicationUser> userManager,
-        SignInManager<Identity.Data.Entities.ApplicationUser> signInManager,
+        UserManager<Data.Entities.ApplicationUser> userManager,
+        SignInManager<Data.Entities.ApplicationUser> signInManager,
         ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse?>
     {
-        private readonly UserManager<Identity.Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        private readonly SignInManager<Identity.Data.Entities.ApplicationUser> _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+        private readonly UserManager<Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        private readonly SignInManager<Data.Entities.ApplicationUser> _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         private readonly ILogger<LoginCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -95,7 +95,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private static IList<Claim> GetClaims(Identity.Data.Entities.ApplicationUser user, IList<string> roles)
+        private static IList<Claim> GetClaims(Data.Entities.ApplicationUser user, IList<string> roles)
         {
             return
             [

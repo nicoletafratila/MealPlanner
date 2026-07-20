@@ -81,7 +81,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var entities = new List<RecipeBook.Data.Entities.Product>
+            var entities = new List<Data.Entities.Product>
             {
                 new() { Id = id1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
                 new() { Id = id2, Name = "P2", ProductCategoryId = Guid.NewGuid() }
@@ -118,7 +118,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
             var id3 = Guid.NewGuid();
-            var entities = new List<RecipeBook.Data.Entities.Product>
+            var entities = new List<Data.Entities.Product>
             {
                 new() { Id = id1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
                 new() { Id = id2, Name = "P2", ProductCategoryId = Guid.NewGuid() },
@@ -150,7 +150,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<RecipeBook.Data.Entities.Product>
+            var entities = new List<Data.Entities.Product>
             {
                 new() { Id = Guid.NewGuid(), Name = "P1", ProductCategoryId = Guid.NewGuid() }
             };

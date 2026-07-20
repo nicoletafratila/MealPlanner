@@ -7,21 +7,21 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Logout
     [TestFixture]
     public class LogoutCommandHandlerTests
     {
-        private Mock<SignInManager<Identity.Data.Entities.ApplicationUser>> _signInManagerMock = null!;
+        private Mock<SignInManager<Data.Entities.ApplicationUser>> _signInManagerMock = null!;
         private LogoutCommandHandler _handler = null!;
 
         [SetUp]
         public void SetUp()
         {
             // Minimal setup for SignInManager
-            var userManagerMock = new Mock<UserManager<Identity.Data.Entities.ApplicationUser>>(
-                Mock.Of<IUserStore<Identity.Data.Entities.ApplicationUser>>(),
+            var userManagerMock = new Mock<UserManager<Data.Entities.ApplicationUser>>(
+                Mock.Of<IUserStore<Data.Entities.ApplicationUser>>(),
                 null, null, null, null, null, null, null, null);
 
-            _signInManagerMock = new Mock<SignInManager<Identity.Data.Entities.ApplicationUser>>(
+            _signInManagerMock = new Mock<SignInManager<Data.Entities.ApplicationUser>>(
                 userManagerMock.Object,
                 Mock.Of<Microsoft.AspNetCore.Http.IHttpContextAccessor>(),
-                Mock.Of<IUserClaimsPrincipalFactory<Identity.Data.Entities.ApplicationUser>>(),
+                Mock.Of<IUserClaimsPrincipalFactory<Data.Entities.ApplicationUser>>(),
                 null, null, null, null);
 
             _handler = new LogoutCommandHandler(_signInManagerMock.Object);

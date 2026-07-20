@@ -51,7 +51,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Delete
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((Data.Entities.MealPlan?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -65,7 +65,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Delete
             }
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<MealPlanner.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repoMock.Verify(r => r.DeleteAsync(It.IsAny<Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
-            var entity = new MealPlanner.Data.Entities.MealPlan { Id = id, Name = "Plan1" };
+            var entity = new Data.Entities.MealPlan { Id = id, Name = "Plan1" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -103,7 +103,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Delete
             var id = Guid.NewGuid();
             var command = new DeleteCommand { Id = id };
 
-            var entity = new MealPlanner.Data.Entities.MealPlan { Id = id, Name = "PlanX" };
+            var entity = new Data.Entities.MealPlan { Id = id, Name = "PlanX" };
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))

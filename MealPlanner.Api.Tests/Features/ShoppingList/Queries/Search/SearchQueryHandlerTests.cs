@@ -31,21 +31,21 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         [Test]
         public void Ctor_NullRepository_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(null!, _mapperMock.Object, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullMapper_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(_repoMock.Object, null!, _currentUserMock.Object));
         }
 
         [Test]
         public void Ctor_NullCurrentUserService_Throws()
         {
-            Assert.Throws<System.ArgumentNullException>(() =>
+            Assert.Throws<ArgumentNullException>(() =>
                 _ = new SearchQueryHandler(_repoMock.Object, _mapperMock.Object, null!));
         }
 
@@ -89,7 +89,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
             var id2 = Guid.NewGuid();
             var expected = new[] { id1, id2 };
 
-            var entities = new List<MealPlanner.Data.Entities.ShoppingList>
+            var entities = new List<Data.Entities.ShoppingList>
             {
                 new() { Id = id1, Name = "List1" },
                 new() { Id = id2, Name = "List2" }
@@ -138,7 +138,7 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<MealPlanner.Data.Entities.ShoppingList>
+            var entities = new List<Data.Entities.ShoppingList>
             {
                 new() { Id = Guid.NewGuid(), Name = "List1" }
             };

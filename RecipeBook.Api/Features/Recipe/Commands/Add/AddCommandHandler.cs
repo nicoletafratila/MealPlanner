@@ -40,7 +40,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
                     return CommandResponse.Failed(RecipeMessages.RecipeAlreadyExists);
                 }
 
-                var mapped = _mapper.Map<RecipeBook.Data.Entities.Recipe>(request.Model);
+                var mapped = _mapper.Map<Data.Entities.Recipe>(request.Model);
                 mapped.UserId = userId;
                 await _repository.AddAsync(mapped, cancellationToken);
 

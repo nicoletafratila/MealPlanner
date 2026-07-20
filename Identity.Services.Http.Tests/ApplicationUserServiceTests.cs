@@ -277,7 +277,7 @@ namespace Identity.Services.Http.Tests
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
-                    var doc = System.Text.Json.JsonDocument.Parse(body);
+                    var doc = JsonDocument.Parse(body);
                     return doc.RootElement.TryGetProperty("userId", out var val)
                            && val.GetString() == userId;
                 })

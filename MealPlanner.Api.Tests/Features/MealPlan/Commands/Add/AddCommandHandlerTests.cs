@@ -85,7 +85,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             var model = new MealPlanEditModel { Id = Guid.Empty, Name = "Plan1" };
             var command = new AddCommand { Model = model };
 
-            var existing = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan1" };
+            var existing = new Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan1" };
 
             _repoMock
                 .Setup(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()))
@@ -103,8 +103,8 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("Plan1", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(It.IsAny<MealPlanEditModel>()), Times.Never);
-            _repoMock.Verify(r => r.AddAsync(It.IsAny<MealPlanner.Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<Data.Entities.MealPlan>(It.IsAny<MealPlanEditModel>()), Times.Never);
+            _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.MealPlan>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -116,12 +116,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("NewPlan", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((Data.Entities.MealPlan?)null);
 
-            var mappedEntity = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "NewPlan" };
+            var mappedEntity = new Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "NewPlan" };
 
             _mapperMock
-                .Setup(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model))
+                .Setup(m => m.Map<Data.Entities.MealPlan>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -136,7 +136,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             Assert.That(result!.Succeeded, Is.True);
 
             _repoMock.Verify(r => r.SearchAsync("NewPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.MealPlan>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -149,12 +149,12 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
 
             _repoMock
                 .Setup(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((MealPlanner.Data.Entities.MealPlan?)null);
+                .ReturnsAsync((Data.Entities.MealPlan?)null);
 
-            var mappedEntity = new MealPlanner.Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "ErrorPlan" };
+            var mappedEntity = new Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "ErrorPlan" };
 
             _mapperMock
-                .Setup(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model))
+                .Setup(m => m.Map<Data.Entities.MealPlan>(model))
                 .Returns(mappedEntity);
 
             _repoMock
@@ -173,7 +173,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Commands.Add
             }
 
             _repoMock.Verify(r => r.SearchAsync("ErrorPlan", "user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<MealPlanner.Data.Entities.MealPlan>(model), Times.Once);
+            _mapperMock.Verify(m => m.Map<Data.Entities.MealPlan>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 
             _loggerMock.Verify(

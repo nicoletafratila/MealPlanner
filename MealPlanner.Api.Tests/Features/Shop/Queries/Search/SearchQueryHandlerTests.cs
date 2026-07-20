@@ -87,7 +87,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
-            var entities = new List<MealPlanner.Data.Entities.Shop>
+            var entities = new List<Data.Entities.Shop>
             {
                 new() { Id = id1, Name = "Shop1" },
                 new() { Id = id2, Name = "Shop2" }
@@ -136,7 +136,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<MealPlanner.Data.Entities.Shop>
+            var entities = new List<Data.Entities.Shop>
             {
                 new() { Id = Guid.NewGuid(), Name = "Shop1" }
             };

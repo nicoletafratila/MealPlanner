@@ -47,7 +47,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new MealPlanner.Data.Entities.Shop
+            var entity = new Data.Entities.Shop
             {
                 Id = id,
                 Name = "Shop1"
@@ -92,7 +92,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.GetEdit
 
             _repoMock
                 .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
+                .ReturnsAsync((Data.Entities.Shop?)null);
 
             var query = new GetEditQuery(id);
 
@@ -108,7 +108,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.GetEdit
             }
 
             _repoMock.Verify(r => r.GetByIdIncludeDisplaySequenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<ShopEditModel>(It.IsAny<MealPlanner.Data.Entities.Shop>()), Times.Never);
+            _mapperMock.Verify(m => m.Map<ShopEditModel>(It.IsAny<Data.Entities.Shop>()), Times.Never);
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.GetEdit
         {
             // Arrange
             var id = Guid.NewGuid();
-            var entity = new MealPlanner.Data.Entities.Shop
+            var entity = new Data.Entities.Shop
             {
                 Id = id,
                 Name = "ShopX"

@@ -62,7 +62,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             var recipeId = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(recipeId);
 
-            var entities = new List<MealPlanner.Data.Entities.MealPlan>
+            var entities = new List<Data.Entities.MealPlan>
             {
                 new() { Id = Guid.NewGuid(), Name = "Plan1" },
                 new() { Id = Guid.NewGuid(), Name = "Plan2" }
@@ -101,7 +101,7 @@ namespace MealPlanner.Api.Tests.Features.MealPlan.Queries.SearchByRecipeId
             var recipeId = Guid.NewGuid();
             var query = new SearchByRecipeIdQuery(recipeId);
 
-            var entities = new List<MealPlanner.Data.Entities.MealPlan>
+            var entities = new List<Data.Entities.MealPlan>
             {
                 new() { Id = Guid.NewGuid(), Name = "Plan1" }
             };

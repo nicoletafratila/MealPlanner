@@ -80,7 +80,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-                .ReturnsAsync((MealPlanner.Data.Entities.Shop?)null);
+                .ReturnsAsync((Data.Entities.Shop?)null);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -91,8 +91,8 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             Assert.That(result.Message, Is.EqualTo($"Could not find with id {id}"));
 
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map(It.IsAny<ShopEditModel>(), It.IsAny<MealPlanner.Data.Entities.Shop>()), Times.Never);
-            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<MealPlanner.Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mapperMock.Verify(m => m.Map(It.IsAny<ShopEditModel>(), It.IsAny<Data.Entities.Shop>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Data.Entities.Shop>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new MealPlanner.Data.Entities.Shop
+            var existing = new Data.Entities.Shop
             {
                 Id = id,
                 Name = "OldName"
@@ -151,7 +151,7 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 
             var command = new UpdateCommand { Model = model };
 
-            var existing = new MealPlanner.Data.Entities.Shop
+            var existing = new Data.Entities.Shop
             {
                 Id = id,
                 Name = "OldShop"
