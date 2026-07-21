@@ -37,6 +37,7 @@ namespace Identity.Api
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Common.Core.ValidationBehavior<,>));
             services.AddTransient<IEmailService, SmtpEmailService>();
             services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>();
 

@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.SessionStorage" Version="$(BlazoredSessionStorage)" />
+    <PackageReference Include="FluentValidation" Version="$(FluentValidation)" />
+    <PackageReference Include="MediatR" Version="$(MediatR)" />
     <PackageReference Include="Serilog.AspNetCore" Version="$(SerilogAspNetCore)" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftAspNetCoreAuthenticationJwtBearer)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="$(MicrosoftAspNetCoreComponentsWebAssemblyAuthentication)" />

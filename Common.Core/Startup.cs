@@ -56,7 +56,10 @@ namespace Common.Core
             RegisterRepositories(services);
             RegisterServices(services);
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<ValidationExceptionFilter>();
+            });
             services.AddBlazoredSessionStorage();
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }

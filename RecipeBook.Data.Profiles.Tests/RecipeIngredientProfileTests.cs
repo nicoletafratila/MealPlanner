@@ -65,6 +65,7 @@ namespace RecipeBook.Data.Profiles.Tests
             var model = new RecipeIngredientEditModel
             {
                 RecipeId = recipeId,
+                ProductId = productId,
                 Product = new ProductModel() { Id = productId },
                 UnitId = unitId,
                 Quantity = 10

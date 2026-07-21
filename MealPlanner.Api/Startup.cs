@@ -53,6 +53,7 @@ namespace MealPlanner.Api
                 .ConfigureHttpClient(ConfigureRecipeBookClient); 
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Common.Core.ValidationBehavior<,>));
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
