@@ -16,6 +16,8 @@ namespace MealPlanner.Data.Entities.Tests
                 Assert.That(list.ShopId, Is.EqualTo(Guid.Empty));
                 Assert.That(list.Products, Is.Not.Null);
                 Assert.That(list.Products, Is.Empty);
+                Assert.That(list.CreatedAt, Is.Null);
+                Assert.That(list.UpdatedAt, Is.Null);
             }
         }
 
@@ -31,6 +33,8 @@ namespace MealPlanner.Data.Entities.Tests
 
             var shopId = Guid.NewGuid();
             var id = Guid.NewGuid();
+            var createdAt = DateTime.Now.AddDays(-2);
+            var updatedAt = DateTime.Now.AddHours(-1);
 
             var list = new ShoppingList
             {
@@ -38,7 +42,9 @@ namespace MealPlanner.Data.Entities.Tests
                 Name = "Weekly Groceries",
                 Shop = shop,
                 ShopId = shopId,
-                Products = productList
+                Products = productList,
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt
             };
 
             using (Assert.EnterMultipleScope())
@@ -49,6 +55,8 @@ namespace MealPlanner.Data.Entities.Tests
                 Assert.That(list.ShopId, Is.EqualTo(shopId));
                 Assert.That(list.Products, Is.SameAs(productList));
                 Assert.That(list.Products, Has.Count.EqualTo(2));
+                Assert.That(list.CreatedAt, Is.EqualTo(createdAt));
+                Assert.That(list.UpdatedAt, Is.EqualTo(updatedAt));
             }
         }
 

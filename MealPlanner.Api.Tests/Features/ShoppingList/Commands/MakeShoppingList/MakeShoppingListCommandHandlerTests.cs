@@ -137,29 +137,31 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
                 .Setup(r => r.GetByIdIncludeDisplaySequenceAsync(shopId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(shop);
 
+            Data.Entities.ShoppingList? addedList = null;
             _shoppingListRepoMock
                 .Setup(r => r.AddAsync(It.IsAny<Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()))
-                .Callback<Data.Entities.ShoppingList, CancellationToken>((s, _) =>
-                {
-                    using (Assert.EnterMultipleScope())
-                    {
-                        Assert.That(s.Name, Is.EqualTo("Shopping list details for Plan1 in shop Shop1"));
-                        Assert.That(s.CreatedAt, Is.Not.Null);
-                    }
-                })
+                .Callback<Data.Entities.ShoppingList, CancellationToken>((s, _) => addedList = s)
                 .ReturnsAsync(newList);
 
             _mapperMock
                 .Setup(m => m.Map<ShoppingListEditModel>(newList))
                 .Returns(mappedEdit);
 
+            var before = DateTime.Now;
             var result = await _handler.Handle(command, CancellationToken.None);
+            var after = DateTime.Now;
 
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Id, Is.EqualTo(newListId));
                 Assert.That(result.Name, Is.EqualTo("Generated"));
+
+                Assert.That(addedList, Is.Not.Null);
+                Assert.That(addedList!.Name, Is.EqualTo("Shopping list details for Plan1 in shop Shop1"));
+                Assert.That(addedList.UserId, Is.EqualTo("user1"));
+                Assert.That(addedList.CreatedAt, Is.Not.Null);
+                Assert.That(addedList.CreatedAt, Is.InRange(before, after));
             }
 
             _mealPlanRepoMock.Verify(r => r.GetByIdIncludeRecipesAsync(mealPlanId, It.IsAny<CancellationToken>()), Times.Once);

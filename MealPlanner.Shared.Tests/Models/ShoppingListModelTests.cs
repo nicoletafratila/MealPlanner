@@ -16,6 +16,8 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
+                Assert.That(model.CreatedAt, Is.Null);
+                Assert.That(model.UpdatedAt, Is.Null);
 
                 // BaseModel defaults
                 Assert.That(model.Index, Is.Zero);
@@ -48,6 +50,30 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 _ = new ShoppingListModel(Guid.NewGuid(), null!);
             });
+        }
+
+        [Test]
+        public void CreatedAtAndUpdatedAt_CanBeSetAndRead()
+        {
+            // Arrange
+            var createdAt = DateTime.Now.AddDays(-3);
+            var updatedAt = DateTime.Now.AddMinutes(-30);
+
+            // Act
+            var model = new ShoppingListModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "Groceries",
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt
+            };
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(model.CreatedAt, Is.EqualTo(createdAt));
+                Assert.That(model.UpdatedAt, Is.EqualTo(updatedAt));
+            }
         }
 
         [Test]
