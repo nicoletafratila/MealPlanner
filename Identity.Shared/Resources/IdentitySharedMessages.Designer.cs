@@ -79,6 +79,15 @@ namespace Identity.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter your current password..
+        /// </summary>
+        public static string CurrentPasswordRequired {
+            get {
+                return ResourceManager.GetString("CurrentPasswordRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Email address is not valid..
         /// </summary>
         public static string EmailAddressInvalid {
@@ -86,7 +95,16 @@ namespace Identity.Shared.Resources {
                 return ResourceManager.GetString("EmailAddressInvalid", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your email address..
+        /// </summary>
+        public static string EmailAddressRequired {
+            get {
+                return ResourceManager.GetString("EmailAddressRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to First Name must be alpha characters only..
         /// </summary>
@@ -95,13 +113,31 @@ namespace Identity.Shared.Resources {
                 return ResourceManager.GetString("FirstNameAlphaOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Name must be alpha characters only..
         /// </summary>
         public static string LastNameAlphaOnly {
             get {
                 return ResourceManager.GetString("LastNameAlphaOnly", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a new password..
+        /// </summary>
+        public static string NewPasswordRequired {
+            get {
+                return ResourceManager.GetString("NewPasswordRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your username..
+        /// </summary>
+        public static string UsernameRequired {
+            get {
+                return ResourceManager.GetString("UsernameRequired", resourceCulture);
             }
         }
     }

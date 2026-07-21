@@ -82,9 +82,23 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync(RecipeCategoryModel cat)
         {
-            var result = await categoryService.DeleteAsync(cat.Id);
-            if (result?.Succeeded == true) Categories.Remove(cat);
-            else SetError(result?.Message);
+            if (IsBusy) return;
+            IsBusy = true;
+            ClearMessages();
+            try
+            {
+                var result = await categoryService.DeleteAsync(cat.Id);
+                if (result?.Succeeded == true) Categories.Remove(cat);
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Category name (required, max 100 characters).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeCategoryNameRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 

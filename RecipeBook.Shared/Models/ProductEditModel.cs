@@ -17,14 +17,14 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Product name (required, max 100 characters).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductNameRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Raw image content (required, up to 500 KB).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductImageRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [MaxLength(512000, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ImageTooLarge), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public byte[]? ImageContent { get; set; }
 

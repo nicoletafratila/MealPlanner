@@ -79,6 +79,15 @@ namespace MealPlanner.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The meal plan requires a name..
+        /// </summary>
+        public static string MealPlanNameRequired {
+            get {
+                return ResourceManager.GetString("MealPlanNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The meal plan requires at least one recipe..
         /// </summary>
         public static string MealPlanRequiresRecipes {
@@ -187,6 +196,15 @@ namespace MealPlanner.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The shop requires a name..
+        /// </summary>
+        public static string ShopNameRequired {
+            get {
+                return ResourceManager.GetString("ShopNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Failed to generate shopping list..
         /// </summary>
         public static string ShoppingListGenerateFailed {
@@ -194,7 +212,16 @@ namespace MealPlanner.Shared.Resources {
                 return ResourceManager.GetString("ShoppingListGenerateFailed", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The shopping list requires a name..
+        /// </summary>
+        public static string ShoppingListNameRequired {
+            get {
+                return ResourceManager.GetString("ShoppingListNameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a shopping list for the product..
         /// </summary>

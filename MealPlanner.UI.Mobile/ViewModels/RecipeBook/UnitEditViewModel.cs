@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
+using RecipeBook.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
@@ -46,12 +47,31 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
-            if (IsBusy) return; IsBusy = true; ClearMessages();
+            if (IsBusy) return;
+            ClearMessages();
+
+            if (string.IsNullOrWhiteSpace(Model.Name))
+            {
+                SetError(RecipeBookSharedMessages.UnitNameRequired);
+                return;
+            }
+
+            if ((int)Model.UnitType is < 0 or > 3)
+            {
+                SetError(RecipeBookSharedMessages.UnitTypeRange);
+                return;
+            }
+
+            IsBusy = true;
             try
             {
                 var result = IsNew ? await unitService.AddAsync(Model) : await unitService.UpdateAsync(Model);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally
             {

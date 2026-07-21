@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
+using Identity.Shared.Resources;
 using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
@@ -14,6 +15,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         {
             if (IsBusy) return;
             ClearMessages();
+
+            if (string.IsNullOrWhiteSpace(Model.EmailAddress))
+            {
+                SetError(IdentitySharedMessages.EmailAddressRequired);
+                return;
+            }
+
             IsBusy = true;
             try
             {
@@ -22,6 +30,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                     SetSuccess(MealPlannerSharedMessages.ForgotPasswordEmailSent);
                 else
                     SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally { IsBusy = false; }
         }

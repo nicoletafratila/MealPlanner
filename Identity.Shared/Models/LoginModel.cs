@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using Identity.Shared.Resources;
 
 namespace Identity.Shared.Models
 {
@@ -11,7 +12,7 @@ namespace Identity.Shared.Models
         /// <summary>
         /// Username used to log in (required).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.UsernameRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string Username { get; set; } = string.Empty;
 
         /// <summary>

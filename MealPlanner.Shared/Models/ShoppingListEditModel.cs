@@ -18,7 +18,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Shopping list name (required, max 100 characters).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListNameRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 

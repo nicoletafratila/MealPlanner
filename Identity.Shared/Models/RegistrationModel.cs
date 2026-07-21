@@ -18,7 +18,7 @@ namespace Identity.Shared.Models
 
         public string? PhoneNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         [EmailAddress(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressInvalid), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string EmailAddress { get; set; } = string.Empty;
     }

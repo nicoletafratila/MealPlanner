@@ -120,14 +120,28 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync(MealPlanModel mp)
         {
-            var result = await mealPlanService.DeleteAsync(mp.Id);
-            if (result?.Succeeded == true)
+            if (IsBusy) return;
+            IsBusy = true;
+            ClearMessages();
+            try
             {
-                MealPlans.Remove(mp);
+                var result = await mealPlanService.DeleteAsync(mp.Id);
+                if (result?.Succeeded == true)
+                {
+                    MealPlans.Remove(mp);
+                }
+                else
+                {
+                    SetError(result?.Message);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                SetError(result?.Message);
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

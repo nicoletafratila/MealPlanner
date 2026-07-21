@@ -37,13 +37,25 @@
   <data name="ConfirmPasswordRequired" xml:space="preserve">
     <value>Confirm password is required.</value>
   </data>
+  <data name="CurrentPasswordRequired" xml:space="preserve">
+    <value>Please enter your current password.</value>
+  </data>
   <data name="EmailAddressInvalid" xml:space="preserve">
     <value>Email address is not valid.</value>
+  </data>
+  <data name="EmailAddressRequired" xml:space="preserve">
+    <value>Please enter your email address.</value>
   </data>
   <data name="FirstNameAlphaOnly" xml:space="preserve">
     <value>First Name must be alpha characters only.</value>
   </data>
   <data name="LastNameAlphaOnly" xml:space="preserve">
     <value>Last Name must be alpha characters only.</value>
+  </data>
+  <data name="NewPasswordRequired" xml:space="preserve">
+    <value>Please enter a new password.</value>
+  </data>
+  <data name="UsernameRequired" xml:space="preserve">
+    <value>Please enter your username.</value>
   </data>
 </root>

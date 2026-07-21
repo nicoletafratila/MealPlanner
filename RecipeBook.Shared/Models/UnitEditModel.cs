@@ -15,7 +15,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Display name of the unit (e.g., "Kilogram", "Liter").
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.UnitNameRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 

@@ -70,6 +70,15 @@ namespace RecipeBook.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select an image for the recipe..
+        /// </summary>
+        public static string ImageRequired {
+            get {
+                return ResourceManager.GetString("ImageRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The image provided is too large..
         /// </summary>
         public static string ImageTooLarge {
@@ -77,7 +86,7 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("ImageTooLarge", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The quantity for the ingredient must be a positive number..
         /// </summary>
@@ -86,7 +95,7 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("IngredientQuantityPositive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a unit of measurement for the ingredient..
         /// </summary>
@@ -95,7 +104,16 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("IngredientUnitRequired", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The product category requires a name..
+        /// </summary>
+        public static string ProductCategoryNameRequired {
+            get {
+                return ResourceManager.GetString("ProductCategoryNameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a category for the product..
         /// </summary>
@@ -104,7 +122,25 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("ProductCategoryRequired", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please select an image for the product..
+        /// </summary>
+        public static string ProductImageRequired {
+            get {
+                return ResourceManager.GetString("ProductImageRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The product requires a name..
+        /// </summary>
+        public static string ProductNameRequired {
+            get {
+                return ResourceManager.GetString("ProductNameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a unit of measurement for the product..
         /// </summary>
@@ -113,7 +149,16 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("ProductUnitRequired", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The recipe category requires a name..
+        /// </summary>
+        public static string RecipeCategoryNameRequired {
+            get {
+                return ResourceManager.GetString("RecipeCategoryNameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a category for the recipe..
         /// </summary>
@@ -122,7 +167,7 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("RecipeCategoryRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a recipe for the ingredient..
         /// </summary>
@@ -131,7 +176,16 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("RecipeIdRequired", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The recipe requires a name..
+        /// </summary>
+        public static string RecipeNameRequired {
+            get {
+                return ResourceManager.GetString("RecipeNameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to The recipe requires at least one ingredient..
         /// </summary>
@@ -140,7 +194,16 @@ namespace RecipeBook.Shared.Resources {
                 return ResourceManager.GetString("RecipeRequiresIngredients", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The unit requires a name..
+        /// </summary>
+        public static string UnitNameRequired {
+            get {
+                return ResourceManager.GetString("UnitNameRequired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to UnitType must be between 0 and 3..
         /// </summary>

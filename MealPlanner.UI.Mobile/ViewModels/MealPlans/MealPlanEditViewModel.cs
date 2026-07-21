@@ -138,13 +138,26 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
-            if (IsBusy) return; IsBusy = true; ClearMessages();
+            if (IsBusy) return;
+            ClearMessages();
+
+            if (string.IsNullOrWhiteSpace(Model.Name))
+            {
+                SetError(MealPlannerSharedMessages.MealPlanNameRequired);
+                return;
+            }
+
+            IsBusy = true;
             try
             {
                 Model.Recipes = PlanRecipes.ToList();
                 var result = IsNew ? await mealPlanService.AddAsync(Model) : await mealPlanService.UpdateAsync(Model);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally
             {
@@ -165,6 +178,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 var result = await mealPlanService.DeleteAsync(deleteId);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally
             {
@@ -197,6 +214,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     await Shell.Current.GoToAsync($"ShoppingListEdit?id={list.Id}");
                 else
                     SetError(MealPlannerSharedMessages.ShoppingListGenerateFailed);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally
             {

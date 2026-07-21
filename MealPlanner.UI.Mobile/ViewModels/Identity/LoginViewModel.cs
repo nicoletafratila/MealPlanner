@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
+using Identity.Shared.Resources;
 using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
@@ -33,6 +34,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         {
             if (IsBusy) return;
             ClearMessages();
+
+            if (string.IsNullOrWhiteSpace(Username))
+            {
+                SetError(IdentitySharedMessages.UsernameRequired);
+                return;
+            }
+
             IsBusy = true;
             try
             {

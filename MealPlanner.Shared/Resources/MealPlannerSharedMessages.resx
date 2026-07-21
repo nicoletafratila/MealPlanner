@@ -34,17 +34,26 @@
   <data name="DisplayIndexPositive" xml:space="preserve">
     <value>The display index for the product category must be a positive number.</value>
   </data>
+  <data name="MealPlanNameRequired" xml:space="preserve">
+    <value>The meal plan requires a name.</value>
+  </data>
   <data name="MealPlanRequiresRecipes" xml:space="preserve">
     <value>The meal plan requires at least one recipe.</value>
   </data>
   <data name="ProductQuantityPositive" xml:space="preserve">
     <value>The quantity for the product must be a positive number.</value>
   </data>
+  <data name="ShoppingListNameRequired" xml:space="preserve">
+    <value>The shopping list requires a name.</value>
+  </data>
   <data name="ShoppingListRequiresProducts" xml:space="preserve">
     <value>The recipe requires at least one product.</value>
   </data>
   <data name="ShoppingListRequired" xml:space="preserve">
     <value>Please select a shopping list for the product.</value>
+  </data>
+  <data name="ShopNameRequired" xml:space="preserve">
+    <value>The shop requires a name.</value>
   </data>
   <data name="ShopRequiresCategoryOrder" xml:space="preserve">
     <value>The shop requires at least product category order.</value>

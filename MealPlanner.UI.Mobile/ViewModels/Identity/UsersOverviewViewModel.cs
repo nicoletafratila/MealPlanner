@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Common.Models;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -52,9 +53,25 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task UnlockUserAsync(string userId)
         {
-            var result = await userService.UnlockAsync(userId);
+            if (IsBusy) return;
+            IsBusy = true;
+            ClearMessages();
+            CommandResponse? result = null;
+            try
+            {
+                result = await userService.UnlockAsync(userId);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
             if (result?.Succeeded == true) await LoadAsync();
-            else SetError(result?.Message);
+            else if (result is not null) SetError(result.Message);
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]

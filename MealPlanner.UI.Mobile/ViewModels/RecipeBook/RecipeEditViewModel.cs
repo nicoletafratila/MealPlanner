@@ -109,6 +109,18 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             if (IsBusy) return;
             ClearMessages();
 
+            if (string.IsNullOrWhiteSpace(Model.Name))
+            {
+                SetError(RecipeBookSharedMessages.RecipeNameRequired);
+                return;
+            }
+
+            if (Model.ImageContent is not { Length: > 0 })
+            {
+                SetError(RecipeBookSharedMessages.ImageRequired);
+                return;
+            }
+
             if (SelectedCategory is null)
             {
                 SetError(RecipeBookSharedMessages.RecipeCategoryRequired);

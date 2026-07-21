@@ -19,7 +19,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Recipe name (required, max 100 chars).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeNameRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
@@ -32,7 +32,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Raw image content (required, up to 500 KB).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ImageRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [MaxLength(512000, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ImageTooLarge), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public byte[]? ImageContent { get; set; }
 

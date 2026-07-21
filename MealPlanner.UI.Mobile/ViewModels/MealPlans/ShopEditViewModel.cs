@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
@@ -48,13 +49,30 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private async Task SaveAsync()
         {
             if (IsBusy) return;
-            IsBusy = true;
             ClearMessages();
+
+            if (string.IsNullOrWhiteSpace(Model.Name))
+            {
+                SetError(MealPlannerSharedMessages.ShopNameRequired);
+                return;
+            }
+
+            if (Model.DisplaySequence is null || Model.DisplaySequence.Count == 0)
+            {
+                SetError(MealPlannerSharedMessages.ShopRequiresCategoryOrder);
+                return;
+            }
+
+            IsBusy = true;
             try
             {
                 var result = IsNew ? await shopService.AddAsync(Model) : await shopService.UpdateAsync(Model);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
                 else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
             }
             finally
             {

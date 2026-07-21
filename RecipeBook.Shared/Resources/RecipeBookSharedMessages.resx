@@ -34,6 +34,9 @@
   <data name="CategoryDisplaySequenceRequired" xml:space="preserve">
     <value>Please select the display sequence for the category.</value>
   </data>
+  <data name="ImageRequired" xml:space="preserve">
+    <value>Please select an image for the recipe.</value>
+  </data>
   <data name="ImageTooLarge" xml:space="preserve">
     <value>The image provided is too large.</value>
   </data>
@@ -43,11 +46,23 @@
   <data name="IngredientUnitRequired" xml:space="preserve">
     <value>Please select a unit of measurement for the ingredient.</value>
   </data>
+  <data name="ProductCategoryNameRequired" xml:space="preserve">
+    <value>The product category requires a name.</value>
+  </data>
   <data name="ProductCategoryRequired" xml:space="preserve">
     <value>Please select a category for the product.</value>
   </data>
+  <data name="ProductImageRequired" xml:space="preserve">
+    <value>Please select an image for the product.</value>
+  </data>
+  <data name="ProductNameRequired" xml:space="preserve">
+    <value>The product requires a name.</value>
+  </data>
   <data name="ProductUnitRequired" xml:space="preserve">
     <value>Please select a unit of measurement for the product.</value>
+  </data>
+  <data name="RecipeCategoryNameRequired" xml:space="preserve">
+    <value>The recipe category requires a name.</value>
   </data>
   <data name="RecipeCategoryRequired" xml:space="preserve">
     <value>Please select a category for the recipe.</value>
@@ -55,8 +70,14 @@
   <data name="RecipeIdRequired" xml:space="preserve">
     <value>Please select a recipe for the ingredient.</value>
   </data>
+  <data name="RecipeNameRequired" xml:space="preserve">
+    <value>The recipe requires a name.</value>
+  </data>
   <data name="RecipeRequiresIngredients" xml:space="preserve">
     <value>The recipe requires at least one ingredient.</value>
+  </data>
+  <data name="UnitNameRequired" xml:space="preserve">
+    <value>The unit requires a name.</value>
   </data>
   <data name="UnitTypeRange" xml:space="preserve">
     <value>UnitType must be between 0 and 3.</value>

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
 {
@@ -16,7 +17,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Category name (required, max 100 characters).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductCategoryNameRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
