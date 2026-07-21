@@ -70,12 +70,17 @@
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:RecipeModel">
-                        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
-                            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Padding="0,4">
+                            <Image Grid.Column="0"
+                                   Source="{Binding ImageUrl}"
+                                   WidthRequest="32" HeightRequest="32"
+                                   Aspect="AspectFill"
+                                   IsVisible="{Binding ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
                                 <Label Text="{Binding EffectiveCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
                             </VerticalStackLayout>
-                            <Button Grid.Column="1" Text="🗑" BackgroundColor="Transparent"
+                            <Button Grid.Column="2" Text="🗑" BackgroundColor="Transparent"
                                     Padding="8,4"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlanEditViewModel}}, Path=RemoveRecipeCommand}"
                                     CommandParameter="{Binding .}" />

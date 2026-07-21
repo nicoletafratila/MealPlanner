@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="$(AngleSharp)" />
     <PackageReference Include="bunit" Version="$(BUnit)" />
     <PackageReference Include="coverlet.collector" Version="$(CoverletCollector)">
       <PrivateAssets>all</PrivateAssets>

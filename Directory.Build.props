@@ -47,6 +47,7 @@
     <NUnit3TestAdapter>6.2.0</NUnit3TestAdapter>
     <CoverletCollector>10.0.1</CoverletCollector>
     <!-- Third-party -->
+    <AngleSharp>1.5.2</AngleSharp>
     <AutoMapper>16.1.1</AutoMapper>
     <BlazorBootstrap>3.5.0</BlazorBootstrap>
     <BlazoredModal>7.3.1</BlazoredModal>
