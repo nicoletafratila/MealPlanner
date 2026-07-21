@@ -147,6 +147,12 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 return;
             }
 
+            if (PlanRecipes.Count == 0)
+            {
+                SetError(MealPlannerSharedMessages.MealPlanRequiresRecipes);
+                return;
+            }
+
             IsBusy = true;
             try
             {

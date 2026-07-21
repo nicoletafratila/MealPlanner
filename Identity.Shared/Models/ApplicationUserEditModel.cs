@@ -17,7 +17,7 @@ namespace Identity.Shared.Models
         /// <summary>
         /// Login/user name (required).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.UsernameRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         [Display(Name = "User Name")]
         public string Username { get; set; } = string.Empty;
 
@@ -42,7 +42,7 @@ namespace Identity.Shared.Models
         /// <summary>
         /// Email address (required, must be valid format).
         /// </summary>
-        [Required]
+        [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         [EmailAddress(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressInvalid), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string EmailAddress { get; set; } = string.Empty;
 

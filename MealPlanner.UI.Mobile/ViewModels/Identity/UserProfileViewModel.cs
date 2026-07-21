@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
+using Identity.Shared.Resources;
 using MealPlanner.Shared.Resources;
 using MealPlanner.UI.Mobile.Services;
 
@@ -38,8 +39,21 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         private async Task SaveAsync()
         {
             if (IsBusy || Model is null) return;
-            IsBusy = true;
             ClearMessages();
+
+            if (string.IsNullOrWhiteSpace(Model.Username))
+            {
+                SetError(IdentitySharedMessages.UsernameRequired);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Model.EmailAddress))
+            {
+                SetError(IdentitySharedMessages.EmailAddressRequired);
+                return;
+            }
+
+            IsBusy = true;
             try
             {
                 var result = await userService.UpdateAsync(Model);
