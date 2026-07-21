@@ -8,6 +8,10 @@ namespace MealPlanner.Data.Entities
 
         public string? Name { get; set; }
 
+        public DateTime? CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+
         [ForeignKey(nameof(ShopId))]
         public Shop? Shop { get; set; }
         public Guid ShopId { get; set; }

@@ -86,7 +86,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ColumnName", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Created.
+        /// </summary>
+        internal static string ColumnCreatedAt {
+            get {
+                return ResourceManager.GetString("ColumnCreatedAt", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Copied to clipboard.
         /// </summary>

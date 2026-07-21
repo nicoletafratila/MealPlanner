@@ -152,6 +152,49 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
         }
 
         [Test]
+        public async Task Handle_SuccessfulUpdate_SetsUpdatedAt()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var model = new ShoppingListEditModel
+            {
+                Id = id,
+                Name = "Groceries"
+            };
+
+            var command = new UpdateCommand { Model = model };
+
+            var existing = new Data.Entities.ShoppingList
+            {
+                Id = id,
+                Name = "OldName"
+            };
+
+            _repoMock
+                .Setup(r => r.GetByIdIncludeProductsAsync(id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(existing);
+
+            _mapperMock
+                .Setup(m => m.Map(model, existing))
+                .Returns(existing);
+
+            _repoMock
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var before = DateTime.Now;
+            var result = await _handler.Handle(command, CancellationToken.None);
+            var after = DateTime.Now;
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(existing.UpdatedAt, Is.Not.Null);
+            Assert.That(existing.UpdatedAt, Is.InRange(before, after));
+        }
+
+        [Test]
         public async Task Handle_ExceptionDuringUpdate_LogsError_AndReturnsFailedResponse()
         {
             // Arrange

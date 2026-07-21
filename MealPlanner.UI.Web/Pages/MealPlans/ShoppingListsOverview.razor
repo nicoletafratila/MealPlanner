@@ -10,14 +10,14 @@
         max-width: 40px;
     }
 
-    .grid-additional-columns th:nth-child(3),
-    .grid-additional-columns td:nth-child(3) {
+    .grid-additional-columns th:nth-child(4),
+    .grid-additional-columns td:nth-child(4) {
         width: 60px;
         max-width: 60px;
     }
 
-    .grid-additional-columns th:nth-child(4),
-    .grid-additional-columns td:nth-child(4) {
+    .grid-additional-columns th:nth-child(5),
+    .grid-additional-columns td:nth-child(5) {
         width: 40px;
         max-width: 40px;
     }
@@ -50,10 +50,13 @@
                 <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnIndex" PropertyName="Index" Filterable="false" Sortable="false">
                     @context.Index
                 </GridColumn>
-                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
+                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div style="cursor: pointer;" @onclick="() => Update(context)">
                         @context.Name
                     </div>
+                </GridColumn>
+                <GridColumn TItem="ShoppingListModel" HeaderText="@Resources.ShoppingListsOverview.ColumnCreatedAt" PropertyName="CreatedAt" IsDefaultSortColumn="true" SortDirection="@_createdAtSortDirection" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt">
+                    @context.CreatedAt?.ToString("d")
                 </GridColumn>
                 <GridColumn TItem="ShoppingListModel" Filterable="false">
                     <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export(context)">@Resources.ShoppingListsOverview.ExportButton</button>

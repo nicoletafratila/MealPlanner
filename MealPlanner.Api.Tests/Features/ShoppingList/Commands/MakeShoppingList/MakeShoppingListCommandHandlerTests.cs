@@ -141,7 +141,11 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.MakeShoppingList
                 .Setup(r => r.AddAsync(It.IsAny<Data.Entities.ShoppingList>(), It.IsAny<CancellationToken>()))
                 .Callback<Data.Entities.ShoppingList, CancellationToken>((s, _) =>
                 {
-                    Assert.That(s.Name, Is.EqualTo("Shopping list details for Plan1 in shop Shop1"));
+                    using (Assert.EnterMultipleScope())
+                    {
+                        Assert.That(s.Name, Is.EqualTo("Shopping list details for Plan1 in shop Shop1"));
+                        Assert.That(s.CreatedAt, Is.Not.Null);
+                    }
                 })
                 .ReturnsAsync(newList);
 

@@ -49,6 +49,9 @@
   <data name="ColumnName" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="ColumnCreatedAt" xml:space="preserve">
+    <value>Created</value>
+  </data>
   <data name="BreadcrumbHome" xml:space="preserve">
     <value>Home</value>
   </data>

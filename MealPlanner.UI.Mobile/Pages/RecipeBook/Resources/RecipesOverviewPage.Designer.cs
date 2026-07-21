@@ -79,23 +79,23 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Week's menu has been created and the recipe has been added successfully..
+        ///   Looks up a localized string similar to Week&apos;s menu has been created and the recipe has been added successfully..
         /// </summary>
         internal static string MealPlanCreatedAndRecipeAdded {
             get {
                 return ResourceManager.GetString("MealPlanCreatedAndRecipeAdded", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Menu.
+        ///   Looks up a localized string similar to Meniu.
         /// </summary>
         internal static string MenuName {
             get {
                 return ResourceManager.GetString("MenuName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Recipes.
         /// </summary>
@@ -104,7 +104,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Search recipes....
         /// </summary>
@@ -113,7 +113,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("PlaceholderSearch", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Recipe has been added successfully.
         /// </summary>
@@ -122,7 +122,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("RecipeAdded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Save failed. Please try again..
         /// </summary>

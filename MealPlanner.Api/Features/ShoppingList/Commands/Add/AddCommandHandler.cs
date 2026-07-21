@@ -42,6 +42,7 @@ namespace MealPlanner.Api.Features.ShoppingList.Commands.Add
                 var mapped = _mapper.Map<Data.Entities.ShoppingList>(request.Model);
                 mapped.Id = Guid.NewGuid();
                 mapped.UserId = userId;
+                mapped.CreatedAt = DateTime.Now;
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

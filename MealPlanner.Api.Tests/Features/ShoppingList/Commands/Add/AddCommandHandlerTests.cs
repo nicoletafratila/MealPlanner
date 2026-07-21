@@ -131,6 +131,36 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Add
         }
 
         [Test]
+        public async Task Handle_NewList_SetsCreatedAtOnMappedEntity()
+        {
+            var model = new ShoppingListEditModel { Id = Guid.Empty, Name = "NewList" };
+            var command = new AddCommand { Model = model };
+
+            _repoMock
+                .Setup(r => r.SearchAsync("NewList", "user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.ShoppingList?)null);
+
+            var mappedEntity = new Data.Entities.ShoppingList { Id = Guid.NewGuid(), Name = "NewList" };
+
+            _mapperMock
+                .Setup(m => m.Map<Data.Entities.ShoppingList>(model))
+                .Returns(mappedEntity);
+
+            _repoMock
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mappedEntity);
+
+            var before = DateTime.Now;
+            var result = await _handler.Handle(command, CancellationToken.None);
+            var after = DateTime.Now;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(mappedEntity.CreatedAt, Is.Not.Null);
+            Assert.That(mappedEntity.CreatedAt, Is.InRange(before, after));
+        }
+
+        [Test]
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
             var model = new ShoppingListEditModel { Id = Guid.Empty, Name = "ErrorList" };

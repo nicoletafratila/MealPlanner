@@ -20,7 +20,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ShoppingListModel>? _shoppingListsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
-        private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
+        private BlazorBootstrap.SortDirection _createdAtSortDirection = BlazorBootstrap.SortDirection.Descending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
         private bool showCopiedMessage;
@@ -53,12 +53,12 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (!firstRender) return;
 
             var stored = await SessionStorage.GetItemAsync<QueryParameters<ShoppingListModel>>();
-            var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
-            var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
+            var createdAtSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "CreatedAt");
+            var direction = (BlazorBootstrap.SortDirection)(int)(createdAtSort?.Direction ?? Common.Pagination.SortDirection.Descending);
 
-            if (direction != _nameSortDirection)
+            if (direction != _createdAtSortDirection)
             {
-                _nameSortDirection = direction;
+                _createdAtSortDirection = direction;
                 _gridKey++;
                 StateHasChanged();
             }

@@ -31,10 +31,14 @@ namespace MealPlanner.Data.Profiles.Tests
         [Test]
         public void ShoppingList_To_ShoppingListModel_Maps_And_Ignores_Unwanted_Fields()
         {
+            var createdAt = DateTime.Now.AddDays(-1);
+            var updatedAt = DateTime.Now;
             var list = new ShoppingList
             {
                 Id = Guid.NewGuid(),
                 Name = "Weekly",
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt,
                 Shop = new Shop(),
                 Products =
                 [
@@ -49,6 +53,8 @@ namespace MealPlanner.Data.Profiles.Tests
                 Assert.That(model, Is.Not.Null);
                 Assert.That(model.Id, Is.EqualTo(list.Id));
                 Assert.That(model.Name, Is.EqualTo(list.Name));
+                Assert.That(model.CreatedAt, Is.EqualTo(createdAt));
+                Assert.That(model.UpdatedAt, Is.EqualTo(updatedAt));
             }
         }
 
@@ -64,10 +70,14 @@ namespace MealPlanner.Data.Profiles.Tests
                 Shop = new Shop { Name = "Original Shop" }
             };
 
+            var createdAt = DateTime.Now.AddDays(-1);
+            var updatedAt = DateTime.Now;
             var model = new ShoppingListModel
             {
                 Id = Guid.NewGuid(),
-                Name = "Updated"
+                Name = "Updated",
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt
             };
 
             var result = _mapper.Map(model, dest);
@@ -76,6 +86,8 @@ namespace MealPlanner.Data.Profiles.Tests
             {
                 Assert.That(result.Id, Is.EqualTo(model.Id));
                 Assert.That(result.Name, Is.EqualTo(model.Name));
+                Assert.That(result.CreatedAt, Is.EqualTo(createdAt));
+                Assert.That(result.UpdatedAt, Is.EqualTo(updatedAt));
 
                 Assert.That(result.Products, Has.Count.EqualTo(originalProducts.Count));
                 Assert.That(result.Shop!.Name, Is.EqualTo("Original Shop"));

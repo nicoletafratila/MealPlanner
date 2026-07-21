@@ -9,6 +9,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     public partial class ShoppingListsOverviewViewModel(IShoppingListService shoppingListService) : BaseViewModel
     {
+        private static readonly List<SortingModel> CreatedAtDescendingSorting =
+            [new SortingModel { PropertyName = "CreatedAt", Direction = SortDirection.Descending }];
+
         [ObservableProperty]
         private ObservableCollection<ShoppingListModel> _shoppingLists = [];
 
@@ -20,7 +23,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             ClearMessages();
             try
             {
-                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { Sorting = DefaultSorting });
+                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { Sorting = CreatedAtDescendingSorting });
                 if (result is not null)
                 {
                     ShoppingLists = new ObservableCollection<ShoppingListModel>(result.Items);
