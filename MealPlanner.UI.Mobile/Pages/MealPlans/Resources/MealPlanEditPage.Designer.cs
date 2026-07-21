@@ -95,16 +95,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("EmptyRecipesSearchLabel", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Search by name.
-        /// </summary>
-        internal static string PlaceholderSearchRecipes {
-            get {
-                return ResourceManager.GetString("PlaceholderSearchRecipes", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Filter by category.
         /// </summary>
@@ -142,7 +133,16 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipes in plan.
+        ///   Looks up a localized string similar to Search by name.
+        /// </summary>
+        internal static string PlaceholderSearchRecipes {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchRecipes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recipes in meal plan.
         /// </summary>
         internal static string RecipesInPlanLabel {
             get {
