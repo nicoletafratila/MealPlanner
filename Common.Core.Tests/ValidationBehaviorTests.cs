@@ -31,9 +31,11 @@ namespace Common.Core.Tests
         }
 
         [Test]
-        public async Task Handle_ResponseTypeIsNotCommandResponse_SkipsValidationAndCallsNext()
+        public async Task Handle_ResponseTypeIsNotCommandResponse_ValidationSucceeds_CallsNext()
         {
             var validator = new Mock<IValidator<TestNonCommandRequest>>(MockBehavior.Strict);
+            validator.Setup(v => v.ValidateAsync(It.IsAny<TestNonCommandRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
             var behavior = new ValidationBehavior<TestNonCommandRequest, string>([validator.Object]);
             var next = new Mock<RequestHandlerDelegate<string>>(MockBehavior.Strict);
             next.Setup(n => n()).ReturnsAsync("value");
@@ -41,7 +43,21 @@ namespace Common.Core.Tests
             var result = await behavior.Handle(new TestNonCommandRequest(), next.Object, CancellationToken.None);
 
             Assert.That(result, Is.EqualTo("value"));
-            validator.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void Handle_ResponseTypeIsNotCommandResponse_ValidationFails_ThrowsValidationExceptionWithoutCallingNext()
+        {
+            var validator = new Mock<IValidator<TestNonCommandRequest>>(MockBehavior.Strict);
+            validator.Setup(v => v.ValidateAsync(It.IsAny<TestNonCommandRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult([new ValidationFailure("Field", "Field is required.")]));
+            var behavior = new ValidationBehavior<TestNonCommandRequest, string>([validator.Object]);
+            var next = new Mock<RequestHandlerDelegate<string>>(MockBehavior.Strict);
+
+            Assert.That(
+                async () => await behavior.Handle(new TestNonCommandRequest(), next.Object, CancellationToken.None),
+                Throws.TypeOf<ValidationException>());
+            next.VerifyNoOtherCalls();
         }
 
         [Test]
