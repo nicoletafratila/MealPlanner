@@ -8,7 +8,9 @@
       "PowerShell(dotnet build *)",
       "Bash(xargs ls)",
       "Bash(dotnet sln *)",
-      "Read(//c/Users/nfratila/.claude/**)"
+      "Read(//c/Users/nfratila/.claude/**)",
+      "Bash(cat)",
+      "Bash(bash /tmp/check_recipebook.sh)"
     ]
   }
 }
