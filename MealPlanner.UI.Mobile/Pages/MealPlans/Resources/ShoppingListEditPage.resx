@@ -48,6 +48,12 @@
   <data name="EmptyProducts" xml:space="preserve">
     <value>No products yet.</value>
   </data>
+  <data name="EmptyProductsSearchLabel" xml:space="preserve">
+    <value>No products found</value>
+  </data>
+  <data name="PlaceholderSearchProducts" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
   <data name="FromMealPlanButton" xml:space="preserve">
     <value>From Meal Plan</value>
   </data>
@@ -72,11 +78,11 @@
   <data name="ProductsLabel" xml:space="preserve">
     <value>Products</value>
   </data>
-  <data name="ProductTitle" xml:space="preserve">
-    <value>Product</value>
-  </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="SelectProductTitle" xml:space="preserve">
+    <value>Select product</value>
   </data>
   <data name="SelectShopTitle" xml:space="preserve">
     <value>Select shop</value>

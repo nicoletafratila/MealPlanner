@@ -39,10 +39,34 @@
                         ItemsSource="{Binding ProductCategories}"
                         SelectedItem="{Binding SelectedProductCategory}"
                         ItemDisplayBinding="{Binding Name}" />
-                <Picker Title="{x:Static res:ShoppingListEditPage.ProductTitle}"
-                        ItemsSource="{Binding ProductsByCategory}"
-                        SelectedItem="{Binding SelectedProduct}"
-                        ItemDisplayBinding="{Binding Name}" />
+                <Border Stroke="{StaticResource MidGray}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10,0"
+                        MinimumHeightRequest="44"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSelectProductTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                        <Image Grid.Column="0"
+                               Source="{Binding SelectedProduct.ImageUrl}"
+                               WidthRequest="26" HeightRequest="26"
+                               Aspect="AspectFill" VerticalOptions="Center"
+                               IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                        <Label Grid.Column="1" VerticalOptions="Center"
+                               LineBreakMode="TailTruncation"
+                               Text="{Binding SelectedProduct.Name, TargetNullValue={x:Static res:ShoppingListEditPage.SelectProductTitle}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedProduct}" Value="{x:Null}">
+                                    <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
+                               FontSize="14" TextColor="{StaticResource DarkGray}" />
+                    </Grid>
+                </Border>
                 <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
                     <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderQuantity}" Keyboard="Numeric" />
                     <Picker Grid.Column="1" Title="{x:Static res:ShoppingListEditPage.UnitTitle}"
@@ -75,9 +99,14 @@
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:ShoppingListProductEditModel">
-                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="8,6">
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto" Padding="8,6">
                         <CheckBox Grid.Column="0" IsChecked="{Binding Collected}" />
-                        <VerticalStackLayout Grid.Column="1" Margin="8,0" VerticalOptions="Center">
+                        <Image Grid.Column="1"
+                               Source="{Binding Product.ImageUrl}"
+                               WidthRequest="28" HeightRequest="28"
+                               Aspect="AspectFill" VerticalOptions="Center"
+                               IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                        <VerticalStackLayout Grid.Column="2" Margin="8,0" VerticalOptions="Center">
                             <Label Text="{Binding Product.Name}" FontAttributes="Bold"
                                    TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />
                             <HorizontalStackLayout Spacing="4">
@@ -87,7 +116,7 @@
                                        TextDecorations="{Binding Collected, Converter={x:Static converters:CollectedToDecorConverter.Instance}}" />
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
-                        <Button Grid.Column="2" Text="🗑" BackgroundColor="Transparent"
+                        <Button Grid.Column="3" Text="🗑" BackgroundColor="Transparent"
                                 Padding="6,2"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=RemoveProductCommand}"
                                 CommandParameter="{Binding .}" />

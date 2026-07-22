@@ -86,7 +86,25 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("EmptyProducts", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to No products found.
+        /// </summary>
+        internal static string EmptyProductsSearchLabel {
+            get {
+                return ResourceManager.GetString("EmptyProductsSearchLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search by name.
+        /// </summary>
+        internal static string PlaceholderSearchProducts {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchProducts", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to From Meal Plan.
         /// </summary>
@@ -160,15 +178,6 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Product.
-        /// </summary>
-        internal static string ProductTitle {
-            get {
-                return ResourceManager.GetString("ProductTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string SaveButton {
@@ -176,7 +185,16 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SaveButton", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select product.
+        /// </summary>
+        internal static string SelectProductTitle {
+            get {
+                return ResourceManager.GetString("SelectProductTitle", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Select shop.
         /// </summary>
