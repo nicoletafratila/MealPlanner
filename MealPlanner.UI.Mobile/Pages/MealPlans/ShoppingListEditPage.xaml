@@ -23,70 +23,83 @@
             <VerticalStackLayout Padding="20,12,20,0" Spacing="8">
                 <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,8" />
 
-                <!-- Name -->
-                <Label Text="{x:Static res:ShoppingListEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
-                <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderName}" />
+                <!-- Collapsible details toggle -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleEditingCommand}" />
+                    </Grid.GestureRecognizers>
+                    <Label Grid.Column="0" Text="{x:Static res:ShoppingListEditPage.DetailsLabel}" Style="{StaticResource SectionHeaderLabel}" VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="{Binding IsEditingExpanded, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='▲|▼'}"
+                           FontSize="16" TextColor="{StaticResource DarkGray}" VerticalOptions="Center" Margin="0,0,4,0" />
+                </Grid>
 
-                <!-- Shop -->
-                <Label Text="{x:Static res:ShoppingListEditPage.ShopLabel}" Style="{StaticResource SectionHeaderLabel}" />
-                <Picker ItemsSource="{Binding Shops}" ItemDisplayBinding="{Binding Name}"
-                        SelectedItem="{Binding SelectedShop}"
-                        Title="{x:Static res:ShoppingListEditPage.SelectShopTitle}" />
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding IsEditingExpanded}">
+                    <!-- Name -->
+                    <Label Text="{x:Static res:ShoppingListEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+                    <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderName}" />
 
-                <!-- Add product section -->
-                <Label Text="{x:Static res:ShoppingListEditPage.AddProductLabel}" Style="{StaticResource SectionHeaderLabel}" />
-                <Picker Title="{x:Static res:ShoppingListEditPage.ProductCategoryTitle}"
-                        ItemsSource="{Binding ProductCategories}"
-                        SelectedItem="{Binding SelectedProductCategory}"
-                        ItemDisplayBinding="{Binding Name}" />
-                <Border Stroke="{StaticResource MidGray}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 8"
-                        Padding="10,0"
-                        MinimumHeightRequest="44"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnSelectProductTapped" />
-                    </Border.GestureRecognizers>
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                        <Image Grid.Column="0"
-                               Source="{Binding SelectedProduct.ImageUrl}"
-                               WidthRequest="26" HeightRequest="26"
-                               Aspect="AspectFill" VerticalOptions="Center"
-                               IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-                        <Label Grid.Column="1" VerticalOptions="Center"
-                               LineBreakMode="TailTruncation"
-                               Text="{Binding SelectedProduct.Name, TargetNullValue={x:Static res:ShoppingListEditPage.SelectProductTitle}}">
-                            <Label.Triggers>
-                                <DataTrigger TargetType="Label" Binding="{Binding SelectedProduct}" Value="{x:Null}">
-                                    <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
-                                </DataTrigger>
-                            </Label.Triggers>
-                        </Label>
-                        <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
-                               FontSize="14" TextColor="{StaticResource DarkGray}" />
-                    </Grid>
-                </Border>
-                <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
-                    <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderQuantity}" Keyboard="Numeric" />
-                    <Picker Grid.Column="1" Title="{x:Static res:ShoppingListEditPage.UnitTitle}"
-                            ItemsSource="{Binding UnitsForProduct}"
-                            SelectedItem="{Binding SelectedUnit}"
+                    <!-- Shop -->
+                    <Label Text="{x:Static res:ShoppingListEditPage.ShopLabel}" Style="{StaticResource SectionHeaderLabel}" />
+                    <Picker ItemsSource="{Binding Shops}" ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedShop}"
+                            Title="{x:Static res:ShoppingListEditPage.SelectShopTitle}" />
+
+                    <!-- Add product section -->
+                    <Label Text="{x:Static res:ShoppingListEditPage.AddProductLabel}" Style="{StaticResource SectionHeaderLabel}" />
+                    <Picker Title="{x:Static res:ShoppingListEditPage.ProductCategoryTitle}"
+                            ItemsSource="{Binding ProductCategories}"
+                            SelectedItem="{Binding SelectedProductCategory}"
                             ItemDisplayBinding="{Binding Name}" />
-                    <Button Grid.Column="2" Text="{x:Static res:ShoppingListEditPage.AddButton}"
-                            Command="{Binding AddProductCommand}"
-                            IsEnabled="{Binding SelectedProduct, Converter={x:Static converters:NotNullConverter.Instance}}"
-                            Padding="14,10" />
-                </Grid>
+                    <Border Stroke="{StaticResource MidGray}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="10,0"
+                            MinimumHeightRequest="44"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSelectProductTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                            <Image Grid.Column="0"
+                                   Source="{Binding SelectedProduct.ImageUrl}"
+                                   WidthRequest="26" HeightRequest="26"
+                                   Aspect="AspectFill" VerticalOptions="Center"
+                                   IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                            <Label Grid.Column="1" VerticalOptions="Center"
+                                   LineBreakMode="TailTruncation"
+                                   Text="{Binding SelectedProduct.Name, TargetNullValue={x:Static res:ShoppingListEditPage.SelectProductTitle}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedProduct}" Value="{x:Null}">
+                                        <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
+                                   FontSize="14" TextColor="{StaticResource DarkGray}" />
+                        </Grid>
+                    </Border>
+                    <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                        <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="{x:Static res:ShoppingListEditPage.PlaceholderQuantity}" Keyboard="Numeric" />
+                        <Picker Grid.Column="1" Title="{x:Static res:ShoppingListEditPage.UnitTitle}"
+                                ItemsSource="{Binding UnitsForProduct}"
+                                SelectedItem="{Binding SelectedUnit}"
+                                ItemDisplayBinding="{Binding Name}" />
+                        <Button Grid.Column="2" Text="{x:Static res:ShoppingListEditPage.AddButton}"
+                                Command="{Binding AddProductCommand}"
+                                IsEnabled="{Binding SelectedProduct, Converter={x:Static converters:NotNullConverter.Instance}}"
+                                Padding="14,10" />
+                    </Grid>
 
-                <!-- Import from meal plan / recipe -->
-                <Label Text="{x:Static res:ShoppingListEditPage.ImportLabel}" Style="{StaticResource SectionHeaderLabel}" />
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                    <Button Grid.Column="0" Text="{x:Static res:ShoppingListEditPage.FromMealPlanButton}" Style="{StaticResource OutlineButton}"
-                            Clicked="OnAddFromMealPlanClicked" />
-                    <Button Grid.Column="1" Text="{x:Static res:ShoppingListEditPage.FromRecipeButton}" Style="{StaticResource OutlineButton}"
-                            Clicked="OnAddFromRecipeClicked" />
-                </Grid>
+                    <!-- Import from meal plan / recipe -->
+                    <Label Text="{x:Static res:ShoppingListEditPage.ImportLabel}" Style="{StaticResource SectionHeaderLabel}" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0" Text="{x:Static res:ShoppingListEditPage.FromMealPlanButton}" Style="{StaticResource OutlineButton}"
+                                Clicked="OnAddFromMealPlanClicked" />
+                        <Button Grid.Column="1" Text="{x:Static res:ShoppingListEditPage.FromRecipeButton}" Style="{StaticResource OutlineButton}"
+                                Clicked="OnAddFromRecipeClicked" />
+                    </Grid>
+                </VerticalStackLayout>
 
                 <Label Text="{x:Static res:ShoppingListEditPage.ProductsLabel}" Style="{StaticResource SectionHeaderLabel}" />
             </VerticalStackLayout>

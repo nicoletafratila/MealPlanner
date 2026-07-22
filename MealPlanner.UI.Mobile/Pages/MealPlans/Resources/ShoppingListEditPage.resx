@@ -45,6 +45,9 @@
   <data name="AddProductLabel" xml:space="preserve">
     <value>Add product</value>
   </data>
+  <data name="DetailsLabel" xml:space="preserve">
+    <value>Details</value>
+  </data>
   <data name="EmptyProducts" xml:space="preserve">
     <value>No products yet.</value>
   </data>

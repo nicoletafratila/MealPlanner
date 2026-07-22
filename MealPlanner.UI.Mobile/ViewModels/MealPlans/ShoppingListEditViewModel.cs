@@ -61,6 +61,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private ObservableCollection<ShoppingListProductEditModel> _shoppingListProducts = [];
 
+        [ObservableProperty]
+        private bool _isEditingExpanded = true;
+
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];
 
@@ -160,6 +163,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             SelectedUnit = UnitsForProduct.FirstOrDefault(u => u.Id == product?.BaseUnit?.Id);
             QuantityText = string.Empty;
         }
+
+        [RelayCommand]
+        private void ToggleEditing() => IsEditingExpanded = !IsEditingExpanded;
 
         [RelayCommand]
         private void AddProduct()
