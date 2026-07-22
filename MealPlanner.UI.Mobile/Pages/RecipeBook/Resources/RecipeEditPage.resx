@@ -39,8 +39,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddIngredientButton" xml:space="preserve">
-    <value>+ Add Ingredient</value>
+  <data name="AddButton" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddIngredientLabel" xml:space="preserve">
+    <value>Add ingredient</value>
+  </data>
+  <data name="EmptyIngredients" xml:space="preserve">
+    <value>No ingredients yet.</value>
   </data>
   <data name="SelectProductTitle" xml:space="preserve">
     <value>Select product</value>
@@ -53,6 +59,12 @@
   </data>
   <data name="CategoryLabel" xml:space="preserve">
     <value>Category</value>
+  </data>
+  <data name="ProductCategoryTitle" xml:space="preserve">
+    <value>Product category</value>
+  </data>
+  <data name="AllCategoriesOption" xml:space="preserve">
+    <value>All categories</value>
   </data>
   <data name="ImageLabel" xml:space="preserve">
     <value>Image</value>

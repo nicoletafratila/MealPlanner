@@ -7,18 +7,17 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook
 {
     public partial class RecipeEditPage : ContentPage
     {
+        private readonly RecipeEditViewModel _vm;
+
         public RecipeEditPage(RecipeEditViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = _vm = viewModel;
         }
 
         private async void OnSelectProductTapped(object sender, TappedEventArgs e)
         {
-            if (e.Parameter is not RecipeIngredientEditViewModel row)
-                return;
-
-            var items = row.Products.Select(p => new SelectorItem(p, p.Name, p.EffectiveCategoryName, p.ImageUrl)).ToList();
+            var items = _vm.ProductsByCategory.Select(p => new SelectorItem(p, p.Name, p.EffectiveCategoryName, p.ImageUrl)).ToList();
             var popup = new SelectorPopup(
                 items,
                 RecipeBook.Resources.RecipeEditPage.SelectProductTitle,
@@ -26,7 +25,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook
                 RecipeBook.Resources.RecipeEditPage.EmptyProductsLabel);
             var result = await this.ShowPopupAsync<object>(popup);
             if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is ProductModel product)
-                row.SelectedProduct = product;
+                _vm.SelectedProduct = product;
         }
     }
 }

@@ -61,14 +61,32 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to + Add Ingredient.
+        ///   Looks up a localized string similar to Add.
         /// </summary>
-        internal static string AddIngredientButton {
+        internal static string AddButton {
             get {
-                return ResourceManager.GetString("AddIngredientButton", resourceCulture);
+                return ResourceManager.GetString("AddButton", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add ingredient.
+        /// </summary>
+        internal static string AddIngredientLabel {
+            get {
+                return ResourceManager.GetString("AddIngredientLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No ingredients yet..
+        /// </summary>
+        internal static string EmptyIngredients {
+            get {
+                return ResourceManager.GetString("EmptyIngredients", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Select product.
         /// </summary>
@@ -104,7 +122,25 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("CategoryLabel", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Product category.
+        /// </summary>
+        internal static string ProductCategoryTitle {
+            get {
+                return ResourceManager.GetString("ProductCategoryTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All categories.
+        /// </summary>
+        internal static string AllCategoriesOption {
+            get {
+                return ResourceManager.GetString("AllCategoriesOption", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Image.
         /// </summary>

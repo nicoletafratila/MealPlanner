@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
+             xmlns:model="clr-namespace:RecipeBook.Shared.Models;assembly=RecipeBook.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.RecipeEditPage"
@@ -33,58 +34,80 @@
             <Image Source="{Binding RecipeImage}" HeightRequest="150" Aspect="AspectFit"
                    IsVisible="{Binding RecipeImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
 
+            <!-- Add ingredient section -->
+            <Label Text="{x:Static res:RecipeEditPage.AddIngredientLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Picker Title="{x:Static res:RecipeEditPage.ProductCategoryTitle}"
+                    ItemsSource="{Binding ProductCategories}"
+                    SelectedItem="{Binding SelectedProductCategory}"
+                    ItemDisplayBinding="{Binding Name}" />
+            <Border Stroke="{StaticResource MidGray}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="10,0"
+                    MinimumHeightRequest="44"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSelectProductTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                    <Image Grid.Column="0"
+                           Source="{Binding SelectedProduct.ImageUrl}"
+                           WidthRequest="26" HeightRequest="26"
+                           Aspect="AspectFill" VerticalOptions="Center"
+                           IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                    <Label Grid.Column="1" VerticalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           Text="{Binding SelectedProduct.Name, TargetNullValue={x:Static res:RecipeEditPage.SelectProductTitle}}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedProduct}" Value="{x:Null}">
+                                <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
+                           FontSize="14" TextColor="{StaticResource DarkGray}" />
+                </Grid>
+            </Border>
+            <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderQuantity}" Keyboard="Numeric" />
+                <Picker Grid.Column="1" Title="{x:Static res:RecipeEditPage.UnitTitle}"
+                        ItemsSource="{Binding UnitsForProduct}"
+                        SelectedItem="{Binding SelectedUnit}"
+                        ItemDisplayBinding="{Binding Name}" />
+                <Button Grid.Column="2" Text="{x:Static res:RecipeEditPage.AddButton}"
+                        Command="{Binding AddIngredientCommand}"
+                        IsEnabled="{Binding SelectedProduct, Converter={x:Static converters:NotNullConverter.Instance}}"
+                        Padding="14,10" />
+            </Grid>
+
             <Label Text="{x:Static res:RecipeEditPage.IngredientsLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <CollectionView ItemsSource="{Binding RecipeIngredients}">
+                <CollectionView.EmptyView>
+                    <Label Text="{x:Static res:RecipeEditPage.EmptyIngredients}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16" />
+                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:RecipeIngredientEditViewModel">
-                        <Grid ColumnDefinitions="*,Auto,80,Auto" Spacing="8" Padding="0,4">
-                            <Border Grid.Column="0"
-                                    Stroke="{StaticResource MidGray}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 8"
-                                    Padding="10,0"
-                                    MinimumHeightRequest="44"
-                                    VerticalOptions="Center"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSelectProductTapped" CommandParameter="{Binding .}" />
-                                </Border.GestureRecognizers>
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                                    <Image Grid.Column="0"
-                                           Source="{Binding SelectedProduct.ImageUrl}"
-                                           WidthRequest="26" HeightRequest="26"
-                                           Aspect="AspectFill" VerticalOptions="Center"
-                                           IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-                                    <Label Grid.Column="1" VerticalOptions="Center"
-                                           LineBreakMode="TailTruncation"
-                                           Text="{Binding SelectedProduct.Name, TargetNullValue='Select product'}">
-                                        <Label.Triggers>
-                                            <DataTrigger TargetType="Label" Binding="{Binding SelectedProduct}" Value="{x:Null}">
-                                                <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                    </Label>
-                                    <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
-                                           FontSize="14" TextColor="{StaticResource DarkGray}" />
-                                </Grid>
-                            </Border>
-                            <Picker Grid.Column="1" Title="{x:Static res:RecipeEditPage.UnitTitle}"
-                                    ItemsSource="{Binding CompatibleUnits}"
-                                    SelectedItem="{Binding SelectedUnit}"
-                                    ItemDisplayBinding="{Binding Name}" />
-                            <Entry Grid.Column="2" Text="{Binding Quantity, StringFormat='{0}'}"
-                                   Keyboard="Numeric" Placeholder="{x:Static res:RecipeEditPage.PlaceholderQuantity}" />
-                            <Button Grid.Column="3" Text="🗑" BackgroundColor="Transparent"
-                                    Padding="8,4"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveIngredientCommand}"
+                    <DataTemplate x:DataType="model:RecipeIngredientEditModel">
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="8,6">
+                            <Image Grid.Column="0"
+                                   Source="{Binding Product.ImageUrl}"
+                                   WidthRequest="28" HeightRequest="28"
+                                   Aspect="AspectFill" VerticalOptions="Center"
+                                   IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                            <VerticalStackLayout Grid.Column="1" Margin="8,0" VerticalOptions="Center">
+                                <Label Text="{Binding Product.Name}" FontAttributes="Bold" />
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="{Binding Quantity}" FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                    <Label Text="{Binding Unit.Name}" FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2" Text="🗑" BackgroundColor="Transparent"
+                                    Padding="6,2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeEditViewModel}}, Path=RemoveIngredientCommand}"
                                     CommandParameter="{Binding .}" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
-            <Button Text="{x:Static res:RecipeEditPage.AddIngredientButton}" Style="{StaticResource OutlineButton}"
-                    Command="{Binding AddIngredientCommand}" />
 
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                    IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
