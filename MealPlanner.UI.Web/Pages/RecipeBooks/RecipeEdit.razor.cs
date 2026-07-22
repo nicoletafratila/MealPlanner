@@ -117,6 +117,31 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 Recipe = await RecipeService.GetEditAsync(id)
                           ?? new RecipeEditModel { Id = id };
             }
+
+            SortIngredientsByCategory();
+        }
+
+        private void SortIngredientsByCategory()
+        {
+            if (Recipe?.Ingredients is null || ProductCategories?.Items is null)
+                return;
+
+            var categoryOrder = ProductCategories.Items
+                .Select((c, index) => new { c.Id, Index = index })
+                .ToDictionary(x => x.Id, x => x.Index);
+
+            int OrderOf(RecipeIngredientEditModel ingredient)
+            {
+                var categoryId = ingredient.Product?.ProductCategory?.Id;
+                return categoryId is not null && categoryOrder.TryGetValue(categoryId.Value, out var index)
+                    ? index
+                    : int.MaxValue;
+            }
+
+            Recipe.Ingredients = Recipe.Ingredients
+                .OrderBy(OrderOf)
+                .ThenBy(i => i.Product?.Name)
+                .ToList();
         }
 
         private async Task SaveAsync()
@@ -250,6 +275,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             };
 
             Recipe.Ingredients.Add(ingredient);
+            SortIngredientsByCategory();
 
             Quantity = string.Empty;
             UnitId = string.Empty;

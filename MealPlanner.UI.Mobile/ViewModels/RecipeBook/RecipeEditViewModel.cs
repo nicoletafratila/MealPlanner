@@ -110,6 +110,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 }
 
                 RecipeIngredients = new ObservableCollection<RecipeIngredientEditModel>(Model.Ingredients);
+                SortIngredientsByCategory();
             }
             catch (Exception ex)
             {
@@ -119,6 +120,28 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 IsBusy = false;
             }
+        }
+
+        private void SortIngredientsByCategory()
+        {
+            var categoryOrder = ProductCategories
+                .Select((c, index) => new { c.Id, Index = index })
+                .ToDictionary(x => x.Id, x => x.Index);
+
+            int OrderOf(RecipeIngredientEditModel ingredient)
+            {
+                var categoryId = ingredient.Product?.ProductCategory?.Id;
+                return categoryId is not null && categoryOrder.TryGetValue(categoryId.Value, out var index)
+                    ? index
+                    : int.MaxValue;
+            }
+
+            var ordered = RecipeIngredients
+                .OrderBy(OrderOf)
+                .ThenBy(i => i.Product?.Name)
+                .ToList();
+
+            RecipeIngredients = new ObservableCollection<RecipeIngredientEditModel>(ordered);
         }
 
         private void RefreshProductsByCategory(ProductCategoryModel? category)
@@ -242,6 +265,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 });
             }
 
+            SortIngredientsByCategory();
             QuantityText = string.Empty;
             SelectedProduct = null;
         }

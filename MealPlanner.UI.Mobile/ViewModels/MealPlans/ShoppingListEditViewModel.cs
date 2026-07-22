@@ -67,6 +67,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         // All units for "add from meal plan/recipe" merging
         private IList<UnitModel> _allUnits = [];
 
+        // Selected shop's product category display order
+        private ShopEditModel? _shopDetails;
+
         partial void OnShoppingListIdChanged(string value)
         {
             Guid.TryParse(value, out var id);
@@ -77,6 +80,39 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         partial void OnSelectedShopChanged(ShopModel? value)
         {
             if (value is not null) Model.ShopId = value.Id;
+            _ = LoadShopDisplaySequenceAsync(value?.Id);
+        }
+
+        private async Task LoadShopDisplaySequenceAsync(Guid? shopId)
+        {
+            try
+            {
+                _shopDetails = shopId is null || shopId.Value == Guid.Empty
+                    ? null
+                    : await shopService.GetEditAsync(shopId.Value);
+                ResequenceProducts();
+            }
+            catch { /* ignore */ }
+        }
+
+        private void ResequenceProducts()
+        {
+            if (_shopDetails is not null)
+            {
+                foreach (var item in ShoppingListProducts)
+                {
+                    var sequence = _shopDetails.GetDisplaySequence(item.Product?.ProductCategory?.Id);
+                    item.DisplaySequence = sequence?.Value ?? 1;
+                }
+            }
+
+            var ordered = ShoppingListProducts
+                .OrderBy(p => p.Collected)
+                .ThenBy(p => p.DisplaySequence)
+                .ThenBy(p => p.Product?.Name)
+                .ToList();
+
+            ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel>(ordered);
         }
 
         partial void OnSelectedProductCategoryChanged(ProductCategoryModel? value) =>
@@ -117,6 +153,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 }
 
                 ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel>(Model.Products);
+                ResequenceProducts();
             }
             catch (Exception ex)
             {
@@ -182,6 +219,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
             else
             {
+                var sequence = _shopDetails?.GetDisplaySequence(SelectedProduct.ProductCategory?.Id);
                 ShoppingListProducts.Add(new ShoppingListProductEditModel
                 {
                     ShoppingListId = Model.Id,
@@ -190,10 +228,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     UnitId = SelectedUnit.Id,
                     Unit = SelectedUnit,
                     Collected = false,
-                    DisplaySequence = ShoppingListProducts.Count + 1
+                    DisplaySequence = sequence?.Value ?? 1
                 });
             }
 
+            ResequenceProducts();
             QuantityText = string.Empty;
             SelectedProduct = null;
         }
@@ -298,9 +337,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 else
                 {
                     item.ShoppingListId = Model.Id;
+                    var sequence = _shopDetails?.GetDisplaySequence(item.Product?.ProductCategory?.Id);
+                    item.DisplaySequence = sequence?.Value ?? 1;
                     ShoppingListProducts.Add(item);
                 }
             }
+
+            ResequenceProducts();
         }
 
         public async Task OnProductCollectedChangedAsync(ShoppingListProductEditModel item)
