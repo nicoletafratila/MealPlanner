@@ -18,8 +18,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         ProductService productService,
         UnitService unitService,
         IMealPlanService mealPlanService,
-        RecipeService recipeService,
-        RecipeCategoryService recipeCategoryService) : BaseViewModel
+        RecipeService recipeService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shoppingListId = string.Empty;
@@ -193,27 +192,33 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             SelectedProduct = null;
         }
 
-        [RelayCommand(AllowConcurrentExecutions = true)]
-        private async Task AddFromMealPlanAsync()
+        public async Task<IReadOnlyList<MealPlanModel>?> LoadMealPlansForSelectionAsync()
         {
             if (Model.ShopId == Guid.Empty)
             {
-                SetError(MealPlannerSharedMessages.SelectShopFirst); return;
+                SetError(MealPlannerSharedMessages.SelectShopFirst);
+                return null;
             }
 
-            var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200, Sorting = DefaultSorting });
-            if (plans is null || plans.Items.Count == 0)
+            try
             {
-                SetError(MealPlannerSharedMessages.NoMealPlansFound); return;
+                var plans = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageSize = 200, Sorting = DefaultSorting });
+                if (plans is null || plans.Items.Count == 0)
+                {
+                    SetError(MealPlannerSharedMessages.NoMealPlansFound);
+                    return null;
+                }
+                return plans.Items;
             }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+                return null;
+            }
+        }
 
-            var names = plans.Items.Select(p => p.Name).ToArray();
-            var picked = await Shell.Current.DisplayActionSheetAsync("Select meal plan", "Cancel", null, names);
-            if (picked is null || picked == "Cancel") return;
-
-            var plan = plans.Items.FirstOrDefault(p => p.Name == picked);
-            if (plan is null) return;
-
+        public async Task AddFromMealPlanAsync(MealPlanModel plan)
+        {
             IsBusy = true;
             try
             {
@@ -230,43 +235,33 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        [RelayCommand(AllowConcurrentExecutions = true)]
-        private async Task AddFromRecipeAsync()
+        public async Task<IReadOnlyList<RecipeModel>?> LoadRecipesForSelectionAsync()
         {
             if (Model.ShopId == Guid.Empty)
             {
-                SetError(MealPlannerSharedMessages.SelectShopFirst); return;
+                SetError(MealPlannerSharedMessages.SelectShopFirst);
+                return null;
             }
 
-            var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
-            string[]? catNames = categories?.Items?.Select(c => c.Name).ToArray();
-            Guid? recipeCategoryId = null;
-
-            if (catNames is { Length: > 0 })
+            try
             {
-                var pickedCat = await Shell.Current.DisplayActionSheetAsync("Filter by category (optional)", "Skip", null, catNames);
-                if (pickedCat is not null && pickedCat != "Skip")
-                    recipeCategoryId = categories!.Items.FirstOrDefault(c => c.Name == pickedCat)?.Id;
+                var recipes = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = DefaultSorting });
+                if (recipes is null || recipes.Items.Count == 0)
+                {
+                    SetError(MealPlannerSharedMessages.NoRecipesFound);
+                    return null;
+                }
+                return recipes.Items;
             }
-
-            var recipes = await recipeService.SearchAsync(new QueryParameters<RecipeModel>
+            catch (Exception ex)
             {
-                PageSize = 500,
-                Sorting = DefaultSorting,
-                Filters = recipeCategoryId.HasValue ? [new FilterItem("RecipeCategoryId", recipeCategoryId.ToString(), FilterOperator.Equals)] : null
-            });
-            if (recipes is null || recipes.Items.Count == 0)
-            {
-                SetError(MealPlannerSharedMessages.NoRecipesFound); return;
+                SetError(ex.Message);
+                return null;
             }
+        }
 
-            var names = recipes.Items.Select(r => r.Name).ToArray();
-            var picked = await Shell.Current.DisplayActionSheetAsync("Select recipe", "Cancel", null, names);
-            if (picked is null || picked == "Cancel") return;
-
-            var recipe = recipes.Items.FirstOrDefault(r => r.Name == picked);
-            if (recipe is null) return;
-
+        public async Task AddFromRecipeAsync(RecipeModel recipe)
+        {
             IsBusy = true;
             try
             {

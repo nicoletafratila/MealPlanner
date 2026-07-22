@@ -66,6 +66,24 @@
   <data name="NameLabel" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="SelectMealPlanTitle" xml:space="preserve">
+    <value>Select meal plan</value>
+  </data>
+  <data name="PlaceholderSearchMealPlans" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
+  <data name="EmptyMealPlansLabel" xml:space="preserve">
+    <value>No meal plans found</value>
+  </data>
+  <data name="SelectRecipeTitle" xml:space="preserve">
+    <value>Select recipe</value>
+  </data>
+  <data name="PlaceholderSearchRecipes" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
+  <data name="EmptyRecipesLabel" xml:space="preserve">
+    <value>No recipes found</value>
+  </data>
   <data name="PlaceholderName" xml:space="preserve">
     <value>Shopping list name</value>
   </data>

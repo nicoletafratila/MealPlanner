@@ -140,7 +140,61 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("NameLabel", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select meal plan.
+        /// </summary>
+        internal static string SelectMealPlanTitle {
+            get {
+                return ResourceManager.GetString("SelectMealPlanTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search by name.
+        /// </summary>
+        internal static string PlaceholderSearchMealPlans {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchMealPlans", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No meal plans found.
+        /// </summary>
+        internal static string EmptyMealPlansLabel {
+            get {
+                return ResourceManager.GetString("EmptyMealPlansLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select recipe.
+        /// </summary>
+        internal static string SelectRecipeTitle {
+            get {
+                return ResourceManager.GetString("SelectRecipeTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search by name.
+        /// </summary>
+        internal static string PlaceholderSearchRecipes {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchRecipes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No recipes found.
+        /// </summary>
+        internal static string EmptyRecipesLabel {
+            get {
+                return ResourceManager.GetString("EmptyRecipesLabel", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Shopping list name.
         /// </summary>

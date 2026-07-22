@@ -83,9 +83,9 @@
                 <Label Text="{x:Static res:ShoppingListEditPage.ImportLabel}" Style="{StaticResource SectionHeaderLabel}" />
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                     <Button Grid.Column="0" Text="{x:Static res:ShoppingListEditPage.FromMealPlanButton}" Style="{StaticResource OutlineButton}"
-                            Command="{Binding AddFromMealPlanCommand}" />
+                            Clicked="OnAddFromMealPlanClicked" />
                     <Button Grid.Column="1" Text="{x:Static res:ShoppingListEditPage.FromRecipeButton}" Style="{StaticResource OutlineButton}"
-                            Command="{Binding AddFromRecipeCommand}" />
+                            Clicked="OnAddFromRecipeClicked" />
                 </Grid>
 
                 <Label Text="{x:Static res:ShoppingListEditPage.ProductsLabel}" Style="{StaticResource SectionHeaderLabel}" />
