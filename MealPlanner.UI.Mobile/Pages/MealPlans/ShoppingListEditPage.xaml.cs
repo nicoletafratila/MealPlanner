@@ -60,5 +60,13 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
             if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is RecipeModel recipe)
                 await _vm.AddFromRecipeAsync(recipe);
         }
+
+        private async void OnProductCollectedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            if (sender is not CheckBox { BindingContext: ShoppingListProductEditModel item })
+                return;
+
+            await _vm.OnProductCollectedChangedAsync(item);
+        }
     }
 }

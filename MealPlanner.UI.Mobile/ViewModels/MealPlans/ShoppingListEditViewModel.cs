@@ -303,6 +303,48 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
+        public async Task OnProductCollectedChangedAsync(ShoppingListProductEditModel item)
+        {
+            ReorderProduct(item);
+            await PersistProductsAsync();
+        }
+
+        private void ReorderProduct(ShoppingListProductEditModel item)
+        {
+            var list = ShoppingListProducts.ToList();
+            var oldIndex = list.IndexOf(item);
+            if (oldIndex < 0) return;
+
+            list.RemoveAt(oldIndex);
+
+            var newIndex = item.Collected
+                ? list.Count
+                : Math.Max(0, list.Count(p => !p.Collected));
+
+            list.Insert(newIndex, item);
+
+            for (var i = 0; i < list.Count; i++)
+                list[i].DisplaySequence = i + 1;
+
+            ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel>(list);
+        }
+
+        private async Task PersistProductsAsync()
+        {
+            if (IsNew) return;
+
+            try
+            {
+                Model.Products = ShoppingListProducts.ToList();
+                var result = await shoppingListService.UpdateAsync(Model);
+                if (result?.Succeeded != true) SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+        }
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
