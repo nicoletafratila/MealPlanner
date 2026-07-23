@@ -39,11 +39,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="CategoryLabel" xml:space="preserve">
     <value>Category</value>
   </data>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteConfirmMessage" xml:space="preserve">
+    <value>Delete this product?</value>
+  </data>
+  <data name="DeleteConfirmTitle" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ImageLabel" xml:space="preserve">
+    <value>Image</value>
+  </data>
   <data name="NameLabel" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="PickImageButton" xml:space="preserve">
+    <value>Pick Image</value>
   </data>
   <data name="PlaceholderName" xml:space="preserve">
     <value>Product name</value>
@@ -53,5 +71,11 @@
   </data>
   <data name="SelectCategoryTitle" xml:space="preserve">
     <value>Select category</value>
+  </data>
+  <data name="UnitLabel" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="UnitTitle" xml:space="preserve">
+    <value>Select unit</value>
   </data>
 </root>

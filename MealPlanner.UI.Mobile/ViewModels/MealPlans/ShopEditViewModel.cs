@@ -94,6 +94,34 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task DeleteAsync()
+        {
+            if (IsNew) return;
+            var confirm = await Shell.Current.DisplayAlertAsync(
+                Pages.MealPlans.Resources.ShopEditPage.DeleteConfirmTitle,
+                Pages.MealPlans.Resources.ShopEditPage.DeleteConfirmMessage,
+                Pages.MealPlans.Resources.ShopEditPage.DeleteButton,
+                Pages.MealPlans.Resources.ShopEditPage.CancelButton);
+            if (!confirm) return;
+            IsBusy = true; ClearMessages();
+            try
+            {
+                Guid.TryParse(ShopId, out var deleteId);
+                var result = await shopService.DeleteAsync(deleteId);
+                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return;

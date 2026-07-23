@@ -11,6 +11,9 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:ShopEditPage.SaveButton}" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
+                     IsDestructive="True"
+                     IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>

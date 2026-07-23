@@ -42,10 +42,17 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductsOverviewViewModel}}, Path=EditCommand}"
                                         CommandParameter="{Binding .}" />
                                 </Frame.GestureRecognizers>
-                                <VerticalStackLayout Spacing="2">
-                                    <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                    <Label Text="{Binding ProductCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
-                                </VerticalStackLayout>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Image Grid.Column="0"
+                                           Source="{Binding ImageUrl}"
+                                           WidthRequest="40" HeightRequest="40"
+                                           Aspect="AspectFill" VerticalOptions="Center"
+                                           IsVisible="{Binding ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <Label Text="{Binding ProductCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                    </VerticalStackLayout>
+                                </Grid>
                             </Frame>
                         </SwipeView>
                     </DataTemplate>

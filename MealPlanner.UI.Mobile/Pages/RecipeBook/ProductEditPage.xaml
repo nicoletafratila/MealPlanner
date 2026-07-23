@@ -10,16 +10,28 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:ProductEditPage.SaveButton}" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
+                     IsDestructive="True"
+                     IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
     </ContentPage.ToolbarItems>
 
-    <VerticalStackLayout Padding="24" Spacing="12">
-        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
-        <Label Text="{x:Static res:ProductEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
-        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ProductEditPage.PlaceholderName}" />
-        <Label Text="{x:Static res:ProductEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
-        <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" Title="{x:Static res:ProductEditPage.SelectCategoryTitle}"
-                SelectedItem="{Binding SelectedCategory}" />
-        <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-               IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+            <Label Text="{x:Static res:ProductEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ProductEditPage.PlaceholderName}" />
+            <Label Text="{x:Static res:ProductEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Picker ItemsSource="{Binding Categories}" ItemDisplayBinding="{Binding Name}" Title="{x:Static res:ProductEditPage.SelectCategoryTitle}"
+                    SelectedItem="{Binding SelectedCategory}" />
+            <Label Text="{x:Static res:ProductEditPage.UnitLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Picker ItemsSource="{Binding Units}" ItemDisplayBinding="{Binding Name}" Title="{x:Static res:ProductEditPage.UnitTitle}"
+                    SelectedItem="{Binding SelectedUnit}" />
+            <Label Text="{x:Static res:ProductEditPage.ImageLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Button Text="{x:Static res:ProductEditPage.PickImageButton}" Command="{Binding PickImageCommand}" HorizontalOptions="Start" />
+            <Image Source="{Binding ProductImage}" HeightRequest="150" Aspect="AspectFit"
+                   IsVisible="{Binding ProductImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
