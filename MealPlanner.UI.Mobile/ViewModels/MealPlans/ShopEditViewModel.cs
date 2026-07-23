@@ -1,13 +1,17 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using Common.Pagination;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
+using RecipeBook.Services.Http;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     [QueryProperty(nameof(ShopId), "id")]
-    public partial class ShopEditViewModel(IShopService shopService) : BaseViewModel
+    public partial class ShopEditViewModel(IShopService shopService, ProductCategoryService categoryService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shopId = string.Empty;
@@ -18,12 +22,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private bool _isNew;
 
+        [ObservableProperty]
+        private ObservableCollection<ShopDisplaySequenceEditModel> _displaySequence = [];
+
         partial void OnShopIdChanged(string value)
         {
             Guid.TryParse(value, out var id);
             IsNew = id == Guid.Empty;
-            if (!IsNew)
-                _ = LoadAsync();
+            _ = LoadAsync();
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
@@ -32,8 +38,18 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             IsBusy = true;
             try
             {
-                Guid.TryParse(ShopId, out var id);
-                Model = await shopService.GetEditAsync(id) ?? new();
+                if (IsNew)
+                {
+                    var categories = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
+                    Model = new ShopEditModel(categories?.Items ?? []);
+                }
+                else
+                {
+                    Guid.TryParse(ShopId, out var id);
+                    Model = await shopService.GetEditAsync(id) ?? new();
+                }
+
+                DisplaySequence = new ObservableCollection<ShopDisplaySequenceEditModel>(Model.DisplaySequence ?? []);
             }
             catch (Exception ex)
             {
@@ -43,6 +59,38 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             {
                 IsBusy = false;
             }
+        }
+
+        [RelayCommand]
+        private void MoveUp(ShopDisplaySequenceEditModel item)
+        {
+            var list = DisplaySequence.ToList();
+            var index = list.IndexOf(item);
+            if (index <= 0) return;
+
+            list.RemoveAt(index);
+            list.Insert(index - 1, item);
+            Resequence(list);
+        }
+
+        [RelayCommand]
+        private void MoveDown(ShopDisplaySequenceEditModel item)
+        {
+            var list = DisplaySequence.ToList();
+            var index = list.IndexOf(item);
+            if (index < 0 || index >= list.Count - 1) return;
+
+            list.RemoveAt(index);
+            list.Insert(index + 1, item);
+            Resequence(list);
+        }
+
+        private void Resequence(List<ShopDisplaySequenceEditModel> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+                list[i].Value = i + 1;
+
+            DisplaySequence = new ObservableCollection<ShopDisplaySequenceEditModel>(list);
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
@@ -56,6 +104,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 SetError(MealPlannerSharedMessages.ShopNameRequired);
                 return;
             }
+
+            Model.DisplaySequence = DisplaySequence.ToList();
 
             if (Model.DisplaySequence is null || Model.DisplaySequence.Count == 0)
             {

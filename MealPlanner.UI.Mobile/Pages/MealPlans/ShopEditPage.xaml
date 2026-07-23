@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
+             xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.ShopEditPage"
@@ -12,10 +13,37 @@
         <ToolbarItem Text="{x:Static res:ShopEditPage.SaveButton}" Command="{Binding SaveCommand}" />
     </ContentPage.ToolbarItems>
 
-    <VerticalStackLayout Padding="24" Spacing="12">
-        <Label Text="{x:Static res:ShopEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
-        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShopEditPage.PlaceholderName}" />
-        <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-               IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,8" />
+
+            <Label Text="{x:Static res:ShopEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShopEditPage.PlaceholderName}" />
+
+            <Label Text="{x:Static res:ShopEditPage.DisplayOrderLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding DisplaySequence}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="model:ShopDisplaySequenceEditModel">
+                        <Grid ColumnDefinitions="*,Auto,Auto" Padding="8,6">
+                            <Label Grid.Column="0" Text="{Binding ProductCategory.Name}" VerticalOptions="Center" />
+                            <Button Grid.Column="1" Text="&#9650;" BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                                    Padding="6,2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShopEditViewModel}}, Path=MoveUpCommand}"
+                                    CommandParameter="{Binding .}" />
+                            <Button Grid.Column="2" Text="&#9660;" BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
+                                    Padding="6,2" Margin="4,0,0,0"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShopEditViewModel}}, Path=MoveDownCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Label Text="{x:Static res:ShopEditPage.EmptyCategories}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16"
+                   IsVisible="{Binding DisplaySequence.Count, Converter={x:Static converters:ZeroToBoolConverter.Instance}}" />
+
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

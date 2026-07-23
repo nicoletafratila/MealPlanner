@@ -86,5 +86,23 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SaveButton", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Category Order.
+        /// </summary>
+        internal static string DisplayOrderLabel {
+            get {
+                return ResourceManager.GetString("DisplayOrderLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No product categories found..
+        /// </summary>
+        internal static string EmptyCategories {
+            get {
+                return ResourceManager.GetString("EmptyCategories", resourceCulture);
+            }
+        }
     }
 }
