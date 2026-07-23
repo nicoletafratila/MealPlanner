@@ -16,6 +16,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         private ObservableCollection<ApplicationUserModel> _users = [];
 
         [ObservableProperty]
+        private string? _searchText;
+
+        [ObservableProperty]
         private int _currentPage = 1;
 
         [ObservableProperty]
@@ -23,6 +26,18 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 
         [ObservableProperty]
         private bool _hasPreviousPage;
+
+        partial void OnSearchTextChanged(string? value)
+        {
+            if (string.IsNullOrEmpty(value)) SearchCommand.Execute(null);
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task SearchAsync()
+        {
+            CurrentPage = 1;
+            await LoadAsync();
+        }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
@@ -32,7 +47,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             ClearMessages();
             try
             {
-                var result = await userService.SearchAsync(new QueryParameters<ApplicationUserModel> { PageNumber = CurrentPage, Sorting = _defaultSorting });
+                var filters = BuildFilters();
+                var result = await userService.SearchAsync(new QueryParameters<ApplicationUserModel> { PageNumber = CurrentPage, Filters = filters, Sorting = _defaultSorting });
                 if (result is not null)
                 {
                     Users = new ObservableCollection<ApplicationUserModel>(result.Items);
@@ -49,6 +65,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 IsBusy = false;
             }
         }
+
+        private FilterItem[]? BuildFilters() =>
+            string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Username", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task UnlockUserAsync(string userId)

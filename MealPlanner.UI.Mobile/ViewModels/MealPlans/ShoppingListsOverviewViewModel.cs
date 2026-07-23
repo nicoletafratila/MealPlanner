@@ -15,6 +15,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private ObservableCollection<ShoppingListModel> _shoppingLists = [];
 
+        [ObservableProperty]
+        private string? _searchText;
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
@@ -23,7 +26,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             ClearMessages();
             try
             {
-                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { Sorting = CreatedAtDescendingSorting });
+                var filters = BuildFilters();
+                var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { Filters = filters, Sorting = CreatedAtDescendingSorting });
                 if (result is not null)
                 {
                     ShoppingLists = new ObservableCollection<ShoppingListModel>(result.Items);
@@ -38,6 +42,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 IsBusy = false;
             }
         }
+
+        private FilterItem[]? BuildFilters() =>
+            string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
         [RelayCommand]
         private Task AddAsync() => Shell.Current.GoToAsync($"ShoppingListEdit?id={Guid.Empty}");

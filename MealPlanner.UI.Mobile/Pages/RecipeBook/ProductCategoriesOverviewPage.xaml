@@ -12,37 +12,41 @@
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-        <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None"
-                        RemainingItemsThreshold="2"
-                        RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
-            <CollectionView.Footer>
-                <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
-                                   IsVisible="{Binding IsLoadingMore}"
-                                   HorizontalOptions="Center"
-                                   Margin="0,8" />
-            </CollectionView.Footer>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:ProductCategoryModel">
-                    <SwipeView Margin="12,4">
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="🗑" BackgroundColor="{StaticResource ErrorColor}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductCategoriesViewModel}}, Path=DeleteCommand}"
-                                           CommandParameter="{Binding .}" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <Frame Style="{StaticResource CardFrame}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductCategoriesViewModel}}, Path=EditCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Frame.GestureRecognizers>
-                            <Label Text="{Binding Name}" FontAttributes="Bold" />
-                        </Frame>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </RefreshView>
+    <Grid RowDefinitions="Auto,*">
+        <SearchBar Grid.Row="0" Placeholder="{x:Static res:ProductCategoriesOverviewPage.PlaceholderSearch}" Text="{Binding SearchText}"
+                   SearchCommand="{Binding LoadCommand}" Margin="12,8" />
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None"
+                            RemainingItemsThreshold="2"
+                            RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
+                <CollectionView.Footer>
+                    <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                       IsVisible="{Binding IsLoadingMore}"
+                                       HorizontalOptions="Center"
+                                       Margin="0,8" />
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ProductCategoryModel">
+                        <SwipeView Margin="12,4">
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="🗑" BackgroundColor="{StaticResource ErrorColor}"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductCategoriesViewModel}}, Path=DeleteCommand}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame Style="{StaticResource CardFrame}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductCategoriesViewModel}}, Path=EditCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
 </ContentPage>

@@ -48,6 +48,34 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task DeleteAsync()
+        {
+            if (IsNew) return;
+            var confirm = await Shell.Current.DisplayAlertAsync(
+                Pages.RecipeBook.Resources.ProductCategoryEditPage.DeleteConfirmTitle,
+                Pages.RecipeBook.Resources.ProductCategoryEditPage.DeleteConfirmMessage,
+                Pages.RecipeBook.Resources.ProductCategoryEditPage.DeleteButton,
+                Pages.RecipeBook.Resources.ProductCategoryEditPage.CancelButton);
+            if (!confirm) return;
+            IsBusy = true; ClearMessages();
+            try
+            {
+                Guid.TryParse(CategoryId, out var deleteId);
+                var result = await categoryService.DeleteAsync(deleteId);
+                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
         {
             if (IsBusy) return;

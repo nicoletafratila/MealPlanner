@@ -15,6 +15,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private ObservableCollection<RecipeCategoryModel> _categories = [];
 
         [ObservableProperty]
+        private string? _searchText;
+
+        [ObservableProperty]
         private int _currentPage = 1;
 
         [ObservableProperty]
@@ -32,7 +35,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             ClearMessages();
             try
             {
-                var result = await categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageNumber = CurrentPage, PageSize = PageSize, Sorting = DefaultSorting });
+                var filters = BuildFilters();
+                var result = await categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageNumber = CurrentPage, PageSize = PageSize, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null)
                 {
                     Categories = new ObservableCollection<RecipeCategoryModel>(result.Items);
@@ -57,7 +61,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             try
             {
                 CurrentPage++;
-                var result = await categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageNumber = CurrentPage, PageSize = PageSize, Sorting = DefaultSorting });
+                var filters = BuildFilters();
+                var result = await categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageNumber = CurrentPage, PageSize = PageSize, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null)
                 {
                     foreach (var item in result.Items)
@@ -72,6 +77,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 IsLoadingMore = false;
             }
         }
+
+        private FilterItem[]? BuildFilters() =>
+            string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
         [RelayCommand]
         private Task AddAsync() => Shell.Current.GoToAsync($"RecipeCategoryEdit?id={Guid.Empty}");

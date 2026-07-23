@@ -77,5 +77,14 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search shopping lists....
+        /// </summary>
+        internal static string PlaceholderSearch {
+            get {
+                return ResourceManager.GetString("PlaceholderSearch", resourceCulture);
+            }
+        }
     }
 }

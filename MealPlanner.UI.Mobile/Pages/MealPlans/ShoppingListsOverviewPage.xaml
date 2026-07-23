@@ -12,37 +12,41 @@
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-        <CollectionView ItemsSource="{Binding ShoppingLists}">
-            <CollectionView.EmptyView>
-                <Label Text="{x:Static res:ShoppingListsOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"
-                       TextColor="{StaticResource DarkGray}" Margin="0,40" />
-            </CollectionView.EmptyView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:ShoppingListModel">
-                    <SwipeView Margin="12,4">
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="🗑" BackgroundColor="{StaticResource ErrorColor}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListsOverviewViewModel}}, Path=DeleteCommand}"
-                                           CommandParameter="{Binding .}" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <Frame Style="{StaticResource CardFrame}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListsOverviewViewModel}}, Path=EditCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Frame.GestureRecognizers>
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM dd, yyyy}'}"
-                                       FontSize="12" TextColor="{StaticResource DarkGray}" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </RefreshView>
+    <Grid RowDefinitions="Auto,*">
+        <SearchBar Grid.Row="0" Placeholder="{x:Static res:ShoppingListsOverviewPage.PlaceholderSearch}" Text="{Binding SearchText}"
+                   SearchCommand="{Binding LoadCommand}" Margin="12,8" />
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+            <CollectionView ItemsSource="{Binding ShoppingLists}">
+                <CollectionView.EmptyView>
+                    <Label Text="{x:Static res:ShoppingListsOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="{StaticResource DarkGray}" Margin="0,40" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ShoppingListModel">
+                        <SwipeView Margin="12,4">
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="🗑" BackgroundColor="{StaticResource ErrorColor}"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListsOverviewViewModel}}, Path=DeleteCommand}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame Style="{StaticResource CardFrame}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListsOverviewViewModel}}, Path=EditCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM dd, yyyy}'}"
+                                           FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
 </ContentPage>

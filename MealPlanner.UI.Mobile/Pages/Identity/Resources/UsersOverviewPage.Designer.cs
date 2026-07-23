@@ -88,6 +88,15 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search users....
+        /// </summary>
+        internal static string PlaceholderSearch {
+            get {
+                return ResourceManager.GetString("PlaceholderSearch", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &lt; Prev.
         /// </summary>
         internal static string PreviousButton {

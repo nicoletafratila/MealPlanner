@@ -15,6 +15,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private ObservableCollection<ShopModel> _shops = [];
 
         [ObservableProperty]
+        private string? _searchText;
+
+        [ObservableProperty]
         private int _currentPage = 1;
 
         [ObservableProperty]
@@ -32,7 +35,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             ClearMessages();
             try
             {
-                var result = await shopService.SearchAsync(new QueryParameters<ShopModel> { PageNumber = CurrentPage, PageSize = PageSize, Sorting = DefaultSorting });
+                var filters = BuildFilters();
+                var result = await shopService.SearchAsync(new QueryParameters<ShopModel> { PageNumber = CurrentPage, PageSize = PageSize, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null)
                 {
                     Shops = new ObservableCollection<ShopModel>(result.Items);
@@ -57,7 +61,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             try
             {
                 CurrentPage++;
-                var result = await shopService.SearchAsync(new QueryParameters<ShopModel> { PageNumber = CurrentPage, PageSize = PageSize, Sorting = DefaultSorting });
+                var filters = BuildFilters();
+                var result = await shopService.SearchAsync(new QueryParameters<ShopModel> { PageNumber = CurrentPage, PageSize = PageSize, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null)
                 {
                     foreach (var item in result.Items)
@@ -72,6 +77,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 IsLoadingMore = false;
             }
         }
+
+        private FilterItem[]? BuildFilters() =>
+            string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
         [RelayCommand]
         private Task AddAsync() => Shell.Current.GoToAsync($"ShopEdit?id={Guid.Empty}");

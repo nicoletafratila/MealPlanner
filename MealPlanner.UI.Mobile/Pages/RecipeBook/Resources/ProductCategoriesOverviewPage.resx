@@ -42,4 +42,7 @@
   <data name="PageTitle" xml:space="preserve">
     <value>Product Categories</value>
   </data>
+  <data name="PlaceholderSearch" xml:space="preserve">
+    <value>Search product categories...</value>
+  </data>
 </root>

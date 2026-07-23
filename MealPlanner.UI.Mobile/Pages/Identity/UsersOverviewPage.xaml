@@ -8,8 +8,11 @@
              x:DataType="vm:UsersOverviewViewModel"
              Title="{x:Static res:UsersOverviewPage.PageTitle}">
 
-    <Grid RowDefinitions="*,Auto">
-        <RefreshView Grid.Row="0" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <SearchBar Grid.Row="0" Placeholder="{x:Static res:UsersOverviewPage.PlaceholderSearch}" Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}" Margin="12,8" />
+
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Users}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:ApplicationUserModel">
@@ -34,7 +37,7 @@
         </RefreshView>
 
         <!-- Pagination -->
-        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="16" Padding="12">
+        <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="16" Padding="12">
             <Button Text="{x:Static res:UsersOverviewPage.PreviousButton}" Command="{Binding PreviousPageCommand}"
                     IsVisible="{Binding HasPreviousPage}" Style="{StaticResource OutlineButton}" />
             <Button Text="{x:Static res:UsersOverviewPage.NextButton}" Command="{Binding NextPageCommand}"

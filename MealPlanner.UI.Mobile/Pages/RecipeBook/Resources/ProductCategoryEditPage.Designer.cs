@@ -61,6 +61,42 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string CancelButton {
+            get {
+                return ResourceManager.GetString("CancelButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string DeleteButton {
+            get {
+                return ResourceManager.GetString("DeleteButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete this product category?.
+        /// </summary>
+        internal static string DeleteConfirmMessage {
+            get {
+                return ResourceManager.GetString("DeleteConfirmMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string DeleteConfirmTitle {
+            get {
+                return ResourceManager.GetString("DeleteConfirmTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string NameLabel {
