@@ -43,7 +43,9 @@
                     </div>
                 </GridColumn>
                 <GridColumn TItem="ShopModel" Filterable="false">
-                    <button class="btn-close btn-sm" type="button" @onclick="() => DeleteAsync(context)"></button>
+                    <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteAsync(context)">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </GridColumn>
             </Columns>
         </GridTemplate>
