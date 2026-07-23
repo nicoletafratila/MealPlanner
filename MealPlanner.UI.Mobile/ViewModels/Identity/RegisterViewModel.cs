@@ -46,6 +46,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 if (result?.Succeeded == true)
                 {
                     SetSuccess(MealPlannerSharedMessages.RegistrationSuccess);
+                    await Task.Delay(1500);
                     await Shell.Current.GoToAsync("..");
                 }
                 else SetError(result?.Message);

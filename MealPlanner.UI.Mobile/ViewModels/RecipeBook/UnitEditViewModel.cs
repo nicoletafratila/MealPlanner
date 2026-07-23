@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Common.Constants.Units;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
@@ -17,6 +18,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         [ObservableProperty]
         private bool _isNew;
+
+        public IReadOnlyList<UnitType> UnitTypes { get; } = Enum.GetValues<UnitType>();
 
         partial void OnUnitIdChanged(string value)
         {

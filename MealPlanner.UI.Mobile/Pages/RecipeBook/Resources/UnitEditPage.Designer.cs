@@ -86,5 +86,14 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("SaveButton", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unit Type.
+        /// </summary>
+        internal static string UnitTypeLabel {
+            get {
+                return ResourceManager.GetString("UnitTypeLabel", resourceCulture);
+            }
+        }
     }
 }
