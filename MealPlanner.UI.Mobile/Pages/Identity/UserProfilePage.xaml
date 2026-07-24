@@ -16,6 +16,12 @@
         <VerticalStackLayout Padding="24" Spacing="12" IsVisible="{Binding Model, Converter={x:Static converters:NotNullConverter.Instance}}">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
+            <Image Source="{Binding ProfileImage}" HeightRequest="120" WidthRequest="120" Aspect="AspectFill"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding ProfileImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
+            <Button Text="{x:Static res:UserProfilePage.PickPictureButton}" Style="{StaticResource OutlineButton}"
+                    Command="{Binding PickProfilePictureCommand}" HorizontalOptions="Center" />
+
             <Label Text="{x:Static res:UserProfilePage.UsernameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Label Text="{Binding Model.Username}" />
 
@@ -31,6 +37,22 @@
             <Label Text="{x:Static res:UserProfilePage.PhoneLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.PhoneNumber}" Keyboard="Telephone" />
 
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsAdmin}" Margin="0,8,0,0">
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding Model.IsActive}" />
+                    <Label Text="{x:Static res:UserProfilePage.IsActiveLabel}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding Model.IsLockedOut}" IsEnabled="False" />
+                    <Label Text="{x:Static res:UserProfilePage.LockedOutLabel}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <Button Text="{x:Static res:UserProfilePage.UnlockButton}" Style="{StaticResource OutlineButton}"
+                        Command="{Binding UnlockCommand}" HorizontalOptions="Start"
+                        IsVisible="{Binding Model.IsLockedOut}" />
+            </VerticalStackLayout>
+
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                    IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
             <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
@@ -39,7 +61,8 @@
             <Button Text="{x:Static res:UserProfilePage.ChangePasswordButton}" Style="{StaticResource OutlineButton}"
                     Command="{Binding ChangePasswordCommand}" Margin="0,16,0,0" />
             <Button Text="{x:Static res:UserProfilePage.SignOutButton}" Style="{StaticResource DangerButton}"
-                    Command="{Binding LogoutCommand}" />
+                    Command="{Binding LogoutCommand}"
+                    IsVisible="{Binding IsOwnProfile}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

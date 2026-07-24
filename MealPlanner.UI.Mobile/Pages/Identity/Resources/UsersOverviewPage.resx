@@ -39,6 +39,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActiveLabel" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="InactiveLabel" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
   <data name="LockedLabel" xml:space="preserve">
     <value>Locked</value>
   </data>
@@ -56,5 +62,8 @@
   </data>
   <data name="UnlockButton" xml:space="preserve">
     <value>Unlock</value>
+  </data>
+  <data name="UnlockedLabel" xml:space="preserve">
+    <value>Unlocked</value>
   </data>
 </root>

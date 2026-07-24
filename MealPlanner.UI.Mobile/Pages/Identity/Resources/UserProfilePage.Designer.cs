@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("ChangePasswordButton", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("EmailLabel", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
@@ -86,7 +86,16 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("FirstNameLabel", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        internal static string IsActiveLabel {
+            get {
+                return ResourceManager.GetString("IsActiveLabel", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
@@ -95,7 +104,16 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("LastNameLabel", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Locked.
+        /// </summary>
+        internal static string LockedOutLabel {
+            get {
+                return ResourceManager.GetString("LockedOutLabel", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to My Profile.
         /// </summary>
@@ -104,7 +122,7 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Phone.
         /// </summary>
@@ -113,7 +131,16 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("PhoneLabel", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Change Picture.
+        /// </summary>
+        internal static string PickPictureButton {
+            get {
+                return ResourceManager.GetString("PickPictureButton", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
@@ -122,7 +149,7 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("SaveButton", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sign Out.
         /// </summary>
@@ -131,7 +158,25 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
                 return ResourceManager.GetString("SignOutButton", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unlock User.
+        /// </summary>
+        internal static string UnlockButton {
+            get {
+                return ResourceManager.GetString("UnlockButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User has been unlocked successfully.
+        /// </summary>
+        internal static string UnlockSucceeded {
+            get {
+                return ResourceManager.GetString("UnlockSucceeded", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>

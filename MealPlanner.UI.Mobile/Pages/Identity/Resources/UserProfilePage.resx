@@ -48,8 +48,14 @@
   <data name="FirstNameLabel" xml:space="preserve">
     <value>First Name</value>
   </data>
+  <data name="IsActiveLabel" xml:space="preserve">
+    <value>Active</value>
+  </data>
   <data name="LastNameLabel" xml:space="preserve">
     <value>Last Name</value>
+  </data>
+  <data name="LockedOutLabel" xml:space="preserve">
+    <value>Locked</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
     <value>My Profile</value>
@@ -57,11 +63,20 @@
   <data name="PhoneLabel" xml:space="preserve">
     <value>Phone</value>
   </data>
+  <data name="PickPictureButton" xml:space="preserve">
+    <value>Change Picture</value>
+  </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
   </data>
   <data name="SignOutButton" xml:space="preserve">
     <value>Sign Out</value>
+  </data>
+  <data name="UnlockButton" xml:space="preserve">
+    <value>Unlock User</value>
+  </data>
+  <data name="UnlockSucceeded" xml:space="preserve">
+    <value>User has been unlocked successfully</value>
   </data>
   <data name="UsernameLabel" xml:space="preserve">
     <value>Username</value>

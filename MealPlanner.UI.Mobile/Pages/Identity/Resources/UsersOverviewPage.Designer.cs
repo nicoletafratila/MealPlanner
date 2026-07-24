@@ -61,6 +61,24 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        internal static string ActiveLabel {
+            get {
+                return ResourceManager.GetString("ActiveLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        internal static string InactiveLabel {
+            get {
+                return ResourceManager.GetString("InactiveLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Locked.
         /// </summary>
         internal static string LockedLabel {
@@ -111,6 +129,15 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
         internal static string UnlockButton {
             get {
                 return ResourceManager.GetString("UnlockButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unlocked.
+        /// </summary>
+        internal static string UnlockedLabel {
+            get {
+                return ResourceManager.GetString("UnlockedLabel", resourceCulture);
             }
         }
     }

@@ -69,6 +69,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         private FilterItem[]? BuildFilters() =>
             string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Username", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
+        [RelayCommand]
+        private Task OpenUserAsync(ApplicationUserModel user) =>
+            Shell.Current.GoToAsync($"UserDetail?username={Uri.EscapeDataString(user.Username)}");
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task UnlockUserAsync(string userId)
         {

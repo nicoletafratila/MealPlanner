@@ -39,6 +39,7 @@ namespace MealPlanner.UI.Mobile
             Routing.RegisterRoute("MealPlanEdit", typeof(MealPlanEditPage));
             Routing.RegisterRoute("ShopEdit", typeof(ShopEditPage));
             Routing.RegisterRoute("ShoppingListEdit", typeof(ShoppingListEditPage));
+            Routing.RegisterRoute("UserDetail", typeof(UserProfilePage));
             Routing.RegisterRoute("ChangePassword", typeof(ChangePasswordPage));
             Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
             Routing.RegisterRoute("ResetPassword", typeof(ResetPasswordPage));

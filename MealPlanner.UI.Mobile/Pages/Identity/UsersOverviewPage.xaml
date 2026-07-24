@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
              xmlns:model="clr-namespace:Identity.Shared.Models;assembly=Identity.Shared"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.Identity.UsersOverviewPage"
              x:DataType="vm:UsersOverviewViewModel"
@@ -17,14 +18,36 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:ApplicationUserModel">
                         <Frame Style="{StaticResource CardFrame}" Margin="12,6">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=OpenUserCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Image Grid.Column="0"
+                                       Source="{Binding ProfilePictureUrl}"
+                                       WidthRequest="44" HeightRequest="44"
+                                       Aspect="AspectFill" VerticalOptions="Center"
+                                       IsVisible="{Binding ProfilePictureUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" Margin="8,0,0,0">
                                     <Label Text="{Binding Username}" FontAttributes="Bold" />
+                                    <HorizontalStackLayout Spacing="4">
+                                        <Label Text="{Binding FirstName}" FontSize="12" />
+                                        <Label Text="{Binding LastName}" FontSize="12" />
+                                    </HorizontalStackLayout>
                                     <Label Text="{Binding EmailAddress}" FontSize="12" TextColor="{StaticResource DarkGray}" />
-                                    <Label Text="{x:Static res:UsersOverviewPage.LockedLabel}" TextColor="{StaticResource ErrorColor}" FontSize="11"
-                                           IsVisible="{Binding IsLockedOut}" />
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{x:Static res:UsersOverviewPage.ActiveLabel}" TextColor="{StaticResource SuccessColor}" FontSize="11"
+                                               IsVisible="{Binding IsActive}" />
+                                        <Label Text="{x:Static res:UsersOverviewPage.InactiveLabel}" TextColor="{StaticResource DarkGray}" FontSize="11"
+                                               IsVisible="{Binding IsActive, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
+                                        <Label Text="{x:Static res:UsersOverviewPage.LockedLabel}" TextColor="{StaticResource ErrorColor}" FontSize="11"
+                                               IsVisible="{Binding IsLockedOut}" />
+                                        <Label Text="{x:Static res:UsersOverviewPage.UnlockedLabel}" TextColor="{StaticResource DarkGray}" FontSize="11"
+                                               IsVisible="{Binding IsLockedOut, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
+                                    </HorizontalStackLayout>
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="{x:Static res:UsersOverviewPage.UnlockButton}"
+                                <Button Grid.Column="2" Text="{x:Static res:UsersOverviewPage.UnlockButton}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=UnlockUserCommand}"
                                         CommandParameter="{Binding UserId}"
                                         IsVisible="{Binding IsLockedOut}"
