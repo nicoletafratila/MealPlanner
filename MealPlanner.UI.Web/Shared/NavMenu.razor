@@ -9,42 +9,8 @@
     <AuthorizeView>
         <Authorized>
             <div class="nav-item px-3">
-                <MudNavLink class="nav-link" href="recipebooks/productcategoriesoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductCategories
-                </MudNavLink>
-            </div>
-            @if ((context.User.IsInRole("admin")))
-            {
-
-                <div class="nav-item px-3">
-                    <MudNavLink class="nav-link" href="recipebooks/unitsoverview">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductUnits
-                    </MudNavLink>
-                </div>
-            }
-            <div class="nav-item px-3">
-                <MudNavLink class="nav-link" href="recipebooks/productsoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Products
-                </MudNavLink>
-            </div>
-            <div class="nav-item px-3">
-                <MudNavLink class="nav-link" href="recipebooks/productstatistics">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductsStatistics
-                </MudNavLink>
-            </div>
-            <div class="nav-item px-3">
-                <MudNavLink class="nav-link" href="recipebooks/recipecategoriesoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.RecipeCategories
-                </MudNavLink>
-            </div>
-            <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipesoverview" Match="NavLinkMatch.All">
                     <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Recipes
-                </MudNavLink>
-            </div>
-            <div class="nav-item px-3">
-                <MudNavLink class="nav-link" href="recipebooks/recipestatistics">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.RecipesStatistics
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
@@ -60,6 +26,39 @@
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="mealplans/shopsoverview">
                     <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Shops
+                </MudNavLink>
+            </div>
+            <div class="nav-item px-3">
+                <MudNavLink class="nav-link" href="recipebooks/productsoverview">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Products
+                </MudNavLink>
+            </div>
+            <div class="nav-item px-3">
+                <MudNavLink class="nav-link" href="recipebooks/recipecategoriesoverview">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.RecipeCategories
+                </MudNavLink>
+            </div>
+            <div class="nav-item px-3">
+                <MudNavLink class="nav-link" href="recipebooks/productcategoriesoverview">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductCategories
+                </MudNavLink>
+            </div>
+            @if ((context.User.IsInRole("admin")))
+            {
+                <div class="nav-item px-3">
+                    <MudNavLink class="nav-link" href="recipebooks/unitsoverview">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductUnits
+                    </MudNavLink>
+                </div>
+            }
+            <div class="nav-item px-3">
+                <MudNavLink class="nav-link" href="recipebooks/recipestatistics">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.RecipesStatistics
+                </MudNavLink>
+            </div>
+            <div class="nav-item px-3">
+                <MudNavLink class="nav-link" href="recipebooks/productstatistics">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductsStatistics
                 </MudNavLink>
             </div>
             @if ((context.User.IsInRole("admin")))

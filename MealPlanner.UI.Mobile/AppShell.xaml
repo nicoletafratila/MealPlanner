@@ -75,7 +75,7 @@
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Title="{x:Static strings:NavStrings.Units}" Icon="unit.png">
+    <FlyoutItem Title="{x:Static strings:NavStrings.Units}" Icon="unit.png" IsVisible="{Binding IsAdmin}">
         <ShellContent Title="{x:Static strings:NavStrings.Units}" ContentTemplate="{DataTemplate recipebook:UnitsOverviewPage}" Route="UnitsOverview" />
     </FlyoutItem>
 
@@ -92,7 +92,7 @@
         <ShellContent Title="{x:Static strings:NavStrings.MyProfile}" ContentTemplate="{DataTemplate identity:UserProfilePage}" Route="UserProfile" />
     </FlyoutItem>
 
-    <FlyoutItem Title="{x:Static strings:NavStrings.Users}" Icon="users.png">
+    <FlyoutItem Title="{x:Static strings:NavStrings.Users}" Icon="users.png" IsVisible="{Binding IsAdmin}">
         <ShellContent Title="{x:Static strings:NavStrings.Users}" ContentTemplate="{DataTemplate identity:UsersOverviewPage}" Route="UsersOverview" />
     </FlyoutItem>
 

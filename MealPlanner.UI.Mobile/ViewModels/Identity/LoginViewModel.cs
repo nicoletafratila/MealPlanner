@@ -7,7 +7,7 @@ using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class LoginViewModel(AuthenticationService authService, SecureStorageTokenProvider tokenProvider) : BaseViewModel
+    public partial class LoginViewModel(AuthenticationService authService, SecureStorageTokenProvider tokenProvider, AppShellViewModel appShellViewModel) : BaseViewModel
     {
         [ObservableProperty]
         private string _username = string.Empty;
@@ -51,6 +51,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                         await tokenProvider.SaveCredentialsAsync(Username, Password);
                     else
                         tokenProvider.ClearCredentials();
+                    await appShellViewModel.LoadCurrentCommand.ExecuteAsync(null);
                     await Shell.Current.GoToAsync("//RecipesOverview");
                 }
                 else

@@ -1,4 +1,3 @@
-using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Windows.ApplicationModel.Activation;
 
@@ -13,7 +12,7 @@ namespace MealPlanner.UI.Mobile.WinUI
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             base.OnLaunched(args);
 
@@ -22,7 +21,7 @@ namespace MealPlanner.UI.Mobile.WinUI
                 activatedArgs.Data is IProtocolActivatedEventArgs protocolArgs &&
                 protocolArgs.Uri.Scheme == "mealplanner")
             {
-                MealPlanner.UI.Mobile.App.HandleDeepLink(protocolArgs.Uri.ToString());
+                Mobile.App.HandleDeepLink(protocolArgs.Uri.ToString());
             }
         }
     }

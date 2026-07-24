@@ -26,7 +26,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var categories = await recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 500 });
                 var data = await statisticsService.GetFavoriteRecipesAsync(categories?.Items?.ToList() ?? []);
                 Entries = data is not null
-                    ? new ObservableCollection<StatisticEntryModel>(FlattenStatistics(data))
+                    ? new ObservableCollection<StatisticEntryModel>(FlattenStatistics(data.OrderBy(stat => stat.Title, StringComparer.CurrentCultureIgnoreCase)))
                     : [];
             }
             catch (Exception ex)
