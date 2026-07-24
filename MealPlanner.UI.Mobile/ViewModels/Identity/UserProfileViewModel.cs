@@ -27,6 +27,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [ObservableProperty]
         private ImageSource? _profileImage;
 
+        [ObservableProperty]
+        private bool _isLockedOut;
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
@@ -46,6 +49,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 if (targetUsername is not null)
                 {
                     Model = await userService.GetEditAsync(targetUsername);
+                    IsLockedOut = Model?.IsLockedOut ?? false;
                     ProfileImage = string.IsNullOrWhiteSpace(Model?.ProfilePictureUrl)
                         ? null
                         : ImageSource.FromUri(new Uri(Model.ProfilePictureUrl));
@@ -137,7 +141,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 if (result?.Succeeded == true)
                 {
                     Model.IsLockedOut = false;
-                    OnPropertyChanged(nameof(Model));
+                    IsLockedOut = false;
                     SetSuccess(UserProfilePage.UnlockSucceeded);
                 }
                 else SetError(result?.Message);

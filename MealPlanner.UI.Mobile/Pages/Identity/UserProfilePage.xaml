@@ -44,13 +44,14 @@
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">
-                    <CheckBox IsChecked="{Binding Model.IsLockedOut}" IsEnabled="False" />
-                    <Label Text="{x:Static res:UserProfilePage.LockedOutLabel}" VerticalOptions="Center" />
+                    <Label Text="🔒" FontSize="16" VerticalOptions="Center" IsVisible="{Binding IsLockedOut}" />
+                    <Label Text="🔓" FontSize="16" VerticalOptions="Center" IsVisible="{Binding IsLockedOut, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
+                    <Label Text="{x:Static res:UserProfilePage.LockedOutLabel}" TextColor="{StaticResource DarkGray}" VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
                 <Button Text="{x:Static res:UserProfilePage.UnlockButton}" Style="{StaticResource OutlineButton}"
                         Command="{Binding UnlockCommand}" HorizontalOptions="Start"
-                        IsVisible="{Binding Model.IsLockedOut}" />
+                        IsVisible="{Binding IsLockedOut}" />
             </VerticalStackLayout>
 
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
