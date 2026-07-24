@@ -36,22 +36,24 @@
                                         <Label Text="{Binding LastName}" FontSize="12" />
                                     </HorizontalStackLayout>
                                     <Label Text="{Binding EmailAddress}" FontSize="12" TextColor="{StaticResource DarkGray}" />
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label Text="{x:Static res:UsersOverviewPage.ActiveLabel}" TextColor="{StaticResource SuccessColor}" FontSize="11"
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="End">
+                                    <HorizontalStackLayout Spacing="6" HorizontalOptions="End">
+                                        <Label Text="🟢" FontSize="18" Semantics.Description="{x:Static res:UsersOverviewPage.ActiveLabel}"
                                                IsVisible="{Binding IsActive}" />
-                                        <Label Text="{x:Static res:UsersOverviewPage.InactiveLabel}" TextColor="{StaticResource DarkGray}" FontSize="11"
+                                        <Label Text="⚪" FontSize="18" Semantics.Description="{x:Static res:UsersOverviewPage.InactiveLabel}"
                                                IsVisible="{Binding IsActive, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
-                                        <Label Text="{x:Static res:UsersOverviewPage.LockedLabel}" TextColor="{StaticResource ErrorColor}" FontSize="11"
+                                        <Label Text="🔒" FontSize="18" Semantics.Description="{x:Static res:UsersOverviewPage.LockedLabel}"
                                                IsVisible="{Binding IsLockedOut}" />
-                                        <Label Text="{x:Static res:UsersOverviewPage.UnlockedLabel}" TextColor="{StaticResource DarkGray}" FontSize="11"
+                                        <Label Text="🔓" FontSize="18" Semantics.Description="{x:Static res:UsersOverviewPage.UnlockedLabel}"
                                                IsVisible="{Binding IsLockedOut, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
                                     </HorizontalStackLayout>
+                                    <Button Text="{x:Static res:UsersOverviewPage.UnlockButton}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=UnlockUserCommand}"
+                                            CommandParameter="{Binding UserId}"
+                                            IsVisible="{Binding IsLockedOut}"
+                                            Style="{StaticResource OutlineButton}" Padding="8,4" />
                                 </VerticalStackLayout>
-                                <Button Grid.Column="2" Text="{x:Static res:UsersOverviewPage.UnlockButton}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=UnlockUserCommand}"
-                                        CommandParameter="{Binding UserId}"
-                                        IsVisible="{Binding IsLockedOut}"
-                                        Style="{StaticResource OutlineButton}" Padding="8,4" />
                             </Grid>
                         </Frame>
                     </DataTemplate>
