@@ -13,7 +13,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         ProductCategoryService productCategoryService) : BaseViewModel
     {
         [ObservableProperty]
-        private ObservableCollection<StatisticEntryModel> _entries = [];
+        private ObservableCollection<CategoryStatisticModel> _categories = [];
 
         [RelayCommand]
         public async Task LoadAsync()
@@ -27,8 +27,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 var categories = await productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 500 });
                 var data = await statisticsService.GetFavoriteProductsAsync(categories?.Items?.ToList() ?? []);
-                Entries = data is not null
-                    ? new ObservableCollection<StatisticEntryModel>(FlattenStatistics(data.OrderBy(stat => stat.Title, StringComparer.CurrentCultureIgnoreCase)))
+                Categories = data is not null
+                    ? new ObservableCollection<CategoryStatisticModel>(BuildCategoryStatistics(data.OrderBy(stat => stat.Title, StringComparer.CurrentCultureIgnoreCase)))
                     : [];
             }
             catch (Exception ex)
@@ -41,23 +41,33 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        private static IEnumerable<StatisticEntryModel> FlattenStatistics(IEnumerable<Common.Models.StatisticModel> statistics)
+        private static IEnumerable<CategoryStatisticModel> BuildCategoryStatistics(IEnumerable<Common.Models.StatisticModel> statistics)
         {
-            foreach (var stat in statistics)
+            var stats = statistics.ToList();
+            var grandTotal = stats.Sum(stat => stat.Data.Values.Sum(v => v ?? 0));
+
+            foreach (var stat in stats)
             {
-                yield return new StatisticEntryModel { GroupTitle = stat.Title ?? string.Empty, IsGroupHeader = true };
-                var maxVal = stat.Data.Values.Where(v => v.HasValue).DefaultIfEmpty(0).Max(v => v ?? 0);
-                foreach (var (name, val) in stat.Data)
+                var items = stat.Data
+                    .Select(entry => (Name: entry.Key, Value: entry.Value ?? 0))
+                    .OrderByDescending(entry => entry.Value)
+                    .ToList();
+                var maxVal = items.Count > 0 ? items.Max(entry => entry.Value) : 0;
+                var totalValue = items.Sum(entry => entry.Value);
+
+                yield return new CategoryStatisticModel
                 {
-                    var v = val ?? 0;
-                    yield return new StatisticEntryModel
+                    Title = stat.Title ?? string.Empty,
+                    TotalValue = totalValue,
+                    SharePercentage = grandTotal > 0 ? totalValue / grandTotal * 100 : 0,
+                    Items = items.Select((entry, index) => new RankedStatisticItemModel
                     {
-                        GroupTitle = stat.Title ?? string.Empty,
-                        ItemName = name,
-                        Value = v,
-                        BarFraction = maxVal > 0 ? v / maxVal : 0
-                    };
-                }
+                        Rank = index + 1,
+                        ItemName = entry.Name,
+                        Value = entry.Value,
+                        BarFraction = maxVal > 0 ? entry.Value / maxVal : 0
+                    }).ToList()
+                };
             }
         }
     }

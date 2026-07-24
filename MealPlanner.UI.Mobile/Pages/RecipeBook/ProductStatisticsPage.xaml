@@ -3,44 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.RecipeBook"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:controls="clr-namespace:MealPlanner.UI.Mobile.Controls"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.ProductStatisticsPage"
              x:DataType="vm:ProductStatisticsViewModel"
              Title="{x:Static res:ProductStatisticsPage.PageTitle}">
 
     <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-        <CollectionView ItemsSource="{Binding Entries}" SelectionMode="None" Margin="16,8">
-            <CollectionView.EmptyView>
-                <Label Text="{x:Static res:ProductStatisticsPage.EmptyLabel}" HorizontalOptions="Center"
-                       TextColor="{StaticResource DarkGray}" Margin="0,40" />
-            </CollectionView.EmptyView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="vm:StatisticEntryModel">
-                    <VerticalStackLayout>
-                        <!-- Group header -->
-                        <Label Text="{Binding GroupTitle}"
-                               FontAttributes="Bold" FontSize="15"
-                               Margin="0,16,0,6"
-                               IsVisible="{Binding IsGroupHeader}" />
+        <Grid RowDefinitions="*,Auto" RowSpacing="4">
+            <CarouselView Grid.Row="0"
+                          ItemsSource="{Binding Categories}"
+                          IndicatorView="PageIndicator"
+                          Loop="False">
+                <CarouselView.EmptyView>
+                    <Label Text="{x:Static res:ProductStatisticsPage.EmptyLabel}" HorizontalOptions="Center"
+                           VerticalOptions="Center" TextColor="{StaticResource DarkGray}" />
+                </CarouselView.EmptyView>
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CategoryStatisticModel">
+                        <ScrollView Padding="16,8">
+                            <VerticalStackLayout Spacing="14">
+                                <Frame Style="{StaticResource CardFrame}">
+                                    <Grid ColumnDefinitions="76,*" ColumnSpacing="16">
+                                        <controls:DonutShareView Grid.Column="0"
+                                                                  WidthRequest="72" HeightRequest="72"
+                                                                  Percentage="{Binding SharePercentage}"
+                                                                  RingColor="{StaticResource Primary}"
+                                                                  TrackColor="{StaticResource MidGray}" />
+                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                            <Label Text="{Binding Title}" FontSize="19" FontAttributes="Bold"
+                                                   LineBreakMode="TailTruncation" />
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="{Binding SharePercentage, StringFormat='{0:0}%'}"
+                                                       FontSize="13" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                                                <Label Text="{x:Static res:ProductStatisticsPage.ShareOfFavoritesLabel}"
+                                                       FontSize="13" TextColor="{StaticResource DarkGray}" />
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="{Binding TotalValue, StringFormat='{0:0}'}"
+                                                       FontSize="12" FontAttributes="Bold" TextColor="{StaticResource DarkGray}" />
+                                                <Label Text="{x:Static res:ProductStatisticsPage.TotalCountLabel}"
+                                                       FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Frame>
 
-                        <!-- Data row -->
-                        <Grid ColumnDefinitions="140,*,40" ColumnSpacing="8" Margin="0,3"
-                              IsVisible="{Binding IsGroupHeader, Converter={x:Static converters:InvertBoolConverter.Instance}}">
-                            <Label Grid.Column="0" Text="{Binding ItemName}"
-                                   FontSize="13" VerticalOptions="Center"
-                                   LineBreakMode="TailTruncation" />
-                            <ProgressBar Grid.Column="1"
-                                         Progress="{Binding BarFraction}"
-                                         ProgressColor="{StaticResource Primary}"
-                                         VerticalOptions="Center" />
-                            <Label Grid.Column="2"
-                                   Text="{Binding Value, StringFormat='{0:0}'}"
-                                   FontSize="12" TextColor="{StaticResource DarkGray}"
-                                   HorizontalOptions="End" VerticalOptions="Center" />
-                        </Grid>
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                                <CollectionView ItemsSource="{Binding Items}" SelectionMode="None">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:RankedStatisticItemModel">
+                                            <Grid ColumnDefinitions="34,*,44" ColumnSpacing="10" Margin="0,5">
+                                                <Border Grid.Column="0" WidthRequest="30" HeightRequest="30"
+                                                        StrokeShape="RoundRectangle 15" Stroke="Transparent"
+                                                        BackgroundColor="{Binding Rank, Converter={x:Static converters:RankToBadgeColorConverter.Instance}}"
+                                                        HorizontalOptions="Center" VerticalOptions="Center">
+                                                    <Label Text="{Binding Rank, Converter={x:Static converters:RankToBadgeTextConverter.Instance}}"
+                                                           FontSize="13" FontAttributes="Bold" TextColor="{StaticResource White}"
+                                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                                           HorizontalTextAlignment="Center" />
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="3">
+                                                    <Label Text="{Binding ItemName}" FontSize="13" LineBreakMode="TailTruncation" />
+                                                    <ProgressBar Progress="{Binding BarFraction}"
+                                                                 ProgressColor="{StaticResource Primary}" HeightRequest="6" />
+                                                </VerticalStackLayout>
+                                                <Label Grid.Column="2" Text="{Binding Value, StringFormat='{0:0}'}"
+                                                       FontSize="13" FontAttributes="Bold" TextColor="{StaticResource DarkGray}"
+                                                       HorizontalOptions="End" VerticalOptions="Center" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <IndicatorView x:Name="PageIndicator" Grid.Row="1"
+                           IndicatorColor="{StaticResource MidGray}"
+                           SelectedIndicatorColor="{StaticResource Primary}"
+                           HorizontalOptions="Center" Margin="0,4,0,10" />
+        </Grid>
     </RefreshView>
 </ContentPage>

@@ -77,5 +77,23 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to of favorites.
+        /// </summary>
+        internal static string ShareOfFavoritesLabel {
+            get {
+                return ResourceManager.GetString("ShareOfFavoritesLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to total.
+        /// </summary>
+        internal static string TotalCountLabel {
+            get {
+                return ResourceManager.GetString("TotalCountLabel", resourceCulture);
+            }
+        }
     }
 }
