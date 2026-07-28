@@ -124,6 +124,15 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remember me.
+        /// </summary>
+        internal static string RememberMeLabel {
+            get {
+                return ResourceManager.GetString("RememberMeLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Username: .
         /// </summary>
         internal static string UsernameLabel {

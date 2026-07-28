@@ -55,7 +55,7 @@ namespace Identity.Services.Http.Tests
             var (service, tokenMock) = CreateService(mockHttp);
 
             tokenMock
-                .Setup(t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Setup(t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
@@ -70,7 +70,7 @@ namespace Identity.Services.Http.Tests
                 Assert.That(result.Message, Is.EqualTo("ok"));
             }
             tokenMock.Verify(
-                t => t.SetTokenAsync("jwt-token", It.IsAny<CancellationToken>()),
+                t => t.SetTokenAsync("jwt-token", loginModel.RememberLogin, It.IsAny<CancellationToken>()),
                 Times.Once);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -106,7 +106,7 @@ namespace Identity.Services.Http.Tests
                 Assert.That(result.Message, Is.EqualTo("invalid credentials"));
             }
             tokenMock.Verify(
-                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()),
                 Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -136,7 +136,7 @@ namespace Identity.Services.Http.Tests
                 Assert.That(result.Message, Is.EqualTo(errorBody));
             }
             tokenMock.Verify(
-                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()),
                 Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }

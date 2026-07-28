@@ -42,6 +42,7 @@
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="$(BlazorBootstrap)" />
     <PackageReference Include="BuildBundlerMinifier" Version="$(BuildBundlerMinifier)" />
+    <PackageReference Include="Blazored.LocalStorage" Version="$(BlazoredLocalStorage)" />
     <PackageReference Include="Blazored.Modal" Version="$(BlazoredModal)" />
     <PackageReference Include="Blazored.SessionStorage" Version="$(BlazoredSessionStorage)" />
     <PackageReference Include="bootstrap-dialog" Version="$(BootstrapDialog)" />

@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using Common.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -131,7 +132,8 @@ namespace Common.Core.Tests
         {
             HttpClient? client = null;
             var sessionStorage = new Mock<ISessionStorageService>().Object;
-            var tokenProvider = new TokenProvider(sessionStorage);
+            var localStorage = new Mock<ILocalStorageService>().Object;
+            var tokenProvider = new TokenProvider(sessionStorage, localStorage);
 
             Assert.That(
                 async () => await HttpClientExtensions.EnsureAuthorizationHeaderAsync(client!, tokenProvider, CancellationToken.None),
@@ -159,7 +161,8 @@ namespace Common.Core.Tests
             using var client = new HttpClient();
 
             var sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Loose);
-            var tokenProvider = new TokenProvider(sessionStorageMock.Object);
+            var localStorageMock = new Mock<ILocalStorageService>(MockBehavior.Loose);
+            var tokenProvider = new TokenProvider(sessionStorageMock.Object, localStorageMock.Object);
 
             using var cts = new CancellationTokenSource();
             cts.Cancel();
@@ -175,12 +178,17 @@ namespace Common.Core.Tests
             using var client = new HttpClient();
             const string token = "async-token";
 
+            var localStorageMock = new Mock<ILocalStorageService>(MockBehavior.Strict);
+            localStorageMock
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
+
             var sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Strict);
             sessionStorageMock
                 .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
 
-            var tokenProvider = new TokenProvider(sessionStorageMock.Object);
+            var tokenProvider = new TokenProvider(sessionStorageMock.Object, localStorageMock.Object);
 
             await client.EnsureAuthorizationHeaderAsync(tokenProvider, CancellationToken.None);
 

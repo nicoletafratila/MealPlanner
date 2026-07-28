@@ -1,4 +1,5 @@
 using AutoMapper;
+using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using Common.Data.DataContext;
 using Common.Data.Profiles;
@@ -61,6 +62,7 @@ namespace Common.Core
                 options.Filters.Add<ValidationExceptionFilter>();
             });
             services.AddBlazoredSessionStorage();
+            services.AddBlazoredLocalStorage();
             ServiceLocator.SetLocatorProvider(services.BuildServiceProvider());
         }
     }

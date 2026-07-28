@@ -23,7 +23,7 @@ namespace Identity.Services.Http
                 if (loginResponse is null) return CommandResponse.Failed(Resources.AuthenticationServiceMessages.AuthenticationFailed);
                 if (loginResponse.Succeeded && !string.IsNullOrWhiteSpace(loginResponse.JwtBearer))
                 {
-                    await TokenProvider.SetTokenAsync(loginResponse.JwtBearer, cancellationToken);
+                    await TokenProvider.SetTokenAsync(loginResponse.JwtBearer, model.RememberLogin, cancellationToken);
                     return loginResponse;
                 }
                 return CommandResponse.Failed(loginResponse.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed);

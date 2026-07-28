@@ -5,6 +5,6 @@ Want me to extend the same helper to those init-path pages too? It's doable but 
 
 
 
-remember me pe web
+
 contact us 
 about me pe mobile

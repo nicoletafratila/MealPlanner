@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using Moq;
 
@@ -6,6 +7,11 @@ namespace Common.Core.Tests
     public static class MoqExtensions
     {
         public static void VerifyNoMocks(this Mock<ISessionStorageService> mock)
+        {
+            mock.VerifyNoOtherCalls();
+        }
+
+        public static void VerifyNoMocks(this Mock<ILocalStorageService> mock)
         {
             mock.VerifyNoOtherCalls();
         }

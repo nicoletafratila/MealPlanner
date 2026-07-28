@@ -14,7 +14,7 @@ namespace MealPlanner.UI.Mobile.Services
             return await SecureStorage.Default.GetAsync(TokenKey).WaitAsync(cancellationToken);
         }
 
-        public async Task SetTokenAsync(string token, CancellationToken cancellationToken = default)
+        public async Task SetTokenAsync(string token, bool persistent = false, CancellationToken cancellationToken = default)
         {
             ArgumentException.ThrowIfNullOrEmpty(token);
             cancellationToken.ThrowIfCancellationRequested();

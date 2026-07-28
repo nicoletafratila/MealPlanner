@@ -63,4 +63,7 @@
   <data name="ForgotPasswordButton" xml:space="preserve">
     <value>Forgot password?</value>
   </data>
+  <data name="RememberMeLabel" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
 </root>

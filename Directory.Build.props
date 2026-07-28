@@ -50,6 +50,7 @@
     <AngleSharp>1.5.2</AngleSharp>
     <AutoMapper>16.1.1</AutoMapper>
     <BlazorBootstrap>3.5.0</BlazorBootstrap>
+    <BlazoredLocalStorage>4.5.0</BlazoredLocalStorage>
     <BlazoredModal>7.3.1</BlazoredModal>
     <BlazoredSessionStorage>2.4.0</BlazoredSessionStorage>
     <BootstrapDialog>3.3.4.1</BootstrapDialog>
