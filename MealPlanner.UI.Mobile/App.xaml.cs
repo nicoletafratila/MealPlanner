@@ -1,5 +1,6 @@
 using Identity.Services.Http;
 using MealPlanner.UI.Mobile.Services;
+using MealPlanner.UI.Mobile.ViewModels;
 
 namespace MealPlanner.UI.Mobile
 {
@@ -30,10 +31,20 @@ namespace MealPlanner.UI.Mobile
                 if (!isAuthenticated)
                 {
                     var authService = _services.GetRequiredService<AuthenticationService>();
-                    var refreshed = await authService.RefreshAsync();
-                    if (!refreshed)
-                        await Shell.Current.GoToAsync("//Login");
+                    isAuthenticated = await authService.RefreshAsync();
                 }
+
+                if (isAuthenticated)
+                {
+                    var appShellViewModel = _services.GetRequiredService<AppShellViewModel>();
+                    await appShellViewModel.LoadCurrentCommand.ExecuteAsync(null);
+                    await Shell.Current.GoToAsync("//RecipesOverview");
+                }
+                else
+                {
+                    await Shell.Current.GoToAsync("//Login");
+                }
+
                 await ProcessPendingDeepLinkAsync();
             }
             catch
