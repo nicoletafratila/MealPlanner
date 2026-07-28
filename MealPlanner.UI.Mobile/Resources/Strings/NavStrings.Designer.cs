@@ -61,7 +61,7 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MealPlanner.
+        ///   Looks up a localized string similar to Meal Planner.
         /// </summary>
         internal static string AppTitle {
             get {
