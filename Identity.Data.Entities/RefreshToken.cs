@@ -1,0 +1,21 @@
+using Common.Data.Entities;
+
+namespace Identity.Data.Entities
+{
+    public class RefreshToken : Entity<Guid>
+    {
+        public string UserId { get; set; } = string.Empty;
+
+        public string TokenHash { get; set; } = string.Empty;
+
+        public DateTime CreatedAtUtc { get; set; }
+
+        public DateTime ExpiresAtUtc { get; set; }
+
+        public DateTime? RevokedAtUtc { get; set; }
+
+        public Guid? ReplacedByTokenId { get; set; }
+
+        public bool IsActive => RevokedAtUtc is null && ExpiresAtUtc > DateTime.UtcNow;
+    }
+}

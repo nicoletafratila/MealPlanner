@@ -3,11 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 using Identity.Services.Http;
 using Identity.Shared.Models;
 using Identity.Shared.Resources;
-using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class LoginViewModel(AuthenticationService authService, SecureStorageTokenProvider tokenProvider, AppShellViewModel appShellViewModel) : BaseViewModel
+    public partial class LoginViewModel(AuthenticationService authService, AppShellViewModel appShellViewModel) : BaseViewModel
     {
         [ObservableProperty]
         private string _username = string.Empty;
@@ -17,17 +16,6 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 
         [ObservableProperty]
         private bool _rememberMe;
-
-        public async Task InitializeAsync()
-        {
-            var (username, password) = await tokenProvider.GetCredentialsAsync();
-            if (username != null)
-            {
-                Username = username;
-                Password = password ?? string.Empty;
-                RememberMe = true;
-            }
-        }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoginAsync()
@@ -44,13 +32,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
             IsBusy = true;
             try
             {
-                var result = await authService.LoginAsync(new LoginModel { Username = Username, Password = Password });
+                var result = await authService.LoginAsync(new LoginModel { Username = Username, Password = Password, RememberLogin = RememberMe });
                 if (result?.Succeeded == true)
                 {
-                    if (RememberMe)
-                        await tokenProvider.SaveCredentialsAsync(Username, Password);
-                    else
-                        tokenProvider.ClearCredentials();
                     await appShellViewModel.LoadCurrentCommand.ExecuteAsync(null);
                     await Shell.Current.GoToAsync("//RecipesOverview");
                 }

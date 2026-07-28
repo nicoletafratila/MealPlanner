@@ -5,8 +5,7 @@ namespace MealPlanner.UI.Mobile.Services
     public class SecureStorageTokenProvider : ITokenProvider
     {
         private const string TokenKey = "authToken";
-        private const string UsernameKey = "savedUsername";
-        private const string PasswordKey = "savedPassword";
+        private const string RefreshTokenKey = "refreshToken";
 
         public async Task<string?> GetTokenAsync(CancellationToken cancellationToken = default)
         {
@@ -28,23 +27,24 @@ namespace MealPlanner.UI.Mobile.Services
             return Task.CompletedTask;
         }
 
-        public async Task SaveCredentialsAsync(string username, string password, CancellationToken cancellationToken = default)
+        public async Task<string?> GetRefreshTokenAsync(CancellationToken cancellationToken = default)
         {
-            await SecureStorage.Default.SetAsync(UsernameKey, username).WaitAsync(cancellationToken);
-            await SecureStorage.Default.SetAsync(PasswordKey, password).WaitAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            return await SecureStorage.Default.GetAsync(RefreshTokenKey).WaitAsync(cancellationToken);
         }
 
-        public async Task<(string? Username, string? Password)> GetCredentialsAsync(CancellationToken cancellationToken = default)
+        public async Task SetRefreshTokenAsync(string refreshToken, bool persistent = false, CancellationToken cancellationToken = default)
         {
-            var username = await SecureStorage.Default.GetAsync(UsernameKey).WaitAsync(cancellationToken);
-            var password = await SecureStorage.Default.GetAsync(PasswordKey).WaitAsync(cancellationToken);
-            return (username, password);
+            ArgumentException.ThrowIfNullOrEmpty(refreshToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            await SecureStorage.Default.SetAsync(RefreshTokenKey, refreshToken).WaitAsync(cancellationToken);
         }
 
-        public void ClearCredentials()
+        public Task RemoveRefreshTokenAsync(CancellationToken cancellationToken = default)
         {
-            SecureStorage.Default.Remove(UsernameKey);
-            SecureStorage.Default.Remove(PasswordKey);
+            cancellationToken.ThrowIfCancellationRequested();
+            SecureStorage.Default.Remove(RefreshTokenKey);
+            return Task.CompletedTask;
         }
     }
 }

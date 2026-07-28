@@ -10,48 +10,72 @@ namespace Common.Core
         private readonly ILocalStorageService _localStorage = localStorage ?? throw new ArgumentNullException(nameof(localStorage));
 
         private const string TokenKey = Constants.MealPlanner.AuthToken;
+        private const string RefreshTokenKey = Constants.MealPlanner.RefreshToken;
 
-        public async Task<string?> GetTokenAsync(CancellationToken cancellationToken = default)
+        public Task<string?> GetTokenAsync(CancellationToken cancellationToken = default) =>
+            GetAsync(TokenKey, cancellationToken);
+
+        public Task SetTokenAsync(string token, bool persistent = false, CancellationToken cancellationToken = default)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(token);
+            return SetAsync(TokenKey, token, persistent, cancellationToken);
+        }
+
+        public Task RemoveTokenAsync(CancellationToken cancellationToken = default) =>
+            RemoveAsync(TokenKey, cancellationToken);
+
+        public Task<string?> GetRefreshTokenAsync(CancellationToken cancellationToken = default) =>
+            GetAsync(RefreshTokenKey, cancellationToken);
+
+        public Task SetRefreshTokenAsync(string refreshToken, bool persistent = false, CancellationToken cancellationToken = default)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(refreshToken);
+            return SetAsync(RefreshTokenKey, refreshToken, persistent, cancellationToken);
+        }
+
+        public Task RemoveRefreshTokenAsync(CancellationToken cancellationToken = default) =>
+            RemoveAsync(RefreshTokenKey, cancellationToken);
+
+        private async Task<string?> GetAsync(string key, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var persistedToken = await _localStorage
-                .GetItemAsync<string?>(TokenKey, cancellationToken)
+            var persistedValue = await _localStorage
+                .GetItemAsync<string?>(key, cancellationToken)
                 .ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(persistedToken))
-                return persistedToken;
+            if (!string.IsNullOrWhiteSpace(persistedValue))
+                return persistedValue;
 
             return await _sessionStorage
-                .GetItemAsync<string?>(TokenKey, cancellationToken)
+                .GetItemAsync<string?>(key, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task SetTokenAsync(string token, bool persistent = false, CancellationToken cancellationToken = default)
+        private async Task SetAsync(string key, string value, bool persistent, CancellationToken cancellationToken)
         {
-            ArgumentException.ThrowIfNullOrEmpty(token);
             cancellationToken.ThrowIfCancellationRequested();
 
             if (persistent)
             {
-                await _localStorage.SetItemAsync(TokenKey, token, cancellationToken).ConfigureAwait(false);
-                await _sessionStorage.RemoveItemAsync(TokenKey, cancellationToken).ConfigureAwait(false);
+                await _localStorage.SetItemAsync(key, value, cancellationToken).ConfigureAwait(false);
+                await _sessionStorage.RemoveItemAsync(key, cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                await _sessionStorage.SetItemAsync(TokenKey, token, cancellationToken).ConfigureAwait(false);
-                await _localStorage.RemoveItemAsync(TokenKey, cancellationToken).ConfigureAwait(false);
+                await _sessionStorage.SetItemAsync(key, value, cancellationToken).ConfigureAwait(false);
+                await _localStorage.RemoveItemAsync(key, cancellationToken).ConfigureAwait(false);
             }
         }
 
-        public async Task RemoveTokenAsync(CancellationToken cancellationToken = default)
+        private async Task RemoveAsync(string key, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             await _sessionStorage
-                .RemoveItemAsync(TokenKey, cancellationToken)
+                .RemoveItemAsync(key, cancellationToken)
                 .ConfigureAwait(false);
             await _localStorage
-                .RemoveItemAsync(TokenKey, cancellationToken)
+                .RemoveItemAsync(key, cancellationToken)
                 .ConfigureAwait(false);
         }
     }

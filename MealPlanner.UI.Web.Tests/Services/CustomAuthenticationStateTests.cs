@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using Identity.Services.Http;
 using MealPlanner.UI.Web.Services;
 using Moq;
 
@@ -55,18 +56,26 @@ namespace MealPlanner.UI.Web.Tests.Services
             return localStorage;
         }
 
+        private static Mock<IAuthenticationService> CreateAuthServiceMock(bool refreshSucceeds = false)
+        {
+            var mock = new Mock<IAuthenticationService>();
+            mock.Setup(a => a.RefreshAsync(It.IsAny<CancellationToken>())).ReturnsAsync(refreshSucceeds);
+            return mock;
+        }
+
         [Test]
         public async Task GetAuthenticationStateAsync_ReturnsAnonymous_WhenTokenMissing()
         {
             // Arrange
             var sessionStorage = new Mock<ISessionStorageService>();
             var localStorage = CreateEmptyLocalStorage();
+            var authService = CreateAuthServiceMock();
 
             sessionStorage
                 .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string?)null);
 
-            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object);
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, authService.Object);
 
             // Act
             var state = await provider.GetAuthenticationStateAsync();
@@ -78,6 +87,43 @@ namespace MealPlanner.UI.Web.Tests.Services
                 Assert.That(state.User.Identity!.IsAuthenticated, Is.False);
                 Assert.That(state.User.Claims, Is.Empty);
             }
+            authService.Verify(a => a.RefreshAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task GetAuthenticationStateAsync_RefreshesExpiredToken_WhenRefreshSucceeds()
+        {
+            // Arrange
+            var sessionStorage = new Mock<ISessionStorageService>();
+            sessionStorage
+                .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
+
+            var expiredToken = CreateJwtToken(
+                new Dictionary<string, object> { ["name"] = "old" },
+                expiresAtUtc: DateTimeOffset.UtcNow.AddSeconds(-10));
+            var refreshedToken = CreateJwtToken(new Dictionary<string, object> { ["name"] = "Refreshed" });
+
+            var localStorage = new Mock<ILocalStorageService>();
+            localStorage
+                .SetupSequence(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expiredToken)
+                .ReturnsAsync(refreshedToken);
+
+            var authService = CreateAuthServiceMock(refreshSucceeds: true);
+
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, authService.Object);
+
+            // Act
+            var state = await provider.GetAuthenticationStateAsync();
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(state.User.Identity!.IsAuthenticated, Is.True);
+                Assert.That(state.User.FindFirst("name")?.Value, Is.EqualTo("Refreshed"));
+            }
+            authService.Verify(a => a.RefreshAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -95,7 +141,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
 
-            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object);
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, CreateAuthServiceMock().Object);
 
             // Act
             var state = await provider.GetAuthenticationStateAsync();
@@ -123,7 +169,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
 
-            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object);
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, CreateAuthServiceMock().Object);
 
             // Act
             var state = await provider.GetAuthenticationStateAsync();
@@ -151,7 +197,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
 
-            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object);
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, CreateAuthServiceMock().Object);
 
             // Act
             var state = await provider.GetAuthenticationStateAsync();
@@ -188,7 +234,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(token);
 
-            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object);
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, CreateAuthServiceMock().Object);
 
             // Act
             var state = await provider.GetAuthenticationStateAsync();
@@ -220,7 +266,7 @@ namespace MealPlanner.UI.Web.Tests.Services
                 .Setup(s => s.GetItemAsync<string?>(Common.Constants.MealPlanner.AuthToken, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(malformedToken);
 
-            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object);
+            var provider = new CustomAuthenticationState(sessionStorage.Object, localStorage.Object, CreateAuthServiceMock().Object);
 
             // Act
             var state = await provider.GetAuthenticationStateAsync();

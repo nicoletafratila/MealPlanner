@@ -58,4 +58,7 @@
   <data name="UsernameRequired" xml:space="preserve">
     <value>Please enter your username.</value>
   </data>
+  <data name="RefreshTokenRequired" xml:space="preserve">
+    <value>Refresh token is required.</value>
+  </data>
 </root>

@@ -12,6 +12,7 @@ namespace Common.Core.Tests
         private TokenProvider _sut = null!;
 
         private const string TokenKey = Constants.MealPlanner.AuthToken;
+        private const string RefreshTokenKey = Constants.MealPlanner.RefreshToken;
 
         [SetUp]
         public void SetUp()
@@ -200,6 +201,111 @@ namespace Common.Core.Tests
 
             _sessionStorageMock.VerifyNoMocks();
             _localStorageMock.VerifyNoMocks();
+        }
+
+        [Test]
+        public async Task GetRefreshTokenAsync_PrefersLocalStorage_WhenPresent()
+        {
+            var expectedToken = "refresh-abc123";
+            _localStorageMock
+                .Setup(s => s.GetItemAsync<string?>(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedToken);
+
+            var result = await _sut.GetRefreshTokenAsync(CancellationToken.None);
+
+            Assert.That(result, Is.EqualTo(expectedToken));
+            _localStorageMock.Verify(
+                s => s.GetItemAsync<string?>(RefreshTokenKey, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task GetRefreshTokenAsync_FallsBackToSessionStorage_WhenLocalStorageEmpty()
+        {
+            var expectedToken = "refresh-abc123";
+            _localStorageMock
+                .Setup(s => s.GetItemAsync<string?>(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
+            _sessionStorageMock
+                .Setup(s => s.GetItemAsync<string?>(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedToken);
+
+            var result = await _sut.GetRefreshTokenAsync(CancellationToken.None);
+
+            Assert.That(result, Is.EqualTo(expectedToken));
+        }
+
+        [Test]
+        public void SetRefreshTokenAsync_EmptyToken_ThrowsArgumentException_AndDoesNotCallStorage()
+        {
+            Assert.That(
+                async () => await _sut.SetRefreshTokenAsync(string.Empty, cancellationToken: CancellationToken.None),
+                Throws.TypeOf<ArgumentException>());
+
+            _sessionStorageMock.VerifyNoOtherCalls();
+            _localStorageMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public async Task SetRefreshTokenAsync_NotPersistent_WritesSessionStorage_AndClearsLocalStorage()
+        {
+            var token = "refresh-token";
+            _sessionStorageMock
+                .Setup(s => s.SetItemAsync(RefreshTokenKey, token, It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
+            _localStorageMock
+                .Setup(s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
+
+            await _sut.SetRefreshTokenAsync(token, persistent: false, cancellationToken: CancellationToken.None);
+
+            _sessionStorageMock.Verify(
+                s => s.SetItemAsync(RefreshTokenKey, token, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _localStorageMock.Verify(
+                s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task SetRefreshTokenAsync_Persistent_WritesLocalStorage_AndClearsSessionStorage()
+        {
+            var token = "refresh-token";
+            _localStorageMock
+                .Setup(s => s.SetItemAsync(RefreshTokenKey, token, It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
+            _sessionStorageMock
+                .Setup(s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
+
+            await _sut.SetRefreshTokenAsync(token, persistent: true, cancellationToken: CancellationToken.None);
+
+            _localStorageMock.Verify(
+                s => s.SetItemAsync(RefreshTokenKey, token, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _sessionStorageMock.Verify(
+                s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task RemoveRefreshTokenAsync_CallsBothStorages_WithCorrectKey()
+        {
+            _sessionStorageMock
+                .Setup(s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
+            _localStorageMock
+                .Setup(s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()))
+                .Returns(ValueTask.CompletedTask);
+
+            await _sut.RemoveRefreshTokenAsync(CancellationToken.None);
+
+            _sessionStorageMock.Verify(
+                s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()),
+                Times.Once);
+            _localStorageMock.Verify(
+                s => s.RemoveItemAsync(RefreshTokenKey, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

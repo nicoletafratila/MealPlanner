@@ -25,4 +25,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsDependencyInjection)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

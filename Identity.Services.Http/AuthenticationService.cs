@@ -13,6 +13,7 @@ namespace Identity.Services.Http
         : ServiceBase(httpClient, tokenProvider), IAuthenticationService
     {
         private readonly string _controller = IdentityControllers.AuthenticationUrl;
+        private readonly SemaphoreSlim _refreshLock = new(1, 1);
 
         public async Task<CommandResponse?> LoginAsync(LoginModel model, CancellationToken cancellationToken = default)
         {
@@ -24,6 +25,10 @@ namespace Identity.Services.Http
                 if (loginResponse.Succeeded && !string.IsNullOrWhiteSpace(loginResponse.JwtBearer))
                 {
                     await TokenProvider.SetTokenAsync(loginResponse.JwtBearer, model.RememberLogin, cancellationToken);
+                    if (!string.IsNullOrWhiteSpace(loginResponse.RefreshToken))
+                        await TokenProvider.SetRefreshTokenAsync(loginResponse.RefreshToken, model.RememberLogin, cancellationToken);
+                    else
+                        await TokenProvider.RemoveRefreshTokenAsync(cancellationToken);
                     return loginResponse;
                 }
                 return CommandResponse.Failed(loginResponse.Message ?? Resources.AuthenticationServiceMessages.AuthenticationFailed);
@@ -49,7 +54,9 @@ namespace Identity.Services.Http
         {
             try
             {
-                using var response = await HttpClient.PostAsync($"{_controller}/{IdentityControllers.LogoutRoute}", content: null, cancellationToken);
+                var refreshToken = await TokenProvider.GetRefreshTokenAsync(cancellationToken);
+                var model = new LogoutModel { RefreshToken = refreshToken };
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.LogoutRoute}", model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await ReadErrorMessageAsync(response, cancellationToken);
@@ -57,13 +64,56 @@ namespace Identity.Services.Http
                     return CommandResponse.Failed(error ?? Resources.AuthenticationServiceMessages.LogoutFailed);
                 }
                 var result = await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
-                if (result?.Succeeded == true) await TokenProvider.RemoveTokenAsync(cancellationToken);
+                if (result?.Succeeded == true)
+                {
+                    await TokenProvider.RemoveTokenAsync(cancellationToken);
+                    await TokenProvider.RemoveRefreshTokenAsync(cancellationToken);
+                }
                 return result ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.LogoutFailed);
             }
             catch (HttpRequestException ex)
             {
                 logger.LogError(ex, "HTTP error during LogoutAsync.");
                 return CommandResponse.Failed(Resources.AuthenticationServiceMessages.NetworkErrorLogout);
+            }
+        }
+
+        public async Task<bool> RefreshAsync(CancellationToken cancellationToken = default)
+        {
+            await _refreshLock.WaitAsync(cancellationToken);
+            try
+            {
+                var storedRefreshToken = await TokenProvider.GetRefreshTokenAsync(cancellationToken);
+                if (string.IsNullOrWhiteSpace(storedRefreshToken))
+                    return false;
+
+                var response = await PostAsync<RefreshTokenModel, LoginCommandResponse>(
+                    $"{_controller}/{IdentityControllers.RefreshTokenRoute}",
+                    new RefreshTokenModel { RefreshToken = storedRefreshToken },
+                    cancellationToken);
+
+                if (response is null || !response.Succeeded || string.IsNullOrWhiteSpace(response.JwtBearer))
+                    return false;
+
+                await TokenProvider.SetTokenAsync(response.JwtBearer, persistent: true, cancellationToken: cancellationToken);
+                if (!string.IsNullOrWhiteSpace(response.RefreshToken))
+                    await TokenProvider.SetRefreshTokenAsync(response.RefreshToken, persistent: true, cancellationToken: cancellationToken);
+
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogError(ex, "HTTP error during RefreshAsync.");
+                return false;
+            }
+            catch (TaskCanceledException ex)
+            {
+                logger.LogError(ex, "Timeout during RefreshAsync.");
+                return false;
+            }
+            finally
+            {
+                _refreshLock.Release();
             }
         }
 

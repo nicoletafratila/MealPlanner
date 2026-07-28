@@ -1,9 +1,14 @@
-﻿using Common.Models;
+﻿using Common.Data.DataContext;
+using Common.Models;
 using Identity.Api.Features.Authentication.Commands.Login;
+using Identity.Data.TableConfigurations;
 using Identity.Shared.Models;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using RecipeBook.Data.TableConfigurations;
 
 namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 {
@@ -13,6 +18,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<SignInManager<Data.Entities.ApplicationUser>> _signInManagerMock = null!;
         private Mock<ILogger<LoginCommandHandler>> _loggerMock = null!;
+        private MealPlannerDbContext _dbContext = null!;
         private LoginCommandHandler _handler = null!;
 
         [SetUp]
@@ -30,11 +36,24 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             _loggerMock = new Mock<ILogger<LoginCommandHandler>>(MockBehavior.Loose);
 
+            var tableConfigurationAssemblies = new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly,
+                typeof(RefreshTokenTableConfiguration).Assembly
+            ]);
+            _dbContext = new MealPlannerDbContext(
+                new DbContextOptionsBuilder<MealPlannerDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options,
+                tableConfigurationAssemblies);
+
             _handler = new LoginCommandHandler(
                 _userManagerMock.Object,
                 _signInManagerMock.Object,
+                _dbContext,
                 _loggerMock.Object);
         }
+
+        [TearDown]
+        public void TearDown() => _dbContext.Dispose();
 
         [Test]
         public void Handle_NullRequest_ThrowsArgumentNullException()
@@ -113,7 +132,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
         }
 
         [Test]
-        public async Task Handle_SuccessfulLogin_ReturnsLoginCommandResponse()
+        public async Task Handle_SuccessfulLogin_WithRememberLogin_IssuesRefreshToken()
         {
             // Arrange
             var user = new Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
@@ -145,7 +164,16 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             {
                 Assert.That(loginResponse.Succeeded, Is.True);
                 Assert.That(loginResponse.JwtBearer, Is.Not.Null.And.Not.Empty);
+                Assert.That(loginResponse.RefreshToken, Is.Not.Null.And.Not.Empty);
                 Assert.That(loginResponse.Claims, Is.Not.Empty);
+            }
+
+            var storedTokens = await _dbContext.RefreshTokens.ToListAsync();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(storedTokens, Has.Count.EqualTo(1));
+                Assert.That(storedTokens[0].UserId, Is.EqualTo("1"));
+                Assert.That(storedTokens[0].IsActive, Is.True);
             }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("user"), Times.Once);
@@ -153,6 +181,39 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
             _signInManagerMock.Verify(
                 s => s.PasswordSignInAsync("user", "pwd", true, true),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_SuccessfulLogin_WithoutRememberLogin_DoesNotIssueRefreshToken()
+        {
+            // Arrange
+            var user = new Data.Entities.ApplicationUser { Id = "1", UserName = "user", IsActive = true };
+            var command = new LoginCommand
+            {
+                Model = new LoginModel { Username = "user", Password = "pwd", RememberLogin = false }
+            };
+
+            _userManagerMock
+                .Setup(m => m.FindByNameAsync("user"))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(m => m.GetRolesAsync(user))
+                .ReturnsAsync(["admin"]);
+
+            _signInManagerMock
+                .Setup(s => s.PasswordSignInAsync("user", "pwd", false, true))
+                .ReturnsAsync(SignInResult.Success);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            var loginResponse = (LoginCommandResponse)result!;
+            Assert.That(loginResponse.RefreshToken, Is.Null);
+
+            var storedTokens = await _dbContext.RefreshTokens.ToListAsync();
+            Assert.That(storedTokens, Is.Empty);
         }
 
         [Test]

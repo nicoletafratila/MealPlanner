@@ -1,12 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Common.Data.DataContext;
 using Common.Models;
-using Duende.IdentityModel;
 using Identity.Api.Features.Authentication.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
@@ -16,10 +12,12 @@ namespace Identity.Api.Features.Authentication.Commands.Login
     public class LoginCommandHandler(
         UserManager<Data.Entities.ApplicationUser> userManager,
         SignInManager<Data.Entities.ApplicationUser> signInManager,
+        MealPlannerDbContext dbContext,
         ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse?>
     {
         private readonly UserManager<Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly SignInManager<Data.Entities.ApplicationUser> _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+        private readonly MealPlannerDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         private readonly ILogger<LoginCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -51,14 +49,24 @@ namespace Identity.Api.Features.Authentication.Commands.Login
 
                 if (result.Succeeded)
                 {
-                    var claims = GetClaims(user, roles);
-                    var token = GenerateJwtToken(claims);
+                    var claims = JwtTokenFactory.GetClaims(user, roles);
+                    var token = JwtTokenFactory.GenerateJwtToken(claims);
+
+                    string? refreshToken = null;
+                    if (request.Model.RememberLogin)
+                    {
+                        var (entity, rawToken) = RefreshTokenGenerator.CreateEntity(user.Id, RefreshTokenGenerator.DefaultLifetime);
+                        await _dbContext.RefreshTokens.AddAsync(entity, cancellationToken);
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                        refreshToken = rawToken;
+                    }
 
                     return new LoginCommandResponse
                     {
                         Message = AuthenticationMessages.LoginSuccessful,
                         Succeeded = true,
                         JwtBearer = token,
+                        RefreshToken = refreshToken,
                         Claims = claims
                             .Select(c => new KeyValuePair<string, string>(c.Type, c.Value))
                             .ToList()
@@ -77,34 +85,6 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                     request.Model.Username);
                 return CommandResponse.Failed(AuthenticationMessages.AuthenticationError);
             }
-        }
-
-        private static string GenerateJwtToken(IList<Claim> claims)
-        {
-            var expiration = DateTimeOffset.UtcNow.AddHours(1);
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: Common.Constants.MealPlanner.Issuer,
-                audience: Common.Constants.MealPlanner.ApiScope,
-                claims: claims,
-                expires: expiration.UtcDateTime,
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private static IList<Claim> GetClaims(Data.Entities.ApplicationUser user, IList<string> roles)
-        {
-            return
-            [
-                new(JwtRegisteredClaimNames.Sub, user.Id),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(ClaimTypes.Name, user.UserName!),
-                new(ClaimTypes.Role, string.Join(",", roles)),
-                new(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope),
-            ];
         }
     }
 }

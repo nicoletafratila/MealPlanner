@@ -72,6 +72,44 @@ namespace Identity.Services.Http.Tests
             tokenMock.Verify(
                 t => t.SetTokenAsync("jwt-token", loginModel.RememberLogin, It.IsAny<CancellationToken>()),
                 Times.Once);
+            tokenMock.Verify(
+                t => t.RemoveRefreshTokenAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task LoginAsync_SucceedsWithRefreshToken_StoresRefreshToken()
+        {
+            // Arrange
+            var loginModel = new LoginModel { Username = "user", Password = "pass", RememberLogin = true };
+
+            var loginResponse = new LoginCommandResponse
+            {
+                Succeeded = true,
+                JwtBearer = "jwt-token",
+                RefreshToken = "refresh-token",
+                Message = "ok"
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/login")
+                .Respond("application/json", JsonSerializer.Serialize(loginResponse, JsonOptions));
+
+            var (service, tokenMock) = CreateService(mockHttp);
+
+            // Act
+            var result = await service.LoginAsync(loginModel);
+
+            // Assert
+            Assert.That(result!.Succeeded, Is.True);
+            tokenMock.Verify(
+                t => t.SetRefreshTokenAsync("refresh-token", true, It.IsAny<CancellationToken>()),
+                Times.Once);
+            tokenMock.Verify(
+                t => t.RemoveRefreshTokenAsync(It.IsAny<CancellationToken>()),
+                Times.Never);
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -164,7 +202,16 @@ namespace Identity.Services.Http.Tests
                 .ReturnsAsync("existing-token");
 
             tokenMock
+                .Setup(t => t.GetRefreshTokenAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync("existing-refresh-token");
+
+            tokenMock
                 .Setup(t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+
+            tokenMock
+                .Setup(t => t.RemoveRefreshTokenAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask)
                 .Verifiable();
 
@@ -179,7 +226,13 @@ namespace Identity.Services.Http.Tests
                 Assert.That(result.Message, Is.EqualTo("logged out"));
             }
             tokenMock.Verify(
+                t => t.GetRefreshTokenAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+            tokenMock.Verify(
                 t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()),
+                Times.Once);
+            tokenMock.Verify(
+                t => t.RemoveRefreshTokenAsync(It.IsAny<CancellationToken>()),
                 Times.Once);
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -251,6 +304,102 @@ namespace Identity.Services.Http.Tests
             tokenMock.Verify(
                 t => t.RemoveTokenAsync(It.IsAny<CancellationToken>()),
                 Times.Never);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- RefreshAsync ----------
+        [Test]
+        public async Task RefreshAsync_NoStoredRefreshToken_ReturnsFalse_WithoutHttpCall()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+            var (service, tokenMock) = CreateService(mockHttp);
+
+            tokenMock
+                .Setup(t => t.GetRefreshTokenAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string?)null);
+
+            var result = await service.RefreshAsync();
+
+            Assert.That(result, Is.False);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task RefreshAsync_Succeeds_StoresNewTokenAndRefreshToken_ReturnsTrue()
+        {
+            var refreshResponse = new LoginCommandResponse
+            {
+                Succeeded = true,
+                JwtBearer = "new-jwt",
+                RefreshToken = "new-refresh-token",
+                Message = "ok"
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/refresh-token")
+                .Respond("application/json", JsonSerializer.Serialize(refreshResponse, JsonOptions));
+
+            var (service, tokenMock) = CreateService(mockHttp);
+
+            tokenMock
+                .Setup(t => t.GetRefreshTokenAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync("old-refresh-token");
+
+            var result = await service.RefreshAsync();
+
+            Assert.That(result, Is.True);
+            tokenMock.Verify(
+                t => t.SetTokenAsync("new-jwt", true, It.IsAny<CancellationToken>()),
+                Times.Once);
+            tokenMock.Verify(
+                t => t.SetRefreshTokenAsync("new-refresh-token", true, It.IsAny<CancellationToken>()),
+                Times.Once);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task RefreshAsync_ServerRejectsToken_ReturnsFalse()
+        {
+            var refreshResponse = new LoginCommandResponse { Succeeded = false, Message = "Invalid refresh token." };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/refresh-token")
+                .Respond("application/json", JsonSerializer.Serialize(refreshResponse, JsonOptions));
+
+            var (service, tokenMock) = CreateService(mockHttp);
+
+            tokenMock
+                .Setup(t => t.GetRefreshTokenAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync("old-refresh-token");
+
+            var result = await service.RefreshAsync();
+
+            Assert.That(result, Is.False);
+            tokenMock.Verify(
+                t => t.SetTokenAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task RefreshAsync_HttpError_ReturnsFalse()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{AuthPath}/refresh-token")
+                .Respond(HttpStatusCode.InternalServerError, "text/plain", "server error");
+
+            var (service, tokenMock) = CreateService(mockHttp);
+
+            tokenMock
+                .Setup(t => t.GetRefreshTokenAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync("old-refresh-token");
+
+            var result = await service.RefreshAsync();
+
+            Assert.That(result, Is.False);
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

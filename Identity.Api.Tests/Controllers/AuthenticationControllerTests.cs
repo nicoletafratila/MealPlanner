@@ -160,7 +160,7 @@ namespace Identity.Api.Tests.Controllers
                 .ReturnsAsync(response);
 
             // Act
-            var result = await _controller.LogoutAsync(CancellationToken.None);
+            var result = await _controller.LogoutAsync(null, CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.SameAs(response));

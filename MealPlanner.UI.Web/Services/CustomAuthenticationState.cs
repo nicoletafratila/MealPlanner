@@ -2,14 +2,19 @@ using System.Security.Claims;
 using System.Text.Json;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using Identity.Services.Http;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MealPlanner.UI.Web.Services
 {
-    public class CustomAuthenticationState(ISessionStorageService sessionStorage, ILocalStorageService localStorage) : AuthenticationStateProvider
+    public class CustomAuthenticationState(
+        ISessionStorageService sessionStorage,
+        ILocalStorageService localStorage,
+        IAuthenticationService authenticationService) : AuthenticationStateProvider
     {
         private readonly ISessionStorageService _sessionStorage = sessionStorage ?? throw new ArgumentNullException(nameof(sessionStorage));
         private readonly ILocalStorageService _localStorage = localStorage ?? throw new ArgumentNullException(nameof(localStorage));
+        private readonly IAuthenticationService _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
         private static AuthenticationState AnonymousState => new(new ClaimsPrincipal(new ClaimsIdentity()));
 
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
@@ -21,12 +26,17 @@ namespace MealPlanner.UI.Web.Services
         {
             try
             {
-                var token = await _localStorage.GetItemAsync<string>(Common.Constants.MealPlanner.AuthToken);
-                if (string.IsNullOrWhiteSpace(token))
-                    token = await _sessionStorage.GetItemAsync<string>(Common.Constants.MealPlanner.AuthToken);
+                var token = await GetStoredTokenAsync();
 
                 if (string.IsNullOrWhiteSpace(token) || IsTokenExpired(token))
-                    return AnonymousState;
+                {
+                    if (!await _authenticationService.RefreshAsync())
+                        return AnonymousState;
+
+                    token = await GetStoredTokenAsync();
+                    if (string.IsNullOrWhiteSpace(token) || IsTokenExpired(token))
+                        return AnonymousState;
+                }
 
                 if (!TryReadPayload(token, out var payload))
                     return AnonymousState;
@@ -41,6 +51,14 @@ namespace MealPlanner.UI.Web.Services
             {
                 return AnonymousState;
             }
+        }
+
+        private async Task<string?> GetStoredTokenAsync()
+        {
+            var token = await _localStorage.GetItemAsync<string>(Common.Constants.MealPlanner.AuthToken);
+            if (string.IsNullOrWhiteSpace(token))
+                token = await _sessionStorage.GetItemAsync<string>(Common.Constants.MealPlanner.AuthToken);
+            return token;
         }
 
         private static bool TryReadPayload(string jwt, out Dictionary<string, JsonElement> payload)

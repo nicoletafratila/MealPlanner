@@ -17,6 +17,7 @@ namespace Identity.Shared.Constants
         public const string ForgotPasswordRoute = "forgot-password";
         public const string ResetPasswordRoute = "reset-password";
         public const string ChangePasswordRoute = "change-password";
+        public const string RefreshTokenRoute = "refresh-token";
 
         // ApplicationUser sub-routes
         public const string EditRoute = "edit";

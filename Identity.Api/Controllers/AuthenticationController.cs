@@ -5,6 +5,7 @@ using Identity.Api.Features.Authentication.Commands.ConfirmEmail;
 using Identity.Api.Features.Authentication.Commands.ForgotPassword;
 using Identity.Api.Features.Authentication.Commands.Login;
 using Identity.Api.Features.Authentication.Commands.Logout;
+using Identity.Api.Features.Authentication.Commands.RefreshToken;
 using Identity.Api.Features.Authentication.Commands.Register;
 using Identity.Api.Features.Authentication.Commands.ResetPassword;
 using Identity.Shared.Models;
@@ -56,9 +57,19 @@ namespace Identity.Api.Controllers
 
         [HttpPost("logout")]
         public async Task<CommandResponse?> LogoutAsync(
+            [FromBody] LogoutModel? model,
             CancellationToken cancellationToken)
         {
-            var command = new LogoutCommand();
+            var command = new LogoutCommand { RefreshToken = model?.RefreshToken };
+            return await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<CommandResponse?> RefreshTokenAsync(
+            [FromBody] RefreshTokenModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new RefreshTokenCommand { Model = model };
             return await _mediator.Send(command, cancellationToken);
         }
 

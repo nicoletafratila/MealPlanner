@@ -3,6 +3,7 @@ using System.Text;
 using AutoMapper;
 using Common.Data.DataContext;
 using Duende.IdentityModel;
+using Identity.Data.TableConfigurations;
 using MealPlanner.Data.Profiles;
 using MealPlanner.Data.TableConfigurations;
 using MediatR;
@@ -24,7 +25,8 @@ namespace RecipeBook.Api
         {
             services.AddSingleton(new TableConfigurationAssemblies([
                 typeof(RecipeTableConfiguration).Assembly,
-                typeof(MealPlanTableConfiguration).Assembly
+                typeof(MealPlanTableConfiguration).Assembly,
+                typeof(RefreshTokenTableConfiguration).Assembly
             ]));
         }
 

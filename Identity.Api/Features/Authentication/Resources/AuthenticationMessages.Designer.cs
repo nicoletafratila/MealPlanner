@@ -248,7 +248,25 @@ namespace Identity.Api.Features.Authentication.Resources {
                 return ResourceManager.GetString("InvalidCredentials", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid refresh token..
+        /// </summary>
+        internal static string InvalidRefreshToken {
+            get {
+                return ResourceManager.GetString("InvalidRefreshToken", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh token has expired..
+        /// </summary>
+        internal static string RefreshTokenExpired {
+            get {
+                return ResourceManager.GetString("RefreshTokenExpired", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Login successful..
         /// </summary>

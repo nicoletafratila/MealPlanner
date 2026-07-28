@@ -10,7 +10,7 @@ using MealPlanner.UI.Mobile.Services;
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     [QueryProperty(nameof(Username), "username")]
-    public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, AuthenticationService authService, SecureStorageTokenProvider tokenProvider) : BaseViewModel
+    public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, AuthenticationService authService) : BaseViewModel
     {
         [ObservableProperty]
         private ApplicationUserEditModel? _model;
@@ -163,7 +163,6 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         private async Task LogoutAsync()
         {
             await authService.LogoutAsync();
-            tokenProvider.ClearCredentials();
             await Shell.Current.GoToAsync("//Login");
         }
     }

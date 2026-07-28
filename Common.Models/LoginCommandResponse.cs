@@ -6,6 +6,8 @@
 
         public string? JwtBearer { get; set; }
 
+        public string? RefreshToken { get; set; }
+
         public IList<KeyValuePair<string, string>> Claims { get; set; } = [];
 
         /// <summary>

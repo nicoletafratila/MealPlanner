@@ -7,6 +7,7 @@ using Duende.IdentityModel;
 using Identity.Api.Features.Email;
 using Identity.Data.Entities;
 using Identity.Data.Profiles;
+using Identity.Data.TableConfigurations;
 using MealPlanner.Data.TableConfigurations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,7 +26,8 @@ namespace Identity.Api
         {
             services.AddSingleton(new TableConfigurationAssemblies([
                 typeof(RecipeTableConfiguration).Assembly,
-                typeof(MealPlanTableConfiguration).Assembly
+                typeof(MealPlanTableConfiguration).Assembly,
+                typeof(RefreshTokenTableConfiguration).Assembly
             ]));
         }
 

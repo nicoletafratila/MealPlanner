@@ -4,6 +4,7 @@ using AutoMapper;
 using Common.Data.DataContext;
 using Duende.IdentityModel;
 using Identity.Data.Profiles;
+using Identity.Data.TableConfigurations;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Profiles;
@@ -25,7 +26,8 @@ namespace MealPlanner.Api
         {
             services.AddSingleton(new TableConfigurationAssemblies([
                 typeof(RecipeTableConfiguration).Assembly,
-                typeof(MealPlanTableConfiguration).Assembly
+                typeof(MealPlanTableConfiguration).Assembly,
+                typeof(RefreshTokenTableConfiguration).Assembly
             ]));
         }
 

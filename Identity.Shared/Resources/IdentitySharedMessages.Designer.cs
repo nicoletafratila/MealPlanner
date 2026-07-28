@@ -140,5 +140,14 @@ namespace Identity.Shared.Resources {
                 return ResourceManager.GetString("UsernameRequired", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh token is required..
+        /// </summary>
+        public static string RefreshTokenRequired {
+            get {
+                return ResourceManager.GetString("RefreshTokenRequired", resourceCulture);
+            }
+        }
     }
 }

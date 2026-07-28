@@ -43,6 +43,12 @@
   <data name="InvalidCredentials" xml:space="preserve">
     <value>Invalid credentials.</value>
   </data>
+  <data name="InvalidRefreshToken" xml:space="preserve">
+    <value>Invalid refresh token.</value>
+  </data>
+  <data name="RefreshTokenExpired" xml:space="preserve">
+    <value>Refresh token has expired.</value>
+  </data>
   <data name="UserLockedOut" xml:space="preserve">
     <value>User is locked out</value>
   </data>

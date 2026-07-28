@@ -8,5 +8,6 @@ namespace Identity.Api.Features.Authentication.Commands.Logout
     /// </summary>
     public class LogoutCommand : IRequest<CommandResponse?>
     {
+        public string? RefreshToken { get; set; }
     }
 }

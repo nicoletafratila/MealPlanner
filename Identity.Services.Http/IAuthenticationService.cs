@@ -11,5 +11,6 @@ namespace Identity.Services.Http
         Task<CommandResponse?> ForgotPasswordAsync(ForgotPasswordModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> ResetPasswordAsync(ResetPasswordModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> ChangePasswordAsync(ChangePasswordModel model, CancellationToken cancellationToken = default);
+		Task<bool> RefreshAsync(CancellationToken cancellationToken = default);
     }
 }
