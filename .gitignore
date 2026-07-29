@@ -402,6 +402,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/Retete
 /MealPlanner.bak
-/Ingrediente
+
+# Android release signing (generated locally per dev/CI, never committed)
+android-signing.local.props
+MealPlanner.UI.Mobile/android-signing/
+*.keystore
+*.jks

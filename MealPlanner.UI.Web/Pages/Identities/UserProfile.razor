@@ -22,7 +22,19 @@
                         <h2 id="headerlastname">@ApplicationUser.LastName</h2>
                     </td>
                     <td style="align-content:flex-end;">
-                        <img class="img-profile" src="@ApplicationUser.ProfilePictureUrl" />
+                        <div style="display:flex; align-items:flex-end; gap:8px;">
+                            <AuthorizeView Roles="admin" Context="lockIconAuthContext">
+                                @if (ApplicationUser.IsLockedOut)
+                                {
+                                    <Icon Name="IconName.LockFill" />
+                                }
+                                else
+                                {
+                                    <Icon Name="IconName.UnlockFill" />
+                                }
+                            </AuthorizeView>
+                            <img class="img-profile" src="@ApplicationUser.ProfilePictureUrl" />
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -73,10 +85,6 @@
                     <div class="form-group mt-3">
                         <label class="col-sm-3" style="width: 5%">@Resources.UserProfile.IsActiveLabel</label>
                         <InputCheckbox id="isactive" class="form-check-input" @bind-Value="@ApplicationUser.IsActive" />
-                    </div>
-                    <div class="form-group mt-3">
-                        <label class="col-sm-3" style="width: 5%">@Resources.UserProfile.LockedOutLabel</label>
-                        <InputCheckbox id="islockedout" class="form-check-input" disabled @bind-Value="@ApplicationUser.IsLockedOut" />
                     </div>
                 </AuthorizeView>
 

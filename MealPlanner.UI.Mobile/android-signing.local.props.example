@@ -1,0 +1,14 @@
+<Project>
+  <!--
+    Copy this file to android-signing.local.props (same folder) and fill in real values.
+    android-signing.local.props is gitignored — it holds the real release-signing secrets
+    and must never be committed. The keystore file itself also stays local/CI-secret only.
+  -->
+  <PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>android-signing/mealplanner-release.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>mealplanner</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>REPLACE_WITH_KEYSTORE_PASSWORD</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>REPLACE_WITH_KEYSTORE_PASSWORD</AndroidSigningStorePass>
+  </PropertyGroup>
+</Project>

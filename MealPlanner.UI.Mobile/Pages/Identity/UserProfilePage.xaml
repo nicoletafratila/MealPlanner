@@ -16,9 +16,15 @@
         <VerticalStackLayout Padding="24" Spacing="12" IsVisible="{Binding Model, Converter={x:Static converters:NotNullConverter.Instance}}">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
-            <Image Source="{Binding ProfileImage}" HeightRequest="120" WidthRequest="120" Aspect="AspectFill"
-                   HorizontalOptions="Center"
-                   IsVisible="{Binding ProfileImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
+            <Grid RowDefinitions="Auto" ColumnDefinitions="*">
+                <Image Source="{Binding ProfileImage}" HeightRequest="120" WidthRequest="120" Aspect="AspectFill"
+                       HorizontalOptions="Center"
+                       IsVisible="{Binding ProfileImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
+                <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="Start" IsVisible="{Binding IsAdmin}">
+                    <Label Text="🔒" FontSize="20" VerticalOptions="Center" IsVisible="{Binding IsLockedOut}" />
+                    <Label Text="🔓" FontSize="20" VerticalOptions="Center" IsVisible="{Binding IsLockedOut, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
+                </HorizontalStackLayout>
+            </Grid>
             <Button Text="{x:Static res:UserProfilePage.PickPictureButton}" Style="{StaticResource OutlineButton}"
                     Command="{Binding PickProfilePictureCommand}" HorizontalOptions="Center" />
 
@@ -41,12 +47,6 @@
                 <HorizontalStackLayout Spacing="8">
                     <CheckBox IsChecked="{Binding Model.IsActive}" />
                     <Label Text="{x:Static res:UserProfilePage.IsActiveLabel}" VerticalOptions="Center" />
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="🔒" FontSize="16" VerticalOptions="Center" IsVisible="{Binding IsLockedOut}" />
-                    <Label Text="🔓" FontSize="16" VerticalOptions="Center" IsVisible="{Binding IsLockedOut, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
-                    <Label Text="{x:Static res:UserProfilePage.LockedOutLabel}" TextColor="{StaticResource DarkGray}" VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
                 <Button Text="{x:Static res:UserProfilePage.UnlockButton}" Style="{StaticResource OutlineButton}"

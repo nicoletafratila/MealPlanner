@@ -22,6 +22,10 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
+  <!-- Android release signing: real keystore + passwords live in the gitignored android-signing.local.props
+       (see android-signing.local.props.example for the template each dev/CI must fill in). -->
+  <Import Project="android-signing.local.props" Condition="Exists('android-signing.local.props')" />
+
   <ItemGroup>
     <MauiIcon Include="Resources\AppIcon\appicon.png" Color="#FFFFFF" />
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />

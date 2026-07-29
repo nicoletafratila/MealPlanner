@@ -58,13 +58,13 @@
                     }
                 </GridColumn>
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnLocked" PropertyName="IsLockedOut" SortString="IsLockedOut" SortKeySelector="item => item.IsLockedOut">
-                    @if (!context.IsLockedOut)
+                    @if (context.IsLockedOut)
                     {
-                        <span class="badge bg-secondary">&ndash;</span>
+                        <Icon Name="IconName.LockFill" />
                     }
                     else
                     {
-                        <span class="badge bg-success">&#10003;</span>
+                        <Icon Name="IconName.UnlockFill" />
                     }
                 </GridColumn>
             </Columns>
