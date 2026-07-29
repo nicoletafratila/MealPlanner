@@ -47,10 +47,10 @@
     <value>QueryParameters is required.</value>
   </data>
   <data name="RecipeCategoryAlreadyExists" xml:space="preserve">
-    <value>This Recipe category already exists.</value>
+    <value>This recipe category already exists.</value>
   </data>
   <data name="SaveFailed" xml:space="preserve">
-    <value>An error occurred when saving the Recipe category.</value>
+    <value>An error occurred when saving the recipe category.</value>
   </data>
   <data name="NotFoundById" xml:space="preserve">
     <value>Could not find with id {0}.</value>

@@ -43,16 +43,16 @@
     <value>Meal Planner</value>
   </data>
   <data name="ForgotPasswordButton" xml:space="preserve">
-    <value>Forgot Password?</value>
+    <value>Forgot password?</value>
   </data>
   <data name="LoginButton" xml:space="preserve">
-    <value>Sign In</value>
+    <value>Sign in</value>
   </data>
   <data name="NoAccountLabel" xml:space="preserve">
     <value>Don't have an account?</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>Sign In</value>
+    <value>Sign in</value>
   </data>
   <data name="PasswordLabel" xml:space="preserve">
     <value>Password</value>

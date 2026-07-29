@@ -88,10 +88,10 @@
     <value>Active: </value>
   </data>
   <data name="ChangePasswordButton" xml:space="preserve">
-    <value>Change Password</value>
+    <value>Change password</value>
   </data>
   <data name="UnlockButton" xml:space="preserve">
-    <value>Unlock User</value>
+    <value>Unlock user</value>
   </data>
   <data name="LockedOutLabel" xml:space="preserve">
     <value>Locked: </value>

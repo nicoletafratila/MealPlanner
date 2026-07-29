@@ -55,7 +55,7 @@
     <value>Name</value>
   </data>
   <data name="UnitTypeLabel" xml:space="preserve">
-    <value>Unit Type</value>
+    <value>Unit type</value>
   </data>
   <data name="PlaceholderName" xml:space="preserve">
     <value>e.g. Gram</value>

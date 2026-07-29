@@ -52,7 +52,7 @@
     <value>Delete</value>
   </data>
   <data name="NameLabel" xml:space="preserve">
-    <value>Shop Name</value>
+    <value>Shop name</value>
   </data>
   <data name="PlaceholderName" xml:space="preserve">
     <value>e.g. Kaufland</value>
@@ -61,7 +61,7 @@
     <value>Save</value>
   </data>
   <data name="DisplayOrderLabel" xml:space="preserve">
-    <value>Category Order</value>
+    <value>Category order</value>
   </data>
   <data name="EmptyCategories" xml:space="preserve">
     <value>No product categories found.</value>

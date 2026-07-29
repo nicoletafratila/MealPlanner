@@ -32,9 +32,9 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="FirstNameAlphaOnly" xml:space="preserve">
-    <value>First Name must be alpha characters only.</value>
+    <value>First name must be alpha characters only.</value>
   </data>
   <data name="LastNameAlphaOnly" xml:space="preserve">
-    <value>Last Name must be alpha characters only.</value>
+    <value>Last name must be alpha characters only.</value>
   </data>
 </root>

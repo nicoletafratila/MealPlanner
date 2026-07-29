@@ -47,10 +47,10 @@
     <value>Please enter your email address.</value>
   </data>
   <data name="FirstNameAlphaOnly" xml:space="preserve">
-    <value>First Name must be alpha characters only.</value>
+    <value>First name must be alpha characters only.</value>
   </data>
   <data name="LastNameAlphaOnly" xml:space="preserve">
-    <value>Last Name must be alpha characters only.</value>
+    <value>Last name must be alpha characters only.</value>
   </data>
   <data name="NewPasswordRequired" xml:space="preserve">
     <value>Please enter a new password.</value>

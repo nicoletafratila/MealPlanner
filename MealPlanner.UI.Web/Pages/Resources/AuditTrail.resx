@@ -40,7 +40,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DeleteAllLogsButton" xml:space="preserve">
-    <value>Delete All Logs</value>
+    <value>Delete all logs</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Loading...</value>

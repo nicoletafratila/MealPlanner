@@ -58,10 +58,10 @@
     <value>Search by name</value>
   </data>
   <data name="FromMealPlanButton" xml:space="preserve">
-    <value>From Meal Plan</value>
+    <value>From meal plan</value>
   </data>
   <data name="FromRecipeButton" xml:space="preserve">
-    <value>From Recipe</value>
+    <value>From recipe</value>
   </data>
   <data name="ImportLabel" xml:space="preserve">
     <value>Import</value>

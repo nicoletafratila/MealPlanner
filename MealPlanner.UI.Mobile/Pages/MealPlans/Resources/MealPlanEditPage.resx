@@ -58,7 +58,7 @@
     <value>Filter by category</value>
   </data>
   <data name="MakeShoppingListButton" xml:space="preserve">
-    <value>Make Shopping List</value>
+    <value>Make shopping list</value>
   </data>
   <data name="NameLabel" xml:space="preserve">
     <value>Name</value>

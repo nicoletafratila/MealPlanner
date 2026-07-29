@@ -55,19 +55,19 @@
     <value>This week's menu:</value>
   </data>
   <data name="MealPlans" xml:space="preserve">
-    <value>Meal Plans</value>
+    <value>Meal plans</value>
   </data>
   <data name="MyProfile" xml:space="preserve">
-    <value>My Profile</value>
+    <value>My profile</value>
   </data>
   <data name="NoMenuYetPrompt" xml:space="preserve">
     <value>No menu yet — tap to create one</value>
   </data>
   <data name="ProductCategories" xml:space="preserve">
-    <value>Product Categories</value>
+    <value>Product categories</value>
   </data>
   <data name="ProductStatistics" xml:space="preserve">
-    <value>Product Statistics</value>
+    <value>Product statistics</value>
   </data>
   <data name="Products" xml:space="preserve">
     <value>Products</value>
@@ -76,16 +76,16 @@
     <value>Profile</value>
   </data>
   <data name="RecipeCategories" xml:space="preserve">
-    <value>Recipe Categories</value>
+    <value>Recipe categories</value>
   </data>
   <data name="RecipeStatistics" xml:space="preserve">
-    <value>Recipe Statistics</value>
+    <value>Recipe statistics</value>
   </data>
   <data name="Recipes" xml:space="preserve">
     <value>Recipes</value>
   </data>
   <data name="ShoppingLists" xml:space="preserve">
-    <value>Shopping Lists</value>
+    <value>Shopping lists</value>
   </data>
   <data name="Shops" xml:space="preserve">
     <value>Shops</value>

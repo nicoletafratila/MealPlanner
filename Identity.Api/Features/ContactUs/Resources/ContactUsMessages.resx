@@ -41,7 +41,7 @@
     <value>Failed to send your message. Please try again later.</value>
   </data>
   <data name="EmailSubjectPrefix" xml:space="preserve">
-    <value>Contact Us</value>
+    <value>Contact us</value>
   </data>
   <data name="EmailFromLabel" xml:space="preserve">
     <value>From</value>
