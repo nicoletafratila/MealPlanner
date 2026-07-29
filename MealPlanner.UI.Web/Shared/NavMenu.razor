@@ -3,74 +3,74 @@
 <div @onclick="ToggleNavMenu" class="nav-menu">
     <div class="nav-item px-3">
         <MudNavLink class="nav-link" href="/">
-            <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Home
+            <i class="bi bi-house me-1"></i> @Resources.NavMenu.Home
         </MudNavLink>
     </div>
     <AuthorizeView>
         <Authorized>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipesoverview" Match="NavLinkMatch.All">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Recipes
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m8.1 13.34 2.83-2.83L3.91 3.5a4.008 4.008 0 0 0 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z" /></svg> @Resources.NavMenu.Recipes
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="mealplans/mealplansoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.MealPlans
+                    <i class="bi bi-calendar-week me-1"></i> @Resources.NavMenu.MealPlans
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="mealplans/shoppinglistsoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ShoppingLists
+                    <i class="bi bi-cart3 me-1"></i> @Resources.NavMenu.ShoppingLists
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="mealplans/shopsoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Shops
+                    <i class="bi bi-shop me-1"></i> @Resources.NavMenu.Shops
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/productsoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Products
+                    <i class="bi bi-box-seam me-1"></i> @Resources.NavMenu.Products
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipecategoriesoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.RecipeCategories
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m12 2-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z" /></svg> @Resources.NavMenu.RecipeCategories
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/productcategoriesoverview">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductCategories
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m12 2-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z" /></svg> @Resources.NavMenu.ProductCategories
                 </MudNavLink>
             </div>
             @if ((context.User.IsInRole("admin")))
             {
                 <div class="nav-item px-3">
                     <MudNavLink class="nav-link" href="recipebooks/unitsoverview">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductUnits
+                        <i class="bi bi-rulers me-1"></i> @Resources.NavMenu.ProductUnits
                     </MudNavLink>
                 </div>
             }
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipestatistics">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.RecipesStatistics
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m8.1 13.34 2.83-2.83L3.91 3.5a4.008 4.008 0 0 0 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z" /></svg> @Resources.NavMenu.RecipesStatistics
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/productstatistics">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.ProductsStatistics
+                    <i class="bi bi-box-seam me-1"></i> @Resources.NavMenu.ProductsStatistics
                 </MudNavLink>
             </div>
             @if ((context.User.IsInRole("admin")))
             {
                 <div class="nav-item px-3">
                     <MudNavLink class="nav-link" href="identities/usersoverview">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.Users
+                        <i class="bi bi-people me-1"></i> @Resources.NavMenu.Users
                     </MudNavLink>
                 </div>
                 <div class="nav-item px-3">
                     <MudNavLink class="nav-link" href="audittrail">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> @Resources.NavMenu.AuditTrail
+                        <i class="bi bi-clock-history me-1"></i> @Resources.NavMenu.AuditTrail
                     </MudNavLink>
                 </div>
             }

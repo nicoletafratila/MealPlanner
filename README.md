@@ -3,6 +3,3 @@ shapes (multiple calls, property assignment, some with no MessageComponent). The
 Want me to extend the same helper to those init-path pages too? It's doable but touches more varied code, so I kept it out of this pass unless you want it.
 
 
-
-teste pt Identity.Data.TableConfigurations
-iconite pt meniul din mobile app
