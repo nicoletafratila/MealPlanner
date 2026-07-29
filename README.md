@@ -4,7 +4,5 @@ Want me to extend the same helper to those init-path pages too? It's doable but 
 
 
 
-
-
-contact us 
-about me pe mobile
+teste pt Identity.Data.TableConfigurations
+iconite pt meniul din mobile app

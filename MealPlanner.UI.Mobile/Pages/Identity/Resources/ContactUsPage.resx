@@ -39,64 +39,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppTitle" xml:space="preserve">
-    <value>Meal Planner</value>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Contact Us</value>
   </data>
-  <data name="Categories" xml:space="preserve">
-    <value>Categories</value>
+  <data name="Heading" xml:space="preserve">
+    <value>Get in touch</value>
   </data>
-  <data name="AboutMe" xml:space="preserve">
-    <value>About me</value>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="ContactUs" xml:space="preserve">
-    <value>Contact us</value>
+  <data name="PlaceholderName" xml:space="preserve">
+    <value>Enter your name</value>
   </data>
-  <data name="CurrentMenuLabel" xml:space="preserve">
-    <value>This week's menu:</value>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Email</value>
   </data>
-  <data name="MealPlans" xml:space="preserve">
-    <value>Meal Plans</value>
+  <data name="PlaceholderEmail" xml:space="preserve">
+    <value>Enter your email address</value>
   </data>
-  <data name="MyProfile" xml:space="preserve">
-    <value>My Profile</value>
+  <data name="SubjectLabel" xml:space="preserve">
+    <value>Subject</value>
   </data>
-  <data name="NoMenuYetPrompt" xml:space="preserve">
-    <value>No menu yet — tap to create one</value>
+  <data name="PlaceholderSubject" xml:space="preserve">
+    <value>Enter the subject</value>
   </data>
-  <data name="ProductCategories" xml:space="preserve">
-    <value>Product Categories</value>
+  <data name="MessageLabel" xml:space="preserve">
+    <value>Message</value>
   </data>
-  <data name="ProductStatistics" xml:space="preserve">
-    <value>Product Statistics</value>
+  <data name="PlaceholderMessage" xml:space="preserve">
+    <value>Enter your message</value>
   </data>
-  <data name="Products" xml:space="preserve">
-    <value>Products</value>
+  <data name="SendButton" xml:space="preserve">
+    <value>Send message</value>
   </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
   </data>
-  <data name="RecipeCategories" xml:space="preserve">
-    <value>Recipe Categories</value>
+  <data name="SubjectRequired" xml:space="preserve">
+    <value>Subject is required.</value>
   </data>
-  <data name="RecipeStatistics" xml:space="preserve">
-    <value>Recipe Statistics</value>
+  <data name="MessageRequired" xml:space="preserve">
+    <value>Message is required.</value>
   </data>
-  <data name="Recipes" xml:space="preserve">
-    <value>Recipes</value>
-  </data>
-  <data name="ShoppingLists" xml:space="preserve">
-    <value>Shopping Lists</value>
-  </data>
-  <data name="Shops" xml:space="preserve">
-    <value>Shops</value>
-  </data>
-  <data name="Statistics" xml:space="preserve">
-    <value>Statistics</value>
-  </data>
-  <data name="Units" xml:space="preserve">
-    <value>Units</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
+  <data name="SubmitFailed" xml:space="preserve">
+    <value>Failed to send your message. Please try again.</value>
   </data>
 </root>

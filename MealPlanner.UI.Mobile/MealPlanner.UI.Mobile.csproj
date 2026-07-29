@@ -42,6 +42,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ChangePasswordPage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\ContactUsPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ContactUsPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Pages\Identity\Resources\ForgotPasswordPage.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ForgotPasswordPage.Designer.cs</LastGenOutput>
@@ -142,6 +146,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UnitsOverviewPage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Compile Update="Pages\Identity\Resources\ContactUsPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ContactUsPage.resx</DependentUpon>
+    </Compile>
 
     <Compile Update="Resources\Strings\NavStrings.Designer.cs">
       <DesignTime>True</DesignTime>

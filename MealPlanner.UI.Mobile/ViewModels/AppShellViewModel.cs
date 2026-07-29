@@ -47,5 +47,8 @@ namespace MealPlanner.UI.Mobile.ViewModels
             Shell.Current.FlyoutIsPresented = false;
             return Shell.Current.GoToAsync($"MealPlanEdit?id={id}");
         }
+
+        [RelayCommand]
+        private Task OpenAboutMeAsync() => Launcher.OpenAsync(new Uri("https://linkedin.com/in/claudia-nicoleta-fratila"));
     }
 }

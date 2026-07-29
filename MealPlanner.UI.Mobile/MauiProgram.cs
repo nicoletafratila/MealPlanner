@@ -48,6 +48,7 @@ namespace MealPlanner.UI.Mobile
             services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<SecureStorageTokenProvider>());
             services.AddSingleton<MobileAuthStateService>();
             services.AddSingleton<IAuthStateNotifier>(sp => sp.GetRequiredService<MobileAuthStateService>());
+            services.AddTransient<AuthRefreshHandler>();
 
 #if DEBUG
             // Android emulator can't validate the .NET dev cert — bypass SSL in debug builds only
@@ -61,16 +62,28 @@ namespace MealPlanner.UI.Mobile
 
             // API HTTP clients
             services.AddHttpClient<AuthenticationService>(c => c.BaseAddress = new Uri(identityBase));
-            services.AddHttpClient<ApplicationUserService>(c => c.BaseAddress = new Uri(identityBase));
-            services.AddHttpClient<RecipeService>(c => c.BaseAddress = new Uri(recipeBase));
-            services.AddHttpClient<RecipeCategoryService>(c => c.BaseAddress = new Uri(recipeBase));
-            services.AddHttpClient<ProductService>(c => c.BaseAddress = new Uri(recipeBase));
-            services.AddHttpClient<ProductCategoryService>(c => c.BaseAddress = new Uri(recipeBase));
-            services.AddHttpClient<UnitService>(c => c.BaseAddress = new Uri(recipeBase));
-            services.AddHttpClient<IMealPlanService, MealPlanService>(c => c.BaseAddress = new Uri(mealPlannerBase));
-            services.AddHttpClient<IShopService, ShopService>(c => c.BaseAddress = new Uri(mealPlannerBase));
-            services.AddHttpClient<IShoppingListService, ShoppingListService>(c => c.BaseAddress = new Uri(mealPlannerBase));
-            services.AddHttpClient<IStatisticsService, StatisticsService>(c => c.BaseAddress = new Uri(mealPlannerBase));
+            services.AddHttpClient<ApplicationUserService>(c => c.BaseAddress = new Uri(identityBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IContactUsService, ContactUsService>(c => c.BaseAddress = new Uri(identityBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<RecipeService>(c => c.BaseAddress = new Uri(recipeBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<RecipeCategoryService>(c => c.BaseAddress = new Uri(recipeBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<ProductService>(c => c.BaseAddress = new Uri(recipeBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<ProductCategoryService>(c => c.BaseAddress = new Uri(recipeBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<UnitService>(c => c.BaseAddress = new Uri(recipeBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IMealPlanService, MealPlanService>(c => c.BaseAddress = new Uri(mealPlannerBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IShopService, ShopService>(c => c.BaseAddress = new Uri(mealPlannerBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IShoppingListService, ShoppingListService>(c => c.BaseAddress = new Uri(mealPlannerBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IStatisticsService, StatisticsService>(c => c.BaseAddress = new Uri(mealPlannerBase))
+                .AddHttpMessageHandler<AuthRefreshHandler>();
 
             // ViewModels — Identity
             services.AddTransient<LoginViewModel>();
@@ -80,6 +93,7 @@ namespace MealPlanner.UI.Mobile
             services.AddTransient<ChangePasswordViewModel>();
             services.AddTransient<UserProfileViewModel>();
             services.AddTransient<UsersOverviewViewModel>();
+            services.AddTransient<ContactUsViewModel>();
 
             // ViewModels — RecipeBook
             services.AddTransient<RecipesOverviewViewModel>();
@@ -112,6 +126,7 @@ namespace MealPlanner.UI.Mobile
             services.AddTransient<ChangePasswordPage>();
             services.AddTransient<UserProfilePage>();
             services.AddTransient<UsersOverviewPage>();
+            services.AddTransient<ContactUsPage>();
 
             // Pages — RecipeBook
             services.AddTransient<RecipesOverviewPage>();

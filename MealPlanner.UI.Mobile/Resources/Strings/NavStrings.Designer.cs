@@ -61,6 +61,15 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About me.
+        /// </summary>
+        internal static string AboutMe {
+            get {
+                return ResourceManager.GetString("AboutMe", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Meal Planner.
         /// </summary>
         internal static string AppTitle {
@@ -68,7 +77,7 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
                 return ResourceManager.GetString("AppTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Categories.
         /// </summary>
@@ -77,7 +86,16 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
                 return ResourceManager.GetString("Categories", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Contact us.
+        /// </summary>
+        internal static string ContactUs {
+            get {
+                return ResourceManager.GetString("ContactUs", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to This week&apos;s menu:.
         /// </summary>

@@ -96,4 +96,10 @@
         <ShellContent Title="{x:Static strings:NavStrings.Users}" ContentTemplate="{DataTemplate identity:UsersOverviewPage}" Route="UsersOverview" />
     </FlyoutItem>
 
+    <FlyoutItem Title="{x:Static strings:NavStrings.ContactUs}" Icon="contact.png">
+        <ShellContent Title="{x:Static strings:NavStrings.ContactUs}" ContentTemplate="{DataTemplate identity:ContactUsPage}" Route="ContactUs" />
+    </FlyoutItem>
+
+    <MenuItem Text="{x:Static strings:NavStrings.AboutMe}" IconImageSource="about.png" Command="{Binding OpenAboutMeCommand}" />
+
 </Shell>

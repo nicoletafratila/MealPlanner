@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
+             x:Class="MealPlanner.UI.Mobile.Pages.Identity.ContactUsPage"
+             x:DataType="vm:ContactUsViewModel"
+             Title="{x:Static res:ContactUsPage.PageTitle}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="{x:Static res:ContactUsPage.Heading}" Style="{StaticResource PageTitleLabel}" />
+
+            <Label Text="{x:Static res:ContactUsPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ContactUsPage.PlaceholderName}" />
+
+            <Label Text="{x:Static res:ContactUsPage.EmailLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.EmailAddress}" Placeholder="{x:Static res:ContactUsPage.PlaceholderEmail}" Keyboard="Email" />
+
+            <Label Text="{x:Static res:ContactUsPage.SubjectLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Entry Text="{Binding Model.Subject}" Placeholder="{x:Static res:ContactUsPage.PlaceholderSubject}" />
+
+            <Label Text="{x:Static res:ContactUsPage.MessageLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Editor Text="{Binding Model.Message}" Placeholder="{x:Static res:ContactUsPage.PlaceholderMessage}" HeightRequest="120" AutoSize="TextChanges" />
+
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
+            <Button Text="{x:Static res:ContactUsPage.SendButton}" Command="{Binding SendCommand}" IsEnabled="{Binding IsNotBusy}" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

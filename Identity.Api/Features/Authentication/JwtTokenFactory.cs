@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Duende.IdentityModel;
@@ -26,14 +27,15 @@ namespace Identity.Api.Features.Authentication
 
         public static IList<Claim> GetClaims(Data.Entities.ApplicationUser user, IList<string> roles)
         {
-            return
-            [
+            var claims = new List<Claim>
+            {
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(ClaimTypes.Name, user.UserName!),
-                new(ClaimTypes.Role, string.Join(",", roles)),
                 new(JwtClaimTypes.Scope, Common.Constants.MealPlanner.ApiScope),
-            ];
+            };
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            return claims;
         }
     }
 }
