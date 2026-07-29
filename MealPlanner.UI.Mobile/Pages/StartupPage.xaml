@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MealPlanner.UI.Mobile.Pages.StartupPage"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             BackgroundColor="{StaticResource Primary}">
+
+    <ActivityIndicator IsRunning="True"
+                        Color="{StaticResource White}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+
+</ContentPage>

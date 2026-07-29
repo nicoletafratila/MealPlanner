@@ -2,6 +2,7 @@ using Common.Http;
 using CommunityToolkit.Maui;
 using Identity.Services.Http;
 using MealPlanner.Services.Http;
+using MealPlanner.UI.Mobile.Pages;
 using MealPlanner.UI.Mobile.Pages.Identity;
 using MealPlanner.UI.Mobile.Pages.MealPlans;
 using MealPlanner.UI.Mobile.Pages.RecipeBook;
@@ -117,6 +118,9 @@ namespace MealPlanner.UI.Mobile
             services.AddTransient<ShopEditViewModel>();
             services.AddTransient<ShoppingListsOverviewViewModel>();
             services.AddTransient<ShoppingListEditViewModel>();
+
+            // Pages — Startup
+            services.AddTransient<StartupPage>();
 
             // Pages — Identity
             services.AddTransient<LoginPage>();
