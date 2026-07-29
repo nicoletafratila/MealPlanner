@@ -1,5 +1,6 @@
 ﻿@page "/mealplans/shoppinglistedit"
 @page "/mealplans/shoppinglistedit/{id}"
+@using MealPlanner.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
@@ -115,7 +116,7 @@
                 <br />
 
                 <div class="card-body">
-                    <TableTemplate Data="@ShoppingList.Products" ColumnCount="3">
+                    <TableTemplate Data="@ShoppingList.Products" ColumnCount="3" SelectedItemChanged="@(async (ShoppingListProductEditModel item) => await CheckboxChangedAsync(item, !item.Collected))">
                         <TableCaption>@Resources.ShoppingListEdit.TableCaptionProducts</TableCaption>
                         <TableHeader>
                             <th style="width: 40px"></th>
@@ -125,10 +126,10 @@
                         <RowTemplate Context="ProductModel">
                             @if (ProductModel != null && ProductModel.Product != null)
                             {
-                                <td style="vertical-align:middle; text-align: center">
+                                <td style="vertical-align:middle; text-align: center" @onclick:stopPropagation="true">
                                     <input type="checkbox" checked="@ProductModel.Collected" @onchange="async (e) => await CheckboxChangedAsync(ProductModel, (bool)(e.Value ?? false))" />
                                 </td>
-                                <td style="vertical-align:middle">
+                                <td style="vertical-align:middle; cursor: pointer">
                                     <div style="display:flex; align-items: center">
                                         <img src="@ProductModel.Product.ImageUrl" class="img-fluid" width="100" height="80" />
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
@@ -139,7 +140,7 @@
                                         <p>@ProductModel.Unit?.Name</p>
                                     </div>
                                 </td>
-                                <td>
+                                <td @onclick:stopPropagation="true">
                                     <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteProductAsync(ProductModel.Product)">
                                         <i class="bi bi-trash" style="font-size: 1.25rem;"></i>
                                     </button>

@@ -352,6 +352,15 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             await PersistProductsAsync();
         }
 
+        [RelayCommand]
+        private async Task ToggleCollectedAsync(ShoppingListProductEditModel item)
+        {
+            if (item is null) return;
+
+            item.Collected = !item.Collected;
+            await OnProductCollectedChangedAsync(item);
+        }
+
         private void ReorderProduct(ShoppingListProductEditModel item)
         {
             var list = ShoppingListProducts.ToList();
