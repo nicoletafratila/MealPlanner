@@ -113,6 +113,52 @@ namespace RecipeBook.Api.Tests.Repositories
             }
         }
 
+        // ---------- GetAllByUserAsync ----------
+        [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyProductsForThatUser_WithCategoryAndBaseUnit()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            var p2 = CreateProductGraph("P2", ProductCategoryGuid(20), "Cat2", "l");
+            p1.UserId = "user1";
+            p2.UserId = "user2";
+            ctx.Products.AddRange(p1, p2);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            var product = result.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(product.Name, Is.EqualTo("P1"));
+                Assert.That(product.ProductCategory, Is.Not.Null);
+                Assert.That(product.BaseUnit, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            p1.UserId = "user2";
+            ctx.Products.Add(p1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
         // ---------- SearchAsync by category ----------
         [Test]
         public async Task SearchAsync_ByCategoryId_ReturnsProductsInThatCategory()

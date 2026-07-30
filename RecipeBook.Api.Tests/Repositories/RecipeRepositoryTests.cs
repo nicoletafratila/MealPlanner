@@ -120,6 +120,51 @@ namespace RecipeBook.Api.Tests.Repositories
             Assert.That(found.RecipeCategory!.Name, Is.EqualTo("Main"));
         }
 
+        // ---------- GetAllByUserAsync ----------
+        [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyRecipesForThatUser_WithCategoryIncluded()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = "user1";
+            r2.UserId = "user2";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            var recipe = result.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(recipe.Name, Is.EqualTo("R1"));
+                Assert.That(recipe.RecipeCategory, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            r1.UserId = "user2";
+            ctx.Recipes.Add(r1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
         // ---------- GetByIdIncludeIngredientsAsync ----------
         [Test]
         public async Task GetByIdIncludeIngredientsAsync_ReturnsRecipe_WithIngredientsAndIncludes()

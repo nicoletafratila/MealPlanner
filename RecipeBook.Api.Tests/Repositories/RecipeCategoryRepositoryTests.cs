@@ -63,6 +63,43 @@ namespace RecipeBook.Api.Tests.Repositories
             Assert.That(all.Select(c => c.Name), Is.EquivalentTo(["Cat1", "Cat2"]));
         }
 
+        // ---------- GetAllByUserAsync ----------
+        [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyCategoriesForThatUser_OrderedByDisplaySequence()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.AddRange(
+                new RecipeCategory { Name = "Cat2", DisplaySequence = 2, UserId = "user1" },
+                new RecipeCategory { Name = "Cat1", DisplaySequence = 1, UserId = "user1" },
+                new RecipeCategory { Name = "Cat3", DisplaySequence = 1, UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.Select(c => c.Name), Is.EqualTo(["Cat1", "Cat2"]));
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.Add(new RecipeCategory { Name = "Cat1", DisplaySequence = 1, UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
         [Test]
         public async Task UpdateAllAsync_UpdatesDisplaySequences()
         {

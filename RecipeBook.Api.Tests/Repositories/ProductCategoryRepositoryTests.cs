@@ -83,6 +83,42 @@ namespace RecipeBook.Api.Tests.Repositories
         }
 
         [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyCategoriesForThatUser()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.ProductCategories.AddRange(
+                new ProductCategory { Name = "Dairy", UserId = "user1" },
+                new ProductCategory { Name = "Snacks", UserId = "user1" },
+                new ProductCategory { Name = "Frozen", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.Select(c => c.Name), Is.EquivalentTo(["Dairy", "Snacks"]));
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.ProductCategories.Add(new ProductCategory { Name = "Frozen", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
         public async Task GetByIdAsync_ReturnsCategory_WhenExists()
         {
             // Arrange
