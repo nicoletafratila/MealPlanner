@@ -349,7 +349,7 @@ namespace Identity.Api.Tests.Features.Email
 
             await _service.SendContactUsAsync("Jane", "jane@example.com", "My Subject", "Body");
 
-            Assert.That(captured!.Subject, Does.Contain("Contact Us"));
+            Assert.That(captured!.Subject, Does.Contain("Contact us"));
             Assert.That(captured!.Subject, Does.Contain("My Subject"));
         }
 

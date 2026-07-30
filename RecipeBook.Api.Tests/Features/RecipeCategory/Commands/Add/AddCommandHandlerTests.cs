@@ -105,7 +105,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("This Recipe category already exists."));
+                Assert.That(result.Message, Is.EqualTo("This recipe category already exists."));
             }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
@@ -191,7 +191,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the Recipe category."));
+                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the recipe category."));
             }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);

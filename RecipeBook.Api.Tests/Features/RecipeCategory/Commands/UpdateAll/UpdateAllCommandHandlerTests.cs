@@ -221,7 +221,7 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.UpdateAll
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.False);
-                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the Recipe category."));
+                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the recipe category."));
             }
 
             _repoMock.Verify(r => r.GetByIdsAsync(It.IsAny<IList<Guid>>(), It.IsAny<CancellationToken>()), Times.Once);
