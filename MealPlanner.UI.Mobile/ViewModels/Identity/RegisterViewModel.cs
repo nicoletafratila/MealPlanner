@@ -39,6 +39,12 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 SetError(MealPlannerSharedMessages.PasswordsDoNotMatch);
                 return;
             }
+
+            if (!Model.AcceptedPrivacyPolicy)
+            {
+                SetError(IdentitySharedMessages.PrivacyPolicyRequired);
+                return;
+            }
             IsBusy = true;
             try
             {
@@ -60,5 +66,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
 
         [RelayCommand]
         private Task GoBackAsync() => Shell.Current.GoToAsync("..");
+
+        [RelayCommand]
+        private Task OpenPrivacyPolicyAsync() => Shell.Current.GoToAsync("PrivacyPolicyView");
     }
 }

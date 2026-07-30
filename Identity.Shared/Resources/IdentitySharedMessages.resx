@@ -55,6 +55,9 @@
   <data name="NewPasswordRequired" xml:space="preserve">
     <value>Please enter a new password.</value>
   </data>
+  <data name="PrivacyPolicyRequired" xml:space="preserve">
+    <value>Please accept the Privacy Policy to continue.</value>
+  </data>
   <data name="UsernameRequired" xml:space="preserve">
     <value>Please enter your username.</value>
   </data>

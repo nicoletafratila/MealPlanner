@@ -142,6 +142,24 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I agree to the.
+        /// </summary>
+        internal static string PrivacyPolicyLabelPrefix {
+            get {
+                return ResourceManager.GetString("PrivacyPolicyLabelPrefix", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy.
+        /// </summary>
+        internal static string PrivacyPolicyLinkText {
+            get {
+                return ResourceManager.GetString("PrivacyPolicyLinkText", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
         internal static string RegisterButton {

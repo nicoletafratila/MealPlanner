@@ -66,6 +66,12 @@
   <data name="PlaceholderUsername" xml:space="preserve">
     <value>Choose a username</value>
   </data>
+  <data name="PrivacyPolicyLabelPrefix" xml:space="preserve">
+    <value>I agree to the</value>
+  </data>
+  <data name="PrivacyPolicyLinkText" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
   <data name="RegisterButton" xml:space="preserve">
     <value>Register</value>
   </data>

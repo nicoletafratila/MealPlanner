@@ -21,5 +21,8 @@ namespace Identity.Shared.Models
         [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         [EmailAddress(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressInvalid), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         public string EmailAddress { get; set; } = string.Empty;
+
+        [Range(typeof(bool), "true", "true", ErrorMessageResourceName = nameof(IdentitySharedMessages.PrivacyPolicyRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
+        public bool AcceptedPrivacyPolicy { get; set; }
     }
 }

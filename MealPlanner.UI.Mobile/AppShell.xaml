@@ -106,6 +106,10 @@
         <ShellContent Title="{x:Static strings:NavStrings.ContactUs}" ContentTemplate="{DataTemplate identity:ContactUsPage}" Route="ContactUs" />
     </FlyoutItem>
 
+    <FlyoutItem Title="{x:Static strings:NavStrings.PrivacyPolicy}" Icon="privacy.png">
+        <ShellContent Title="{x:Static strings:NavStrings.PrivacyPolicy}" ContentTemplate="{DataTemplate identity:PrivacyPolicyPage}" Route="PrivacyPolicy" />
+    </FlyoutItem>
+
     <MenuItem Text="{x:Static strings:NavStrings.AboutMe}" IconImageSource="about.png" Command="{Binding OpenAboutMeCommand}" />
 
 </Shell>

@@ -98,6 +98,25 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
         }
 
         [Test]
+        public void AcceptedPrivacyPolicy_False_HasValidationError()
+        {
+            var command = new RegisterCommand
+            {
+                Model = new RegistrationModel
+                {
+                    Username = "user",
+                    Password = "Test123!",
+                    EmailAddress = "user@example.com",
+                    AcceptedPrivacyPolicy = false
+                }
+            };
+
+            var result = _validator.TestValidate(command);
+
+            result.ShouldHaveValidationErrorFor(x => x.Model!.AcceptedPrivacyPolicy);
+        }
+
+        [Test]
         public void ValidModel_HasNoValidationErrors()
         {
             var command = new RegisterCommand
@@ -107,7 +126,8 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Register
                     Username = "user",
                     Password = "Test123!",
                     ConfirmPassword = "Test123!",
-                    EmailAddress = "user@example.com"
+                    EmailAddress = "user@example.com",
+                    AcceptedPrivacyPolicy = true
                 }
             };
 

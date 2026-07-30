@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="LastUpdated" xml:space="preserve">
+    <value>Last updated: 30 July 2026</value>
+  </data>
+  <data name="IntroHeading" xml:space="preserve">
+    <value>Introduction</value>
+  </data>
+  <data name="IntroBody" xml:space="preserve">
+    <value>MealPlanner ("the app") respects your privacy. This policy explains what information we collect, how we use it, and the choices you have.</value>
+  </data>
+  <data name="DataCollectedHeading" xml:space="preserve">
+    <value>Information we collect</value>
+  </data>
+  <data name="DataCollectedBody" xml:space="preserve">
+    <value>When you create an account we collect your email address, username, and password (stored securely as a hash, never in plain text). We also store the recipes, products, meal plans, shopping lists, and shops you create while using the app.</value>
+  </data>
+  <data name="DataUseHeading" xml:space="preserve">
+    <value>How we use your information</value>
+  </data>
+  <data name="DataUseBody" xml:space="preserve">
+    <value>We use this information solely to provide the meal planning, recipe, and shopping list features of the app. We do not sell or share your personal data with third parties for marketing purposes.</value>
+  </data>
+  <data name="DataStorageHeading" xml:space="preserve">
+    <value>Data storage and security</value>
+  </data>
+  <data name="DataStorageBody" xml:space="preserve">
+    <value>Your data is stored in a secured database and is only accessible through your authenticated account.</value>
+  </data>
+  <data name="DataRetentionHeading" xml:space="preserve">
+    <value>Data retention</value>
+  </data>
+  <data name="DataRetentionBody" xml:space="preserve">
+    <value>We retain your data for as long as your account remains active. You may request deletion of your account and associated data at any time.</value>
+  </data>
+  <data name="YourRightsHeading" xml:space="preserve">
+    <value>Your rights</value>
+  </data>
+  <data name="YourRightsBody" xml:space="preserve">
+    <value>You can access, update, or delete your personal data at any time from within the app, or by contacting us using the Contact Us page.</value>
+  </data>
+  <data name="ChildrenHeading" xml:space="preserve">
+    <value>Children's privacy</value>
+  </data>
+  <data name="ChildrenBody" xml:space="preserve">
+    <value>MealPlanner is not directed to children under 13, and we do not knowingly collect personal information from children.</value>
+  </data>
+  <data name="ChangesHeading" xml:space="preserve">
+    <value>Changes to this policy</value>
+  </data>
+  <data name="ChangesBody" xml:space="preserve">
+    <value>We may update this policy from time to time. Continued use of the app after changes are published constitutes acceptance of the updated policy.</value>
+  </data>
+  <data name="ContactHeading" xml:space="preserve">
+    <value>Contact us</value>
+  </data>
+  <data name="ContactBody" xml:space="preserve">
+    <value>If you have questions about this privacy policy, please reach out via the Contact Us page in the app.</value>
+  </data>
+</root>

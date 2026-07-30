@@ -72,6 +72,9 @@
     <Compile Update="Pages\ContactUs.razor.cs">
       <DependentUpon>ContactUs.razor</DependentUpon>
     </Compile>
+    <Compile Update="Pages\PrivacyPolicy.razor.cs">
+      <DependentUpon>PrivacyPolicy.razor</DependentUpon>
+    </Compile>
     <Compile Update="Pages\Identities\ChangePassword.razor.cs">
       <DependentUpon>ChangePassword.razor</DependentUpon>
     </Compile>
@@ -353,6 +356,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ContactUs.resx</DependentUpon>
     </Compile>
+    <Compile Update="Pages\Resources\PrivacyPolicy.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PrivacyPolicy.resx</DependentUpon>
+    </Compile>
 <Compile Update="Shared\Resources\NavMenu.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -516,6 +524,10 @@
     <EmbeddedResource Update="Pages\Resources\ContactUs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ContactUs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Resources\PrivacyPolicy.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PrivacyPolicy.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

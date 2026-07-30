@@ -54,6 +54,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ForgotPasswordPage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Identity\Resources\PrivacyPolicyPage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PrivacyPolicyPage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Pages\Identity\Resources\LoginPage.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LoginPage.Designer.cs</LastGenOutput>
@@ -154,6 +158,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ContactUsPage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\Resources\PrivacyPolicyPage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PrivacyPolicyPage.resx</DependentUpon>
     </Compile>
 
     <Compile Update="Resources\Strings\NavStrings.Designer.cs">
@@ -308,6 +317,9 @@
     </Compile>
     <Compile Update="Pages\Identity\ForgotPasswordPage.xaml.cs">
       <DependentUpon>ForgotPasswordPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Identity\PrivacyPolicyPage.xaml.cs">
+      <DependentUpon>PrivacyPolicyPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Pages\Identity\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>

@@ -412,6 +412,15 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must accept the Privacy Policy..
+        /// </summary>
+        internal static string PrivacyPolicyRequired {
+            get {
+                return ResourceManager.GetString("PrivacyPolicyRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred during registration..
         /// </summary>
         internal static string RegistrationError {

@@ -131,6 +131,7 @@ namespace MealPlanner.UI.Mobile
             services.AddTransient<UserProfilePage>();
             services.AddTransient<UsersOverviewPage>();
             services.AddTransient<ContactUsPage>();
+            services.AddTransient<PrivacyPolicyPage>();
 
             // Pages — RecipeBook
             services.AddTransient<RecipesOverviewPage>();

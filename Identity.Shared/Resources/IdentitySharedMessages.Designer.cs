@@ -133,6 +133,15 @@ namespace Identity.Shared.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Please accept the Privacy Policy to continue..
+        /// </summary>
+        public static string PrivacyPolicyRequired {
+            get {
+                return ResourceManager.GetString("PrivacyPolicyRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Please enter your username..
         /// </summary>
         public static string UsernameRequired {

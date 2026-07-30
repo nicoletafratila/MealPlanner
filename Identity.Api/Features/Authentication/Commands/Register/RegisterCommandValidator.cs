@@ -25,6 +25,10 @@ namespace Identity.Api.Features.Authentication.Commands.Register
                         .WithMessage(AuthenticationMessages.EmailRequired)
                         .EmailAddress()
                         .WithMessage(AuthenticationMessages.EmailInvalid);
+
+                    RuleFor(x => x.Model!.AcceptedPrivacyPolicy)
+                        .Equal(true)
+                        .WithMessage(AuthenticationMessages.PrivacyPolicyRequired);
                 });
         }
     }

@@ -24,6 +24,22 @@
             <Label Text="{x:Static res:RegisterPage.ConfirmPasswordLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.ConfirmPassword}" Placeholder="{x:Static res:RegisterPage.PlaceholderConfirmPassword}" IsPassword="True" />
 
+            <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                <CheckBox IsChecked="{Binding Model.AcceptedPrivacyPolicy}" />
+                <Label VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenPrivacyPolicyCommand}" />
+                    </Label.GestureRecognizers>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{x:Static res:RegisterPage.PrivacyPolicyLabelPrefix}" />
+                            <Span Text=" " />
+                            <Span Text="{x:Static res:RegisterPage.PrivacyPolicyLinkText}" TextDecorations="Underline" TextColor="{StaticResource Primary}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </HorizontalStackLayout>
+
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                    IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
             <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"

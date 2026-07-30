@@ -63,6 +63,9 @@
   <data name="NoMenuYetPrompt" xml:space="preserve">
     <value>No menu yet — tap to create one</value>
   </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
   <data name="ProductCategories" xml:space="preserve">
     <value>Product categories</value>
   </data>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
+             x:Class="MealPlanner.UI.Mobile.Pages.Identity.PrivacyPolicyPage"
+             Title="{x:Static res:PrivacyPolicyPage.PageTitle}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="{x:Static res:PrivacyPolicyPage.PageTitle}" Style="{StaticResource PageTitleLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.LastUpdated}" FontAttributes="Italic" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.IntroBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataCollectedHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataCollectedBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataUseHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataUseBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataStorageHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataStorageBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataRetentionHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.DataRetentionBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.YourRightsHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.YourRightsBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.ChildrenHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.ChildrenBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.ChangesHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.ChangesBody}" />
+
+            <Label Text="{x:Static res:PrivacyPolicyPage.ContactHeading}" Style="{StaticResource SectionHeaderLabel}" />
+            <Label Text="{x:Static res:PrivacyPolicyPage.ContactBody}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

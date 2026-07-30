@@ -44,6 +44,7 @@ namespace MealPlanner.UI.Mobile
             Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
             Routing.RegisterRoute("ResetPassword", typeof(ResetPasswordPage));
             Routing.RegisterRoute("Register", typeof(RegisterPage));
+            Routing.RegisterRoute("PrivacyPolicyView", typeof(PrivacyPolicyPage));
         }
     }
 }

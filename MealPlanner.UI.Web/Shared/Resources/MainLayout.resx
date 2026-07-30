@@ -77,4 +77,7 @@
 	<data name="NoMenuYetLinkText" xml:space="preserve">
 		<value>here</value>
 	</data>
+	<data name="PrivacyPolicy" xml:space="preserve">
+		<value>Privacy policy</value>
+	</data>
 </root>

@@ -59,7 +59,8 @@ namespace Identity.Shared.Tests.Models
                 EmailAddress = "newuser@example.com",
                 FirstName = "John",
                 LastName = "Doe",
-                PhoneNumber = "+123456789"
+                PhoneNumber = "+123456789",
+                AcceptedPrivacyPolicy = true
             };
 
             var isValid = TryValidate(model, out var results);
@@ -68,6 +69,27 @@ namespace Identity.Shared.Tests.Models
             {
                 Assert.That(isValid, Is.True);
                 Assert.That(results, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void AcceptedPrivacyPolicy_Required_ErrorWhenFalse()
+        {
+            var model = new RegistrationModel
+            {
+                Username = "user",
+                Password = "Test123!",
+                ConfirmPassword = "Test123!",
+                EmailAddress = "user@example.com",
+                AcceptedPrivacyPolicy = false
+            };
+
+            var isValid = TryValidate(model, out var results);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RegistrationModel.AcceptedPrivacyPolicy))), Is.True);
             }
         }
 
@@ -100,7 +122,8 @@ namespace Identity.Shared.Tests.Models
                 Username = "user",
                 Password = "Test123!",
                 ConfirmPassword = "Test123!",
-                EmailAddress = ""
+                EmailAddress = "",
+                AcceptedPrivacyPolicy = true
             };
 
             var isValid = TryValidate(model, out var results);
@@ -137,7 +160,8 @@ namespace Identity.Shared.Tests.Models
                 Password = "Test123!",
                 ConfirmPassword = "Test123!",
                 EmailAddress = "user@example.com",
-                FirstName = "John Paul"
+                FirstName = "John Paul",
+                AcceptedPrivacyPolicy = true
             };
 
             var isValid = TryValidate(model, out var results);
@@ -163,7 +187,8 @@ namespace Identity.Shared.Tests.Models
                 Password = "Test123!",
                 ConfirmPassword = "Test123!",
                 EmailAddress = "user@example.com",
-                LastName = "Smith Jr"
+                LastName = "Smith Jr",
+                AcceptedPrivacyPolicy = true
             };
 
             var isValid = TryValidate(model, out var results);
