@@ -15,7 +15,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels
     {
         private Mock<IMealPlanService> _mealPlanServiceMock = null!;
         private Mock<ITokenProvider> _tokenProviderMock = null!;
-        private MobileAuthStateService _authStateService = null!;
+        private AuthenticationStateService _authStateService = null!;
         private AppShellViewModel _viewModel = null!;
 
         [SetUp]
@@ -23,7 +23,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels
         {
             _mealPlanServiceMock = new Mock<IMealPlanService>(MockBehavior.Strict);
             _tokenProviderMock = new Mock<ITokenProvider>(MockBehavior.Strict);
-            _authStateService = new MobileAuthStateService(_tokenProviderMock.Object);
+            _authStateService = new AuthenticationStateService(_tokenProviderMock.Object);
             _viewModel = new AppShellViewModel(_mealPlanServiceMock.Object, _authStateService);
         }
 

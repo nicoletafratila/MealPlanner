@@ -47,7 +47,7 @@ namespace MealPlanner.UI.Mobile
             services.AddMemoryCache();
             services.AddSingleton<SecureStorageTokenProvider>();
             services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<SecureStorageTokenProvider>());
-            services.AddSingleton<MobileAuthStateService>();
+            services.AddSingleton<AuthenticationStateService>();
             services.AddTransient<AuthRefreshHandler>();
 
 #if DEBUG

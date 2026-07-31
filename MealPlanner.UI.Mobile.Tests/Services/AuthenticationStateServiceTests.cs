@@ -8,16 +8,16 @@ using Moq;
 namespace MealPlanner.UI.Mobile.Tests.Services
 {
     [TestFixture]
-    public class MobileAuthStateServiceTests
+    public class AuthenticationStateServiceTests
     {
         private Mock<ITokenProvider> _tokenProviderMock = null!;
-        private MobileAuthStateService _service = null!;
+        private AuthenticationStateService _service = null!;
 
         [SetUp]
         public void SetUp()
         {
             _tokenProviderMock = new Mock<ITokenProvider>(MockBehavior.Strict);
-            _service = new MobileAuthStateService(_tokenProviderMock.Object);
+            _service = new AuthenticationStateService(_tokenProviderMock.Object);
         }
 
         private void SetupToken(string? token) =>

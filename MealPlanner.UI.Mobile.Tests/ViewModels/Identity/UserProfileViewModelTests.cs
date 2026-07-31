@@ -25,7 +25,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         private Mock<IApplicationUserService> _userServiceMock = null!;
         private Mock<IAuthenticationService> _authServiceMock = null!;
         private Mock<ITokenProvider> _tokenProviderMock = null!;
-        private MobileAuthStateService _authState = null!;
+        private AuthenticationStateService _authState = null!;
         private UserProfileViewModel _viewModel = null!;
 
         [SetUp]
@@ -35,14 +35,14 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
             _authServiceMock = new Mock<IAuthenticationService>(MockBehavior.Strict);
             _tokenProviderMock = new Mock<ITokenProvider>(MockBehavior.Strict);
 
-            _authState = new MobileAuthStateService(_tokenProviderMock.Object);
+            _authState = new AuthenticationStateService(_tokenProviderMock.Object);
             _viewModel = new UserProfileViewModel(_userServiceMock.Object, _authState, _authServiceMock.Object);
         }
 
         /// <summary>
         /// Hand-builds a JWT with an unsigned/empty signature segment whose payload contains the
         /// given claims, base64-encoded with the standard (non URL-safe) alphabet, matching what
-        /// MobileAuthStateService.ParseClaims expects (it only re-pads, it never remaps '-'/'_').
+        /// AuthenticationStateService.ParseClaims expects (it only re-pads, it never remaps '-'/'_').
         /// </summary>
         private static string BuildJwt(IDictionary<string, object> claims)
         {

@@ -6,11 +6,11 @@ namespace MealPlanner.UI.Mobile
 {
     public partial class App : Application
     {
-        private readonly MobileAuthStateService _authState;
+        private readonly AuthenticationStateService _authState;
         private readonly IServiceProvider _services;
         private static string? _pendingDeepLink;
 
-        public App(MobileAuthStateService authState, IServiceProvider services)
+        public App(AuthenticationStateService authState, IServiceProvider services)
         {
             InitializeComponent();
             _authState = authState;

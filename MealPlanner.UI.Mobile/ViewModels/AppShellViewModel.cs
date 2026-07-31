@@ -6,7 +6,7 @@ using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels
 {
-    public partial class AppShellViewModel(IMealPlanService mealPlanService, MobileAuthStateService authStateService) : BaseViewModel
+    public partial class AppShellViewModel(IMealPlanService mealPlanService, AuthenticationStateService authStateService) : BaseViewModel
     {
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasCurrentMealPlan))]

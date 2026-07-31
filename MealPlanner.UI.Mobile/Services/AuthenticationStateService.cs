@@ -5,7 +5,7 @@ using Common.Http;
 
 namespace MealPlanner.UI.Mobile.Services
 {
-    public class MobileAuthStateService(ITokenProvider tokenProvider)
+    public class AuthenticationStateService(ITokenProvider tokenProvider)
     {
         public event Action? AuthStateChanged;
 
@@ -81,7 +81,7 @@ namespace MealPlanner.UI.Mobile.Services
             return false;
         }
 
-        private static IEnumerable<Claim> BuildClaims(Dictionary<string, JsonElement> payload)
+        private static List<Claim> BuildClaims(Dictionary<string, JsonElement> payload)
         {
             var skip = new HashSet<string> { "exp", "nbf", "iat" };
             var claims = new List<Claim>();
