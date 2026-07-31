@@ -2,6 +2,7 @@ using Common.Data.DataContext;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Data.Entities;
@@ -42,6 +43,24 @@ namespace MealPlanner.Api.Tests.Repositories
         {
             context = _provider.GetRequiredService<MealPlannerDbContext>();
             return new ShoppingListRepository(context);
+        }
+
+        // SQLite is required for tests that use ExecuteDeleteAsync (unsupported by InMemory).
+        private static (ShoppingListRepository repo, MealPlannerDbContext ctx, SqliteConnection connection) CreateSqliteRepository()
+        {
+            var connection = new SqliteConnection("Data Source=:memory:");
+            connection.Open();
+
+            var assemblies = new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]);
+            var options = new DbContextOptionsBuilder<MealPlannerDbContext>()
+                .UseSqlite(connection)
+                .Options;
+
+            var ctx = new MealPlannerDbContext(options, assemblies);
+            return (new ShoppingListRepository(ctx), ctx, connection);
         }
 
         // Deterministic mapping so a given int seed always maps to the same Guid,
@@ -109,6 +128,71 @@ namespace MealPlanner.Api.Tests.Repositories
                 Shop = shop,
                 Products = [slProduct]
             };
+        }
+
+        // ---------- GetAllByUserAsync ----------
+        [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyShoppingListsForThatUser()
+        {
+            var repo = CreateRepository(out var ctx);
+
+            ctx.ShoppingLists.AddRange(
+                new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", UserId = "user1" },
+                new ShoppingList { Id = ShoppingListGuid(2), Name = "List2", UserId = "user1" },
+                new ShoppingList { Id = ShoppingListGuid(3), Name = "List3", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.Select(l => l.Name), Is.EquivalentTo(["List1", "List2"]));
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            var repo = CreateRepository(out var ctx);
+
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            Assert.That(result, Is.Empty);
+        }
+
+        // ---------- DeleteAsync ----------
+        [Test]
+        public async Task DeleteAsync_RemovesProductRowsAndShoppingList()
+        {
+            var (repo, ctx, connection) = CreateSqliteRepository();
+            await using var _ = ctx;
+            using var __ = connection;
+
+            await ctx.Database.EnsureCreatedAsync();
+            var shopId = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
+            ctx.ProductCategories.Add(new ProductCategory { Id = categoryId, Name = "Cat1" });
+            ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
+            ctx.Products.Add(new Product { Id = ProductGuid(10), Name = "Flour", ProductCategoryId = categoryId, BaseUnitId = UnitGuid(1) });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", ShopId = shopId, UserId = "user1" });
+            ctx.ShoppingListProducts.Add(
+                new ShoppingListProduct { ShoppingListId = ShoppingListGuid(1), ProductId = ProductGuid(10), UnitId = UnitGuid(1), Quantity = 1m });
+            await ctx.SaveChangesAsync();
+
+            var entity = await repo.GetByIdIncludeProductsAsync(ShoppingListGuid(1), CancellationToken.None);
+            Assert.That(entity, Is.Not.Null);
+
+            // Act
+            await repo.DeleteAsync(entity!, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(await ctx.ShoppingLists.AnyAsync(sl => sl.Id == ShoppingListGuid(1)), Is.False);
+                Assert.That(await ctx.ShoppingListProducts.AnyAsync(p => p.ShoppingListId == ShoppingListGuid(1)), Is.False);
+            }
         }
 
         // ---------- GetByIdIncludeProductsAsync ----------

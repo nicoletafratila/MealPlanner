@@ -148,6 +148,75 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
         }
 
         [Test]
+        public async Task Handle_WithFilters_ReturnsOnlyMatchingItems()
+        {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var entities = new List<Data.Entities.Product>
+            {
+                new() { Id = id1, Name = "Milk", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = id2, Name = "Bread", ProductCategoryId = Guid.NewGuid() }
+            };
+
+            var models = new List<ProductModel>
+            {
+                new() { Id = id1, Name = "Milk" },
+                new() { Id = id2, Name = "Bread" }
+            };
+
+            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
+
+            var qp = new QueryParameters<ProductModel>
+            {
+                Filters = [new FilterItem(nameof(ProductModel.Name), "Milk", FilterOperator.Equals)],
+                Sorting = null,
+                PageNumber = 1,
+                PageSize = 10
+            };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items, Has.Count.EqualTo(1));
+            Assert.That(result.Items.Single().Name, Is.EqualTo("Milk"));
+        }
+
+        [Test]
+        public async Task Handle_WithSorting_ReturnsSortedItems()
+        {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var entities = new List<Data.Entities.Product>
+            {
+                new() { Id = id1, Name = "Milk", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = id2, Name = "Bread", ProductCategoryId = Guid.NewGuid() }
+            };
+
+            var models = new List<ProductModel>
+            {
+                new() { Id = id1, Name = "Milk" },
+                new() { Id = id2, Name = "Bread" }
+            };
+
+            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
+
+            var qp = new QueryParameters<ProductModel>
+            {
+                Filters = null,
+                Sorting = [new SortingModel { PropertyName = nameof(ProductModel.Name), Direction = SortDirection.Ascending }],
+                PageNumber = 1,
+                PageSize = 10
+            };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items.Select(x => x.Name), Is.EqualTo(["Bread", "Milk"]));
+        }
+
+        [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
             var entities = new List<Data.Entities.Product>

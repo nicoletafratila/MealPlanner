@@ -82,6 +82,43 @@ namespace MealPlanner.Api.Tests.Repositories
             };
         }
 
+        // ---------- GetAllByUserAsync ----------
+        [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyShopsForThatUser()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.Shops.AddRange(
+                new Shop { Id = ShopGuid(1), Name = "Shop1", UserId = "user1" },
+                new Shop { Id = ShopGuid(2), Name = "Shop2", UserId = "user1" },
+                new Shop { Id = ShopGuid(3), Name = "Shop3", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.Select(s => s.Name), Is.EquivalentTo(["Shop1", "Shop2"]));
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
         // ---------- GetByIdIncludeDisplaySequenceAsync ----------
         [Test]
         public async Task GetByIdIncludeDisplaySequenceAsync_ReturnsShop_WithDisplaySequenceAndCategories()

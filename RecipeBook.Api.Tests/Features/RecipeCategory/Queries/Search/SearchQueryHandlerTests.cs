@@ -135,6 +135,83 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Queries.Search
         }
 
         [Test]
+        public async Task Handle_WithFilters_ReturnsOnlyMatchingItems()
+        {
+            var entities = new List<RecipeCategoryEntity>
+            {
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
+            };
+
+            var models = new List<RecipeCategoryModel>
+            {
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat1", DisplaySequence = 1 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat2", DisplaySequence = 2 }
+            };
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entities);
+
+            _mapperMock
+                .Setup(m => m.Map<IList<RecipeCategoryModel>>(entities))
+                .Returns(models);
+
+            var qp = new QueryParameters<RecipeCategoryModel>
+            {
+                Filters = [new FilterItem(nameof(RecipeCategoryModel.Name), "Cat1", FilterOperator.Equals)],
+                Sorting = null,
+                PageNumber = 1,
+                PageSize = 10
+            };
+
+            var query = new SearchQuery { QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items, Has.Count.EqualTo(1));
+            Assert.That(result.Items.Single().Name, Is.EqualTo("Cat1"));
+        }
+
+        [Test]
+        public async Task Handle_WithSorting_ReturnsSortedItems()
+        {
+            var entities = new List<RecipeCategoryEntity>
+            {
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat2", DisplaySequence = 2 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat1", DisplaySequence = 1 }
+            };
+
+            var models = new List<RecipeCategoryModel>
+            {
+                new() { Id = RecipeCategoryGuid(1), Name = "Cat2", DisplaySequence = 2 },
+                new() { Id = RecipeCategoryGuid(2), Name = "Cat1", DisplaySequence = 1 }
+            };
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entities);
+
+            _mapperMock
+                .Setup(m => m.Map<IList<RecipeCategoryModel>>(entities))
+                .Returns(models);
+
+            var qp = new QueryParameters<RecipeCategoryModel>
+            {
+                Filters = null,
+                Sorting = [new SortingModel { PropertyName = nameof(RecipeCategoryModel.Name), Direction = SortDirection.Ascending }],
+                PageNumber = 1,
+                PageSize = 10
+            };
+
+            var query = new SearchQuery { QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items.Select(x => x.Name), Is.EqualTo(["Cat1", "Cat2"]));
+        }
+
+        [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
             var entities = new List<RecipeCategoryEntity>

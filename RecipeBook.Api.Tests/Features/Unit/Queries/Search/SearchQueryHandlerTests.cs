@@ -114,6 +114,95 @@ namespace RecipeBook.Api.Tests.Features.Unit.Queries.Search
         }
 
         [Test]
+        public async Task Handle_WithFilters_ReturnsOnlyMatchingItems()
+        {
+            // Arrange
+            var entities = new List<UnitEntity>
+            {
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
+                new() { Id = Guid.NewGuid(), Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
+            };
+
+            var models = new List<UnitModel>
+            {
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
+                new() { Id = Guid.NewGuid(), Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
+            };
+
+            _repoMock
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .ReturnsAsync(entities);
+
+            _mapperMock
+                .Setup(m => m.Map<IList<UnitModel>>(entities))
+                .Returns(models);
+
+            var qp = new QueryParameters<UnitModel>
+            {
+                Filters = [new FilterItem(nameof(UnitModel.Name), "kg", FilterOperator.Equals)],
+                Sorting = null,
+                PageNumber = 1,
+                PageSize = 10
+            };
+
+            var query = new SearchQuery
+            {
+                QueryParameters = qp
+            };
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.That(result.Items, Has.Count.EqualTo(1));
+            Assert.That(result.Items.Single().Name, Is.EqualTo("kg"));
+        }
+
+        [Test]
+        public async Task Handle_WithSorting_ReturnsSortedItems()
+        {
+            // Arrange
+            var entities = new List<UnitEntity>
+            {
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
+                new() { Id = Guid.NewGuid(), Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
+            };
+
+            var models = new List<UnitModel>
+            {
+                new() { Id = Guid.NewGuid(), Name = "kg", UnitType = Common.Constants.Units.UnitType.Weight },
+                new() { Id = Guid.NewGuid(), Name = "g",  UnitType = Common.Constants.Units.UnitType.Weight }
+            };
+
+            _repoMock
+                .Setup(r => r.GetAllAsync(CancellationToken.None))
+                .ReturnsAsync(entities);
+
+            _mapperMock
+                .Setup(m => m.Map<IList<UnitModel>>(entities))
+                .Returns(models);
+
+            var qp = new QueryParameters<UnitModel>
+            {
+                Filters = null,
+                Sorting = [new SortingModel { PropertyName = nameof(UnitModel.Name), Direction = SortDirection.Ascending }],
+                PageNumber = 1,
+                PageSize = 10
+            };
+
+            var query = new SearchQuery
+            {
+                QueryParameters = qp
+            };
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.That(result.Items.Select(x => x.Name), Is.EqualTo(["g", "kg"]));
+        }
+
+        [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
             // Arrange

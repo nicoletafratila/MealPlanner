@@ -134,6 +134,83 @@ namespace RecipeBook.Api.Tests.Features.ProductCategory.Queries.Search
         }
 
         [Test]
+        public async Task Handle_WithFilters_ReturnsOnlyMatchingItems()
+        {
+            var entities = new List<Data.Entities.ProductCategory>
+            {
+                new() { Id = ProductCategoryGuid(1), Name = "Cat1" },
+                new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
+            };
+
+            var models = new List<ProductCategoryModel>
+            {
+                new() { Id = ProductCategoryGuid(1), Name = "Cat1" },
+                new() { Id = ProductCategoryGuid(2), Name = "Cat2" }
+            };
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entities);
+
+            _mapperMock
+                .Setup(m => m.Map<IList<ProductCategoryModel>>(entities))
+                .Returns(models);
+
+            var qp = new QueryParameters<ProductCategoryModel>
+            {
+                Filters = [new FilterItem(nameof(ProductCategoryModel.Name), "Cat1", FilterOperator.Equals)],
+                Sorting = null,
+                PageNumber = 1,
+                PageSize = 10
+            };
+
+            var query = new SearchQuery { QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items, Has.Count.EqualTo(1));
+            Assert.That(result.Items.Single().Name, Is.EqualTo("Cat1"));
+        }
+
+        [Test]
+        public async Task Handle_WithSorting_ReturnsSortedItems()
+        {
+            var entities = new List<Data.Entities.ProductCategory>
+            {
+                new() { Id = ProductCategoryGuid(1), Name = "Cat2" },
+                new() { Id = ProductCategoryGuid(2), Name = "Cat1" }
+            };
+
+            var models = new List<ProductCategoryModel>
+            {
+                new() { Id = ProductCategoryGuid(1), Name = "Cat2" },
+                new() { Id = ProductCategoryGuid(2), Name = "Cat1" }
+            };
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(entities);
+
+            _mapperMock
+                .Setup(m => m.Map<IList<ProductCategoryModel>>(entities))
+                .Returns(models);
+
+            var qp = new QueryParameters<ProductCategoryModel>
+            {
+                Filters = null,
+                Sorting = [new SortingModel { PropertyName = nameof(ProductCategoryModel.Name), Direction = SortDirection.Ascending }],
+                PageNumber = 1,
+                PageSize = 10
+            };
+
+            var query = new SearchQuery { QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items.Select(x => x.Name), Is.EqualTo(["Cat1", "Cat2"]));
+        }
+
+        [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
             var entities = new List<Data.Entities.ProductCategory>

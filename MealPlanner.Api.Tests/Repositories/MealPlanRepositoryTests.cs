@@ -172,6 +172,37 @@ namespace MealPlanner.Api.Tests.Repositories
             return (mealPlan, recipe, product);
         }
 
+        // ---------- GetAllByUserAsync ----------
+        [Test]
+        public async Task GetAllByUserAsync_ReturnsOnlyMealPlansForThatUser()
+        {
+            var repo = CreateRepository(out var ctx);
+
+            ctx.MealPlans.AddRange(
+                new MealPlan { Id = MealPlanId(1), Name = "Plan1", UserId = "user1" },
+                new MealPlan { Id = MealPlanId(2), Name = "Plan2", UserId = "user1" },
+                new MealPlan { Id = MealPlanId(3), Name = "Plan3", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result.Select(p => p.Name), Is.EquivalentTo(["Plan1", "Plan2"]));
+        }
+
+        [Test]
+        public async Task GetAllByUserAsync_NoMatches_ReturnsEmptyList()
+        {
+            var repo = CreateRepository(out var ctx);
+
+            ctx.MealPlans.Add(new MealPlan { Id = MealPlanId(1), Name = "Plan1", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            var result = await repo.GetAllByUserAsync("user1", CancellationToken.None);
+
+            Assert.That(result, Is.Empty);
+        }
+
         // ---------- GetByIdAsync override ----------
         [Test]
         public async Task GetByIdAsync_ReturnsMealPlan_WithRecipesAndCategoriesIncluded()
