@@ -14,8 +14,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     [QueryProperty(nameof(PreselectedRecipeId), "recipeId")]
     public partial class MealPlanEditViewModel(
         IMealPlanService mealPlanService,
-        RecipeService recipeService,
-        RecipeCategoryService recipeCategoryService,
+        IRecipeService recipeService,
+        IRecipeCategoryService recipeCategoryService,
         IShopService shopService,
         IShoppingListService shoppingListService) : BaseViewModel
     {

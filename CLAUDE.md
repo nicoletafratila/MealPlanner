@@ -63,7 +63,7 @@ Each of the three domains (Identity, RecipeBook, MealPlanner) owns a set of libr
 - `Common.Data.Entities` — `Entity<T>` base class
 - `Common.Models` — `CommandResponse`, `BaseModel`, `LoginCommandResponse`, `StatisticModel`
 - `Common.Pagination` — `PagedList<T>`, `QueryParameters<T>`, `FilterItem`, `FilterOperator`, `SortingModel`
-- `Common.Http` — `ServiceBase` (base for HTTP services), `ITokenProvider`, `IAuthStateNotifier`
+- `Common.Http` — `ServiceBase` (base for HTTP services), `ITokenProvider`
 - `Common.Services` — `ICurrentUserService`, `ILoggerService`, `UnitConverter` and other domain utilities
 - `Common.Validators` — FluentValidation base validators
 - `Common.Constants` — security scopes, policy names, role constants

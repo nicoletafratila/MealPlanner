@@ -10,7 +10,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class RecipeStatisticsViewModel(
         IStatisticsService statisticsService,
-        RecipeCategoryService recipeCategoryService) : BaseViewModel
+        IRecipeCategoryService recipeCategoryService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<CategoryStatisticModel> _categories = [];

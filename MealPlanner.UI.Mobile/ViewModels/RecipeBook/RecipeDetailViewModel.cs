@@ -6,7 +6,7 @@ using RecipeBook.Shared.Models;
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     [QueryProperty(nameof(RecipeId), "id")]
-    public partial class RecipeDetailViewModel(RecipeService recipeService) : BaseViewModel
+    public partial class RecipeDetailViewModel(IRecipeService recipeService) : BaseViewModel
     {
         [ObservableProperty]
         private string _recipeId = string.Empty;

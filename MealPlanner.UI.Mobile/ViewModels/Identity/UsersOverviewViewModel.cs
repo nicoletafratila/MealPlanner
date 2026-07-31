@@ -8,7 +8,7 @@ using Identity.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class UsersOverviewViewModel(ApplicationUserService userService) : BaseViewModel
+    public partial class UsersOverviewViewModel(IApplicationUserService userService) : BaseViewModel
     {
         private static readonly List<SortingModel> _defaultSorting = [new SortingModel { PropertyName = "Username", Direction = SortDirection.Ascending }];
 

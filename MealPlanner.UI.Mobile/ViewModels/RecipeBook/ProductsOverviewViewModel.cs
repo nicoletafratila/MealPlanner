@@ -7,7 +7,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    public partial class ProductsOverviewViewModel(ProductService productService) : BaseViewModel
+    public partial class ProductsOverviewViewModel(IProductService productService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<ProductModel> _products = [];

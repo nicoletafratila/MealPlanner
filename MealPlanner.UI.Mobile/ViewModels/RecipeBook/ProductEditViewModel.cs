@@ -9,7 +9,7 @@ using RecipeBook.Shared.Resources;
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     [QueryProperty(nameof(ProductId), "id")]
-    public partial class ProductEditViewModel(ProductService productService, ProductCategoryService categoryService, UnitService unitService) : BaseViewModel
+    public partial class ProductEditViewModel(IProductService productService, IProductCategoryService categoryService, IUnitService unitService) : BaseViewModel
     {
         [ObservableProperty]
         private string _productId = string.Empty;

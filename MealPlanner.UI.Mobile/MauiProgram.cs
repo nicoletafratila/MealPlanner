@@ -48,7 +48,6 @@ namespace MealPlanner.UI.Mobile
             services.AddSingleton<SecureStorageTokenProvider>();
             services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<SecureStorageTokenProvider>());
             services.AddSingleton<MobileAuthStateService>();
-            services.AddSingleton<IAuthStateNotifier>(sp => sp.GetRequiredService<MobileAuthStateService>());
             services.AddTransient<AuthRefreshHandler>();
 
 #if DEBUG
@@ -62,20 +61,20 @@ namespace MealPlanner.UI.Mobile
 #endif
 
             // API HTTP clients
-            services.AddHttpClient<AuthenticationService>(c => c.BaseAddress = new Uri(identityBase));
-            services.AddHttpClient<ApplicationUserService>(c => c.BaseAddress = new Uri(identityBase))
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>(c => c.BaseAddress = new Uri(identityBase));
+            services.AddHttpClient<IApplicationUserService, ApplicationUserService>(c => c.BaseAddress = new Uri(identityBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IContactUsService, ContactUsService>(c => c.BaseAddress = new Uri(identityBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
-            services.AddHttpClient<RecipeService>(c => c.BaseAddress = new Uri(recipeBase))
+            services.AddHttpClient<IRecipeService, RecipeService>(c => c.BaseAddress = new Uri(recipeBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
-            services.AddHttpClient<RecipeCategoryService>(c => c.BaseAddress = new Uri(recipeBase))
+            services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>(c => c.BaseAddress = new Uri(recipeBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
-            services.AddHttpClient<ProductService>(c => c.BaseAddress = new Uri(recipeBase))
+            services.AddHttpClient<IProductService, ProductService>(c => c.BaseAddress = new Uri(recipeBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
-            services.AddHttpClient<ProductCategoryService>(c => c.BaseAddress = new Uri(recipeBase))
+            services.AddHttpClient<IProductCategoryService, ProductCategoryService>(c => c.BaseAddress = new Uri(recipeBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
-            services.AddHttpClient<UnitService>(c => c.BaseAddress = new Uri(recipeBase))
+            services.AddHttpClient<IUnitService, UnitService>(c => c.BaseAddress = new Uri(recipeBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IMealPlanService, MealPlanService>(c => c.BaseAddress = new Uri(mealPlannerBase))
                 .AddHttpMessageHandler<AuthRefreshHandler>();

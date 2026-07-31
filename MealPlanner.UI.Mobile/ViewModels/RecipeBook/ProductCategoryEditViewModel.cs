@@ -7,7 +7,7 @@ using RecipeBook.Shared.Resources;
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     [QueryProperty(nameof(CategoryId), "id")]
-    public partial class ProductCategoryEditViewModel(ProductCategoryService categoryService) : BaseViewModel
+    public partial class ProductCategoryEditViewModel(IProductCategoryService categoryService) : BaseViewModel
     {
         [ObservableProperty]
         private string _categoryId = string.Empty;

@@ -6,7 +6,7 @@ using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class ChangePasswordViewModel(AuthenticationService authService) : BaseViewModel
+    public partial class ChangePasswordViewModel(IAuthenticationService authService) : BaseViewModel
     {
         public ChangePasswordModel Model { get; } = new();
 

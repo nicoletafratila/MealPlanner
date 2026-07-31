@@ -14,11 +14,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     public partial class ShoppingListEditViewModel(
         IShoppingListService shoppingListService,
         IShopService shopService,
-        ProductCategoryService productCategoryService,
-        ProductService productService,
-        UnitService unitService,
+        IProductCategoryService productCategoryService,
+        IProductService productService,
+        IUnitService unitService,
         IMealPlanService mealPlanService,
-        RecipeService recipeService) : BaseViewModel
+        IRecipeService recipeService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shoppingListId = string.Empty;

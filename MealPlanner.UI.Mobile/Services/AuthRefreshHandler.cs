@@ -13,7 +13,7 @@ namespace MealPlanner.UI.Mobile.Services
             if (response.StatusCode != HttpStatusCode.Unauthorized)
                 return response;
 
-            var authService = services.GetRequiredService<AuthenticationService>();
+            var authService = services.GetRequiredService<IAuthenticationService>();
             var refreshed = await authService.RefreshAsync(cancellationToken);
             var token = refreshed ? await tokenProvider.GetTokenAsync(cancellationToken) : null;
             if (string.IsNullOrWhiteSpace(token))

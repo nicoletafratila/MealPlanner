@@ -6,7 +6,7 @@ using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class RegisterViewModel(AuthenticationService authService) : BaseViewModel
+    public partial class RegisterViewModel(IAuthenticationService authService) : BaseViewModel
     {
         public RegistrationModel Model { get; } = new();
 

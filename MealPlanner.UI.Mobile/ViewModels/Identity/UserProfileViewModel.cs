@@ -10,7 +10,7 @@ using MealPlanner.UI.Mobile.Services;
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
     [QueryProperty(nameof(Username), "username")]
-    public partial class UserProfileViewModel(ApplicationUserService userService, MobileAuthStateService authState, AuthenticationService authService) : BaseViewModel
+    public partial class UserProfileViewModel(IApplicationUserService userService, MobileAuthStateService authState, IAuthenticationService authService) : BaseViewModel
     {
         [ObservableProperty]
         private ApplicationUserEditModel? _model;

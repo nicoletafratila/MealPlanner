@@ -6,7 +6,7 @@ using Identity.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.Identity
 {
-    public partial class LoginViewModel(AuthenticationService authService, AppShellViewModel appShellViewModel) : BaseViewModel
+    public partial class LoginViewModel(IAuthenticationService authService, AppShellViewModel appShellViewModel) : BaseViewModel
     {
         [ObservableProperty]
         private string _username = string.Empty;

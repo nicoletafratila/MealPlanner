@@ -5,7 +5,7 @@ using Common.Http;
 
 namespace MealPlanner.UI.Mobile.Services
 {
-    public class MobileAuthStateService(ITokenProvider tokenProvider) : IAuthStateNotifier
+    public class MobileAuthStateService(ITokenProvider tokenProvider)
     {
         public event Action? AuthStateChanged;
 
@@ -17,13 +17,14 @@ namespace MealPlanner.UI.Mobile.Services
 
             try
             {
-                var claims = ParseClaims(token).ToList();
-                var expClaim = claims.FirstOrDefault(c => c.Type == "exp");
-                if (expClaim is not null && long.TryParse(expClaim.Value, out var exp))
-                {
-                    if (DateTimeOffset.FromUnixTimeSeconds(exp) < DateTimeOffset.UtcNow)
-                        return new ClaimsPrincipal(new ClaimsIdentity());
-                }
+                var payload = ParsePayload(token);
+                if (payload is null)
+                    return new ClaimsPrincipal(new ClaimsIdentity());
+
+                if (TryGetExpiration(payload, out var exp) && exp < DateTimeOffset.UtcNow)
+                    return new ClaimsPrincipal(new ClaimsIdentity());
+
+                var claims = BuildClaims(payload);
                 return new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
             }
             catch
@@ -48,20 +49,43 @@ namespace MealPlanner.UI.Mobile.Services
 
         public void NotifyAuthStateChanged() => AuthStateChanged?.Invoke();
 
-        private static IEnumerable<Claim> ParseClaims(string token)
+        private static Dictionary<string, JsonElement>? ParsePayload(string token)
         {
             var parts = token.Split('.');
-            if (parts.Length != 3) return [];
+            if (parts.Length != 3) return null;
 
             var payload = parts[1];
             var padded = payload.Length % 4 == 0 ? payload : payload + new string('=', 4 - payload.Length % 4);
             var json = Encoding.UTF8.GetString(Convert.FromBase64String(padded));
-            var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
-            if (dict is null) return [];
+            return JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+        }
 
+        private static bool TryGetExpiration(Dictionary<string, JsonElement> payload, out DateTimeOffset expiration)
+        {
+            expiration = default;
+            if (!payload.TryGetValue("exp", out var expElement))
+                return false;
+
+            if (expElement.ValueKind == JsonValueKind.Number && expElement.TryGetInt64(out var exp))
+            {
+                expiration = DateTimeOffset.FromUnixTimeSeconds(exp);
+                return true;
+            }
+
+            if (long.TryParse(expElement.GetString(), out exp))
+            {
+                expiration = DateTimeOffset.FromUnixTimeSeconds(exp);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static IEnumerable<Claim> BuildClaims(Dictionary<string, JsonElement> payload)
+        {
             var skip = new HashSet<string> { "exp", "nbf", "iat" };
             var claims = new List<Claim>();
-            foreach (var (key, value) in dict)
+            foreach (var (key, value) in payload)
             {
                 if (skip.Contains(key)) continue;
                 if (value.ValueKind == JsonValueKind.Array)

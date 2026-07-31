@@ -11,7 +11,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    public partial class RecipesOverviewViewModel(RecipeService recipeService, RecipeCategoryService categoryService, IMealPlanService mealPlanService) : BaseViewModel
+    public partial class RecipesOverviewViewModel(IRecipeService recipeService, IRecipeCategoryService categoryService, IMealPlanService mealPlanService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<RecipeModel> _recipes = [];

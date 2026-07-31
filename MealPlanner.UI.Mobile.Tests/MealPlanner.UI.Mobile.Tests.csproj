@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Directory.Build.props forces net10.0 for every project except MealPlanner.UI.Mobile.
+         The mobile app only targets net10.0-android36.0;net10.0-windows10.0.19041.0, so a plain
+         net10.0 test project cannot ProjectReference it. Override to the Windows MAUI TFM so this
+         project shares a compatible TFM and runs natively on Windows without an Android emulator. -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseMaui>true</UseMaui>
+    <OutputType>Library</OutputType>
+    <WindowsPackageType>None</WindowsPackageType>
+    <!-- Without packaging, the WindowsAppSDK module auto-initializer can't find a registered
+         Windows App Runtime and crashes tests with COMException "Class not registered".
+         Self-contained bundles the runtime so it works in an unpackaged test host. -->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>MealPlanner.UI.Mobile.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- UseMaui defaults to the SDK-bundled Microsoft.Maui.Controls version, which is older than
+         $(MicrosoftMaui) that MealPlanner.UI.Mobile references — pin explicitly to avoid an
+         NU1605 package downgrade error. -->
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MicrosoftMaui)" />
+    <PackageReference Include="coverlet.collector" Version="$(CoverletCollector)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdk)" />
+    <PackageReference Include="Moq" Version="$(Moq)" />
+    <PackageReference Include="NUnit" Version="$(NUnitVersion)" />
+    <PackageReference Include="NUnit.Analyzers" Version="$(NUnitAnalyzers)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapter)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- MealPlanner.UI.Mobile builds as WindowsPackageType=MSIX (needed for real deployment),
+         which bakes in a WindowsAppSDK deployment-manager module initializer that crashes with
+         "Class not registered" outside a packaged/installed app context. Override it to None
+         only for this dependency build so the test host can load the assembly without crashing;
+         the app's own standalone build is unaffected.
+         NOTE: because this override reuses the app's normal bin/obj folders (NuGet restore does
+         not key its graph on arbitrary AdditionalProperties like BaseOutputPath, so isolating
+         output paths breaks restore), always run this test project via its own direct invocation
+         (`dotnet test MealPlanner.UI.Mobile.Tests\MealPlanner.UI.Mobile.Tests.csproj`), matching
+         the repo's existing single-project test convention. A default-parallel `dotnet build
+         MealPlanner.sln` can build MealPlanner.UI.Mobile twice concurrently (once normally, once
+         via this override) and race on those shared bin/obj files — use `dotnet build
+         MealPlanner.sln -m:1` (single-threaded) for a reliable solution-wide build instead. -->
+    <ProjectReference Include="..\MealPlanner.UI.Mobile\MealPlanner.UI.Mobile.csproj">
+      <AdditionalProperties>WindowsPackageType=None;WindowsAppSdkAutoInitialize=false;WindowsAppSdkDeploymentManagerInitialize=false;WindowsAppSdkBootstrapInitialize=false</AdditionalProperties>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+</Project>

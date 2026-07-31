@@ -10,11 +10,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     [QueryProperty(nameof(RecipeId), "id")]
     public partial class RecipeEditViewModel(
-        RecipeService recipeService,
-        RecipeCategoryService categoryService,
-        UnitService unitService,
-        ProductService productService,
-        ProductCategoryService productCategoryService) : BaseViewModel
+        IRecipeService recipeService,
+        IRecipeCategoryService categoryService,
+        IUnitService unitService,
+        IProductService productService,
+        IProductCategoryService productCategoryService) : BaseViewModel
     {
         [ObservableProperty]
         private string _recipeId = string.Empty;

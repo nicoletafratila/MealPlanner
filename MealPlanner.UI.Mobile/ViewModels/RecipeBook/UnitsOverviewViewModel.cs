@@ -7,7 +7,7 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    public partial class UnitsOverviewViewModel(UnitService unitService) : BaseViewModel
+    public partial class UnitsOverviewViewModel(IUnitService unitService) : BaseViewModel
     {
         private const int PageSize = 200;
 

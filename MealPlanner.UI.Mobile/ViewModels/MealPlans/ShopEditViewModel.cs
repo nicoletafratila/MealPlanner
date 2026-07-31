@@ -11,7 +11,7 @@ using RecipeBook.Shared.Models;
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     [QueryProperty(nameof(ShopId), "id")]
-    public partial class ShopEditViewModel(IShopService shopService, ProductCategoryService categoryService) : BaseViewModel
+    public partial class ShopEditViewModel(IShopService shopService, IProductCategoryService categoryService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shopId = string.Empty;
