@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
+using MealPlanner.UI.Mobile.Pages.MealPlans.Resources;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -101,6 +102,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 {
                     Guid.TryParse(MealPlanId, out var id);
                     Model = await mealPlanService.GetEditAsync(id) ?? new();
+                }
+                else
+                {
+                    Model = new MealPlanEditModel { Name = mealPlanService.GetMenuName(MealPlanEditPage.MenuName) };
                 }
                 Model.Recipes ??= [];
 

@@ -60,6 +60,9 @@
   <data name="MakeShoppingListButton" xml:space="preserve">
     <value>Make shopping list</value>
   </data>
+  <data name="MenuName" xml:space="preserve">
+    <value>Meniu</value>
+  </data>
   <data name="NameLabel" xml:space="preserve">
     <value>Name</value>
   </data>

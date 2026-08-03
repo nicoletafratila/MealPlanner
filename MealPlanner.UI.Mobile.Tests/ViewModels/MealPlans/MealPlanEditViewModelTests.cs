@@ -54,6 +54,9 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _shopServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ShopModel>(shops, Metadata.Create(1, 200, shops.Count)));
+            _mealPlanServiceMock
+                .Setup(s => s.GetMenuName(It.IsAny<string>()))
+                .Returns("Meniu 2026/1");
         }
 
         [Test]
@@ -82,6 +85,16 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _mealPlanServiceMock.Verify(
                 s => s.GetEditAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()),
                 Times.Never);
+        }
+
+        [Test]
+        public void OnMealPlanIdChanged_NewMealPlan_SuggestsMenuName()
+        {
+            SetupLoadDependencies();
+
+            _viewModel.MealPlanId = Guid.Empty.ToString();
+
+            Assert.That(_viewModel.Model.Name, Is.EqualTo("Meniu 2026/1"));
         }
 
         [Test]
