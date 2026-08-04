@@ -24,9 +24,9 @@ namespace MealPlanner.UI.Mobile.ViewModels
             {
                 CurrentMealPlan = await mealPlanService.GetCurrentAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                CurrentMealPlan = null;
+                SetError(ex.Message);
             }
 
             try
@@ -34,9 +34,9 @@ namespace MealPlanner.UI.Mobile.ViewModels
                 var user = await authStateService.GetCurrentUserAsync();
                 IsAdmin = user.IsInRole("admin");
             }
-            catch
+            catch (Exception ex)
             {
-                IsAdmin = false;
+                SetError(ex.Message);
             }
         }
 

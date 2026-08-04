@@ -2,6 +2,7 @@ using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
 namespace MealPlanner.UI.Web.Shared
 {
@@ -14,6 +15,9 @@ namespace MealPlanner.UI.Web.Shared
         [Inject]
         public IMealPlanService MealPlanService { get; set; } = default!;
 
+        [Inject]
+        public ILogger<MainLayout> Logger { get; set; } = default!;
+
         protected override async Task OnInitializedAsync()
         {
             try
@@ -21,8 +25,9 @@ namespace MealPlanner.UI.Web.Shared
                 _currentMealPlan = await MealPlanService.GetCurrentAsync();
                 _isAuthenticated = true;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, "Failed to load current meal plan.");
             }
         }
 
@@ -32,8 +37,9 @@ namespace MealPlanner.UI.Web.Shared
             {
                 _currentMealPlan = await MealPlanService.GetCurrentAsync();
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, "Failed to refresh current meal plan.");
             }
             await InvokeAsync(StateHasChanged);
         }

@@ -103,11 +103,10 @@ namespace MealPlanner.Services.Http
             ];
         }
 
-        private DateTime GetCurrentWeekStart()
+        private static DateTime GetCurrentWeekStart()
         {
             var today = DateTime.Today;
-            var firstDay = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
-            var diff = (7 + (today.DayOfWeek - firstDay)) % 7;
+            var diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
             return today.AddDays(-diff).Date;
         }
     }
