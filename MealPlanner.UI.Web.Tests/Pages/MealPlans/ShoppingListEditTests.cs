@@ -1025,7 +1025,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             // Assert
             _shoppingListServiceMock.Verify(
-                s => s.UpdateAsync(It.IsAny<ShoppingListEditModel>(), CancellationToken.None),
+                s => s.UpdateProductCollectedAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>(), CancellationToken.None),
                 Times.Never);
         }
 
@@ -1041,7 +1041,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             cut.Instance.ShoppingList = new ShoppingListEditModel { Products = [item] };
 
             _shoppingListServiceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<ShoppingListEditModel>(), CancellationToken.None))
+                .Setup(s => s.UpdateProductCollectedAsync(cut.Instance.ShoppingList.Id, product.Id, true, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = false, Message = "nope" });
 
             var method = typeof(ShoppingListEdit).GetMethod("CheckboxChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
@@ -1074,7 +1074,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             cut.Instance.ShoppingList = new ShoppingListEditModel { Products = [itemA, itemB] };
 
             _shoppingListServiceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<ShoppingListEditModel>(), CancellationToken.None))
+                .Setup(s => s.UpdateProductCollectedAsync(cut.Instance.ShoppingList.Id, productA.Id, true, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true, Message = "ok" });
 
             var method = typeof(ShoppingListEdit).GetMethod("CheckboxChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
@@ -1089,6 +1089,76 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             // Assert
             Assert.That(itemA.Collected, Is.True);
             Assert.That(cut.Instance.ShoppingList!.Products!.Select(p => p.Product!.Name), Is.EqualTo(["Apples", "Bananas"]));
+        }
+
+        [Test]
+        public async Task CheckboxChangedAsync_MiddleOfLargerList_MovesOnlyToggledItem_LeavesOthersInPlace()
+        {
+            // Arrange
+            ArrangeLookups();
+            var productA = new ProductModel { Id = Guid.NewGuid(), Name = "Apples" };
+            var productB = new ProductModel { Id = Guid.NewGuid(), Name = "Bread" };
+            var productC = new ProductModel { Id = Guid.NewGuid(), Name = "Cheese" };
+            var productD = new ProductModel { Id = Guid.NewGuid(), Name = "Dates" };
+            var itemA = new ShoppingListProductEditModel { Product = productA, Collected = false, DisplaySequence = 1 };
+            var itemB = new ShoppingListProductEditModel { Product = productB, Collected = false, DisplaySequence = 2 };
+            var itemC = new ShoppingListProductEditModel { Product = productC, Collected = false, DisplaySequence = 3 };
+            var itemD = new ShoppingListProductEditModel { Product = productD, Collected = true, DisplaySequence = 1 };
+
+            var cut = RenderComponent("0");
+            cut.Instance.ShoppingList = new ShoppingListEditModel { Products = [itemA, itemB, itemC, itemD] };
+
+            _shoppingListServiceMock
+                .Setup(s => s.UpdateProductCollectedAsync(cut.Instance.ShoppingList.Id, productC.Id, true, CancellationToken.None))
+                .ReturnsAsync(new CommandResponse { Succeeded = true, Message = "ok" });
+
+            var method = typeof(ShoppingListEdit).GetMethod("CheckboxChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [new ShoppingListProductEditModel { Product = productC }, true])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(itemC.Collected, Is.True);
+            Assert.That(
+                cut.Instance.ShoppingList!.Products!.Select(p => p.Product!.Name),
+                Is.EqualTo(["Apples", "Bread", "Dates", "Cheese"]));
+        }
+
+        [Test]
+        public async Task CheckboxChangedAsync_ItemAlreadyInCorrectPosition_DoesNotReorder()
+        {
+            // Arrange
+            ArrangeLookups();
+            var productA = new ProductModel { Id = Guid.NewGuid(), Name = "Apple" };
+            var productB = new ProductModel { Id = Guid.NewGuid(), Name = "Banana" };
+            var itemA = new ShoppingListProductEditModel { Product = productA, Collected = false, DisplaySequence = 1 };
+            var itemB = new ShoppingListProductEditModel { Product = productB, Collected = true, DisplaySequence = 1 };
+
+            var cut = RenderComponent("0");
+            cut.Instance.ShoppingList = new ShoppingListEditModel { Products = [itemA, itemB] };
+
+            _shoppingListServiceMock
+                .Setup(s => s.UpdateProductCollectedAsync(cut.Instance.ShoppingList.Id, productB.Id, false, CancellationToken.None))
+                .ReturnsAsync(new CommandResponse { Succeeded = true, Message = "ok" });
+
+            var method = typeof(ShoppingListEdit).GetMethod("CheckboxChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [new ShoppingListProductEditModel { Product = productB }, false])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(itemB.Collected, Is.False);
+            Assert.That(
+                cut.Instance.ShoppingList!.Products!.Select(p => p.Product!.Name),
+                Is.EqualTo(["Apple", "Banana"]));
         }
 
         // ---------- OnProductChangedAsync ----------

@@ -286,6 +286,59 @@ namespace MealPlanner.Services.Http.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
+        // ---------- UpdateProductCollectedAsync ----------
+        [Test]
+        public async Task UpdateProductCollectedAsync_PatchesSingleProduct_AndReturnsCommandResponse()
+        {
+            // Arrange
+            var shoppingListId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var expectedResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Patch, $"{BaseAddress}{ShoppingListPath}/product/collected")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var deserialized = JsonSerializer.Deserialize<ShoppingListProductCollectedModel>(body, JsonOptions);
+                    return deserialized is not null
+                           && deserialized.ShoppingListId == shoppingListId
+                           && deserialized.ProductId == productId
+                           && deserialized.Collected;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.UpdateProductCollectedAsync(shoppingListId, productId, true);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void UpdateProductCollectedAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Patch, $"{BaseAddress}{ShoppingListPath}/product/collected")
+                .Respond(HttpStatusCode.BadRequest);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(async () =>
+                await service.UpdateProductCollectedAsync(Guid.NewGuid(), Guid.NewGuid(), true));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
         // ---------- DeleteAsync ----------
         [Test]
         public async Task DeleteAsync_SendsDeleteWithId_AndReturnsCommandResponse()

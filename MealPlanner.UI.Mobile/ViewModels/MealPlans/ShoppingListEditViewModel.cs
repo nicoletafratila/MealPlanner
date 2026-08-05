@@ -70,6 +70,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         // Selected shop's product category display order
         private ShopEditModel? _shopDetails;
 
+        private bool _isHandlingCollectedChange;
+
         partial void OnShoppingListIdChanged(string value)
         {
             Guid.TryParse(value, out var id);
@@ -112,7 +114,54 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 .ThenBy(p => p.Product?.Name)
                 .ToList();
 
-            ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel>(ordered);
+            for (var i = 0; i < ordered.Count; i++)
+            {
+                var currentIndex = ShoppingListProducts.IndexOf(ordered[i]);
+                if (currentIndex != i)
+                {
+                    ShoppingListProducts.RemoveAt(currentIndex);
+                    ShoppingListProducts.Insert(i, ordered[i]);
+                }
+            }
+        }
+
+        private void RepositionProduct(ShoppingListProductEditModel item)
+        {
+            if (_shopDetails is not null)
+            {
+                var sequence = _shopDetails.GetDisplaySequence(item.Product?.ProductCategory?.Id);
+                item.DisplaySequence = sequence?.Value ?? 1;
+            }
+
+            var currentIndex = ShoppingListProducts.IndexOf(item);
+            if (currentIndex < 0)
+                return;
+
+            var targetIndex = 0;
+            for (var i = 0; i < ShoppingListProducts.Count; i++)
+            {
+                if (i == currentIndex)
+                    continue;
+
+                if (CompareOrder(ShoppingListProducts[i], item) <= 0)
+                    targetIndex++;
+            }
+
+            if (targetIndex != currentIndex)
+                ShoppingListProducts.Move(currentIndex, targetIndex);
+        }
+
+        private static int CompareOrder(ShoppingListProductEditModel a, ShoppingListProductEditModel b)
+        {
+            var byCollected = a.Collected.CompareTo(b.Collected);
+            if (byCollected != 0)
+                return byCollected;
+
+            var bySequence = a.DisplaySequence.CompareTo(b.DisplaySequence);
+            if (bySequence != 0)
+                return bySequence;
+
+            return string.Compare(a.Product?.Name, b.Product?.Name, StringComparison.Ordinal);
         }
 
         partial void OnSelectedProductCategoryChanged(ProductCategoryModel? value) =>
@@ -348,8 +397,24 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         public async Task OnProductCollectedChangedAsync(ShoppingListProductEditModel item)
         {
-            ResequenceProducts();
-            await PersistProductsAsync();
+            if (_isHandlingCollectedChange)
+                return;
+
+            _isHandlingCollectedChange = true;
+            try
+            {
+                // Setting item.Collected also flips the bound CheckBox, which raises CheckedChanged
+                // synchronously and re-enters this method before ToggleCollectedAsync's explicit call
+                // runs. Yielding lets that native callback unwind before we mutate the bound
+                // ObservableCollection, and the guard above collapses the resulting double invocation.
+                await Task.Yield();
+                RepositionProduct(item);
+                await PersistCollectedAsync(item);
+            }
+            finally
+            {
+                _isHandlingCollectedChange = false;
+            }
         }
 
         [RelayCommand]
@@ -369,6 +434,23 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             {
                 Model.Products = ShoppingListProducts.ToList();
                 var result = await shoppingListService.UpdateAsync(Model);
+                if (result?.Succeeded != true) SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+        }
+
+        // Toggling one item's Collected state doesn't need a full-list PUT; only that
+        // product's row changed, so send a targeted PATCH instead of re-serializing the whole list.
+        private async Task PersistCollectedAsync(ShoppingListProductEditModel item)
+        {
+            if (IsNew || item.Product is null) return;
+
+            try
+            {
+                var result = await shoppingListService.UpdateProductCollectedAsync(Model.Id, item.Product.Id, item.Collected);
                 if (result?.Succeeded != true) SetError(result?.Message);
             }
             catch (Exception ex)

@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Security.Claims;
 using BlazorBootstrap;
 using Bunit;
 using Bunit.TestDoubles;
@@ -6,7 +8,9 @@ using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Shared
@@ -173,6 +177,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task OnInitializedAsync_WhenMealPlanExists_ShowsMealPlanNameAsLink()
         {
             // Arrange
+            _authContext.SetAuthorized("member1");
             var id = Guid.NewGuid();
             var plan = new MealPlanModel { Id = id, Name = "Week 20 Menu" };
             _mealPlanServiceMock
@@ -197,6 +202,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task OnInitializedAsync_WhenAuthenticatedAndNoMealPlan_ShowsCreateMessage()
         {
             // Arrange
+            _authContext.SetAuthorized("member1");
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync((MealPlanModel?)null);
@@ -214,13 +220,39 @@ namespace MealPlanner.UI.Web.Tests.Shared
             }
         }
 
+        // Exercised without bunit rendering (bare instance + reflection) so the real 1s/2s retry
+        // backoff delays don't have to run through bunit's render/JSInterop pipeline (BlazorBootstrap's
+        // Modal issues its own JS calls on every render, which turns a multi-second wait into flaky JSInterop failures).
         [Test]
-        public void OnInitializedAsync_WhenApiThrows_ShowsNeitherMessage()
+        public async Task OnInitializedAsync_AuthenticatedButAllLoadAttemptsFail_MarksLoadAsFailed_AndLeavesPlanNull()
         {
             // Arrange
+            var layout = new MainLayout
+            {
+                MealPlanService = _mealPlanServiceMock.Object,
+                Logger = Mock.Of<ILogger<MainLayout>>(),
+                AuthenticationStateTask = Task.FromResult(AuthenticatedState("member1"))
+            };
             _mealPlanServiceMock
                 .Setup(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new HttpRequestException("Unauthorized"));
+                .ThrowsAsync(new HttpRequestException("Persistent failure"));
+
+            // Act
+            await InvokeOnInitializedAsync(layout);
+
+            // Assert — a failed load must not be mistaken for "authenticated user has no menu yet"
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(GetPrivateField<bool>(layout, "_loadFailed"), Is.True);
+                Assert.That(GetPrivateField<MealPlanModel?>(layout, "_currentMealPlan"), Is.Null);
+            }
+            _mealPlanServiceMock.Verify(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()), Times.Exactly(3));
+        }
+
+        [Test]
+        public void OnInitializedAsync_WhenNotAuthenticated_NeverCallsMealPlanService()
+        {
+            // Arrange — SetUp already calls SetNotAuthorized()
 
             // Act
             var cut = _ctx.Render<MainLayout>();
@@ -231,6 +263,50 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
                 Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
             }
+            _mealPlanServiceMock.Verify(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task OnInitializedAsync_FailsThenSucceeds_RetriesAndPopulatesPlan()
+        {
+            // Arrange
+            var layout = new MainLayout
+            {
+                MealPlanService = _mealPlanServiceMock.Object,
+                Logger = Mock.Of<ILogger<MainLayout>>(),
+                AuthenticationStateTask = Task.FromResult(AuthenticatedState("member1"))
+            };
+            var id = Guid.NewGuid();
+            _mealPlanServiceMock
+                .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new HttpRequestException("Transient failure"))
+                .ReturnsAsync(new MealPlanModel { Id = id, Name = "Week 21 Menu" });
+
+            // Act
+            await InvokeOnInitializedAsync(layout);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(GetPrivateField<bool>(layout, "_loadFailed"), Is.False);
+                Assert.That(GetPrivateField<MealPlanModel?>(layout, "_currentMealPlan")?.Name, Is.EqualTo("Week 21 Menu"));
+            }
+            _mealPlanServiceMock.Verify(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+        }
+
+        private static AuthenticationState AuthenticatedState(string userName) =>
+            new(new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Name, userName)], "TestAuth")));
+
+        private static Task InvokeOnInitializedAsync(MainLayout layout)
+        {
+            var method = typeof(MainLayout).GetMethod("OnInitializedAsync", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            return (Task)method.Invoke(layout, null)!;
+        }
+
+        private static T GetPrivateField<T>(MainLayout layout, string fieldName)
+        {
+            var field = typeof(MainLayout).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)!;
+            return (T)field.GetValue(layout)!;
         }
 
         // ---------- RefreshCurrentMealPlanAsync ----------
@@ -239,6 +315,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task RefreshCurrentMealPlanAsync_UpdatesLabelWhenPlanBecomesAvailable()
         {
             // Arrange — first call (OnInitializedAsync) returns null, second call (refresh) returns a plan
+            _authContext.SetAuthorized("member1");
             var id = Guid.NewGuid();
             _mealPlanServiceMock
                 .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
@@ -267,6 +344,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
         public async Task RefreshCurrentMealPlanAsync_ClearsLabelWhenPlanIsDeleted()
         {
             // Arrange — first call returns a plan, second call (after delete) returns null
+            _authContext.SetAuthorized("member1");
             _mealPlanServiceMock
                 .SetupSequence(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new MealPlanModel { Id = Guid.NewGuid(), Name = "Meniu 2025/1" })

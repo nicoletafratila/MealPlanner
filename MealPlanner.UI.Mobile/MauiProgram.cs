@@ -56,6 +56,7 @@ namespace MealPlanner.UI.Mobile
             services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<SecureStorageTokenProvider>());
             services.AddSingleton<AuthenticationStateService>();
             services.AddTransient<AuthRefreshHandler>();
+            services.AddTransient<TimingHandler>();
 
 #if DEBUG
             // Android emulator can't validate the .NET dev cert — bypass SSL in debug builds only
@@ -68,28 +69,40 @@ namespace MealPlanner.UI.Mobile
 #endif
 
             // API HTTP clients
-            services.AddHttpClient<IAuthenticationService, AuthenticationService>(c => ConfigureClient(c, identityBase, "IdentityApi"));
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>(c => ConfigureClient(c, identityBase, "IdentityApi"))
+                .AddHttpMessageHandler<TimingHandler>();
             services.AddHttpClient<IApplicationUserService, ApplicationUserService>(c => ConfigureClient(c, identityBase, "IdentityApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IContactUsService, ContactUsService>(c => ConfigureClient(c, identityBase, "IdentityApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IRecipeService, RecipeService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IProductService, ProductService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IProductCategoryService, ProductCategoryService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IUnitService, UnitService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IMealPlanService, MealPlanService>(c => ConfigureClient(c, mealPlannerBase, "MealPlannerApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IShopService, ShopService>(c => ConfigureClient(c, mealPlannerBase, "MealPlannerApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IShoppingListService, ShoppingListService>(c => ConfigureClient(c, mealPlannerBase, "MealPlannerApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IStatisticsService, StatisticsService>(c => ConfigureClient(c, mealPlannerBase, "MealPlannerApi"))
+                .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
 
             // ViewModels — Identity

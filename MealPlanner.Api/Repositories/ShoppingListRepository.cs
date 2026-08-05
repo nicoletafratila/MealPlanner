@@ -81,6 +81,19 @@ namespace MealPlanner.Api.Repositories
             await Context.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task<bool> UpdateProductCollectedAsync(
+            Guid shoppingListId,
+            Guid productId,
+            bool collected,
+            CancellationToken cancellationToken)
+        {
+            var rowsAffected = await Context.ShoppingListProducts
+                .Where(p => p.ShoppingListId == shoppingListId && p.ProductId == productId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.Collected, collected), cancellationToken);
+
+            return rowsAffected > 0;
+        }
+
         public async Task<ShoppingList?> GetByIdIncludeProductsAsync(
             Guid id,
             CancellationToken cancellationToken)

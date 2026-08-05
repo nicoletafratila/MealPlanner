@@ -5,8 +5,10 @@ using MealPlanner.Api.Features.ShoppingList.Commands.Add;
 using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Commands.Update;
+using MealPlanner.Api.Features.ShoppingList.Commands.UpdateProductCollected;
 using MealPlanner.Api.Features.ShoppingList.Queries.GetEdit;
 using MealPlanner.Api.Features.ShoppingList.Queries.Search;
+using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -98,6 +100,22 @@ namespace MealPlanner.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new UpdateCommand { Model = model };
+            var response = await _mediator.Send(command, cancellationToken);
+            return Ok(response);
+        }
+
+        [HttpPatch(MealPlannerControllers.UpdateProductCollectedRoute)]
+        public async Task<ActionResult<CommandResponse?>> UpdateProductCollectedAsync(
+            [FromBody] ShoppingListProductCollectedModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new UpdateProductCollectedCommand
+            {
+                ShoppingListId = model.ShoppingListId,
+                ProductId = model.ProductId,
+                Collected = model.Collected
+            };
+
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }

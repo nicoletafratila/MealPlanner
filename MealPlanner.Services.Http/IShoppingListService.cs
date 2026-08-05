@@ -23,6 +23,12 @@ namespace MealPlanner.Services.Http
             ShoppingListEditModel model,
             CancellationToken cancellationToken = default);
 
+        Task<CommandResponse?> UpdateProductCollectedAsync(
+            Guid shoppingListId,
+            Guid productId,
+            bool collected,
+            CancellationToken cancellationToken = default);
+
         Task<CommandResponse?> DeleteAsync(
             Guid id,
             CancellationToken cancellationToken = default);

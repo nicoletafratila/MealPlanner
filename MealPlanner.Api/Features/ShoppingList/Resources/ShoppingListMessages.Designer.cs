@@ -158,5 +158,14 @@ namespace MealPlanner.Api.Features.ShoppingList.Resources {
                 return ResourceManager.GetString("UserIdRequired", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ProductId must be provided..
+        /// </summary>
+        internal static string ProductIdRequired {
+            get {
+                return ResourceManager.GetString("ProductIdRequired", resourceCulture);
+            }
+        }
     }
 }

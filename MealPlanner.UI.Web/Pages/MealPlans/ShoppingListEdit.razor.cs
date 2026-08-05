@@ -418,13 +418,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task CheckboxChangedAsync(ShoppingListProductEditModel model, bool newValue)
         {
             var itemToChange = ShoppingList?.Products?.FirstOrDefault(item => item.Product?.Id == model?.Product?.Id);
-            if (itemToChange is null || ShoppingList is null)
+            if (itemToChange?.Product is null || ShoppingList is null)
                 return;
 
             var oldValue = itemToChange.Collected;
             itemToChange.Collected = newValue;
 
-            var response = await ShoppingListService.UpdateAsync(ShoppingList);
+            var response = await ShoppingListService.UpdateProductCollectedAsync(ShoppingList.Id, itemToChange.Product.Id, newValue);
             if (response is null || !response.Succeeded)
             {
                 await ShowErrorAsync(response?.Message ?? Resources.ShoppingListEdit.SaveFailed);
@@ -433,16 +433,48 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 return;
             }
 
-            if (ShoppingList.Products is { Count: > 0 })
+            RepositionProduct(itemToChange);
+            StateHasChanged();
+        }
+
+        private void RepositionProduct(ShoppingListProductEditModel item)
+        {
+            var products = ShoppingList?.Products;
+            if (products is null)
+                return;
+
+            var currentIndex = products.IndexOf(item);
+            if (currentIndex < 0)
+                return;
+
+            var targetIndex = 0;
+            for (var i = 0; i < products.Count; i++)
             {
-                ShoppingList.Products = ShoppingList.Products
-                    .OrderBy(item => item.Collected)
-                    .ThenBy(item => item.DisplaySequence)
-                    .ThenBy(item => item.Product?.Name)
-                    .ToList();
+                if (i == currentIndex)
+                    continue;
+
+                if (CompareOrder(products[i], item) <= 0)
+                    targetIndex++;
             }
 
-            StateHasChanged();
+            if (targetIndex == currentIndex)
+                return;
+
+            products.RemoveAt(currentIndex);
+            products.Insert(targetIndex, item);
+        }
+
+        private static int CompareOrder(ShoppingListProductEditModel a, ShoppingListProductEditModel b)
+        {
+            var byCollected = a.Collected.CompareTo(b.Collected);
+            if (byCollected != 0)
+                return byCollected;
+
+            var bySequence = a.DisplaySequence.CompareTo(b.DisplaySequence);
+            if (bySequence != 0)
+                return bySequence;
+
+            return string.Compare(a.Product?.Name, b.Product?.Name, StringComparison.Ordinal);
         }
 
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)

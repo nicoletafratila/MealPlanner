@@ -446,19 +446,60 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 Assert.That(item1.DisplaySequence, Is.EqualTo(1));
             }
             _shoppingListServiceMock.Verify(
-                s => s.UpdateAsync(It.IsAny<ShoppingListEditModel>(), It.IsAny<CancellationToken>()),
+                s => s.UpdateProductCollectedAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
         [Test]
-        public async Task ToggleCollectedAsync_ExistingShoppingList_TogglesCollectedAndCallsUpdateAsync()
+        public async Task ToggleCollectedAsync_MiddleOfLargerList_MovesOnlyToggledItem_LeavesOthersInPlace()
+        {
+            _viewModel.IsNew = true;
+            var itemA = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Apples"), Collected = false, DisplaySequence = 1 };
+            var itemB = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Bread"), Collected = false, DisplaySequence = 2 };
+            var itemC = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Cheese"), Collected = false, DisplaySequence = 3 };
+            var itemD = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Dates"), Collected = true, DisplaySequence = 1 };
+            _viewModel.ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel> { itemA, itemB, itemC, itemD };
+
+            await _viewModel.ToggleCollectedCommand.ExecuteAsync(itemC);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(itemC.Collected, Is.True);
+                Assert.That(
+                    _viewModel.ShoppingListProducts.Select(p => p.Product!.Name),
+                    Is.EqualTo(new[] { "Apples", "Bread", "Dates", "Cheese" }));
+            }
+        }
+
+        [Test]
+        public async Task ToggleCollectedAsync_ItemAlreadyInCorrectPosition_DoesNotReorder()
+        {
+            _viewModel.IsNew = true;
+            var itemA = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Apple"), Collected = false, DisplaySequence = 1 };
+            var itemB = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Banana"), Collected = true, DisplaySequence = 1 };
+            _viewModel.ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel> { itemA, itemB };
+
+            // Uncollecting Banana still sorts it after Apple (same sequence, name tiebreak), so it stays at index 1.
+            await _viewModel.ToggleCollectedCommand.ExecuteAsync(itemB);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(itemB.Collected, Is.False);
+                Assert.That(
+                    _viewModel.ShoppingListProducts.Select(p => p.Product!.Name),
+                    Is.EqualTo(new[] { "Apple", "Banana" }));
+            }
+        }
+
+        [Test]
+        public async Task ToggleCollectedAsync_ExistingShoppingList_TogglesCollectedAndCallsUpdateProductCollectedAsync()
         {
             _viewModel.IsNew = false;
             var item1 = new ShoppingListProductEditModel { Product = new ProductModel(Guid.NewGuid(), "Apple"), Collected = false, DisplaySequence = 1 };
             _viewModel.ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel> { item1 };
 
             _shoppingListServiceMock
-                .Setup(s => s.UpdateAsync(_viewModel.Model, CancellationToken.None))
+                .Setup(s => s.UpdateProductCollectedAsync(_viewModel.Model.Id, item1.Product!.Id, true, CancellationToken.None))
                 .ReturnsAsync(CommandResponse.Success());
 
             await _viewModel.ToggleCollectedCommand.ExecuteAsync(item1);
@@ -468,7 +509,9 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 Assert.That(item1.Collected, Is.True);
                 Assert.That(_viewModel.ErrorMessage, Is.Null);
             }
-            _shoppingListServiceMock.Verify(s => s.UpdateAsync(_viewModel.Model, CancellationToken.None), Times.Once);
+            _shoppingListServiceMock.Verify(
+                s => s.UpdateProductCollectedAsync(_viewModel.Model.Id, item1.Product!.Id, true, CancellationToken.None),
+                Times.Once);
         }
 
         [Test]
@@ -479,7 +522,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _viewModel.ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel> { item1 };
 
             _shoppingListServiceMock
-                .Setup(s => s.UpdateAsync(_viewModel.Model, CancellationToken.None))
+                .Setup(s => s.UpdateProductCollectedAsync(_viewModel.Model.Id, item1.Product!.Id, true, CancellationToken.None))
                 .ReturnsAsync(CommandResponse.Failed("cannot update"));
 
             await _viewModel.ToggleCollectedCommand.ExecuteAsync(item1);

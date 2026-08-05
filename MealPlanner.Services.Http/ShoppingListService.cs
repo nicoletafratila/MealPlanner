@@ -62,6 +62,24 @@ namespace MealPlanner.Services.Http
             }
         }
 
+        public async Task<CommandResponse?> UpdateProductCollectedAsync(
+            Guid shoppingListId,
+            Guid productId,
+            bool collected,
+            CancellationToken cancellationToken = default)
+        {
+            var model = new ShoppingListProductCollectedModel(shoppingListId, productId, collected);
+            try
+            {
+                return await PatchAsync($"{_controller}/{MealPlannerControllers.UpdateProductCollectedRoute}", model, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "ShoppingList UpdateProductCollectedAsync failed. Model {@Model}", model);
+                throw;
+            }
+        }
+
         public async Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });

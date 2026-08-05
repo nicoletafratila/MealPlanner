@@ -64,4 +64,7 @@
   <data name="UserIdRequired" xml:space="preserve">
     <value>User id is required.</value>
   </data>
+  <data name="ProductIdRequired" xml:space="preserve">
+    <value>ProductId must be provided.</value>
+  </data>
 </root>

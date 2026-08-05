@@ -8,5 +8,6 @@ namespace MealPlanner.Api.Repositories
         Task<IReadOnlyList<ShoppingList>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
         Task<ShoppingList?> GetByIdIncludeProductsAsync(Guid id, CancellationToken cancellationToken);
         Task<ShoppingList?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
+        Task<bool> UpdateProductCollectedAsync(Guid shoppingListId, Guid productId, bool collected, CancellationToken cancellationToken);
     }
 }

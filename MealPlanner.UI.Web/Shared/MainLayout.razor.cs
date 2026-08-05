@@ -2,15 +2,22 @@ using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 
 namespace MealPlanner.UI.Web.Shared
 {
     public partial class MainLayout : LayoutComponentBase, IMessageComponent
     {
+        private const int MaxLoadAttempts = 3;
+
         private MealPlanModel? _currentMealPlan;
         private bool _isAuthenticated;
+        private bool _loadFailed;
         private CancellationTokenSource? _autoDismissCts;
+
+        [CascadingParameter]
+        public Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
         [Inject]
         public IMealPlanService MealPlanService { get; set; } = default!;
@@ -20,14 +27,45 @@ namespace MealPlanner.UI.Web.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            try
+            _isAuthenticated = await IsUserAuthenticatedAsync();
+
+            if (_isAuthenticated)
             {
-                _currentMealPlan = await MealPlanService.GetCurrentAsync();
-                _isAuthenticated = true;
+                await LoadCurrentMealPlanWithRetryAsync();
             }
-            catch (Exception ex)
+        }
+
+        private async Task<bool> IsUserAuthenticatedAsync()
+        {
+            if (AuthenticationStateTask is null)
+                return false;
+
+            var authState = await AuthenticationStateTask;
+            return authState.User.Identity?.IsAuthenticated ?? false;
+        }
+
+        private async Task LoadCurrentMealPlanWithRetryAsync()
+        {
+            for (var attempt = 1; attempt <= MaxLoadAttempts; attempt++)
             {
-                Logger.LogError(ex, "Failed to load current meal plan.");
+                try
+                {
+                    _currentMealPlan = await MealPlanService.GetCurrentAsync();
+                    _loadFailed = false;
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Failed to load current meal plan (attempt {Attempt}/{MaxAttempts}).", attempt, MaxLoadAttempts);
+
+                    if (attempt == MaxLoadAttempts)
+                    {
+                        _loadFailed = true;
+                        return;
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(attempt));
+                }
             }
         }
 

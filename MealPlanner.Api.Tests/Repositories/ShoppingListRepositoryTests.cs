@@ -404,5 +404,61 @@ namespace MealPlanner.Api.Tests.Repositories
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.UpdateAsync(null!, CancellationToken.None));
         }
+
+        // ---------- UpdateProductCollectedAsync ----------
+        // SQLite is required here too: ExecuteUpdateAsync (like ExecuteDeleteAsync) isn't supported by the InMemory provider.
+        [Test]
+        public async Task UpdateProductCollectedAsync_MatchingRow_UpdatesCollectedOnly_AndReturnsTrue()
+        {
+            var (repo, ctx, connection) = CreateSqliteRepository();
+            await using var _ = ctx;
+            using var __ = connection;
+
+            await ctx.Database.EnsureCreatedAsync();
+            var shopId = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
+            ctx.Shops.Add(new Shop { Id = shopId, Name = "Shop" });
+            ctx.ProductCategories.Add(new ProductCategory { Id = categoryId, Name = "Cat1" });
+            ctx.Units.Add(new Unit { Id = UnitGuid(1), Name = "kg", UnitType = 0 });
+            ctx.Products.Add(new Product { Id = ProductGuid(10), Name = "Flour", ProductCategoryId = categoryId, BaseUnitId = UnitGuid(1) });
+            ctx.ShoppingLists.Add(new ShoppingList { Id = ShoppingListGuid(1), Name = "List1", ShopId = shopId, UserId = "user1" });
+            ctx.ShoppingListProducts.Add(new ShoppingListProduct
+            {
+                ShoppingListId = ShoppingListGuid(1),
+                ProductId = ProductGuid(10),
+                UnitId = UnitGuid(1),
+                Quantity = 1m,
+                Collected = false,
+                DisplaySequence = 1
+            });
+            await ctx.SaveChangesAsync();
+
+            var updated = await repo.UpdateProductCollectedAsync(ShoppingListGuid(1), ProductGuid(10), true, CancellationToken.None);
+
+            // ExecuteUpdateAsync bypasses the change tracker, so re-read without tracking to see the persisted value.
+            var row = ctx.ShoppingListProducts.AsNoTracking()
+                .Single(p => p.ShoppingListId == ShoppingListGuid(1) && p.ProductId == ProductGuid(10));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(updated, Is.True);
+                Assert.That(row.Collected, Is.True);
+                Assert.That(row.Quantity, Is.EqualTo(1m));
+                Assert.That(row.DisplaySequence, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public async Task UpdateProductCollectedAsync_NoMatchingRow_ReturnsFalse()
+        {
+            var (repo, ctx, connection) = CreateSqliteRepository();
+            await using var _ = ctx;
+            using var __ = connection;
+
+            await ctx.Database.EnsureCreatedAsync();
+
+            var updated = await repo.UpdateProductCollectedAsync(ShoppingListGuid(1), ProductGuid(10), true, CancellationToken.None);
+
+            Assert.That(updated, Is.False);
+        }
     }
 }

@@ -80,7 +80,7 @@
                             @Resources.MainLayout.CurrentMenuLabel <a href="mealplans/mealplanedit/@_currentMealPlan.Id">@_currentMealPlan.Name</a>
                         </p>
                     }
-                    else if (_isAuthenticated)
+                    else if (_isAuthenticated && !_loadFailed)
                     {
                         <p class="current-menu-link">
                             @Resources.MainLayout.NoMenuYetPrefix<a href="mealplans/mealplanedit/">@Resources.MainLayout.NoMenuYetLinkText</a>@Resources.MainLayout.NoMenuYetSuffix

@@ -105,16 +105,17 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="model:ShoppingListProductEditModel">
                         <Grid ColumnDefinitions="Auto,Auto,*,Auto" Padding="8,6">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=ToggleCollectedCommand}"
-                                                       CommandParameter="{Binding .}" />
-                            </Grid.GestureRecognizers>
                             <CheckBox Grid.Column="0" IsChecked="{Binding Collected}" CheckedChanged="OnProductCollectedChanged" />
                             <Image Grid.Column="1"
                                    Source="{Binding Product.ImageUrl}"
                                    WidthRequest="28" HeightRequest="28"
                                    Aspect="AspectFill" VerticalOptions="Center"
-                                   IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                   IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=ToggleCollectedCommand}"
+                                                           CommandParameter="{Binding .}" />
+                                </Image.GestureRecognizers>
+                            </Image>
                             <VerticalStackLayout Grid.Column="2" Margin="8,0" VerticalOptions="Center">
                                 <VerticalStackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=ToggleCollectedCommand}"

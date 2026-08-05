@@ -53,6 +53,14 @@ namespace Common.Services
             return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
         }
 
+        protected async Task<CommandResponse?> PatchAsync<TBody>(string url, TBody body, CancellationToken cancellationToken)
+        {
+            await EnsureAuthAsync(cancellationToken);
+            using var response = await HttpClient.PatchAsJsonAsync(url, body, JsonOptions, cancellationToken);
+            await EnsureSuccessAsync(response, cancellationToken);
+            return await response.Content.ReadFromJsonAsync<CommandResponse>(JsonOptions, cancellationToken);
+        }
+
         protected async Task<CommandResponse?> DeleteAsync(string url, CancellationToken cancellationToken)
         {
             await EnsureAuthAsync(cancellationToken);

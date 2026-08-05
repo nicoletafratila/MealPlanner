@@ -5,6 +5,7 @@ using MealPlanner.Api.Features.ShoppingList.Commands.Add;
 using MealPlanner.Api.Features.ShoppingList.Commands.Delete;
 using MealPlanner.Api.Features.ShoppingList.Commands.MakeShoppingList;
 using MealPlanner.Api.Features.ShoppingList.Commands.Update;
+using MealPlanner.Api.Features.ShoppingList.Commands.UpdateProductCollected;
 using MealPlanner.Api.Features.ShoppingList.Queries.GetEdit;
 using MealPlanner.Api.Features.ShoppingList.Queries.Search;
 using MealPlanner.Shared.Models;
@@ -194,6 +195,35 @@ namespace MealPlanner.Api.Tests.Controllers
             Assert.That(ok!.Value, Is.SameAs(response));
 
             _senderMock.Verify(m => m.Send(It.IsAny<UpdateCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task UpdateProductCollectedAsync_SendsUpdateProductCollectedCommand()
+        {
+            // Arrange
+            var shoppingListId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var model = new ShoppingListProductCollectedModel(shoppingListId, productId, true);
+            var response = CommandResponse.Success();
+
+            _senderMock
+                .Setup(m => m.Send(
+                    It.Is<UpdateProductCollectedCommand>(c =>
+                        c.ShoppingListId == shoppingListId && c.ProductId == productId && c.Collected),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            // Act
+            var result = await _controller.UpdateProductCollectedAsync(model, CancellationToken.None);
+
+            // Assert
+            var ok = result.Result as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+            Assert.That(ok!.Value, Is.SameAs(response));
+
+            _senderMock.Verify(
+                m => m.Send(It.IsAny<UpdateProductCollectedCommand>(), It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Test]

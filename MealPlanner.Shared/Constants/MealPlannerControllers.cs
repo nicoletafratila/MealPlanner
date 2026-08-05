@@ -17,6 +17,7 @@ namespace MealPlanner.Shared.Constants
         public const string SearchRoute = "search";
         public const string MakeShoppingListRoute = "makeShoppingList";
         public const string ShoppingListProductsRoute = "shoppingListProducts";
+        public const string UpdateProductCollectedRoute = "product/collected";
         public const string FavoriteRecipesRoute = "favoriterecipes";
         public const string FavoriteProductsRoute = "favoriteproducts";
     }
