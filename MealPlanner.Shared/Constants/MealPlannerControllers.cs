@@ -15,10 +15,10 @@ namespace MealPlanner.Shared.Constants
         // Sub-routes
         public const string EditRoute = "edit";
         public const string SearchRoute = "search";
-        public const string MakeShoppingListRoute = "makeShoppingList";
-        public const string ShoppingListProductsRoute = "shoppingListProducts";
+        public const string MakeShoppingListRoute = "make";
+        public const string ShoppingListProductsRoute = "products";
         public const string UpdateProductCollectedRoute = "product/collected";
-        public const string FavoriteRecipesRoute = "favoriterecipes";
-        public const string FavoriteProductsRoute = "favoriteproducts";
+        public const string FavoriteRecipesRoute = "favorite/recipes";
+        public const string FavoriteProductsRoute = "favorite/products";
     }
 }

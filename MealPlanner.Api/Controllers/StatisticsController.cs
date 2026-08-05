@@ -13,7 +13,7 @@ namespace MealPlanner.Api.Controllers
     {
         private readonly ISender _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-        [HttpGet("favoriterecipes")]
+        [HttpGet("favorite/recipes")]
         public async Task<ActionResult<IList<StatisticModel>>> SearchFavoriteRecipesAsync(
             [FromQuery] string? categoryIds,
             CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ namespace MealPlanner.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("favoriteproducts")]
+        [HttpGet("favorite/products")]
         public async Task<ActionResult<IList<StatisticModel>?>> SearchFavoriteProductsAsync(
             [FromQuery] string? categoryIds,
             CancellationToken cancellationToken)

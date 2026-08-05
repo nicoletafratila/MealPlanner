@@ -124,7 +124,7 @@ namespace RecipeBook.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/shoppingListProducts*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/products*")
                 .With(m =>
                 {
                     var q = m.RequestUri!.Query;

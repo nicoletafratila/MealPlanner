@@ -33,7 +33,7 @@ namespace MealPlanner.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("shoppingListProducts")]
+        [HttpGet("products")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
             [FromQuery] Guid mealPlanId,
             [FromQuery] Guid shopId,

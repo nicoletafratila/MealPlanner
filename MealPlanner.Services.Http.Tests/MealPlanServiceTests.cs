@@ -105,7 +105,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/shoppingListProducts*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/products*")
                 .With(m =>
                 {
                     var q = m.RequestUri!.Query;
@@ -131,7 +131,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/shoppingListProducts*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{MealPlanPath}/products*")
                 .Respond(HttpStatusCode.InternalServerError);
 
             var service = CreateService(mockHttp);

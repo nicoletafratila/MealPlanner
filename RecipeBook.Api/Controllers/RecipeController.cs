@@ -45,7 +45,7 @@ namespace RecipeBook.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("shoppingListProducts")]
+        [HttpGet("products")]
         public async Task<ActionResult<IList<ShoppingListProductEditModel>?>> GetShoppingListProductsAsync(
             [FromQuery] Guid recipeId,
             [FromQuery] Guid shopId,

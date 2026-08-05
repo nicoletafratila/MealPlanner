@@ -69,7 +69,7 @@ namespace MealPlanner.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("makeShoppingList")]
+        [HttpPost("make")]
         public async Task<ActionResult<ShoppingListEditModel?>> MakeShoppingListAsync(
             [FromBody] ShoppingListCreateModel model,
             CancellationToken cancellationToken)

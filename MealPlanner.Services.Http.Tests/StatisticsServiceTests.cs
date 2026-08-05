@@ -58,7 +58,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favoriterecipes*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favorite/recipes*")
                 .With(m =>
                 {
                     var auth = m.Headers.Authorization;
@@ -92,7 +92,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favoriterecipes*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favorite/recipes*")
                 .Respond(HttpStatusCode.InternalServerError);
 
             var service = CreateService(mockHttp);
@@ -125,7 +125,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favoriteproducts*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favorite/products*")
                 .With(m =>
                 {
                     var auth = m.Headers.Authorization;
@@ -159,7 +159,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favoriteproducts*")
+                .Expect(HttpMethod.Get, $"{BaseAddress}{StatisticsPath}/favorite/products*")
                 .Respond(HttpStatusCode.InternalServerError);
 
             var service = CreateService(mockHttp);

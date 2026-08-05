@@ -143,7 +143,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}/makeShoppingList")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}/make")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
@@ -172,7 +172,7 @@ namespace MealPlanner.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}/makeShoppingList")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShoppingListPath}/make")
                 .Respond(HttpStatusCode.BadRequest);
 
             var service = CreateService(mockHttp);
