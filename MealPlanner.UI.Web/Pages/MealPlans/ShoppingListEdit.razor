@@ -116,7 +116,7 @@
                 <br />
 
                 <div class="card-body">
-                    <TableTemplate Data="@ShoppingList.Products" ColumnCount="3" SelectedItemChanged="@(async (ShoppingListProductEditModel item) => await CheckboxChangedAsync(item, !item.Collected))">
+                    <TableTemplate Data="@ShoppingList.Products" ColumnCount="3">
                         <TableCaption>@Resources.ShoppingListEdit.TableCaptionProducts</TableCaption>
                         <TableHeader>
                             <th style="width: 40px"></th>
@@ -129,7 +129,7 @@
                                 <td style="vertical-align:middle; text-align: center" @onclick:stopPropagation="true">
                                     <input type="checkbox" checked="@ProductModel.Collected" @onchange="async (e) => await CheckboxChangedAsync(ProductModel, (bool)(e.Value ?? false))" />
                                 </td>
-                                <td style="vertical-align:middle; cursor: pointer">
+                                <td style="vertical-align:middle; cursor: pointer" @onclick:stopPropagation="true" @onclick="async () => await CheckboxChangedAsync(ProductModel, !ProductModel.Collected)">
                                     <div style="display:flex; align-items: center">
                                         <img src="@ProductModel.Product.ImageUrl" class="img-fluid" width="100" height="80" />
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>

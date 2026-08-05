@@ -442,8 +442,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             {
                 Assert.That(item1.Collected, Is.True);
                 Assert.That(_viewModel.ShoppingListProducts.Select(p => p.Product!.Name), Is.EqualTo(new[] { "Banana", "Apple" }));
-                Assert.That(item2.DisplaySequence, Is.EqualTo(1));
-                Assert.That(item1.DisplaySequence, Is.EqualTo(2));
+                Assert.That(item2.DisplaySequence, Is.EqualTo(2));
+                Assert.That(item1.DisplaySequence, Is.EqualTo(1));
             }
             _shoppingListServiceMock.Verify(
                 s => s.UpdateAsync(It.IsAny<ShoppingListEditModel>(), It.IsAny<CancellationToken>()),

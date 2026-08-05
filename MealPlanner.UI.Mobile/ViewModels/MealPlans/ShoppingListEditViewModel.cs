@@ -348,7 +348,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         public async Task OnProductCollectedChangedAsync(ShoppingListProductEditModel item)
         {
-            ReorderProduct(item);
+            ResequenceProducts();
             await PersistProductsAsync();
         }
 
@@ -359,26 +359,6 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
             item.Collected = !item.Collected;
             await OnProductCollectedChangedAsync(item);
-        }
-
-        private void ReorderProduct(ShoppingListProductEditModel item)
-        {
-            var list = ShoppingListProducts.ToList();
-            var oldIndex = list.IndexOf(item);
-            if (oldIndex < 0) return;
-
-            list.RemoveAt(oldIndex);
-
-            var newIndex = item.Collected
-                ? list.Count
-                : Math.Max(0, list.Count(p => !p.Collected));
-
-            list.Insert(newIndex, item);
-
-            for (var i = 0; i < list.Count; i++)
-                list[i].DisplaySequence = i + 1;
-
-            ShoppingListProducts = new ObservableCollection<ShoppingListProductEditModel>(list);
         }
 
         private async Task PersistProductsAsync()
