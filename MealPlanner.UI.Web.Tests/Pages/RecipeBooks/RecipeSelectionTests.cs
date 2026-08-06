@@ -135,7 +135,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&
                     qp.Sorting.First().Direction == SortDirection.Ascending &&
-                    qp.PageSize == int.MaxValue &&
+                    qp.PageSize == 100 &&
                     qp.PageNumber == 1)),
                 Times.Once);
 

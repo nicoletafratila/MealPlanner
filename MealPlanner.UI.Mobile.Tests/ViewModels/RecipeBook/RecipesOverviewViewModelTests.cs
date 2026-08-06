@@ -51,13 +51,13 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
-        public async Task LoadAsync_Success_LoadsCategoriesThenSearchesRecipes()
+        public async Task LoadAsync_Success_LoadsCategoriesAndSearchesRecipes()
         {
             var categories = new List<RecipeCategoryModel> { new(Guid.NewGuid(), "Desert") };
             var recipes = new List<RecipeModel> { new(Guid.NewGuid(), "Pasta") };
 
             _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.Is<QueryParameters<RecipeCategoryModel>>(p => p.PageSize == 100), CancellationToken.None))
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<RecipeCategoryModel>>(p => p.PageSize == int.MaxValue), CancellationToken.None))
                 .ReturnsAsync(CategoriesPage(categories));
 
             _recipeServiceMock
@@ -82,6 +82,10 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("boom"));
+
+            _recipeServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
+                .ReturnsAsync(RecipesPage([], 1, 20, 0));
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
 
