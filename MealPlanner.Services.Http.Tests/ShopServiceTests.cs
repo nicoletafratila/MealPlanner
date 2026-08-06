@@ -4,6 +4,7 @@ using Common.Http;
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Shared.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
@@ -20,7 +21,8 @@ namespace MealPlanner.Services.Http.Tests
 
         private static ShopService CreateService(
             MockHttpMessageHandler mockHttp,
-            string token = "test-token")
+            string token = "test-token",
+            IMemoryCache? cache = null)
         {
             var httpClient = new HttpClient(mockHttp)
             {
@@ -33,7 +35,7 @@ namespace MealPlanner.Services.Http.Tests
                 .ReturnsAsync(token);
             var logger = Mock.Of<ILogger<ShopService>>();
 
-            return new ShopService(httpClient, tokenProvider.Object, logger);
+            return new ShopService(httpClient, tokenProvider.Object, cache ?? new MemoryCache(new MemoryCacheOptions()), logger);
         }
 
         // ---------- GetEditAsync ----------
@@ -125,6 +127,133 @@ namespace MealPlanner.Services.Http.Tests
 
             // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_SecondCall_ReturnsCachedResult_WithoutExtraHttpRequest()
+        {
+            var paged = new PagedList<ShopModel>([new ShopModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            var second = await service.SearchAsync();
+
+            Assert.That(second, Is.Not.Null);
+            Assert.That(second!.Items, Has.Count.EqualTo(1));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task AddAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<ShopModel>([new ShopModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var addResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}")
+                .Respond("application/json", JsonSerializer.Serialize(addResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.AddAsync(new ShopEditModel { Id = Guid.NewGuid() });
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task UpdateAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<ShopModel>([new ShopModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var updateResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Put, $"{BaseAddress}{ShopPath}")
+                .Respond("application/json", JsonSerializer.Serialize(updateResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.UpdateAsync(new ShopEditModel { Id = Guid.NewGuid() });
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task DeleteAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<ShopModel>([new ShopModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var deleteResponse = new CommandResponse { Succeeded = true };
+            var deleteId = Guid.NewGuid();
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Delete, $"{BaseAddress}{ShopPath}*")
+                .Respond("application/json", JsonSerializer.Serialize(deleteResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.DeleteAsync(deleteId);
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_DifferentFilters_SamePageAndSorting_DoesNotReuseOtherFiltersCachedResult()
+        {
+            var pagedA = new PagedList<ShopModel>([new ShopModel(Guid.NewGuid(), "Lidl")], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var pagedB = new PagedList<ShopModel>([new ShopModel(Guid.NewGuid(), "Kaufland")], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .With(m => Uri.UnescapeDataString(m.RequestUri!.Query).Contains("\"lidl\""))
+                .Respond("application/json", JsonSerializer.Serialize(pagedA, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ShopPath}/search*")
+                .With(m => Uri.UnescapeDataString(m.RequestUri!.Query).Contains("\"kaufland\""))
+                .Respond("application/json", JsonSerializer.Serialize(pagedB, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            var resultA = await service.SearchAsync(new QueryParameters<ShopModel>
+            {
+                Filters = [new FilterItem("Name", "lidl", FilterOperator.Contains)]
+            });
+            var resultB = await service.SearchAsync(new QueryParameters<ShopModel>
+            {
+                Filters = [new FilterItem("Name", "kaufland", FilterOperator.Contains)]
+            });
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultA!.Items[0].Name, Is.EqualTo("Lidl"));
+                Assert.That(resultB!.Items[0].Name, Is.EqualTo("Kaufland"));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

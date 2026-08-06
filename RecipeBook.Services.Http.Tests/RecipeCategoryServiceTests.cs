@@ -3,6 +3,7 @@ using System.Text.Json;
 using Common.Http;
 using Common.Models;
 using Common.Pagination;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Shared.Models;
@@ -20,7 +21,8 @@ namespace RecipeBook.Services.Http.Tests
 
         private static RecipeCategoryService CreateService(
             MockHttpMessageHandler mockHttp,
-            string token = "test-token")
+            string token = "test-token",
+            IMemoryCache? cache = null)
         {
             var httpClient = new HttpClient(mockHttp)
             {
@@ -33,7 +35,7 @@ namespace RecipeBook.Services.Http.Tests
                 .ReturnsAsync(token);
             var logger = Mock.Of<ILogger<RecipeCategoryService>>();
 
-            return new RecipeCategoryService(httpClient, tokenProvider.Object, logger);
+            return new RecipeCategoryService(httpClient, tokenProvider.Object, cache ?? new MemoryCache(new MemoryCacheOptions()), logger);
         }
 
         // ---------- GetEditAsync ----------
@@ -125,6 +127,123 @@ namespace RecipeBook.Services.Http.Tests
 
             // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_SecondCall_ReturnsCachedResult_WithoutExtraHttpRequest()
+        {
+            var paged = new PagedList<RecipeCategoryModel>([new RecipeCategoryModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            var second = await service.SearchAsync();
+
+            Assert.That(second, Is.Not.Null);
+            Assert.That(second!.Items, Has.Count.EqualTo(1));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task AddAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<RecipeCategoryModel>([new RecipeCategoryModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var addResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{RecipeCategoryPath}")
+                .Respond("application/json", JsonSerializer.Serialize(addResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.AddAsync(new RecipeCategoryEditModel { Id = Guid.NewGuid() });
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task UpdateAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<RecipeCategoryModel>([new RecipeCategoryModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var updateResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Put, $"{BaseAddress}{RecipeCategoryPath}")
+                .Respond("application/json", JsonSerializer.Serialize(updateResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.UpdateAsync(new RecipeCategoryEditModel { Id = Guid.NewGuid() });
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task BulkUpdateAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<RecipeCategoryModel>([new RecipeCategoryModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var updateResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Put, $"{BaseAddress}{RecipeCategoryPath}/updateAll")
+                .Respond("application/json", JsonSerializer.Serialize(updateResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.UpdateAsync(new List<RecipeCategoryModel> { new() { Id = Guid.NewGuid() } });
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task DeleteAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<RecipeCategoryModel>([new RecipeCategoryModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var deleteResponse = new CommandResponse { Succeeded = true };
+            var deleteId = Guid.NewGuid();
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Delete, $"{BaseAddress}{RecipeCategoryPath}*")
+                .Respond("application/json", JsonSerializer.Serialize(deleteResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipeCategoryPath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.DeleteAsync(deleteId);
+            await service.SearchAsync();
+
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

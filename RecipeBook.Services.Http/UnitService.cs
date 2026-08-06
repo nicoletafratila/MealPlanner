@@ -32,7 +32,7 @@ namespace RecipeBook.Services.Http
 
         public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null, CancellationToken cancellationToken = default)
         {
-            var cacheKey = $"units:{queryParameters?.PageNumber}:{queryParameters?.PageSize}:{string.Join(",", queryParameters?.Sorting?.Select(s => s.PropertyName) ?? [])}";
+            var cacheKey = SearchCacheKeyBuilder.Build("units", queryParameters);
             if (cache.TryGetValue(cacheKey, out PagedList<UnitModel>? cached))
             {
                 return cached;

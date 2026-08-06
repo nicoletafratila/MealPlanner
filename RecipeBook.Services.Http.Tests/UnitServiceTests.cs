@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Common.Constants.Units;
 using Common.Http;
 using Common.Models;
 using Common.Pagination;
@@ -152,6 +153,47 @@ namespace RecipeBook.Services.Http.Tests
             // Assert — only one HTTP request was made
             Assert.That(second, Is.Not.Null);
             Assert.That(second!.Items, Has.Count.EqualTo(1));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_DifferentFilters_SamePageAndSorting_DoesNotReuseOtherFiltersCachedResult()
+        {
+            // Regression test: the cache key must include Filters, otherwise two searches that only
+            // differ by filter (e.g. typing different text into a search box) would collide on the
+            // same PageNumber/PageSize/Sorting and incorrectly return each other's cached results.
+            var pagedKg = new PagedList<UnitModel>([new UnitModel(Guid.NewGuid(), "Kilogram", UnitType.Weight)], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var pagedLiter = new PagedList<UnitModel>([new UnitModel(Guid.NewGuid(), "Liter", UnitType.Liquid)], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UnitPath}/search*")
+                .With(m => Uri.UnescapeDataString(m.RequestUri!.Query).Contains("\"kg\""))
+                .Respond("application/json", JsonSerializer.Serialize(pagedKg, JsonOptions));
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UnitPath}/search*")
+                .With(m => Uri.UnescapeDataString(m.RequestUri!.Query).Contains("\"liter\""))
+                .Respond("application/json", JsonSerializer.Serialize(pagedLiter, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            var kgResult = await service.SearchAsync(new QueryParameters<UnitModel>
+            {
+                Filters = [new FilterItem("Name", "kg", FilterOperator.Contains)]
+            });
+            var literResult = await service.SearchAsync(new QueryParameters<UnitModel>
+            {
+                Filters = [new FilterItem("Name", "liter", FilterOperator.Contains)]
+            });
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(kgResult!.Items[0].Name, Is.EqualTo("Kilogram"));
+                Assert.That(literResult!.Items[0].Name, Is.EqualTo("Liter"));
+            }
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
