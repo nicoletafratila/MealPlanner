@@ -27,10 +27,11 @@ namespace MealPlanner.Services.Http
             {
                 Filters = CreateCurrentWeekFilters(),
                 PageNumber = 1,
-                PageSize = int.MaxValue
+                PageSize = 1,
+                Sorting = [new SortingModel { PropertyName = nameof(MealPlanModel.CreatedAt), Direction = SortDirection.Descending }]
             }, cancellationToken) ?? new PagedList<MealPlanModel>([], new Metadata());
 
-            return result.Items.Count != 0 ? result.Items.OrderByDescending(x => x.CreatedAt).FirstOrDefault() : null;
+            return result.Items.FirstOrDefault();
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid mealPlanId, Guid shopId, CancellationToken cancellationToken = default)

@@ -44,7 +44,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 CurrentPage = 1;
                 var filters = BuildFilters();
-                var categoriesTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = Int32.MaxValue });
+                var categoriesTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200 });
                 var recipesTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
                 await Task.WhenAll(categoriesTask, recipesTask);
 

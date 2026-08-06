@@ -43,7 +43,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             try
             {
                 var filters = BuildFilters();
-                var result = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageNumber = CurrentPage, Filters = filters.Count > 0 ? filters : null, Sorting = CreatedAtDescendingSorting });
+                var result = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = CreatedAtDescendingSorting });
                 if (result is not null)
                 {
                     MealPlans = new ObservableCollection<MealPlanModel>(result.Items);
@@ -100,7 +100,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private async Task AppendPageAsync()
         {
             var filters = BuildFilters();
-            var result = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageNumber = CurrentPage, Filters = filters.Count > 0 ? filters : null, Sorting = CreatedAtDescendingSorting });
+            var result = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = CreatedAtDescendingSorting });
             if (result is not null)
             {
                 foreach (var item in result.Items)
