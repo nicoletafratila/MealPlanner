@@ -1,7 +1,7 @@
+using Common.Data.Entities;
 using Common.Data.Repository;
 using Common.Pagination;
 using MealPlanner.Data.Entities;
-using RecipeBook.Data.Entities;
 
 namespace MealPlanner.Api.Repositories
 {
@@ -9,8 +9,8 @@ namespace MealPlanner.Api.Repositories
     {
         Task<IReadOnlyList<MealPlan>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
         Task<MealPlan?> GetByIdIncludeRecipesAsync(Guid id, CancellationToken cancellationToken);
-        Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(IList<Guid> categoryIds, string userId, CancellationToken cancellationToken);
-        Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<Guid> categoryIds, string userId, CancellationToken cancellationToken);
+        Task<IList<CategoryItemCount>> SearchByRecipeCategoryIdsAsync(IList<Guid> categoryIds, string userId, CancellationToken cancellationToken);
+        Task<IList<CategoryItemCount>> SearchByProductCategoryIdsAsync(IList<Guid> categoryIds, string userId, CancellationToken cancellationToken);
         Task<IList<MealPlan>> SearchByRecipeAsync(Guid recipeId, string userId, CancellationToken cancellationToken);
         Task<MealPlan?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
 

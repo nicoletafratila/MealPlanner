@@ -1,4 +1,5 @@
-﻿using Common.Services;
+﻿using Common.Data.Entities;
+using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchRecipes;
 using MealPlanner.Api.Repositories;
@@ -122,45 +123,12 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(categories);
 
-            // MealPlanRecipes: 3 in Main (R1 * 2, R2 * 1) and 1 in Dessert (D1 * 1)
-            var mealPlanRecipes = new List<Data.Entities.MealPlanRecipe>
+            // Already aggregated by EF: 3 in Main (R1 * 2, R2 * 1) and 1 in Dessert (D1 * 1)
+            var recipeCounts = new List<CategoryItemCount>
             {
-                new()
-                {
-                    Recipe = new RecipeBook.Data.Entities.Recipe
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "R1",
-                        RecipeCategoryId = cat1Id
-                    }
-                },
-                new()
-                {
-                    Recipe = new RecipeBook.Data.Entities.Recipe
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "R1",
-                        RecipeCategoryId = cat1Id
-                    }
-                },
-                new()
-                {
-                    Recipe = new RecipeBook.Data.Entities.Recipe
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "R2",
-                        RecipeCategoryId = cat1Id
-                    }
-                },
-                new()
-                {
-                    Recipe = new RecipeBook.Data.Entities.Recipe
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "D1",
-                        RecipeCategoryId = cat2Id
-                    }
-                }
+                new(cat1Id, "R1", 2),
+                new(cat1Id, "R2", 1),
+                new(cat2Id, "D1", 1)
             };
 
             mealPlanRepoMock
@@ -168,7 +136,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                     It.Is<IList<Guid>>(ids => ids.Count == 2 && ids.Contains(cat1Id) && ids.Contains(cat2Id)),
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(mealPlanRecipes);
+                .ReturnsAsync(recipeCounts);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

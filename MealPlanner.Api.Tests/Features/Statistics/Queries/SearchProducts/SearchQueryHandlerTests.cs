@@ -1,4 +1,5 @@
-﻿using Common.Services;
+﻿using Common.Data.Entities;
+using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchProducts;
 using MealPlanner.Api.Repositories;
@@ -128,20 +129,12 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(categories);
 
-            // Two mealplans with products in Dairy and one in Bakery
-            var p1 = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = dairyId };
-            var p2 = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Cheese", ProductCategoryId = dairyId };
-            var p3 = new RecipeBook.Data.Entities.Product { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = bakeryId };
-
-            var mp1 = new Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan1" };
-            var mp2 = new Data.Entities.MealPlan { Id = Guid.NewGuid(), Name = "Plan2" };
-
-            var pairs = new List<KeyValuePair<RecipeBook.Data.Entities.Product, Data.Entities.MealPlan>>
+            // Already aggregated by EF: Milk(2), Cheese(1) in Dairy and Bread(1) in Bakery
+            var productCounts = new List<CategoryItemCount>
             {
-                new(p1, mp1),
-                new(p1, mp2),
-                new(p2, mp1),
-                new(p3, mp1)
+                new(dairyId, "Milk", 2),
+                new(dairyId, "Cheese", 1),
+                new(bakeryId, "Bread", 1)
             };
 
             repoMock
@@ -150,7 +143,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                         ids.Count == 2 && ids.Contains(dairyId) && ids.Contains(bakeryId)),
                     It.IsAny<string>(),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(pairs);
+                .ReturnsAsync(productCounts);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

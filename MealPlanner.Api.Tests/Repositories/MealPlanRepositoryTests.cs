@@ -1,4 +1,5 @@
 using Common.Data.DataContext;
+using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
@@ -397,9 +398,13 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
-            var mpr = result.Single();
-            Assert.That(mpr.Recipe, Is.Not.Null);
-            Assert.That(mpr.Recipe!.RecipeCategoryId, Is.EqualTo(RecipeCategoryGuid(5)));
+            var count = result.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(count.CategoryId, Is.EqualTo(RecipeCategoryGuid(5)));
+                Assert.That(count.Name, Is.EqualTo("R1"));
+                Assert.That(count.Count, Is.EqualTo(1));
+            }
         }
 
         [Test]
@@ -448,11 +453,12 @@ namespace MealPlanner.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
-            var kv = result.Single();
+            var count = result.Single();
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(kv.Key.ProductCategoryId, Is.EqualTo(ProductCategoryGuid(20)));
-                Assert.That(kv.Value.Name, Is.EqualTo("Plan1"));
+                Assert.That(count.CategoryId, Is.EqualTo(ProductCategoryGuid(20)));
+                Assert.That(count.Name, Is.EqualTo("Flour"));
+                Assert.That(count.Count, Is.EqualTo(1));
             }
         }
 

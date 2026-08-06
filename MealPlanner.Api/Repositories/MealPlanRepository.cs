@@ -1,4 +1,5 @@
 using Common.Data.DataContext;
+using Common.Data.Entities;
 using Common.Data.Repository;
 using Common.Pagination;
 using MealPlanner.Data.Entities;
@@ -89,7 +90,7 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(mp => mp.Id == id, cancellationToken);
         }
 
-        public async Task<IList<MealPlanRecipe>> SearchByRecipeCategoryIdsAsync(
+        public async Task<IList<CategoryItemCount>> SearchByRecipeCategoryIdsAsync(
             IList<Guid> categoryIds,
             string userId,
             CancellationToken cancellationToken)
@@ -101,14 +102,14 @@ namespace MealPlanner.Api.Repositories
 
             return await Context.MealPlanRecipes
                 .AsNoTracking()
-                .Include(x => x.Recipe)
-                    .ThenInclude(r => r!.RecipeCategory)
                 .Where(mpr => categoryIds.Contains(mpr.Recipe!.RecipeCategoryId)
                               && mpr.MealPlan!.UserId == userId)
+                .GroupBy(mpr => new { mpr.Recipe!.RecipeCategoryId, mpr.Recipe!.Name })
+                .Select(g => new CategoryItemCount(g.Key.RecipeCategoryId, g.Key.Name ?? string.Empty, g.Count()))
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(
+        public async Task<IList<CategoryItemCount>> SearchByProductCategoryIdsAsync(
             IList<Guid> categoryIds,
             string userId,
             CancellationToken cancellationToken)
@@ -124,14 +125,10 @@ namespace MealPlanner.Api.Repositories
                 join mr in Context.MealPlanRecipes.AsNoTracking()
                     on ri.RecipeId equals mr.RecipeId
                 where mr.MealPlan!.UserId == userId
-                select new { ri.Product, mr.MealPlan };
+                group ri by new { ri.Product!.ProductCategoryId, ri.Product.Name } into g
+                select new CategoryItemCount(g.Key.ProductCategoryId, g.Key.Name!, g.Count());
 
-            var results = await query.ToListAsync(cancellationToken);
-
-            return results
-                .Where(x => x.Product != null && x.MealPlan != null)
-                .Select(x => new KeyValuePair<Product, MealPlan>(x.Product!, x.MealPlan!))
-                .ToList();
+            return await query.ToListAsync(cancellationToken);
         }
 
         public async Task<IList<MealPlan>> SearchByRecipeAsync(

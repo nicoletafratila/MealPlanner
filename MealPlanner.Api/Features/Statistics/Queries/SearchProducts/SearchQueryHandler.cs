@@ -47,11 +47,10 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
             if (string.IsNullOrEmpty(userId))
                 return result;
 
-            var mealPlans = await _mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds, userId, cancellationToken);
+            var productCounts = await _mealPlanRepository.SearchByProductCategoryIdsAsync(categoryIds, userId, cancellationToken);
 
-            var mealPlansByCategory = mealPlans
-                .Where(mp => mp.Key != null)
-                .GroupBy(mp => mp.Key!.ProductCategoryId)
+            var countsByCategory = productCounts
+                .GroupBy(c => c.CategoryId)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
             foreach (var category in categories)
@@ -62,25 +61,15 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchProducts
                     Label = category.Name
                 };
 
-                if (!mealPlansByCategory.TryGetValue(category.Id, out var mealPlanWithProducts))
+                if (!countsByCategory.TryGetValue(category.Id, out var productsInCategory))
                 {
                     result.Add(model);
                     continue;
                 }
 
-                foreach (var pair in mealPlanWithProducts)
+                foreach (var product in productsInCategory)
                 {
-                    var product = pair.Key!;
-                    var productName = product.Name ?? string.Empty;
-
-                    if (!model.Data!.TryGetValue(productName, out var value))
-                    {
-                        model.Data[productName] = 1;
-                    }
-                    else
-                    {
-                        model.Data[productName] = value + 1;
-                    }
+                    model.Data![product.Name] = product.Count;
                 }
 
                 if (model.Data!.Count > 0)

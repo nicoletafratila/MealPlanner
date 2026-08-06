@@ -48,11 +48,10 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
             if (string.IsNullOrEmpty(userId))
                 return result;
 
-            var mealPlans = await _mealPlanRepository.SearchByRecipeCategoryIdsAsync(categoryIds, userId, cancellationToken);
+            var recipeCounts = await _mealPlanRepository.SearchByRecipeCategoryIdsAsync(categoryIds, userId, cancellationToken);
 
-            var mealPlansByCategory = mealPlans
-                .Where(mp => mp.Recipe != null)
-                .GroupBy(mp => mp.Recipe!.RecipeCategoryId)
+            var countsByCategory = recipeCounts
+                .GroupBy(c => c.CategoryId)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
             foreach (var category in categories)
@@ -63,25 +62,15 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
                     Label = category.Name
                 };
 
-                if (!mealPlansByCategory.TryGetValue(category.Id, out var mealPlanWithRecipes))
+                if (!countsByCategory.TryGetValue(category.Id, out var recipesInCategory))
                 {
                     result.Add(model);
                     continue;
                 }
 
-                foreach (var mealPlan in mealPlanWithRecipes)
+                foreach (var recipe in recipesInCategory)
                 {
-                    var recipe = mealPlan.Recipe!;
-                    var recipeName = recipe.Name ?? string.Empty;
-
-                    if (!model.Data!.TryGetValue(recipeName, out var value))
-                    {
-                        model.Data[recipeName] = 1;
-                    }
-                    else
-                    {
-                        model.Data[recipeName] = value + 1;
-                    }
+                    model.Data![recipe.Name] = recipe.Count;
                 }
 
                 if (model.Data!.Count > 0)
