@@ -35,7 +35,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters, Sorting = DefaultSorting });
                 if (result is not null)
                 {
-                    Products = new ObservableCollection<ProductModel>(result.Items); HasNextPage = result.Metadata.HasNextPage;
+                    Products.Clear();
+                    foreach (var item in result.Items)
+                        Products.Add(item);
+                    HasNextPage = result.Metadata.HasNextPage;
                 }
             }
             catch (Exception ex)
