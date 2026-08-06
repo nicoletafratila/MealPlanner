@@ -71,8 +71,8 @@
 
                 <div class="form-group mt-3">
                     <label for="email" class="col-sm-3">@Resources.UserProfile.EmailLabel</label>
-                    <InputText id="email" class="form-control" @bind-Value="@ApplicationUser.EmailAddress" placeholder="@Resources.UserProfile.PlaceholderEmail"></InputText>
-                    <ValidationMessage For="@(() => ApplicationUser.EmailAddress)" />
+                    <InputText id="email" class="form-control" @bind-Value="@ApplicationUser.Email" placeholder="@Resources.UserProfile.PlaceholderEmail"></InputText>
+                    <ValidationMessage For="@(() => ApplicationUser.Email)" />
                 </div>
 
                 <div class="form-group mt-3">

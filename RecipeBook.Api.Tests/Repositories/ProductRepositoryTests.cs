@@ -1,4 +1,5 @@
 using Common.Data.DataContext;
+using Common.Pagination;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -253,6 +254,161 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(result, Is.Null);
+        }
+
+        // ---------- SearchByUserAsync ----------
+        [Test]
+        public async Task SearchByUserAsync_ScopesToUser_WithCategoryAndBaseUnit()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            var p2 = CreateProductGraph("P2", ProductCategoryGuid(20), "Cat2", "l");
+            p1.UserId = "user1";
+            p2.UserId = "user2";
+            ctx.Products.AddRange(p1, p2);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, skip) = await repo.SearchByUserAsync(
+                "user1", null, null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(items, Has.Count.EqualTo(1));
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(skip, Is.Zero);
+                Assert.That(items.Single().Name, Is.EqualTo("P1"));
+                Assert.That(items.Single().ProductCategory, Is.Not.Null);
+                Assert.That(items.Single().BaseUnit, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_CategoryIdFilter_ReturnsOnlyMatchingCategory()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            var p2 = CreateProductGraph("P2", ProductCategoryGuid(20), "Cat2", "l");
+            var p3 = new Product { Name = "P3", ProductCategoryId = p1.ProductCategoryId, ProductCategory = p1.ProductCategory, BaseUnit = new Unit { Name = "kg", UnitType = 0 } };
+            p1.UserId = p2.UserId = p3.UserId = "user1";
+            ctx.Products.AddRange(p1, p2, p3);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", ProductCategoryGuid(10), null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(2));
+                Assert.That(items.Select(x => x.Name), Is.EquivalentTo(["P1", "P3"]));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NameFilter_ReturnsOnlyMatchingProducts()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("Milk", ProductCategoryGuid(10), "Cat1", "l");
+            var p2 = CreateProductGraph("Bread", ProductCategoryGuid(20), "Cat2", "pcs");
+            p1.UserId = p2.UserId = "user1";
+            ctx.Products.AddRange(p1, p2);
+            await ctx.SaveChangesAsync();
+
+            var filters = new[] { new FilterItem(nameof(Product.Name), "Milk", FilterOperator.Contains) };
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", null, filters, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(items.Single().Name, Is.EqualTo("Milk"));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_Sorting_ReturnsSortedByRequestedProperty()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("Bread", ProductCategoryGuid(10), "Cat1", "pcs");
+            var p2 = CreateProductGraph("Milk", ProductCategoryGuid(20), "Cat2", "l");
+            p1.UserId = p2.UserId = "user1";
+            ctx.Products.AddRange(p2, p1);
+            await ctx.SaveChangesAsync();
+
+            var sorting = new[] { new SortingModel { PropertyName = nameof(Product.Name), Direction = SortDirection.Ascending } };
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync(
+                "user1", null, null, sorting, 1, 10, CancellationToken.None);
+
+            // Assert
+            Assert.That(items.Select(x => x.Name), Is.EqualTo(["Bread", "Milk"]));
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_Paging_ReturnsRequestedPageAndSkip()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            for (var i = 1; i <= 5; i++)
+            {
+                var p = CreateProductGraph($"P{i}", ProductCategoryGuid(i), $"Cat{i}", "kg");
+                p.UserId = "user1";
+                ctx.Products.Add(p);
+            }
+            await ctx.SaveChangesAsync();
+
+            var sorting = new[] { new SortingModel { PropertyName = nameof(Product.Name), Direction = SortDirection.Ascending } };
+
+            // Act
+            var (items, totalCount, skip) = await repo.SearchByUserAsync(
+                "user1", null, null, sorting, 2, 2, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(5));
+                Assert.That(skip, Is.EqualTo(2));
+                Assert.That(items.Select(x => x.Name), Is.EqualTo(["P3", "P4"]));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NoMatches_ReturnsEmptyWithZeroTotalCount()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("P1", ProductCategoryGuid(10), "Cat1", "kg");
+            p1.UserId = "user2";
+            ctx.Products.Add(p1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", null, null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(items, Is.Empty);
+                Assert.That(totalCount, Is.Zero);
+            }
         }
     }
 }

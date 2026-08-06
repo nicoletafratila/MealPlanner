@@ -19,7 +19,7 @@ namespace Identity.Api.Features.ApplicationUser.Commands.Update
                     .NotEmpty()
                     .WithMessage(ApplicationUserMessages.UserIdRequired);
 
-                RuleFor(x => x.Model!.EmailAddress)
+                RuleFor(x => x.Model!.Email)
                     .NotEmpty()
                     .WithMessage(ApplicationUserMessages.EmailAddressRequired);
             });

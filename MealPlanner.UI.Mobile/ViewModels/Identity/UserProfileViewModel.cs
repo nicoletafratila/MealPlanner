@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(Model.EmailAddress))
+            if (string.IsNullOrWhiteSpace(Model.Email))
             {
                 SetError(IdentitySharedMessages.EmailAddressRequired);
                 return;

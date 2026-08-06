@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Pagination;
 using Common.Services;
 using MealPlanner.Api.Repositories;
@@ -25,43 +25,15 @@ namespace MealPlanner.Api.Features.Shop.Queries.Search
             if (string.IsNullOrEmpty(userId))
                 return new([], new Metadata());
 
-            var entities = await _repository.GetAllByUserAsync(userId, cancellationToken);
+            var (entities, totalCount, skip) = await _repository.SearchByUserAsync(
+                userId, qp.Filters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken);
+
             var models = _mapper.Map<IList<ShopModel>>(entities) ?? [];
+            var metadata = Metadata.Create(qp.PageNumber, qp.PageSize, totalCount);
+            for (var i = 0; i < models.Count; i++)
+                models[i].Index = skip + i + 1;
 
-            models = ApplyFilters(models, qp);
-            models = ApplySorting(models, qp);
-
-            return models.ToPagedList(qp.PageNumber, qp.PageSize);
-        }
-
-        private static IList<ShopModel> ApplyFilters(
-            IList<ShopModel> source,
-            QueryParameters<ShopModel> parameters)
-        {
-            if (parameters.Filters is null || !parameters.Filters.Any())
-                return source;
-
-            var result = source;
-
-            foreach (var filter in parameters.Filters)
-            {
-                var predicate = filter.ConvertFilterItemToFunc<ShopModel>();
-                result = result.Where(predicate).ToList();
-            }
-
-            return result;
-        }
-
-        private static IList<ShopModel> ApplySorting(
-            IList<ShopModel> source,
-            QueryParameters<ShopModel> parameters)
-        {
-            if (parameters.Sorting is null || !parameters.Sorting.Any())
-                return source;
-
-            return source.AsQueryable()
-                         .ApplySorting(parameters.Sorting)!
-                         .ToList();
+            return new PagedList<ShopModel>(models, metadata);
         }
     }
 }

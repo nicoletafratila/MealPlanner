@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Pagination;
 using Common.Services;
 using MediatR;
@@ -25,57 +25,20 @@ namespace RecipeBook.Api.Features.Recipe.Queries.Search
             if (string.IsNullOrEmpty(userId))
                 return new([], new Metadata());
 
-            var entities = await _repository.GetAllByUserAsync(userId, cancellationToken);
+            // Malformed category ids are ignored (filter not applied), matching the previous behavior.
+            Guid? categoryId = !string.IsNullOrWhiteSpace(request.CategoryId) && Guid.TryParse(request.CategoryId, out var parsedCategoryId)
+                ? parsedCategoryId
+                : null;
+
+            var (entities, totalCount, skip) = await _repository.SearchByUserAsync(
+                userId, categoryId, qp.Filters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken);
+
             var models = _mapper.Map<IList<RecipeModel>>(entities) ?? [];
+            var metadata = Metadata.Create(qp.PageNumber, qp.PageSize, totalCount);
+            for (var i = 0; i < models.Count; i++)
+                models[i].Index = skip + i + 1;
 
-            models = ApplyCategoryFilter(models, request.CategoryId);
-            models = ApplyFilters(models, qp);
-            models = ApplySorting(models, qp);
-
-            return models.ToPagedList(qp.PageNumber, qp.PageSize);
-        }
-
-        private static IList<RecipeModel> ApplyCategoryFilter(
-            IList<RecipeModel> source,
-            string? categoryId)
-        {
-            if (string.IsNullOrWhiteSpace(categoryId))
-                return source;
-
-            if (!Guid.TryParse(categoryId, out var id))
-                return source;
-
-            return source.Where(r => r.RecipeCategoryId == id.ToString()).ToList();
-        }
-
-        private static IList<RecipeModel> ApplyFilters(
-            IList<RecipeModel> source,
-            QueryParameters<RecipeModel> parameters)
-        {
-            if (parameters.Filters is null || !parameters.Filters.Any())
-                return source;
-
-            var result = source;
-
-            foreach (var filter in parameters.Filters)
-            {
-                var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
-                result = result.Where(predicate).ToList();
-            }
-
-            return result;
-        }
-
-        private static IList<RecipeModel> ApplySorting(
-            IList<RecipeModel> source,
-            QueryParameters<RecipeModel> parameters)
-        {
-            if (parameters.Sorting is null || !parameters.Sorting.Any())
-                return source;
-
-            return source.AsQueryable()
-                         .ApplySorting(parameters.Sorting)!
-                         .ToList();
+            return new PagedList<RecipeModel>(models, metadata);
         }
     }
 }

@@ -1,4 +1,5 @@
 using Common.Data.Repository;
+using Common.Pagination;
 using MealPlanner.Data.Entities;
 using RecipeBook.Data.Entities;
 
@@ -12,5 +13,16 @@ namespace MealPlanner.Api.Repositories
         Task<IList<KeyValuePair<Product, MealPlan>>> SearchByProductCategoryIdsAsync(IList<Guid> categoryIds, string userId, CancellationToken cancellationToken);
         Task<IList<MealPlan>> SearchByRecipeAsync(Guid recipeId, string userId, CancellationToken cancellationToken);
         Task<MealPlan?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Filters, sorts, and pages meal plans for a user at the database level, returning only the requested page.
+        /// </summary>
+        Task<PagedQueryResult<MealPlan>> SearchByUserAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken);
     }
 }

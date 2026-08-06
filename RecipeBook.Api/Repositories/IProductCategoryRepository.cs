@@ -1,4 +1,5 @@
 using Common.Data.Repository;
+using Common.Pagination;
 using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
@@ -9,5 +10,16 @@ namespace RecipeBook.Api.Repositories
     public interface IProductCategoryRepository : IAsyncRepository<ProductCategory, Guid>
     {
         Task<IReadOnlyList<ProductCategory>> GetAllByUserAsync(string userId, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Filters, sorts, and pages product categories for a user at the database level, returning only the requested page.
+        /// </summary>
+        Task<PagedQueryResult<ProductCategory>> SearchByUserAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken);
     }
 }

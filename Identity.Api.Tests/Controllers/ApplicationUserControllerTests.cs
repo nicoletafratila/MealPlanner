@@ -166,7 +166,7 @@ namespace Identity.Api.Tests.Controllers
             {
                 UserId = "1",
                 Username = "bob",
-                EmailAddress = "bob@example.com"
+                Email = "bob@example.com"
             };
 
             _mediatorMock
@@ -302,7 +302,7 @@ namespace Identity.Api.Tests.Controllers
             {
                 UserId = "1",
                 Username = "bob",
-                EmailAddress = "bob@example.com"
+                Email = "bob@example.com"
             };
 
             _mediatorMock
@@ -334,7 +334,7 @@ namespace Identity.Api.Tests.Controllers
             {
                 UserId = "1",
                 Username = "bob",
-                EmailAddress = "bob@example.com"
+                Email = "bob@example.com"
             };
 
             var failed = CommandResponse.Failed("Error message");
@@ -368,7 +368,7 @@ namespace Identity.Api.Tests.Controllers
             {
                 UserId = "1",
                 Username = "bob",
-                EmailAddress = "bob@example.com"
+                Email = "bob@example.com"
             };
 
             var success = CommandResponse.Success();

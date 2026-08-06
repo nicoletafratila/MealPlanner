@@ -1,4 +1,5 @@
 using Common.Data.DataContext;
+using Common.Pagination;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -223,6 +224,134 @@ namespace RecipeBook.Api.Tests.Repositories
 
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.GetByIdsAsync(null!, CancellationToken.None));
+        }
+
+        // ---------- SearchByUserAsync ----------
+        [Test]
+        public async Task SearchByUserAsync_ScopesToUser()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.AddRange(
+                new RecipeCategory { Name = "Cat1", DisplaySequence = 1, UserId = "user1" },
+                new RecipeCategory { Name = "Cat2", DisplaySequence = 1, UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, skip) = await repo.SearchByUserAsync("user1", null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(skip, Is.Zero);
+                Assert.That(items.Single().Name, Is.EqualTo("Cat1"));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NoExplicitSorting_DefaultsToDisplaySequence()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.AddRange(
+                new RecipeCategory { Name = "Cat2", DisplaySequence = 2, UserId = "user1" },
+                new RecipeCategory { Name = "Cat1", DisplaySequence = 1, UserId = "user1" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync("user1", null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            Assert.That(items.Select(x => x.Name), Is.EqualTo(["Cat1", "Cat2"]));
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_ExplicitSorting_OverridesDisplaySequenceOrder()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.AddRange(
+                new RecipeCategory { Name = "Cat2", DisplaySequence = 1, UserId = "user1" },
+                new RecipeCategory { Name = "Cat1", DisplaySequence = 2, UserId = "user1" });
+            await ctx.SaveChangesAsync();
+
+            var sorting = new[] { new SortingModel { PropertyName = nameof(RecipeCategory.Name), Direction = SortDirection.Ascending } };
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync("user1", null, sorting, 1, 10, CancellationToken.None);
+
+            // Assert
+            Assert.That(items.Select(x => x.Name), Is.EqualTo(["Cat1", "Cat2"]));
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NameFilter_ReturnsOnlyMatchingCategories()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.AddRange(
+                new RecipeCategory { Name = "Main", DisplaySequence = 1, UserId = "user1" },
+                new RecipeCategory { Name = "Dessert", DisplaySequence = 2, UserId = "user1" });
+            await ctx.SaveChangesAsync();
+
+            var filters = new[] { new FilterItem(nameof(RecipeCategory.Name), "Main", FilterOperator.Contains) };
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync("user1", filters, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(items.Single().Name, Is.EqualTo("Main"));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_Paging_ReturnsRequestedPageAndSkip()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            for (var i = 1; i <= 5; i++)
+                ctx.RecipeCategories.Add(new RecipeCategory { Name = $"Cat{i}", DisplaySequence = i, UserId = "user1" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, skip) = await repo.SearchByUserAsync("user1", null, null, 2, 2, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(5));
+                Assert.That(skip, Is.EqualTo(2));
+                Assert.That(items.Select(x => x.Name), Is.EqualTo(["Cat3", "Cat4"]));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NoMatches_ReturnsEmptyWithZeroTotalCount()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.RecipeCategories.Add(new RecipeCategory { Name = "Cat1", DisplaySequence = 1, UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync("user1", null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(items, Is.Empty);
+                Assert.That(totalCount, Is.Zero);
+            }
         }
     }
 }

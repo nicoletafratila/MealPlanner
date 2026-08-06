@@ -1,5 +1,6 @@
 using Common.Data.DataContext;
 using Common.Data.Repository;
+using Common.Pagination;
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Data.Entities;
 
@@ -47,6 +48,23 @@ namespace RecipeBook.Api.Repositories
                 Context.Entry(entity).Property(c => c.DisplaySequence).IsModified = true;
 
             await Context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<PagedQueryResult<RecipeCategory>> SearchByUserAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            IQueryable<RecipeCategory> query = Context.RecipeCategories
+                .Where(c => c.UserId == userId)
+                .OrderBy(c => c.DisplaySequence);
+
+            var filtered = query.ApplyFilters(filters).ApplySorting(sorting);
+
+            return await filtered.ToPagedResultAsync(pageNumber, pageSize, cancellationToken);
         }
     }
 }

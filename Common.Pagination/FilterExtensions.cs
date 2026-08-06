@@ -5,7 +5,34 @@ namespace Common.Pagination
 {
     public static class FilterExtensions
     {
-        public static Func<T, bool> ConvertFilterItemToFunc<T>(this FilterItem filter)
+        public static Func<T, bool> ConvertFilterItemToFunc<T>(this FilterItem filter) =>
+            BuildExpression<T>(filter, useStringComparisonOverloads: true).Compile();
+
+        public static Expression<Func<T, bool>> ConvertFilterItemToExpression<T>(this FilterItem filter) =>
+            BuildExpression<T>(filter, useStringComparisonOverloads: true);
+
+        /// <summary>
+        /// Like <see cref="ConvertFilterItemToExpression{T}"/>, but avoids the string.Equals/Contains/StartsWith/EndsWith
+        /// overloads that take a <see cref="StringComparison"/>, since EF Core cannot translate those to SQL. Case
+        /// sensitivity for string operators is delegated to the database's collation instead.
+        /// </summary>
+        public static Expression<Func<T, bool>> ConvertFilterItemToQueryableExpression<T>(this FilterItem filter) =>
+            BuildExpression<T>(filter, useStringComparisonOverloads: false);
+
+        public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> source, IEnumerable<FilterItem>? filters)
+        {
+            ArgumentNullException.ThrowIfNull(source);
+
+            if (filters is null)
+                return source;
+
+            foreach (var filter in filters)
+                source = source.Where(filter.ConvertFilterItemToQueryableExpression<T>());
+
+            return source;
+        }
+
+        private static Expression<Func<T, bool>> BuildExpression<T>(FilterItem filter, bool useStringComparisonOverloads)
         {
             ArgumentNullException.ThrowIfNull(filter);
 
@@ -30,6 +57,8 @@ namespace Common.Pagination
             {
                 if (underlyingType.IsEnum && filterValue is string enumString)
                     filterValue = Enum.Parse(underlyingType, enumString, ignoreCase: true);
+                else if (underlyingType == typeof(Guid) && filterValue is string guidString)
+                    filterValue = Guid.Parse(guidString);
                 else
                     filterValue = Convert.ChangeType(filterValue, underlyingType);
             }
@@ -50,14 +79,14 @@ namespace Common.Pagination
             {
                 FilterOperator.Equals =>
                     propertyType == typeof(string)
-                        ? BuildStringEqualsCall(member, Expression.Constant(filterValue, propertyType), filter.StringComparison)
+                        ? BuildStringEquals(member, Expression.Constant(filterValue, propertyType), filter.StringComparison, useStringComparisonOverloads)
                         : isNullable
                             ? Expression.AndAlso(hasValue, Expression.Equal(valueAccess, constant))
                             : Expression.Equal(member, constant),
 
                 FilterOperator.NotEquals =>
                     propertyType == typeof(string)
-                        ? Expression.Not(BuildStringEqualsCall(member, Expression.Constant(filterValue, propertyType), filter.StringComparison))
+                        ? Expression.Not(BuildStringEquals(member, Expression.Constant(filterValue, propertyType), filter.StringComparison, useStringComparisonOverloads))
                         : isNullable
                             ? Expression.OrElse(Expression.Not(hasValue), Expression.NotEqual(valueAccess, constant))
                             : Expression.NotEqual(member, constant),
@@ -83,22 +112,22 @@ namespace Common.Pagination
                         : Expression.GreaterThanOrEqual(member, constant),
 
                 FilterOperator.Contains =>
-                    BuildStringMethodCall(member, Expression.Constant(filterValue, propertyType), nameof(string.Contains), filter.StringComparison),
+                    BuildStringMethodCall(member, Expression.Constant(filterValue, propertyType), nameof(string.Contains), filter.StringComparison, useStringComparisonOverloads),
 
                 FilterOperator.StartsWith =>
-                    BuildStringMethodCall(member, Expression.Constant(filterValue, propertyType), nameof(string.StartsWith), filter.StringComparison),
+                    BuildStringMethodCall(member, Expression.Constant(filterValue, propertyType), nameof(string.StartsWith), filter.StringComparison, useStringComparisonOverloads),
 
                 FilterOperator.EndsWith =>
-                    BuildStringMethodCall(member, Expression.Constant(filterValue, propertyType), nameof(string.EndsWith), filter.StringComparison),
+                    BuildStringMethodCall(member, Expression.Constant(filterValue, propertyType), nameof(string.EndsWith), filter.StringComparison, useStringComparisonOverloads),
 
                 _ => throw new NotSupportedException($"Operator {filter.Operator} is not supported")
             };
 
-            return Expression.Lambda<Func<T, bool>>(body, parameter).Compile();
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
-        private static BinaryExpression BuildStringEqualsCall(
-            MemberExpression member, ConstantExpression constant, StringComparison comparison)
+        private static BinaryExpression BuildStringEquals(
+            MemberExpression member, ConstantExpression constant, StringComparison comparison, bool useStringComparisonOverloads)
         {
             if (member.Type != typeof(string))
                 throw new NotSupportedException("Operator Equals with StringComparison is only supported for string properties.");
@@ -106,6 +135,10 @@ namespace Common.Pagination
                 throw new ArgumentException("Filter value for operator Equals cannot be null.");
 
             var notNull = Expression.NotEqual(member, Expression.Constant(null, typeof(string)));
+
+            if (!useStringComparisonOverloads)
+                return Expression.AndAlso(notNull, Expression.Equal(member, constant));
+
             var equalsMethod = typeof(string).GetMethod(nameof(string.Equals), [typeof(string), typeof(string), typeof(StringComparison)])
                 ?? throw new InvalidOperationException("Could not find string.Equals(string, string, StringComparison) overload.");
             var call = Expression.Call(equalsMethod, member, constant, Expression.Constant(comparison));
@@ -113,16 +146,24 @@ namespace Common.Pagination
         }
 
         private static BinaryExpression BuildStringMethodCall(
-            MemberExpression member, ConstantExpression constant, string methodName, StringComparison comparison)
+            MemberExpression member, ConstantExpression constant, string methodName, StringComparison comparison, bool useStringComparisonOverloads)
         {
             if (member.Type != typeof(string))
                 throw new NotSupportedException($"Operator {methodName} is only supported for string properties.");
             if (constant.Value is null)
                 throw new ArgumentException($"Filter value for operator {methodName} cannot be null.");
 
+            var notNull = Expression.NotEqual(member, Expression.Constant(null, typeof(string)));
+
+            if (!useStringComparisonOverloads)
+            {
+                var plainMethod = typeof(string).GetMethod(methodName, [typeof(string)])
+                    ?? throw new InvalidOperationException($"Could not find string.{methodName}(string) overload.");
+                return Expression.AndAlso(notNull, Expression.Call(member, plainMethod, constant));
+            }
+
             var method = typeof(string).GetMethod(methodName, [typeof(string), typeof(StringComparison)])
                 ?? throw new InvalidOperationException($"Could not find string.{methodName}(string, StringComparison) overload.");
-            var notNull = Expression.NotEqual(member, Expression.Constant(null, typeof(string)));
             var call = Expression.Call(member, method, constant, Expression.Constant(comparison));
             return Expression.AndAlso(notNull, call);
         }

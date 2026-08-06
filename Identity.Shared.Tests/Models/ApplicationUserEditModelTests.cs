@@ -24,12 +24,12 @@ namespace Identity.Shared.Tests.Models
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(model.Username, Is.EqualTo(string.Empty));
-                Assert.That(model.EmailAddress, Is.EqualTo(string.Empty));
+                Assert.That(model.Email, Is.EqualTo(string.Empty));
                 Assert.That(model.IsLockedOut, Is.False);
 
                 Assert.That(isValid, Is.False);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.Username))), Is.True);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.EmailAddress))), Is.True);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.Email))), Is.True);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Identity.Shared.Tests.Models
                 Username = "user1",
                 FirstName = "John",
                 LastName = "Doe",
-                EmailAddress = "john.doe@example.com",
+                Email = "john.doe@example.com",
                 PhoneNumber = "+123456789",
                 IsActive = true
             };
@@ -65,7 +65,7 @@ namespace Identity.Shared.Tests.Models
             var model = new ApplicationUserEditModel
             {
                 Username = "",
-                EmailAddress = "test@example.com"
+                Email = "test@example.com"
             };
 
             var isValid = TryValidate(model, out var results);
@@ -78,13 +78,13 @@ namespace Identity.Shared.Tests.Models
         }
 
         [Test]
-        public void EmailAddress_Required_And_MustBeValidFormat()
+        public void Email_Required_And_MustBeValidFormat()
         {
             // Missing email
             var model = new ApplicationUserEditModel
             {
                 Username = "user1",
-                EmailAddress = ""
+                Email = ""
             };
 
             var isValid = TryValidate(model, out var results);
@@ -92,21 +92,21 @@ namespace Identity.Shared.Tests.Models
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.EmailAddress))), Is.True);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.Email))), Is.True);
             }
 
             // Invalid format
-            model.EmailAddress = "not-an-email";
+            model.Email = "not-an-email";
             isValid = TryValidate(model, out results);
 
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.EmailAddress))), Is.True);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ApplicationUserEditModel.Email))), Is.True);
             }
 
             // Valid email
-            model.EmailAddress = "valid@example.com";
+            model.Email = "valid@example.com";
             isValid = TryValidate(model, out results);
 
             Assert.That(isValid, Is.True);
@@ -118,7 +118,7 @@ namespace Identity.Shared.Tests.Models
             var model = new ApplicationUserEditModel
             {
                 Username = "user1",
-                EmailAddress = "user1@example.com",
+                Email = "user1@example.com",
                 FirstName = "John Doe"
             };
 
@@ -142,7 +142,7 @@ namespace Identity.Shared.Tests.Models
             var model = new ApplicationUserEditModel
             {
                 Username = "user1",
-                EmailAddress = "user1@example.com",
+                Email = "user1@example.com",
                 LastName = "Smith Jr"
             };
 

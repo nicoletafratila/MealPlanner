@@ -63,7 +63,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
             Assert.That(result, Is.Not.Null);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.EmailAddress, Is.Null.Or.Empty);
+                Assert.That(result.Email, Is.Null.Or.Empty);
                 Assert.That(result.Username, Is.Null.Or.Empty);
             }
 
@@ -86,7 +86,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
             {
                 UserId = "1",
                 Username = "alice",
-                EmailAddress = "alice@example.com",
+                Email = "alice@example.com",
                 IsActive = true
             };
 
@@ -109,7 +109,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.GetEdit
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.UserId, Is.EqualTo("1"));
                 Assert.That(result.Username, Is.EqualTo("alice"));
-                Assert.That(result.EmailAddress, Is.EqualTo("alice@example.com"));
+                Assert.That(result.Email, Is.EqualTo("alice@example.com"));
             }
 
             _userManagerMock.Verify(m => m.FindByNameAsync("alice"), Times.Once);

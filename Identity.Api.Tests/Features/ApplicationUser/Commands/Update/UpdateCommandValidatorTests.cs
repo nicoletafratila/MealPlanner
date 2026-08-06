@@ -33,7 +33,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "",
-                    EmailAddress = "user@example.com"
+                    Email = "user@example.com"
                 }
             };
 
@@ -43,20 +43,20 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
         }
 
         [Test]
-        public void EmailAddress_Empty_HasValidationError()
+        public void Email_Empty_HasValidationError()
         {
             var command = new UpdateCommand
             {
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "1",
-                    EmailAddress = ""
+                    Email = ""
                 }
             };
 
             var result = _validator.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(x => x.Model!.EmailAddress);
+            result.ShouldHaveValidationErrorFor(x => x.Model!.Email);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 {
                     UserId = "1",
                     Username = "user",
-                    EmailAddress = "user@example.com"
+                    Email = "user@example.com"
                 }
             };
 

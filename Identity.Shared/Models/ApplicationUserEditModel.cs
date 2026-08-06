@@ -44,7 +44,7 @@ namespace Identity.Shared.Models
         /// </summary>
         [Required(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressRequired), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
         [EmailAddress(ErrorMessageResourceName = nameof(IdentitySharedMessages.EmailAddressInvalid), ErrorMessageResourceType = typeof(IdentitySharedMessages))]
-        public string EmailAddress { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }
 

@@ -8,5 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Common.Data.DataContext\Common.Data.DataContext.csproj" />
     <ProjectReference Include="..\Common.Data.Entities\Common.Data.Entities.csproj" />
+    <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
   </ItemGroup>
 </Project>

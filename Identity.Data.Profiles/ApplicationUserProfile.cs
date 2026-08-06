@@ -15,7 +15,7 @@ namespace Identity.Data.Profiles
                 .ForMember(m => m.Username, o => o.MapFrom(s => s.UserName))
                 .ForMember(m => m.FirstName, o => o.MapFrom(s => s.FirstName))
                 .ForMember(m => m.LastName, o => o.MapFrom(s => s.LastName))
-                .ForMember(m => m.EmailAddress, o => o.MapFrom(s => s.Email))
+                .ForMember(m => m.Email, o => o.MapFrom(s => s.Email))
                 .ForMember(m => m.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber))
                 .ForMember(
                     m => m.ProfilePictureUrl,
@@ -40,7 +40,7 @@ namespace Identity.Data.Profiles
                         $"data:image/jpg;base64,{Convert.ToBase64String(s.ProfilePicture ?? Array.Empty<byte>())}"
                     ))
                 .ForMember(m => m.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber))
-                .ForMember(m => m.EmailAddress, o => o.MapFrom(s => s.Email))
+                .ForMember(m => m.Email, o => o.MapFrom(s => s.Email))
                 .ForMember(m => m.IsActive, o => o.MapFrom(s => s.IsActive))
                 .ForMember(m => m.IsLockedOut, o => o.MapFrom(s =>
                     s.LockoutEnd.HasValue && s.LockoutEnd > DateTimeOffset.UtcNow))

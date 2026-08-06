@@ -32,7 +32,7 @@
             <Label Text="{Binding Model.Username}" />
 
             <Label Text="{x:Static res:UserProfilePage.EmailLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.EmailAddress}" Keyboard="Email" />
+            <Entry Text="{Binding Model.Email}" Keyboard="Email" />
 
             <Label Text="{x:Static res:UserProfilePage.FirstNameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.FirstName}" />

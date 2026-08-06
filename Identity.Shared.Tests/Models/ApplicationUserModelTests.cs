@@ -16,7 +16,7 @@ namespace Identity.Shared.Tests.Models
                 Assert.That(model.Username, Is.EqualTo(string.Empty));
                 Assert.That(model.FirstName, Is.Null);
                 Assert.That(model.LastName, Is.Null);
-                Assert.That(model.EmailAddress, Is.Null);
+                Assert.That(model.Email, Is.Null);
                 Assert.That(model.IsActive, Is.False);
                 Assert.That(model.IsLockedOut, Is.False);
                 Assert.That(model.Index, Is.Zero);
@@ -33,7 +33,7 @@ namespace Identity.Shared.Tests.Models
                 Username = "alice",
                 FirstName = "Alice",
                 LastName = "Smith",
-                EmailAddress = "alice@example.com",
+                Email = "alice@example.com",
                 IsActive = true,
                 IsLockedOut = true,
                 Index = 3
@@ -45,7 +45,7 @@ namespace Identity.Shared.Tests.Models
                 Assert.That(model.Username, Is.EqualTo("alice"));
                 Assert.That(model.FirstName, Is.EqualTo("Alice"));
                 Assert.That(model.LastName, Is.EqualTo("Smith"));
-                Assert.That(model.EmailAddress, Is.EqualTo("alice@example.com"));
+                Assert.That(model.Email, Is.EqualTo("alice@example.com"));
                 Assert.That(model.IsActive, Is.True);
                 Assert.That(model.IsLockedOut, Is.True);
                 Assert.That(model.Index, Is.EqualTo(3));

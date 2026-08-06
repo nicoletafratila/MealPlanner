@@ -1,5 +1,6 @@
 using Common.Data.DataContext;
 using Common.Data.Repository;
+using Common.Pagination;
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Data.Entities;
 
@@ -20,6 +21,23 @@ namespace RecipeBook.Api.Repositories
             return await Context.ProductCategories
                 .Where(c => c.UserId == userId)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<PagedQueryResult<ProductCategory>> SearchByUserAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            IQueryable<ProductCategory> query = Context.ProductCategories
+                .Where(c => c.UserId == userId)
+                .OrderBy(c => c.Id);
+
+            var filtered = query.ApplyFilters(filters).ApplySorting(sorting);
+
+            return await filtered.ToPagedResultAsync(pageNumber, pageSize, cancellationToken);
         }
     }
 }

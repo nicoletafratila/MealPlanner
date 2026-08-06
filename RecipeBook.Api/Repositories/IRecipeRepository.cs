@@ -1,4 +1,5 @@
 using Common.Data.Repository;
+using Common.Pagination;
 using RecipeBook.Data.Entities;
 
 namespace RecipeBook.Api.Repositories
@@ -24,5 +25,17 @@ namespace RecipeBook.Api.Repositories
         /// Finds a recipe by name (case-insensitive) scoped to a user, or null if not found.
         /// </summary>
         Task<Recipe?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Filters, sorts, and pages recipes for a user at the database level, returning only the requested page.
+        /// </summary>
+        Task<PagedQueryResult<Recipe>> SearchByUserAsync(
+            string userId,
+            Guid? categoryId,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken);
     }
 }

@@ -64,7 +64,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
             });
             _tokenProviderMock.Setup(x => x.GetTokenAsync(CancellationToken.None)).ReturnsAsync(jwt);
 
-            var editModel = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com", IsLockedOut = false };
+            var editModel = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", IsLockedOut = false };
             _userServiceMock.Setup(x => x.GetEditAsync("alice", CancellationToken.None)).ReturnsAsync(editModel);
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -91,7 +91,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
             });
             _tokenProviderMock.Setup(x => x.GetTokenAsync(CancellationToken.None)).ReturnsAsync(jwt);
 
-            var editModel = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com" };
+            var editModel = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com" };
             _userServiceMock.Setup(x => x.GetEditAsync("alice", CancellationToken.None)).ReturnsAsync(editModel);
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -111,7 +111,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
 
             _viewModel.Username = "bob";
 
-            var editModel = new ApplicationUserEditModel { Username = "bob", EmailAddress = "bob@test.com" };
+            var editModel = new ApplicationUserEditModel { Username = "bob", Email = "bob@test.com" };
             _userServiceMock.Setup(x => x.GetEditAsync("bob", CancellationToken.None)).ReturnsAsync(editModel);
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -137,7 +137,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
             });
             _tokenProviderMock.Setup(x => x.GetTokenAsync(CancellationToken.None)).ReturnsAsync(jwt);
 
-            var editModel = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com", ProfilePictureUrl = "https://example.com/pic.jpg" };
+            var editModel = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", ProfilePictureUrl = "https://example.com/pic.jpg" };
             _userServiceMock.Setup(x => x.GetEditAsync("alice", CancellationToken.None)).ReturnsAsync(editModel);
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -161,7 +161,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task SaveAsync_EmptyUsername_SetsErrorAndDoesNotCallService()
         {
-            _viewModel.Model = new ApplicationUserEditModel { Username = string.Empty, EmailAddress = "alice@test.com" };
+            _viewModel.Model = new ApplicationUserEditModel { Username = string.Empty, Email = "alice@test.com" };
 
             await _viewModel.SaveCommand.ExecuteAsync(null);
 
@@ -172,7 +172,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task SaveAsync_EmptyEmail_SetsErrorAndDoesNotCallService()
         {
-            _viewModel.Model = new ApplicationUserEditModel { Username = "alice", EmailAddress = string.Empty };
+            _viewModel.Model = new ApplicationUserEditModel { Username = "alice", Email = string.Empty };
 
             await _viewModel.SaveCommand.ExecuteAsync(null);
 
@@ -183,7 +183,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task SaveAsync_Success_OwnProfile_CallsUpdateAsync()
         {
-            var model = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com" };
+            var model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com" };
             _viewModel.Model = model;
             // IsOwnProfile defaults to true, so no Shell.Current navigation happens on success.
 
@@ -202,7 +202,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task SaveAsync_Failure_SetsErrorMessage()
         {
-            var model = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com" };
+            var model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com" };
             _viewModel.Model = model;
 
             _userServiceMock.Setup(x => x.UpdateAsync(model, CancellationToken.None)).ReturnsAsync(CommandResponse.Failed("Username already in use"));
@@ -215,7 +215,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task UnlockAsync_ModelUserIdEmpty_DoesNotCallService()
         {
-            _viewModel.Model = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com", UserId = string.Empty };
+            _viewModel.Model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", UserId = string.Empty };
 
             await _viewModel.UnlockCommand.ExecuteAsync(null);
 
@@ -225,7 +225,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task UnlockAsync_Success_SetsIsLockedOutFalseAndSuccessMessage()
         {
-            var model = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com", UserId = "user-1", IsLockedOut = true };
+            var model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", UserId = "user-1", IsLockedOut = true };
             _viewModel.Model = model;
             _viewModel.IsLockedOut = true;
 
@@ -244,7 +244,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         [Test]
         public async Task UnlockAsync_Failure_SetsErrorMessageAndKeepsLockedOut()
         {
-            var model = new ApplicationUserEditModel { Username = "alice", EmailAddress = "alice@test.com", UserId = "user-1", IsLockedOut = true };
+            var model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", UserId = "user-1", IsLockedOut = true };
             _viewModel.Model = model;
             _viewModel.IsLockedOut = true;
 

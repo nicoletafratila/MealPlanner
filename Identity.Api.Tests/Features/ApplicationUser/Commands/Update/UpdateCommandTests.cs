@@ -24,7 +24,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
             {
                 UserId = "1",
                 Username = "user",
-                EmailAddress = "user@example.com"
+                Email = "user@example.com"
             };
 
             // Act
@@ -53,7 +53,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
             {
                 UserId = "2",
                 Username = "other",
-                EmailAddress = "other@example.com"
+                Email = "other@example.com"
             };
 
             // Act

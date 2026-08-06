@@ -46,7 +46,7 @@ namespace Identity.Data.Profiles.Tests
                 Assert.That(result.FirstName, Is.EqualTo("John"));
                 Assert.That(result.LastName, Is.EqualTo("Doe"));
                 Assert.That(result.PhoneNumber, Is.EqualTo("123456"));
-                Assert.That(result.EmailAddress, Is.EqualTo("test@example.com"));
+                Assert.That(result.Email, Is.EqualTo("test@example.com"));
                 Assert.That(result.IsActive, Is.True);
 
                 Assert.That(result.ProfilePictureUrl, Does.StartWith("data:image/jpg;base64,"));
@@ -94,7 +94,7 @@ namespace Identity.Data.Profiles.Tests
                 Assert.That(result.Username, Is.EqualTo("testuser"));
                 Assert.That(result.FirstName, Is.EqualTo("John"));
                 Assert.That(result.LastName, Is.EqualTo("Doe"));
-                Assert.That(result.EmailAddress, Is.EqualTo("test@example.com"));
+                Assert.That(result.Email, Is.EqualTo("test@example.com"));
                 Assert.That(result.IsActive, Is.True);
                 Assert.That(result.Index, Is.Zero);
                 Assert.That(result.IsSelected, Is.False);
@@ -118,7 +118,7 @@ namespace Identity.Data.Profiles.Tests
                 Assert.That(result.Username, Is.EqualTo("minimal"));
                 Assert.That(result.FirstName, Is.Null);
                 Assert.That(result.LastName, Is.Null);
-                Assert.That(result.EmailAddress, Is.Null);
+                Assert.That(result.Email, Is.Null);
                 Assert.That(result.IsActive, Is.False);
             }
         }
@@ -198,7 +198,7 @@ namespace Identity.Data.Profiles.Tests
                 FirstName = "Alice",
                 LastName = "Smith",
                 PhoneNumber = "555",
-                EmailAddress = "alice@mail.com",
+                Email = "alice@mail.com",
                 IsActive = false
             };
 

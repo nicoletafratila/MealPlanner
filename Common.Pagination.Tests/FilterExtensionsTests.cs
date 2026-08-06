@@ -6,6 +6,7 @@ namespace Common.Pagination.Tests
     public class FilterExtensionsTests
     {
         private sealed record DateItem(DateTime? CreatedAt);
+        private sealed record GuidItem(Guid CategoryId);
 
         [Test]
         public void ConvertFilterItemToFunc_Throws_When_Filter_Is_Null()
@@ -390,6 +391,101 @@ namespace Common.Pagination.Tests
                 () => filter.ConvertFilterItemToFunc<RecipeModel>(),
                 Throws.TypeOf<ArgumentException>()
                       .With.Message.Contains("cannot be null"));
+        }
+
+        [Test]
+        public void Equals_Guid_Works_With_String_Value()
+        {
+            var matchingId = Guid.NewGuid();
+            var data = new[]
+            {
+                new GuidItem(matchingId),
+                new GuidItem(Guid.NewGuid())
+            };
+
+            var filter = new FilterItem(
+                propertyName: nameof(GuidItem.CategoryId),
+                value: matchingId.ToString(),
+                @operator: FilterOperator.Equals,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var predicate = filter.ConvertFilterItemToFunc<GuidItem>();
+            var result = data.Where(predicate).ToArray();
+
+            Assert.That(result, Has.Length.EqualTo(1));
+            Assert.That(result[0].CategoryId, Is.EqualTo(matchingId));
+        }
+
+        [Test]
+        public void ConvertFilterItemToQueryableExpression_Equals_MatchesOverIQueryable()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Name = "John", RecipeCategoryName = "a" },
+                new RecipeModel { Name = "Jane", RecipeCategoryName = "b" }
+            }.AsQueryable();
+
+            var filter = new FilterItem(
+                propertyName: nameof(RecipeModel.RecipeCategoryName),
+                value: "a",
+                @operator: FilterOperator.Equals,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var result = data.Where(filter.ConvertFilterItemToQueryableExpression<RecipeModel>()).ToArray();
+
+            Assert.That(result, Has.Length.EqualTo(1));
+            Assert.That(result[0].Name, Is.EqualTo("John"));
+        }
+
+        [Test]
+        public void ConvertFilterItemToQueryableExpression_Contains_MatchesOverIQueryable()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Name = "Alice" },
+                new RecipeModel { Name = "Bob" }
+            }.AsQueryable();
+
+            var filter = new FilterItem(
+                propertyName: nameof(RecipeModel.Name),
+                value: "lic",
+                @operator: FilterOperator.Contains,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var result = data.Where(filter.ConvertFilterItemToQueryableExpression<RecipeModel>()).ToArray();
+
+            Assert.That(result.Select(x => x.Name), Is.EquivalentTo(["Alice"]));
+        }
+
+        [Test]
+        public void ApplyFilters_NullFilters_ReturnsSourceUnchanged()
+        {
+            var data = new[] { new RecipeModel { Name = "Alice" }, new RecipeModel { Name = "Bob" } }.AsQueryable();
+
+            var result = data.ApplyFilters(null).ToArray();
+
+            Assert.That(result.Select(x => x.Name), Is.EquivalentTo(["Alice", "Bob"]));
+        }
+
+        [Test]
+        public void ApplyFilters_MultipleFilters_AppliesEachAsAnd()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Name = "Alice", RecipeCategoryName = "a" },
+                new RecipeModel { Name = "Alicia", RecipeCategoryName = "b" },
+                new RecipeModel { Name = "Bob", RecipeCategoryName = "a" }
+            }.AsQueryable();
+
+            var filters = new[]
+            {
+                new FilterItem(nameof(RecipeModel.Name), "Ali", FilterOperator.StartsWith),
+                new FilterItem(nameof(RecipeModel.RecipeCategoryName), "a", FilterOperator.Equals)
+            };
+
+            var result = data.ApplyFilters(filters).ToArray();
+
+            Assert.That(result.Select(x => x.Name), Is.EquivalentTo(["Alice"]));
         }
     }
 }

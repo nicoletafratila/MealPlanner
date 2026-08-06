@@ -1,4 +1,5 @@
 using Common.Data.DataContext;
+using Common.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
@@ -357,6 +358,160 @@ namespace RecipeBook.Api.Tests.Repositories
             // Act / Assert
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.UpdateAsync(null!, CancellationToken.None));
+        }
+
+        // ---------- SearchByUserAsync ----------
+        [Test]
+        public async Task SearchByUserAsync_ScopesToUser_WithCategoryIncluded()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = "user1";
+            r2.UserId = "user2";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, skip) = await repo.SearchByUserAsync(
+                "user1", null, null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(items, Has.Count.EqualTo(1));
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(skip, Is.Zero);
+                Assert.That(items.Single().Name, Is.EqualTo("R1"));
+                Assert.That(items.Single().RecipeCategory, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_CategoryIdFilter_ReturnsOnlyMatchingCategory()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
+            var r3 = new Recipe { Id = RecipeGuid(3), Name = "R3", RecipeCategoryId = r1.RecipeCategoryId, RecipeCategory = r1.RecipeCategory };
+            r1.UserId = r2.UserId = r3.UserId = "user1";
+            ctx.Recipes.AddRange(r1, r2, r3);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", RecipeCategoryGuid(10), null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(2));
+                Assert.That(items.Select(x => x.Name), Is.EquivalentTo(["R1", "R3"]));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NameFilter_ReturnsOnlyMatchingRecipes()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "My Recipe", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "Other", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = r2.UserId = "user1";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            var filters = new[] { new FilterItem(nameof(Recipe.Name), "My Recipe", FilterOperator.Contains) };
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", null, filters, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(items.Single().Name, Is.EqualTo("My Recipe"));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_Sorting_ReturnsSortedByRequestedProperty()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "Bravo", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "Alpha", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = r2.UserId = "user1";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            var sorting = new[] { new SortingModel { PropertyName = nameof(Recipe.Name), Direction = SortDirection.Ascending } };
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync(
+                "user1", null, null, sorting, 1, 10, CancellationToken.None);
+
+            // Assert
+            Assert.That(items.Select(x => x.Name), Is.EqualTo(["Alpha", "Bravo"]));
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_Paging_ReturnsRequestedPageAndSkip()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            for (var i = 1; i <= 5; i++)
+            {
+                var r = CreateRecipeGraph(RecipeGuid(i), $"R{i}", RecipeCategoryGuid(i), $"Cat{i}");
+                r.UserId = "user1";
+                ctx.Recipes.Add(r);
+            }
+            await ctx.SaveChangesAsync();
+
+            var sorting = new[] { new SortingModel { PropertyName = nameof(Recipe.Name), Direction = SortDirection.Ascending } };
+
+            // Act
+            var (items, totalCount, skip) = await repo.SearchByUserAsync(
+                "user1", null, null, sorting, 2, 2, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(5));
+                Assert.That(skip, Is.EqualTo(2));
+                Assert.That(items.Select(x => x.Name), Is.EqualTo(["R3", "R4"]));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_NoMatches_ReturnsEmptyWithZeroTotalCount()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            r1.UserId = "user2";
+            ctx.Recipes.Add(r1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", null, null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(items, Is.Empty);
+                Assert.That(totalCount, Is.Zero);
+            }
         }
     }
 }

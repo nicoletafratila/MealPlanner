@@ -59,17 +59,14 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            VerifySearchByUserAsyncNeverCalled();
             _mapperMock.Verify(m => m.Map<IList<ShopModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
         public async Task Handle_NullQueryParameters_ReturnsEmptyPagedList()
         {
-            var query = new SearchQuery
-            {
-                QueryParameters = null
-            };
+            var query = new SearchQuery { QueryParameters = null };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -78,12 +75,12 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            VerifySearchByUserAsyncNeverCalled();
             _mapperMock.Verify(m => m.Map<IList<ShopModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
-        public async Task Handle_NoFiltersOrSorting_MapsAndPaginatesAllResults()
+        public async Task Handle_NoFiltersOrSorting_MapsPageAndSetsIndexes()
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
@@ -100,120 +97,64 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
             };
 
             _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+                .Setup(r => r.SearchByUserAsync("user1", null, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Shop>(entities, 2, 0));
+            _mapperMock.Setup(m => m.Map<IList<ShopModel>>(entities)).Returns(models);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ShopModel>>(entities))
-                .Returns(models);
-
-            var qp = new QueryParameters<ShopModel>
-            {
-                Filters = null,
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ShopModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            Assert.That(result.Items.Count, Is.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Id), Is.EquivalentTo(new[] { id1, id2 }));
+                Assert.That(result.Items, Has.Count.EqualTo(2));
+                Assert.That(result.Items.Select(x => x.Index), Is.EqualTo([1, 2]));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
-            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", null, null, 1, 10, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ShopModel>>(entities), Times.Once);
         }
 
         [Test]
-        public async Task Handle_WithFilters_ReturnsOnlyMatchingItems()
+        public async Task Handle_WithFilters_PassesFiltersToRepositoryAndMapsResult()
         {
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
-            var entities = new List<Data.Entities.Shop>
-            {
-                new() { Id = id1, Name = "Shop1" },
-                new() { Id = id2, Name = "Shop2" }
-            };
-
-            var models = new List<ShopModel>
-            {
-                new() { Id = id1, Name = "Shop1" },
-                new() { Id = id2, Name = "Shop2" }
-            };
+            var filters = new List<FilterItem> { new(nameof(ShopModel.Name), "Shop1", FilterOperator.Equals) };
+            var entities = new List<Data.Entities.Shop> { new() { Id = Guid.NewGuid(), Name = "Shop1" } };
+            var models = new List<ShopModel> { new() { Name = "Shop1" } };
 
             _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+                .Setup(r => r.SearchByUserAsync("user1", filters, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Shop>(entities, 1, 0));
+            _mapperMock.Setup(m => m.Map<IList<ShopModel>>(entities)).Returns(models);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ShopModel>>(entities))
-                .Returns(models);
-
-            var qp = new QueryParameters<ShopModel>
-            {
-                Filters = [new FilterItem(nameof(ShopModel.Name), "Shop1", FilterOperator.Equals)],
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ShopModel> { Filters = filters, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            Assert.That(result.Items, Has.Count.EqualTo(1));
             Assert.That(result.Items.Single().Name, Is.EqualTo("Shop1"));
         }
 
         [Test]
-        public async Task Handle_WithSorting_ReturnsSortedItems()
+        public async Task Handle_WithSorting_PassesSortingToRepositoryAndMapsResult()
         {
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
+            var sorting = new List<SortingModel> { new() { PropertyName = nameof(ShopModel.Name), Direction = SortDirection.Ascending } };
             var entities = new List<Data.Entities.Shop>
             {
-                new() { Id = id1, Name = "Shop2" },
-                new() { Id = id2, Name = "Shop1" }
+                new() { Id = Guid.NewGuid(), Name = "Shop1" },
+                new() { Id = Guid.NewGuid(), Name = "Shop2" }
             };
-
-            var models = new List<ShopModel>
-            {
-                new() { Id = id1, Name = "Shop2" },
-                new() { Id = id2, Name = "Shop1" }
-            };
+            var models = new List<ShopModel> { new() { Name = "Shop1" }, new() { Name = "Shop2" } };
 
             _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+                .Setup(r => r.SearchByUserAsync("user1", null, sorting, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Shop>(entities, 2, 0));
+            _mapperMock.Setup(m => m.Map<IList<ShopModel>>(entities)).Returns(models);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ShopModel>>(entities))
-                .Returns(models);
-
-            var qp = new QueryParameters<ShopModel>
-            {
-                Filters = null,
-                Sorting = [new SortingModel { PropertyName = nameof(ShopModel.Name), Direction = SortDirection.Ascending }],
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ShopModel> { Filters = null, Sorting = sorting, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
@@ -223,42 +164,32 @@ namespace MealPlanner.Api.Tests.Features.Shop.Queries.Search
         [Test]
         public async Task Handle_MapperReturnsNull_HandledAsEmptyList()
         {
-            var entities = new List<Data.Entities.Shop>
-            {
-                new() { Id = Guid.NewGuid(), Name = "Shop1" }
-            };
+            var entities = new List<Data.Entities.Shop> { new() { Id = Guid.NewGuid(), Name = "Shop1" } };
 
             _repoMock
-                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(entities);
+                .Setup(r => r.SearchByUserAsync("user1", null, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Shop>(entities, 1, 0));
+            _mapperMock.Setup(m => m.Map<IList<ShopModel>?>(entities)).Returns((IList<ShopModel>?)null);
 
-            _mapperMock
-                .Setup(m => m.Map<IList<ShopModel>?>(entities))
-                .Returns((IList<ShopModel>?)null);
-
-            var qp = new QueryParameters<ShopModel>
-            {
-                Filters = null,
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-
-            var query = new SearchQuery
-            {
-                QueryParameters = qp
-            };
+            var qp = new QueryParameters<ShopModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Items, Is.Empty);
-                Assert.That(result.Metadata.TotalCount, Is.Zero);
+                Assert.That(result.Metadata.TotalCount, Is.EqualTo(1));
             }
 
-            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", null, null, 1, 10, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ShopModel>>(entities), Times.Once);
         }
+
+        private void VerifySearchByUserAsyncNeverCalled() =>
+            _repoMock.Verify(r => r.SearchByUserAsync(
+                It.IsAny<string>(), It.IsAny<IEnumerable<FilterItem>?>(),
+                It.IsAny<IEnumerable<SortingModel>?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()),
+                Times.Never);
     }
 }

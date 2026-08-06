@@ -68,7 +68,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "   ",
-                    EmailAddress = "user@example.com"
+                    Email = "user@example.com"
                 }
             };
 
@@ -100,7 +100,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "123",
-                    EmailAddress = "user@example.com"
+                    Email = "user@example.com"
                 }
             };
 
@@ -133,7 +133,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "1",
-                    EmailAddress = "bad-email"
+                    Email = "bad-email"
                 }
             };
 
@@ -179,7 +179,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "1",
-                    EmailAddress = "user@example.com"
+                    Email = "user@example.com"
                 }
             };
 
@@ -217,7 +217,7 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Update
                 Model = new ApplicationUserEditModel
                 {
                     UserId = "1",
-                    EmailAddress = "user@example.com"
+                    Email = "user@example.com"
                 }
             };
 

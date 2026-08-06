@@ -92,8 +92,8 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Queries.Search
 
             var models = new List<ApplicationUserModel>
             {
-                new() { UserId = "1", Username = "alice", EmailAddress = "alice@example.com", IsActive = true },
-                new() { UserId = "2", Username = "bob",   EmailAddress = "bob@example.com",   IsActive = false }
+                new() { UserId = "1", Username = "alice", Email = "alice@example.com", IsActive = true },
+                new() { UserId = "2", Username = "bob",   Email = "bob@example.com",   IsActive = false }
             };
 
             _userManagerMock

@@ -1,5 +1,6 @@
 using Common.Data.DataContext;
 using Common.Data.Repository;
+using Common.Pagination;
 using MealPlanner.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Data.Entities;
@@ -161,6 +162,23 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(
                     mp => mp.UserId == userId && mp.Name != null && mp.Name.ToLower() == name.ToLower(),
                     cancellationToken);
+        }
+
+        public async Task<PagedQueryResult<MealPlan>> SearchByUserAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            IQueryable<MealPlan> query = Context.MealPlans
+                .Where(mp => mp.UserId == userId)
+                .OrderBy(mp => mp.Id);
+
+            var filtered = query.ApplyFilters(filters).ApplySorting(sorting);
+
+            return await filtered.ToPagedResultAsync(pageNumber, pageSize, cancellationToken);
         }
     }
 }

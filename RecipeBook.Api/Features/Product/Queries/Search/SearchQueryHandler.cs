@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Common.Pagination;
 using Common.Services;
 using MediatR;
@@ -25,54 +25,25 @@ namespace RecipeBook.Api.Features.Product.Queries.Search
             if (string.IsNullOrEmpty(userId))
                 return new([], new Metadata());
 
-            var entities = await _repository.GetAllByUserAsync(userId, cancellationToken);
-            var models = _mapper.Map<IList<ProductModel>>(entities) ?? [];
-
-            models = ApplyCategoryFilter(models, request.CategoryId);
-            models = ApplyFilters(models, qp);
-            models = ApplySorting(models, qp);
-
-            return models.ToPagedList(qp.PageNumber, qp.PageSize);
-        }
-
-        private static IList<ProductModel> ApplyCategoryFilter(
-            IList<ProductModel> source,
-            string? categoryId)
-        {
-            if (string.IsNullOrWhiteSpace(categoryId))
-                return source;
-
-            return source.Where(p => p.ProductCategoryId == categoryId).ToList();
-        }
-
-        private static IList<ProductModel> ApplyFilters(
-            IList<ProductModel> source,
-            QueryParameters<ProductModel> parameters)
-        {
-            if (parameters.Filters is null || !parameters.Filters.Any())
-                return source;
-
-            var result = source;
-
-            foreach (var filter in parameters.Filters)
+            Guid? categoryId = null;
+            if (!string.IsNullOrWhiteSpace(request.CategoryId))
             {
-                var predicate = filter.ConvertFilterItemToFunc<ProductModel>();
-                result = result.Where(predicate).ToList();
+                // Malformed category ids never match any product, matching the previous DTO-string-comparison behavior.
+                if (!Guid.TryParse(request.CategoryId, out var parsedCategoryId))
+                    return new([], Metadata.Create(qp.PageNumber, qp.PageSize, 0));
+
+                categoryId = parsedCategoryId;
             }
 
-            return result;
-        }
+            var (entities, totalCount, skip) = await _repository.SearchByUserAsync(
+                userId, categoryId, qp.Filters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken);
 
-        private static IList<ProductModel> ApplySorting(
-            IList<ProductModel> source,
-            QueryParameters<ProductModel> parameters)
-        {
-            if (parameters.Sorting is null || !parameters.Sorting.Any())
-                return source;
+            var models = _mapper.Map<IList<ProductModel>>(entities) ?? [];
+            var metadata = Metadata.Create(qp.PageNumber, qp.PageSize, totalCount);
+            for (var i = 0; i < models.Count; i++)
+                models[i].Index = skip + i + 1;
 
-            return source.AsQueryable()
-                         .ApplySorting(parameters.Sorting)!
-                         .ToList();
+            return new PagedList<ProductModel>(models, metadata);
         }
     }
 }

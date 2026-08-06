@@ -56,7 +56,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            VerifySearchByUserAsyncNeverCalled();
             _mapperMock.Verify(m => m.Map<IList<ProductModel>>(It.IsAny<object>()), Times.Never);
         }
 
@@ -72,12 +72,12 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
                 Assert.That(result.Items, Is.Empty);
                 Assert.That(result.Metadata.TotalCount, Is.Zero);
             }
-            _repoMock.Verify(r => r.GetAllByUserAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            VerifySearchByUserAsyncNeverCalled();
             _mapperMock.Verify(m => m.Map<IList<ProductModel>>(It.IsAny<object>()), Times.Never);
         }
 
         [Test]
-        public async Task Handle_NoFiltersSortingOrCategory_MapsAndPaginatesAllResults()
+        public async Task Handle_NoFiltersSortingOrCategory_MapsPageAndSetsIndexes()
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
@@ -89,11 +89,13 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
 
             var models = new List<ProductModel>
             {
-                new() { Id = id1, Name = "P1", ProductCategoryId = "cat1" },
-                new() { Id = id2, Name = "P2", ProductCategoryId = "cat2" }
+                new() { Id = id1, Name = "P1" },
+                new() { Id = id2, Name = "P2" }
             };
 
-            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", null, null, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Product>(entities, 2, 0));
             _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
 
             var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
@@ -101,119 +103,123 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
-            Assert.That(result.Items, Has.Count.EqualTo(2));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.Items.Select(x => x.Name), Is.EquivalentTo(["P1", "P2"]));
+                Assert.That(result.Items, Has.Count.EqualTo(2));
+                Assert.That(result.Items.Select(x => x.Index), Is.EqualTo([1, 2]));
                 Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
             }
 
-            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", null, null, null, 1, 10, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductModel>>(entities), Times.Once);
         }
 
         [Test]
-        public async Task Handle_CategoryFilter_AppliesFilter()
+        public async Task Handle_ValidCategoryId_PassesParsedGuidToRepository()
         {
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
-            var id3 = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
             var entities = new List<Data.Entities.Product>
             {
-                new() { Id = id1, Name = "P1", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = id2, Name = "P2", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = id3, Name = "P3", ProductCategoryId = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid(), Name = "P1", ProductCategoryId = categoryId }
             };
+            var models = new List<ProductModel> { new() { Name = "P1" } };
 
-            var models = new List<ProductModel>
-            {
-                new() { Id = id1, Name = "P1", ProductCategoryId = "10" },
-                new() { Id = id2, Name = "P2", ProductCategoryId = "20" },
-                new() { Id = id3, Name = "P3", ProductCategoryId = "10" },
-            };
-
-            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", categoryId, null, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Product>(entities, 1, 0));
             _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
 
             var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
-            var query = new SearchQuery { CategoryId = "10", QueryParameters = qp };
-
-            var result = await _handler.Handle(query, CancellationToken.None);
-
-            Assert.That(result.Items, Has.Count.EqualTo(2));
-            Assert.That(result.Items.Select(x => x.Name), Is.EquivalentTo(["P1", "P3"]));
-
-            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<IList<ProductModel>>(entities), Times.Once);
-        }
-
-        [Test]
-        public async Task Handle_WithFilters_ReturnsOnlyMatchingItems()
-        {
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
-            var entities = new List<Data.Entities.Product>
-            {
-                new() { Id = id1, Name = "Milk", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = id2, Name = "Bread", ProductCategoryId = Guid.NewGuid() }
-            };
-
-            var models = new List<ProductModel>
-            {
-                new() { Id = id1, Name = "Milk" },
-                new() { Id = id2, Name = "Bread" }
-            };
-
-            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
-            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
-
-            var qp = new QueryParameters<ProductModel>
-            {
-                Filters = [new FilterItem(nameof(ProductModel.Name), "Milk", FilterOperator.Equals)],
-                Sorting = null,
-                PageNumber = 1,
-                PageSize = 10
-            };
-            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
+            var query = new SearchQuery { CategoryId = categoryId.ToString(), QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.That(result.Items, Has.Count.EqualTo(1));
-            Assert.That(result.Items.Single().Name, Is.EqualTo("Milk"));
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", categoryId, null, null, 1, 10, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
-        public async Task Handle_WithSorting_ReturnsSortedItems()
+        public async Task Handle_MalformedCategoryId_ReturnsEmptyWithoutCallingRepository()
         {
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
-            var entities = new List<Data.Entities.Product>
-            {
-                new() { Id = id1, Name = "Milk", ProductCategoryId = Guid.NewGuid() },
-                new() { Id = id2, Name = "Bread", ProductCategoryId = Guid.NewGuid() }
-            };
+            var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = "not-a-guid", QueryParameters = qp };
 
-            var models = new List<ProductModel>
-            {
-                new() { Id = id1, Name = "Milk" },
-                new() { Id = id2, Name = "Bread" }
-            };
+            var result = await _handler.Handle(query, CancellationToken.None);
 
-            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Is.Empty);
+                Assert.That(result.Metadata.TotalCount, Is.Zero);
+            }
+            VerifySearchByUserAsyncNeverCalled();
+        }
+
+        [Test]
+        public async Task Handle_WithFilters_PassesFiltersToRepositoryAndMapsResult()
+        {
+            var filters = new List<FilterItem> { new(nameof(ProductModel.Name), "Milk", FilterOperator.Equals) };
+            var entities = new List<Data.Entities.Product> { new() { Id = Guid.NewGuid(), Name = "Milk" } };
+            var models = new List<ProductModel> { new() { Name = "Milk" } };
+
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", null, filters, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Product>(entities, 1, 0));
             _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
 
-            var qp = new QueryParameters<ProductModel>
+            var qp = new QueryParameters<ProductModel> { Filters = filters, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items.Single().Name, Is.EqualTo("Milk"));
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", null, filters, null, 1, 10, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_WithSorting_PassesSortingToRepositoryAndMapsResult()
+        {
+            var sorting = new List<SortingModel> { new() { PropertyName = nameof(ProductModel.Name), Direction = SortDirection.Ascending } };
+            var entities = new List<Data.Entities.Product>
             {
-                Filters = null,
-                Sorting = [new SortingModel { PropertyName = nameof(ProductModel.Name), Direction = SortDirection.Ascending }],
-                PageNumber = 1,
-                PageSize = 10
+                new() { Id = Guid.NewGuid(), Name = "Bread" },
+                new() { Id = Guid.NewGuid(), Name = "Milk" }
             };
+            var models = new List<ProductModel> { new() { Name = "Bread" }, new() { Name = "Milk" } };
+
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", null, null, sorting, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Product>(entities, 2, 0));
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
+
+            var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = sorting, PageNumber = 1, PageSize = 10 };
             var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.That(result.Items.Select(x => x.Name), Is.EqualTo(["Bread", "Milk"]));
+        }
+
+        [Test]
+        public async Task Handle_SecondPage_SetsIndexesFromSkip()
+        {
+            var entities = new List<Data.Entities.Product> { new() { Id = Guid.NewGuid(), Name = "P11" } };
+            var models = new List<ProductModel> { new() { Name = "P11" } };
+
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", null, null, null, 2, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Product>(entities, 11, 10));
+            _mapperMock.Setup(m => m.Map<IList<ProductModel>>(entities)).Returns(models);
+
+            var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 2, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items.Single().Index, Is.EqualTo(11));
+                Assert.That(result.Metadata.TotalCount, Is.EqualTo(11));
+            }
         }
 
         [Test]
@@ -224,7 +230,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
                 new() { Id = Guid.NewGuid(), Name = "P1", ProductCategoryId = Guid.NewGuid() }
             };
 
-            _repoMock.Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(entities);
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", null, null, null, 1, 10, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Product>(entities, 1, 0));
             _mapperMock.Setup(m => m.Map<IList<ProductModel>?>(entities)).Returns((IList<ProductModel>?)null);
 
             var qp = new QueryParameters<ProductModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
@@ -235,11 +243,17 @@ namespace RecipeBook.Api.Tests.Features.Product.Queries.Search
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.Items, Is.Empty);
-                Assert.That(result.Metadata.TotalCount, Is.Zero);
+                Assert.That(result.Metadata.TotalCount, Is.EqualTo(1));
             }
 
-            _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", null, null, null, 1, 10, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<IList<ProductModel>>(entities), Times.Once);
         }
+
+        private void VerifySearchByUserAsyncNeverCalled() =>
+            _repoMock.Verify(r => r.SearchByUserAsync(
+                It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<IEnumerable<FilterItem>?>(),
+                It.IsAny<IEnumerable<SortingModel>?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()),
+                Times.Never);
     }
 }
