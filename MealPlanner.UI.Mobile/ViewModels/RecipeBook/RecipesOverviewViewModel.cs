@@ -50,7 +50,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
                 Categories = lookupDataService.Categories;
 
-                if (recipesTask.Result is { } result)
+                if (await recipesTask is { } result)
                 {
                     Recipes = new ObservableCollection<RecipeModel>(result.Items);
                     HasNextPage = result.Metadata.HasNextPage;

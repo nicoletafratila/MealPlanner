@@ -83,10 +83,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 var catTask = recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DisplaySequenceSorting });
                 await Task.WhenAll(catTask, lookupDataService.EnsureLoadedAsync(), lookupDataService.EnsureRecipesLoadedAsync());
 
-                if (catTask.Result is not null)
+                var categoryResult = await catTask;
+                if (categoryResult is not null)
                 {
                     var all = new List<RecipeCategoryModel> { new() { Id = Guid.Empty, Name = Pages.RecipeBook.Resources.RecipeEditPage.AllCategoriesOption } };
-                    all.AddRange(catTask.Result.Items);
+                    all.AddRange(categoryResult.Items);
                     Categories = new ObservableCollection<RecipeCategoryModel>(all);
                 }
 

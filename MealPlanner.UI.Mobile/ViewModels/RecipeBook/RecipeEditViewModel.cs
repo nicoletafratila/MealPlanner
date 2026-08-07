@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.UI.Mobile.Services;
+using Microsoft.Maui.Graphics.Platform;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 using RecipeBook.Shared.Resources;
@@ -12,6 +13,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         IRecipeService recipeService,
         ReferenceDataCacheService lookupDataService) : BaseViewModel, IQueryAttributable
     {
+        // Recipe search returns every recipe's image inline for list thumbnails, so keeping
+        // stored images small keeps that endpoint fast for users with many recipes.
+        private const float MaxImageDimension = 1024;
+        private const float ImageQuality = 0.8f;
+
         private RecipeEditModel? _preloadedModel;
 
         [ObservableProperty]
@@ -175,9 +181,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var result = results?.FirstOrDefault();
                 if (result is null) return;
                 await using var stream = await result.OpenReadAsync();
-                using var ms = new MemoryStream();
-                await stream.CopyToAsync(ms);
-                Model.ImageContent = ms.ToArray();
+                Model.ImageContent = await ResizeImageAsync(stream);
                 RecipeImage = ImageSource.FromStream(() => new MemoryStream(Model.ImageContent));
             }
             catch (Exception ex)
@@ -185,6 +189,15 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 SetError(ex.Message);
             }
         }
+
+        private static Task<byte[]> ResizeImageAsync(Stream stream) => Task.Run(() =>
+        {
+            using var image = PlatformImage.FromStream(stream);
+            using var resized = image.Downsize(MaxImageDimension, disposeOriginal: false);
+            using var output = new MemoryStream();
+            resized.Save(output, ImageFormat.Jpeg, ImageQuality);
+            return output.ToArray();
+        });
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SaveAsync()
