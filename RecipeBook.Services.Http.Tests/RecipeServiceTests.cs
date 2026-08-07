@@ -295,6 +295,45 @@ namespace RecipeBook.Services.Http.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
+        [Test]
+        public async Task SearchAsync_DifferentUsers_SharedCache_DoesNotLeakBetweenUsers()
+        {
+            var userAResult = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var userBResult = new PagedList<RecipeModel>([new RecipeModel(), new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(userAResult, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(userBResult, JsonOptions));
+
+            // Simulates the Blazor Server scenario: one IMemoryCache instance shared across
+            // concurrently logged-in users of the same process.
+            var sharedCache = new MemoryCache(new MemoryCacheOptions());
+            var serviceForUserA = CreateService(mockHttp, token: CreateJwt("user-a"), cache: sharedCache);
+            var serviceForUserB = CreateService(mockHttp, token: CreateJwt("user-b"), cache: sharedCache);
+
+            var resultA = await serviceForUserA.SearchAsync();
+            var resultB = await serviceForUserB.SearchAsync();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultA!.Items, Has.Count.EqualTo(1));
+                Assert.That(resultB!.Items, Has.Count.EqualTo(2));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        private static string CreateJwt(string userId)
+        {
+            var header = Base64UrlEncode("{\"alg\":\"none\",\"typ\":\"JWT\"}"u8.ToArray());
+            var payload = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(new { sub = userId }));
+            return $"{header}.{payload}.signature";
+        }
+
+        private static string Base64UrlEncode(byte[] bytes) =>
+            Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
         // ---------- AddAsync ----------
         [Test]
         public async Task AddAsync_PostsModel_AndReturnsCommandResponse()

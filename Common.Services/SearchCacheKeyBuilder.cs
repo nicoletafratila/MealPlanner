@@ -5,7 +5,7 @@ namespace Common.Services
 {
     public static class SearchCacheKeyBuilder
     {
-        public static string Build<T>(string prefix, QueryParameters<T>? queryParameters)
+        public static string Build<T>(string prefix, QueryParameters<T>? queryParameters, string? userId)
         {
             var sorting = queryParameters?.Sorting is null
                 ? null
@@ -14,7 +14,7 @@ namespace Common.Services
                 ? null
                 : JsonSerializer.Serialize(queryParameters.Filters);
 
-            return $"{prefix}:{queryParameters?.PageNumber}:{queryParameters?.PageSize}:{sorting}:{filters}";
+            return $"{prefix}:{userId}:{queryParameters?.PageNumber}:{queryParameters?.PageSize}:{sorting}:{filters}";
         }
     }
 }

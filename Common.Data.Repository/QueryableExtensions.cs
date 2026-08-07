@@ -13,8 +13,6 @@ namespace Common.Data.Repository
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            var totalCount = await source.CountAsync(cancellationToken);
-
             int skip;
             try
             {
@@ -25,9 +23,25 @@ namespace Common.Data.Repository
                 throw new OverflowException("The combination of pageNumber and pageSize caused an overflow.", ex);
             }
 
-            var items = skip >= totalCount
-                ? []
-                : await source.Skip(skip).Take(pageSize).ToListAsync(cancellationToken);
+            // Fetch one row past the page to learn whether more data exists, so the common
+            // "everything fits on one page" case can skip the separate COUNT query below.
+            var probe = await source.Skip(skip).Take(pageSize + 1).ToListAsync(cancellationToken);
+
+            if (probe.Count > 0 && probe.Count <= pageSize)
+            {
+                return new PagedQueryResult<T>(probe, skip + probe.Count, skip);
+            }
+
+            if (probe.Count == 0 && skip == 0)
+            {
+                return new PagedQueryResult<T>([], 0, skip);
+            }
+
+            // The page is full (more pages may follow) or empty with skip > 0 (the requested
+            // page may be past the last one) - either way the exact total is unknowable from
+            // the probe alone.
+            var totalCount = await source.CountAsync(cancellationToken);
+            var items = probe.Count > pageSize ? probe.Take(pageSize).ToList() : probe;
 
             return new PagedQueryResult<T>(items, totalCount, skip);
         }

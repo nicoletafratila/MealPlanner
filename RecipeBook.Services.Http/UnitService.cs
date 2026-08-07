@@ -32,7 +32,8 @@ namespace RecipeBook.Services.Http
 
         public async Task<PagedList<UnitModel>?> SearchAsync(QueryParameters<UnitModel>? queryParameters = null, CancellationToken cancellationToken = default)
         {
-            var cacheKey = SearchCacheKeyBuilder.Build("units", queryParameters);
+            // Units are global reference data (not filtered by user server-side), so no user scoping is needed here.
+            var cacheKey = SearchCacheKeyBuilder.Build("units", queryParameters, userId: null);
             if (cache.TryGetValue(cacheKey, out PagedList<UnitModel>? cached))
             {
                 return cached;
