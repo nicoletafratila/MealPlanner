@@ -1,6 +1,8 @@
 using Common.Models;
 using Common.Pagination;
 using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
 using Moq;
 using RecipeBook.Services.Http;
@@ -13,6 +15,11 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
     {
         private Mock<IStatisticsService> _statisticsServiceMock = null!;
         private Mock<IProductCategoryService> _productCategoryServiceMock = null!;
+        private Mock<IRecipeCategoryService> _lookupRecipeCategoryServiceMock = null!;
+        private Mock<IUnitService> _lookupUnitServiceMock = null!;
+        private Mock<IShopService> _lookupShopServiceMock = null!;
+        private Mock<IProductService> _lookupProductServiceMock = null!;
+        private Mock<IRecipeService> _lookupRecipeServiceMock = null!;
         private ProductStatisticsViewModel _viewModel = null!;
 
         [SetUp]
@@ -20,14 +27,37 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         {
             _statisticsServiceMock = new Mock<IStatisticsService>(MockBehavior.Strict);
             _productCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
-            _viewModel = new ProductStatisticsViewModel(_statisticsServiceMock.Object, _productCategoryServiceMock.Object);
+            _lookupRecipeCategoryServiceMock = new Mock<IRecipeCategoryService>(MockBehavior.Strict);
+            _lookupUnitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
+            _lookupShopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
+            _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
+            _lookupRecipeServiceMock = new Mock<IRecipeService>(MockBehavior.Strict);
+
+            var lookupDataService = new ReferenceDataCacheService(
+                _lookupRecipeCategoryServiceMock.Object,
+                _lookupUnitServiceMock.Object,
+                _lookupProductServiceMock.Object,
+                _productCategoryServiceMock.Object,
+                _lookupShopServiceMock.Object,
+                _lookupRecipeServiceMock.Object);
+
+            _viewModel = new ProductStatisticsViewModel(_statisticsServiceMock.Object, lookupDataService);
         }
 
         private void SetupCategorySearch(List<ProductCategoryModel> categories)
         {
             _productCategoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
-                .ReturnsAsync(new PagedList<ProductCategoryModel>(categories, Metadata.Create(1, 500, categories.Count)));
+                .ReturnsAsync(new PagedList<ProductCategoryModel>(categories, Metadata.Create(1, 200, categories.Count)));
+            _lookupRecipeCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], Metadata.Create(1, 100, 0)));
+            _lookupUnitServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<UnitModel>([], Metadata.Create(1, 100, 0)));
+            _lookupShopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShopModel>([], Metadata.Create(1, 200, 0)));
         }
 
         [Test]

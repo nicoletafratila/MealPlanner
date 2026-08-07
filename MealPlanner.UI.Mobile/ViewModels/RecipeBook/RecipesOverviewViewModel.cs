@@ -6,12 +6,13 @@ using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Mobile.Pages.RecipeBook.Resources;
+using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    public partial class RecipesOverviewViewModel(IRecipeService recipeService, IRecipeCategoryService categoryService, IMealPlanService mealPlanService) : BaseViewModel
+    public partial class RecipesOverviewViewModel(IRecipeService recipeService, ReferenceDataCacheService lookupDataService, IMealPlanService mealPlanService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<RecipeModel> _recipes = [];
@@ -44,18 +45,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 CurrentPage = 1;
                 var filters = BuildFilters();
-                var categoriesTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200 });
                 var recipesTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
-                await Task.WhenAll(categoriesTask, recipesTask);
+                await Task.WhenAll(lookupDataService.EnsureLoadedAsync(), recipesTask);
 
-                if (categoriesTask.Result is { } catResult)
-                    Categories = new ObservableCollection<RecipeCategoryModel>(catResult.Items);
+                Categories = lookupDataService.Categories;
 
                 if (recipesTask.Result is { } result)
                 {
-                    Recipes.Clear();
-                    foreach (var item in result.Items)
-                        Recipes.Add(item);
+                    Recipes = new ObservableCollection<RecipeModel>(result.Items);
                     HasNextPage = result.Metadata.HasNextPage;
                 }
             }
@@ -80,9 +77,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
                 if (result is not null)
                 {
-                    Recipes.Clear();
-                    foreach (var item in result.Items)
-                        Recipes.Add(item);
+                    Recipes = new ObservableCollection<RecipeModel>(result.Items);
                     HasNextPage = result.Metadata.HasNextPage;
                 }
             }

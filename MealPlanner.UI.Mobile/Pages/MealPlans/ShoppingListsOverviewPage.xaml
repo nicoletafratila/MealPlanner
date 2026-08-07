@@ -16,7 +16,7 @@
         <SearchBar Grid.Row="0" Placeholder="{x:Static res:ShoppingListsOverviewPage.PlaceholderSearch}" Text="{Binding SearchText}"
                    SearchCommand="{Binding LoadCommand}" Margin="12,8" />
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-            <CollectionView ItemsSource="{Binding ShoppingLists}">
+            <CollectionView ItemsSource="{Binding ShoppingLists}" ItemSizingStrategy="MeasureFirstItem">
                 <CollectionView.EmptyView>
                     <Label Text="{x:Static res:ShoppingListsOverviewPage.EmptyLabel}" HorizontalOptions="Center" VerticalOptions="Center"
                            TextColor="{StaticResource DarkGray}" Margin="0,40" />
@@ -31,18 +31,18 @@
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
-                            <Frame Style="{StaticResource CardFrame}">
-                                <Frame.GestureRecognizers>
+                            <Border Style="{StaticResource CardFrame}">
+                                <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListsOverviewViewModel}}, Path=EditCommand}"
                                         CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
+                                </Border.GestureRecognizers>
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="{Binding Name}" FontAttributes="Bold" />
                                     <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM dd, yyyy}'}"
                                            FontSize="12" TextColor="{StaticResource DarkGray}" />
                                 </VerticalStackLayout>
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

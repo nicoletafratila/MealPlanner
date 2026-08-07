@@ -4,6 +4,7 @@ using Common.Pagination;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
+using MealPlanner.UI.Mobile.Services;
 using MealPlanner.UI.Mobile.ViewModels.MealPlans;
 using Moq;
 using RecipeBook.Services.Http;
@@ -16,6 +17,11 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
     {
         private Mock<IShopService> _shopServiceMock = null!;
         private Mock<IProductCategoryService> _categoryServiceMock = null!;
+        private Mock<IRecipeCategoryService> _lookupRecipeCategoryServiceMock = null!;
+        private Mock<IUnitService> _lookupUnitServiceMock = null!;
+        private Mock<IShopService> _lookupShopServiceMock = null!;
+        private Mock<IProductService> _lookupProductServiceMock = null!;
+        private Mock<IRecipeService> _lookupRecipeServiceMock = null!;
         private ShopEditViewModel _viewModel = null!;
 
         [SetUp]
@@ -23,7 +29,34 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         {
             _shopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
             _categoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
-            _viewModel = new ShopEditViewModel(_shopServiceMock.Object, _categoryServiceMock.Object);
+            _lookupRecipeCategoryServiceMock = new Mock<IRecipeCategoryService>(MockBehavior.Strict);
+            _lookupUnitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
+            _lookupShopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
+            _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
+            _lookupRecipeServiceMock = new Mock<IRecipeService>(MockBehavior.Strict);
+
+            var lookupDataService = new ReferenceDataCacheService(
+                _lookupRecipeCategoryServiceMock.Object,
+                _lookupUnitServiceMock.Object,
+                _lookupProductServiceMock.Object,
+                _categoryServiceMock.Object,
+                _lookupShopServiceMock.Object,
+                _lookupRecipeServiceMock.Object);
+
+            _viewModel = new ShopEditViewModel(_shopServiceMock.Object, lookupDataService);
+        }
+
+        private void SetupDummyLookups()
+        {
+            _lookupRecipeCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], Metadata.Create(1, 100, 0)));
+            _lookupUnitServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<UnitModel>([], Metadata.Create(1, 100, 0)));
+            _lookupShopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShopModel>([], Metadata.Create(1, 200, 0)));
         }
 
         [Test]
@@ -34,6 +67,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 new(Guid.NewGuid(), "Dairy"),
                 new(Guid.NewGuid(), "Bakery")
             };
+            SetupDummyLookups();
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>(categories, Metadata.Create(1, 200, categories.Count)));
@@ -203,6 +237,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         [Test]
         public async Task SaveAsync_NewShopValid_CallsAddAsync()
         {
+            SetupDummyLookups();
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], Metadata.Create(1, 200, 0)));
@@ -259,6 +294,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             // DeleteAsync confirms via Shell.Current.DisplayAlertAsync before any try/catch, so
             // calling it past the IsNew guard would throw in this test host. Only the guard-clause
             // return path is exercised here.
+            SetupDummyLookups();
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], Metadata.Create(1, 200, 0)));

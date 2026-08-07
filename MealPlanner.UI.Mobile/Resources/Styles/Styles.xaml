@@ -86,12 +86,11 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <Style x:Key="CardFrame" TargetType="Frame">
-        <Setter Property="BackgroundColor" Value="{StaticResource CardBackgroundColor}" />
-        <Setter Property="BorderColor" Value="{StaticResource MidGray}" />
-        <Setter Property="CornerRadius" Value="10" />
+    <Style x:Key="CardFrame" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBackgroundColor}" />
+        <Setter Property="Stroke" Value="{StaticResource MidGray}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
         <Setter Property="Padding" Value="12" />
-        <Setter Property="HasShadow" Value="False" />
     </Style>
 
     <Style TargetType="SearchBar">

@@ -4,16 +4,26 @@ using Common.Models;
 using Common.Pagination;
 using Common.Services;
 using MealPlanner.Shared.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using RecipeBook.Shared.Constants;
 using RecipeBook.Shared.Models;
 
 namespace RecipeBook.Services.Http
 {
-    public class RecipeService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<RecipeService> logger)
+    public class RecipeService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<RecipeService> logger)
         : ServiceBase(httpClient, tokenProvider), IRecipeService
     {
         private readonly string _controller = RecipeBookControllers.RecipeUrl;
+        private static CancellationTokenSource _cacheToken = new();
+
+        private static void InvalidateCache()
+        {
+            var old = Interlocked.Exchange(ref _cacheToken, new CancellationTokenSource());
+            old.Cancel();
+            old.Dispose();
+        }
 
         public async Task<RecipeModel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
@@ -41,14 +51,34 @@ namespace RecipeBook.Services.Http
             return await GetAsync<IList<ShoppingListProductEditModel>>(url, cancellationToken);
         }
 
-        public Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null, CancellationToken cancellationToken = default)
-            => SearchAsync(_controller, queryParameters, cancellationToken);
+        public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null, CancellationToken cancellationToken = default)
+        {
+            var cacheKey = SearchCacheKeyBuilder.Build("recipes", queryParameters);
+            if (cache.TryGetValue(cacheKey, out PagedList<RecipeModel>? cached))
+            {
+                return cached;
+            }
+
+            var result = await SearchAsync(_controller, queryParameters, cancellationToken);
+
+            if (result is not null)
+            {
+                var opts = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30))
+                    .AddExpirationToken(new CancellationChangeToken(_cacheToken.Token));
+                cache.Set(cacheKey, result, opts);
+            }
+
+            return result;
+        }
 
         public async Task<CommandResponse?> AddAsync(RecipeEditModel model, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await PostAsync(_controller, model, cancellationToken);
+                var r = await PostAsync(_controller, model, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
@@ -60,7 +90,9 @@ namespace RecipeBook.Services.Http
         {
             try
             {
-                return await PutAsync(_controller, model, cancellationToken);
+                var r = await PutAsync(_controller, model, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
@@ -73,7 +105,9 @@ namespace RecipeBook.Services.Http
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try
             {
-                return await DeleteAsync(url, cancellationToken);
+                var r = await DeleteAsync(url, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {

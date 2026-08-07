@@ -20,6 +20,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
+            if (IsBusy) return;
             if (!Guid.TryParse(RecipeId, out var id) || id == Guid.Empty) return;
             IsBusy = true;
             try
@@ -44,7 +45,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         }
 
         [RelayCommand]
-        private Task EditAsync() => Shell.Current.GoToAsync($"RecipeEdit?id={RecipeId}");
+        private Task EditAsync()
+        {
+            var parameters = new Dictionary<string, object> { ["id"] = RecipeId };
+            if (Recipe is not null)
+                parameters["model"] = Recipe;
+            return Shell.Current.GoToAsync("RecipeEdit", parameters);
+        }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task DeleteAsync()

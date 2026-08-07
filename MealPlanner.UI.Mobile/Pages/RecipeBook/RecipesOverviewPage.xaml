@@ -39,6 +39,7 @@
         <!-- Recipe list -->
         <RefreshView Grid.Row="2" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None"
+                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
                 <CollectionView.Footer>
@@ -61,16 +62,17 @@
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
-                            <Frame Style="{StaticResource CardFrame}" Padding="0">
-                                <Frame.GestureRecognizers>
+                            <Border Style="{StaticResource CardFrame}" Padding="0">
+                                <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=OpenRecipeCommand}"
                                         CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
+                                </Border.GestureRecognizers>
                                 <VerticalStackLayout Spacing="0">
                                     <Grid HeightRequest="160">
                                         <Image Source="{Binding ImageUrl}"
                                                Aspect="AspectFill"
+                                               HeightRequest="160"
                                                HorizontalOptions="Fill" />
                                         <Button Text="+"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesOverviewViewModel}}, Path=AddToMealPlanCommand}"
@@ -122,7 +124,7 @@
                                                FontSize="12" TextColor="{StaticResource DarkGray}" />
                                     </VerticalStackLayout>
                                 </VerticalStackLayout>
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

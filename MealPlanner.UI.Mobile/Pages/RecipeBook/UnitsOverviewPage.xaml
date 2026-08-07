@@ -17,6 +17,7 @@
                    SearchCommand="{Binding LoadCommand}" Margin="12,8" />
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Units}" SelectionMode="None"
+                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
                 <CollectionView.Footer>
@@ -35,17 +36,17 @@
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
-                            <Frame Style="{StaticResource CardFrame}">
-                                <Frame.GestureRecognizers>
+                            <Border Style="{StaticResource CardFrame}">
+                                <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UnitsOverviewViewModel}}, Path=EditCommand}"
                                         CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
+                                </Border.GestureRecognizers>
                                 <HorizontalStackLayout Spacing="8">
                                     <Label Text="{Binding Name}" FontAttributes="Bold" />
                                     <Label Text="{Binding UnitType, StringFormat='({0})'}" TextColor="{StaticResource DarkGray}" />
                                 </HorizontalStackLayout>
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

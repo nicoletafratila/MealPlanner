@@ -38,7 +38,7 @@
                 </Label>
 
                 <Label Text="{x:Static res:RecipeDetailPage.IngredientsLabel}" Style="{StaticResource SectionHeaderLabel}" />
-                <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
+                <CollectionView ItemsSource="{Binding Recipe.Ingredients}" ItemSizingStrategy="MeasureFirstItem">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:RecipeIngredientEditModel">
                             <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,4" ColumnSpacing="8">

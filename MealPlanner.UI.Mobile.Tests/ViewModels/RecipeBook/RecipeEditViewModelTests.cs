@@ -2,6 +2,9 @@ using System.Collections.ObjectModel;
 using Common.Constants.Units;
 using Common.Models;
 using Common.Pagination;
+using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
 using Moq;
 using RecipeBook.Services.Http;
@@ -23,6 +26,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         private Mock<IUnitService> _unitServiceMock = null!;
         private Mock<IProductService> _productServiceMock = null!;
         private Mock<IProductCategoryService> _productCategoryServiceMock = null!;
+        private Mock<IShopService> _shopServiceMock = null!;
+        private Mock<IRecipeService> _lookupRecipeServiceMock = null!;
         private RecipeEditViewModel _viewModel = null!;
 
         [SetUp]
@@ -33,12 +38,18 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _unitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
             _productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
             _productCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
-            _viewModel = new RecipeEditViewModel(
-                _recipeServiceMock.Object,
+            _shopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
+            _lookupRecipeServiceMock = new Mock<IRecipeService>(MockBehavior.Strict);
+
+            var lookupDataService = new ReferenceDataCacheService(
                 _categoryServiceMock.Object,
                 _unitServiceMock.Object,
                 _productServiceMock.Object,
-                _productCategoryServiceMock.Object);
+                _productCategoryServiceMock.Object,
+                _shopServiceMock.Object,
+                _lookupRecipeServiceMock.Object);
+
+            _viewModel = new RecipeEditViewModel(_recipeServiceMock.Object, lookupDataService);
         }
 
         private void SetupLookups(
@@ -62,7 +73,14 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _productCategoryServiceMock
                 .Setup(s => s.SearchAsync(It.Is<QueryParameters<ProductCategoryModel>>(p => p.PageSize == 200), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>(productCategories, Metadata.Create(1, 200, productCategories.Count)));
+
+            _shopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShopModel>([], Metadata.Create(1, 200, 0)));
         }
+
+        private static void ApplyRecipeId(RecipeEditViewModel viewModel, string id) =>
+            viewModel.ApplyQueryAttributes(new Dictionary<string, object> { ["id"] = id });
 
         [Test]
         public void OnRecipeIdChanged_EmptyGuid_LoadsLookupsOnlyAndMarksNew()
@@ -73,7 +91,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             var productCategories = new List<ProductCategoryModel> { new(Guid.NewGuid(), "Dairy") };
             SetupLookups(categories, units, products, productCategories);
 
-            _viewModel.RecipeId = Guid.Empty.ToString();
+            ApplyRecipeId(_viewModel, Guid.Empty.ToString());
 
             using (Assert.EnterMultipleScope())
             {
@@ -124,7 +142,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(recipeModel);
 
-            _viewModel.RecipeId = id.ToString();
+            ApplyRecipeId(_viewModel, id.ToString());
 
             using (Assert.EnterMultipleScope())
             {
@@ -157,8 +175,11 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _productCategoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], Metadata.Create(1, 200, 0)));
+            _shopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShopModel>([], Metadata.Create(1, 200, 0)));
 
-            _viewModel.RecipeId = Guid.Empty.ToString();
+            ApplyRecipeId(_viewModel, Guid.Empty.ToString());
 
             using (Assert.EnterMultipleScope())
             {

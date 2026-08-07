@@ -1,17 +1,15 @@
 ﻿using System.Collections.ObjectModel;
-using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
-using RecipeBook.Services.Http;
-using RecipeBook.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     [QueryProperty(nameof(ShopId), "id")]
-    public partial class ShopEditViewModel(IShopService shopService, IProductCategoryService categoryService) : BaseViewModel
+    public partial class ShopEditViewModel(IShopService shopService, ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shopId = string.Empty;
@@ -35,13 +33,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
+            if (IsBusy) return;
             IsBusy = true;
             try
             {
                 if (IsNew)
                 {
-                    var categories = await categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
-                    Model = new ShopEditModel(categories?.Items ?? []);
+                    await lookupDataService.EnsureLoadedAsync();
+                    Model = new ShopEditModel(lookupDataService.ProductCategories);
                 }
                 else
                 {
@@ -145,7 +144,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             try
             {
                 var result = IsNew ? await shopService.AddAsync(Model) : await shopService.UpdateAsync(Model);
-                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateShops();
+                    await Shell.Current.GoToAsync("..");
+                }
                 else SetError(result?.Message);
             }
             catch (Exception ex)

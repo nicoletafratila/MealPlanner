@@ -28,6 +28,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
+            if (IsBusy) return;
             IsBusy = true;
             try
             {

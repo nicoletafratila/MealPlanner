@@ -21,6 +21,7 @@
 
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding MealPlans}" SelectionMode="None"
+                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
                 <CollectionView.Footer>
@@ -43,18 +44,18 @@
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
-                            <Frame Style="{StaticResource CardFrame}">
-                                <Frame.GestureRecognizers>
+                            <Border Style="{StaticResource CardFrame}">
+                                <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MealPlansOverviewViewModel}}, Path=EditCommand}"
                                         CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
+                                </Border.GestureRecognizers>
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="{Binding Name}" FontAttributes="Bold" />
                                     <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM dd, yyyy}'}"
                                            FontSize="12" TextColor="{StaticResource DarkGray}" />
                                 </VerticalStackLayout>
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

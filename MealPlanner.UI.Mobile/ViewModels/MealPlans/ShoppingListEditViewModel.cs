@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
+using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -14,11 +15,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     public partial class ShoppingListEditViewModel(
         IShoppingListService shoppingListService,
         IShopService shopService,
-        IProductCategoryService productCategoryService,
         IProductService productService,
-        IUnitService unitService,
         IMealPlanService mealPlanService,
-        IRecipeService recipeService) : BaseViewModel
+        IRecipeService recipeService,
+        ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shoppingListId = string.Empty;
@@ -172,22 +172,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand]
         public async Task LoadAsync()
         {
+            if (IsBusy) return;
             IsBusy = true;
             try
             {
-                var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200, Sorting = DefaultSorting });
-                var catTask = productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
-                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 200, Sorting = DefaultSorting });
-                await Task.WhenAll(shopTask, catTask, unitTask);
-
-                if (shopTask.Result is not null) Shops = new ObservableCollection<ShopModel>(shopTask.Result.Items);
-                if (catTask.Result is not null)
-                {
-                    var cats = new List<ProductCategoryModel> { new() { Id = Guid.Empty, Name = "All categories" } };
-                    cats.AddRange(catTask.Result.Items);
-                    ProductCategories = new ObservableCollection<ProductCategoryModel>(cats);
-                }
-                if (unitTask.Result is not null) _allUnits = unitTask.Result.Items;
+                await lookupDataService.EnsureLoadedAsync();
+                Shops = lookupDataService.Shops;
+                ProductCategories = WithAllCategoriesOption(lookupDataService.ProductCategories);
+                _allUnits = lookupDataService.Units;
 
                 if (!IsNew)
                 {
@@ -212,6 +204,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             {
                 IsBusy = false;
             }
+        }
+
+        private static ObservableCollection<ProductCategoryModel> WithAllCategoriesOption(IEnumerable<ProductCategoryModel> categories)
+        {
+            var list = new List<ProductCategoryModel> { new() { Id = Guid.Empty, Name = Pages.RecipeBook.Resources.RecipeEditPage.AllCategoriesOption } };
+            list.AddRange(categories);
+            return new ObservableCollection<ProductCategoryModel>(list);
         }
 
         private async Task LoadProductsByCategoryAsync(Guid? categoryId)
@@ -339,13 +338,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
             try
             {
-                var recipes = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = DefaultSorting });
-                if (recipes is null || recipes.Items.Count == 0)
+                await lookupDataService.EnsureRecipesLoadedAsync();
+                if (lookupDataService.Recipes.Count == 0)
                 {
                     SetError(MealPlannerSharedMessages.NoRecipesFound);
                     return null;
                 }
-                return recipes.Items;
+                return lookupDataService.Recipes;
             }
             catch (Exception ex)
             {

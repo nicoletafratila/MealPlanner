@@ -1,16 +1,14 @@
 using System.Collections.ObjectModel;
-using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
-using RecipeBook.Services.Http;
-using RecipeBook.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class ProductStatisticsViewModel(
         IStatisticsService statisticsService,
-        IProductCategoryService productCategoryService) : BaseViewModel
+        ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<CategoryStatisticModel> _categories = [];
@@ -25,8 +23,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             IsBusy = true; ClearMessages();
             try
             {
-                var categories = await productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 500 });
-                var data = await statisticsService.GetFavoriteProductsAsync(categories?.Items?.ToList() ?? []);
+                await lookupDataService.EnsureLoadedAsync();
+                var data = await statisticsService.GetFavoriteProductsAsync(lookupDataService.ProductCategories.ToList());
                 Categories = data is not null
                     ? new ObservableCollection<CategoryStatisticModel>(BuildCategoryStatistics(data.OrderBy(stat => stat.Title, StringComparer.CurrentCultureIgnoreCase)))
                     : [];

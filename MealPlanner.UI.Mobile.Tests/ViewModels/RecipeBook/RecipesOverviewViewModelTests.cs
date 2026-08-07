@@ -2,6 +2,7 @@ using Common.Models;
 using Common.Pagination;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
 using Moq;
 using RecipeBook.Services.Http;
@@ -22,6 +23,10 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         private Mock<IRecipeService> _recipeServiceMock = null!;
         private Mock<IRecipeCategoryService> _categoryServiceMock = null!;
         private Mock<IMealPlanService> _mealPlanServiceMock = null!;
+        private Mock<IUnitService> _lookupUnitServiceMock = null!;
+        private Mock<IProductCategoryService> _lookupProductCategoryServiceMock = null!;
+        private Mock<IShopService> _lookupShopServiceMock = null!;
+        private Mock<IProductService> _lookupProductServiceMock = null!;
         private RecipesOverviewViewModel _viewModel = null!;
 
         [SetUp]
@@ -30,7 +35,33 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _recipeServiceMock = new Mock<IRecipeService>(MockBehavior.Strict);
             _categoryServiceMock = new Mock<IRecipeCategoryService>(MockBehavior.Strict);
             _mealPlanServiceMock = new Mock<IMealPlanService>(MockBehavior.Strict);
-            _viewModel = new RecipesOverviewViewModel(_recipeServiceMock.Object, _categoryServiceMock.Object, _mealPlanServiceMock.Object);
+            _lookupUnitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
+            _lookupProductCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
+            _lookupShopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
+            _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
+
+            var lookupDataService = new ReferenceDataCacheService(
+                _categoryServiceMock.Object,
+                _lookupUnitServiceMock.Object,
+                _lookupProductServiceMock.Object,
+                _lookupProductCategoryServiceMock.Object,
+                _lookupShopServiceMock.Object,
+                _recipeServiceMock.Object);
+
+            _viewModel = new RecipesOverviewViewModel(_recipeServiceMock.Object, lookupDataService, _mealPlanServiceMock.Object);
+        }
+
+        private void SetupDummyLookups()
+        {
+            _lookupUnitServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<UnitModel>([], Metadata.Create(1, 100, 0)));
+            _lookupProductCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductCategoryModel>([], Metadata.Create(1, 200, 0)));
+            _lookupShopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShopModel>([], Metadata.Create(1, 200, 0)));
         }
 
         private static PagedList<RecipeModel> RecipesPage(IEnumerable<RecipeModel> items, int pageNumber, int pageSize, int totalCount) =>
@@ -53,11 +84,12 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         [Test]
         public async Task LoadAsync_Success_LoadsCategoriesAndSearchesRecipes()
         {
+            SetupDummyLookups();
             var categories = new List<RecipeCategoryModel> { new(Guid.NewGuid(), "Desert") };
             var recipes = new List<RecipeModel> { new(Guid.NewGuid(), "Pasta") };
 
             _categoryServiceMock
-                .Setup(s => s.SearchAsync(It.Is<QueryParameters<RecipeCategoryModel>>(p => p.PageSize == int.MaxValue), CancellationToken.None))
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<RecipeCategoryModel>>(p => p.PageSize == 100), CancellationToken.None))
                 .ReturnsAsync(CategoriesPage(categories));
 
             _recipeServiceMock
@@ -79,6 +111,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         [Test]
         public async Task LoadAsync_CategoryServiceThrows_SetsErrorMessage()
         {
+            SetupDummyLookups();
             _categoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("boom"));

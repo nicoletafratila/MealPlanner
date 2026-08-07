@@ -1,21 +1,19 @@
 using System.Collections.ObjectModel;
-using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 using RecipeBook.Shared.Resources;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    [QueryProperty(nameof(RecipeId), "id")]
     public partial class RecipeEditViewModel(
         IRecipeService recipeService,
-        IRecipeCategoryService categoryService,
-        IUnitService unitService,
-        IProductService productService,
-        IProductCategoryService productCategoryService) : BaseViewModel
+        ReferenceDataCacheService lookupDataService) : BaseViewModel, IQueryAttributable
     {
+        private RecipeEditModel? _preloadedModel;
+
         [ObservableProperty]
         private string _recipeId = string.Empty;
 
@@ -66,39 +64,39 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [ObservableProperty]
         private string _quantityText = string.Empty;
 
-        partial void OnRecipeIdChanged(string value) => _ = LoadAsync();
-
         partial void OnSelectedProductCategoryChanged(ProductCategoryModel? value) => RefreshProductsByCategory(value);
 
         partial void OnSelectedProductChanged(ProductModel? value) => RefreshUnitsForProduct(value);
 
-        [RelayCommand(AllowConcurrentExecutions = true)]
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (query.TryGetValue("model", out var modelObj) && modelObj is RecipeEditModel preloaded)
+                _preloadedModel = preloaded;
+
+            if (query.TryGetValue("id", out var idObj))
+                RecipeId = idObj?.ToString() ?? string.Empty;
+
+            _ = LoadAsync();
+        }
+
+        [RelayCommand]
         private async Task LoadAsync()
         {
+            if (IsBusy) return;
             IsBusy = true;
             Guid.TryParse(RecipeId, out var id);
             IsNew = id == Guid.Empty;
             try
             {
-                var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
-                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 100, Sorting = DefaultSorting });
-                var prodTask = productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = DefaultSorting });
-                var prodCatTask = productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = DefaultSorting });
-                await Task.WhenAll(catTask, unitTask, prodTask, prodCatTask);
-
-                if (catTask.Result is not null) Categories = new ObservableCollection<RecipeCategoryModel>(catTask.Result.Items);
-                if (unitTask.Result is not null) Units = new ObservableCollection<UnitModel>(unitTask.Result.Items);
-                if (prodTask.Result is not null) Products = new ObservableCollection<ProductModel>(prodTask.Result.Items);
-                if (prodCatTask.Result is not null)
-                {
-                    var prodCats = new List<ProductCategoryModel> { new() { Id = Guid.Empty, Name = Pages.RecipeBook.Resources.RecipeEditPage.AllCategoriesOption } };
-                    prodCats.AddRange(prodCatTask.Result.Items);
-                    ProductCategories = new ObservableCollection<ProductCategoryModel>(prodCats);
-                }
+                await Task.WhenAll(lookupDataService.EnsureLoadedAsync(), lookupDataService.EnsureProductsLoadedAsync());
+                Categories = lookupDataService.Categories;
+                Units = lookupDataService.Units;
+                Products = lookupDataService.Products;
+                ProductCategories = WithAllCategoriesOption(lookupDataService.ProductCategories);
 
                 if (!IsNew)
                 {
-                    Model = await recipeService.GetEditAsync(id) ?? new();
+                    Model = _preloadedModel is { } pre && pre.Id == id ? pre : await recipeService.GetEditAsync(id) ?? new();
                     SelectedCategory = Categories.FirstOrDefault(c => c.Id == Model.RecipeCategoryId);
                     if (Model.ImageContent is { Length: > 0 })
                         RecipeImage = ImageSource.FromStream(() => new MemoryStream(Model.ImageContent));
@@ -120,6 +118,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 IsBusy = false;
             }
+        }
+
+        private static ObservableCollection<ProductCategoryModel> WithAllCategoriesOption(IEnumerable<ProductCategoryModel> categories)
+        {
+            var list = new List<ProductCategoryModel> { new() { Id = Guid.Empty, Name = Pages.RecipeBook.Resources.RecipeEditPage.AllCategoriesOption } };
+            list.AddRange(categories);
+            return new ObservableCollection<ProductCategoryModel>(list);
         }
 
         private void SortIngredientsByCategory()
@@ -226,7 +231,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var result = IsNew
                     ? await recipeService.AddAsync(Model)
                     : await recipeService.UpdateAsync(Model);
-                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateRecipes();
+                    await Shell.Current.GoToAsync("..");
+                }
                 else SetError(result?.Message);
             }
             catch (Exception ex)

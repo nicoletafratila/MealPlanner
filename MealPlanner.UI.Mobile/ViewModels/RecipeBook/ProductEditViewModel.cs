@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 using RecipeBook.Shared.Resources;
@@ -9,7 +9,7 @@ using RecipeBook.Shared.Resources;
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     [QueryProperty(nameof(ProductId), "id")]
-    public partial class ProductEditViewModel(IProductService productService, IProductCategoryService categoryService, IUnitService unitService) : BaseViewModel
+    public partial class ProductEditViewModel(IProductService productService, ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         [ObservableProperty]
         private string _productId = string.Empty;
@@ -55,15 +55,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
+            if (IsBusy) return;
             IsBusy = true;
             try
             {
-                var catTask = categoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 100, Sorting = DefaultSorting });
-                var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 100, Sorting = DefaultSorting });
-                await Task.WhenAll(catTask, unitTask);
-
-                if (catTask.Result is not null) Categories = new ObservableCollection<ProductCategoryModel>(catTask.Result.Items);
-                if (unitTask.Result is not null) Units = new ObservableCollection<UnitModel>(unitTask.Result.Items);
+                await lookupDataService.EnsureLoadedAsync();
+                Categories = lookupDataService.ProductCategories;
+                Units = lookupDataService.Units;
 
                 Guid.TryParse(ProductId, out var id);
                 if (!IsNew) Model = await productService.GetEditAsync(id) ?? new();
@@ -158,7 +156,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             try
             {
                 var result = IsNew ? await productService.AddAsync(Model) : await productService.UpdateAsync(Model);
-                if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateProducts();
+                    await Shell.Current.GoToAsync("..");
+                }
                 else SetError(result?.Message);
             }
             catch (Exception ex)

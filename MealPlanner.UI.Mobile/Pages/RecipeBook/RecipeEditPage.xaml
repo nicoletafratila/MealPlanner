@@ -81,7 +81,7 @@
             </Grid>
 
             <Label Text="{x:Static res:RecipeEditPage.IngredientsLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <CollectionView ItemsSource="{Binding RecipeIngredients}">
+            <CollectionView ItemsSource="{Binding RecipeIngredients}" ItemSizingStrategy="MeasureFirstItem">
                 <CollectionView.EmptyView>
                     <Label Text="{x:Static res:RecipeEditPage.EmptyIngredients}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16" />
                 </CollectionView.EmptyView>

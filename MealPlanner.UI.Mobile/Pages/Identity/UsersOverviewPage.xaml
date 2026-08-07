@@ -14,15 +14,15 @@
                    SearchCommand="{Binding SearchCommand}" Margin="12,8" />
 
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-            <CollectionView ItemsSource="{Binding Users}">
+            <CollectionView ItemsSource="{Binding Users}" ItemSizingStrategy="MeasureFirstItem">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:ApplicationUserModel">
-                        <Frame Style="{StaticResource CardFrame}" Margin="12,6">
-                            <Frame.GestureRecognizers>
+                        <Border Style="{StaticResource CardFrame}" Margin="12,6">
+                            <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UsersOverviewViewModel}}, Path=OpenUserCommand}"
                                     CommandParameter="{Binding .}" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,*,Auto">
                                 <Image Grid.Column="0"
                                        Source="{Binding ProfilePictureUrl}"
@@ -55,7 +55,7 @@
                                             Style="{StaticResource OutlineButton}" Padding="8,4" />
                                 </VerticalStackLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

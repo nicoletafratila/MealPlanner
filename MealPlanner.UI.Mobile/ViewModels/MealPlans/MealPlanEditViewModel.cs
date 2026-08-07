@@ -6,6 +6,7 @@ using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
 using MealPlanner.UI.Mobile.Pages.MealPlans.Resources;
+using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -15,10 +16,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
     [QueryProperty(nameof(PreselectedRecipeId), "recipeId")]
     public partial class MealPlanEditViewModel(
         IMealPlanService mealPlanService,
-        IRecipeService recipeService,
         IRecipeCategoryService recipeCategoryService,
-        IShopService shopService,
-        IShoppingListService shoppingListService) : BaseViewModel
+        IShoppingListService shoppingListService,
+        ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         private static readonly List<SortingModel> DisplaySequenceSorting =
             [new SortingModel { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending }];
@@ -76,27 +76,23 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
+            if (IsBusy) return;
             IsBusy = true;
             try
             {
                 var catTask = recipeCategoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 200, Sorting = DisplaySequenceSorting });
-                var recipeTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = DefaultSorting });
-                var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200, Sorting = DefaultSorting });
-                await Task.WhenAll(catTask, recipeTask, shopTask);
+                await Task.WhenAll(catTask, lookupDataService.EnsureLoadedAsync(), lookupDataService.EnsureRecipesLoadedAsync());
 
                 if (catTask.Result is not null)
                 {
-                    var all = new List<RecipeCategoryModel> { new() { Id = Guid.Empty, Name = "All categories" } };
+                    var all = new List<RecipeCategoryModel> { new() { Id = Guid.Empty, Name = Pages.RecipeBook.Resources.RecipeEditPage.AllCategoriesOption } };
                     all.AddRange(catTask.Result.Items);
                     Categories = new ObservableCollection<RecipeCategoryModel>(all);
                 }
-                if (recipeTask.Result is not null)
-                {
-                    AllRecipes = new ObservableCollection<RecipeModel>(recipeTask.Result.Items);
-                    FilteredRecipes = AllRecipes;
-                }
-                if (shopTask.Result is not null)
-                    Shops = new ObservableCollection<ShopModel>(shopTask.Result.Items);
+
+                AllRecipes = lookupDataService.Recipes;
+                FilteredRecipes = AllRecipes;
+                Shops = lookupDataService.Shops;
 
                 if (!IsNew)
                 {

@@ -18,6 +18,7 @@
                    SearchCommand="{Binding LoadCommand}" Margin="12,8" />
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Products}" SelectionMode="None"
+                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
                 <CollectionView.Footer>
@@ -36,12 +37,12 @@
                                                CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
-                            <Frame Style="{StaticResource CardFrame}">
-                                <Frame.GestureRecognizers>
+                            <Border Style="{StaticResource CardFrame}">
+                                <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductsOverviewViewModel}}, Path=EditCommand}"
                                         CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
+                                </Border.GestureRecognizers>
                                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                                     <Image Grid.Column="0"
                                            Source="{Binding ImageUrl}"
@@ -53,7 +54,7 @@
                                         <Label Text="{Binding ProductCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
                                     </VerticalStackLayout>
                                 </Grid>
-                            </Frame>
+                            </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

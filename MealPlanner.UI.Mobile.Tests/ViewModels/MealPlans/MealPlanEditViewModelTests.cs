@@ -3,6 +3,7 @@ using Common.Pagination;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
+using MealPlanner.UI.Mobile.Services;
 using MealPlanner.UI.Mobile.ViewModels.MealPlans;
 using Moq;
 using RecipeBook.Services.Http;
@@ -18,6 +19,10 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         private Mock<IRecipeCategoryService> _recipeCategoryServiceMock = null!;
         private Mock<IShopService> _shopServiceMock = null!;
         private Mock<IShoppingListService> _shoppingListServiceMock = null!;
+        private Mock<IRecipeCategoryService> _lookupRecipeCategoryServiceMock = null!;
+        private Mock<IUnitService> _lookupUnitServiceMock = null!;
+        private Mock<IProductService> _lookupProductServiceMock = null!;
+        private Mock<IProductCategoryService> _lookupProductCategoryServiceMock = null!;
         private MealPlanEditViewModel _viewModel = null!;
 
         [SetUp]
@@ -28,12 +33,24 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _recipeCategoryServiceMock = new Mock<IRecipeCategoryService>(MockBehavior.Strict);
             _shopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
             _shoppingListServiceMock = new Mock<IShoppingListService>(MockBehavior.Strict);
+            _lookupRecipeCategoryServiceMock = new Mock<IRecipeCategoryService>(MockBehavior.Strict);
+            _lookupUnitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
+            _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
+            _lookupProductCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
+
+            var lookupDataService = new ReferenceDataCacheService(
+                _lookupRecipeCategoryServiceMock.Object,
+                _lookupUnitServiceMock.Object,
+                _lookupProductServiceMock.Object,
+                _lookupProductCategoryServiceMock.Object,
+                _shopServiceMock.Object,
+                _recipeServiceMock.Object);
+
             _viewModel = new MealPlanEditViewModel(
                 _mealPlanServiceMock.Object,
-                _recipeServiceMock.Object,
                 _recipeCategoryServiceMock.Object,
-                _shopServiceMock.Object,
-                _shoppingListServiceMock.Object);
+                _shoppingListServiceMock.Object,
+                lookupDataService);
         }
 
         private void SetupLoadDependencies(
@@ -57,6 +74,15 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _mealPlanServiceMock
                 .Setup(s => s.GetMenuName(It.IsAny<string>()))
                 .Returns("Meniu 2026/1");
+            _lookupRecipeCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], Metadata.Create(1, 100, 0)));
+            _lookupUnitServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<UnitModel>([], Metadata.Create(1, 100, 0)));
+            _lookupProductCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductCategoryModel>([], Metadata.Create(1, 200, 0)));
         }
 
         [Test]

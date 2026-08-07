@@ -23,7 +23,7 @@
                     <DataTemplate x:DataType="vm:CategoryStatisticModel">
                         <ScrollView Padding="16,8">
                             <VerticalStackLayout Spacing="14">
-                                <Frame Style="{StaticResource CardFrame}">
+                                <Border Style="{StaticResource CardFrame}">
                                     <Grid ColumnDefinitions="76,*" ColumnSpacing="16">
                                         <controls:DonutShareView Grid.Column="0"
                                                                   WidthRequest="72" HeightRequest="72"
@@ -47,9 +47,9 @@
                                             </HorizontalStackLayout>
                                         </VerticalStackLayout>
                                     </Grid>
-                                </Frame>
+                                </Border>
 
-                                <CollectionView ItemsSource="{Binding Items}" SelectionMode="None">
+                                <CollectionView ItemsSource="{Binding Items}" SelectionMode="None" ItemSizingStrategy="MeasureFirstItem">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate x:DataType="vm:RankedStatisticItemModel">
                                             <Grid ColumnDefinitions="34,*,44" ColumnSpacing="10" Margin="0,5">

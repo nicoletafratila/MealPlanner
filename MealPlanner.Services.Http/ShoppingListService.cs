@@ -5,14 +5,24 @@ using Common.Pagination;
 using Common.Services;
 using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace MealPlanner.Services.Http
 {
-    public class ShoppingListService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<ShoppingListService> logger)
+    public class ShoppingListService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<ShoppingListService> logger)
         : ServiceBase(httpClient, tokenProvider), IShoppingListService
     {
         private readonly string _controller = MealPlannerControllers.ShoppingListUrl;
+        private static CancellationTokenSource _cacheToken = new();
+
+        private static void InvalidateCache()
+        {
+            var old = Interlocked.Exchange(ref _cacheToken, new CancellationTokenSource());
+            old.Cancel();
+            old.Dispose();
+        }
 
         public async Task<ShoppingListEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
@@ -20,14 +30,34 @@ namespace MealPlanner.Services.Http
             return await GetAsync<ShoppingListEditModel>(url, cancellationToken);
         }
 
-        public Task<PagedList<ShoppingListModel>?> SearchAsync(QueryParameters<ShoppingListModel>? queryParameters = null, CancellationToken cancellationToken = default)
-            => SearchAsync(_controller, queryParameters, cancellationToken);
+        public async Task<PagedList<ShoppingListModel>?> SearchAsync(QueryParameters<ShoppingListModel>? queryParameters = null, CancellationToken cancellationToken = default)
+        {
+            var cacheKey = SearchCacheKeyBuilder.Build("shoppingLists", queryParameters);
+            if (cache.TryGetValue(cacheKey, out PagedList<ShoppingListModel>? cached))
+            {
+                return cached;
+            }
+
+            var result = await SearchAsync(_controller, queryParameters, cancellationToken);
+
+            if (result is not null)
+            {
+                var opts = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30))
+                    .AddExpirationToken(new CancellationChangeToken(_cacheToken.Token));
+                cache.Set(cacheKey, result, opts);
+            }
+
+            return result;
+        }
 
         public async Task<ShoppingListEditModel?> MakeShoppingListAsync(ShoppingListCreateModel model, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await PostAsync<ShoppingListCreateModel, ShoppingListEditModel>($"{_controller}/{MealPlannerControllers.MakeShoppingListRoute}", model, cancellationToken);
+                var r = await PostAsync<ShoppingListCreateModel, ShoppingListEditModel>($"{_controller}/{MealPlannerControllers.MakeShoppingListRoute}", model, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
@@ -40,7 +70,9 @@ namespace MealPlanner.Services.Http
         {
             try
             {
-                return await PostAsync(_controller, model, cancellationToken);
+                var r = await PostAsync(_controller, model, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
@@ -53,7 +85,9 @@ namespace MealPlanner.Services.Http
         {
             try
             {
-                return await PutAsync(_controller, model, cancellationToken);
+                var r = await PutAsync(_controller, model, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
@@ -71,7 +105,9 @@ namespace MealPlanner.Services.Http
             var model = new ShoppingListProductCollectedModel(shoppingListId, productId, collected);
             try
             {
-                return await PatchAsync($"{_controller}/{MealPlannerControllers.UpdateProductCollectedRoute}", model, cancellationToken);
+                var r = await PatchAsync($"{_controller}/{MealPlannerControllers.UpdateProductCollectedRoute}", model, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
@@ -85,7 +121,9 @@ namespace MealPlanner.Services.Http
             var url = BuildUrl(_controller, new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             try
             {
-                return await DeleteAsync(url, cancellationToken);
+                var r = await DeleteAsync(url, cancellationToken);
+                InvalidateCache();
+                return r;
             }
             catch (Exception ex)
             {
