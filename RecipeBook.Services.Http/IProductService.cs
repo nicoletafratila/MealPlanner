@@ -9,7 +9,8 @@ namespace RecipeBook.Services.Http
         Task<ProductEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default);
         Task<PagedList<ProductModel>?> SearchAsync(
             QueryParameters<ProductModel>? queryParameters = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            bool thumbnailOnly = false);
         Task<CommandResponse?> AddAsync(ProductEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> UpdateAsync(ProductEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);

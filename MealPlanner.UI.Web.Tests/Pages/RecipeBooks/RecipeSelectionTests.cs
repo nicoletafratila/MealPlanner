@@ -69,7 +69,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             // Act
@@ -105,7 +105,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
                 .ReturnsAsync(new PagedList<RecipeModel>(
                     recipes, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 }));
 
@@ -135,8 +135,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&
                     qp.Sorting.First().Direction == SortDirection.Ascending &&
-                    qp.PageSize == 100 &&
-                    qp.PageNumber == 1)),
+                    qp.PageSize == int.MaxValue &&
+                    qp.PageNumber == 1), It.IsAny<CancellationToken>(), true),
                 Times.Once);
 
             Assert.That(cut.Instance.Recipes, Is.Not.Null);
@@ -154,7 +154,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             var cut = RenderComponent();
@@ -180,7 +180,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                     qp.Sorting != null &&
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&
-                    qp.Sorting.First().Direction == SortDirection.Ascending)),
+                    qp.Sorting.First().Direction == SortDirection.Ascending), It.IsAny<CancellationToken>(), true),
                 Times.Once);
         }
 
@@ -196,7 +196,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _modalControllerMock
@@ -238,7 +238,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>()))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _modalControllerMock

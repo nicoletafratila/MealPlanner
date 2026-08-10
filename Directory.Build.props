@@ -68,6 +68,7 @@
     <Serilog>4.2.0</Serilog>
     <SerilogAspNetCore>10.0.0</SerilogAspNetCore>
     <SerilogSinksMSSqlServer>10.0.0</SerilogSinksMSSqlServer>
+    <SixLaborsImageSharp>3.1.12</SixLaborsImageSharp>
     <SwashbuckleAspNetCore>9.0.6</SwashbuckleAspNetCore>
     <XUnit>2.9.2</XUnit>
     <XUnitRunnerVisualStudio>2.8.2</XUnitRunnerVisualStudio>

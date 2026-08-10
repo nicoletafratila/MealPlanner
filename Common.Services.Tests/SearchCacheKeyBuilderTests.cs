@@ -79,5 +79,25 @@ namespace Common.Services.Tests
 
             Assert.That(() => SearchCacheKeyBuilder.Build("units", qp, null), Throws.Nothing);
         }
+
+        [Test]
+        public void Build_DifferentThumbnailOnly_ProducesDifferentKey()
+        {
+            var qp = new QueryParameters<object> { PageNumber = 1, PageSize = 20 };
+
+            Assert.That(
+                SearchCacheKeyBuilder.Build("recipes", qp, "user-1", thumbnailOnly: true),
+                Is.Not.EqualTo(SearchCacheKeyBuilder.Build("recipes", qp, "user-1", thumbnailOnly: false)));
+        }
+
+        [Test]
+        public void Build_ThumbnailOnlyDefaultsToFalse_MatchesExplicitFalse()
+        {
+            var qp = new QueryParameters<object> { PageNumber = 1, PageSize = 20 };
+
+            Assert.That(
+                SearchCacheKeyBuilder.Build("recipes", qp, "user-1"),
+                Is.EqualTo(SearchCacheKeyBuilder.Build("recipes", qp, "user-1", thumbnailOnly: false)));
+        }
     }
 }

@@ -19,6 +19,12 @@ namespace RecipeBook.Api.Features.Product.Queries.Search
         /// </summary>
         public QueryParameters<ProductModel>? QueryParameters { get; set; }
 
+        /// <summary>
+        /// When true, skips loading the full image for each result and returns only the thumbnail —
+        /// used by reference-data lookups that fetch many rows at once for pickers.
+        /// </summary>
+        public bool ThumbnailOnly { get; set; }
+
         public SearchQuery()
         {
         }

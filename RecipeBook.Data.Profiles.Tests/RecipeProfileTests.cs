@@ -37,6 +37,7 @@ namespace RecipeBook.Data.Profiles.Tests
                 Id = recipeId,
                 Name = "Test",
                 ImageContent = [1, 2, 3],
+                ImageThumbnail = [4, 5, 6],
                 RecipeCategory = new RecipeCategory { Id = categoryId, Name = "Dessert" }
             };
 
@@ -49,7 +50,18 @@ namespace RecipeBook.Data.Profiles.Tests
                 Assert.That(result.RecipeCategoryId, Is.EqualTo(categoryId.ToString()));
                 Assert.That(result.RecipeCategoryName, Is.EqualTo("Dessert"));
                 Assert.That(result.ImageUrl, Does.StartWith("data:image/jpg;base64,"));
+                Assert.That(result.ThumbnailUrl, Does.StartWith("data:image/jpg;base64,"));
             }
+        }
+
+        [Test]
+        public void Recipe_To_RecipeModel_WhenImageThumbnailNull_ReturnsNullThumbnailUrl()
+        {
+            var recipe = new Recipe { Name = "Test", ImageThumbnail = null };
+
+            var result = _mapper.Map<RecipeModel>(recipe);
+
+            Assert.That(result.ThumbnailUrl, Is.Null);
         }
 
         [Test]

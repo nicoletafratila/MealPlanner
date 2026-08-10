@@ -345,7 +345,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 PageNumber = 1
             };
 
-            Products = await ProductService.SearchAsync(queryParameters);
+            Products = await ProductService.SearchAsync(queryParameters, thumbnailOnly: true);
 
             ProductId = string.Empty;
             Quantity = string.Empty;

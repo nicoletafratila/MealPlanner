@@ -36,7 +36,7 @@ namespace RecipeBook.Api.Features.Product.Queries.Search
             }
 
             var (entities, totalCount, skip) = await _repository.SearchByUserAsync(
-                userId, categoryId, qp.Filters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken);
+                userId, categoryId, qp.Filters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken, request.ThumbnailOnly);
 
             var models = _mapper.Map<IList<ProductModel>>(entities) ?? [];
             var metadata = Metadata.Create(qp.PageNumber, qp.PageSize, totalCount);

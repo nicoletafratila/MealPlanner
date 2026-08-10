@@ -53,7 +53,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             QueryParameters<ProductModel>? captured = null;
             _productServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
-                .Callback<QueryParameters<ProductModel>, CancellationToken>((p, _) => captured = p)
+                .Callback<QueryParameters<ProductModel>, CancellationToken, bool>((p, _, _) => captured = p)
                 .ReturnsAsync(new PagedList<ProductModel>([new ProductModel(Guid.NewGuid(), "Milk")], metadata));
 
             await _viewModel.LoadCommand.ExecuteAsync(null);

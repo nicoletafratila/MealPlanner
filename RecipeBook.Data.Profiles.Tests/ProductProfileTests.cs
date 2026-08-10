@@ -32,6 +32,7 @@ namespace RecipeBook.Data.Profiles.Tests
                 Id = Guid.NewGuid(),
                 Name = "Flour",
                 ImageContent = [1, 2, 3],
+                ImageThumbnail = [4, 5, 6],
                 ProductCategory = new ProductCategory { Name = "Baking" }
             };
 
@@ -42,9 +43,20 @@ namespace RecipeBook.Data.Profiles.Tests
                 Assert.That(result.Id, Is.EqualTo(entity.Id));
                 Assert.That(result.Name, Is.EqualTo("Flour"));
                 Assert.That(result.ImageUrl, Does.StartWith("data:image/jpg;base64,"));
+                Assert.That(result.ThumbnailUrl, Does.StartWith("data:image/jpg;base64,"));
                 Assert.That(result.Index, Is.Zero);
                 Assert.That(result.IsSelected, Is.False);
             }
+        }
+
+        [Test]
+        public void Product_To_ProductModel_WhenImageThumbnailNull_ReturnsNullThumbnailUrl()
+        {
+            var entity = new Product { Name = "Flour", ImageThumbnail = null };
+
+            var result = _mapper.Map<ProductModel>(entity);
+
+            Assert.That(result.ThumbnailUrl, Is.Null);
         }
 
         [Test]
@@ -64,6 +76,7 @@ namespace RecipeBook.Data.Profiles.Tests
                 Assert.That(result.Id, Is.EqualTo(model.Id));
                 Assert.That(result.Name, Is.EqualTo("Sugar"));
                 Assert.That(result.ImageContent, Is.Null);
+                Assert.That(result.ImageThumbnail, Is.Null);
                 Assert.That(result.BaseUnit, Is.Null);
                 Assert.That(result.ProductCategory, Is.Null);
             }

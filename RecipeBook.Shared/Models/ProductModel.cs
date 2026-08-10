@@ -23,6 +23,11 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
 
         /// <summary>
+        /// Optional thumbnail-sized image URL for the product, for use in lists and pickers.
+        /// </summary>
+        public string? ThumbnailUrl { get; set; }
+
+        /// <summary>
         /// Base unit used for this product (e.g., kg, liter).
         /// </summary>
         public UnitModel? BaseUnit { get; set; }

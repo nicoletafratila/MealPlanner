@@ -4,6 +4,7 @@ using Common.Data.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MealPlanner.Api.Migrations
 {
     [DbContext(typeof(MealPlannerDbContext))]
-    partial class MealPlannerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260810114908_AddImageThumbnailToRecipeAndProduct")]
+    partial class AddImageThumbnailToRecipeAndProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

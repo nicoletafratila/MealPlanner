@@ -4,6 +4,7 @@ using Common.Services;
 using MediatR;
 using RecipeBook.Api.Features.Product.Resources;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Services;
 
 namespace RecipeBook.Api.Features.Product.Commands.Add
 {
@@ -40,6 +41,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Add
 
                 var mapped = _mapper.Map<Data.Entities.Product>(request.Model);
                 mapped.UserId = userId;
+                mapped.ImageThumbnail = ImageThumbnailGenerator.CreateThumbnail(mapped.ImageContent);
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

@@ -10,6 +10,8 @@ namespace RecipeBook.Data.Entities
 
         public byte[]? ImageContent { get; set; }
 
+        public byte[]? ImageThumbnail { get; set; }
+
         public string? Source { get; set; }
 
         [ForeignKey("RecipeCategoryId")]

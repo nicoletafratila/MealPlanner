@@ -17,6 +17,11 @@ namespace RecipeBook.Data.Profiles
                     opt => opt.MapFrom(data =>
                         $"data:image/jpg;base64,{Convert.ToBase64String(data.ImageContent ?? Array.Empty<byte>())}"
                     ))
+                .ForMember(
+                    model => model.ThumbnailUrl,
+                    opt => opt.MapFrom(data =>
+                        data.ImageThumbnail == null ? null : $"data:image/jpg;base64,{Convert.ToBase64String(data.ImageThumbnail)}"
+                    ))
                 .ForMember(model => model.RecipeCategoryName, opt => opt.MapFrom(data => data.RecipeCategory!.Name))
                 .ForMember(model => model.RecipeCategoryId, opt => opt.MapFrom(data => data.RecipeCategory!.Id))
                 .ReverseMap()

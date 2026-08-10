@@ -51,16 +51,16 @@ namespace RecipeBook.Services.Http
             return await GetAsync<IList<ShoppingListProductEditModel>>(url, cancellationToken);
         }
 
-        public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null, CancellationToken cancellationToken = default)
+        public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null, CancellationToken cancellationToken = default, bool thumbnailOnly = false)
         {
             var userId = JwtUserIdExtractor.GetUserId(await tokenProvider.GetTokenAsync(cancellationToken));
-            var cacheKey = SearchCacheKeyBuilder.Build("recipes", queryParameters, userId);
+            var cacheKey = SearchCacheKeyBuilder.Build("recipes", queryParameters, userId, thumbnailOnly);
             if (cache.TryGetValue(cacheKey, out PagedList<RecipeModel>? cached))
             {
                 return cached;
             }
 
-            var result = await SearchAsync(_controller, queryParameters, cancellationToken);
+            var result = await SearchAsync(_controller, queryParameters, cancellationToken, thumbnailOnly);
 
             if (result is not null)
             {

@@ -5,6 +5,8 @@ using Moq;
 using RecipeBook.Api.Features.Product.Commands.Add;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
 {
@@ -111,6 +113,35 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             _repoMock.Verify(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_NewProduct_GeneratesImageThumbnail_WhenImageContentPresent()
+        {
+            var model = new ProductEditModel { Id = Guid.Empty, Name = "ImageProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
+            var command = new AddCommand { Model = model };
+
+            _repoMock.Setup(r => r.SearchAsync("ImageProduct", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
+
+            using var image = new Image<Rgba32>(4, 4);
+            using var ms = new MemoryStream();
+            image.SaveAsPng(ms);
+
+            var mappedEntity = new Data.Entities.Product
+            {
+                Id = Guid.NewGuid(),
+                Name = "ImageProduct",
+                ProductCategoryId = Guid.NewGuid(),
+                BaseUnitId = Guid.NewGuid(),
+                ImageContent = ms.ToArray()
+            };
+
+            _mapperMock.Setup(m => m.Map<Data.Entities.Product>(model)).Returns(mappedEntity);
+            _repoMock.Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>())).ReturnsAsync(mappedEntity);
+
+            await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(mappedEntity.ImageThumbnail, Is.Not.Null);
         }
 
         [Test]

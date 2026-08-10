@@ -390,6 +390,58 @@ namespace RecipeBook.Api.Tests.Repositories
         }
 
         [Test]
+        public async Task SearchByUserAsync_ThumbnailOnlyTrue_ProjectsAwayImageContent_ButIncludesThumbnail()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            r1.UserId = "user1";
+            r1.ImageContent = [1, 2, 3];
+            r1.ImageThumbnail = [4, 5, 6];
+            ctx.Recipes.Add(r1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync(
+                "user1", null, null, null, 1, 10, CancellationToken.None, thumbnailOnly: true);
+
+            // Assert
+            var item = items.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(item.ImageContent, Is.Null);
+                Assert.That(item.ImageThumbnail, Is.EqualTo(new byte[] { 4, 5, 6 }));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_ThumbnailOnlyFalse_IncludesFullImageAndThumbnail()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            r1.UserId = "user1";
+            r1.ImageContent = [1, 2, 3];
+            r1.ImageThumbnail = [4, 5, 6];
+            ctx.Recipes.Add(r1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync(
+                "user1", null, null, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            var item = items.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(item.ImageContent, Is.EqualTo(new byte[] { 1, 2, 3 }));
+                Assert.That(item.ImageThumbnail, Is.EqualTo(new byte[] { 4, 5, 6 }));
+            }
+        }
+
+        [Test]
         public async Task SearchByUserAsync_CategoryIdFilter_ReturnsOnlyMatchingCategory()
         {
             // Arrange

@@ -435,7 +435,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         {
             _viewModel.Model.ShopId = Guid.NewGuid();
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None, true))
                 .ReturnsAsync(new PagedList<RecipeModel>([], Metadata.Create(1, 500, 0)));
 
             var result = await _viewModel.LoadRecipesForSelectionAsync();
@@ -453,7 +453,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _viewModel.Model.ShopId = Guid.NewGuid();
             var recipe = new RecipeModel(Guid.NewGuid(), "Pancakes");
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None, true))
                 .ReturnsAsync(new PagedList<RecipeModel>([recipe], Metadata.Create(1, 500, 1)));
 
             var result = await _viewModel.LoadRecipesForSelectionAsync();

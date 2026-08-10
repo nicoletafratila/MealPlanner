@@ -31,6 +31,7 @@ namespace RecipeBook.Api.Repositories
             IEnumerable<SortingModel>? sorting,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken,
+            bool thumbnailOnly = false);
     }
 }

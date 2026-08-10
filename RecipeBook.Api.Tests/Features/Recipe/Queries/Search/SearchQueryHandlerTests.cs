@@ -119,6 +119,26 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Queries.Search
         }
 
         [Test]
+        public async Task Handle_ThumbnailOnlyTrue_PassesThumbnailOnlyToRepository()
+        {
+            var entities = new List<Data.Entities.Recipe> { new() { Id = Guid.NewGuid(), Name = "R1", RecipeCategoryId = Guid.NewGuid() } };
+            var models = new List<RecipeModel> { new() { Name = "R1" } };
+
+            _repoMock
+                .Setup(r => r.SearchByUserAsync("user1", null, null, null, 1, 10, It.IsAny<CancellationToken>(), true))
+                .ReturnsAsync(new PagedQueryResult<Data.Entities.Recipe>(entities, 1, 0));
+            _mapperMock.Setup(m => m.Map<IList<RecipeModel>>(entities)).Returns(models);
+
+            var qp = new QueryParameters<RecipeModel> { Filters = null, Sorting = null, PageNumber = 1, PageSize = 10 };
+            var query = new SearchQuery { CategoryId = null, QueryParameters = qp, ThumbnailOnly = true };
+
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            Assert.That(result.Items, Has.Count.EqualTo(1));
+            _repoMock.Verify(r => r.SearchByUserAsync("user1", null, null, null, 1, 10, It.IsAny<CancellationToken>(), true), Times.Once);
+        }
+
+        [Test]
         public async Task Handle_ValidCategoryId_PassesParsedGuidToRepository()
         {
             var categoryId = Guid.NewGuid();

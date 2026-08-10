@@ -72,9 +72,10 @@ namespace Common.Services
         protected async Task<PagedList<T>?> SearchAsync<T>(
             string url,
             QueryParameters<T>? queryParameters,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            bool thumbnailOnly = false)
         {
-            var query = BuildSearchQuery(queryParameters);
+            var query = BuildSearchQuery(queryParameters, thumbnailOnly);
             var fullUrl = BuildUrl($"{url}/{ApiQueryParams.SearchRoute}", query);
             await EnsureAuthAsync(cancellationToken);
             using var response = await HttpClient.GetAsync(fullUrl, cancellationToken);
@@ -134,12 +135,13 @@ namespace Common.Services
             return body;
         }
 
-        private static Dictionary<string, string?> BuildSearchQuery<T>(QueryParameters<T>? qp) => new()
+        private static Dictionary<string, string?> BuildSearchQuery<T>(QueryParameters<T>? qp, bool thumbnailOnly = false) => new()
         {
             [ApiQueryParams.Filters] = qp?.Filters is null ? null : JsonSerializer.Serialize(qp.Filters, JsonOptions),
             [ApiQueryParams.Sorting] = qp?.Sorting is null || !qp.Sorting.Any() ? null : JsonSerializer.Serialize(qp.Sorting, JsonOptions),
             [ApiQueryParams.PageSize] = (qp?.PageSize ?? int.MaxValue).ToString(),
-            [ApiQueryParams.PageNumber] = (qp?.PageNumber ?? 1).ToString()
+            [ApiQueryParams.PageNumber] = (qp?.PageNumber ?? 1).ToString(),
+            [ApiQueryParams.ThumbnailOnly] = thumbnailOnly ? "true" : null
         };
 
         protected static string BuildUrl(string baseUrl, IDictionary<string, string?> query)

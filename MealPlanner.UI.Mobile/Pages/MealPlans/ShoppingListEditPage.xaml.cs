@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
 
         private async void OnSelectProductTapped(object sender, TappedEventArgs e)
         {
-            var items = _vm.ProductsByCategory.Select(p => new SelectorItem(p, p.Name, p.EffectiveCategoryName, p.ImageUrl)).ToList();
+            var items = _vm.ProductsByCategory.Select(p => new SelectorItem(p, p.Name, p.EffectiveCategoryName, p.ThumbnailUrl)).ToList();
             var popup = new SelectorPopup(
                 items,
                 MealPlans.Resources.ShoppingListEditPage.SelectProductTitle,
@@ -50,7 +50,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
             var recipes = await _vm.LoadRecipesForSelectionAsync();
             if (recipes is null || recipes.Count == 0) return;
 
-            var items = recipes.Select(r => new SelectorItem(r, r.Name, r.EffectiveCategoryName, r.ImageUrl)).ToList();
+            var items = recipes.Select(r => new SelectorItem(r, r.Name, r.EffectiveCategoryName, r.ThumbnailUrl)).ToList();
             var popup = new SelectorPopup(
                 items,
                 MealPlans.Resources.ShoppingListEditPage.SelectRecipeTitle,

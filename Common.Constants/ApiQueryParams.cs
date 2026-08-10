@@ -19,5 +19,6 @@ namespace Common.Constants
         public const string MealPlanId = "mealPlanId";
         public const string Username = "username";
         public const string UserId = "userId";
+        public const string ThumbnailOnly = "thumbnailOnly";
     }
 }

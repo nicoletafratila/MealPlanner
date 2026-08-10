@@ -89,7 +89,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 PageNumber = 1
             };
 
-            Recipes = await RecipeService.SearchAsync(queryParameters) ?? new PagedList<RecipeModel>([], new Metadata());
+            Recipes = await RecipeService.SearchAsync(queryParameters, thumbnailOnly: true) ?? new PagedList<RecipeModel>([], new Metadata());
             StateHasChanged();
         }
     }

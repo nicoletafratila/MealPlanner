@@ -103,7 +103,7 @@ namespace RecipeBook.Api.Tests.Controllers
         [Test]
         public async Task SearchAsync_InvalidPageParams_ReturnsBadRequest()
         {
-            var result = await _controller.SearchAsync(null, null, "abc", "1", CancellationToken.None);
+            var result = await _controller.SearchAsync(null, null, "abc", "1", false, CancellationToken.None);
             Assert.That(result.Result, Is.InstanceOf<BadRequestObjectResult>());
             _senderMock.Verify(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -119,7 +119,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Callback<IRequest<PagedList<RecipeModel>>, CancellationToken>((q, _) => captured = (SearchQuery)q)
                 .ReturnsAsync(paged);
 
-            var result = await _controller.SearchAsync(null, null, "10", "2", CancellationToken.None);
+            var result = await _controller.SearchAsync(null, null, "10", "2", false, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);
@@ -133,9 +133,26 @@ namespace RecipeBook.Api.Tests.Controllers
             {
                 Assert.That(captured!.QueryParameters!.PageSize, Is.EqualTo(10));
                 Assert.That(captured!.QueryParameters!.PageNumber, Is.EqualTo(2));
+                Assert.That(captured!.ThumbnailOnly, Is.False);
             }
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task SearchAsync_ThumbnailOnlyTrue_SetsThumbnailOnlyOnQuery()
+        {
+            var paged = new PagedList<RecipeModel>([], new Metadata());
+            SearchQuery? captured = null;
+
+            _senderMock
+                .Setup(m => m.Send(It.IsAny<SearchQuery>(), It.IsAny<CancellationToken>()))
+                .Callback<IRequest<PagedList<RecipeModel>>, CancellationToken>((q, _) => captured = (SearchQuery)q)
+                .ReturnsAsync(paged);
+
+            await _controller.SearchAsync(null, null, "10", "2", true, CancellationToken.None);
+
+            Assert.That(captured!.ThumbnailOnly, Is.True);
         }
 
         [Test]

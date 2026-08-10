@@ -111,7 +111,8 @@ namespace RecipeBook.Api.Repositories
             IEnumerable<SortingModel>? sorting,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            bool thumbnailOnly = false)
         {
             IQueryable<Recipe> query = Context.Recipes
                 .Include(x => x.RecipeCategory)
@@ -122,6 +123,20 @@ namespace RecipeBook.Api.Repositories
                 query = query.Where(x => x.RecipeCategoryId == categoryId.Value);
 
             var filtered = query.ApplyFilters(filters).ApplySorting(sorting);
+
+            if (thumbnailOnly)
+            {
+                filtered = filtered.Select(x => new Recipe
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    Name = x.Name,
+                    Source = x.Source,
+                    ImageThumbnail = x.ImageThumbnail,
+                    RecipeCategory = x.RecipeCategory,
+                    RecipeCategoryId = x.RecipeCategoryId
+                });
+            }
 
             return await filtered.ToPagedResultAsync(pageNumber, pageSize, cancellationToken);
         }

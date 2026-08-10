@@ -223,13 +223,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             try
             {
                 var result = categoryId is null || categoryId.Value == Guid.Empty
-                    ? await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = DefaultSorting })
+                    ? await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = DefaultSorting }, thumbnailOnly: true)
                     : await productService.SearchAsync(new QueryParameters<ProductModel>
                     {
                         PageSize = 500,
                         Sorting = DefaultSorting,
                         Filters = [new FilterItem("ProductCategoryId", categoryId.ToString(), FilterOperator.Equals)]
-                    });
+                    }, thumbnailOnly: true);
                 ProductsByCategory = result is not null
                     ? new ObservableCollection<ProductModel>(result.Items)
                     : [];

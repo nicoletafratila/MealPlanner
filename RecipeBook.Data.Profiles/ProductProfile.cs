@@ -17,8 +17,14 @@ namespace RecipeBook.Data.Profiles
                     o => o.MapFrom(src =>
                         $"data:image/jpg;base64,{Convert.ToBase64String(src.ImageContent ?? Array.Empty<byte>())}")
                 )
+                .ForMember(
+                    m => m.ThumbnailUrl,
+                    o => o.MapFrom(src =>
+                        src.ImageThumbnail == null ? null : $"data:image/jpg;base64,{Convert.ToBase64String(src.ImageThumbnail)}")
+                )
                 .ReverseMap()
                 .ForMember(d => d.ImageContent, o => o.Ignore())
+                .ForMember(d => d.ImageThumbnail, o => o.Ignore())
                 .ForMember(d => d.BaseUnit, o => o.Ignore())
                 .ForMember(d => d.ProductCategory, o => o.Ignore());
 

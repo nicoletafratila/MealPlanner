@@ -12,6 +12,7 @@ namespace RecipeBook.Api
 
             await CategorySeedData.SeedProductCategoriesAsync(context);
             await CategorySeedData.SeedRecipeCategoriesAsync(context);
+            await ImageThumbnailBackfill.EnsureBackfilledAsync(context);
         }
     }
 }

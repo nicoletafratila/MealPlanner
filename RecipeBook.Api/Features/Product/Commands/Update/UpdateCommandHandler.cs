@@ -3,6 +3,7 @@ using Common.Models;
 using MediatR;
 using RecipeBook.Api.Features.Product.Resources;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Services;
 
 namespace RecipeBook.Api.Features.Product.Commands.Update
 {
@@ -34,6 +35,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Update
                 }
 
                 _mapper.Map(request.Model, existingItem);
+                existingItem.ImageThumbnail = ImageThumbnailGenerator.CreateThumbnail(existingItem.ImageContent);
                 await _repository.UpdateAsync(existingItem, cancellationToken);
 
                 return CommandResponse.Success();

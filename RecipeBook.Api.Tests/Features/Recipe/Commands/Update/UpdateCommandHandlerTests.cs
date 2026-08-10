@@ -4,6 +4,8 @@ using Moq;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using RecipeEntity = RecipeBook.Data.Entities.Recipe;
 
 namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
@@ -148,6 +150,52 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_SuccessfulUpdate_GeneratesImageThumbnail_WhenImageContentPresent()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
+            var model = new RecipeEditModel
+            {
+                Id = id,
+                Name = "Updated Recipe",
+                RecipeCategoryId = categoryId
+            };
+
+            var command = new UpdateCommand { Model = model };
+
+            using var image = new Image<Rgba32>(4, 4);
+            using var ms = new MemoryStream();
+            image.SaveAsPng(ms);
+
+            var existing = new RecipeEntity
+            {
+                Id = id,
+                Name = "Old Name",
+                RecipeCategoryId = categoryId,
+                ImageContent = ms.ToArray()
+            };
+
+            _repoMock
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(existing);
+
+            _mapperMock
+                .Setup(m => m.Map(model, existing))
+                .Returns(existing);
+
+            _repoMock
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(existing.ImageThumbnail, Is.Not.Null);
         }
 
         [Test]

@@ -531,7 +531,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var recipes = new PagedList<RecipeModel>([new() { Id = Guid.NewGuid(), Name = "A" }], new Metadata());
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None, true))
                 .ReturnsAsync(recipes);
 
             var cut = RenderComponent("0");
@@ -554,7 +554,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                     qp.Filters != null &&
                     qp.Filters.Count() == 1 &&
                     qp.Filters.First().PropertyName == "RecipeCategoryId" &&
-                    qp.Filters.First().Value as string == "3"), CancellationToken.None),
+                    qp.Filters.First().Value as string == "3"), CancellationToken.None, true),
                 Times.Once);
 
             Assert.That(cut.Instance.RecipeId, Is.EqualTo(string.Empty));

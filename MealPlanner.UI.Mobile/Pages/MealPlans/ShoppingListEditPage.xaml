@@ -60,10 +60,10 @@
                     </Border.GestureRecognizers>
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
                         <Image Grid.Column="0"
-                               Source="{Binding SelectedProduct.ImageUrl}"
+                               Source="{Binding SelectedProduct.ThumbnailUrl}"
                                WidthRequest="26" HeightRequest="26"
                                Aspect="AspectFill" VerticalOptions="Center"
-                               IsVisible="{Binding SelectedProduct.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                               IsVisible="{Binding SelectedProduct.ThumbnailUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
                         <Label Grid.Column="1" VerticalOptions="Center"
                                LineBreakMode="TailTruncation"
                                Text="{Binding SelectedProduct.Name, TargetNullValue={x:Static res:ShoppingListEditPage.SelectProductTitle}}">

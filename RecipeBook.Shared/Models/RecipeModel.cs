@@ -20,6 +20,11 @@ namespace RecipeBook.Shared.Models
         public string? ImageUrl { get; set; }
 
         /// <summary>
+        /// Optional thumbnail-sized image URL for this recipe, for use in lists and pickers.
+        /// </summary>
+        public string? ThumbnailUrl { get; set; }
+
+        /// <summary>
         /// Optional source (e.g., cookbook, URL, author).
         /// </summary>
         public string? Source { get; set; }

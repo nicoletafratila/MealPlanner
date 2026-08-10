@@ -352,7 +352,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 PageSize = int.MaxValue
             };
 
-            Recipes = await RecipeService.SearchAsync(queryParameters);
+            Recipes = await RecipeService.SearchAsync(queryParameters, thumbnailOnly: true);
             StateHasChanged();
         }
 

@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
             if (BindingContext is not MealPlanEditViewModel viewModel)
                 return;
 
-            var items = viewModel.FilteredRecipes.Select(r => new SelectorItem(r, r.Name, r.EffectiveCategoryName, r.ImageUrl)).ToList();
+            var items = viewModel.FilteredRecipes.Select(r => new SelectorItem(r, r.Name, r.EffectiveCategoryName, r.ThumbnailUrl)).ToList();
             var popup = new SelectorPopup(
                 items,
                 MealPlans.Resources.MealPlanEditPage.SelectRecipeTitle,

@@ -5,6 +5,8 @@ using Moq;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 {
@@ -149,6 +151,47 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             _repoMock.Verify(r => r.SearchAsync("New Recipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_NoExistingRecipe_GeneratesImageThumbnail_WhenImageContentPresent()
+        {
+            var model = new RecipeEditModel
+            {
+                Id = Guid.Empty,
+                Name = "ImageRecipe",
+                RecipeCategoryId = Guid.NewGuid()
+            };
+
+            var command = new AddCommand { Model = model };
+
+            _repoMock
+                .Setup(r => r.SearchAsync("ImageRecipe", "user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Recipe?)null);
+
+            using var image = new Image<Rgba32>(4, 4);
+            using var ms = new MemoryStream();
+            image.SaveAsPng(ms);
+
+            var mappedEntity = new Data.Entities.Recipe
+            {
+                Id = Guid.NewGuid(),
+                Name = "ImageRecipe",
+                RecipeCategoryId = Guid.NewGuid(),
+                ImageContent = ms.ToArray()
+            };
+
+            _mapperMock
+                .Setup(m => m.Map<Data.Entities.Recipe>(model))
+                .Returns(mappedEntity);
+
+            _repoMock
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mappedEntity);
+
+            await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(mappedEntity.ImageThumbnail, Is.Not.Null);
         }
 
         [Test]

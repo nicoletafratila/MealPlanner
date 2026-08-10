@@ -39,3 +39,11 @@ Passwords (save these to your password manager right now — there is no recover
 
 Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI.Mobile.csproj -f net10.0-android36.0 -c Release should produce a signed .aab ready for Play Console upload.
 
+
+
+
+
+
+cand dechid users se inchide
+cand adaug podus la reteta sau la lista nu se vede poza
+imagine pe web la selectare produse, retete

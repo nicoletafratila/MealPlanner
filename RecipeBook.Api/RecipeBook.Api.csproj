@@ -89,6 +89,7 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="$(MediatRExtensionsMSDI)" />
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJson)" />
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="$(SerilogSinksMSSqlServer)" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="$(SixLaborsImageSharp)" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleAspNetCore)" />
   </ItemGroup>
 

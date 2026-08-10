@@ -248,6 +248,72 @@ namespace RecipeBook.Services.Http.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
+        [Test]
+        public async Task SearchAsync_ThumbnailOnlyTrue_IncludesThumbnailOnlyInRequestQueryString()
+        {
+            var paged = new PagedList<ProductModel>([new ProductModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
+                .With(m => m.RequestUri!.Query.Contains("thumbnailOnly=true"))
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.SearchAsync(thumbnailOnly: true);
+
+            Assert.That(result, Is.Not.Null);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_ThumbnailOnlyFalse_OmitsThumbnailOnlyFromRequestQueryString()
+        {
+            var paged = new PagedList<ProductModel>([new ProductModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
+                .With(m => !m.RequestUri!.Query.Contains("thumbnailOnly"))
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.SearchAsync();
+
+            Assert.That(result, Is.Not.Null);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task SearchAsync_SameQueryParametersDifferentThumbnailOnly_DoesNotShareCache()
+        {
+            var withThumbnails = new PagedList<ProductModel>([new ProductModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var withFullImages = new PagedList<ProductModel>([new ProductModel(), new ProductModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 });
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
+                .With(m => m.RequestUri!.Query.Contains("thumbnailOnly=true"))
+                .Respond("application/json", JsonSerializer.Serialize(withThumbnails, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*")
+                .With(m => !m.RequestUri!.Query.Contains("thumbnailOnly"))
+                .Respond("application/json", JsonSerializer.Serialize(withFullImages, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            var thumbnailResult = await service.SearchAsync(thumbnailOnly: true);
+            var fullImageResult = await service.SearchAsync();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(thumbnailResult!.Items, Has.Count.EqualTo(1));
+                Assert.That(fullImageResult!.Items, Has.Count.EqualTo(2));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
         private static string CreateJwt(string userId)
         {
             var header = Base64UrlEncode("{\"alg\":\"none\",\"typ\":\"JWT\"}"u8.ToArray());

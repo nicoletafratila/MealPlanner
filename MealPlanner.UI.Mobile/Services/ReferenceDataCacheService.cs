@@ -73,7 +73,7 @@ namespace MealPlanner.UI.Mobile.Services
             {
                 if (DateTimeOffset.UtcNow - _productsLoadedAt < VolatileCacheDuration) return;
 
-                var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = NameSorting });
+                var result = await productService.SearchAsync(new QueryParameters<ProductModel> { PageSize = 500, Sorting = NameSorting }, thumbnailOnly: true);
                 Replace(Products, result?.Items);
                 _productsLoadedAt = DateTimeOffset.UtcNow;
             }
@@ -92,7 +92,7 @@ namespace MealPlanner.UI.Mobile.Services
             {
                 if (DateTimeOffset.UtcNow - _recipesLoadedAt < VolatileCacheDuration) return;
 
-                var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = NameSorting });
+                var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageSize = 500, Sorting = NameSorting }, thumbnailOnly: true);
                 Replace(Recipes, result?.Items);
                 _recipesLoadedAt = DateTimeOffset.UtcNow;
             }

@@ -563,7 +563,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var products = new PagedList<ProductModel>([new() { Id = Guid.NewGuid() }], new Metadata());
 
             _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None, true))
                 .ReturnsAsync(products);
 
             var cut = RenderComponent("0");
@@ -586,7 +586,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                     qp.Filters != null &&
                     qp.Filters.Count() == 1 &&
                     qp.Filters.First().PropertyName == "ProductCategoryId" &&
-                    qp.Filters.First().Value as string == "3"), CancellationToken.None),
+                    qp.Filters.First().Value as string == "3"), CancellationToken.None, true),
                 Times.Once);
 
             using (Assert.EnterMultipleScope())
