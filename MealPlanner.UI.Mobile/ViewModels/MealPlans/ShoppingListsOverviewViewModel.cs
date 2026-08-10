@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Extensions;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
@@ -30,7 +31,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 var result = await shoppingListService.SearchAsync(new QueryParameters<ShoppingListModel> { Filters = filters, Sorting = CreatedAtDescendingSorting });
                 if (result is not null)
                 {
-                    ShoppingLists = new ObservableCollection<ShoppingListModel>(result.Items);
+                    ShoppingLists.Replace(result.Items);
                 }
             }
             catch (Exception ex)

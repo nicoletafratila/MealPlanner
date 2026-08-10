@@ -39,7 +39,6 @@
         <!-- Recipe list -->
         <RefreshView Grid.Row="2" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None"
-                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
                 <CollectionView.Footer>

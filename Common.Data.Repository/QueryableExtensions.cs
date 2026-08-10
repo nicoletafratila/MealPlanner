@@ -25,7 +25,9 @@ namespace Common.Data.Repository
 
             // Fetch one row past the page to learn whether more data exists, so the common
             // "everything fits on one page" case can skip the separate COUNT query below.
-            var probe = await source.Skip(skip).Take(pageSize + 1).ToListAsync(cancellationToken);
+            // Guard against overflow when pageSize is already int.MaxValue.
+            var probeSize = pageSize < int.MaxValue ? pageSize + 1 : pageSize;
+            var probe = await source.Skip(skip).Take(probeSize).ToListAsync(cancellationToken);
 
             if (probe.Count > 0 && probe.Count <= pageSize)
             {

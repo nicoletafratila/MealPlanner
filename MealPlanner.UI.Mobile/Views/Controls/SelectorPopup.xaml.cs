@@ -7,6 +7,7 @@ namespace MealPlanner.UI.Mobile.Views.Controls
     {
         private readonly IReadOnlyList<SelectorItem> _allItems;
         private readonly ObservableCollection<SelectorItem> _filteredItems;
+        private bool _isClosing;
 
         public SelectorPopup(IReadOnlyList<SelectorItem> items, string header, string searchPlaceholder, string emptyText)
         {
@@ -33,8 +34,11 @@ namespace MealPlanner.UI.Mobile.Views.Controls
 
         private async void OnItemSelected(object? sender, SelectionChangedEventArgs e)
         {
-            if (e.CurrentSelection.FirstOrDefault() is SelectorItem item)
-                await CloseAsync(item.Value, CancellationToken.None);
+            if (_isClosing) return;
+            if (e.CurrentSelection.FirstOrDefault() is not SelectorItem item) return;
+
+            _isClosing = true;
+            await CloseAsync(item.Value, CancellationToken.None);
         }
     }
 }

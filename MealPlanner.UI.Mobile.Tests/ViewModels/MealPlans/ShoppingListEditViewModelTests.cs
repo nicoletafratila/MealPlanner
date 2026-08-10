@@ -243,6 +243,28 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         }
 
         [Test]
+        public void OnShoppingListIdChanged_ReappliedForSameNewShoppingList_DoesNotClearAddedProducts()
+        {
+            var shop = new ShopModel(Guid.NewGuid(), "Lidl");
+            SetupLoadDependencies([shop], [], []);
+
+            _viewModel.ShoppingListId = Guid.Empty.ToString();
+
+            _viewModel.SelectedProduct = new ProductModel(Guid.NewGuid(), "Milk");
+            _viewModel.SelectedUnit = new UnitModel(Guid.NewGuid(), "Liter", UnitType.Volume);
+            _viewModel.QuantityText = "2";
+            _viewModel.AddProductCommand.Execute(null);
+            Assert.That(_viewModel.ShoppingListProducts, Has.Count.EqualTo(1));
+
+            // Shell can clear a QueryProperty to empty and reapply it when a popup is shown on
+            // this page, which would bypass a same-value equality check on the property setter.
+            _viewModel.ShoppingListId = string.Empty;
+            _viewModel.ShoppingListId = Guid.Empty.ToString();
+
+            Assert.That(_viewModel.ShoppingListProducts, Has.Count.EqualTo(1));
+        }
+
+        [Test]
         public void AddProduct_ExistingProductSameId_MergesQuantityInsteadOfDuplicate()
         {
             var product = new ProductModel(Guid.NewGuid(), "Milk");

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MealPlanner.UI.Mobile.Extensions;
 using MealPlanner.UI.Mobile.Services;
 using Microsoft.Maui.Graphics.Platform;
 using RecipeBook.Services.Http;
@@ -19,6 +20,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private const float ImageQuality = 0.8f;
 
         private RecipeEditModel? _preloadedModel;
+        private bool _hasLoaded;
 
         [ObservableProperty]
         private string _recipeId = string.Empty;
@@ -76,6 +78,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            if (_hasLoaded) return;
+            _hasLoaded = true;
+
             if (query.TryGetValue("model", out var modelObj) && modelObj is RecipeEditModel preloaded)
                 _preloadedModel = preloaded;
 
@@ -152,7 +157,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 .ThenBy(i => i.Product?.Name)
                 .ToList();
 
-            RecipeIngredients = new ObservableCollection<RecipeIngredientEditModel>(ordered);
+            RecipeIngredients.Replace(ordered);
         }
 
         private void RefreshProductsByCategory(ProductCategoryModel? category)

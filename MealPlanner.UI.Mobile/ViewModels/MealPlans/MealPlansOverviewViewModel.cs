@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Extensions;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
@@ -46,7 +47,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 var result = await mealPlanService.SearchAsync(new QueryParameters<MealPlanModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = CreatedAtDescendingSorting });
                 if (result is not null)
                 {
-                    MealPlans = new ObservableCollection<MealPlanModel>(result.Items);
+                    MealPlans.Replace(result.Items);
                     HasNextPage = result.Metadata.HasNextPage;
                 }
             }

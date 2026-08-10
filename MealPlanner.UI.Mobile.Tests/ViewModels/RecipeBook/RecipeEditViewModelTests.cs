@@ -386,6 +386,56 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
+        public void AddIngredient_TwoDifferentProducts_AccumulatesBothInList()
+        {
+            var unit = new UnitModel(Guid.NewGuid(), "Kg", UnitType.Weight);
+            var productA = new ProductModel(Guid.NewGuid(), "Milk");
+            var productB = new ProductModel(Guid.NewGuid(), "Bread");
+            _viewModel.Units = new ObservableCollection<UnitModel> { unit };
+
+            _viewModel.SelectedProduct = productA;
+            _viewModel.SelectedUnit = unit;
+            _viewModel.QuantityText = "1";
+            _viewModel.AddIngredientCommand.Execute(null);
+
+            _viewModel.SelectedProduct = productB;
+            _viewModel.SelectedUnit = unit;
+            _viewModel.QuantityText = "2";
+            _viewModel.AddIngredientCommand.Execute(null);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.RecipeIngredients, Has.Count.EqualTo(2));
+                Assert.That(_viewModel.RecipeIngredients.Select(i => i.Product), Is.EquivalentTo(new[] { productA, productB }));
+            }
+        }
+
+        [Test]
+        public void ApplyQueryAttributes_ReappliedForSameNewRecipe_DoesNotClearAddedIngredients()
+        {
+            // Shell re-invokes ApplyQueryAttributes on the same page instance when the product
+            // selector popup is shown. It must not wipe ingredients added since the page loaded.
+            var categories = new List<RecipeCategoryModel> { new(Guid.NewGuid(), "Desert") };
+            var units = new List<UnitModel> { new(Guid.NewGuid(), "Kg", UnitType.Weight) };
+            var product = new ProductModel(Guid.NewGuid(), "Milk");
+            var products = new List<ProductModel> { product };
+            var productCategories = new List<ProductCategoryModel> { new(Guid.NewGuid(), "Dairy") };
+            SetupLookups(categories, units, products, productCategories);
+
+            ApplyRecipeId(_viewModel, Guid.Empty.ToString());
+
+            _viewModel.SelectedProduct = product;
+            _viewModel.SelectedUnit = units[0];
+            _viewModel.QuantityText = "1";
+            _viewModel.AddIngredientCommand.Execute(null);
+            Assert.That(_viewModel.RecipeIngredients, Has.Count.EqualTo(1));
+
+            ApplyRecipeId(_viewModel, Guid.Empty.ToString());
+
+            Assert.That(_viewModel.RecipeIngredients, Has.Count.EqualTo(1));
+        }
+
+        [Test]
         public void RemoveIngredient_RemovesGivenIngredientFromCollection()
         {
             var ingredient = new RecipeIngredientEditModel { Product = new ProductModel(Guid.NewGuid(), "Milk"), Quantity = 1 };

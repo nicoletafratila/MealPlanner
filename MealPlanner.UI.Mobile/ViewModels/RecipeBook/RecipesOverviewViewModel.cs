@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Extensions;
 using MealPlanner.UI.Mobile.Pages.RecipeBook.Resources;
 using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
@@ -52,7 +53,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
                 if (await recipesTask is { } result)
                 {
-                    Recipes = new ObservableCollection<RecipeModel>(result.Items);
+                    Recipes.Replace(result.Items);
                     HasNextPage = result.Metadata.HasNextPage;
                 }
             }
@@ -77,7 +78,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var result = await recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
                 if (result is not null)
                 {
-                    Recipes = new ObservableCollection<RecipeModel>(result.Items);
+                    Recipes.Replace(result.Items);
                     HasNextPage = result.Metadata.HasNextPage;
                 }
             }

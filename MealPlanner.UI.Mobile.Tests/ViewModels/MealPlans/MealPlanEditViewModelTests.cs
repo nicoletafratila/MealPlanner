@@ -53,6 +53,14 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 lookupDataService);
         }
 
+        private static void ApplyMealPlanId(MealPlanEditViewModel viewModel, string id, string? recipeId = null)
+        {
+            var query = new Dictionary<string, object> { ["id"] = id };
+            if (recipeId is not null)
+                query["recipeId"] = recipeId;
+            viewModel.ApplyQueryAttributes(query);
+        }
+
         private void SetupLoadDependencies(
             IReadOnlyList<RecipeCategoryModel>? categories = null,
             IReadOnlyList<RecipeModel>? recipes = null,
@@ -93,7 +101,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             var shop = new ShopModel(Guid.NewGuid(), "Lidl");
             SetupLoadDependencies([category], [recipe], [shop]);
 
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
 
             using (Assert.EnterMultipleScope())
             {
@@ -113,12 +121,13 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 Times.Never);
         }
 
+
         [Test]
         public void OnMealPlanIdChanged_NewMealPlan_SuggestsMenuName()
         {
             SetupLoadDependencies();
 
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
 
             Assert.That(_viewModel.Model.Name, Is.EqualTo("Meniu 2026/1"));
         }
@@ -135,7 +144,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
 
-            _viewModel.MealPlanId = id.ToString();
+            ApplyMealPlanId(_viewModel, id.ToString());
 
             using (Assert.EnterMultipleScope())
             {
@@ -152,8 +161,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             var recipe = new RecipeModel(Guid.NewGuid(), "Pancakes");
             SetupLoadDependencies(recipes: [recipe]);
 
-            _viewModel.PreselectedRecipeId = recipe.Id.ToString();
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString(), recipe.Id.ToString());
 
             using (Assert.EnterMultipleScope())
             {
@@ -174,8 +182,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
 
-            _viewModel.PreselectedRecipeId = recipe.Id.ToString();
-            _viewModel.MealPlanId = id.ToString();
+            ApplyMealPlanId(_viewModel, id.ToString(), recipe.Id.ToString());
 
             Assert.That(_viewModel.PlanRecipes, Has.Count.EqualTo(1));
         }
@@ -189,7 +196,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             var otherRecipe = new RecipeModel(Guid.NewGuid(), "Soup") { RecipeCategoryId = Guid.NewGuid().ToString() };
             SetupLoadDependencies(categories: [category], recipes: [matchingRecipe, otherRecipe]);
 
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
             _viewModel.SelectedRecipe = matchingRecipe;
 
             _viewModel.SelectedCategory = category;
@@ -209,7 +216,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             var recipe2 = new RecipeModel(Guid.NewGuid(), "Soup");
             SetupLoadDependencies(recipes: [recipe1, recipe2]);
 
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
 
             _viewModel.SelectedCategory = _viewModel.Categories[0];
 
@@ -222,7 +229,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             var recipe1 = new RecipeModel(Guid.NewGuid(), "Cake");
             SetupLoadDependencies(recipes: [recipe1]);
 
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
 
             _viewModel.SelectedCategory = null;
 
@@ -252,6 +259,26 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 Assert.That(_viewModel.PlanRecipes, Contains.Item(recipe));
                 Assert.That(_viewModel.SelectedRecipe, Is.Null);
             }
+        }
+
+        [Test]
+        public void ApplyQueryAttributes_ReappliedForSameNewMealPlan_DoesNotClearAddedRecipes()
+        {
+            var category = new RecipeCategoryModel(Guid.NewGuid(), "Dessert");
+            var recipe = new RecipeModel(Guid.NewGuid(), "Pancakes");
+            SetupLoadDependencies([category], [recipe], []);
+
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
+
+            _viewModel.SelectedRecipe = recipe;
+            _viewModel.AddRecipeCommand.Execute(null);
+            Assert.That(_viewModel.PlanRecipes, Has.Count.EqualTo(1));
+
+            // Shell re-invokes ApplyQueryAttributes on this same page instance when a popup is
+            // shown; it must not wipe recipes added since the page loaded.
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
+
+            Assert.That(_viewModel.PlanRecipes, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -319,7 +346,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         public async Task SaveAsync_NewMealPlanValid_CallsAddAsync()
         {
             SetupLoadDependencies();
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
             _viewModel.Model.Name = "Week 1";
             _viewModel.PlanRecipes.Add(new RecipeModel(Guid.NewGuid(), "Pancakes"));
 
@@ -345,7 +372,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _mealPlanServiceMock
                 .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
-            _viewModel.MealPlanId = id.ToString();
+            ApplyMealPlanId(_viewModel, id.ToString());
 
             _viewModel.Model.Name = "Week 1 updated";
 
@@ -364,7 +391,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             // DeleteAsync confirms via Shell.Current.DisplayAlertAsync before any try/catch, so
             // calling it past the IsNew guard would throw in this test host. Only the guard-clause
             // return path is exercised here.
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
             Assert.That(_viewModel.IsNew, Is.True);
 
             await _viewModel.DeleteCommand.ExecuteAsync(null);
@@ -378,7 +405,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         public async Task MakeShoppingListAsync_WhenIsNew_DoesNothing()
         {
             SetupLoadDependencies();
-            _viewModel.MealPlanId = Guid.Empty.ToString();
+            ApplyMealPlanId(_viewModel, Guid.Empty.ToString());
             _viewModel.PlanRecipes.Add(new RecipeModel(Guid.NewGuid(), "Pancakes"));
 
             await _viewModel.MakeShoppingListCommand.ExecuteAsync(null);
@@ -403,7 +430,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _mealPlanServiceMock
                 .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
-            _viewModel.MealPlanId = id.ToString();
+            ApplyMealPlanId(_viewModel, id.ToString());
 
             await _viewModel.MakeShoppingListCommand.ExecuteAsync(null);
 
@@ -427,7 +454,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _mealPlanServiceMock
                 .Setup(s => s.GetEditAsync(id, CancellationToken.None))
                 .ReturnsAsync(existing);
-            _viewModel.MealPlanId = id.ToString();
+            ApplyMealPlanId(_viewModel, id.ToString());
             Assert.That(_viewModel.Shops, Is.Empty);
 
             await _viewModel.MakeShoppingListCommand.ExecuteAsync(null);

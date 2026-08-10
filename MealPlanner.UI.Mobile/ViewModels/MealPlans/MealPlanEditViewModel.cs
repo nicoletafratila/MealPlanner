@@ -12,13 +12,11 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
-    [QueryProperty(nameof(MealPlanId), "id")]
-    [QueryProperty(nameof(PreselectedRecipeId), "recipeId")]
     public partial class MealPlanEditViewModel(
         IMealPlanService mealPlanService,
         IRecipeCategoryService recipeCategoryService,
         IShoppingListService shoppingListService,
-        ReferenceDataCacheService lookupDataService) : BaseViewModel
+        ReferenceDataCacheService lookupDataService) : BaseViewModel, IQueryAttributable
     {
         private static readonly List<SortingModel> DisplaySequenceSorting =
             [new SortingModel { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending }];
@@ -56,9 +54,20 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         [ObservableProperty]
         private bool _isNew;
 
-        partial void OnMealPlanIdChanged(string value)
+        private bool _hasLoaded;
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            Guid.TryParse(value, out var id);
+            if (_hasLoaded) return;
+            _hasLoaded = true;
+
+            if (query.TryGetValue("id", out var idObj))
+                MealPlanId = idObj?.ToString() ?? string.Empty;
+
+            if (query.TryGetValue("recipeId", out var recipeIdObj))
+                PreselectedRecipeId = recipeIdObj?.ToString() ?? string.Empty;
+
+            Guid.TryParse(MealPlanId, out var id);
             IsNew = id == Guid.Empty;
             _ = LoadAsync();
         }

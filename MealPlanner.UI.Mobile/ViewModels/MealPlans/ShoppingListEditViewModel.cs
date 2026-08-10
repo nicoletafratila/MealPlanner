@@ -72,8 +72,13 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         private bool _isHandlingCollectedChange;
 
+        private bool _hasLoaded;
+
         partial void OnShoppingListIdChanged(string value)
         {
+            if (_hasLoaded) return;
+            _hasLoaded = true;
+
             Guid.TryParse(value, out var id);
             IsNew = id == Guid.Empty;
             _ = LoadAsync();

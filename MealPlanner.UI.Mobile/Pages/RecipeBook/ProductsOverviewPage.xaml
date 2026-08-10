@@ -18,7 +18,6 @@
                    SearchCommand="{Binding LoadCommand}" Margin="12,8" />
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Products}" SelectionMode="None"
-                            ItemSizingStrategy="MeasureFirstItem"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">
                 <CollectionView.Footer>
