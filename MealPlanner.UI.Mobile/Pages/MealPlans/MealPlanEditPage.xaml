@@ -64,11 +64,8 @@
 
             <!-- Recipes in plan -->
             <Label Text="{x:Static res:MealPlanEditPage.RecipesInPlanLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <CollectionView ItemsSource="{Binding PlanRecipes}" SelectionMode="None">
-                <CollectionView.EmptyView>
-                    <Label Text="{x:Static res:MealPlanEditPage.EmptyRecipes}" TextColor="{StaticResource DarkGray}" Margin="0,4" />
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding PlanRecipes}">
+                <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="model:RecipeModel">
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Padding="0,4">
                             <Image Grid.Column="0"
@@ -86,8 +83,10 @@
                                     CommandParameter="{Binding .}" />
                         </Grid>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+            <Label Text="{x:Static res:MealPlanEditPage.EmptyRecipes}" TextColor="{StaticResource DarkGray}" Margin="0,4"
+                   IsVisible="{Binding PlanRecipes.Count, Converter={x:Static converters:ZeroToBoolConverter.Instance}}" />
 
             <!-- Make shopping list -->
             <Button Text="{x:Static res:MealPlanEditPage.MakeShoppingListButton}"
