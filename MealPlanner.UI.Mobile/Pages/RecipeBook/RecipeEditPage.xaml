@@ -86,10 +86,10 @@
                     <DataTemplate x:DataType="model:RecipeIngredientEditModel">
                         <Grid ColumnDefinitions="Auto,*,Auto" Padding="8,6">
                             <Image Grid.Column="0"
-                                   Source="{Binding Product.ImageUrl}"
+                                   Source="{Binding Product.ThumbnailUrl}"
                                    WidthRequest="28" HeightRequest="28"
                                    Aspect="AspectFill" VerticalOptions="Center"
-                                   IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                   IsVisible="{Binding Product.ThumbnailUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
                             <VerticalStackLayout Grid.Column="1" Margin="8,0" VerticalOptions="Center">
                                 <Label Text="{Binding Product.Name}" FontAttributes="Bold" />
                                 <HorizontalStackLayout Spacing="4">

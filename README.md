@@ -45,5 +45,4 @@ Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI
 
 
 cand dechid users se inchide
-cand adaug podus la reteta sau la lista nu se vede poza
 imagine pe web la selectare produse, retete

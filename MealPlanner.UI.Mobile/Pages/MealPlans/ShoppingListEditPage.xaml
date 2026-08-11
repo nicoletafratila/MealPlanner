@@ -107,10 +107,10 @@
                         <Grid ColumnDefinitions="Auto,Auto,*,Auto" Padding="8,6">
                             <CheckBox Grid.Column="0" IsChecked="{Binding Collected}" CheckedChanged="OnProductCollectedChanged" />
                             <Image Grid.Column="1"
-                                   Source="{Binding Product.ImageUrl}"
+                                   Source="{Binding Product.ThumbnailUrl}"
                                    WidthRequest="28" HeightRequest="28"
                                    Aspect="AspectFill" VerticalOptions="Center"
-                                   IsVisible="{Binding Product.ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}">
+                                   IsVisible="{Binding Product.ThumbnailUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}">
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListEditViewModel}}, Path=ToggleCollectedCommand}"
                                                            CommandParameter="{Binding .}" />

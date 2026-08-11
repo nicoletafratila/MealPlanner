@@ -15,7 +15,7 @@ namespace RecipeBook.Data.Profiles
                 .ForMember(
                     model => model.ImageUrl,
                     opt => opt.MapFrom(data =>
-                        $"data:image/jpg;base64,{Convert.ToBase64String(data.ImageContent ?? Array.Empty<byte>())}"
+                        data.ImageContent == null ? null : $"data:image/jpg;base64,{Convert.ToBase64String(data.ImageContent)}"
                     ))
                 .ForMember(
                     model => model.ThumbnailUrl,
@@ -32,7 +32,7 @@ namespace RecipeBook.Data.Profiles
                 .ForMember(
                     model => model.ImageUrl,
                     opt => opt.MapFrom(data =>
-                        $"data:image/jpg;base64,{Convert.ToBase64String(data.ImageContent ?? Array.Empty<byte>())}"
+                        data.ImageContent == null ? null : $"data:image/jpg;base64,{Convert.ToBase64String(data.ImageContent)}"
                     ))
                 .ForMember(
                     model => model.Ingredients,

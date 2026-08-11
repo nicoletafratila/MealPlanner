@@ -69,10 +69,10 @@
                     <DataTemplate x:DataType="model:RecipeModel">
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Padding="0,4">
                             <Image Grid.Column="0"
-                                   Source="{Binding ImageUrl}"
+                                   Source="{Binding ThumbnailUrl}"
                                    WidthRequest="32" HeightRequest="32"
                                    Aspect="AspectFill"
-                                   IsVisible="{Binding ImageUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+                                   IsVisible="{Binding ThumbnailUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
                                 <Label Text="{Binding EffectiveCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />

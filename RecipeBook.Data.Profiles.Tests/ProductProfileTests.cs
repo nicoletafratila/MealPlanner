@@ -133,11 +133,21 @@ namespace RecipeBook.Data.Profiles.Tests
         }
 
         [Test]
-        public void Null_ImageContent_Does_Not_Throw_And_Generates_Empty_Base64()
+        public void Null_ImageContent_Does_Not_Throw_And_Returns_Null_ImageUrl()
         {
             var entity = new Product();
             var model = _mapper.Map<ProductEditModel>(entity);
-            Assert.That(model.ImageUrl, Is.EqualTo("data:image/jpg;base64,"));
+            Assert.That(model.ImageUrl, Is.Null);
+        }
+
+        [Test]
+        public void Product_To_ProductModel_WhenImageContentNull_ReturnsNullImageUrl()
+        {
+            var entity = new Product { Name = "Flour", ImageContent = null };
+
+            var result = _mapper.Map<ProductModel>(entity);
+
+            Assert.That(result.ImageUrl, Is.Null);
         }
     }
 }

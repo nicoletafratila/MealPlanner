@@ -65,6 +65,26 @@ namespace RecipeBook.Data.Profiles.Tests
         }
 
         [Test]
+        public void Recipe_To_RecipeModel_WhenImageContentNull_ReturnsNullImageUrl()
+        {
+            var recipe = new Recipe { Name = "Test", ImageContent = null };
+
+            var result = _mapper.Map<RecipeModel>(recipe);
+
+            Assert.That(result.ImageUrl, Is.Null);
+        }
+
+        [Test]
+        public void Recipe_To_RecipeEditModel_WhenImageContentNull_ReturnsNullImageUrl()
+        {
+            var recipe = new Recipe { Name = "Test", ImageContent = null };
+
+            var result = _mapper.Map<RecipeEditModel>(recipe);
+
+            Assert.That(result.ImageUrl, Is.Null);
+        }
+
+        [Test]
         public void RecipeModel_To_Recipe_Ignores_RecipeCategory()
         {
             var dest = new Recipe
