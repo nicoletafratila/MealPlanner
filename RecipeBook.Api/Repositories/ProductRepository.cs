@@ -90,7 +90,9 @@ namespace RecipeBook.Api.Repositories
             if (categoryId is not null)
                 query = query.Where(x => x.ProductCategoryId == categoryId.Value);
 
-            var filtered = query.ApplyFilters(filters).ApplySorting(sorting);
+            var remappedFilters = filters.RemapPropertyName("ProductCategoryName", "ProductCategory.Name");
+            var remappedSorting = sorting.RemapPropertyName("ProductCategoryName", "ProductCategory.Name");
+            var filtered = query.ApplyFilters(remappedFilters).ApplySorting(remappedSorting);
 
             if (thumbnailOnly)
             {

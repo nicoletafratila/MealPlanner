@@ -325,33 +325,38 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public async Task SearchAsync_ThumbnailOnlyTrue_IncludesThumbnailOnlyInRequestQueryString()
+        public async Task SearchAsync_ThumbnailOnlyFilterTrue_IncludesThumbnailOnlyInFiltersQueryString()
         {
             var paged = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
 
             var mockHttp = new MockHttpMessageHandler();
             mockHttp
                 .Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
-                .With(m => m.RequestUri!.Query.Contains("thumbnailOnly=true"))
+                .With(m => m.RequestUri!.Query.Contains("ThumbnailOnly"))
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
 
             var service = CreateService(mockHttp);
 
-            var result = await service.SearchAsync(thumbnailOnly: true);
+            var queryParameters = new QueryParameters<RecipeModel>
+            {
+                Filters = [new FilterItem("ThumbnailOnly", true, FilterOperator.Equals)]
+            };
+
+            var result = await service.SearchAsync(queryParameters);
 
             Assert.That(result, Is.Not.Null);
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
         [Test]
-        public async Task SearchAsync_ThumbnailOnlyFalse_OmitsThumbnailOnlyFromRequestQueryString()
+        public async Task SearchAsync_NoThumbnailOnlyFilter_OmitsThumbnailOnlyFromFiltersQueryString()
         {
             var paged = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
 
             var mockHttp = new MockHttpMessageHandler();
             mockHttp
                 .Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
-                .With(m => !m.RequestUri!.Query.Contains("thumbnailOnly"))
+                .With(m => !m.RequestUri!.Query.Contains("ThumbnailOnly"))
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
 
             var service = CreateService(mockHttp);
@@ -363,23 +368,26 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public async Task SearchAsync_SameQueryParametersDifferentThumbnailOnly_DoesNotShareCache()
+        public async Task SearchAsync_DifferentThumbnailOnlyFilter_DoesNotShareCache()
         {
             var withThumbnails = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
             var withFullImages = new PagedList<RecipeModel>([new RecipeModel(), new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 });
 
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
-                .With(m => m.RequestUri!.Query.Contains("thumbnailOnly=true"))
+                .With(m => m.RequestUri!.Query.Contains("ThumbnailOnly"))
                 .Respond("application/json", JsonSerializer.Serialize(withThumbnails, JsonOptions));
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
-                .With(m => !m.RequestUri!.Query.Contains("thumbnailOnly"))
+                .With(m => !m.RequestUri!.Query.Contains("ThumbnailOnly"))
                 .Respond("application/json", JsonSerializer.Serialize(withFullImages, JsonOptions));
 
             var cache = new MemoryCache(new MemoryCacheOptions());
             var service = CreateService(mockHttp, cache: cache);
 
-            var thumbnailResult = await service.SearchAsync(thumbnailOnly: true);
+            var thumbnailResult = await service.SearchAsync(new QueryParameters<RecipeModel>
+            {
+                Filters = [new FilterItem("ThumbnailOnly", true, FilterOperator.Equals)]
+            });
             var fullImageResult = await service.SearchAsync();
 
             using (Assert.EnterMultipleScope())

@@ -42,6 +42,9 @@
 	<data name="PageTitle" xml:space="preserve">
 		<value>Products</value>
 	</data>
+	<data name="AllCategoriesOption" xml:space="preserve">
+		<value>All categories</value>
+	</data>
 	<data name="NewButton" xml:space="preserve">
 		<value>New</value>
 	</data>

@@ -15,8 +15,7 @@ namespace RecipeBook.Services.Http
             CancellationToken cancellationToken = default);
         Task<PagedList<RecipeModel>?> SearchAsync(
             QueryParameters<RecipeModel>? queryParameters = null,
-            CancellationToken cancellationToken = default,
-            bool thumbnailOnly = false);
+            CancellationToken cancellationToken = default);
         Task<CommandResponse?> AddAsync(RecipeEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> UpdateAsync(RecipeEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);

@@ -816,7 +816,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _productServiceMock
                 .Setup(s => s.SearchAsync(
                     It.Is<QueryParameters<ProductModel>>(q => q.Filters!.Any(f => f.PropertyName == "ProductCategoryId" && (string)f.Value! == categoryId)),
-                    CancellationToken.None, true))
+                    CancellationToken.None))
                 .ReturnsAsync(products);
 
             var method = typeof(RecipeEdit).GetMethod("OnProductCategoryChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -845,8 +845,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _productServiceMock
                 .Setup(s => s.SearchAsync(
-                    It.Is<QueryParameters<ProductModel>>(q => q.Filters != null && !q.Filters.Any()),
-                    CancellationToken.None, true))
+                    It.Is<QueryParameters<ProductModel>>(q => q.Filters != null && q.Filters.Count() == 1 && q.Filters.Any(f => f.PropertyName == "ThumbnailOnly")),
+                    CancellationToken.None))
                 .ReturnsAsync(products);
 
             var method = typeof(RecipeEdit).GetMethod("OnProductCategoryChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -861,7 +861,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             _productServiceMock.Verify(
-                s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(q => q.Filters != null && !q.Filters.Any()), CancellationToken.None, true),
+                s => s.SearchAsync(
+                    It.Is<QueryParameters<ProductModel>>(q => q.Filters != null && q.Filters.Count() == 1 && q.Filters.Any(f => f.PropertyName == "ThumbnailOnly")),
+                    CancellationToken.None),
                 Times.Once);
         }
 

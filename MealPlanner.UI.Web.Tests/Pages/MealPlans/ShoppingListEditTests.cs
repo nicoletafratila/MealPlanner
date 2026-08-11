@@ -563,7 +563,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var products = new PagedList<ProductModel>([new() { Id = Guid.NewGuid() }], new Metadata());
 
             _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None, true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
                 .ReturnsAsync(products);
 
             var cut = RenderComponent("0");
@@ -584,9 +584,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _productServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(qp =>
                     qp.Filters != null &&
-                    qp.Filters.Count() == 1 &&
-                    qp.Filters.First().PropertyName == "ProductCategoryId" &&
-                    qp.Filters.First().Value as string == "3"), CancellationToken.None, true),
+                    qp.Filters.Count() == 2 &&
+                    qp.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true)) &&
+                    qp.Filters.Any(f => f.PropertyName == "ProductCategoryId" && f.Value as string == "3")), CancellationToken.None),
                 Times.Once);
 
             using (Assert.EnterMultipleScope())

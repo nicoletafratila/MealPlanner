@@ -480,7 +480,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
             var productCategoryId = e.Value?.ToString();
-            var filters = new List<Common.Pagination.FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>
+            {
+                new("ThumbnailOnly", true, Common.Pagination.FilterOperator.Equals)
+            };
 
             if (!string.IsNullOrWhiteSpace(productCategoryId))
             {
@@ -506,7 +509,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 PageNumber = 1
             };
 
-            Products = await ProductService.SearchAsync(queryParameters, thumbnailOnly: true);
+            Products = await ProductService.SearchAsync(queryParameters);
 
             ProductId = string.Empty;
             Quantity = string.Empty;

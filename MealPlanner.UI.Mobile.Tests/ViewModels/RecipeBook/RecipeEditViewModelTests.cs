@@ -67,7 +67,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 .ReturnsAsync(new PagedList<UnitModel>(units, Metadata.Create(1, 100, units.Count)));
 
             _productServiceMock
-                .Setup(s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(p => p.PageSize == 500), CancellationToken.None, true))
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(p => p.PageSize == 500), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductModel>(products, Metadata.Create(1, 500, products.Count)));
 
             _productCategoryServiceMock
@@ -170,7 +170,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<UnitModel>([], Metadata.Create(1, 100, 0)));
             _productServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None, true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductModel>([], Metadata.Create(1, 500, 0)));
             _productCategoryServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))

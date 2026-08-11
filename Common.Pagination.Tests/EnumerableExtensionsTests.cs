@@ -134,6 +134,44 @@ namespace Common.Pagination.Tests
         }
 
         [Test]
+        public void ApplySorting_Sorts_By_Nested_PropertyPath()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Id = Guid.NewGuid(), Name = "R1", RecipeCategory = new() { Name = "Dinner" } },
+                new RecipeModel { Id = Guid.NewGuid(), Name = "R2", RecipeCategory = new() { Name = "Breakfast" } }
+            }.AsQueryable();
+
+            var sorting = new[]
+            {
+                CreateSortingModel("RecipeCategory.Name", SortDirection.Ascending)
+            };
+
+            var result = data.ApplySorting(sorting).ToArray();
+
+            Assert.That(result.Select(x => x.Name), Is.EqualTo(new[] { "R2", "R1" }));
+        }
+
+        [Test]
+        public void ApplySorting_Throws_When_Nested_Segment_Not_Found()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Id = Guid.NewGuid(), RecipeCategory = new() { Name = "Dinner" } }
+            }.AsQueryable();
+
+            var sorting = new[]
+            {
+                CreateSortingModel("RecipeCategory.DoesNotExist", SortDirection.Ascending)
+            };
+
+            Assert.That(
+                () => data.ApplySorting(sorting),
+                Throws.TypeOf<ArgumentException>()
+                      .With.Message.Contains("DoesNotExist"));
+        }
+
+        [Test]
         public void ApplySorting_Is_CaseInsensitive_For_Property_Names()
         {
             var data = new[]

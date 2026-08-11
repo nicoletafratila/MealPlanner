@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Common.Pagination
 {
@@ -39,16 +38,9 @@ namespace Common.Pagination
             if (string.IsNullOrWhiteSpace(filter.PropertyName))
                 throw new ArgumentException("PropertyName cannot be null or empty.", nameof(filter));
 
-            var propertyInfo = typeof(T).GetProperty(
-                                   filter.PropertyName,
-                                   BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
-                               ?? throw new ArgumentException(
-                                   $"Property {filter.PropertyName} does not exist on type {typeof(T).Name}",
-                                   nameof(filter));
-
             var parameter = Expression.Parameter(typeof(T), "x");
-            var member = Expression.Property(parameter, propertyInfo);
-            var propertyType = propertyInfo.PropertyType;
+            var member = PropertyPathExpression.Resolve(parameter, filter.PropertyName);
+            var propertyType = member.Type;
             var underlyingType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
             bool isNullable = underlyingType != propertyType;
 

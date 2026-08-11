@@ -71,7 +71,6 @@ namespace RecipeBook.Api.Controllers
             [FromQuery] string? sorting,
             [FromQuery] string? pageSize,
             [FromQuery] string? pageNumber,
-            [FromQuery] bool thumbnailOnly,
             CancellationToken cancellationToken)
         {
             if (!int.TryParse(pageSize, out var size) || size <= 0 ||
@@ -98,8 +97,7 @@ namespace RecipeBook.Api.Controllers
 
             var query = new SearchQuery
             {
-                QueryParameters = qp,
-                ThumbnailOnly = thumbnailOnly
+                QueryParameters = qp
             };
 
             var result = await _mediator.Send(query, cancellationToken);

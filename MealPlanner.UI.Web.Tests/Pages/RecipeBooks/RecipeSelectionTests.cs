@@ -69,7 +69,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             // Act
@@ -105,7 +105,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             };
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PagedList<RecipeModel>(
                     recipes, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 2 }));
 
@@ -128,15 +128,15 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _recipeServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<RecipeModel>>(qp =>
                     qp.Filters != null &&
-                    qp.Filters.Count() == 1 &&
-                    qp.Filters.First().PropertyName == "RecipeCategoryId" &&
-                    qp.Filters.First().Value as string == "1" &&
+                    qp.Filters.Count() == 2 &&
+                    qp.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true)) &&
+                    qp.Filters.Any(f => f.PropertyName == "RecipeCategoryId" && f.Value as string == "1") &&
                     qp.Sorting != null &&
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&
                     qp.Sorting.First().Direction == SortDirection.Ascending &&
                     qp.PageSize == int.MaxValue &&
-                    qp.PageNumber == 1), It.IsAny<CancellationToken>(), true),
+                    qp.PageNumber == 1), It.IsAny<CancellationToken>()),
                 Times.Once);
 
             Assert.That(cut.Instance.Recipes, Is.Not.Null);
@@ -154,7 +154,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             var cut = RenderComponent();
@@ -172,15 +172,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 await task;
             });
 
-            // Assert: filters empty, sorting by Name ascending
+            // Assert: only the ThumbnailOnly sentinel filter, sorting by Name ascending
             _recipeServiceMock.Verify(
                 s => s.SearchAsync(It.Is<QueryParameters<RecipeModel>>(qp =>
                     qp.Filters != null &&
-                    qp.Filters.Count() == 0 &&
+                    qp.Filters.Count() == 1 &&
+                    qp.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true)) &&
                     qp.Sorting != null &&
                     qp.Sorting.Count() == 1 &&
                     qp.Sorting.First().PropertyName == "Name" &&
-                    qp.Sorting.First().Direction == SortDirection.Ascending), It.IsAny<CancellationToken>(), true),
+                    qp.Sorting.First().Direction == SortDirection.Ascending), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -196,7 +197,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _modalControllerMock
@@ -238,7 +239,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>(), true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
 
             _modalControllerMock

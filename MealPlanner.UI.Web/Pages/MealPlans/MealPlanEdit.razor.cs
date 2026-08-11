@@ -326,7 +326,10 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var recipeCategoryId = e.Value?.ToString();
             RecipeId = string.Empty;
 
-            var filters = new List<Common.Pagination.FilterItem>();
+            var filters = new List<Common.Pagination.FilterItem>
+            {
+                new("ThumbnailOnly", true, Common.Pagination.FilterOperator.Equals)
+            };
 
             if (!string.IsNullOrWhiteSpace(recipeCategoryId))
             {
@@ -352,7 +355,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 PageSize = int.MaxValue
             };
 
-            Recipes = await RecipeService.SearchAsync(queryParameters, thumbnailOnly: true);
+            Recipes = await RecipeService.SearchAsync(queryParameters);
             StateHasChanged();
         }
 

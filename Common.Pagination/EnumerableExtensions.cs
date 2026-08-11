@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Common.Pagination
 {
@@ -25,15 +24,8 @@ namespace Common.Pagination
                 if (string.IsNullOrWhiteSpace(sort.PropertyName))
                     throw new ArgumentException("SortString cannot be null or empty.", nameof(sortingModels));
 
-                var propertyInfo = typeof(TItem).GetProperty(
-                    sort.PropertyName,
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
-                    ?? throw new ArgumentException(
-                        $"Property '{sort.PropertyName}' does not exist on type {typeof(TItem).Name}.",
-                        nameof(sortingModels));
-
-                var property = Expression.Property(parameter, propertyInfo);
-                var lambda = Expression.Lambda(property, parameter);
+                var member = PropertyPathExpression.Resolve(parameter, sort.PropertyName);
+                var lambda = Expression.Lambda(member, parameter);
 
                 var methodName = isFirst
                     ? (sort.Direction == SortDirection.Descending ? "OrderByDescending" : "OrderBy")
@@ -44,7 +36,7 @@ namespace Common.Pagination
                 current = Expression.Call(
                     typeof(Queryable),
                     methodName,
-                    [typeof(TItem), property.Type],
+                    [typeof(TItem), member.Type],
                     current,
                     Expression.Quote(lambda));
             }

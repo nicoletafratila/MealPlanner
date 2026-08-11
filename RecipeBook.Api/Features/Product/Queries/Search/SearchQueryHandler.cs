@@ -35,8 +35,10 @@ namespace RecipeBook.Api.Features.Product.Queries.Search
                 categoryId = parsedCategoryId;
             }
 
+            var thumbnailOnly = qp.Filters.TryExtractBooleanFlag("ThumbnailOnly", out var remainingFilters);
+
             var (entities, totalCount, skip) = await _repository.SearchByUserAsync(
-                userId, categoryId, qp.Filters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken, request.ThumbnailOnly);
+                userId, categoryId, remainingFilters, qp.Sorting, qp.PageNumber, qp.PageSize, cancellationToken, thumbnailOnly);
 
             var models = _mapper.Map<IList<ProductModel>>(entities) ?? [];
             var metadata = Metadata.Create(qp.PageNumber, qp.PageSize, totalCount);

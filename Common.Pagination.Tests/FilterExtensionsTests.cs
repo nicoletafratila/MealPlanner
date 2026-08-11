@@ -468,6 +468,63 @@ namespace Common.Pagination.Tests
         }
 
         [Test]
+        public void ConvertFilterItemToFunc_Works_With_Nested_PropertyPath()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Name = "John", RecipeCategory = new() { Name = "Breakfast" } },
+                new RecipeModel { Name = "Jane", RecipeCategory = new() { Name = "Dinner" } }
+            };
+
+            var filter = new FilterItem(
+                propertyName: "RecipeCategory.Name",
+                value: "Breakfast",
+                @operator: FilterOperator.Equals,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
+            var result = data.Where(predicate).ToArray();
+
+            Assert.That(result, Has.Length.EqualTo(1));
+            Assert.That(result[0].Name, Is.EqualTo("John"));
+        }
+
+        [Test]
+        public void ConvertFilterItemToFunc_Throws_When_Nested_Segment_Not_Found()
+        {
+            var filter = new FilterItem(
+                propertyName: "RecipeCategory.DoesNotExist",
+                value: "a",
+                @operator: FilterOperator.Equals,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            Assert.That(
+                () => filter.ConvertFilterItemToFunc<RecipeModel>(),
+                Throws.TypeOf<ArgumentException>()
+                      .With.Message.Contains("DoesNotExist"));
+        }
+
+        [Test]
+        public void ConvertFilterItemToQueryableExpression_Works_With_Nested_PropertyPath_Over_IQueryable()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Name = "John", RecipeCategory = new() { Name = "Breakfast" } },
+                new RecipeModel { Name = "Jane", RecipeCategory = new() { Name = "Dinner" } }
+            }.AsQueryable();
+
+            var filter = new FilterItem(
+                propertyName: "RecipeCategory.Name",
+                value: "inner",
+                @operator: FilterOperator.Contains,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var result = data.Where(filter.ConvertFilterItemToQueryableExpression<RecipeModel>()).ToArray();
+
+            Assert.That(result.Select(x => x.Name), Is.EquivalentTo(["Jane"]));
+        }
+
+        [Test]
         public void ApplyFilters_MultipleFilters_AppliesEachAsAnd()
         {
             var data = new[]

@@ -135,7 +135,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             QueryParameters<RecipeModel>? captured = null;
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
-                .Callback<QueryParameters<RecipeModel>, CancellationToken, bool>((p, _, _) => captured = p)
+                .Callback<QueryParameters<RecipeModel>, CancellationToken>((p, _) => captured = p)
                 .ReturnsAsync(RecipesPage([], 1, 20, 0));
 
             await _viewModel.SearchCommand.ExecuteAsync(null);
@@ -151,7 +151,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             QueryParameters<RecipeModel>? captured = null;
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
-                .Callback<QueryParameters<RecipeModel>, CancellationToken, bool>((p, _, _) => captured = p)
+                .Callback<QueryParameters<RecipeModel>, CancellationToken>((p, _) => captured = p)
                 .ReturnsAsync(RecipesPage([], 1, 20, 0));
 
             await _viewModel.SearchCommand.ExecuteAsync(null);
@@ -176,7 +176,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             QueryParameters<RecipeModel>? captured = null;
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
-                .Callback<QueryParameters<RecipeModel>, CancellationToken, bool>((p, _, _) => captured = p)
+                .Callback<QueryParameters<RecipeModel>, CancellationToken>((p, _) => captured = p)
                 .ReturnsAsync(RecipesPage([], 1, 20, 0));
 
             // Setting SelectedCategory triggers a search via OnSelectedCategoryChanged.
@@ -210,7 +210,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             QueryParameters<RecipeModel>? captured = null;
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
-                .Callback<QueryParameters<RecipeModel>, CancellationToken, bool>((p, _, _) => captured = p)
+                .Callback<QueryParameters<RecipeModel>, CancellationToken>((p, _) => captured = p)
                 .ReturnsAsync(RecipesPage([], 1, 20, 0));
 
             _viewModel.ClearCategoryCommand.Execute(null);

@@ -61,6 +61,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All categories.
+        /// </summary>
+        internal static string AllCategoriesOption {
+            get {
+                return ResourceManager.GetString("AllCategoriesOption", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         internal static string BreadcrumbHome {

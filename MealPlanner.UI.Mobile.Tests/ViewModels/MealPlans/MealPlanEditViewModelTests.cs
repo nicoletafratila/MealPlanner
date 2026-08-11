@@ -74,7 +74,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeCategoryModel>(categories, Metadata.Create(1, 200, categories.Count)));
             _recipeServiceMock
-                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None, true))
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeModel>(recipes, Metadata.Create(1, 500, recipes.Count)));
             _shopServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>(), CancellationToken.None))

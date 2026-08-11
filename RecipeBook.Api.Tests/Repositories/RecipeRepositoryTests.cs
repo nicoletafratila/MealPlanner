@@ -515,6 +515,54 @@ namespace RecipeBook.Api.Tests.Repositories
         }
 
         [Test]
+        public async Task SearchByUserAsync_RecipeCategoryNameFilter_ReturnsOnlyMatchingCategory()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = r2.UserId = "user1";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            var filters = new[] { new FilterItem("RecipeCategoryName", "Main", FilterOperator.Contains) };
+
+            // Act
+            var (items, totalCount, _) = await repo.SearchByUserAsync(
+                "user1", null, filters, null, 1, 10, CancellationToken.None);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(totalCount, Is.EqualTo(1));
+                Assert.That(items.Single().Name, Is.EqualTo("R1"));
+            }
+        }
+
+        [Test]
+        public async Task SearchByUserAsync_RecipeCategoryNameSorting_ReturnsSortedByCategoryName()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = r2.UserId = "user1";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            var sorting = new[] { new SortingModel { PropertyName = "RecipeCategoryName", Direction = SortDirection.Ascending } };
+
+            // Act
+            var (items, _, _) = await repo.SearchByUserAsync(
+                "user1", null, null, sorting, 1, 10, CancellationToken.None);
+
+            // Assert
+            Assert.That(items.Select(x => x.Name), Is.EqualTo(["R2", "R1"]));
+        }
+
+        [Test]
         public async Task SearchByUserAsync_Paging_ReturnsRequestedPageAndSkip()
         {
             // Arrange
