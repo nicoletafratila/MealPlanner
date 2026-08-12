@@ -53,7 +53,7 @@ namespace RecipeBook.Services.Http
 
         public async Task<PagedList<RecipeModel>?> SearchAsync(QueryParameters<RecipeModel>? queryParameters = null, CancellationToken cancellationToken = default)
         {
-            var userId = JwtUserIdExtractor.GetUserId(await tokenProvider.GetTokenAsync(cancellationToken));
+            var userId = JwtUserIdExtractor.GetUserId(await TokenProvider.GetTokenAsync(cancellationToken));
             var cacheKey = SearchCacheKeyBuilder.Build("recipes", queryParameters, userId);
             if (cache.TryGetValue(cacheKey, out PagedList<RecipeModel>? cached))
             {

@@ -32,7 +32,7 @@ namespace MealPlanner.Services.Http
 
         public async Task<PagedList<ShopModel>?> SearchAsync(QueryParameters<ShopModel>? queryParameters = null, CancellationToken cancellationToken = default)
         {
-            var userId = JwtUserIdExtractor.GetUserId(await tokenProvider.GetTokenAsync(cancellationToken));
+            var userId = JwtUserIdExtractor.GetUserId(await TokenProvider.GetTokenAsync(cancellationToken));
             var cacheKey = SearchCacheKeyBuilder.Build("shops", queryParameters, userId);
             if (cache.TryGetValue(cacheKey, out PagedList<ShopModel>? cached))
             {
