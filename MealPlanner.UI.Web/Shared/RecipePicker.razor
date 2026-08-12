@@ -1,0 +1,30 @@
+@using RecipeBook.Shared.Models
+
+<div class="dropdown recipe-picker">
+    <button id="@Id" type="button" class="form-select text-start d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        @if (SelectedRecipe != null)
+        {
+            <img src="@SelectedRecipe.ThumbnailUrl" class="recipe-picker-thumb" alt="" />
+            <span>@SelectedRecipe.Name</span>
+        }
+        else
+        {
+            <span>@Placeholder</span>
+        }
+    </button>
+    <ul class="dropdown-menu w-100">
+        <li><a class="dropdown-item" href="javascript:void(0)" @onclick="() => SelectAsync(null)">@Placeholder</a></li>
+        @if (Recipes != null)
+        {
+            @foreach (var item in Recipes)
+            {
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:void(0)" @onclick="() => SelectAsync(item)">
+                        <img src="@item.ThumbnailUrl" class="recipe-picker-thumb" alt="" />
+                        <span>@item.Name</span>
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</div>

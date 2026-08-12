@@ -32,16 +32,7 @@
 
             <div class="form-group mt-3">
                 <label for="recipeCategory">@Resources.RecipeSelection.LabelRecipe</label>
-                <InputSelect id="recipe" class="form-select" @bind-Value="@RecipeId">
-                    <option selected value="0">@Resources.RecipeSelection.ChooseOption</option>
-                    @if (Recipes != null && Recipes.Items!.Any())
-                    {
-                        @foreach (var item in Recipes.Items!)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    }
-                </InputSelect>
+                <RecipePicker Id="recipe" Recipes="Recipes?.Items" @bind-Value="RecipeId" Placeholder="@Resources.RecipeSelection.ChooseOption" />
             </div>
 
             <div class="col mt-3">

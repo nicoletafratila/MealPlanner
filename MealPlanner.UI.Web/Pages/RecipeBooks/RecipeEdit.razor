@@ -93,16 +93,7 @@
 
                 <div class="form-group mt-3">
                     <label for="ingredient" class="col-sm-3">@Resources.RecipeEdit.LabelIngredient</label>
-                    <select id="ingredient" class="form-select" @onchange="OnProductChangedAsync">
-                        <option selected value="0">@Resources.RecipeEdit.ChooseOption</option>
-                        @if (Products != null && Products!.Items!.Any())
-                        {
-                            @foreach (var item in Products?.Items!)
-                            {
-                                <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
-                            }
-                        }
-                    </select>
+                    <ProductPicker Id="ingredient" Products="Products?.Items" SelectedProductId="@ProductId" Placeholder="@Resources.RecipeEdit.ChooseOption" OnChanged="OnProductChangedAsync" />
                 </div>
 
                 <div class="form-group mt-3">

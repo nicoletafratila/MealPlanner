@@ -44,5 +44,3 @@ Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI
 
 
 
-cand dechid users se inchide
-imagine pe web la selectare produse, retete

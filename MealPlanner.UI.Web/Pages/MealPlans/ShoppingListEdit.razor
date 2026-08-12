@@ -77,16 +77,7 @@
 
                 <div class="form-group mt-3">
                     <label for="Product" class="col-sm-3">@Resources.ShoppingListEdit.LabelProduct</label>
-                    <select id="Product" class="form-select" @onchange="OnProductChangedAsync">
-                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
-                        @if (Products != null && Products!.Items!.Any())
-                        {
-                            @foreach (var item in Products?.Items!)
-                            {
-                                <option value="@item.Id">@item.Name (@item.BaseUnit!.Name)</option>
-                            }
-                        }
-                    </select>
+                    <ProductPicker Id="Product" Products="Products?.Items" SelectedProductId="@ProductId" Placeholder="@Resources.ShoppingListEdit.ChooseOption" OnChanged="OnProductChangedAsync" />
                 </div>
 
                 <div class="form-group mt-3">

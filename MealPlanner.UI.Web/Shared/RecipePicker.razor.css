@@ -1,0 +1,18 @@
+.recipe-picker {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.recipe-picker-thumb {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}

@@ -54,16 +54,7 @@
                 <div class="form-group mt-3">
                     <label for="recipe" class="col-sm-3">@Resources.MealPlanEdit.LabelRecipe</label>
                     <div class="input-group">
-                        <InputSelect id="recipe" class="form-select" @bind-Value="@RecipeId">
-                            <option selected value="0">@Resources.MealPlanEdit.ChooseOption</option>
-                            @if (Recipes != null && Recipes!.Items!.Any())
-                            {
-                                @foreach (var item in Recipes?.Items!)
-                                {
-                                    <option value="@item.Id">@item.Name</option>
-                                }
-                            }
-                        </InputSelect>
+                        <RecipePicker Id="recipe" Recipes="Recipes?.Items" @bind-Value="RecipeId" Placeholder="@Resources.MealPlanEdit.ChooseOption" />
                         <button class="btn btn-primary" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.MealPlanEdit.AddButton</button>
                     </div>
                 </div>
