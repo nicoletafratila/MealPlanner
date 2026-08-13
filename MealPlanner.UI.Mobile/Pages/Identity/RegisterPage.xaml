@@ -10,6 +10,11 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="12">
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <Label Text="{x:Static res:RegisterPage.Heading}" Style="{StaticResource PageTitleLabel}" />
 
             <Label Text="{x:Static res:RegisterPage.UsernameLabel}" Style="{StaticResource SectionHeaderLabel}" />
@@ -39,11 +44,6 @@
                     </Label.FormattedText>
                 </Label>
             </HorizontalStackLayout>
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
-                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 
             <Button Text="{x:Static res:RegisterPage.RegisterButton}" Command="{Binding RegisterCommand}"
                     IsEnabled="{Binding IsNotBusy}" Margin="0,8,0,0" />

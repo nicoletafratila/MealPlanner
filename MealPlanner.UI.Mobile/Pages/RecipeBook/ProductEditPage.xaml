@@ -18,6 +18,8 @@
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="12">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
             <Label Text="{x:Static res:ProductEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ProductEditPage.PlaceholderName}" />
             <Label Text="{x:Static res:ProductEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
@@ -30,8 +32,6 @@
             <Button Text="{x:Static res:ProductEditPage.PickImageButton}" Command="{Binding PickImageCommand}" HorizontalOptions="Start" />
             <Image Source="{Binding ProductImage}" HeightRequest="150" Aspect="AspectFit"
                    IsVisible="{Binding ProductImage, Converter={x:Static converters:NotNullConverter.Instance}}" />
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

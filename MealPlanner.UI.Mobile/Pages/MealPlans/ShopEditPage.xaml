@@ -20,6 +20,9 @@
         <VerticalStackLayout Padding="24" Spacing="12">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,8" />
 
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <Label Text="{x:Static res:ShopEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShopEditPage.PlaceholderName}" />
 
@@ -44,9 +47,6 @@
 
             <Label Text="{x:Static res:ShopEditPage.EmptyCategories}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16"
                    IsVisible="{Binding DisplaySequence.Count, Converter={x:Static converters:ZeroToBoolConverter.Instance}}" />
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -16,6 +16,11 @@
         <VerticalStackLayout Padding="24" Spacing="12" IsVisible="{Binding Model, Converter={x:Static converters:NotNullConverter.Instance}}">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <Grid RowDefinitions="Auto" ColumnDefinitions="*">
                 <Image Source="{Binding ProfileImage}" HeightRequest="120" WidthRequest="120" Aspect="AspectFill"
                        HorizontalOptions="Center"
@@ -53,11 +58,6 @@
                         Command="{Binding UnlockCommand}" HorizontalOptions="Start"
                         IsVisible="{Binding IsLockedOut}" />
             </VerticalStackLayout>
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
-                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 
             <Button Text="{x:Static res:UserProfilePage.ChangePasswordButton}" Style="{StaticResource OutlineButton}"
                     Command="{Binding ChangePasswordCommand}" Margin="0,16,0,0" />

@@ -16,10 +16,10 @@
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="24" Spacing="12">
-        <Label Text="{x:Static res:RecipeCategoryEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
-        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:RecipeCategoryEditPage.PlaceholderName}" />
-
         <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
+        <Label Text="{x:Static res:RecipeCategoryEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:RecipeCategoryEditPage.PlaceholderName}" />
     </VerticalStackLayout>
 </ContentPage>

@@ -13,6 +13,9 @@
     <ScrollView>
         <VerticalStackLayout Padding="32,60,32,32" Spacing="16">
 
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <Label Text="{x:Static res:LoginPage.AppName}" FontSize="32" FontAttributes="Bold"
                    TextColor="{StaticResource Primary}" HorizontalOptions="Center" />
             <Label Text="{x:Static res:LoginPage.Subtitle}" TextColor="{StaticResource DarkGray}"
@@ -31,9 +34,6 @@
                 <CheckBox IsChecked="{Binding RememberMe}" VerticalOptions="Center" />
                 <Label Text="{x:Static res:LoginPage.RememberMeLabel}" VerticalOptions="Center" />
             </HorizontalStackLayout>
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 
             <Button Text="{x:Static res:LoginPage.LoginButton}" Command="{Binding LoginCommand}"
                     IsEnabled="{Binding IsNotBusy}" Margin="0,8,0,0" />

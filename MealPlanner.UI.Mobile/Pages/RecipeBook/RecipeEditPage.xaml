@@ -17,6 +17,9 @@
         <VerticalStackLayout Padding="20" Spacing="12">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <Label Text="{x:Static res:RecipeEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderName}" />
 
@@ -107,9 +110,6 @@
             </VerticalStackLayout>
             <Label Text="{x:Static res:RecipeEditPage.EmptyIngredients}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16"
                    IsVisible="{Binding RecipeIngredients.Count, Converter={x:Static converters:ZeroToBoolConverter.Instance}}" />
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

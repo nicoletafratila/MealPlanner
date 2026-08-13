@@ -16,9 +16,9 @@
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="24" Spacing="12">
-        <Label Text="{x:Static res:ProductCategoryEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
-        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ProductCategoryEditPage.PlaceholderName}" />
         <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+        <Label Text="{x:Static res:ProductCategoryEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
+        <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ProductCategoryEditPage.PlaceholderName}" />
     </VerticalStackLayout>
 </ContentPage>

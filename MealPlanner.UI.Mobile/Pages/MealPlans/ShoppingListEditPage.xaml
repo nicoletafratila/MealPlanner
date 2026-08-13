@@ -21,6 +21,9 @@
         <VerticalStackLayout Padding="20,12,20,0" Spacing="8">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,8" />
 
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <!-- Collapsible details toggle -->
             <Grid ColumnDefinitions="*,Auto">
                 <Grid.GestureRecognizers>
@@ -141,9 +144,6 @@
 
             <Label Text="{x:Static res:ShoppingListEditPage.EmptyProducts}" HorizontalOptions="Center" TextColor="{StaticResource DarkGray}" Margin="0,16"
                    IsVisible="{Binding ShoppingListProducts.Count, Converter={x:Static converters:ZeroToBoolConverter.Instance}}" />
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

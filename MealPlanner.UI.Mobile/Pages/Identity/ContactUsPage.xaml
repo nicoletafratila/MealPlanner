@@ -10,6 +10,11 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
             <Label Text="{x:Static res:ContactUsPage.Heading}" Style="{StaticResource PageTitleLabel}" />
 
             <Label Text="{x:Static res:ContactUsPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
@@ -23,11 +28,6 @@
 
             <Label Text="{x:Static res:ContactUsPage.MessageLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Editor Text="{Binding Model.Message}" Placeholder="{x:Static res:ContactUsPage.PlaceholderMessage}" HeightRequest="120" AutoSize="TextChanges" />
-
-            <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
-            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
-                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 
             <Button Text="{x:Static res:ContactUsPage.SendButton}" Command="{Binding SendCommand}" IsEnabled="{Binding IsNotBusy}" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />

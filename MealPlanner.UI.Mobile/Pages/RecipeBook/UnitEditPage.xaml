@@ -16,11 +16,11 @@
     </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Padding="24" Spacing="12">
+        <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
+               IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
         <Label Text="{x:Static res:UnitEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
         <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:UnitEditPage.PlaceholderName}" />
         <Label Text="{x:Static res:UnitEditPage.UnitTypeLabel}" Style="{StaticResource SectionHeaderLabel}" />
         <Picker ItemsSource="{Binding UnitTypes}" SelectedItem="{Binding Model.UnitType}" />
-        <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
-               IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
     </VerticalStackLayout>
 </ContentPage>
