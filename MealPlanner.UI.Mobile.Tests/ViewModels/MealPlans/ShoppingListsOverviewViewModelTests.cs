@@ -98,6 +98,24 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         }
 
         [Test]
+        public async Task SearchText_ClearedAfterSearch_ReloadsAllShoppingLists()
+        {
+            var metadata = Metadata.Create(1, 20, 2);
+            _shoppingListServiceMock
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<ShoppingListModel>>(p => p.Filters == null), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShoppingListModel>(
+                    [new ShoppingListModel(Guid.NewGuid(), "Week 1 list"), new ShoppingListModel(Guid.NewGuid(), "Week 2 list")], metadata));
+
+            _viewModel.SearchText = string.Empty;
+            if (_viewModel.SearchCommand.ExecutionTask is { } task)
+            {
+                await task;
+            }
+
+            Assert.That(_viewModel.ShoppingLists, Has.Count.EqualTo(2));
+        }
+
+        [Test]
         public async Task DeleteAsync_Success_RemovesShoppingListFromCollection()
         {
             var shoppingList = new ShoppingListModel(Guid.NewGuid(), "Week 1 list");

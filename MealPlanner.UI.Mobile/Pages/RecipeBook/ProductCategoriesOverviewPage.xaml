@@ -14,7 +14,7 @@
 
     <Grid RowDefinitions="Auto,*">
         <SearchBar Grid.Row="0" Placeholder="{x:Static res:ProductCategoriesOverviewPage.PlaceholderSearch}" Text="{Binding SearchText}"
-                   SearchCommand="{Binding LoadCommand}" Margin="12,8" />
+                   SearchCommand="{Binding SearchCommand}" Margin="12,8" />
         <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None"
                             ItemSizingStrategy="MeasureFirstItem"

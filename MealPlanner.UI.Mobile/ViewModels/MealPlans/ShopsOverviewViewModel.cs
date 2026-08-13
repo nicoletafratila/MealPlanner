@@ -54,6 +54,17 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task SearchAsync() => await LoadAsync();
+
+        partial void OnSearchTextChanged(string? value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                SearchCommand.Execute(null);
+            }
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task NextPageAsync()
         {
             if (IsLoadingMore || IsBusy || !HasNextPage) return;

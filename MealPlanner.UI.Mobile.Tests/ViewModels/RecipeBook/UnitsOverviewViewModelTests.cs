@@ -97,6 +97,24 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
+        public async Task SearchText_ClearedAfterSearch_ReloadsAllUnits()
+        {
+            var metadata = Metadata.Create(1, 200, 2);
+            _unitServiceMock
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<UnitModel>>(p => p.Filters == null), CancellationToken.None))
+                .ReturnsAsync(new PagedList<UnitModel>(
+                    [new UnitModel(Guid.NewGuid(), "Kilogram", UnitType.Weight), new UnitModel(Guid.NewGuid(), "Liter", UnitType.Liquid)], metadata));
+
+            _viewModel.SearchText = string.Empty;
+            if (_viewModel.SearchCommand.ExecutionTask is { } task)
+            {
+                await task;
+            }
+
+            Assert.That(_viewModel.Units, Has.Count.EqualTo(2));
+        }
+
+        [Test]
         public async Task DeleteAsync_Success_RemovesUnitFromCollection()
         {
             var unit = new UnitModel(Guid.NewGuid(), "Kilogram", UnitType.Weight);

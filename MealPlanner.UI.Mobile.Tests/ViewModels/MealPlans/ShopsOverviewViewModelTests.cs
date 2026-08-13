@@ -162,6 +162,24 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         }
 
         [Test]
+        public async Task SearchText_ClearedAfterSearch_ReloadsAllShops()
+        {
+            var metadata = Metadata.Create(1, 100, 2);
+            _shopServiceMock
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<ShopModel>>(p => p.Filters == null), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ShopModel>(
+                    [new ShopModel(Guid.NewGuid(), "Lidl"), new ShopModel(Guid.NewGuid(), "Kaufland")], metadata));
+
+            _viewModel.SearchText = string.Empty;
+            if (_viewModel.SearchCommand.ExecutionTask is { } task)
+            {
+                await task;
+            }
+
+            Assert.That(_viewModel.Shops, Has.Count.EqualTo(2));
+        }
+
+        [Test]
         public async Task DeleteAsync_Success_RemovesShopFromCollection()
         {
             var shop = new ShopModel(Guid.NewGuid(), "Lidl");

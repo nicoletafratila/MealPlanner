@@ -137,6 +137,24 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
+        public async Task SearchText_ClearedAfterSearch_ReloadsAllProducts()
+        {
+            var metadata = Metadata.Create(1, 20, 2);
+            _productServiceMock
+                .Setup(s => s.SearchAsync(It.Is<QueryParameters<ProductModel>>(p => p.Filters == null), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductModel>(
+                    [new ProductModel(Guid.NewGuid(), "Milk"), new ProductModel(Guid.NewGuid(), "Bread")], metadata));
+
+            _viewModel.SearchText = string.Empty;
+            if (_viewModel.SearchCommand.ExecutionTask is { } task)
+            {
+                await task;
+            }
+
+            Assert.That(_viewModel.Products, Has.Count.EqualTo(2));
+        }
+
+        [Test]
         public async Task DeleteAsync_Success_RemovesProductFromCollection()
         {
             var product = new ProductModel(Guid.NewGuid(), "Milk");

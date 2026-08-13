@@ -44,6 +44,17 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task SearchAsync() => await LoadAsync();
+
+        partial void OnSearchTextChanged(string? value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                SearchCommand.Execute(null);
+            }
+        }
+
         private FilterItem[]? BuildFilters() =>
             string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
 
