@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
+             xmlns:controls="clr-namespace:MealPlanner.UI.Mobile.Views.Controls"
              x:Class="MealPlanner.UI.Mobile.Pages.Identity.RegisterPage"
              x:DataType="vm:RegisterViewModel"
              Title="{x:Static res:RegisterPage.PageTitle}">
@@ -24,10 +25,10 @@
             <Entry Text="{Binding Model.EmailAddress}" Placeholder="{x:Static res:RegisterPage.PlaceholderEmail}" Keyboard="Email" />
 
             <Label Text="{x:Static res:RegisterPage.PasswordLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.Password}" Placeholder="{x:Static res:RegisterPage.PlaceholderPassword}" IsPassword="True" />
+            <controls:PasswordEntry Text="{Binding Model.Password}" Placeholder="{x:Static res:RegisterPage.PlaceholderPassword}" />
 
             <Label Text="{x:Static res:RegisterPage.ConfirmPasswordLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Model.ConfirmPassword}" Placeholder="{x:Static res:RegisterPage.PlaceholderConfirmPassword}" IsPassword="True" />
+            <controls:PasswordEntry Text="{Binding Model.ConfirmPassword}" Placeholder="{x:Static res:RegisterPage.PlaceholderConfirmPassword}" />
 
             <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
                 <CheckBox IsChecked="{Binding Model.AcceptedPrivacyPolicy}" />

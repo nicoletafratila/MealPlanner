@@ -43,6 +43,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NavStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\Controls\Resources\PasswordEntryStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PasswordEntryStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Pages\Identity\Resources\ChangePasswordPage.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ChangePasswordPage.Designer.cs</LastGenOutput>
@@ -170,6 +174,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>NavStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Controls\Resources\PasswordEntryStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PasswordEntryStrings.resx</DependentUpon>
     </Compile>
     <Compile Update="Pages\Identity\Resources\ChangePasswordPage.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -387,6 +396,9 @@
     </Compile>
     <Compile Update="Views\Controls\SelectorPopup.xaml.cs">
       <DependentUpon>SelectorPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Controls\PasswordEntry.xaml.cs">
+      <DependentUpon>PasswordEntry.xaml</DependentUpon>
     </Compile>
     <Compile Update="Pages\RecipeBook\RecipeStatisticsPage.xaml.cs">
       <DependentUpon>RecipeStatisticsPage.xaml</DependentUpon>

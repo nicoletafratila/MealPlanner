@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.Identity"
              xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.Identity.Resources"
+             xmlns:controls="clr-namespace:MealPlanner.UI.Mobile.Views.Controls"
              x:Class="MealPlanner.UI.Mobile.Pages.Identity.LoginPage"
              x:DataType="vm:LoginViewModel"
              Title="{x:Static res:LoginPage.PageTitle}"
@@ -26,9 +27,8 @@
                    ReturnType="Next" />
 
             <Label Text="{x:Static res:LoginPage.PasswordLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Entry Text="{Binding Password}" Placeholder="{x:Static res:LoginPage.PlaceholderPassword}"
-                   IsPassword="True" ReturnType="Go"
-                   ReturnCommand="{Binding LoginCommand}" />
+            <controls:PasswordEntry Text="{Binding Password}" Placeholder="{x:Static res:LoginPage.PlaceholderPassword}"
+                   ReturnType="Go" ReturnCommand="{Binding LoginCommand}" />
 
             <HorizontalStackLayout Spacing="8">
                 <CheckBox IsChecked="{Binding RememberMe}" VerticalOptions="Center" />
