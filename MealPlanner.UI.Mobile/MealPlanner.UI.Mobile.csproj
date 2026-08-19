@@ -409,11 +409,11 @@
     <PackageReference Include="CommunityToolkit.Maui" Version="14.1.1" />
   </ItemGroup>
 
-  <!-- Common.Constants has no ASP.NET or EF dependencies — safe to reference from MAUI -->
   <ItemGroup>
     <ProjectReference Include="..\Common.Constants\Common.Constants.csproj" />
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
     <ProjectReference Include="..\Common.Http\Common.Http.csproj" />
+    <ProjectReference Include="..\Common.Services\Common.Services.csproj" />
     <ProjectReference Include="..\Identity.Services.Http\Identity.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />

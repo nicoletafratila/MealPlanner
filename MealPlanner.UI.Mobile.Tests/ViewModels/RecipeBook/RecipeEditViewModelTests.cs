@@ -386,6 +386,59 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
+        public void AddIngredient_SameProductDifferentUnit_ConvertsToExistingUnitBeforeMerging()
+        {
+            var kg = new UnitModel(Guid.NewGuid(), "kg", UnitType.Weight);
+            var gr = new UnitModel(Guid.NewGuid(), "gr", UnitType.Weight);
+            var product = new ProductModel(Guid.NewGuid(), "Flour");
+            _viewModel.Units = new ObservableCollection<UnitModel> { kg, gr };
+
+            _viewModel.SelectedProduct = product;
+            _viewModel.SelectedUnit = kg;
+            _viewModel.QuantityText = "1";
+            _viewModel.AddIngredientCommand.Execute(null);
+
+            _viewModel.SelectedProduct = product;
+            _viewModel.SelectedUnit = gr;
+            _viewModel.QuantityText = "500";
+            _viewModel.AddIngredientCommand.Execute(null);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.RecipeIngredients, Has.Count.EqualTo(1));
+                Assert.That(_viewModel.RecipeIngredients[0].Unit, Is.SameAs(kg));
+                Assert.That(_viewModel.RecipeIngredients[0].Quantity, Is.EqualTo(1.5m));
+                Assert.That(_viewModel.ErrorMessage, Is.Null);
+            }
+        }
+
+        [Test]
+        public void AddIngredient_SameProductIncompatibleUnitType_SetsErrorAndLeavesQuantityUnchanged()
+        {
+            var kg = new UnitModel(Guid.NewGuid(), "kg", UnitType.Weight);
+            var liter = new UnitModel(Guid.NewGuid(), "l", UnitType.Liquid);
+            var product = new ProductModel(Guid.NewGuid(), "Milk");
+            _viewModel.Units = new ObservableCollection<UnitModel> { kg, liter };
+
+            _viewModel.SelectedProduct = product;
+            _viewModel.SelectedUnit = kg;
+            _viewModel.QuantityText = "1";
+            _viewModel.AddIngredientCommand.Execute(null);
+
+            _viewModel.SelectedProduct = product;
+            _viewModel.SelectedUnit = liter;
+            _viewModel.QuantityText = "2";
+            _viewModel.AddIngredientCommand.Execute(null);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.ErrorMessage, Is.Not.Null);
+                Assert.That(_viewModel.RecipeIngredients, Has.Count.EqualTo(1));
+                Assert.That(_viewModel.RecipeIngredients[0].Quantity, Is.EqualTo(1m));
+            }
+        }
+
+        [Test]
         public void AddIngredient_TwoDifferentProducts_AccumulatesBothInList()
         {
             var unit = new UnitModel(Guid.NewGuid(), "Kg", UnitType.Weight);

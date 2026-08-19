@@ -42,5 +42,8 @@ Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI
 
 
 
+toggle for password
+
+
 
 

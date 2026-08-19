@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Common.Services.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.UI.Mobile.Extensions;
@@ -272,10 +273,23 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             if (SelectedProduct is null || SelectedUnit is null) return;
             if (!decimal.TryParse(QuantityText, out var qty) || qty <= 0) return;
 
+            ClearMessages();
+
             var existing = RecipeIngredients.FirstOrDefault(i => i.Product?.Id == SelectedProduct.Id);
             if (existing is not null)
             {
-                existing.Quantity += qty;
+                try
+                {
+                    existing.Quantity += existing.Unit is null || existing.Unit.Id == SelectedUnit.Id
+                        ? qty
+                        : UnitConverter.Convert(qty, SelectedUnit, existing.Unit);
+                }
+                catch (Exception ex) when (ex is InvalidOperationException or NotSupportedException or ArgumentException)
+                {
+                    SetError(ex.Message);
+                    return;
+                }
+
                 var index = RecipeIngredients.IndexOf(existing);
                 RecipeIngredients[index] = existing;
             }
