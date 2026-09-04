@@ -100,6 +100,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
 
             _selectedRecipeGrid = new Shared.GridTemplate<RecipeModel>();
+
+            await OnRecipeCategoryChangedAsync(new ChangeEventArgs());
         }
 
         private async Task SaveAsync()
@@ -331,7 +333,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 new("ThumbnailOnly", true, Common.Pagination.FilterOperator.Equals)
             };
 
-            if (!string.IsNullOrWhiteSpace(recipeCategoryId))
+            if (!string.IsNullOrWhiteSpace(recipeCategoryId) && recipeCategoryId != "0")
             {
                 filters.Add(new Common.Pagination.FilterItem(
                     "RecipeCategoryId",

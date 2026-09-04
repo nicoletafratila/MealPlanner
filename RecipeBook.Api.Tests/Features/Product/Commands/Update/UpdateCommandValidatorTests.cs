@@ -52,5 +52,27 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             // Assert
             result.ShouldNotHaveValidationErrorFor(x => x.Model);
         }
+
+        [Test]
+        public void Model_ProductCategoryIdEmpty_HasValidationError()
+        {
+            // Arrange
+            var command = new UpdateCommand
+            {
+                Model = new ProductEditModel
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Product1",
+                    BaseUnitId = Guid.NewGuid(),
+                    ProductCategoryId = Guid.Empty
+                }
+            };
+
+            // Act
+            var result = _validator.TestValidate(command);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Model!.ProductCategoryId);
+        }
     }
 }

@@ -105,6 +105,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             Shops = await ShopService.SearchAsync();
             BaseUnits = await UnitService.SearchAsync();
 
+            await OnProductCategoryChangedAsync(new ChangeEventArgs());
+
             _ = Guid.TryParse(Id, out var id);
             if (id == Guid.Empty)
             {
@@ -485,7 +487,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 new("ThumbnailOnly", true, Common.Pagination.FilterOperator.Equals)
             };
 
-            if (!string.IsNullOrWhiteSpace(productCategoryId))
+            if (!string.IsNullOrWhiteSpace(productCategoryId) && productCategoryId != "0")
             {
                 filters.Add(new Common.Pagination.FilterItem(
                     "ProductCategoryId",

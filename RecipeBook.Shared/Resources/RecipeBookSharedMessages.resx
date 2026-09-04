@@ -43,6 +43,9 @@
   <data name="IngredientQuantityPositive" xml:space="preserve">
     <value>The quantity for the ingredient must be a positive number.</value>
   </data>
+  <data name="IngredientProductRequired" xml:space="preserve">
+    <value>Please select a product for the ingredient.</value>
+  </data>
   <data name="IngredientUnitRequired" xml:space="preserve">
     <value>Please select a unit of measurement for the ingredient.</value>
   </data>

@@ -37,11 +37,17 @@
   <data name="MealPlanNameRequired" xml:space="preserve">
     <value>The meal plan requires a name.</value>
   </data>
+  <data name="MealPlanRequired" xml:space="preserve">
+    <value>Please select a meal plan.</value>
+  </data>
   <data name="MealPlanRequiresRecipes" xml:space="preserve">
     <value>The meal plan requires at least one recipe.</value>
   </data>
   <data name="ProductQuantityPositive" xml:space="preserve">
     <value>The quantity for the product must be a positive number.</value>
+  </data>
+  <data name="ProductRequired" xml:space="preserve">
+    <value>Please select a product.</value>
   </data>
   <data name="ShoppingListNameRequired" xml:space="preserve">
     <value>The shopping list requires a name.</value>
@@ -54,6 +60,9 @@
   </data>
   <data name="ShopNameRequired" xml:space="preserve">
     <value>The shop requires a name.</value>
+  </data>
+  <data name="ShopRequired" xml:space="preserve">
+    <value>Please select a shop.</value>
   </data>
   <data name="ShopRequiresCategoryOrder" xml:space="preserve">
     <value>The shop requires at least product category order.</value>

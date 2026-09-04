@@ -31,7 +31,30 @@ namespace MealPlanner.Shared.Tests.Models
 
                 Assert.That(isValid, Is.False);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListEditModel.Name))), Is.True);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListEditModel.ShopId))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListEditModel.Products))), Is.True);
+            }
+        }
+
+        [Test]
+        public void ShopId_Required_WhenEmpty()
+        {
+            var model = new ShoppingListEditModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test",
+                ShopId = Guid.Empty,
+                Products =
+                [
+                    new() { ShoppingListId = Guid.NewGuid(), Quantity = 1m, UnitId = Guid.NewGuid(), DisplaySequence = 0 }
+                ]
+            };
+
+            var isValid = TryValidate(model, out var results);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListEditModel.ShopId))), Is.True);
             }
         }
 

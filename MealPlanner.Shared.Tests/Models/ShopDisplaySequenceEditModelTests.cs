@@ -15,7 +15,7 @@ namespace MealPlanner.Shared.Tests.Models
         }
 
         [Test]
-        public void DefaultCtor_InitializesDefaults_AndIsValid()
+        public void DefaultCtor_InitializesDefaults_ButIsInvalid()
         {
             // Act
             var model = new ShopDisplaySequenceEditModel();
@@ -32,9 +32,9 @@ namespace MealPlanner.Shared.Tests.Models
                 Assert.That(model.Index, Is.Zero);
                 Assert.That(model.IsSelected, Is.False);
 
-                // With current annotations (Range(0..)), default is valid
-                Assert.That(isValid, Is.True);
-                Assert.That(results, Is.Empty);
+                // ShopId is required and defaults to Guid.Empty, so the model is invalid
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopDisplaySequenceEditModel.ShopId))), Is.True);
             }
         }
 

@@ -44,7 +44,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Selected recipe category id.
         /// </summary>
-        [Required]
+        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid RecipeCategoryId { get; set; }
 
         /// <summary>

@@ -38,6 +38,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             Categories = await RecipeCategoryService.SearchAsync(queryParameters)
                          ?? new PagedList<RecipeCategoryModel>([], new Metadata());
+
+            await OnRecipeCategoryChangedAsync(new ChangeEventArgs());
         }
 
         protected override void OnParametersSet()
@@ -68,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 new("ThumbnailOnly", true, FilterOperator.Equals)
             };
 
-            if (!string.IsNullOrWhiteSpace(recipeCategoryId))
+            if (!string.IsNullOrWhiteSpace(recipeCategoryId) && recipeCategoryId != "0")
             {
                 filters.Add(new FilterItem(
                     propertyName: "RecipeCategoryId",

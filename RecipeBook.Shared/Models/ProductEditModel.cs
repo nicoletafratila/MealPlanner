@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using Common.Validators;
 using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
@@ -36,12 +37,13 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Base unit id for this product (e.g., kg, liter).
         /// </summary>
+        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductUnitRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid BaseUnitId { get; set; }
 
         /// <summary>
         /// Product category id.
         /// </summary>
-        [Required]
+        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ProductCategoryRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid ProductCategoryId { get; set; }
 
         public ProductEditModel()

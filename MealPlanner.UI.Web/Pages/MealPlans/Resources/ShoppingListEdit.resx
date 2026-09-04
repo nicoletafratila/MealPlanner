@@ -142,6 +142,9 @@
   <data name="ChooseOption" xml:space="preserve">
     <value>Choose...</value>
   </data>
+  <data name="AllCategoriesOption" xml:space="preserve">
+    <value>All categories</value>
+  </data>
   <data name="QuantityPositiveNumber" xml:space="preserve">
     <value>The quantity for the product must be a positive number.</value>
   </data>

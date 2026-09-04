@@ -49,7 +49,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 var recipesTask = recipeService.SearchAsync(new QueryParameters<RecipeModel> { PageNumber = CurrentPage, PageSize = 20, Filters = filters.Count > 0 ? filters : null, Sorting = DefaultSorting });
                 await Task.WhenAll(lookupDataService.EnsureLoadedAsync(), recipesTask);
 
-                Categories = lookupDataService.Categories;
+                var allCategories = new List<RecipeCategoryModel> { new() { Id = Guid.Empty, Name = RecipesOverviewPage.AllCategoriesTitle } };
+                allCategories.AddRange(lookupDataService.Categories);
+                Categories = new ObservableCollection<RecipeCategoryModel>(allCategories);
 
                 if (await recipesTask is { } result)
                 {

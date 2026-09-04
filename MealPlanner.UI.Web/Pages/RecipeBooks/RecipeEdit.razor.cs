@@ -107,6 +107,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             ProductCategories = await ProductCategoryService.SearchAsync(queryParametersProduct);
             BaseUnits = await UnitService.SearchAsync();
 
+            await OnProductCategoryChangedAsync(new ChangeEventArgs());
+
             _ = Guid.TryParse(Id, out var id);
             if (id == Guid.Empty)
             {
@@ -231,7 +233,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private bool CanAddIngredient =>
             !string.IsNullOrWhiteSpace(ProductId) &&
             ProductId != "0" &&
-            UnitId != "0" &&
+            !string.IsNullOrWhiteSpace(UnitId) &&
             !string.IsNullOrWhiteSpace(Quantity) &&
             double.TryParse(Quantity, out var quantityValue) &&
             quantityValue > 0;
@@ -324,7 +326,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 new("ThumbnailOnly", true, Common.Pagination.FilterOperator.Equals)
             };
 
-            if (!string.IsNullOrWhiteSpace(productCategoryId))
+            if (!string.IsNullOrWhiteSpace(productCategoryId) && productCategoryId != "0")
             {
                 filters.Add(new Common.Pagination.FilterItem(
                     "ProductCategoryId",

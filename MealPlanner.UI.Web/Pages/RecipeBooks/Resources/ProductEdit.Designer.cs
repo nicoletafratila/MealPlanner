@@ -88,15 +88,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose....
-        /// </summary>
-        internal static string ChooseOption {
-            get {
-                return ResourceManager.GetString("ChooseOption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         internal static string DeleteButton {

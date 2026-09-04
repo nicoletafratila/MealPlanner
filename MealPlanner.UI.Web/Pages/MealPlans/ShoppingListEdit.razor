@@ -43,7 +43,7 @@
                 <div class="form-group mt-3">
                     <label for="Shop" class="col-sm-3">@Resources.ShoppingListEdit.LabelShop</label>
                     <select id="Shop" class="form-select" @onchange="OnShopChangedAsync">
-                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
+                        <option selected value="0" hidden></option>
                         @if (Shops?.Items != null && Shops.Items.Any())
                         {
                             @foreach (var item in Shops.Items)
@@ -59,12 +59,13 @@
                             }
                         }
                     </select>
+                    <ValidationMessage For="@(() => ShoppingList.ShopId)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="ProductCategory" class="col-sm-3">@Resources.ShoppingListEdit.LabelProductCategory</label>
                     <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
-                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
+                        <option selected value="0">@Resources.ShoppingListEdit.AllCategoriesOption</option>
                         @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                         {
                             @foreach (var item in Categories.Items)
@@ -83,7 +84,7 @@
                 <div class="form-group mt-3">
                     <label for="unit" class="col-sm-3">@Resources.ShoppingListEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
-                        <option selected value="0">@Resources.ShoppingListEdit.ChooseOption</option>
+                        <option selected value="0" hidden></option>
                         @if (Units != null && Units.Any())
                         {
                             @foreach (var unit in Units!)

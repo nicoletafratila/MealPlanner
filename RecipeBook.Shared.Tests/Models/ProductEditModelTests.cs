@@ -146,6 +146,46 @@ namespace RecipeBook.Shared.Tests.Models
         }
 
         [Test]
+        public void ProductCategoryId_Required_WhenEmpty()
+        {
+            var model = new ProductEditModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test",
+                ImageContent = new byte[10],
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.Empty
+            };
+
+            var isValid = TryValidate(model, out var results);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.ProductCategoryId))), Is.True);
+            }
+        }
+
+        [Test]
+        public void BaseUnitId_Required_WhenEmpty()
+        {
+            var model = new ProductEditModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test",
+                ImageContent = new byte[10],
+                BaseUnitId = Guid.Empty,
+                ProductCategoryId = Guid.NewGuid()
+            };
+
+            var isValid = TryValidate(model, out var results);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ProductEditModel.BaseUnitId))), Is.True);
+            }
+        }
+
+        [Test]
         public void Ctor_SetsProperties()
         {
             // Arrange

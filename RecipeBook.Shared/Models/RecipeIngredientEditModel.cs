@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using Common.Validators;
 using RecipeBook.Shared.Resources;
 
 namespace RecipeBook.Shared.Models
@@ -12,7 +13,7 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// The parent recipe id this ingredient belongs to.
         /// </summary>
-        [Required]
+        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeIdRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid RecipeId { get; set; }
 
         /// <summary>
@@ -25,11 +26,13 @@ namespace RecipeBook.Shared.Models
         /// <summary>
         /// Selected product id for this ingredient.
         /// </summary>
+        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.IngredientProductRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid ProductId { get; set; }
 
         /// <summary>
         /// Selected unit id for this ingredient.
         /// </summary>
+        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.IngredientUnitRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid UnitId { get; set; }
 
         /// <summary>

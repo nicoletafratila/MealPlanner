@@ -97,6 +97,15 @@ namespace RecipeBook.Shared.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Please select a product for the ingredient..
+        /// </summary>
+        public static string IngredientProductRequired {
+            get {
+                return ResourceManager.GetString("IngredientProductRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Please select a unit of measurement for the ingredient..
         /// </summary>
         public static string IngredientUnitRequired {

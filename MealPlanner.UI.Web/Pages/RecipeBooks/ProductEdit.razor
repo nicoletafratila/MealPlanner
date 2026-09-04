@@ -46,7 +46,7 @@
                 <div class="form-group mt-3">
                     <label for="productCategory" class="col-sm-3">@Resources.ProductEdit.LabelProductCategory</label>
                     <InputSelect id="productCategory" class="form-select" @bind-Value="@Product.ProductCategoryId">
-                        <option selected value="0">@Resources.ProductEdit.ChooseOption</option>
+                        <option selected value="0" hidden></option>
                         @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                         {
                             @foreach (var category in Categories.Items!)
@@ -61,7 +61,7 @@
                 <div class="form-group mt-3">
                     <label for="unit" class="col-sm-3">@Resources.ProductEdit.LabelUnitOfMeasurement</label>
                     <InputSelect id="unit" class="form-select" @bind-Value="@Product.BaseUnitId">
-                        <option selected value="0">@Resources.ProductEdit.ChooseOption</option>
+                        <option selected value="0" hidden></option>
                         @if (Units != null && Units.Items != null && Units.Items.Any())
                         {
                             @foreach (var unit in Units.Items!)

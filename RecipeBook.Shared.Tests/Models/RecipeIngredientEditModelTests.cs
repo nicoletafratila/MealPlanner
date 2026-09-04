@@ -39,6 +39,7 @@ namespace RecipeBook.Shared.Tests.Models
             var recipeId = Guid.NewGuid();
             var unitId = Guid.NewGuid();
             var model = new RecipeIngredientEditModel(recipeId: recipeId, quantity: 2.5m, unitId: unitId);
+            model.ProductId = Guid.NewGuid();
 
             // Act
             var isValid = TryValidate(model, out var results);
@@ -61,6 +62,7 @@ namespace RecipeBook.Shared.Tests.Models
             var model = new RecipeIngredientEditModel
             {
                 RecipeId = Guid.NewGuid(),
+                ProductId = Guid.NewGuid(),
                 UnitId = Guid.NewGuid(),
                 Quantity = -1m
             };
@@ -83,6 +85,63 @@ namespace RecipeBook.Shared.Tests.Models
 
             // Assert
             Assert.That(isValid, Is.True);
+        }
+
+        [Test]
+        public void RecipeId_Required_WhenEmpty()
+        {
+            var model = new RecipeIngredientEditModel
+            {
+                RecipeId = Guid.Empty,
+                ProductId = Guid.NewGuid(),
+                UnitId = Guid.NewGuid(),
+                Quantity = 1m
+            };
+
+            var isValid = TryValidate(model, out var results);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.RecipeId))), Is.True);
+            }
+        }
+
+        [Test]
+        public void ProductId_Required_WhenEmpty()
+        {
+            var model = new RecipeIngredientEditModel
+            {
+                RecipeId = Guid.NewGuid(),
+                ProductId = Guid.Empty,
+                UnitId = Guid.NewGuid(),
+                Quantity = 1m
+            };
+
+            var isValid = TryValidate(model, out var results);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.ProductId))), Is.True);
+            }
+        }
+
+        [Test]
+        public void UnitId_Required_WhenEmpty()
+        {
+            var model = new RecipeIngredientEditModel
+            {
+                RecipeId = Guid.NewGuid(),
+                ProductId = Guid.NewGuid(),
+                UnitId = Guid.Empty,
+                Quantity = 1m
+            };
+
+            var isValid = TryValidate(model, out var results);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.UnitId))), Is.True);
+            }
         }
 
         [Test]

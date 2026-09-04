@@ -1,4 +1,6 @@
 using Common.Models;
+using Common.Validators;
+using MealPlanner.Shared.Resources;
 
 namespace MealPlanner.Shared.Models
 {
@@ -10,11 +12,13 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Parent shopping list id.
         /// </summary>
+        [RequiredGuid(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public Guid ShoppingListId { get; set; }
 
         /// <summary>
         /// The product whose collected state is being updated.
         /// </summary>
+        [RequiredGuid(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ProductRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public Guid ProductId { get; set; }
 
         /// <summary>

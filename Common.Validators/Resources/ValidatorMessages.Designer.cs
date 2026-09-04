@@ -68,5 +68,14 @@ namespace Common.Validators.Resources {
                 return ResourceManager.GetString("MinimumCountError", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} must be selected..
+        /// </summary>
+        public static string RequiredGuidError {
+            get {
+                return ResourceManager.GetString("RequiredGuidError", resourceCulture);
+            }
+        }
     }
 }

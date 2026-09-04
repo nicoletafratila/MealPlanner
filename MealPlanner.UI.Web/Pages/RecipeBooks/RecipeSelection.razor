@@ -19,7 +19,7 @@
             <div class="form-group mt-3">
                 <label for="recipeCategory">@Resources.RecipeSelection.LabelRecipeCategory</label>
                 <select id="recipeCategory" class="form-select" @onchange="OnRecipeCategoryChangedAsync">
-                    <option selected value="0">@Resources.RecipeSelection.ChooseOption</option>
+                    <option selected value="0">@Resources.RecipeSelection.AllCategoriesOption</option>
                     @if (Categories != null && Categories.Items != null && Categories.Items.Any())
                     {
                         @foreach (var item in Categories.Items)

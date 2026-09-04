@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Common.Models;
+using Common.Validators;
 using MealPlanner.Shared.Resources;
 using RecipeBook.Shared.Models;
 
@@ -13,7 +14,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Parent shop id.
         /// </summary>
-        [Required]
+        [RequiredGuid(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShopRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public Guid ShopId { get; set; }
 
         /// <summary>

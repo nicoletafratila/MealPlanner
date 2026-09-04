@@ -105,7 +105,4 @@
 	<data name="PlaceholderProductName" xml:space="preserve">
 		<value>Enter product name</value>
 	</data>
-	<data name="ChooseOption" xml:space="preserve">
-		<value>Choose...</value>
-	</data>
 </root>

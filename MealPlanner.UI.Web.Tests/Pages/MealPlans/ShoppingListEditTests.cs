@@ -79,6 +79,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _unitServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+
+            _productServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductModel>([], new Metadata()));
         }
 
         private IRenderedComponent<ShoppingListEdit> RenderComponent(string? id = null, IModalService? modalService = null)
@@ -149,6 +153,32 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             Assert.That(cut.Instance.ShoppingList!.Id, Is.EqualTo(id));
 
             _shoppingListServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
+        }
+
+        [Test]
+        public void OnInitializedAsync_LoadsProductsWithoutCategoryFilter()
+        {
+            // Arrange
+            ArrangeLookups();
+
+            var products = new PagedList<ProductModel>(
+                [new() { Id = Guid.NewGuid(), Name = "Milk" }],
+                new Metadata());
+
+            _productServiceMock
+                .Setup(s => s.SearchAsync(
+                    It.Is<QueryParameters<ProductModel>>(q =>
+                        q.Filters != null &&
+                        q.Filters.Count() == 1 &&
+                        q.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true))),
+                    CancellationToken.None))
+                .ReturnsAsync(products);
+
+            // Act
+            var cut = RenderComponent("0");
+
+            // Assert: the product picker is populated on first load, without needing a category selection
+            Assert.That(cut.Instance.Products, Is.SameAs(products));
         }
 
         // ---------- SaveCoreAsync ----------

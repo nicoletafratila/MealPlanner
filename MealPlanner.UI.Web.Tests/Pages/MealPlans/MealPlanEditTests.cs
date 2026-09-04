@@ -67,6 +67,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _mealPlanServiceMock
                 .Setup(s => s.GetMenuName(It.IsAny<string>()))
                 .Returns("Meniu 2025/23");
+
+            _recipeServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
         }
 
         private IRenderedComponent<MealPlanEdit> RenderComponent(string? id = null)
@@ -133,6 +137,32 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             }
 
             _mealPlanServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
+        }
+
+        [Test]
+        public void OnInitializedAsync_LoadsRecipesWithoutCategoryFilter()
+        {
+            // Arrange
+            ArrangeCategories();
+
+            var recipes = new PagedList<RecipeModel>(
+                [new() { Id = Guid.NewGuid(), Name = "Pasta" }],
+                new Metadata());
+
+            _recipeServiceMock
+                .Setup(s => s.SearchAsync(
+                    It.Is<QueryParameters<RecipeModel>>(q =>
+                        q.Filters != null &&
+                        q.Filters.Count() == 1 &&
+                        q.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true))),
+                    CancellationToken.None))
+                .ReturnsAsync(recipes);
+
+            // Act
+            var cut = RenderComponent("0");
+
+            // Assert: the recipe picker is populated on first load, without needing a category selection
+            Assert.That(cut.Instance.Recipes, Is.SameAs(recipes));
         }
 
         // ---------- SaveCoreAsync ----------

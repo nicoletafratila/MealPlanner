@@ -67,6 +67,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _unitServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<UnitModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<UnitModel>([], new Metadata()));
+
+            _productServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductModel>([], new Metadata()));
         }
 
         private IRenderedComponent<RecipeEdit> RenderComponent(string? id = null)
@@ -152,6 +156,32 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             Assert.That(cut.Instance.Recipe, Is.Not.Null);
             Assert.That(cut.Instance.Recipe!.Id, Is.EqualTo(recipeId));
             _recipeServiceMock.Verify(s => s.GetEditAsync(recipeId, CancellationToken.None), Times.Once);
+        }
+
+        [Test]
+        public void OnInitializedAsync_LoadsProductsWithoutCategoryFilter()
+        {
+            // Arrange
+            ArrangeLookups();
+
+            var products = new PagedList<ProductModel>(
+                [new() { Id = Guid.NewGuid(), Name = "Milk" }],
+                new Metadata());
+
+            _productServiceMock
+                .Setup(s => s.SearchAsync(
+                    It.Is<QueryParameters<ProductModel>>(q =>
+                        q.Filters != null &&
+                        q.Filters.Count() == 1 &&
+                        q.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true))),
+                    CancellationToken.None))
+                .ReturnsAsync(products);
+
+            // Act
+            var cut = RenderComponent("0");
+
+            // Assert: the product picker is populated on first load, without needing a category selection
+            Assert.That(cut.Instance.Products, Is.SameAs(products));
         }
 
         // ---------- SaveCoreAsync ----------
@@ -511,12 +541,15 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         }
 
         [Test]
-        public void CanAddIngredient_False_WhenUnitIdIsZero()
+        public void CanAddIngredient_False_WhenUnitIdIsUnset()
         {
             ArrangeLookups();
             var cut = RenderComponent("0");
             cut.Instance.ProductId = Guid.NewGuid().ToString();
-            cut.Instance.UnitId = "0";
+
+            // The unit InputSelect's placeholder <option> has value="" (not "0" like ProductPicker's), so
+            // an unselected unit is represented by an empty string.
+            cut.Instance.UnitId = "";
             cut.Instance.Quantity = "2";
 
             var property = typeof(RecipeEdit).GetProperty("CanAddIngredient", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -840,6 +873,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             ArrangeLookups();
             var cut = RenderComponent("0");
+
+            // OnInitializedAsync already triggers an equivalent unfiltered load; isolate the explicit call below.
+            _productServiceMock.Invocations.Clear();
 
             var products = new PagedList<ProductModel>([], new Metadata());
 

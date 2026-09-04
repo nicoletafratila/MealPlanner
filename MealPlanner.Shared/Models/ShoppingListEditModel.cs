@@ -25,7 +25,7 @@ namespace MealPlanner.Shared.Models
         /// <summary>
         /// Linked shop id (required).
         /// </summary>
-        [Required]
+        [RequiredGuid(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShopRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public Guid ShopId { get; set; }
 
         /// <summary>

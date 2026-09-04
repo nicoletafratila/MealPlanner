@@ -85,6 +85,33 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 Times.Once);
         }
 
+        [Test]
+        public void OnInitializedAsync_LoadsRecipesWithoutCategoryFilter()
+        {
+            // Arrange
+            _categoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
+                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
+
+            var recipes = new List<RecipeModel> { new() { Id = Guid.NewGuid(), Name = "Pasta" } };
+
+            _recipeServiceMock
+                .Setup(s => s.SearchAsync(
+                    It.Is<QueryParameters<RecipeModel>>(qp =>
+                        qp.Filters != null &&
+                        qp.Filters.Count() == 1 &&
+                        qp.Filters.Any(f => f.PropertyName == "ThumbnailOnly" && Equals(f.Value, true))),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PagedList<RecipeModel>(recipes, new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 }));
+
+            // Act
+            var cut = RenderComponent();
+
+            // Assert: the recipe picker is populated on first load, without needing a category selection
+            Assert.That(cut.Instance.Recipes, Is.Not.Null);
+            Assert.That(cut.Instance.Recipes!.Items, Has.Count.EqualTo(1));
+        }
+
         // ---------- OnRecipeCategoryChangedAsync ----------
         [Test]
         public async Task OnRecipeCategoryChangedAsync_WithCategoryId_LoadsRecipes_WithCorrectFilterAndSorting()
@@ -159,6 +186,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             var cut = RenderComponent();
             cut.Instance.ModalController = _modalControllerMock.Object;
+
+            // OnInitializedAsync already triggers an equivalent unfiltered load; isolate the explicit call below.
+            _recipeServiceMock.Invocations.Clear();
 
             var method = typeof(RecipeSelection).GetMethod("OnRecipeCategoryChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);

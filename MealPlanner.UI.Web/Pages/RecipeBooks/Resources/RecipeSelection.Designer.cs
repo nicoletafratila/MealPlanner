@@ -61,6 +61,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All categories.
+        /// </summary>
+        internal static string AllCategoriesOption {
+            get {
+                return ResourceManager.GetString("AllCategoriesOption", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string CancelButton {
@@ -68,7 +77,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("CancelButton", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Choose....
         /// </summary>

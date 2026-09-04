@@ -86,7 +86,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("AddRecipeButton", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to All categories.
+        /// </summary>
+        internal static string AllCategoriesOption {
+            get {
+                return ResourceManager.GetString("AllCategoriesOption", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Back to overview.
         /// </summary>
