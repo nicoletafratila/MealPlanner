@@ -11,9 +11,9 @@ namespace RecipeBook.Shared.Models
     public class RecipeIngredientEditModel : BaseModel
     {
         /// <summary>
-        /// The parent recipe id this ingredient belongs to.
+        /// The parent recipe id this ingredient belongs to. May be Guid.Empty when the ingredient
+        /// is added while creating a new recipe that has not been saved yet.
         /// </summary>
-        [RequiredGuid(ErrorMessageResourceName = nameof(RecipeBookSharedMessages.RecipeIdRequired), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
         public Guid RecipeId { get; set; }
 
         /// <summary>

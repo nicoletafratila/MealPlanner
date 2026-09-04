@@ -178,15 +178,6 @@ namespace RecipeBook.Shared.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Please select a recipe for the ingredient..
-        /// </summary>
-        public static string RecipeIdRequired {
-            get {
-                return ResourceManager.GetString("RecipeIdRequired", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to The recipe requires a name..
         /// </summary>
         public static string RecipeNameRequired {

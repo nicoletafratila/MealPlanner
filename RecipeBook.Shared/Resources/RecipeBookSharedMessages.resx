@@ -70,9 +70,6 @@
   <data name="RecipeCategoryRequired" xml:space="preserve">
     <value>Please select a category for the recipe.</value>
   </data>
-  <data name="RecipeIdRequired" xml:space="preserve">
-    <value>Please select a recipe for the ingredient.</value>
-  </data>
   <data name="RecipeNameRequired" xml:space="preserve">
     <value>The recipe requires a name.</value>
   </data>

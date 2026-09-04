@@ -88,7 +88,7 @@ namespace RecipeBook.Shared.Tests.Models
         }
 
         [Test]
-        public void RecipeId_Required_WhenEmpty()
+        public void RecipeId_IsValid_WhenEmpty()
         {
             var model = new RecipeIngredientEditModel
             {
@@ -101,8 +101,8 @@ namespace RecipeBook.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(RecipeIngredientEditModel.RecipeId))), Is.True);
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
             }
         }
 
