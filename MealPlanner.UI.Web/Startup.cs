@@ -1,8 +1,12 @@
 using Blazored.Modal;
+using Common.Data.DataContext;
+using Identity.Data.TableConfigurations;
 using Identity.Services.Http;
+using MealPlanner.Data.TableConfigurations;
 using MealPlanner.Services.Http;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using RecipeBook.Data.TableConfigurations;
 using RecipeBook.Services.Http;
 using Serilog;
 
@@ -10,6 +14,15 @@ namespace MealPlanner.UI.Web
 {
     public class Startup(IConfiguration configuration) : Common.Core.Startup(configuration)
     {
+        protected override void RegisterTableConfigurationAssemblies(IServiceCollection services)
+        {
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly,
+                typeof(RefreshTokenTableConfiguration).Assembly
+            ]));
+        }
+
         protected override void RegisterServices(IServiceCollection services)
         {
             // Identity API clients

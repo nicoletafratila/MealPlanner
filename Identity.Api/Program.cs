@@ -28,6 +28,9 @@ namespace Identity.Api
                 {
                     var connectionString = ctx.Configuration.GetConnectionString("MealPlanner");
 
+                    var columnOptions = new ColumnOptions();
+                    columnOptions.Store.Remove(StandardColumn.Id);
+
                     lc.MinimumLevel.Error()
                       .Enrich.FromLogContext()
                       .ReadFrom.Configuration(ctx.Configuration)
@@ -47,6 +50,7 @@ namespace Identity.Api
                               SchemaName = "dbo",
                               AutoCreateSqlTable = false
                           },
+                          columnOptions: columnOptions,
                           restrictedToMinimumLevel: LogEventLevel.Error);
                 });
         }

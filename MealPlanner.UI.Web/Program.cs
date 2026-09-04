@@ -17,6 +17,9 @@ namespace MealPlanner.UI.Web
             {
                 var connectionString = ctx.Configuration.GetConnectionString("MealPlanner");
 
+                var columnOptions = new ColumnOptions();
+                columnOptions.Store.Remove(StandardColumn.Id);
+
                 lc.MinimumLevel.Error()
                   .Enrich.FromLogContext()
                   .ReadFrom.Configuration(ctx.Configuration)
@@ -35,6 +38,7 @@ namespace MealPlanner.UI.Web
                           TableName = "Logs",
                           SchemaName = "dbo"
                       },
+                      columnOptions: columnOptions,
                       restrictedToMinimumLevel: LogEventLevel.Error);
             });
 

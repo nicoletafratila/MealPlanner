@@ -42,6 +42,10 @@ namespace Common.Data.DataContext
             modelBuilder.Entity<ShoppingListProduct>()
                 .Property(b => b.Quantity)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Log>()
+                .Property(l => l.Id)
+                .HasDefaultValueSql("NEWID()");
         }
     }
 }
