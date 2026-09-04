@@ -138,7 +138,6 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         private void AddRecipe()
         {
             if (SelectedRecipe is null) return;
-            if (PlanRecipes.Any(r => r.Id == SelectedRecipe.Id)) return;
             PlanRecipes.Add(SelectedRecipe);
             SelectedRecipe = null;
         }
