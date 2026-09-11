@@ -1309,20 +1309,19 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
         // ---------- OnShopChangedAsync ----------
         [Test]
-        public async Task OnShopChangedAsync_ReturnsEarly_WhenGuidInvalid()
+        public async Task OnShopChangedAsync_ReturnsEarly_WhenShoppingListIsNull()
         {
             // Arrange
             ArrangeLookups();
             var cut = RenderComponent("0");
-            cut.Instance.ShoppingList = new ShoppingListEditModel { Products = [] };
+            cut.Instance.ShoppingList = null;
 
             var method = typeof(ShoppingListEdit).GetMethod("OnShopChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
-            var args = new ChangeEventArgs { Value = "not-a-guid" };
 
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method.Invoke(cut.Instance, [args])!;
+                var task = (Task)method.Invoke(cut.Instance, [])!;
                 await task;
             });
 
@@ -1361,15 +1360,14 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 .ReturnsAsync(existingShop);
 
             var cut = RenderComponent("0");
-            cut.Instance.ShoppingList = new ShoppingListEditModel { Products = [itemA, itemB] };
+            cut.Instance.ShoppingList = new ShoppingListEditModel { ShopId = shopId, Products = [itemA, itemB] };
 
             var method = typeof(ShoppingListEdit).GetMethod("OnShopChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
-            var args = new ChangeEventArgs { Value = shopId.ToString() };
 
             // Act
             await cut.InvokeAsync(async () =>
             {
-                var task = (Task)method.Invoke(cut.Instance, [args])!;
+                var task = (Task)method.Invoke(cut.Instance, [])!;
                 await task;
             });
 

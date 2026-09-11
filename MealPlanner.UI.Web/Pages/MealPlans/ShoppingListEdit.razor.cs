@@ -120,7 +120,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 ShoppingList = await ShoppingListService.GetEditAsync(id);
                 if (ShoppingList is not null)
                 {
-                    await OnShopChangedAsync(new ChangeEventArgs { Value = ShoppingList.ShopId });
+                    await OnShopChangedAsync();
                 }
             }
         }
@@ -555,15 +555,11 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             StateHasChanged();
         }
 
-        private async Task OnShopChangedAsync(ChangeEventArgs e)
+        private async Task OnShopChangedAsync()
         {
-            if (!Guid.TryParse(e.Value?.ToString(), out var shopId))
-                return;
-
             if (ShoppingList is null)
                 return;
 
-            ShoppingList.ShopId = shopId;
             _shop = await ShopService.GetEditAsync(ShoppingList.ShopId);
 
             if (ShoppingList.Products is not { Count: > 0 } || _shop is null)
