@@ -26,7 +26,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         protected override async Task OnInitializedAsync()
         {
-            var result = await MealPlanService!.SearchAsync();
+            var queryParameters = new QueryParameters<MealPlanModel>
+            {
+                Sorting =
+                [
+                    new SortingModel { PropertyName = nameof(MealPlanModel.CreatedAt), Direction = SortDirection.Descending },
+                    new SortingModel { PropertyName = nameof(MealPlanModel.Name), Direction = SortDirection.Ascending }
+                ]
+            };
+
+            var result = await MealPlanService!.SearchAsync(queryParameters);
             MealPlans = result ?? new PagedList<MealPlanModel>([], new Metadata());
         }
 

@@ -43,4 +43,3 @@ Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI
 
 
 
-check if validator match models
