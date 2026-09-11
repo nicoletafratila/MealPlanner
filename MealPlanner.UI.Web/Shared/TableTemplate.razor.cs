@@ -9,6 +9,9 @@ namespace MealPlanner.UI.Web.Shared
         public bool ShowIndex { get; set; }
 
         [Parameter]
+        public string IndexHeaderText { get; set; } = "#";
+
+        [Parameter]
         public RenderFragment? TableHeader { get; set; }
 
         [Parameter]

@@ -65,6 +65,13 @@
     }
 </style>
 
+@if (Caption != null)
+{
+    <div class="caption-top" style="padding-top: 0.5rem; padding-bottom: 0.5rem; color: var(--bs-secondary-color); text-align: left; border-bottom: var(--bs-border-width) solid var(--bs-border-color);">
+        @Caption
+    </div>
+}
+
 <Grid TItem="TItem"
       @ref="gridTemplateReference"
       AllowFiltering="true"

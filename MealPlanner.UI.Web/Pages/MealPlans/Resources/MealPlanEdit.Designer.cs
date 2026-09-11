@@ -320,5 +320,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShoppingListSaveError", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recipes:.
+        /// </summary>
+        internal static string TableCaptionRecipes {
+            get {
+                return ResourceManager.GetString("TableCaptionRecipes", resourceCulture);
+            }
+        }
     }
 }

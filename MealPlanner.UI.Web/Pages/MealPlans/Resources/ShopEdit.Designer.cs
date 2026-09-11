@@ -239,5 +239,14 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Categories:.
+        /// </summary>
+        internal static string TableCaptionCategories {
+            get {
+                return ResourceManager.GetString("TableCaptionCategories", resourceCulture);
+            }
+        }
     }
 }

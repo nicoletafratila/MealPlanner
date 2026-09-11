@@ -73,7 +73,7 @@
 		<value>Add</value>
 	</data>
 	<data name="ListOfIngredients" xml:space="preserve">
-		<value>List of ingredients:</value>
+		<value>Ingredients:</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

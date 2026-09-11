@@ -124,7 +124,7 @@
 
                 <div class="col">
                     <ValidationMessage For="@(() => Recipe.Ingredients)" />
-                    <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true" ColumnCount="6">
+                    <TableTemplate Data="@Recipe.Ingredients" ShowIndex="true" IndexHeaderText="" ColumnCount="6">
                         <TableCaption>@Resources.RecipeEdit.ListOfIngredients</TableCaption>
                         <TableHeader>
                             <th></th>

@@ -43,7 +43,7 @@
 		<value>Recipe category:</value>
 	</data>
 	<data name="ListOfIngredients" xml:space="preserve">
-		<value>List of ingredients:</value>
+		<value>Ingredients:</value>
 	</data>
 	<data name="ColumnName" xml:space="preserve">
 		<value>Name</value>

@@ -286,7 +286,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List of ingredients:.
+        ///   Looks up a localized string similar to Ingredients:.
         /// </summary>
         internal static string ListOfIngredients {
             get {

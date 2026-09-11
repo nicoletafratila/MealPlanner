@@ -62,6 +62,7 @@
                 <div class="card-body">
                     <ValidationMessage For="@(() => MealPlan.Recipes)" />
                     <GridTemplate TItem="RecipeModel" @ref="_selectedRecipeGrid" DataProvider="RecipesDataProviderAsync" TableGridClass="@_tableGridClass" AllowPaging="false">
+                        <Caption>@Resources.MealPlanEdit.TableCaptionRecipes</Caption>
                         <Columns>
                             <GridColumn TItem="RecipeModel" Filterable="false">
                                 <ChildContent Context="recipeContext">

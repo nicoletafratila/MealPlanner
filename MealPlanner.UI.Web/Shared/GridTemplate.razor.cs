@@ -18,6 +18,9 @@ namespace MealPlanner.UI.Web.Shared
         public RenderFragment? Columns { get; set; }
 
         [Parameter]
+        public RenderFragment? Caption { get; set; }
+
+        [Parameter]
         public RenderFragment? ChildContent { get; set; }
 
         [Parameter]

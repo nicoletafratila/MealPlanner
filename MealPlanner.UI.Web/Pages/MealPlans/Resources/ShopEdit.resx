@@ -40,6 +40,9 @@
   <data name="ColumnName" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="TableCaptionCategories" xml:space="preserve">
+    <value>Categories:</value>
+  </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
   </data>
