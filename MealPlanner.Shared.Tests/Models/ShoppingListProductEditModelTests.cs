@@ -26,13 +26,12 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(isValid, Is.False);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.DisplaySequence))), Is.True);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.ShoppingListId))), Is.True);
                 Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.UnitId))), Is.True);
             }
         }
 
         [Test]
-        public void ShoppingListId_Required_WhenEmpty()
+        public void ShoppingListId_IsValid_WhenEmpty()
         {
             var model = new ShoppingListProductEditModel
             {
@@ -45,8 +44,8 @@ namespace MealPlanner.Shared.Tests.Models
             var isValid = TryValidate(model, out var results);
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(isValid, Is.False);
-                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShoppingListProductEditModel.ShoppingListId))), Is.True);
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
             }
         }
 

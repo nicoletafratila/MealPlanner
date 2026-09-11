@@ -12,9 +12,9 @@ namespace MealPlanner.Shared.Models
     public class ShoppingListProductEditModel : BaseModel
     {
         /// <summary>
-        /// Parent shopping list id.
+        /// Parent shopping list id. May be Guid.Empty when the product is added while creating a new
+        /// shopping list that has not been saved yet.
         /// </summary>
-        [RequiredGuid(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShoppingListRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public Guid ShoppingListId { get; set; }
 
         /// <summary>
