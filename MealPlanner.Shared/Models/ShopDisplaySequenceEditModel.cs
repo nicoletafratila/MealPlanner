@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using Common.Models;
-using Common.Validators;
 using MealPlanner.Shared.Resources;
 using RecipeBook.Shared.Models;
 
@@ -12,9 +11,10 @@ namespace MealPlanner.Shared.Models
     public class ShopDisplaySequenceEditModel : BaseModel
     {
         /// <summary>
-        /// Parent shop id.
+        /// Parent shop id. Left as <see cref="Guid.Empty"/> when the shop is being created for the first time;
+        /// the server assigns the real shop id and EF Core fixes up this foreign key via the parent shop's
+        /// display-sequence navigation collection, so it is not validated as required here.
         /// </summary>
-        [RequiredGuid(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShopRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         public Guid ShopId { get; set; }
 
         /// <summary>
