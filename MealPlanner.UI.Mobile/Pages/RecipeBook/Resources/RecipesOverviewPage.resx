@@ -120,6 +120,9 @@
   <data name="AllCategoriesTitle" xml:space="preserve">
     <value>All categories</value>
   </data>
+  <data name="EmptyCategoriesLabel" xml:space="preserve">
+    <value>No categories found</value>
+  </data>
   <data name="EmptyLabel" xml:space="preserve">
     <value>No recipes found.</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
     <value>Search recipes...</value>
+  </data>
+  <data name="PlaceholderSearchCategories" xml:space="preserve">
+    <value>Search by name</value>
   </data>
   <data name="RecipeAdded" xml:space="preserve">
     <value>Recipe has been added successfully</value>
