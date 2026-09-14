@@ -32,6 +32,31 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public TItem? SelectedItem { get; set; }
 
+        [Parameter]
+        public bool EnableDragReorder { get; set; }
+
+        [Parameter]
+        public EventCallback<(TItem DraggedItem, TItem TargetItem)> OnReorder { get; set; }
+
+        private TItem? _draggedItem;
+
+        public void OnDragStart(TItem item)
+        {
+            _draggedItem = item;
+        }
+
+        public async Task OnDropAsync(TItem item)
+        {
+            var draggedItem = _draggedItem;
+            _draggedItem = default;
+
+            if (draggedItem is null || EqualityComparer<TItem>.Default.Equals(draggedItem, item))
+                return;
+
+            if (OnReorder.HasDelegate)
+                await OnReorder.InvokeAsync((draggedItem, item));
+        }
+
         public async Task OnSelectedItemChangedAsync(TItem item)
         {
             if (item is null)

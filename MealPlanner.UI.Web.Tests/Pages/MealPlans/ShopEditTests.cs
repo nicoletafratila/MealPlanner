@@ -594,5 +594,74 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 Assert.That(newSeq[2].Index, Is.EqualTo(3));
             }
         }
+
+        [Test]
+        public void MoveToTop_MovesItemToStart()
+        {
+            // Arrange
+            ArrangeCategories();
+            var cut = RenderComponent("0");
+
+            var item0 = new ShopDisplaySequenceEditModel { Value = 1 };
+            var item1 = new ShopDisplaySequenceEditModel { Value = 2 };
+            var item2 = new ShopDisplaySequenceEditModel { Value = 3 };
+            cut.Instance.Shop.DisplaySequence = [item0, item1, item2];
+
+            var method = typeof(ShopEdit).GetMethod("MoveToTop", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [item2]));
+
+            var newSeq = cut.Instance.Shop.DisplaySequence;
+
+            Assert.That(newSeq[0], Is.SameAs(item2));
+        }
+
+        [Test]
+        public void MoveToBottom_MovesItemToEnd()
+        {
+            // Arrange
+            ArrangeCategories();
+            var cut = RenderComponent("0");
+
+            var item0 = new ShopDisplaySequenceEditModel { Value = 1 };
+            var item1 = new ShopDisplaySequenceEditModel { Value = 2 };
+            var item2 = new ShopDisplaySequenceEditModel { Value = 3 };
+            cut.Instance.Shop.DisplaySequence = [item0, item1, item2];
+
+            var method = typeof(ShopEdit).GetMethod("MoveToBottom", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [item0]));
+
+            var newSeq = cut.Instance.Shop.DisplaySequence;
+
+            Assert.That(newSeq[2], Is.SameAs(item0));
+        }
+
+        [Test]
+        public void OnReorderAsync_MovesDraggedItemBeforeTarget()
+        {
+            // Arrange
+            ArrangeCategories();
+            var cut = RenderComponent("0");
+
+            var item0 = new ShopDisplaySequenceEditModel { Value = 1 };
+            var item1 = new ShopDisplaySequenceEditModel { Value = 2 };
+            var item2 = new ShopDisplaySequenceEditModel { Value = 3 };
+            cut.Instance.Shop.DisplaySequence = [item0, item1, item2];
+
+            var method = typeof(ShopEdit).GetMethod("OnReorderAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [(item0, item2)]));
+
+            var newSeq = cut.Instance.Shop.DisplaySequence;
+
+            Assert.That(newSeq[1], Is.SameAs(item0));
+        }
     }
 }

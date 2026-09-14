@@ -128,19 +128,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task MoveUp(RecipeCategoryModel item)
         {
-            if (Categories is null)
+            if (!CanMoveUp(item))
                 return;
 
-            var index = Categories.IndexOf(item);
-            if (index <= 0)
-                return;
-
-            Categories.RemoveAt(index);
-            Categories.Insert(index - 1, item);
-            Categories.SetIndexes();
-            for (var i = 0; i < Categories.Count; i++)
-                Categories[i].DisplaySequence = i + 1;
-            await AutoSaveDisplaySequenceAsync();
+            await ReorderAsync(categories =>
+            {
+                var index = categories.IndexOf(item);
+                categories.RemoveAt(index);
+                categories.Insert(index - 1, item);
+            });
         }
 
         private bool CanMoveDown(RecipeCategoryModel item)
@@ -154,18 +150,65 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task MoveDown(RecipeCategoryModel item)
         {
+            if (!CanMoveDown(item))
+                return;
+
+            await ReorderAsync(categories =>
+            {
+                var index = categories.IndexOf(item);
+                categories.RemoveAt(index);
+                categories.Insert(index + 1, item);
+            });
+        }
+
+        private async Task MoveToTop(RecipeCategoryModel item)
+        {
+            if (!CanMoveUp(item))
+                return;
+
+            await ReorderAsync(categories =>
+            {
+                categories.Remove(item);
+                categories.Insert(0, item);
+            });
+        }
+
+        private async Task MoveToBottom(RecipeCategoryModel item)
+        {
+            if (!CanMoveDown(item))
+                return;
+
+            await ReorderAsync(categories =>
+            {
+                categories.Remove(item);
+                categories.Add(item);
+            });
+        }
+
+        private async Task OnReorderAsync((RecipeCategoryModel DraggedItem, RecipeCategoryModel TargetItem) reorder)
+        {
+            await ReorderAsync(categories =>
+            {
+                var draggedIndex = categories.IndexOf(reorder.DraggedItem);
+                var targetIndex = categories.IndexOf(reorder.TargetItem);
+                if (draggedIndex < 0 || targetIndex < 0)
+                    return;
+
+                categories.RemoveAt(draggedIndex);
+                categories.Insert(draggedIndex < targetIndex ? targetIndex - 1 : targetIndex, reorder.DraggedItem);
+            });
+        }
+
+        private async Task ReorderAsync(Action<IList<RecipeCategoryModel>> reorder)
+        {
             if (Categories is null)
                 return;
 
-            var index = Categories.IndexOf(item);
-            if (index < 0 || index >= Categories.Count - 1)
-                return;
-
-            Categories.RemoveAt(index);
-            Categories.Insert(index + 1, item);
+            reorder(Categories);
             Categories.SetIndexes();
             for (var i = 0; i < Categories.Count; i++)
                 Categories[i].DisplaySequence = i + 1;
+
             await AutoSaveDisplaySequenceAsync();
         }
 

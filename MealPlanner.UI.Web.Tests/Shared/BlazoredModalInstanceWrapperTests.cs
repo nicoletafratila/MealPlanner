@@ -31,6 +31,10 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>()))
                 .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
 
+            _recipeServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
+
             _ctx.Services.AddSingleton(_categoryServiceMock.Object);
             _ctx.Services.AddSingleton(_recipeServiceMock.Object);
             _ctx.Services.AddBlazoredModal();

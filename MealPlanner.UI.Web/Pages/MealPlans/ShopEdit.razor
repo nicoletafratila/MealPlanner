@@ -1,5 +1,6 @@
 ﻿@page "/mealplans/shopedit"
 @page "/mealplans/shopedit/{Id}"
+@using MealPlanner.Shared.Models
 
 <Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
 
@@ -32,22 +33,29 @@
                 </div>
 
                 <div class="card-body">
-                    <TableTemplate Data="@Shop.DisplaySequence" ShowIndex="true" ColumnCount="2">
+                    <TableTemplate TItem="ShopDisplaySequenceEditModel" Data="@Shop.DisplaySequence" ShowIndex="true" ColumnCount="2" EnableDragReorder="true" OnReorder="OnReorderAsync">
                         <TableCaption>@Resources.ShopEdit.TableCaptionCategories</TableCaption>
                         <TableHeader>
                             <th>@Resources.ShopEdit.ColumnName</th>
-                            <th style="width: 80px"></th>
+                            <th style="width: 40px"></th>
                         </TableHeader>
                         <RowTemplate Context="DisplaySequence">
                             <td>
                                 @DisplaySequence.ProductCategory?.Name
                             </td>
                             <td>
-                                @if (DisplaySequence.IsSelected)
-                                {
-                                    <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await MoveUp(DisplaySequence)" disabled="@(!CanMoveUp(DisplaySequence))">&#9650;</button>
-                                    <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="async () => await MoveDown(DisplaySequence)" disabled="@(!CanMoveDown(DisplaySequence))">&#9660;</button>
-                                }
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="@Resources.ShopEdit.ReorderMenuLabel" @onclick:stopPropagation="true">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item" type="button" disabled="@(!CanMoveUp(DisplaySequence))" @onclick="async () => await MoveUp(DisplaySequence)">@Resources.ShopEdit.MoveUpAction</button></li>
+                                        <li><button class="dropdown-item" type="button" disabled="@(!CanMoveDown(DisplaySequence))" @onclick="async () => await MoveDown(DisplaySequence)">@Resources.ShopEdit.MoveDownAction</button></li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li><button class="dropdown-item" type="button" disabled="@(!CanMoveUp(DisplaySequence))" @onclick="async () => await MoveToTop(DisplaySequence)">@Resources.ShopEdit.MoveToTopAction</button></li>
+                                        <li><button class="dropdown-item" type="button" disabled="@(!CanMoveDown(DisplaySequence))" @onclick="async () => await MoveToBottom(DisplaySequence)">@Resources.ShopEdit.MoveToBottomAction</button></li>
+                                    </ul>
+                                </div>
                             </td>
                         </RowTemplate>
                     </TableTemplate>

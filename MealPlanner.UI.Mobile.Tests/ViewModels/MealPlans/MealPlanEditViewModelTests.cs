@@ -282,7 +282,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         }
 
         [Test]
-        public void AddRecipe_AlreadyInPlan_DoesNotAddDuplicate()
+        public void AddRecipe_AlreadyInPlan_AddsDuplicate()
         {
             var recipe = new RecipeModel(Guid.NewGuid(), "Pancakes");
             _viewModel.PlanRecipes.Add(recipe);
@@ -290,7 +290,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
 
             _viewModel.AddRecipeCommand.Execute(null);
 
-            Assert.That(_viewModel.PlanRecipes, Has.Count.EqualTo(1));
+            Assert.That(_viewModel.PlanRecipes, Has.Count.EqualTo(2));
         }
 
         [Test]

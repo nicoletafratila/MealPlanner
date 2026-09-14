@@ -238,5 +238,92 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             var instanceCategories = cut.Instance.Categories;
             Assert.That(instanceCategories[1].Id, Is.EqualTo(firstItem.Id));
         }
+
+        // ---------- MoveToTop / MoveToBottom ----------
+        [Test]
+        public void MoveToTop_MovesItemToStart()
+        {
+            var categories = new List<RecipeCategoryModel>
+            {
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
+            };
+
+            _serviceMock
+              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+              .ReturnsAsync(new PagedList<RecipeCategoryModel>(
+                  categories, new Metadata()));
+
+            var cut = RenderWithMessageComponent();
+
+            var moveToTop = typeof(RecipeCategoriesOverview).GetMethod("MoveToTop", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(moveToTop, Is.Not.Null);
+
+            var lastItem = categories[2];
+
+            cut.InvokeAsync(() => moveToTop!.Invoke(cut.Instance, [lastItem]));
+
+            var instanceCategories = cut.Instance.Categories;
+            Assert.That(instanceCategories[0].Id, Is.EqualTo(lastItem.Id));
+        }
+
+        [Test]
+        public void MoveToBottom_MovesItemToEnd()
+        {
+            var categories = new List<RecipeCategoryModel>
+            {
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
+            };
+
+            _serviceMock
+              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+              .ReturnsAsync(new PagedList<RecipeCategoryModel>(
+                  categories, new Metadata()));
+
+            var cut = RenderWithMessageComponent();
+
+            var moveToBottom = typeof(RecipeCategoriesOverview).GetMethod("MoveToBottom", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(moveToBottom, Is.Not.Null);
+
+            var firstItem = categories[0];
+
+            cut.InvokeAsync(() => moveToBottom!.Invoke(cut.Instance, [firstItem]));
+
+            var instanceCategories = cut.Instance.Categories;
+            Assert.That(instanceCategories[2].Id, Is.EqualTo(firstItem.Id));
+        }
+
+        // ---------- OnReorderAsync (drag-and-drop) ----------
+        [Test]
+        public void OnReorderAsync_MovesDraggedItemBeforeTarget()
+        {
+            var categories = new List<RecipeCategoryModel>
+            {
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() },
+                new() { Id = Guid.NewGuid() }
+            };
+
+            _serviceMock
+              .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+              .ReturnsAsync(new PagedList<RecipeCategoryModel>(
+                  categories, new Metadata()));
+
+            var cut = RenderWithMessageComponent();
+
+            var onReorder = typeof(RecipeCategoriesOverview).GetMethod("OnReorderAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(onReorder, Is.Not.Null);
+
+            var draggedItem = categories[0];
+            var targetItem = categories[2];
+
+            cut.InvokeAsync(() => onReorder!.Invoke(cut.Instance, [(draggedItem, targetItem)]));
+
+            var instanceCategories = cut.Instance.Categories;
+            Assert.That(instanceCategories[1].Id, Is.EqualTo(draggedItem.Id));
+        }
     }
 }

@@ -93,4 +93,19 @@
 	<data name="EditButton" xml:space="preserve">
 		<value>Edit</value>
 	</data>
+	<data name="ReorderMenuLabel" xml:space="preserve">
+		<value>Reorder</value>
+	</data>
+	<data name="MoveUpAction" xml:space="preserve">
+		<value>Move up</value>
+	</data>
+	<data name="MoveDownAction" xml:space="preserve">
+		<value>Move down</value>
+	</data>
+	<data name="MoveToTopAction" xml:space="preserve">
+		<value>Move to top</value>
+	</data>
+	<data name="MoveToBottomAction" xml:space="preserve">
+		<value>Move to bottom</value>
+	</data>
 </root>

@@ -100,7 +100,9 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_viewModel.Categories, Has.Count.EqualTo(1));
+                Assert.That(_viewModel.Categories, Has.Count.EqualTo(2));
+                Assert.That(_viewModel.Categories[0].Id, Is.EqualTo(Guid.Empty));
+                Assert.That(_viewModel.Categories[1], Is.SameAs(categories[0]));
                 Assert.That(_viewModel.Recipes, Has.Count.EqualTo(1));
                 Assert.That(_viewModel.HasNextPage, Is.True);
                 Assert.That(_viewModel.IsBusy, Is.False);

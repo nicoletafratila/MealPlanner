@@ -145,19 +145,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task MoveUp(ShopDisplaySequenceEditModel item)
         {
-            if (Shop.DisplaySequence is not { Count: > 1 })
+            if (!CanMoveUp(item))
                 return;
 
-            var index = Shop.DisplaySequence.IndexOf(item);
-            if (index <= 0)
-                return;
-
-            Shop.DisplaySequence.RemoveAt(index);
-            Shop.DisplaySequence.Insert(index - 1, item);
-            Shop.DisplaySequence.SetIndexes();
-            for (var i = 0; i < Shop.DisplaySequence.Count; i++)
-                Shop.DisplaySequence[i].Value = i + 1;
-            await AutoSaveSequenceAsync();
+            await ReorderAsync(sequence =>
+            {
+                var index = sequence.IndexOf(item);
+                sequence.RemoveAt(index);
+                sequence.Insert(index - 1, item);
+            });
         }
 
         private bool CanMoveDown(ShopDisplaySequenceEditModel item)
@@ -171,18 +167,65 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private async Task MoveDown(ShopDisplaySequenceEditModel item)
         {
+            if (!CanMoveDown(item))
+                return;
+
+            await ReorderAsync(sequence =>
+            {
+                var index = sequence.IndexOf(item);
+                sequence.RemoveAt(index);
+                sequence.Insert(index + 1, item);
+            });
+        }
+
+        private async Task MoveToTop(ShopDisplaySequenceEditModel item)
+        {
+            if (!CanMoveUp(item))
+                return;
+
+            await ReorderAsync(sequence =>
+            {
+                sequence.Remove(item);
+                sequence.Insert(0, item);
+            });
+        }
+
+        private async Task MoveToBottom(ShopDisplaySequenceEditModel item)
+        {
+            if (!CanMoveDown(item))
+                return;
+
+            await ReorderAsync(sequence =>
+            {
+                sequence.Remove(item);
+                sequence.Add(item);
+            });
+        }
+
+        private async Task OnReorderAsync((ShopDisplaySequenceEditModel DraggedItem, ShopDisplaySequenceEditModel TargetItem) reorder)
+        {
+            await ReorderAsync(sequence =>
+            {
+                var draggedIndex = sequence.IndexOf(reorder.DraggedItem);
+                var targetIndex = sequence.IndexOf(reorder.TargetItem);
+                if (draggedIndex < 0 || targetIndex < 0)
+                    return;
+
+                sequence.RemoveAt(draggedIndex);
+                sequence.Insert(draggedIndex < targetIndex ? targetIndex - 1 : targetIndex, reorder.DraggedItem);
+            });
+        }
+
+        private async Task ReorderAsync(Action<IList<ShopDisplaySequenceEditModel>> reorder)
+        {
             if (Shop.DisplaySequence is not { Count: > 1 })
                 return;
 
-            var index = Shop.DisplaySequence.IndexOf(item);
-            if (index < 0 || index >= Shop.DisplaySequence.Count - 1)
-                return;
-
-            Shop.DisplaySequence.RemoveAt(index);
-            Shop.DisplaySequence.Insert(index + 1, item);
+            reorder(Shop.DisplaySequence);
             Shop.DisplaySequence.SetIndexes();
             for (var i = 0; i < Shop.DisplaySequence.Count; i++)
                 Shop.DisplaySequence[i].Value = i + 1;
+
             await AutoSaveSequenceAsync();
         }
 

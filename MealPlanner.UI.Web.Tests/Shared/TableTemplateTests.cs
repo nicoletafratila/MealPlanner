@@ -174,5 +174,84 @@ namespace MealPlanner.UI.Web.Tests.Shared
                 Assert.That(items[2].IsSelected, Is.True);
             }
         }
+
+        // ---------- Drag reorder ----------
+        [Test]
+        public async Task OnDropAsync_InvokesOnReorder_WithDraggedAndTargetItems()
+        {
+            var itemA = new TestItem { Name = "A" };
+            var itemB = new TestItem { Name = "B" };
+            var data = new[] { itemA, itemB };
+
+            (TestItem DraggedItem, TestItem TargetItem)? invokedWith = null;
+
+            var cut = _ctx.Render<TableTemplate<TestItem>>(parameters =>
+            {
+                parameters.Add(p => p.Data, data);
+                parameters.Add(p => p.RowTemplate, CreateRowTemplate());
+                parameters.Add(p => p.EnableDragReorder, true);
+                parameters.Add(p => p.OnReorder, EventCallback.Factory.Create<(TestItem, TestItem)>(
+                    this,
+                    r => invokedWith = r));
+            });
+
+            var instance = cut.Instance;
+
+            instance.OnDragStart(itemA);
+            await instance.OnDropAsync(itemB);
+
+            Assert.That(invokedWith, Is.EqualTo((itemA, itemB)));
+        }
+
+        [Test]
+        public async Task OnDropAsync_DoesNothing_WhenDroppedOnSameItem()
+        {
+            var itemA = new TestItem { Name = "A" };
+            var data = new[] { itemA };
+
+            var callbackCount = 0;
+
+            var cut = _ctx.Render<TableTemplate<TestItem>>(parameters =>
+            {
+                parameters.Add(p => p.Data, data);
+                parameters.Add(p => p.RowTemplate, CreateRowTemplate());
+                parameters.Add(p => p.EnableDragReorder, true);
+                parameters.Add(p => p.OnReorder, EventCallback.Factory.Create<(TestItem, TestItem)>(
+                    this,
+                    _ => callbackCount++));
+            });
+
+            var instance = cut.Instance;
+
+            instance.OnDragStart(itemA);
+            await instance.OnDropAsync(itemA);
+
+            Assert.That(callbackCount, Is.Zero);
+        }
+
+        [Test]
+        public async Task OnDropAsync_DoesNothing_WhenNoDragInProgress()
+        {
+            var itemA = new TestItem { Name = "A" };
+            var data = new[] { itemA };
+
+            var callbackCount = 0;
+
+            var cut = _ctx.Render<TableTemplate<TestItem>>(parameters =>
+            {
+                parameters.Add(p => p.Data, data);
+                parameters.Add(p => p.RowTemplate, CreateRowTemplate());
+                parameters.Add(p => p.EnableDragReorder, true);
+                parameters.Add(p => p.OnReorder, EventCallback.Factory.Create<(TestItem, TestItem)>(
+                    this,
+                    _ => callbackCount++));
+            });
+
+            var instance = cut.Instance;
+
+            await instance.OnDropAsync(itemA);
+
+            Assert.That(callbackCount, Is.Zero);
+        }
     }
 }

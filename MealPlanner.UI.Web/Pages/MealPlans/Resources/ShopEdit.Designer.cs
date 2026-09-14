@@ -185,7 +185,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("LabelDisplayOrder", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Shop name: .
         /// </summary>
@@ -194,7 +194,43 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("LabelShopName", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        internal static string MoveDownAction {
+            get {
+                return ResourceManager.GetString("MoveDownAction", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Move to bottom.
+        /// </summary>
+        internal static string MoveToBottomAction {
+            get {
+                return ResourceManager.GetString("MoveToBottomAction", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Move to top.
+        /// </summary>
+        internal static string MoveToTopAction {
+            get {
+                return ResourceManager.GetString("MoveToTopAction", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        internal static string MoveUpAction {
+            get {
+                return ResourceManager.GetString("MoveUpAction", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Enter shop name.
         /// </summary>
@@ -203,7 +239,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("PlaceholderShopName", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reorder.
+        /// </summary>
+        internal static string ReorderMenuLabel {
+            get {
+                return ResourceManager.GetString("ReorderMenuLabel", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>

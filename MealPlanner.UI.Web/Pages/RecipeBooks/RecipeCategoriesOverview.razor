@@ -21,10 +21,10 @@
         <div class="card-body">
             @if (Categories != null)
             {
-                <TableTemplate Data="@Categories" ShowIndex="true" ColumnCount="4">
+                <TableTemplate TItem="RecipeCategoryModel" Data="@Categories" ShowIndex="true" ColumnCount="4" EnableDragReorder="true" OnReorder="OnReorderAsync">
                     <TableHeader>
                         <th>@Resources.RecipeCategoriesOverview.ColumnName</th>
-                        <th style="width: 80px"></th>
+                        <th style="width: 40px"></th>
                         <th style="width: 40px"></th>
                         <th style="width: 40px"></th>
                     </TableHeader>
@@ -33,11 +33,18 @@
                             @category.Name
                         </td>
                         <td>
-                            @if (category.IsSelected)
-                            {
-                                <button class="btn btn-primary btn-sm" type="button" @onclick="() => MoveUp(category)" disabled="@(!CanMoveUp(category))">&#9650;</button>
-                                <button class="btn btn-primary btn-sm" type="button" style="margin-left: 5px;" @onclick="() => MoveDown(category)" disabled="@(!CanMoveDown(category))">&#9660;</button>
-                            }
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="@Resources.RecipeCategoriesOverview.ReorderMenuLabel" @onclick:stopPropagation="true">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><button class="dropdown-item" type="button" disabled="@(!CanMoveUp(category))" @onclick="() => MoveUp(category)">@Resources.RecipeCategoriesOverview.MoveUpAction</button></li>
+                                    <li><button class="dropdown-item" type="button" disabled="@(!CanMoveDown(category))" @onclick="() => MoveDown(category)">@Resources.RecipeCategoriesOverview.MoveDownAction</button></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><button class="dropdown-item" type="button" disabled="@(!CanMoveUp(category))" @onclick="() => MoveToTop(category)">@Resources.RecipeCategoriesOverview.MoveToTopAction</button></li>
+                                    <li><button class="dropdown-item" type="button" disabled="@(!CanMoveDown(category))" @onclick="() => MoveToBottom(category)">@Resources.RecipeCategoriesOverview.MoveToBottomAction</button></li>
+                                </ul>
+                            </div>
                         </td>
                         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">@Resources.RecipeCategoriesOverview.EditButton</button></td>
                         <td>
