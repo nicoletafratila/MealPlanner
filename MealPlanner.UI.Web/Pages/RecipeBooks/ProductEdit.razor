@@ -39,7 +39,7 @@
 
                 <div class="form-group mt-3">
                     <label for="image" class="col-sm-3">@Resources.ProductEdit.LabelSelectImage</label>
-                    <InputFile id="image" class="form-control" OnChange="OnInputFileChangeAsync" accept="image/png, image/jpeg, image/gif" />
+                    <ValidatedInputFile Id="image" OnChange="OnInputFileChangeAsync" Accept="image/png, image/jpeg, image/gif" For="@(() => Product.ImageContent)" />
                     <ValidationMessage For="@(() => Product.ImageContent)" />
                 </div>
 
