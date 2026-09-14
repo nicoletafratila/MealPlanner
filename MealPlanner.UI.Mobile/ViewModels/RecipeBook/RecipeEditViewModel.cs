@@ -105,6 +105,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 Units = lookupDataService.Units;
                 Products = lookupDataService.Products;
                 ProductCategories = WithAllCategoriesOption(lookupDataService.ProductCategories);
+                SelectedProductCategory = ProductCategories.FirstOrDefault();
 
                 if (!IsNew)
                 {

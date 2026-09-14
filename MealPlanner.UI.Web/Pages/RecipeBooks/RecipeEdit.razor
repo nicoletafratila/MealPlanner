@@ -79,18 +79,21 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="unit" class="col-sm-3">@Resources.RecipeEdit.LabelUnitOfMeasurement</label>
-                    <ComboBox Id="unit" Items="Units" IdSelector="u => u.Id.ToString()" TextSelector="u => u.Name" @bind-Value="UnitId" For="@(() => UnitId)" />
-                    <ValidationMessage For="@(() => UnitId)" />
-                </div>
-
-                <div class="form-group mt-3">
-                    <label for="quantity" class="col-sm-3">@Resources.RecipeEdit.LabelQuantity</label>
-                    <div class="input-group">
-                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.RecipeEdit.PlaceholderQuantity"></InputText>
-                        <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">@Resources.RecipeEdit.AddButton</button>
+                    <div class="row g-2 align-items-end">
+                        <div class="col">
+                            <label for="quantity">@Resources.RecipeEdit.LabelQuantity</label>
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.RecipeEdit.PlaceholderQuantity"></InputText>
+                            <ValidationMessage For="@(() => Quantity)" />
+                        </div>
+                        <div class="col">
+                            <label for="unit">@Resources.RecipeEdit.LabelUnitOfMeasurement</label>
+                            <ComboBox Id="unit" Items="Units" IdSelector="u => u.Id.ToString()" TextSelector="u => u.Name" @bind-Value="UnitId" For="@(() => UnitId)" />
+                            <ValidationMessage For="@(() => UnitId)" />
+                        </div>
+                        <div class="col-auto">
+                            <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">@Resources.RecipeEdit.AddButton</button>
+                        </div>
                     </div>
-                    <ValidationMessage For="@(() => Quantity)" />
                 </div>
 
                 <br />

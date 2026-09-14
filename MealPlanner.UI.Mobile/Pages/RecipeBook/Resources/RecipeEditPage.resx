@@ -49,7 +49,7 @@
     <value>No ingredients yet.</value>
   </data>
   <data name="SelectProductTitle" xml:space="preserve">
-    <value>Select product</value>
+    <value>Choose...</value>
   </data>
   <data name="PlaceholderSearchProducts" xml:space="preserve">
     <value>Search by name</value>
@@ -58,34 +58,52 @@
     <value>No products found</value>
   </data>
   <data name="CategoryLabel" xml:space="preserve">
-    <value>Category</value>
+    <value>Recipe category</value>
   </data>
   <data name="ProductCategoryTitle" xml:space="preserve">
-    <value>Product category</value>
+    <value>Ingredient category</value>
   </data>
   <data name="AllCategoriesOption" xml:space="preserve">
     <value>All categories</value>
   </data>
+  <data name="EmptyCategoriesLabel" xml:space="preserve">
+    <value>No categories found</value>
+  </data>
+  <data name="EmptyProductCategoriesLabel" xml:space="preserve">
+    <value>No categories found</value>
+  </data>
+  <data name="EmptyUnitsLabel" xml:space="preserve">
+    <value>No units found</value>
+  </data>
+  <data name="PlaceholderSearchCategories" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
+  <data name="PlaceholderSearchProductCategories" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
+  <data name="PlaceholderSearchUnits" xml:space="preserve">
+    <value>Search by name</value>
+  </data>
   <data name="ImageLabel" xml:space="preserve">
-    <value>Image</value>
+    <value>Select image</value>
   </data>
   <data name="IngredientsLabel" xml:space="preserve">
     <value>Ingredients</value>
   </data>
   <data name="NameLabel" xml:space="preserve">
-    <value>Name</value>
+    <value>Recipe name</value>
   </data>
   <data name="PickImageButton" xml:space="preserve">
     <value>Pick image</value>
   </data>
   <data name="PlaceholderName" xml:space="preserve">
-    <value>Recipe name</value>
+    <value>Enter recipe name</value>
   </data>
   <data name="PlaceholderQuantity" xml:space="preserve">
-    <value>Qty</value>
+    <value>Enter the quantity</value>
   </data>
   <data name="PlaceholderSource" xml:space="preserve">
-    <value>Optional source / URL</value>
+    <value>Enter the url for the original source</value>
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
@@ -94,9 +112,9 @@
     <value>Select category</value>
   </data>
   <data name="SourceLabel" xml:space="preserve">
-    <value>Source</value>
+    <value>Original source</value>
   </data>
   <data name="UnitTitle" xml:space="preserve">
-    <value>Unit</value>
+    <value>Unit of measurement</value>
   </data>
 </root>

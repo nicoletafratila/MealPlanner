@@ -23,14 +23,33 @@
             <Label Text="{x:Static res:RecipeEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderName}" />
 
-            <Label Text="{x:Static res:RecipeEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Picker ItemsSource="{Binding Categories}"
-                    SelectedItem="{Binding SelectedCategory}"
-                    ItemDisplayBinding="{Binding Name}"
-                    Title="{x:Static res:RecipeEditPage.SelectCategoryTitle}" />
-
             <Label Text="{x:Static res:RecipeEditPage.SourceLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Source}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderSource}" />
+
+            <Label Text="{x:Static res:RecipeEditPage.CategoryLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Border Stroke="{StaticResource MidGray}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="10,0"
+                    MinimumHeightRequest="44"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSelectCategoryTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" VerticalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           Text="{Binding SelectedCategory.Name, TargetNullValue={x:Static res:RecipeEditPage.SelectCategoryTitle}}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedCategory}" Value="{x:Null}">
+                                <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label Grid.Column="1" Text="&#x25BE;" VerticalOptions="Center"
+                           FontSize="14" TextColor="{StaticResource DarkGray}" />
+                </Grid>
+            </Border>
 
             <Label Text="{x:Static res:RecipeEditPage.ImageLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Button Text="{x:Static res:RecipeEditPage.PickImageButton}" Command="{Binding PickImageCommand}" HorizontalOptions="Start" />
@@ -39,10 +58,29 @@
 
             <!-- Add ingredient section -->
             <Label Text="{x:Static res:RecipeEditPage.AddIngredientLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Picker Title="{x:Static res:RecipeEditPage.ProductCategoryTitle}"
-                    ItemsSource="{Binding ProductCategories}"
-                    SelectedItem="{Binding SelectedProductCategory}"
-                    ItemDisplayBinding="{Binding Name}" />
+            <Border Stroke="{StaticResource MidGray}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="10,0"
+                    MinimumHeightRequest="44"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSelectProductCategoryTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" VerticalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           Text="{Binding SelectedProductCategory.Name, TargetNullValue={x:Static res:RecipeEditPage.ProductCategoryTitle}}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedProductCategory}" Value="{x:Null}">
+                                <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label Grid.Column="1" Text="&#x25BE;" VerticalOptions="Center"
+                           FontSize="14" TextColor="{StaticResource DarkGray}" />
+                </Grid>
+            </Border>
             <Border Stroke="{StaticResource MidGray}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 8"
@@ -73,10 +111,29 @@
             </Border>
             <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
                 <Entry Grid.Column="0" Text="{Binding QuantityText}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderQuantity}" Keyboard="Numeric" />
-                <Picker Grid.Column="1" Title="{x:Static res:RecipeEditPage.UnitTitle}"
-                        ItemsSource="{Binding UnitsForProduct}"
-                        SelectedItem="{Binding SelectedUnit}"
-                        ItemDisplayBinding="{Binding Name}" />
+                <Border Grid.Column="1" Stroke="{StaticResource MidGray}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10,0"
+                        MinimumHeightRequest="44"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSelectUnitTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" VerticalOptions="Center"
+                               LineBreakMode="TailTruncation"
+                               Text="{Binding SelectedUnit.Name, TargetNullValue={x:Static res:RecipeEditPage.UnitTitle}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedUnit}" Value="{x:Null}">
+                                    <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Grid.Column="1" Text="&#x25BE;" VerticalOptions="Center"
+                               FontSize="14" TextColor="{StaticResource DarkGray}" />
+                    </Grid>
+                </Border>
                 <Button Grid.Column="2" Text="{x:Static res:RecipeEditPage.AddButton}"
                         Command="{Binding AddIngredientCommand}"
                         IsEnabled="{Binding SelectedProduct, Converter={x:Static converters:NotNullConverter.Instance}}"

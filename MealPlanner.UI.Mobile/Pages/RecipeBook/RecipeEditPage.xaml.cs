@@ -27,5 +27,44 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook
             if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is ProductModel product)
                 _vm.SelectedProduct = product;
         }
+
+        private async void OnSelectCategoryTapped(object sender, TappedEventArgs e)
+        {
+            var items = _vm.Categories.Select(c => new SelectorItem(c, c.Name)).ToList();
+            var popup = new SelectorPopup(
+                items,
+                RecipeBook.Resources.RecipeEditPage.SelectCategoryTitle,
+                RecipeBook.Resources.RecipeEditPage.PlaceholderSearchCategories,
+                RecipeBook.Resources.RecipeEditPage.EmptyCategoriesLabel);
+            var result = await this.ShowPopupAsync<object>(popup);
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is RecipeCategoryModel category)
+                _vm.SelectedCategory = category;
+        }
+
+        private async void OnSelectProductCategoryTapped(object sender, TappedEventArgs e)
+        {
+            var items = _vm.ProductCategories.Select(c => new SelectorItem(c, c.Name)).ToList();
+            var popup = new SelectorPopup(
+                items,
+                RecipeBook.Resources.RecipeEditPage.ProductCategoryTitle,
+                RecipeBook.Resources.RecipeEditPage.PlaceholderSearchProductCategories,
+                RecipeBook.Resources.RecipeEditPage.EmptyProductCategoriesLabel);
+            var result = await this.ShowPopupAsync<object>(popup);
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is ProductCategoryModel category)
+                _vm.SelectedProductCategory = category;
+        }
+
+        private async void OnSelectUnitTapped(object sender, TappedEventArgs e)
+        {
+            var items = _vm.UnitsForProduct.Select(u => new SelectorItem(u, u.Name)).ToList();
+            var popup = new SelectorPopup(
+                items,
+                RecipeBook.Resources.RecipeEditPage.UnitTitle,
+                RecipeBook.Resources.RecipeEditPage.PlaceholderSearchUnits,
+                RecipeBook.Resources.RecipeEditPage.EmptyUnitsLabel);
+            var result = await this.ShowPopupAsync<object>(popup);
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is UnitModel unit)
+                _vm.SelectedUnit = unit;
+        }
     }
 }
