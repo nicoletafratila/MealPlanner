@@ -17,6 +17,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         public PagedList<RecipeCategoryModel>? Categories { get; private set; }
 
+        public string? RecipeCategoryFilterId { get; set; }
+
         public string? RecipeId { get; private set; }
         public PagedList<RecipeModel>? Recipes { get; private set; }
 

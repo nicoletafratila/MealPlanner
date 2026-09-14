@@ -17,16 +17,7 @@
             <ValidationSummary />
 
             <div class="form-group mt-3">
-                <InputSelect id="Shop" class="form-select" @bind-Value="@ShopId">
-                    <option selected value="0" hidden></option>
-                    @if (Shops != null && Shops.Items != null && Shops.Items.Any())
-                    {
-                        @foreach (var item in Shops.Items)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
-                    }
-                </InputSelect>
+                <ComboBox Id="Shop" Items="Shops?.Items" IdSelector="c => c.Id.ToString()" TextSelector="c => c.Name" @bind-Value="ShopId" For="@(() => ShopId)" />
                 <ValidationMessage For="@(() => ShopId)" />
             </div>
 

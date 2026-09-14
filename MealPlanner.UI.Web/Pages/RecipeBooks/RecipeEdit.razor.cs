@@ -34,6 +34,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         public string? ProductId { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
 
+        public string? IngredientCategoryFilterId { get; set; }
+
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(Resources.RecipeEdit), ErrorMessageResourceName = "QuantityPositiveNumber")]
         public string? Quantity { get; set; }
 

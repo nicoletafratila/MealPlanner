@@ -37,6 +37,8 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         public PagedList<ProductCategoryModel>? Categories { get; set; }
 
+        public string? ProductCategoryFilterId { get; set; }
+
         public string? ProductId { get; set; }
         public PagedList<ProductModel>? Products { get; set; }
 

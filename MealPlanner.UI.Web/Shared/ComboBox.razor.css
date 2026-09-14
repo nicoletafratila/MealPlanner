@@ -1,0 +1,18 @@
+.combo-box > button {
+    min-height: calc(1.5em + 0.75rem + 2px);
+}
+
+.combo-box-menu {
+    max-height: 340px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.combo-box-menu ul {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.combo-box-filter {
+    margin-bottom: 0.25rem;
+}

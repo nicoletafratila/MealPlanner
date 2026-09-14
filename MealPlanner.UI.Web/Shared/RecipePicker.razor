@@ -12,11 +12,14 @@
             <span>@Placeholder</span>
         }
     </button>
-    <ul class="dropdown-menu w-100">
+    <ul class="dropdown-menu w-100 combo-box-menu">
+        <li class="px-2 pb-1">
+            <input type="text" class="form-control form-control-sm combo-box-filter" placeholder="@Resources.Messages.SearchPlaceholder" value="@FilterText" @oninput="OnFilterInput" @onclick:stopPropagation="true" />
+        </li>
         <li><a class="dropdown-item" href="javascript:void(0)" @onclick="() => SelectAsync(null)">@Placeholder</a></li>
-        @if (Recipes != null)
+        @if (FilteredRecipes != null)
         {
-            @foreach (var item in Recipes)
+            @foreach (var item in FilteredRecipes)
             {
                 <li>
                     <a class="dropdown-item d-flex align-items-center" href="javascript:void(0)" @onclick="() => SelectAsync(item)">

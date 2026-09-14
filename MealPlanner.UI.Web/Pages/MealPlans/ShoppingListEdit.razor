@@ -42,31 +42,13 @@
 
                 <div class="form-group mt-3">
                     <label for="Shop" class="col-sm-3">@Resources.ShoppingListEdit.LabelShop</label>
-                    <InputSelect id="Shop" class="form-select" @bind-Value="ShoppingList.ShopId" @bind-Value:after="OnShopChangedAsync">
-                        <option selected value="0" hidden></option>
-                        @if (Shops?.Items != null && Shops.Items.Any())
-                        {
-                            @foreach (var item in Shops.Items)
-                            {
-                                <option value="@item.Id">@item.Name</option>
-                            }
-                        }
-                    </InputSelect>
+                    <ComboBox Id="Shop" Items="Shops?.Items" IdSelector="c => c.Id" TextSelector="c => c.Name" @bind-Value="ShoppingList.ShopId" @bind-Value:after="OnShopChangedAsync" For="@(() => ShoppingList.ShopId)" />
                     <ValidationMessage For="@(() => ShoppingList.ShopId)" />
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="ProductCategory" class="col-sm-3">@Resources.ShoppingListEdit.LabelProductCategory</label>
-                    <select id="ProductCategory" class="form-select" @onchange="OnProductCategoryChangedAsync">
-                        <option selected value="0">@Resources.ShoppingListEdit.AllCategoriesOption</option>
-                        @if (Categories != null && Categories.Items != null && Categories.Items.Any())
-                        {
-                            @foreach (var item in Categories.Items)
-                            {
-                                <option value="@item.Id">@item.Name</option>
-                            }
-                        }
-                    </select>
+                    <ComboBox Id="ProductCategory" Items="Categories?.Items" IdSelector="c => c.Id.ToString()" TextSelector="c => c.Name" @bind-Value="ProductCategoryFilterId" @bind-Value:after="() => OnProductCategoryChangedAsync(new ChangeEventArgs { Value = ProductCategoryFilterId })" Placeholder="@Resources.ShoppingListEdit.AllCategoriesOption" />
                 </div>
 
                 <div class="form-group mt-3">
@@ -76,16 +58,7 @@
 
                 <div class="form-group mt-3">
                     <label for="unit" class="col-sm-3">@Resources.ShoppingListEdit.LabelUnitOfMeasurement</label>
-                    <InputSelect id="unit" class="form-select" @bind-Value="@UnitId">
-                        <option selected value="0" hidden></option>
-                        @if (Units != null && Units.Any())
-                        {
-                            @foreach (var unit in Units!)
-                            {
-                                <option value="@unit.Id">@unit.Name</option>
-                            }
-                        }
-                    </InputSelect>
+                    <ComboBox Id="unit" Items="Units" IdSelector="u => u.Id.ToString()" TextSelector="u => u.Name" @bind-Value="UnitId" For="@(() => UnitId)" />
                     <ValidationMessage For="@(() => UnitId)" />
                 </div>
 

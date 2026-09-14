@@ -68,5 +68,14 @@ namespace MealPlanner.UI.Web.Shared.Resources {
                 return ResourceManager.GetString("ServiceUnavailable", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search....
+        /// </summary>
+        internal static string SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("SearchPlaceholder", resourceCulture);
+            }
+        }
     }
 }

@@ -34,4 +34,7 @@
   <data name="ServiceUnavailable" xml:space="preserve">
     <value>The service is currently unavailable. Please try again later.</value>
   </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Type to search...</value>
+  </data>
 </root>
