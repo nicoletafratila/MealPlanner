@@ -366,7 +366,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             ProductId = productId;
             Quantity = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(productId))
+            if (string.IsNullOrWhiteSpace(productId) || productId == "0")
             {
                 StateHasChanged();
                 return;

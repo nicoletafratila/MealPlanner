@@ -151,15 +151,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Category.
-        /// </summary>
-        internal static string HeaderCategory {
-            get {
-                return ResourceManager.GetString("HeaderCategory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string HeaderName {
@@ -167,7 +158,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("HeaderName", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        internal static string HeaderCategory {
+            get {
+                return ResourceManager.GetString("HeaderCategory", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Week&apos;s menu has been created and the recipe has been added successfully..
         /// </summary>

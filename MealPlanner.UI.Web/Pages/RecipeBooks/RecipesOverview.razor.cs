@@ -42,17 +42,41 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         public IMealPlanService MealPlanService { get; set; } = default!;
 
         [Inject]
+        public IRecipeCategoryService RecipeCategoryService { get; set; } = default!;
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
 
-        protected override void OnInitialized()
+        public PagedList<RecipeCategoryModel>? RecipeCategories { get; set; }
+
+        public string? RecipeCategoryFilterId { get; set; }
+
+        protected override async Task OnInitializedAsync()
         {
             _navItems =
             [
                 new BreadcrumbItem { Text = Resources.RecipesOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
             ];
+
+            var queryParameters = new QueryParameters<RecipeCategoryModel>
+            {
+                Filters = [],
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "DisplaySequence",
+                        Direction = Common.Pagination.SortDirection.Ascending
+                    }
+                ],
+                PageSize = int.MaxValue,
+                PageNumber = 1
+            };
+
+            RecipeCategories = await RecipeCategoryService.SearchAsync(queryParameters);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -136,6 +160,22 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 await _recipesGrid.RefreshDataAsync();
         }
 
+        private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)
+        {
+            var stored = await SessionStorage.GetItemAsync<QueryParameters<RecipeModel>>();
+            var resetParameters = new QueryParameters<RecipeModel>
+            {
+                Filters = stored?.Filters,
+                Sorting = stored?.Sorting ?? [],
+                PageNumber = 1,
+                PageSize = _pageSize
+            };
+            await SessionStorage.SetItemAsync(resetParameters);
+
+            _gridKey++;
+            StateHasChanged();
+        }
+
         private async Task<GridDataProviderResult<RecipeModel>> DataProviderAsync(GridDataProviderRequest<RecipeModel> request)
         {
             if (request.PageSize > 0)
@@ -185,11 +225,16 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             if (filtersKey == "")
                 _pageBeforeFilter = request.PageNumber;
 
+            var filters = request.Filters?
+                .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                .ToList() ?? [];
+
+            if (!string.IsNullOrWhiteSpace(RecipeCategoryFilterId))
+                filters.Add(new Common.Pagination.FilterItem("RecipeCategoryId", RecipeCategoryFilterId, Common.Pagination.FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+
             var queryParameters = new QueryParameters<RecipeModel>
             {
-                Filters = request.Filters?
-                    .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
-                    .ToList() ?? [],
+                Filters = filters,
                 Sorting = request.Sorting?
                     .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
                     .ToList() ?? [],

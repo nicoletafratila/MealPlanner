@@ -42,4 +42,5 @@ Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI
 
 
 
+comaparare web cu mobile screen cu screen
 

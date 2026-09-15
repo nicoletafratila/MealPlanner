@@ -61,7 +61,19 @@
                         </div>
                     </div>
                 </GridColumn>
-                <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderCategory" PropertyName="RecipeCategoryName" SortString="RecipeCategoryName" SortKeySelector="item => item.RecipeCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
+                <GridColumn TItem="RecipeModel" PropertyName="RecipeCategoryName" Sortable="false" Filterable="false" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <HeaderContent>
+                        <div class="category-filter-header">
+                            <span>@Resources.RecipesOverview.HeaderCategory</span>
+                            <div class="category-filter-control">
+                                <ComboBox Id="recipeCategoryFilter" Items="RecipeCategories?.Items" IdSelector="c => c.Id.ToString()" TextSelector="c => c.Name"
+                                          @bind-Value="RecipeCategoryFilterId"
+                                          @bind-Value:after="() => OnRecipeCategoryChangedAsync(new ChangeEventArgs { Value = RecipeCategoryFilterId })"
+                                          Placeholder="@Resources.RecipesOverview.AllCategoriesOption" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                </GridColumn>
             </Columns>
         </GridTemplate>
     </div>
