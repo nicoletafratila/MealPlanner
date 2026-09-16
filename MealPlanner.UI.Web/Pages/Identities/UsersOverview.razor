@@ -1,7 +1,7 @@
 @page "/identities/usersoverview"
 @using Identity.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <style>
     .grid-additional-columns th:nth-child(1),
@@ -31,7 +31,7 @@
                     @context.Index
                 </GridColumn>
                 <GridColumn TItem="ApplicationUserModel" HeaderText="@Resources.UsersOverview.ColumnUsername" PropertyName="Username" SortString="Username" SortKeySelector="item => item.Username" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
-                    <div style="cursor: pointer;" @onclick="() => Update(context)">
+                    <div class="cursor-pointer" @onclick="() => Update(context)">
                         @context.Username
                     </div>
                 </GridColumn>

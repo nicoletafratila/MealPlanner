@@ -3,16 +3,16 @@
 
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <div class="card">
     <div class="card-header">
-        <table style="width: 100%;">
+        <table class="w-100">
             <tr>
-                <td style="width: 100%;">
+                <td class="w-100">
                     <h2>@Resources.RecipesOverview.PageTitle</h2>
                 </td>
-                <td style="white-space: nowrap;">
+                <td class="text-nowrap">
                     <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.RecipesOverview.NewButton</button>
                 </td>
             </tr>
@@ -24,14 +24,13 @@
             <Columns>
                 <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div class="card-template">
-                        <div class="card-header" style="position: relative; padding: 0;">
+                        <div class="card-header position-relative p-0">
                             <img src="@context.ImageUrl"
-                                 class="img-fluid"
-                                 style="width: 178px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;"
+                                 class="img-fluid card-cover-img"
                                  @onclick="() => Update(context)" />
 
                             <img src="Images/add.png"
-                                 style="position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; cursor: pointer; z-index: 2;"
+                                 class="add-icon"
                                  @onclick="() => AddToMealPlanAsync(context)" />
                         </div>
                         <div class="card-body">
@@ -49,7 +48,7 @@
                                         }
                                     </td>
                                     <td class="min-space">
-                                        <i class="bi bi-trash text-danger" style="cursor: pointer; font-size: 1.25rem;" @onclick="() => DeleteAsync(context)"></i>
+                                        <i class="bi bi-trash text-danger fs-5 cursor-pointer" @onclick="() => DeleteAsync(context)"></i>
                                     </td>
                                 </tr>
                                 <tr>

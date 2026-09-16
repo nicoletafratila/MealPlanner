@@ -16,3 +16,13 @@
     z-index: 5;
     font-weight: normal;
 }
+
+.card-header img.add-icon {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 2;
+}

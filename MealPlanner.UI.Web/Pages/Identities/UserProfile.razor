@@ -1,7 +1,7 @@
 @page "/identities/userprofile"
 @page "/identities/userprofile/{name}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <style>
     .img-profile {
@@ -15,14 +15,14 @@
     <div class="card">
         <div class="card-header">
             <table>
-                <tr class="row g-0" style="display:contents">
-                    <td style="vertical-align: top">
+                <tr class="row g-0 tr-contents">
+                    <td class="align-top">
                         <h2 id="headerfirstname">@ApplicationUser.FirstName</h2>
                         <br />
                         <h2 id="headerlastname">@ApplicationUser.LastName</h2>
                     </td>
-                    <td style="align-content:flex-end;">
-                        <div style="display:flex; align-items:flex-end; gap:8px;">
+                    <td class="align-content-end">
+                        <div class="d-flex align-items-end gap-2">
                             <AuthorizeView Roles="admin" Context="lockIconAuthContext">
                                 @if (ApplicationUser.IsLockedOut)
                                 {
@@ -83,7 +83,7 @@
 
                 <AuthorizeView Roles="admin" Context="authContext">
                     <div class="form-group mt-3">
-                        <label class="col-sm-3" style="width: 5%">@Resources.UserProfile.IsActiveLabel</label>
+                        <label class="col-sm-3 isactive-label">@Resources.UserProfile.IsActiveLabel</label>
                         <InputCheckbox id="isactive" class="form-check-input" @bind-Value="@ApplicationUser.IsActive" />
                     </div>
                 </AuthorizeView>

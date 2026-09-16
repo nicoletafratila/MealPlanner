@@ -1,7 +1,7 @@
 ﻿@page "/recipebooks/productcategoriesoverview"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <style>
     .grid-additional-columns th:nth-child(1),
@@ -21,10 +21,10 @@
     <div class="card-header">
         <table>
             <tr>
-                <td style="width: 100%;">
+                <td class="w-100">
                     <h2>@Resources.ProductCategoriesOverview.PageTitle</h2>
                 </td>
-                <td style="white-space: nowrap;">
+                <td class="text-nowrap">
                     <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.ProductCategoriesOverview.NewButton</button>
                 </td>
             </tr>
@@ -38,13 +38,13 @@
                     @context.Index
                 </GridColumn>
                 <GridColumn TItem="ProductCategoryModel" HeaderText="@Resources.ProductCategoriesOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
-                    <div style="cursor: pointer;" @onclick="() => Update(context)">
+                    <div class="cursor-pointer" @onclick="() => Update(context)">
                         @context.Name
                     </div>
                 </GridColumn>
                 <GridColumn TItem="ProductCategoryModel" Filterable="false">
                     <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteAsync(context)">
-                        <i class="bi bi-trash" style="font-size: 1.25rem;"></i>
+                        <i class="bi bi-trash fs-5"></i>
                     </button>
                 </GridColumn>
             </Columns>

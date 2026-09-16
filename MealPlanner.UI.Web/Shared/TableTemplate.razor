@@ -23,11 +23,11 @@
         <tr>
             @if (EnableDragReorder)
             {
-                <th style="width: 30px"></th>
+                <th class="drag-col"></th>
             }
             @if (ShowIndex)
             {
-                <th style="width: 40px">@IndexHeaderText</th>
+                <th class="action-col">@IndexHeaderText</th>
             }
             @TableHeader
         </tr>
@@ -36,7 +36,7 @@
         @if (Data == null || !Data.Any())
         {
             <tr class="no-hover-bg">
-                <td class="no-hover-bg" colspan="@((ShowIndex ? ColumnCount + 1 : ColumnCount) + (EnableDragReorder ? 1 : 0))" style="text-align-last: center; border: none;">
+                <td class="no-hover-bg empty-cell" colspan="@((ShowIndex ? ColumnCount + 1 : ColumnCount) + (EnableDragReorder ? 1 : 0))">
                     <img src="Images/empty-state.svg" class="empty-svg" width="128" height="128" alt="" />
                 </td>
             </tr>
@@ -52,7 +52,7 @@
                     @onclick="async () => await OnSelectedItemChangedAsync(item)">
                     @if (EnableDragReorder)
                     {
-                        <td style="cursor: grab; text-align: center;"><i class="bi bi-grip-vertical"></i></td>
+                        <td class="drag-handle"><i class="bi bi-grip-vertical"></i></td>
                     }
                     @if (ShowIndex)
                     {

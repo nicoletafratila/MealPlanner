@@ -1,15 +1,15 @@
 ﻿@page "/recipebooks/recipecategoryedit"
 @page "/recipebooks/recipecategoryedit/{Id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 @if (RecipeCategory != null)
 {
     <div class="card">
         <div class="card-header">
             <table>
-                <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
+                <tr class="row g-0 tr-contents">
+                    <td class="col-md-8 align-top">
                         <h2 id="headerName">@RecipeCategory.Name</h2>
                     </td>
                 </tr>

@@ -1,17 +1,17 @@
 ﻿@page "/recipebooks/recipecategoriesoverview"
 @using RecipeBook.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <div>
     <div class="card">
         <div class="card-header">
             <table>
                 <tr>
-                    <td style="width: 100%;">
+                    <td class="w-100">
                         <h2>@Resources.RecipeCategoriesOverview.PageTitle</h2>
                     </td>
-                    <td style="white-space: nowrap;">
+                    <td class="text-nowrap">
                         <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.RecipeCategoriesOverview.NewButton</button>
                     </td>
                 </tr>
@@ -24,9 +24,9 @@
                 <TableTemplate TItem="RecipeCategoryModel" Data="@Categories" ShowIndex="true" ColumnCount="4" EnableDragReorder="true" OnReorder="OnReorderAsync">
                     <TableHeader>
                         <th>@Resources.RecipeCategoriesOverview.ColumnName</th>
-                        <th style="width: 40px"></th>
-                        <th style="width: 40px"></th>
-                        <th style="width: 40px"></th>
+                        <th class="action-col"></th>
+                        <th class="action-col"></th>
+                        <th class="action-col"></th>
                     </TableHeader>
                     <RowTemplate Context="category">
                         <td>
@@ -49,7 +49,7 @@
                         <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">@Resources.RecipeCategoriesOverview.EditButton</button></td>
                         <td>
                             <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteAsync(category)">
-                                <i class="bi bi-trash" style="font-size: 1.25rem;"></i>
+                                <i class="bi bi-trash fs-5"></i>
                             </button>
                         </td>
                     </RowTemplate>

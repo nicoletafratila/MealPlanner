@@ -10,7 +10,7 @@
         <Authorized>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipesoverview" Match="NavLinkMatch.All">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m8.1 13.34 2.83-2.83L3.91 3.5a4.008 4.008 0 0 0 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z" /></svg> @Resources.NavMenu.Recipes
+                    <RecipesIcon /> @Resources.NavMenu.Recipes
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
@@ -35,12 +35,12 @@
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipecategoriesoverview">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m12 2-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z" /></svg> @Resources.NavMenu.RecipeCategories
+                    <CategoriesIcon /> @Resources.NavMenu.RecipeCategories
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/productcategoriesoverview">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m12 2-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z" /></svg> @Resources.NavMenu.ProductCategories
+                    <CategoriesIcon /> @Resources.NavMenu.ProductCategories
                 </MudNavLink>
             </div>
             @if ((context.User.IsInRole("admin")))
@@ -53,7 +53,7 @@
             }
             <div class="nav-item px-3">
                 <MudNavLink class="nav-link" href="recipebooks/recipestatistics">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" class="me-1" style="vertical-align:-0.125em;"><path d="m8.1 13.34 2.83-2.83L3.91 3.5a4.008 4.008 0 0 0 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z" /></svg> @Resources.NavMenu.RecipesStatistics
+                    <RecipesIcon /> @Resources.NavMenu.RecipesStatistics
                 </MudNavLink>
             </div>
             <div class="nav-item px-3">

@@ -1,0 +1,13 @@
+.drag-col {
+    width: 30px;
+}
+
+.drag-handle {
+    cursor: grab;
+    text-align: center;
+}
+
+.empty-cell {
+    text-align-last: center;
+    border: none;
+}

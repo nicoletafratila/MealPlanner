@@ -5,7 +5,7 @@
 @using MealPlanner.UI.Web.Shared
 @using MealPlanner.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <style>
     .table-grid > thead {
@@ -18,8 +18,8 @@
     <div class="card">
         <div class="card-header">
             <table>
-                <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
+                <tr class="row g-0 tr-contents">
+                    <td class="col-md-8 align-top">
                         <h2 id="headerName">@MealPlan.Name</h2>
                     </td>
                 </tr>
@@ -58,8 +58,8 @@
                             <GridColumn TItem="RecipeModel" Filterable="false">
                                 <ChildContent Context="recipeContext">
                                     <div class="card-template">
-                                        <div class="card-header" style="padding: 0px;">
-                                            <img src="@recipeContext.ImageUrl" class="img-fluid" style="width: 200px; height: 100%; object-fit: cover; cursor: pointer; border-top-left-radius: 5px; border-top-right-radius: 5px;" @onclick="async () => await ShowRecipeAsync(recipeContext)" />
+                                        <div class="card-header p-0">
+                                            <img src="@recipeContext.ImageUrl" class="img-fluid card-cover-img" @onclick="async () => await ShowRecipeAsync(recipeContext)" />
                                         </div>
                                         <div class="card-body">
                                             <table>
@@ -76,7 +76,7 @@
                                                         }
                                                     </td>
                                                     <td class="min-space">
-                                                        <i class="bi bi-trash text-danger" style="cursor: pointer; font-size: 1.25rem;" @onclick="async () => await DeleteRecipeAsync(recipeContext)"></i>
+                                                        <i class="bi bi-trash text-danger fs-5 cursor-pointer" @onclick="async () => await DeleteRecipeAsync(recipeContext)"></i>
                                                     </td>
                                                 </tr>
                                                 <tr>

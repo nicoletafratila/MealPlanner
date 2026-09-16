@@ -1,7 +1,7 @@
 ﻿@page "/recipebooks/productedit"
 @page "/recipebooks/productedit/{id}"
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 <style>
     .img-product {
@@ -15,11 +15,11 @@
     <div class="card">
         <div class="card-header">
             <table>
-                <tr class="row g-0" style="display:contents">
-                    <td style="vertical-align: top">
+                <tr class="row g-0 tr-contents">
+                    <td class="align-top">
                         <h2 id="headerName">@Product.Name</h2>
                     </td>
-                    <td style="align-content:flex-end;">
+                    <td class="align-content-end">
                         <img class="img-product" src="@Product.ImageUrl" />
                     </td>
                 </tr>

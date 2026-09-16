@@ -2,15 +2,15 @@
 @page "/mealplans/shopedit/{Id}"
 @using MealPlanner.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 @if (Shop != null)
 {
     <div class="card">
         <div class="card-header">
             <table>
-                <tr class="row g-0" style="display:contents">
-                    <td class="col-md-8" style="vertical-align: top">
+                <tr class="row g-0 tr-contents">
+                    <td class="col-md-8 align-top">
                         <h2 id="headerName">@Shop.Name</h2>
                     </td>
                 </tr>
@@ -37,7 +37,7 @@
                         <TableCaption>@Resources.ShopEdit.TableCaptionCategories</TableCaption>
                         <TableHeader>
                             <th>@Resources.ShopEdit.ColumnName</th>
-                            <th style="width: 40px"></th>
+                            <th class="action-col"></th>
                         </TableHeader>
                         <RowTemplate Context="DisplaySequence">
                             <td>

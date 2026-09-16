@@ -2,7 +2,7 @@
 @page "/mealplans/shoppinglistedit/{id}"
 @using MealPlanner.Shared.Models
 
-<Breadcrumb style="--bs-breadcrumb-divider: '>';" Items="_navItems"></Breadcrumb>
+<Breadcrumb Items="_navItems"></Breadcrumb>
 
 
 @if (ShoppingList != null)
@@ -11,10 +11,10 @@
         <div class="card-header">
             <table>
                 <tr>
-                    <td style="width: 100%;">
+                    <td class="w-100">
                         <h2 id="headerName" class="d-inline">@ShoppingList.Name</h2>
                     </td>
-                    <td style="white-space: nowrap;">
+                    <td class="text-nowrap">
                         <button class="btn btn-primary btn-sm" type="button" @onclick="() => Export()">@Resources.ShoppingListEdit.ExportButton</button>
                     </td>
                     @if (showCopiedMessage)
@@ -78,18 +78,18 @@
                     <TableTemplate Data="@ShoppingList.Products" ColumnCount="3">
                         <TableCaption>@Resources.ShoppingListEdit.TableCaptionProducts</TableCaption>
                         <TableHeader>
-                            <th style="width: 40px"></th>
+                            <th class="action-col"></th>
                             <th></th>
-                            <th style="width: 40px"></th>
+                            <th class="action-col"></th>
                         </TableHeader>
                         <RowTemplate Context="ProductModel">
                             @if (ProductModel != null && ProductModel.Product != null)
                             {
-                                <td style="vertical-align:middle; text-align: center" @onclick:stopPropagation="true">
+                                <td class="align-middle text-center" @onclick:stopPropagation="true">
                                     <input type="checkbox" checked="@ProductModel.Collected" @onchange="async (e) => await CheckboxChangedAsync(ProductModel, (bool)(e.Value ?? false))" />
                                 </td>
-                                <td style="vertical-align:middle; cursor: pointer" @onclick:stopPropagation="true" @onclick="async () => await CheckboxChangedAsync(ProductModel, !ProductModel.Collected)">
-                                    <div style="display:flex; align-items: center">
+                                <td class="align-middle cursor-pointer" @onclick:stopPropagation="true" @onclick="async () => await CheckboxChangedAsync(ProductModel, !ProductModel.Collected)">
+                                    <div class="d-flex align-items-center">
                                         <img src="@ProductModel.Product.ThumbnailUrl" class="img-fluid" width="100" height="80" />
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                         <p>@ProductModel.Product.Name</p>
@@ -101,7 +101,7 @@
                                 </td>
                                 <td @onclick:stopPropagation="true">
                                     <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteProductAsync(ProductModel.Product)">
-                                        <i class="bi bi-trash" style="font-size: 1.25rem;"></i>
+                                        <i class="bi bi-trash fs-5"></i>
                                     </button>
                                 </td>
                             }
@@ -111,9 +111,9 @@
                     <button type="submit" class="btn btn-primary btn-sm">@Resources.ShoppingListEdit.SaveButton</button>
                     <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.ShoppingListEdit.DeleteButton</button>
 
-                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">@Resources.ShoppingListEdit.AddMealPlanButton</button>
-                    <button class="btn btn-primary btn-sm" type="button" style="margin:0px,5px, 5px, 5px" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.ShoppingListEdit.AddRecipeButton</button>
-                    <button class="btn btn-primary btn-sm" type="button" style="margin:5px" @onclick="NavigateToOverview">@Resources.ShoppingListEdit.BackToOverviewButton</button>
+                    <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">@Resources.ShoppingListEdit.AddMealPlanButton</button>
+                    <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.ShoppingListEdit.AddRecipeButton</button>
+                    <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="NavigateToOverview">@Resources.ShoppingListEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

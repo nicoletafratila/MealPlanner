@@ -52,6 +52,38 @@
     text-align: right;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.tr-contents {
+    display: contents;
+}
+
+.action-col {
+    width: 40px;
+}
+
+.chart-row {
+    height: 400px;
+}
+
+.card-cover-img {
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.breadcrumb {
+    --bs-breadcrumb-divider: '>';
+}
+
+.nav-icon {
+    vertical-align: -0.125em;
+}
+
 .btn-new-container {
     float: right;
     margin-top: 50px;
