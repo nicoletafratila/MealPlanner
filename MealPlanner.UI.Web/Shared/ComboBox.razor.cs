@@ -38,6 +38,9 @@ namespace MealPlanner.UI.Web.Shared
         public string? Placeholder { get; set; }
 
         [Parameter]
+        public bool ShowClearButton { get; set; }
+
+        [Parameter]
         public Expression<Func<TValue>>? For { get; set; }
 
         private string FilterText => _filterText;
@@ -65,6 +68,8 @@ namespace MealPlanner.UI.Web.Shared
                 return Placeholder ?? string.Empty;
             }
         }
+
+        private bool HasValue => !EqualityComparer<TValue>.Default.Equals(Value, default!);
 
         private string CssClassValue =>
             For is null || CurrentEditContext is null

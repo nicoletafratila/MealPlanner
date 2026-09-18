@@ -15,6 +15,10 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class RecipesOverviewViewModel(IRecipeService recipeService, ReferenceDataCacheService lookupDataService, IMealPlanService mealPlanService) : BaseViewModel
     {
+        private const int SearchDebounceMilliseconds = 400;
+
+        private CancellationTokenSource? _searchDebounceTokenSource;
+
         [ObservableProperty]
         private ObservableCollection<RecipeModel> _recipes = [];
 
@@ -96,8 +100,29 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         partial void OnSearchTextChanged(string? value)
         {
+            _searchDebounceTokenSource?.Cancel();
+
             if (string.IsNullOrEmpty(value))
+            {
                 SearchCommand.Execute(null);
+                return;
+            }
+
+            var tokenSource = new CancellationTokenSource();
+            _searchDebounceTokenSource = tokenSource;
+            DebounceSearchAsync(tokenSource.Token);
+        }
+
+        private async void DebounceSearchAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await Task.Delay(SearchDebounceMilliseconds, cancellationToken);
+                SearchCommand.Execute(null);
+            }
+            catch (TaskCanceledException)
+            {
+            }
         }
 
         [RelayCommand]

@@ -68,7 +68,8 @@
                                 <ComboBox Id="recipeCategoryFilter" Items="RecipeCategories?.Items" IdSelector="c => c.Id.ToString()" TextSelector="c => c.Name"
                                           @bind-Value="RecipeCategoryFilterId"
                                           @bind-Value:after="() => OnRecipeCategoryChangedAsync(new ChangeEventArgs { Value = RecipeCategoryFilterId })"
-                                          Placeholder="@Resources.RecipesOverview.AllCategoriesOption" />
+                                          Placeholder="@Resources.RecipesOverview.AllCategoriesOption"
+                                          ShowClearButton="true" />
                             </div>
                         </div>
                     </HeaderContent>

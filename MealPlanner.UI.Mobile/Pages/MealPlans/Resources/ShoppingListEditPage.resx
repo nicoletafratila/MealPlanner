@@ -73,7 +73,7 @@
     <value>Select meal plan</value>
   </data>
   <data name="PlaceholderSearchMealPlans" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="EmptyMealPlansLabel" xml:space="preserve">
     <value>No meal plans found</value>
@@ -82,7 +82,7 @@
     <value>Select recipe</value>
   </data>
   <data name="PlaceholderSearchRecipes" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="EmptyRecipesLabel" xml:space="preserve">
     <value>No recipes found</value>

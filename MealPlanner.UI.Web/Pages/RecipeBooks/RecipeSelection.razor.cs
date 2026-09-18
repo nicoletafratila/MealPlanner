@@ -33,7 +33,14 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             var queryParameters = new QueryParameters<RecipeCategoryModel>
             {
                 Filters = [],
-                Sorting = [],
+                Sorting =
+                [
+                    new SortingModel
+                    {
+                        PropertyName = "DisplaySequence",
+                        Direction = SortDirection.Ascending
+                    }
+                ],
                 PageSize = int.MaxValue,
                 PageNumber = 1
             };

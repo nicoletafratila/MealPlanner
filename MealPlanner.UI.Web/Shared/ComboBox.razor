@@ -1,21 +1,27 @@
 @typeparam TItem
 @typeparam TValue
 
-<div class="dropdown combo-box">
-    <button id="@Id" type="button" class="@CssClassValue" data-bs-toggle="dropdown" aria-expanded="false">
-        <span>@SelectedText</span>
-    </button>
-    <div class="dropdown-menu combo-box-menu w-100">
-        <input type="text" class="form-control form-control-sm combo-box-filter" placeholder="@Resources.Messages.SearchPlaceholder" value="@FilterText" @oninput="OnFilterInput" @onclick:stopPropagation="true" />
-        <ul class="list-unstyled mb-0">
-            @if (!string.IsNullOrEmpty(Placeholder))
-            {
-                <li><a class="dropdown-item" href="javascript:void(0)" @onclick="ClearAsync">@Placeholder</a></li>
-            }
-            @foreach (var item in FilteredItems)
-            {
-                <li><a class="dropdown-item" href="javascript:void(0)" @onclick="() => SelectAsync(item)">@TextSelector(item)</a></li>
-            }
-        </ul>
+<div class="combo-box-wrapper">
+    <div class="dropdown combo-box">
+        <button id="@Id" type="button" class="@CssClassValue" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="combo-box-text">@SelectedText</span>
+        </button>
+        <div class="dropdown-menu combo-box-menu w-100">
+            <input type="text" class="form-control form-control-sm combo-box-filter" placeholder="@Resources.Messages.SearchPlaceholder" value="@FilterText" @oninput="OnFilterInput" @onclick:stopPropagation="true" />
+            <ul class="list-unstyled mb-0">
+                @if (!ShowClearButton && !string.IsNullOrEmpty(Placeholder))
+                {
+                    <li><a class="dropdown-item" href="javascript:void(0)" @onclick="ClearAsync">@Placeholder</a></li>
+                }
+                @foreach (var item in FilteredItems)
+                {
+                    <li><a class="dropdown-item" href="javascript:void(0)" @onclick="() => SelectAsync(item)">@TextSelector(item)</a></li>
+                }
+            </ul>
+        </div>
     </div>
+    @if (ShowClearButton && HasValue)
+    {
+        <button type="button" class="combo-box-clear" aria-label="@Resources.Messages.ClearSelection" @onclick="ClearAsync">&#x2715;</button>
+    }
 </div>

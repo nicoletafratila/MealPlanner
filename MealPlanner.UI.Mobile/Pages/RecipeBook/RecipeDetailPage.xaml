@@ -24,18 +24,18 @@
             <VerticalStackLayout Padding="20" Spacing="12">
                 <Label Text="{Binding Recipe.Name}" FontSize="22" FontAttributes="Bold" />
 
-                <Label Text="{Binding Recipe.Source}"
-                       FontSize="12"
-                       TextColor="{StaticResource Primary}"
-                       TextDecorations="Underline"
-                       IsVisible="{Binding Recipe.Source, Converter={x:Static converters:StringNotNullConverter.Instance}}">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenSourceCommand}"
-                                              CommandParameter="{Binding Recipe.Source}" />
-                        <PointerGestureRecognizer PointerEntered="OnSourcePointerEntered"
-                                                  PointerExited="OnSourcePointerExited" />
-                    </Label.GestureRecognizers>
-                </Label>
+                <ImageButton Source="globe.png"
+                             HorizontalOptions="Start"
+                             BackgroundColor="Transparent"
+                             Padding="4"
+                             WidthRequest="32"
+                             HeightRequest="32"
+                             CornerRadius="16"
+                             MinimumHeightRequest="0"
+                             MinimumWidthRequest="0"
+                             IsVisible="{Binding Recipe.Source, Converter={x:Static converters:StringNotNullConverter.Instance}}"
+                             Command="{Binding OpenSourceCommand}"
+                             CommandParameter="{Binding Recipe.Source}" />
 
                 <Label Text="{x:Static res:RecipeDetailPage.IngredientsLabel}" Style="{StaticResource SectionHeaderLabel}" />
                 <CollectionView ItemsSource="{Binding Recipe.Ingredients}" ItemSizingStrategy="MeasureFirstItem">

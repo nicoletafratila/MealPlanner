@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Make Shopping List.
+        ///   Looks up a localized string similar to Make shopping list.
         /// </summary>
         internal static string MakeShoppingListButton {
             get {
@@ -122,7 +122,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("MenuName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
@@ -142,7 +142,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search by name.
+        ///   Looks up a localized string similar to Type to search by name....
         /// </summary>
         internal static string PlaceholderSearchRecipes {
             get {

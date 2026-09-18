@@ -52,7 +52,7 @@
     <value>No recipes found</value>
   </data>
   <data name="PlaceholderSearchRecipes" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="FilterByCategoryTitle" xml:space="preserve">
     <value>Filter by category</value>

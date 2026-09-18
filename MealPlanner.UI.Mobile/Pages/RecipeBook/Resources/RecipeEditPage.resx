@@ -76,13 +76,13 @@
     <value>No units found</value>
   </data>
   <data name="PlaceholderSearchCategories" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="PlaceholderSearchProductCategories" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="PlaceholderSearchUnits" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="ImageLabel" xml:space="preserve">
     <value>Select image</value>

@@ -1,5 +1,35 @@
+.combo-box-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.combo-box {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .combo-box > button {
     min-height: calc(1.5em + 0.75rem + 2px);
+}
+
+.combo-box-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.combo-box-clear {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #757575;
+    padding: 0 8px;
+}
+
+.combo-box-clear:hover {
+    color: #757575;
 }
 
 .combo-box-menu {

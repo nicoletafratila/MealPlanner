@@ -61,20 +61,29 @@ namespace MealPlanner.UI.Web.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear selection.
+        /// </summary>
+        internal static string ClearSelection {
+            get {
+                return ResourceManager.GetString("ClearSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
+        internal static string SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The service is currently unavailable. Please try again later..
         /// </summary>
         internal static string ServiceUnavailable {
             get {
                 return ResourceManager.GetString("ServiceUnavailable", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Type to search....
-        /// </summary>
-        internal static string SearchPlaceholder {
-            get {
-                return ResourceManager.GetString("SearchPlaceholder", resourceCulture);
             }
         }
     }
