@@ -19,6 +19,8 @@ namespace MealPlanner.UI.Mobile.Services
         private static readonly TimeSpan VolatileCacheDuration = TimeSpan.FromSeconds(60);
         private static readonly List<SortingModel> NameSorting =
             [new SortingModel { PropertyName = "Name", Direction = SortDirection.Ascending }];
+        private static readonly List<SortingModel> DisplaySequenceSorting =
+            [new SortingModel { PropertyName = "DisplaySequence", Direction = SortDirection.Ascending }];
 
         private readonly SemaphoreSlim _lock = new(1, 1);
         private DateTimeOffset _stableLoadedAt = DateTimeOffset.MinValue;
@@ -45,7 +47,7 @@ namespace MealPlanner.UI.Mobile.Services
             {
                 if (DateTimeOffset.UtcNow - _stableLoadedAt < StableCacheDuration) return;
 
-                var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100, Sorting = NameSorting });
+                var catTask = categoryService.SearchAsync(new QueryParameters<RecipeCategoryModel> { PageSize = 100, Sorting = DisplaySequenceSorting });
                 var unitTask = unitService.SearchAsync(new QueryParameters<UnitModel> { PageSize = 100, Sorting = NameSorting });
                 var prodCatTask = productCategoryService.SearchAsync(new QueryParameters<ProductCategoryModel> { PageSize = 200, Sorting = NameSorting });
                 var shopTask = shopService.SearchAsync(new QueryParameters<ShopModel> { PageSize = 200, Sorting = NameSorting });

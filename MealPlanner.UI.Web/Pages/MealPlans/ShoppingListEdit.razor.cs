@@ -95,7 +95,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 [
                     new SortingModel
                     {
-                        PropertyName = "DisplaySequence",
+                        PropertyName = "Name",
                         Direction = Common.Pagination.SortDirection.Ascending
                     }
                 ],
