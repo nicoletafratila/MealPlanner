@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add recipe.
+        ///   Looks up a localized string similar to Recipe.
         /// </summary>
         internal static string AddRecipeLabel {
             get {
@@ -78,6 +78,15 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to No categories found.
+        /// </summary>
+        internal static string EmptyCategoriesLabel {
+            get {
+                return ResourceManager.GetString("EmptyCategoriesLabel", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to No recipes added yet..
         /// </summary>
@@ -97,7 +106,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter by category.
+        ///   Looks up a localized string similar to All categories.
         /// </summary>
         internal static string FilterByCategoryTitle {
             get {
@@ -124,7 +133,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name.
+        ///   Looks up a localized string similar to Meal plan name.
         /// </summary>
         internal static string NameLabel {
             get {
@@ -133,7 +142,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Meal plan name.
+        ///   Looks up a localized string similar to Enter meal plan name.
         /// </summary>
         internal static string PlaceholderName {
             get {
@@ -144,6 +153,15 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Type to search by name....
         /// </summary>
+        internal static string PlaceholderSearchCategories {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchCategories", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
         internal static string PlaceholderSearchRecipes {
             get {
                 return ResourceManager.GetString("PlaceholderSearchRecipes", resourceCulture);
@@ -151,7 +169,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipes in meal plan.
+        ///   Looks up a localized string similar to Recipes:.
         /// </summary>
         internal static string RecipesInPlanLabel {
             get {
@@ -169,7 +187,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select recipe.
+        ///   Looks up a localized string similar to Choose....
         /// </summary>
         internal static string SelectRecipeTitle {
             get {

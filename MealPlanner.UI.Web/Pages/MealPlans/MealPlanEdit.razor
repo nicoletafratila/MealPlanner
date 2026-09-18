@@ -44,9 +44,13 @@
 
                 <div class="form-group mt-3">
                     <label for="recipe" class="col-sm-3">@Resources.MealPlanEdit.LabelRecipe</label>
-                    <div class="input-group">
-                        <RecipePicker Id="recipe" Recipes="Recipes?.Items" @bind-Value="RecipeId" Placeholder="@Resources.MealPlanEdit.ChooseOption" />
-                        <button class="btn btn-primary" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.MealPlanEdit.AddButton</button>
+                    <div class="row g-2 align-items-end">
+                        <div class="col">
+                            <RecipePicker Id="recipe" Recipes="Recipes?.Items" @bind-Value="RecipeId" Placeholder="@Resources.MealPlanEdit.ChooseOption" />
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.MealPlanEdit.AddButton</button>
+                        </div>
                     </div>
                 </div>
 

@@ -43,7 +43,7 @@
     <value>Add</value>
   </data>
   <data name="AddIngredientLabel" xml:space="preserve">
-    <value>Add ingredient</value>
+    <value>Ingredient</value>
   </data>
   <data name="EmptyIngredients" xml:space="preserve">
     <value>No ingredients yet.</value>
@@ -88,7 +88,7 @@
     <value>Select image</value>
   </data>
   <data name="IngredientsLabel" xml:space="preserve">
-    <value>Ingredients</value>
+    <value>Ingredients:</value>
   </data>
   <data name="NameLabel" xml:space="preserve">
     <value>Recipe name</value>

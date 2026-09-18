@@ -98,6 +98,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     var all = new List<RecipeCategoryModel> { new() { Id = Guid.Empty, Name = Pages.RecipeBook.Resources.RecipeEditPage.AllCategoriesOption } };
                     all.AddRange(categoryResult.Items);
                     Categories = new ObservableCollection<RecipeCategoryModel>(all);
+                    SelectedCategory = Categories.FirstOrDefault();
                 }
 
                 AllRecipes = lookupDataService.Recipes;

@@ -64,9 +64,13 @@
 
                 <div class="form-group mt-3">
                     <label for="quantity" class="col-sm-3">@Resources.ShoppingListEdit.LabelQuantity</label>
-                    <div class="input-group">
-                        <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.ShoppingListEdit.PlaceholderQuantity"></InputText>
-                        <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
+                    <div class="row g-2 align-items-end">
+                        <div class="col">
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.ShoppingListEdit.PlaceholderQuantity"></InputText>
+                        </div>
+                        <div class="col-auto">
+                            <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
+                        </div>
                     </div>
                     <ValidationMessage For="@(() => Quantity)" />
                 </div>

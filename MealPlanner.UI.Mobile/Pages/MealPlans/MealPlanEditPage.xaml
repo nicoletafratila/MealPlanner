@@ -29,10 +29,29 @@
 
             <!-- Recipe selection -->
             <Label Text="{x:Static res:MealPlanEditPage.AddRecipeLabel}" Style="{StaticResource SectionHeaderLabel}" />
-            <Picker Title="{x:Static res:MealPlanEditPage.FilterByCategoryTitle}"
-                    ItemsSource="{Binding Categories}"
-                    SelectedItem="{Binding SelectedCategory}"
-                    ItemDisplayBinding="{Binding Name}" />
+            <Border Stroke="{StaticResource MidGray}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="10,0"
+                    MinimumHeightRequest="44"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSelectCategoryTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" VerticalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           Text="{Binding SelectedCategory.Name, TargetNullValue={x:Static res:MealPlanEditPage.FilterByCategoryTitle}}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding SelectedCategory}" Value="{x:Null}">
+                                <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label Grid.Column="1" Text="&#x25BE;" VerticalOptions="Center"
+                           FontSize="14" TextColor="{StaticResource DarkGray}" />
+                </Grid>
+            </Border>
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                 <Border Grid.Column="0"
                         Stroke="{StaticResource MidGray}"

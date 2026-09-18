@@ -28,5 +28,21 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
             if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is RecipeModel recipe)
                 viewModel.SelectedRecipe = recipe;
         }
+
+        private async void OnSelectCategoryTapped(object sender, TappedEventArgs e)
+        {
+            if (BindingContext is not MealPlanEditViewModel viewModel)
+                return;
+
+            var items = viewModel.Categories.Select(c => new SelectorItem(c, c.Name)).ToList();
+            var popup = new SelectorPopup(
+                items,
+                MealPlans.Resources.MealPlanEditPage.FilterByCategoryTitle,
+                MealPlans.Resources.MealPlanEditPage.PlaceholderSearchCategories,
+                MealPlans.Resources.MealPlanEditPage.EmptyCategoriesLabel);
+            var result = await this.ShowPopupAsync<object>(popup);
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is RecipeCategoryModel category)
+                viewModel.SelectedCategory = category;
+        }
     }
 }

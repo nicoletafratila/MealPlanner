@@ -43,7 +43,7 @@
     <value>Add</value>
   </data>
   <data name="AddRecipeLabel" xml:space="preserve">
-    <value>Add recipe</value>
+    <value>Recipe</value>
   </data>
   <data name="EmptyRecipes" xml:space="preserve">
     <value>No recipes added yet.</value>
@@ -51,11 +51,17 @@
   <data name="EmptyRecipesSearchLabel" xml:space="preserve">
     <value>No recipes found</value>
   </data>
+  <data name="EmptyCategoriesLabel" xml:space="preserve">
+    <value>No categories found</value>
+  </data>
+  <data name="PlaceholderSearchCategories" xml:space="preserve">
+    <value>Type to search by name...</value>
+  </data>
   <data name="PlaceholderSearchRecipes" xml:space="preserve">
     <value>Type to search by name...</value>
   </data>
   <data name="FilterByCategoryTitle" xml:space="preserve">
-    <value>Filter by category</value>
+    <value>All categories</value>
   </data>
   <data name="MakeShoppingListButton" xml:space="preserve">
     <value>Make shopping list</value>
@@ -64,18 +70,18 @@
     <value>Meniu</value>
   </data>
   <data name="NameLabel" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="PlaceholderName" xml:space="preserve">
     <value>Meal plan name</value>
   </data>
+  <data name="PlaceholderName" xml:space="preserve">
+    <value>Enter meal plan name</value>
+  </data>
   <data name="RecipesInPlanLabel" xml:space="preserve">
-    <value>Recipes in meal plan</value>
+    <value>Recipes:</value>
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
   </data>
   <data name="SelectRecipeTitle" xml:space="preserve">
-    <value>Select recipe</value>
+    <value>Choose...</value>
   </data>
 </root>
