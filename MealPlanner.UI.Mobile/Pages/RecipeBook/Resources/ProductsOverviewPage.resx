@@ -43,6 +43,6 @@
     <value>Products</value>
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
-    <value>Search products...</value>
+    <value>Type to search by name...</value>
   </data>
 </root>

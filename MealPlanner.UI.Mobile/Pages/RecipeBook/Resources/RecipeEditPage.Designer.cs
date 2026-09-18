@@ -214,7 +214,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search by name.
+        ///   Looks up a localized string similar to Type to search by name....
         /// </summary>
         internal static string PlaceholderSearchProducts {
             get {

@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search users....
+        ///   Looks up a localized string similar to Type to search by name....
         /// </summary>
         internal static string PlaceholderSearch {
             get {

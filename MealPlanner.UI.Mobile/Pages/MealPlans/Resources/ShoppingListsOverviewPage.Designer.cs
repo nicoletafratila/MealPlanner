@@ -79,7 +79,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Search shopping lists....
+        ///   Looks up a localized string similar to Type to search by name....
         /// </summary>
         internal static string PlaceholderSearch {
             get {

@@ -46,6 +46,6 @@
     <value>Meal plans</value>
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
-    <value>Search meal plans...</value>
+    <value>Type to search by name...</value>
   </data>
 </root>

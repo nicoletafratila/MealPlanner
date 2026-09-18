@@ -55,7 +55,7 @@
     <value>No products found</value>
   </data>
   <data name="PlaceholderSearchProducts" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="FromMealPlanButton" xml:space="preserve">
     <value>From meal plan</value>

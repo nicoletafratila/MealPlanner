@@ -55,7 +55,7 @@
     <value>Users</value>
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
-    <value>Search users...</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="PreviousButton" xml:space="preserve">
     <value>&lt; Prev</value>

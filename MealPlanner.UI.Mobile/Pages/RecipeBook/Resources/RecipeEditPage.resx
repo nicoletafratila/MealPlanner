@@ -52,7 +52,7 @@
     <value>Choose...</value>
   </data>
   <data name="PlaceholderSearchProducts" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Type to search by name...</value>
   </data>
   <data name="EmptyProductsLabel" xml:space="preserve">
     <value>No products found</value>
