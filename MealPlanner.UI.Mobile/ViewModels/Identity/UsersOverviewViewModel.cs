@@ -27,10 +27,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [ObservableProperty]
         private bool _hasPreviousPage;
 
-        partial void OnSearchTextChanged(string? value)
-        {
-            if (string.IsNullOrEmpty(value)) SearchCommand.Execute(null);
-        }
+        partial void OnSearchTextChanged(string? value) => DebounceSearch(SearchCommand, value);
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SearchAsync()

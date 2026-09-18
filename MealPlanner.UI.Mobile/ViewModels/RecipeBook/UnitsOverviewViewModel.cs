@@ -59,13 +59,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task SearchAsync() => await LoadAsync();
 
-        partial void OnSearchTextChanged(string? value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                SearchCommand.Execute(null);
-            }
-        }
+        partial void OnSearchTextChanged(string? value) => DebounceSearch(SearchCommand, value);
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task NextPageAsync()

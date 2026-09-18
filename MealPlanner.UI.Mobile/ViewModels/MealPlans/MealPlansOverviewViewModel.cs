@@ -61,13 +61,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             }
         }
 
-        partial void OnSearchTextChanged(string? value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                SearchCommand.Execute(null);
-            }
-        }
+        partial void OnSearchTextChanged(string? value) => DebounceSearch(SearchCommand, value);
 
         private List<FilterItem> BuildFilters()
         {
