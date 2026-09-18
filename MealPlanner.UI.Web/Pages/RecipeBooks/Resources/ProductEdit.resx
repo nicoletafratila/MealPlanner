@@ -46,16 +46,16 @@
 		<value>Product</value>
 	</data>
 	<data name="LabelProductName" xml:space="preserve">
-		<value>Product name: </value>
+		<value>Product name</value>
 	</data>
 	<data name="LabelSelectImage" xml:space="preserve">
-		<value>Select image: </value>
+		<value>Select image</value>
 	</data>
 	<data name="LabelProductCategory" xml:space="preserve">
-		<value>Product category: </value>
+		<value>Product category</value>
 	</data>
 	<data name="LabelUnitOfMeasurement" xml:space="preserve">
-		<value>Unit of measurement: </value>
+		<value>Unit of measurement</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

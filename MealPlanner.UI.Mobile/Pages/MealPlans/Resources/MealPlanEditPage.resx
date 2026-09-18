@@ -76,7 +76,7 @@
     <value>Enter meal plan name</value>
   </data>
   <data name="RecipesInPlanLabel" xml:space="preserve">
-    <value>Recipes:</value>
+    <value>Recipes</value>
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>

@@ -169,7 +169,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipes:.
+        ///   Looks up a localized string similar to Recipes.
         /// </summary>
         internal static string RecipesInPlanLabel {
             get {

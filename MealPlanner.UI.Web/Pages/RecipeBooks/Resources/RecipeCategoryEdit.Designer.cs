@@ -169,7 +169,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipe category name: .
+        ///   Looks up a localized string similar to Recipe category name.
         /// </summary>
         internal static string LabelRecipeCategoryName {
             get {

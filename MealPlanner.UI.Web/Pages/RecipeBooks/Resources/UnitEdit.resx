@@ -46,10 +46,10 @@
 		<value>Unit</value>
 	</data>
 	<data name="LabelUnitName" xml:space="preserve">
-		<value>Unit name: </value>
+		<value>Unit name</value>
 	</data>
 	<data name="LabelUnitType" xml:space="preserve">
-		<value>Unit type: </value>
+		<value>Unit type</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

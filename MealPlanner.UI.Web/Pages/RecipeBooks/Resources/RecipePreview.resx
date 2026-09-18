@@ -40,10 +40,10 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="RecipeCategory" xml:space="preserve">
-		<value>Recipe category:</value>
+		<value>Recipe category</value>
 	</data>
 	<data name="ListOfIngredients" xml:space="preserve">
-		<value>Ingredients:</value>
+		<value>Ingredients</value>
 	</data>
 	<data name="ColumnName" xml:space="preserve">
 		<value>Name</value>

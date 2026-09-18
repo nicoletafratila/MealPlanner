@@ -46,7 +46,7 @@
 		<value>Recipe category</value>
 	</data>
 	<data name="LabelRecipeCategoryName" xml:space="preserve">
-		<value>Recipe category name: </value>
+		<value>Recipe category name</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

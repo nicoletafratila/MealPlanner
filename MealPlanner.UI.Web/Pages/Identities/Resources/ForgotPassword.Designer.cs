@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email: .
+        ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string EmailLabel {
             get {

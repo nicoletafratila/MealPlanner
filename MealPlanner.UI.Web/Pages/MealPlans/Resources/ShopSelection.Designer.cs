@@ -79,7 +79,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select the shop for which you would like to have the list:.
+        ///   Looks up a localized string similar to Please select the shop for which you would like to have the list.
         /// </summary>
         internal static string Title {
             get {

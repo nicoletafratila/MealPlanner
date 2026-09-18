@@ -133,7 +133,7 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If the button does not work, copy and paste the following link into your browser:.
+        ///   Looks up a localized string similar to If the button does not work, copy and paste the following link into your browser.
         /// </summary>
         internal static string EmailConfirmation_FallbackText {
             get {
@@ -331,7 +331,7 @@ namespace Identity.Api.Features.Authentication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If the button does not work, copy and paste the following link into your browser:.
+        ///   Looks up a localized string similar to If the button does not work, copy and paste the following link into your browser.
         /// </summary>
         internal static string PasswordReset_FallbackText {
             get {

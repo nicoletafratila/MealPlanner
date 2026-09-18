@@ -151,7 +151,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingredients:.
+        ///   Looks up a localized string similar to Ingredients.
         /// </summary>
         internal static string IngredientsLabel {
             get {

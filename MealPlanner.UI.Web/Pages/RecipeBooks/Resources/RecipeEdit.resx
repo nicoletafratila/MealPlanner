@@ -46,34 +46,34 @@
 		<value>Recipe</value>
 	</data>
 	<data name="LabelRecipeName" xml:space="preserve">
-		<value>Recipe name: </value>
+		<value>Recipe name</value>
 	</data>
 	<data name="LabelOriginalSource" xml:space="preserve">
-		<value>Original source: </value>
+		<value>Original source</value>
 	</data>
 	<data name="LabelRecipeCategory" xml:space="preserve">
-		<value>Recipe category: </value>
+		<value>Recipe category</value>
 	</data>
 	<data name="LabelSelectImage" xml:space="preserve">
-		<value>Select image: </value>
+		<value>Select image</value>
 	</data>
 	<data name="LabelIngredientCategory" xml:space="preserve">
-		<value>Ingredient category: </value>
+		<value>Ingredient category</value>
 	</data>
 	<data name="LabelIngredient" xml:space="preserve">
-		<value>Ingredient: </value>
+		<value>Ingredient</value>
 	</data>
 	<data name="LabelUnitOfMeasurement" xml:space="preserve">
-		<value>Unit of measurement: </value>
+		<value>Unit of measurement</value>
 	</data>
 	<data name="LabelQuantity" xml:space="preserve">
-		<value>Quantity: </value>
+		<value>Quantity</value>
 	</data>
 	<data name="AddButton" xml:space="preserve">
 		<value>Add</value>
 	</data>
 	<data name="ListOfIngredients" xml:space="preserve">
-		<value>Ingredients:</value>
+		<value>Ingredients</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

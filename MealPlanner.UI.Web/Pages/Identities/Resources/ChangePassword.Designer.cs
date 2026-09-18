@@ -88,7 +88,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirm new password: .
+        ///   Looks up a localized string similar to Confirm new password.
         /// </summary>
         internal static string ConfirmNewPasswordLabel {
             get {
@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current password: .
+        ///   Looks up a localized string similar to Current password.
         /// </summary>
         internal static string CurrentPasswordLabel {
             get {
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New password: .
+        ///   Looks up a localized string similar to New password.
         /// </summary>
         internal static string NewPasswordLabel {
             get {

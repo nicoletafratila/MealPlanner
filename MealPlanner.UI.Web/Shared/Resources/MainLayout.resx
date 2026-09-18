@@ -60,7 +60,7 @@
 		<value>Organize, Cook, Enjoy: Your Culinary Companion for Menus and Recipes!</value>
 	</data>
 	<data name="CurrentMenuLabel" xml:space="preserve">
-		<value>This week's menu:</value>
+		<value>This week's menu</value>
 	</data>
 	<data name="NoMenuYetPrefix" xml:space="preserve">
 		<value>You have not created a menu for this week yet. Click </value>

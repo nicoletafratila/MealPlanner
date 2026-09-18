@@ -35,25 +35,25 @@
     <value>Contact us</value>
   </data>
   <data name="NameLabel" xml:space="preserve">
-    <value>Name: </value>
+    <value>Name</value>
   </data>
   <data name="PlaceholderName" xml:space="preserve">
     <value>Enter your name</value>
   </data>
   <data name="EmailLabel" xml:space="preserve">
-    <value>Email: </value>
+    <value>Email</value>
   </data>
   <data name="PlaceholderEmail" xml:space="preserve">
     <value>Enter your email address</value>
   </data>
   <data name="SubjectLabel" xml:space="preserve">
-    <value>Subject: </value>
+    <value>Subject</value>
   </data>
   <data name="PlaceholderSubject" xml:space="preserve">
     <value>Enter the subject</value>
   </data>
   <data name="MessageLabel" xml:space="preserve">
-    <value>Message: </value>
+    <value>Message</value>
   </data>
   <data name="PlaceholderMessage" xml:space="preserve">
     <value>Enter your message</value>

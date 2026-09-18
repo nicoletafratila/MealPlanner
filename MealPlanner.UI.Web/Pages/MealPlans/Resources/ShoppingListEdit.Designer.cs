@@ -241,7 +241,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Product: .
+        ///   Looks up a localized string similar to Product.
         /// </summary>
         internal static string LabelProduct {
             get {
@@ -250,7 +250,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Product category: .
+        ///   Looks up a localized string similar to Product category.
         /// </summary>
         internal static string LabelProductCategory {
             get {
@@ -259,7 +259,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quantity: .
+        ///   Looks up a localized string similar to Quantity.
         /// </summary>
         internal static string LabelQuantity {
             get {
@@ -268,7 +268,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shop: .
+        ///   Looks up a localized string similar to Shop.
         /// </summary>
         internal static string LabelShop {
             get {
@@ -277,7 +277,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shopping list name: .
+        ///   Looks up a localized string similar to Shopping list name.
         /// </summary>
         internal static string LabelShoppingListName {
             get {
@@ -286,7 +286,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unit of measurement: .
+        ///   Looks up a localized string similar to Unit of measurement.
         /// </summary>
         internal static string LabelUnitOfMeasurement {
             get {
@@ -412,7 +412,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Products:.
+        ///   Looks up a localized string similar to Products.
         /// </summary>
         internal static string TableCaptionProducts {
             get {

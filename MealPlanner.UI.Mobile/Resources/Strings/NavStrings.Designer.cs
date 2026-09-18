@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Mobile.Resources.Strings {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This week&apos;s menu:.
+        ///   Looks up a localized string similar to This week&apos;s menu.
         /// </summary>
         internal static string CurrentMenuLabel {
             get {

@@ -178,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display order: .
+        ///   Looks up a localized string similar to Display order.
         /// </summary>
         internal static string LabelDisplayOrder {
             get {
@@ -187,7 +187,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Shop name: .
+        ///   Looks up a localized string similar to Shop name.
         /// </summary>
         internal static string LabelShopName {
             get {
@@ -286,7 +286,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Categories:.
+        ///   Looks up a localized string similar to Categories.
         /// </summary>
         internal static string TableCaptionCategories {
             get {

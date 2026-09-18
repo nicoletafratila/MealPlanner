@@ -40,13 +40,13 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="ModalTitle" xml:space="preserve">
-		<value>Please select the recipe you would like to add to the list:</value>
+		<value>Please select the recipe you would like to add to the list</value>
 	</data>
 	<data name="LabelRecipeCategory" xml:space="preserve">
-		<value>Recipe category: </value>
+		<value>Recipe category</value>
 	</data>
 	<data name="LabelRecipe" xml:space="preserve">
-		<value>Recipe: </value>
+		<value>Recipe</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

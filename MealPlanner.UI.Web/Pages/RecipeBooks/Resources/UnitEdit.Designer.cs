@@ -169,7 +169,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unit name: .
+        ///   Looks up a localized string similar to Unit name.
         /// </summary>
         internal static string LabelUnitName {
             get {
@@ -178,7 +178,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unit type: .
+        ///   Looks up a localized string similar to Unit type.
         /// </summary>
         internal static string LabelUnitType {
             get {

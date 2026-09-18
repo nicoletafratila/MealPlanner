@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirm password: .
+        ///   Looks up a localized string similar to Confirm password.
         /// </summary>
         internal static string ConfirmPasswordLabel {
             get {
@@ -79,7 +79,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email: .
+        ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string EmailLabel {
             get {
@@ -88,7 +88,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First name: .
+        ///   Looks up a localized string similar to First name.
         /// </summary>
         internal static string FirstNameLabel {
             get {
@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last name: .
+        ///   Looks up a localized string similar to Last name.
         /// </summary>
         internal static string LastNameLabel {
             get {
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password: .
+        ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string PasswordLabel {
             get {
@@ -124,7 +124,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Phone number: .
+        ///   Looks up a localized string similar to Phone number.
         /// </summary>
         internal static string PhoneNumberLabel {
             get {
@@ -241,7 +241,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username: .
+        ///   Looks up a localized string similar to Username.
         /// </summary>
         internal static string UsernameLabel {
             get {

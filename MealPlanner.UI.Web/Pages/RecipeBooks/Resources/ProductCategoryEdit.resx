@@ -46,7 +46,7 @@
 		<value>Product category</value>
 	</data>
 	<data name="LabelProductCategoryName" xml:space="preserve">
-		<value>Product category name: </value>
+		<value>Product category name</value>
 	</data>
 	<data name="SaveButton" xml:space="preserve">
 		<value>Save</value>

@@ -214,7 +214,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingredient: .
+        ///   Looks up a localized string similar to Ingredient.
         /// </summary>
         internal static string LabelIngredient {
             get {
@@ -223,7 +223,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingredient category: .
+        ///   Looks up a localized string similar to Ingredient category.
         /// </summary>
         internal static string LabelIngredientCategory {
             get {
@@ -232,7 +232,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Original source: .
+        ///   Looks up a localized string similar to Original source.
         /// </summary>
         internal static string LabelOriginalSource {
             get {
@@ -241,7 +241,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quantity: .
+        ///   Looks up a localized string similar to Quantity.
         /// </summary>
         internal static string LabelQuantity {
             get {
@@ -250,7 +250,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipe category: .
+        ///   Looks up a localized string similar to Recipe category.
         /// </summary>
         internal static string LabelRecipeCategory {
             get {
@@ -259,7 +259,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipe name: .
+        ///   Looks up a localized string similar to Recipe name.
         /// </summary>
         internal static string LabelRecipeName {
             get {
@@ -268,7 +268,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select image: .
+        ///   Looks up a localized string similar to Select image.
         /// </summary>
         internal static string LabelSelectImage {
             get {
@@ -277,7 +277,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unit of measurement: .
+        ///   Looks up a localized string similar to Unit of measurement.
         /// </summary>
         internal static string LabelUnitOfMeasurement {
             get {
@@ -286,7 +286,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingredients:.
+        ///   Looks up a localized string similar to Ingredients.
         /// </summary>
         internal static string ListOfIngredients {
             get {

@@ -88,7 +88,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipe: .
+        ///   Looks up a localized string similar to Recipe.
         /// </summary>
         internal static string LabelRecipe {
             get {
@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipe category: .
+        ///   Looks up a localized string similar to Recipe category.
         /// </summary>
         internal static string LabelRecipeCategory {
             get {
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select the recipe you would like to add to the list:.
+        ///   Looks up a localized string similar to Please select the recipe you would like to add to the list.
         /// </summary>
         internal static string ModalTitle {
             get {

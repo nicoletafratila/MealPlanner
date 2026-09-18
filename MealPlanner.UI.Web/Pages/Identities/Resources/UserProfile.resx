@@ -40,22 +40,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UsernameLabel" xml:space="preserve">
-    <value>Username: </value>
+    <value>Username</value>
   </data>
   <data name="FirstNameLabel" xml:space="preserve">
-    <value>First name: </value>
+    <value>First name</value>
   </data>
   <data name="LastNameLabel" xml:space="preserve">
-    <value>Last name: </value>
+    <value>Last name</value>
   </data>
   <data name="PhoneNumberLabel" xml:space="preserve">
-    <value>Phone number: </value>
+    <value>Phone number</value>
   </data>
   <data name="EmailLabel" xml:space="preserve">
-    <value>Email: </value>
+    <value>Email</value>
   </data>
   <data name="SelectImageLabel" xml:space="preserve">
-    <value>Select image: </value>
+    <value>Select image</value>
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
@@ -85,7 +85,7 @@
     <value>Email</value>
   </data>
   <data name="IsActiveLabel" xml:space="preserve">
-    <value>Active: </value>
+    <value>Active</value>
   </data>
   <data name="ChangePasswordButton" xml:space="preserve">
     <value>Change password</value>
@@ -94,7 +94,7 @@
     <value>Unlock user</value>
   </data>
   <data name="LockedOutLabel" xml:space="preserve">
-    <value>Locked: </value>
+    <value>Locked</value>
   </data>
   <data name="UserLockedBadge" xml:space="preserve">
     <value>Locked</value>

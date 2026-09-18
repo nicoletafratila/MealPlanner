@@ -88,7 +88,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email: .
+        ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string EmailLabel {
             get {
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First name: .
+        ///   Looks up a localized string similar to First name.
         /// </summary>
         internal static string FirstNameLabel {
             get {
@@ -115,7 +115,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Active: .
+        ///   Looks up a localized string similar to Active.
         /// </summary>
         internal static string IsActiveLabel {
             get {
@@ -124,7 +124,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last name: .
+        ///   Looks up a localized string similar to Last name.
         /// </summary>
         internal static string LastNameLabel {
             get {
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Locked: .
+        ///   Looks up a localized string similar to Locked.
         /// </summary>
         internal static string LockedOutLabel {
             get {
@@ -142,7 +142,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Phone number: .
+        ///   Looks up a localized string similar to Phone number.
         /// </summary>
         internal static string PhoneNumberLabel {
             get {
@@ -205,7 +205,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select image: .
+        ///   Looks up a localized string similar to Select image.
         /// </summary>
         internal static string SelectImageLabel {
             get {
@@ -241,7 +241,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username: .
+        ///   Looks up a localized string similar to Username.
         /// </summary>
         internal static string UsernameLabel {
             get {

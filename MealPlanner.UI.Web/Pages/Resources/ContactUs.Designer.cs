@@ -61,7 +61,7 @@ namespace MealPlanner.UI.Web.Pages.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email: .
+        ///   Looks up a localized string similar to Email.
         /// </summary>
         internal static string EmailLabel {
             get {
@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Web.Pages.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Message: .
+        ///   Looks up a localized string similar to Message.
         /// </summary>
         internal static string MessageLabel {
             get {
@@ -79,7 +79,7 @@ namespace MealPlanner.UI.Web.Pages.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name: .
+        ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string NameLabel {
             get {
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Pages.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Subject: .
+        ///   Looks up a localized string similar to Subject.
         /// </summary>
         internal static string SubjectLabel {
             get {

@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password: .
+        ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string PasswordLabel {
             get {
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Username: .
+        ///   Looks up a localized string similar to Username.
         /// </summary>
         internal static string UsernameLabel {
             get {
