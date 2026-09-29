@@ -44,7 +44,20 @@
                         </div>
                     </div>
                 </GridColumn>
-                <GridColumn TItem="ProductModel" HeaderText="@Resources.ProductsOverview.HeaderCategory" PropertyName="ProductCategoryName" SortString="ProductCategoryName" SortKeySelector="item => item.ProductCategoryName" StringComparison="StringComparison.OrdinalIgnoreCase" />
+                <GridColumn TItem="ProductModel" PropertyName="ProductCategoryName" Sortable="false" Filterable="false" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    <HeaderContent>
+                        <div class="category-filter-header">
+                            <span>@Resources.ProductsOverview.HeaderCategory</span>
+                            <div class="category-filter-control">
+                                <ComboBox Id="productCategoryFilter" Items="ProductCategories?.Items" IdSelector="c => c.Id.ToString()" TextSelector="c => c.Name"
+                                          @bind-Value="ProductCategoryFilterId"
+                                          @bind-Value:after="() => OnProductCategoryChangedAsync(new ChangeEventArgs { Value = ProductCategoryFilterId })"
+                                          Placeholder="@Resources.ProductsOverview.AllCategoriesOption"
+                                          ShowClearButton="true" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                </GridColumn>
             </Columns>
         </GridTemplate>
     </div>
