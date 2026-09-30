@@ -3,13 +3,14 @@
     width: inherit;
 }
 
-/* GridTemplate's Grid wraps its table in a .table-responsive div; overflow-x: auto there
-   implicitly clips vertical overflow too, cutting off an open category filter dropdown when
-   the grid is short (e.g. the empty-data state). Let it overflow so the dropdown stays visible.
-   This can't be scoped via GridTemplate.razor.css: Grid is a child component, so the scope
-   attribute never reaches the .table-responsive div it renders. */
+/* GridTemplate's Grid renders its own .table-responsive div with an inline
+   style="overflow-x:auto;" (from Responsive="true"), which implicitly clips vertical
+   overflow too, cutting off an open category filter dropdown when the grid is short
+   (e.g. the empty-data state). Inline styles beat plain stylesheet rules, so overriding
+   this requires !important. This can't be scoped via GridTemplate.razor.css: Grid is a
+   child component, so the scope attribute never reaches the .table-responsive div it renders. */
 .table-responsive {
-    overflow: visible;
+    overflow: visible !important;
 }
 
 .card-gridTemplate {
