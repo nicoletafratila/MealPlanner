@@ -42,5 +42,9 @@ Once you refresh that token, dotnet publish MealPlanner.UI.Mobile/MealPlanner.UI
 
 
 
+
+share one recipe to another user
+share my recipes to another user
+share my shops to another user
 comaparare web cu mobile screen cu screen
 
