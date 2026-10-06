@@ -65,13 +65,13 @@
         <ShellContent Title="{x:Static strings:NavStrings.ShoppingLists}" ContentTemplate="{DataTemplate mealplans:ShoppingListsOverviewPage}" Route="ShoppingListsOverview" />
     </FlyoutItem>
 
-    <FlyoutItem Title="{x:Static strings:NavStrings.Shops}" Icon="shop.png">
-        <ShellContent Title="{x:Static strings:NavStrings.Shops}" ContentTemplate="{DataTemplate mealplans:ShopsOverviewPage}" Route="ShopsOverview" />
-    </FlyoutItem>
-
     <!-- Reference data -->
     <FlyoutItem Title="{x:Static strings:NavStrings.Products}" Icon="product.png">
         <ShellContent Title="{x:Static strings:NavStrings.Products}" ContentTemplate="{DataTemplate recipebook:ProductsOverviewPage}" Route="ProductsOverview" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="{x:Static strings:NavStrings.Shops}" Icon="shop.png">
+        <ShellContent Title="{x:Static strings:NavStrings.Shops}" ContentTemplate="{DataTemplate mealplans:ShopsOverviewPage}" Route="ShopsOverview" />
     </FlyoutItem>
 
     <FlyoutItem Title="{x:Static strings:NavStrings.Categories}" Icon="category.png">
