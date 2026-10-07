@@ -191,7 +191,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Markup, Does.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("This week's menu"));
                 Assert.That(cut.Markup, Does.Contain("Week 20 Menu"));
                 Assert.That(cut.Markup, Does.Contain($"mealplans/mealplanedit/{id}"));
                 Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
@@ -216,7 +216,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             {
                 Assert.That(cut.Markup, Does.Contain("You have not created a menu for this week yet"));
                 Assert.That(cut.Markup, Does.Contain("mealplans/mealplanedit/"));
-                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu"));
             }
         }
 
@@ -260,7 +260,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu"));
                 Assert.That(cut.Markup, Does.Not.Contain("You have not created"));
             }
             _mealPlanServiceMock.Verify(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()), Times.Never);
@@ -325,7 +325,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => Task.CompletedTask);
 
-            Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"),
+            Assert.That(cut.Markup, Does.Not.Contain("This week's menu"),
                 "Label should be absent before refresh.");
 
             // Act
@@ -334,7 +334,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Assert
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Markup, Does.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Contain("This week's menu"));
                 Assert.That(cut.Markup, Does.Contain("Meniu 2025/23"));
                 Assert.That(cut.Markup, Does.Contain($"mealplans/mealplanedit/{id}"));
             }
@@ -353,7 +353,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             var cut = _ctx.Render<MainLayout>();
             await cut.InvokeAsync(() => Task.CompletedTask);
 
-            Assert.That(cut.Markup, Does.Contain("This week's menu:"),
+            Assert.That(cut.Markup, Does.Contain("This week's menu"),
                 "Label should be present before refresh.");
 
             // Act
@@ -362,7 +362,7 @@ namespace MealPlanner.UI.Web.Tests.Shared
             // Assert — plan gone, "not yet created" prompt appears
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(cut.Markup, Does.Not.Contain("This week's menu:"));
+                Assert.That(cut.Markup, Does.Not.Contain("This week's menu"));
                 Assert.That(cut.Markup, Does.Contain("You have not created"));
             }
         }

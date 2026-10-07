@@ -538,6 +538,83 @@ namespace RecipeBook.Services.Http.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
+        // ---------- ShareAsync ----------
+        [Test]
+        public async Task ShareAsync_PostsModel_AndReturnsCommandResponse()
+        {
+            // Arrange
+            var recipeId = Guid.NewGuid();
+            const string targetUserId = "user2";
+            var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/share")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var deserialized = JsonSerializer.Deserialize<RecipeShareModel>(body, JsonOptions);
+                    return deserialized is not null && deserialized.RecipeId == recipeId && deserialized.TargetUserId == targetUserId;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.ShareAsync(recipeId, targetUserId);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("ok"));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void ShareAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/share")
+                .Respond(HttpStatusCode.BadRequest);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAsync(Guid.NewGuid(), "user2"));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ShareAsync_InvalidatesCache_NextSearchHitsHttp()
+        {
+            var paged = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
+            var shareResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+            mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/share")
+                .Respond("application/json", JsonSerializer.Serialize(shareResponse, JsonOptions));
+            mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
+                .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            var service = CreateService(mockHttp, cache: cache);
+
+            await service.SearchAsync();
+            await service.ShareAsync(Guid.NewGuid(), "user2");
+            await service.SearchAsync();
+
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
         [Test]
         public void DeleteAsync_Throws_OnNonSuccessStatusCode()
         {

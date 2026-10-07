@@ -144,4 +144,19 @@
 	<data name="SelectUnitOfMeasurement" xml:space="preserve">
 		<value>Please select a unit of measurement for the ingredient.</value>
 	</data>
+	<data name="ShareButton" xml:space="preserve">
+		<value>Share</value>
+	</data>
+	<data name="ShareModalTitle" xml:space="preserve">
+		<value>Select the user to share this recipe with</value>
+	</data>
+	<data name="ShareSucceeded" xml:space="preserve">
+		<value>The recipe has been shared successfully</value>
+	</data>
+	<data name="ShareFailed" xml:space="preserve">
+		<value>Share failed.</value>
+	</data>
+	<data name="ShareFailedMessage" xml:space="preserve">
+		<value>Share failed. Please try again.</value>
+	</data>
 </root>

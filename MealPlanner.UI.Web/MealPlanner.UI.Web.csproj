@@ -156,6 +156,9 @@
     <Compile Update="Pages\RecipeBooks\RecipeSelection.razor.cs">
       <DependentUpon>RecipeSelection.razor</DependentUpon>
     </Compile>
+    <Compile Update="Pages\RecipeBooks\RecipeShareUserSelection.razor.cs">
+      <DependentUpon>RecipeShareUserSelection.razor</DependentUpon>
+    </Compile>
     <Compile Update="Pages\RecipeBooks\RecipesOverview.razor.cs">
       <DependentUpon>RecipesOverview.razor</DependentUpon>
     </Compile>
@@ -230,6 +233,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RecipeSelection.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\RecipeBooks\Resources\RecipeShareUserSelection.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeShareUserSelection.resx</DependentUpon>
     </Compile>
     <Compile Update="Pages\RecipeBooks\Resources\RecipeCategoryEdit.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -410,6 +418,10 @@
     <EmbeddedResource Update="Pages\RecipeBooks\Resources\RecipeSelection.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>RecipeSelection.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\RecipeBooks\Resources\RecipeShareUserSelection.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeShareUserSelection.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\RecipeBooks\Resources\RecipeCategoryEdit.resx">
       <Generator>ResXFileCodeGenerator</Generator>

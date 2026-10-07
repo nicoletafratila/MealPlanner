@@ -110,6 +110,58 @@ namespace Identity.Services.Http.Tests
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
+        // ---------- ListAsync ----------
+        [Test]
+        public async Task ListAsync_ReturnsDeserializedList_AndSendsAuthHeader()
+        {
+            const string token = "my-jwt-token";
+            var expected = new List<ApplicationUserListModel>
+            {
+                new() { UserId = "2", Username = "bob" }
+            };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/list")
+                .With(m =>
+                {
+                    var auth = m.Headers.Authorization;
+                    return auth is not null && auth.Scheme == "Bearer" && auth.Parameter == token;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expected, JsonOptions));
+
+            var service = CreateService(mockHttp, token: token);
+
+            var result = await service.ListAsync();
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!, Has.Count.EqualTo(1));
+                Assert.That(result[0].Username, Is.EqualTo("bob"));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+            mockHttp.VerifyNoOutstandingRequest();
+        }
+
+        [Test]
+        public async Task ListAsync_OnNonSuccessStatusCode_ReturnsNull()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Get, $"{BaseAddress}{UserPath}/list")
+                .Respond(HttpStatusCode.Forbidden);
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.ListAsync();
+
+            Assert.That(result, Is.Null);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
         // ---------- GetEditAsync ----------
         [Test]
         public async Task GetEditAsync_ReturnsDeserializedModel_AndSendsAuthHeader()

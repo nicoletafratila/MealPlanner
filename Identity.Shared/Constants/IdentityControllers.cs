@@ -22,6 +22,7 @@ namespace Identity.Shared.Constants
         // ApplicationUser sub-routes
         public const string EditRoute = "edit";
         public const string UnlockRoute = "unlock";
+        public const string ListRoute = "list";
 
         // ContactUs sub-routes
         public const string SendRoute = "send";

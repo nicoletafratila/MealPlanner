@@ -4,6 +4,7 @@ using Identity.Api.Controllers;
 using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
+using Identity.Api.Features.ApplicationUser.Queries.List;
 using Identity.Api.Features.ApplicationUser.Queries.Search;
 using Identity.Shared.Models;
 using MediatR;
@@ -105,6 +106,31 @@ namespace Identity.Api.Tests.Controllers
                 Assert.That(capturedQuery.QueryParameters.Filters, Is.Null);
                 Assert.That(capturedQuery.QueryParameters.Sorting, Is.Null);
             }
+        }
+
+        #endregion
+
+        #region ListAsync
+
+        [Test]
+        public async Task ListAsync_ReturnsOkWithList()
+        {
+            var users = new List<ApplicationUserListModel>
+            {
+                new() { UserId = "2", Username = "bob" }
+            };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<ListQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(users);
+
+            var result = await _controller.ListAsync(CancellationToken.None);
+
+            var ok = result.Result as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+            Assert.That(ok!.Value, Is.SameAs(users));
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<ListQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion

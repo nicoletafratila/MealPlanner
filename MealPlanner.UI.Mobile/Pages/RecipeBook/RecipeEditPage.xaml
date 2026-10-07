@@ -11,6 +11,8 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:RecipeEditPage.SaveButton}" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:RecipeEditPage.SelectShareUserTitle}" IconImageSource="share.png" Clicked="OnShareTapped"
+                     IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -19,6 +21,9 @@
 
             <Label Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                    IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
+
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource SuccessColor}"
+                   IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
 
             <Label Text="{x:Static res:RecipeEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:RecipeEditPage.PlaceholderName}" />

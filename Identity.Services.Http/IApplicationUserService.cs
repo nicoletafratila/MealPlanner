@@ -10,5 +10,6 @@ namespace Identity.Services.Http
         Task<ApplicationUserEditModel?> GetEditAsync(string name, CancellationToken cancellationToken = default);
         Task<CommandResponse?> UpdateAsync(ApplicationUserEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> UnlockAsync(string userId, CancellationToken cancellationToken = default);
+        Task<IList<ApplicationUserListModel>?> ListAsync(CancellationToken cancellationToken = default);
     }
 }

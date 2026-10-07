@@ -18,6 +18,20 @@ namespace Identity.Services.Http
         public Task<PagedList<ApplicationUserModel>?> SearchAsync(QueryParameters<ApplicationUserModel>? queryParameters = null, CancellationToken cancellationToken = default)
             => SearchAsync(_controller, queryParameters, cancellationToken);
 
+        public async Task<IList<ApplicationUserListModel>?> ListAsync(CancellationToken cancellationToken = default)
+        {
+            var url = $"{_controller}/{IdentityControllers.ListRoute}";
+            try
+            {
+                return await GetAsync<IList<ApplicationUserListModel>>(url, cancellationToken);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogWarning(ex, "ListAsync failed.");
+                return null;
+            }
+        }
+
         public async Task<ApplicationUserEditModel?> GetEditAsync(string name, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(name))

@@ -2,6 +2,8 @@ using System.Collections.ObjectModel;
 using Common.Services.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 using MealPlanner.UI.Mobile.Extensions;
 using MealPlanner.UI.Mobile.Services;
 using Microsoft.Maui.Graphics.Platform;
@@ -13,6 +15,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     public partial class RecipeEditViewModel(
         IRecipeService recipeService,
+        IApplicationUserService applicationUserService,
         ReferenceDataCacheService lookupDataService) : BaseViewModel, IQueryAttributable
     {
         // Recipe search returns every recipe's image inline for list thumbnails, so keeping
@@ -315,5 +318,33 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         [RelayCommand]
         private void RemoveIngredient(RecipeIngredientEditModel ingredient) =>
             RecipeIngredients.Remove(ingredient);
+
+        public async Task<List<ApplicationUserListModel>> GetShareTargetUsersAsync()
+            => (await applicationUserService.ListAsync())?.ToList() ?? [];
+
+        public async Task ShareToUserAsync(string targetUserId)
+        {
+            if (IsBusy || string.IsNullOrWhiteSpace(targetUserId)) return;
+            ClearMessages();
+            IsBusy = true;
+            try
+            {
+                var result = await recipeService.ShareAsync(Model.Id, targetUserId);
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateRecipes();
+                    SetSuccess(Pages.RecipeBook.Resources.RecipeEditPage.ShareSucceeded);
+                }
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
     }
 }

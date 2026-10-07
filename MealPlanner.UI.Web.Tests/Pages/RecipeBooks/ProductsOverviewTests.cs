@@ -20,6 +20,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
         private BunitContext _ctx = null!;
         private Mock<IProductService> _productServiceMock = null!;
+        private Mock<IProductCategoryService> _productCategoryServiceMock = null!;
         private Mock<ISessionStorageService> _sessionStorageMock = null!;
         private Mock<IMessageComponent> _messageComponentMock = null!;
 
@@ -29,10 +30,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx = new BunitContext();
 
             _productServiceMock = new Mock<IProductService>(MockBehavior.Strict);
+            _productCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
             _sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Strict);
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _ctx.Services.AddSingleton(_productServiceMock.Object);
+            _ctx.Services.AddSingleton(_productCategoryServiceMock.Object);
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);
 
             _ctx.Services.AddScoped<BreadcrumbService>();
@@ -45,6 +48,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _productServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<ProductModel>([], new Metadata()));
+
+            _productCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
 
             _sessionStorageMock
                 .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -60,6 +67,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             _ctx.Dispose();
             _productServiceMock.Reset();
+            _productCategoryServiceMock.Reset();
             _sessionStorageMock.Reset();
             _messageComponentMock.Reset();
         }

@@ -1,0 +1,30 @@
+<style>
+    .blazored-modal {
+        max-height: fit-content !important;
+        max-width: fit-content !important;
+        margin-top: 500px !important;
+    }
+</style>
+
+<div class="modal-body">
+    <div class="modal-title">
+        <h5>@Resources.RecipeShareUserSelection.ModalTitle</h5>
+    </div>
+
+    <div class="col">
+        <EditForm Model="@this" OnValidSubmit="@SaveAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mt-3">
+                <label for="targetUser">@Resources.RecipeShareUserSelection.LabelUser</label>
+                <ComboBox Id="targetUser" Items="Users" IdSelector="u => u.UserId" TextSelector="u => DisplayName(u)" @bind-Value="TargetUserId" Placeholder="@Resources.RecipeShareUserSelection.ChooseOption" />
+            </div>
+
+            <div class="col mt-3">
+                <button class="btn btn-primary btn-sm" type="submit">@Resources.RecipeShareUserSelection.SaveButton</button>
+                <button class="btn btn-danger btn-sm" @onclick="async ()=> await CancelAsync()">@Resources.RecipeShareUserSelection.CancelButton</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

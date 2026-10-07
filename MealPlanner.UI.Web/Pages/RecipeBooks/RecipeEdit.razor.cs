@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BlazorBootstrap;
+using Blazored.Modal.Services;
 using Common.Models;
 using Common.Pagination;
 using Common.UI;
@@ -21,6 +22,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter]
+        private IModalService? ModalService { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -230,6 +234,35 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
             await ShowInfoAsync(Resources.RecipeEdit.DeleteSucceeded);
             NavigateToOverview();
+        }
+
+        private async Task ShareAsync()
+        {
+            if (Recipe is null || Recipe.Id == Guid.Empty)
+                return;
+
+            var modal = ModalService?.Show<RecipeShareUserSelection>(Resources.RecipeEdit.ShareModalTitle);
+            if (modal is null)
+                return;
+
+            var result = await modal.Result;
+            if (!result.Confirmed || result.Data is not string targetUserId || string.IsNullOrWhiteSpace(targetUserId))
+                return;
+
+            var response = await RecipeService.ShareAsync(Recipe.Id, targetUserId);
+            if (response is null)
+            {
+                await ShowErrorAsync(Resources.RecipeEdit.ShareFailedMessage);
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                await ShowErrorAsync(response.Message ?? Resources.RecipeEdit.ShareFailed);
+                return;
+            }
+
+            await ShowInfoAsync(Resources.RecipeEdit.ShareSucceeded);
         }
 
         private bool CanAddIngredient =>

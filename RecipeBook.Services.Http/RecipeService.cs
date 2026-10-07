@@ -115,5 +115,20 @@ namespace RecipeBook.Services.Http
                 logger.LogError(ex, "Recipe DeleteAsync failed. Id {Id}", id); throw;
             }
         }
+
+        public async Task<CommandResponse?> ShareAsync(Guid recipeId, string targetUserId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var model = new RecipeShareModel { RecipeId = recipeId, TargetUserId = targetUserId };
+                var r = await PostAsync($"{_controller}/{RecipeBookControllers.ShareRoute}", model, cancellationToken);
+                InvalidateCache();
+                return r;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Recipe ShareAsync failed. RecipeId {RecipeId}, TargetUserId {TargetUserId}", recipeId, targetUserId); throw;
+            }
+        }
     }
 }

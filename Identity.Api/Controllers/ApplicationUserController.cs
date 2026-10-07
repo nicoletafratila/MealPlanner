@@ -4,6 +4,7 @@ using Identity.Api.Controllers.Resources;
 using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
+using Identity.Api.Features.ApplicationUser.Queries.List;
 using Identity.Api.Features.ApplicationUser.Queries.Search;
 using Identity.Shared.Models;
 using MediatR;
@@ -55,6 +56,16 @@ namespace Identity.Api.Controllers
             };
 
             var result = await _mediator.Send(new SearchQuery { QueryParameters = qp }, cancellationToken);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Gets a lightweight list of other active users, for pickers such as recipe cloning.
+        /// </summary>
+        [HttpGet("list")]
+        public async Task<ActionResult<IList<ApplicationUserListModel>>> ListAsync(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new ListQuery(), cancellationToken);
             return Ok(result);
         }
 

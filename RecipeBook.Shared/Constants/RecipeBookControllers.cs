@@ -19,5 +19,6 @@ namespace RecipeBook.Shared.Constants
         public const string SearchRoute = "search";
         public const string UpdateAllRoute = "updateAll";
         public const string ShoppingListProductsRoute = "products";
+        public const string ShareRoute = "share";
     }
 }

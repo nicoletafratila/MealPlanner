@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using RecipeBook.Api.Controllers.Resources;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Features.Recipe.Commands.Delete;
+using RecipeBook.Api.Features.Recipe.Commands.Share;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
 using RecipeBook.Api.Features.Recipe.Queries.GetById;
 using RecipeBook.Api.Features.Recipe.Queries.GetEdit;
@@ -120,6 +121,16 @@ namespace RecipeBook.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new UpdateCommand { Model = model };
+            var response = await _mediator.Send(command, cancellationToken);
+            return Ok(response);
+        }
+
+        [HttpPost("share")]
+        public async Task<ActionResult<CommandResponse?>> ShareAsync(
+            [FromBody] RecipeShareModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new ShareCommand { RecipeId = model.RecipeId, TargetUserId = model.TargetUserId };
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }

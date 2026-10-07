@@ -23,6 +23,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
         private BunitContext _ctx = null!;
         private Mock<IRecipeService> _recipeServiceMock = null!;
+        private Mock<IRecipeCategoryService> _recipeCategoryServiceMock = null!;
         private Mock<IMealPlanService> _mealPlanServiceMock = null!;
         private Mock<ISessionStorageService> _sessionStorageMock = null!;
         private Mock<IMessageComponent> _messageComponentMock = null!;
@@ -33,11 +34,13 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx = new BunitContext();
 
             _recipeServiceMock = new Mock<IRecipeService>(MockBehavior.Strict);
+            _recipeCategoryServiceMock = new Mock<IRecipeCategoryService>(MockBehavior.Strict);
             _mealPlanServiceMock = new Mock<IMealPlanService>(MockBehavior.Loose);
             _sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Strict);
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
 
             _ctx.Services.AddSingleton(_recipeServiceMock.Object);
+            _ctx.Services.AddSingleton(_recipeCategoryServiceMock.Object);
             _ctx.Services.AddSingleton(_mealPlanServiceMock.Object);
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);
 
@@ -50,6 +53,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _recipeServiceMock
                 .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeModel>>(), CancellationToken.None))
                 .ReturnsAsync(new PagedList<RecipeModel>([], new Metadata()));
+
+            _recipeCategoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<RecipeCategoryModel>([], new Metadata()));
 
             _sessionStorageMock
                 .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -65,6 +72,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         {
             _ctx.Dispose();
             _recipeServiceMock.Reset();
+            _recipeCategoryServiceMock.Reset();
             _mealPlanServiceMock.Reset();
             _sessionStorageMock.Reset();
             _messageComponentMock.Reset();

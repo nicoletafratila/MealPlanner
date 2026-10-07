@@ -356,7 +356,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("SaveFailedMessage", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Data has been saved successfully.
         /// </summary>
@@ -365,13 +365,58 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Please select a unit of measurement for the ingredient..
         /// </summary>
         internal static string SelectUnitOfMeasurement {
             get {
                 return ResourceManager.GetString("SelectUnitOfMeasurement", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share.
+        /// </summary>
+        internal static string ShareButton {
+            get {
+                return ResourceManager.GetString("ShareButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share failed..
+        /// </summary>
+        internal static string ShareFailed {
+            get {
+                return ResourceManager.GetString("ShareFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share failed. Please try again..
+        /// </summary>
+        internal static string ShareFailedMessage {
+            get {
+                return ResourceManager.GetString("ShareFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select the user to share this recipe with.
+        /// </summary>
+        internal static string ShareModalTitle {
+            get {
+                return ResourceManager.GetString("ShareModalTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The recipe has been shared successfully.
+        /// </summary>
+        internal static string ShareSucceeded {
+            get {
+                return ResourceManager.GetString("ShareSucceeded", resourceCulture);
             }
         }
     }
