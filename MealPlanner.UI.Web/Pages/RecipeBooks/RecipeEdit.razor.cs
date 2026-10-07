@@ -366,13 +366,13 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             ProductId = productId;
             Quantity = string.Empty;
 
-            if (string.IsNullOrWhiteSpace(productId) || productId == "0")
+            if (string.IsNullOrWhiteSpace(productId) || productId == "0" || !Guid.TryParse(productId, out var parsedProductId))
             {
                 StateHasChanged();
                 return;
             }
 
-            var product = await ProductService.GetEditAsync(Guid.Parse(productId));
+            var product = await ProductService.GetEditAsync(parsedProductId);
             if (product == null || BaseUnits?.Items == null)
             {
                 StateHasChanged();
