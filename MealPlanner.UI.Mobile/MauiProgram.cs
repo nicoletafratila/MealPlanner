@@ -28,14 +28,26 @@ namespace MealPlanner.UI.Mobile
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit();
 
-            // Load appsettings.json embedded resource
+            // Load the shared appsettings.json, then layer the environment-specific overlay
+            // on top — the mobile equivalent of ASPNETCORE_ENVIRONMENT, picked by build
+            // configuration since a compiled APK has no launch-time env var to read.
             var assembly = typeof(MauiProgram).Assembly;
+            var configBuilder = new ConfigurationBuilder();
+
             using var stream = assembly.GetManifestResourceStream("MealPlanner.UI.Mobile.appsettings.json");
             if (stream is not null)
-            {
-                var config = new ConfigurationBuilder().AddJsonStream(stream).Build();
-                builder.Configuration.AddConfiguration(config);
-            }
+                configBuilder.AddJsonStream(stream);
+
+#if DEBUG
+            const string envSettingsFile = "MealPlanner.UI.Mobile.appsettings.Development.json";
+#else
+            const string envSettingsFile = "MealPlanner.UI.Mobile.appsettings.Production.json";
+#endif
+            using var envStream = assembly.GetManifestResourceStream(envSettingsFile);
+            if (envStream is not null)
+                configBuilder.AddJsonStream(envStream);
+
+            builder.Configuration.AddConfiguration(configBuilder.Build());
 
             var identityBase = builder.Configuration["IdentityApi:BaseUrl"]!;
             var recipeBase = builder.Configuration["RecipeBookApi:BaseUrl"]!;
