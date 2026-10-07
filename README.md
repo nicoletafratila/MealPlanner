@@ -1,3 +1,6 @@
+dotnet user-secrets set "Email:Password" "<new-app-password>" --project Identity.Api
+
+
 
 share one recipe to another user
 share my recipes to another user
