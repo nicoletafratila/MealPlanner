@@ -97,7 +97,7 @@
                                    IsVisible="{Binding ThumbnailUrl, Converter={x:Static converters:StringNotNullConverter.Instance}}" />
                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                <Label Text="{Binding EffectiveCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
+                                <Label Text="{Binding RecipeCategoryName}" FontSize="12" TextColor="{StaticResource DarkGray}" />
                             </VerticalStackLayout>
                             <Button Grid.Column="2" Text="🗑" BackgroundColor="Transparent"
                                     Padding="8,4"

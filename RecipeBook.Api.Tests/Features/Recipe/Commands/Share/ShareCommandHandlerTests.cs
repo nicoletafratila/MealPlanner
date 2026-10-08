@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Recipe.Commands.Share;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Services;
 
 namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
 {
@@ -10,6 +11,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
     {
         private Mock<IRecipeRepository> _repoMock = null!;
         private Mock<IProductRepository> _productRepoMock = null!;
+        private Mock<IRecipeCategoryShareResolver> _recipeCategoryResolverMock = null!;
+        private Mock<IProductCategoryShareResolver> _productCategoryResolverMock = null!;
         private Mock<ILogger<ShareCommandHandler>> _loggerMock = null!;
         private ShareCommandHandler _handler = null!;
 
@@ -18,9 +21,33 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         {
             _repoMock = new Mock<IRecipeRepository>(MockBehavior.Strict);
             _productRepoMock = new Mock<IProductRepository>(MockBehavior.Strict);
+            _recipeCategoryResolverMock = new Mock<IRecipeCategoryShareResolver>(MockBehavior.Strict);
+            _productCategoryResolverMock = new Mock<IProductCategoryShareResolver>(MockBehavior.Strict);
             _loggerMock = new Mock<ILogger<ShareCommandHandler>>(MockBehavior.Loose);
 
-            _handler = new ShareCommandHandler(_repoMock.Object, _productRepoMock.Object, _loggerMock.Object);
+            SetUpIdentityCategoryResolvers();
+
+            _handler = new ShareCommandHandler(
+                _repoMock.Object,
+                _productRepoMock.Object,
+                _recipeCategoryResolverMock.Object,
+                _productCategoryResolverMock.Object,
+                _loggerMock.Object);
+        }
+
+        // By default, the category resolver mocks map every distinct source category to itself, so tests that don't
+        // care about category remapping can assert on the pre-existing (source) category ids unchanged.
+        private void SetUpIdentityCategoryResolvers()
+        {
+            _recipeCategoryResolverMock
+                .Setup(r => r.ResolveAsync(It.IsAny<IEnumerable<Data.Entities.RecipeCategory?>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((IEnumerable<Data.Entities.RecipeCategory?> categories, string _, CancellationToken _) =>
+                    categories.Where(c => c is not null).Select(c => c!.Id).Distinct().ToDictionary(id => id, id => id));
+
+            _productCategoryResolverMock
+                .Setup(r => r.ResolveAsync(It.IsAny<IEnumerable<Data.Entities.ProductCategory?>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((IEnumerable<Data.Entities.ProductCategory?> categories, string _, CancellationToken _) =>
+                    categories.Where(c => c is not null).Select(c => c!.Id).Distinct().ToDictionary(id => id, id => id));
         }
 
         private void SetUpProductClone(Data.Entities.Product product, Guid clonedProductId)
@@ -48,21 +75,35 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         public void Ctor_NullRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new ShareCommandHandler(null!, _productRepoMock.Object, _loggerMock.Object));
+                _ = new ShareCommandHandler(null!, _productRepoMock.Object, _recipeCategoryResolverMock.Object, _productCategoryResolverMock.Object, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullProductRepository_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new ShareCommandHandler(_repoMock.Object, null!, _loggerMock.Object));
+                _ = new ShareCommandHandler(_repoMock.Object, null!, _recipeCategoryResolverMock.Object, _productCategoryResolverMock.Object, _loggerMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullRecipeCategoryResolver_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new ShareCommandHandler(_repoMock.Object, _productRepoMock.Object, null!, _productCategoryResolverMock.Object, _loggerMock.Object));
+        }
+
+        [Test]
+        public void Ctor_NullProductCategoryResolver_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                _ = new ShareCommandHandler(_repoMock.Object, _productRepoMock.Object, _recipeCategoryResolverMock.Object, null!, _loggerMock.Object));
         }
 
         [Test]
         public void Ctor_NullLogger_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _ = new ShareCommandHandler(_repoMock.Object, _productRepoMock.Object, null!));
+                _ = new ShareCommandHandler(_repoMock.Object, _productRepoMock.Object, _recipeCategoryResolverMock.Object, _productCategoryResolverMock.Object, null!));
         }
 
         [Test]
@@ -114,6 +155,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 ImageThumbnail = [9, 10],
                 BaseUnitId = baseUnitId,
                 ProductCategoryId = productCategoryId,
+                ProductCategory = new Data.Entities.ProductCategory { Id = productCategoryId, Name = "Baking" },
                 UserId = "user1"
             };
 
@@ -125,6 +167,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 ImageContent = [1, 2, 3],
                 ImageThumbnail = [4, 5, 6],
                 RecipeCategoryId = categoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = categoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients =
                 [
@@ -176,6 +219,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         {
             var recipeId = Guid.NewGuid();
             var productId = Guid.NewGuid();
+            var productCategoryId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
             var clonedProductId = Guid.NewGuid();
             var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
 
@@ -184,7 +229,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 Id = productId,
                 Name = "Sugar",
                 BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = Guid.NewGuid(),
+                ProductCategoryId = productCategoryId,
+                ProductCategory = new Data.Entities.ProductCategory { Id = productCategoryId, Name = "Baking" },
                 UserId = "user1"
             };
 
@@ -192,7 +238,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
             {
                 Id = recipeId,
                 Name = "My Recipe",
-                RecipeCategoryId = Guid.NewGuid(),
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients =
                 [
@@ -230,13 +277,15 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         public async Task Handle_NameCollision_AppendsCopySuffix()
         {
             var recipeId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
             var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
 
             var source = new Data.Entities.Recipe
             {
                 Id = recipeId,
                 Name = "My Recipe",
-                RecipeCategoryId = Guid.NewGuid(),
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients = []
             };
@@ -272,13 +321,15 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         public async Task Handle_RepeatedNameCollision_IncrementsCopySuffix()
         {
             var recipeId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
             var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
 
             var source = new Data.Entities.Recipe
             {
                 Id = recipeId,
                 Name = "My Recipe",
-                RecipeCategoryId = Guid.NewGuid(),
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients = []
             };
@@ -315,13 +366,15 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         public async Task Handle_ExceptionDuringAdd_LogsError_AndReturnsFailedResponse()
         {
             var recipeId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
             var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
 
             var source = new Data.Entities.Recipe
             {
                 Id = recipeId,
                 Name = "My Recipe",
-                RecipeCategoryId = Guid.NewGuid(),
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients = []
             };
@@ -362,6 +415,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         {
             var recipeId = Guid.NewGuid();
             var productId = Guid.NewGuid();
+            var productCategoryId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
             var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
 
             var product = new Data.Entities.Product
@@ -369,7 +424,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 Id = productId,
                 Name = "Flour",
                 BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = Guid.NewGuid(),
+                ProductCategoryId = productCategoryId,
+                ProductCategory = new Data.Entities.ProductCategory { Id = productCategoryId, Name = "Baking" },
                 UserId = "user1"
             };
 
@@ -377,7 +433,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
             {
                 Id = recipeId,
                 Name = "My Recipe",
-                RecipeCategoryId = Guid.NewGuid(),
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients =
                 [
@@ -410,10 +467,97 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         }
 
         [Test]
+        public async Task Handle_ResolvesRecipeAndProductCategoriesAgainstTargetUser()
+        {
+            var recipeId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
+            var resolvedRecipeCategoryId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var productCategoryId = Guid.NewGuid();
+            var resolvedProductCategoryId = Guid.NewGuid();
+            var clonedProductId = Guid.NewGuid();
+            var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
+
+            var product = new Data.Entities.Product
+            {
+                Id = productId,
+                Name = "Flour",
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = productCategoryId,
+                ProductCategory = new Data.Entities.ProductCategory { Id = productCategoryId, Name = "Baking" },
+                UserId = "user1"
+            };
+
+            var source = new Data.Entities.Recipe
+            {
+                Id = recipeId,
+                Name = "My Recipe",
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
+                UserId = "user1",
+                RecipeIngredients =
+                [
+                    new Data.Entities.RecipeIngredient { ProductId = productId, Product = product, UnitId = Guid.NewGuid(), Quantity = 1 }
+                ]
+            };
+
+            _recipeCategoryResolverMock.Reset();
+            _recipeCategoryResolverMock
+                .Setup(r => r.ResolveAsync(It.IsAny<IEnumerable<Data.Entities.RecipeCategory?>>(), "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Dictionary<Guid, Guid> { [recipeCategoryId] = resolvedRecipeCategoryId });
+
+            _productCategoryResolverMock.Reset();
+            _productCategoryResolverMock
+                .Setup(r => r.ResolveAsync(It.IsAny<IEnumerable<Data.Entities.ProductCategory?>>(), "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Dictionary<Guid, Guid> { [productCategoryId] = resolvedProductCategoryId });
+
+            _repoMock
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(source);
+
+            _repoMock
+                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Recipe?)null);
+
+            _productRepoMock
+                .Setup(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Product?)null);
+
+            _productRepoMock
+                .Setup(r => r.AddAsync(
+                    It.Is<Data.Entities.Product>(p => p.ProductCategoryId == resolvedProductCategoryId),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Product p, CancellationToken _) =>
+                {
+                    p.Id = clonedProductId;
+                    return p;
+                });
+
+            Data.Entities.Recipe? added = null;
+            _repoMock
+                .Setup(r => r.AddAsync(It.IsAny<Data.Entities.Recipe>(), It.IsAny<CancellationToken>()))
+                .Callback<Data.Entities.Recipe, CancellationToken>((r, _) => added = r)
+                .ReturnsAsync((Data.Entities.Recipe r, CancellationToken _) => r);
+
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(added!.RecipeCategoryId, Is.EqualTo(resolvedRecipeCategoryId));
+
+            _productRepoMock.Verify(
+                r => r.AddAsync(
+                    It.Is<Data.Entities.Product>(p => p.ProductCategoryId == resolvedProductCategoryId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
         public async Task Handle_ExistingProductWithSameName_ReusesExistingProduct_AndDoesNotCloneIt()
         {
             var recipeId = Guid.NewGuid();
             var productId = Guid.NewGuid();
+            var productCategoryId = Guid.NewGuid();
+            var recipeCategoryId = Guid.NewGuid();
             var existingProductId = Guid.NewGuid();
             var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
 
@@ -422,7 +566,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 Id = productId,
                 Name = "Flour",
                 BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = Guid.NewGuid(),
+                ProductCategoryId = productCategoryId,
+                ProductCategory = new Data.Entities.ProductCategory { Id = productCategoryId, Name = "Baking" },
                 UserId = "user1"
             };
 
@@ -430,7 +575,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
             {
                 Id = recipeId,
                 Name = "My Recipe",
-                RecipeCategoryId = Guid.NewGuid(),
+                RecipeCategoryId = recipeCategoryId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = recipeCategoryId, Name = "Desserts" },
                 UserId = "user1",
                 RecipeIngredients =
                 [

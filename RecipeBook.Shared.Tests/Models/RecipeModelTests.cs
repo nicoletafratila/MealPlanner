@@ -21,7 +21,6 @@ namespace RecipeBook.Shared.Tests.Models
                 Assert.That(model.RecipeCategory, Is.Null);
                 Assert.That(model.RecipeCategoryName, Is.Null);
                 Assert.That(model.RecipeCategoryId, Is.Null);
-                Assert.That(model.EffectiveCategoryName, Is.EqualTo(string.Empty));
 
                 // From BaseModel
                 Assert.That(model.Index, Is.Zero);
@@ -56,57 +55,6 @@ namespace RecipeBook.Shared.Tests.Models
             {
                 _ = new RecipeModel(Guid.NewGuid(), null!);
             });
-        }
-
-        [Test]
-        public void EffectiveCategoryName_UsesRecipeCategoryName_WhenAvailable()
-        {
-            // Arrange
-            var model = new RecipeModel
-            {
-                RecipeCategory = new RecipeCategoryModel { Name = "Main" },
-                RecipeCategoryName = "MainCached"
-            };
-
-            // Act
-            var effective = model.EffectiveCategoryName;
-
-            // Assert: prefers RecipeCategory.Name
-            Assert.That(effective, Is.EqualTo("Main"));
-        }
-
-        [Test]
-        public void EffectiveCategoryName_FallsBackToRecipeCategoryName_WhenNavigationNull()
-        {
-            // Arrange
-            var model = new RecipeModel
-            {
-                RecipeCategory = null,
-                RecipeCategoryName = "FallbackName"
-            };
-
-            // Act
-            var effective = model.EffectiveCategoryName;
-
-            // Assert
-            Assert.That(effective, Is.EqualTo("FallbackName"));
-        }
-
-        [Test]
-        public void EffectiveCategoryName_ReturnsEmpty_WhenNoCategoryInfo()
-        {
-            // Arrange
-            var model = new RecipeModel
-            {
-                RecipeCategory = null,
-                RecipeCategoryName = null
-            };
-
-            // Act
-            var effective = model.EffectiveCategoryName;
-
-            // Assert
-            Assert.That(effective, Is.EqualTo(string.Empty));
         }
     }
 }

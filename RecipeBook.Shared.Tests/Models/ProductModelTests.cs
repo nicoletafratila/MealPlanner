@@ -21,7 +21,6 @@ namespace RecipeBook.Shared.Tests.Models
                 Assert.That(model.ProductCategory, Is.Null);
                 Assert.That(model.ProductCategoryName, Is.Null);
                 Assert.That(model.ProductCategoryId, Is.Null);
-                Assert.That(model.EffectiveCategoryName, Is.EqualTo(string.Empty));
 
                 // BaseModel defaults
                 Assert.That(model.Index, Is.Zero);
@@ -56,57 +55,6 @@ namespace RecipeBook.Shared.Tests.Models
             {
                 _ = new ProductModel(Guid.NewGuid(), null!);
             });
-        }
-
-        [Test]
-        public void EffectiveCategoryName_UsesProductCategoryName_WhenAvailable()
-        {
-            // Arrange
-            var model = new ProductModel
-            {
-                ProductCategory = new ProductCategoryModel { Name = "Dairy" },
-                ProductCategoryName = "DairyCached"
-            };
-
-            // Act
-            var effective = model.EffectiveCategoryName;
-
-            // Assert: prefers navigation property
-            Assert.That(effective, Is.EqualTo("Dairy"));
-        }
-
-        [Test]
-        public void EffectiveCategoryName_FallsBackToFlattenedName_WhenNavigationNull()
-        {
-            // Arrange
-            var model = new ProductModel
-            {
-                ProductCategory = null,
-                ProductCategoryName = "Snacks"
-            };
-
-            // Act
-            var effective = model.EffectiveCategoryName;
-
-            // Assert
-            Assert.That(effective, Is.EqualTo("Snacks"));
-        }
-
-        [Test]
-        public void EffectiveCategoryName_ReturnsEmpty_WhenNoCategoryInfo()
-        {
-            // Arrange
-            var model = new ProductModel
-            {
-                ProductCategory = null,
-                ProductCategoryName = null
-            };
-
-            // Act
-            var effective = model.EffectiveCategoryName;
-
-            // Assert
-            Assert.That(effective, Is.EqualTo(string.Empty));
         }
     }
 }

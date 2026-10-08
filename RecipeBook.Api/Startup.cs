@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecipeBook.Api.Abstractions;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Services;
 using RecipeBook.Data.Profiles;
 using RecipeBook.Data.TableConfigurations;
 using Serilog;
@@ -46,6 +47,9 @@ namespace RecipeBook.Api
         protected override void RegisterServices(IServiceCollection services)
         {
             services.AddSingleton<MealPlannerClientConfig>();
+
+            services.AddScoped<IRecipeCategoryShareResolver, RecipeCategoryShareResolver>();
+            services.AddScoped<IProductCategoryShareResolver, ProductCategoryShareResolver>();
 
             services.AddHttpClient<IMealPlannerClient, MealPlannerClient>()
                 .ConfigureHttpClient(ConfigureMealPlannerClient); ;

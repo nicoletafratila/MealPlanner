@@ -18,7 +18,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook
 
         private async void OnSelectProductTapped(object sender, TappedEventArgs e)
         {
-            var items = _vm.ProductsByCategory.Select(p => new SelectorItem(p, p.Name, p.EffectiveCategoryName, p.ThumbnailUrl)).ToList();
+            var items = _vm.ProductsByCategory.Select(p => new SelectorItem(p, p.Name, p.ProductCategoryName, p.ThumbnailUrl)).ToList();
             var popup = new SelectorPopup(
                 items,
                 RecipeBook.Resources.RecipeEditPage.SelectProductTitle,

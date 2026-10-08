@@ -3,6 +3,7 @@ using Common.Services;
 using MediatR;
 using RecipeBook.Api.Features.Recipe.Resources;
 using RecipeBook.Api.Repositories;
+using RecipeBook.Api.Services;
 
 namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
 {
@@ -13,6 +14,8 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
     public class ShareAllCommandHandler(
         IRecipeRepository repository,
         IProductRepository productRepository,
+        IRecipeCategoryShareResolver recipeCategoryResolver,
+        IProductCategoryShareResolver productCategoryResolver,
         ICurrentUserService currentUserService,
         ILogger<ShareAllCommandHandler> logger) : IRequestHandler<ShareAllCommand, CommandResponse?>
     {
@@ -20,6 +23,8 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
 
         private readonly IRecipeRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         private readonly IProductRepository _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+        private readonly IRecipeCategoryShareResolver _recipeCategoryResolver = recipeCategoryResolver ?? throw new ArgumentNullException(nameof(recipeCategoryResolver));
+        private readonly IProductCategoryShareResolver _productCategoryResolver = productCategoryResolver ?? throw new ArgumentNullException(nameof(productCategoryResolver));
         private readonly ICurrentUserService _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
         private readonly ILogger<ShareAllCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
@@ -37,8 +42,18 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                 if (sourceRecipes.Count == 0)
                     return CommandResponse.Success();
 
-                var targetProductIdsBySourceProductId = await CloneProductsAsync(sourceRecipes, request.TargetUserId, cancellationToken);
-                var sharedRecipes = await BuildSharedRecipesAsync(sourceRecipes, targetProductIdsBySourceProductId, request.TargetUserId, cancellationToken);
+                var recipeCategoryMap = await _recipeCategoryResolver.ResolveAsync(
+                    sourceRecipes.Select(r => r.RecipeCategory),
+                    request.TargetUserId,
+                    cancellationToken);
+
+                var productCategoryMap = await _productCategoryResolver.ResolveAsync(
+                    sourceRecipes.SelectMany(r => r.RecipeIngredients ?? []).Select(ri => ri.Product?.ProductCategory),
+                    request.TargetUserId,
+                    cancellationToken);
+
+                var targetProductIdsBySourceProductId = await CloneProductsAsync(sourceRecipes, productCategoryMap, request.TargetUserId, cancellationToken);
+                var sharedRecipes = await BuildSharedRecipesAsync(sourceRecipes, targetProductIdsBySourceProductId, recipeCategoryMap, request.TargetUserId, cancellationToken);
 
                 await _repository.AddRangeAsync(sharedRecipes, cancellationToken);
 
@@ -53,6 +68,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
 
         private async Task<Dictionary<Guid, Guid>> CloneProductsAsync(
             IReadOnlyList<Data.Entities.Recipe> sourceRecipes,
+            Dictionary<Guid, Guid> productCategoryMap,
             string targetUserId,
             CancellationToken cancellationToken)
         {
@@ -92,7 +108,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     ImageContent = product.ImageContent,
                     ImageThumbnail = product.ImageThumbnail,
                     BaseUnitId = product.BaseUnitId,
-                    ProductCategoryId = product.ProductCategoryId,
+                    ProductCategoryId = productCategoryMap[product.ProductCategoryId],
                     UserId = targetUserId
                 };
 
@@ -112,6 +128,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
         private async Task<List<Data.Entities.Recipe>> BuildSharedRecipesAsync(
             IReadOnlyList<Data.Entities.Recipe> sourceRecipes,
             Dictionary<Guid, Guid> targetProductIdsBySourceProductId,
+            Dictionary<Guid, Guid> recipeCategoryMap,
             string targetUserId,
             CancellationToken cancellationToken)
         {
@@ -141,7 +158,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     Source = source.Source,
                     ImageContent = source.ImageContent,
                     ImageThumbnail = source.ImageThumbnail,
-                    RecipeCategoryId = source.RecipeCategoryId,
+                    RecipeCategoryId = recipeCategoryMap[source.RecipeCategoryId],
                     UserId = targetUserId,
                     RecipeIngredients = sharedIngredients
                 });

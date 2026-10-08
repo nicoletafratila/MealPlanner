@@ -44,17 +44,6 @@ namespace RecipeBook.Shared.Models
         /// </summary>
         public string? RecipeCategoryId { get; set; }
 
-        /// <summary>
-        /// Returns the most appropriate category name:
-        /// 1) RecipeCategory.Name
-        /// 2) RecipeCategoryName
-        /// 3) empty string.
-        /// </summary>
-        public string EffectiveCategoryName =>
-            RecipeCategory?.Name
-            ?? RecipeCategoryName
-            ?? string.Empty;
-
         public RecipeModel()
         {
         }
