@@ -140,5 +140,59 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("EmptyCategories", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share with user.
+        /// </summary>
+        internal static string SelectShareUserTitle {
+            get {
+                return ResourceManager.GetString("SelectShareUserTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
+        internal static string PlaceholderSearchUsers {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchUsers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No users found.
+        /// </summary>
+        internal static string EmptyUsersLabel {
+            get {
+                return ResourceManager.GetString("EmptyUsersLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to There are no other users to share this shop with..
+        /// </summary>
+        internal static string ShareNoUsersMessage {
+            get {
+                return ResourceManager.GetString("ShareNoUsersMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        internal static string OkButton {
+            get {
+                return ResourceManager.GetString("OkButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The shop has been shared successfully.
+        /// </summary>
+        internal static string ShareSucceeded {
+            get {
+                return ResourceManager.GetString("ShareSucceeded", resourceCulture);
+            }
+        }
     }
 }

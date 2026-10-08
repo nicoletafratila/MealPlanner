@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using RecipeBook.Api.Controllers.Resources;
 using RecipeBook.Api.Features.ProductCategory.Commands.Add;
 using RecipeBook.Api.Features.ProductCategory.Commands.Delete;
+using RecipeBook.Api.Features.ProductCategory.Commands.ResolveShare;
 using RecipeBook.Api.Features.ProductCategory.Commands.Update;
 using RecipeBook.Api.Features.ProductCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.ProductCategory.Queries.Search;
@@ -82,6 +83,21 @@ namespace RecipeBook.Api.Controllers
             };
 
             var result = await _mediator.Send(query, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("resolveshare")]
+        public async Task<ActionResult<Dictionary<Guid, Guid>>> ResolveShareAsync(
+            [FromBody] ProductCategoryResolveShareModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new ResolveShareCommand
+            {
+                CategoryIds = model.CategoryIds,
+                TargetUserId = model.TargetUserId
+            };
+
+            var result = await _mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 

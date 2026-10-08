@@ -1,10 +1,12 @@
 using BlazorBootstrap;
+using Blazored.Modal.Services;
 using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Pagination;
 using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Pages.RecipeBooks;
 using MealPlanner.UI.Web.Services;
 using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter]
+        private IModalService? ModalService { get; set; }
 
         [Inject]
         public IShopService ShopService { get; set; } = default!;
@@ -122,6 +127,42 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             if (_shopsGrid is not null)
                 await _shopsGrid.RefreshDataAsync();
+        }
+
+        private async Task ShareAllAsync()
+        {
+            var modal = ModalService?.Show<RecipeShareUserSelection>(Resources.ShopsOverview.ShareAllModalTitle);
+            if (modal is null)
+                return;
+
+            var result = await modal.Result;
+            if (!result.Confirmed || result.Data is not string targetUserId || string.IsNullOrWhiteSpace(targetUserId))
+                return;
+
+            var filters = await GetCurrentFiltersAsync();
+
+            var response = await ShopService.ShareAllAsync(targetUserId, filters);
+            if (response is null)
+            {
+                await ShowErrorAsync(Resources.ShopsOverview.ShareAllFailedMessage);
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                await ShowErrorAsync(response.Message ?? Resources.ShopsOverview.ShareAllFailed);
+                return;
+            }
+
+            await ShowInfoAsync(Resources.ShopsOverview.ShareAllSucceeded);
+        }
+
+        private async Task<List<Common.Pagination.FilterItem>?> GetCurrentFiltersAsync()
+        {
+            var stored = await SessionStorage.GetItemAsync<QueryParameters<ShopModel>>();
+            var filters = stored?.Filters?.ToList() ?? [];
+
+            return filters.Count > 0 ? filters : null;
         }
 
         private async Task<GridDataProviderResult<ShopModel>> DataProviderAsync(

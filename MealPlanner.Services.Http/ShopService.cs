@@ -97,5 +97,40 @@ namespace MealPlanner.Services.Http
                 throw;
             }
         }
+
+        public async Task<CommandResponse?> ShareAsync(Guid shopId, string targetUserId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var model = new ShopShareModel { ShopId = shopId, TargetUserId = targetUserId };
+                var r = await PostAsync($"{_controller}/{MealPlannerControllers.ShareRoute}", model, cancellationToken);
+                InvalidateCache();
+                return r;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Shop ShareAsync failed. ShopId {ShopId}, TargetUserId {TargetUserId}", shopId, targetUserId);
+                throw;
+            }
+        }
+
+        public async Task<CommandResponse?> ShareAllAsync(
+            string targetUserId,
+            IEnumerable<FilterItem>? filters = null,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var model = new ShopShareAllModel { TargetUserId = targetUserId, Filters = filters };
+                var r = await PostAsync($"{_controller}/{MealPlannerControllers.ShareAllRoute}", model, cancellationToken);
+                InvalidateCache();
+                return r;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Shop ShareAllAsync failed. TargetUserId {TargetUserId}", targetUserId);
+                throw;
+            }
+        }
     }
 }

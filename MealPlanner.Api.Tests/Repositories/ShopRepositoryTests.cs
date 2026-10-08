@@ -1,4 +1,5 @@
 using Common.Data.DataContext;
+using Common.Pagination;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
@@ -180,6 +181,71 @@ namespace MealPlanner.Api.Tests.Repositories
             // Act / Assert
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.GetByIdIncludeDisplaySequenceAsync(null, CancellationToken.None));
+        }
+
+        // ---------- GetAllByUserIncludeDisplaySequenceAsync ----------
+        [Test]
+        public async Task GetAllByUserIncludeDisplaySequenceAsync_ReturnsOnlyShopsForThatUser_WithDisplaySequenceAndCategories()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var shop1 = CreateShopGraph(ShopGuid(1), "Shop1", (1, 10));
+            shop1.UserId = "user1";
+            var shop2 = CreateShopGraph(ShopGuid(2), "Shop2", (2, 5));
+            shop2.UserId = "user2";
+
+            ctx.Shops.AddRange(shop1, shop2);
+            ctx.ProductCategories.AddRange(
+                shop1.DisplaySequence!.Select(ds => ds.ProductCategory!)
+                    .Concat(shop2.DisplaySequence!.Select(ds => ds.ProductCategory!)));
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserIncludeDisplaySequenceAsync("user1", null, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result[0].Name, Is.EqualTo("Shop1"));
+            Assert.That(result[0].DisplaySequence, Has.Count.EqualTo(1));
+            Assert.That(result[0].DisplaySequence![0].ProductCategory, Is.Not.Null);
+        }
+
+        [Test]
+        public async Task GetAllByUserIncludeDisplaySequenceAsync_WithFilters_AppliesThem()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.Shops.AddRange(
+                new Shop { Id = ShopGuid(1), Name = "Kaufland", UserId = "user1" },
+                new Shop { Id = ShopGuid(2), Name = "Lidl", UserId = "user1" });
+            await ctx.SaveChangesAsync();
+
+            var filters = new List<FilterItem> { new("Name", "Kaufland", FilterOperator.Equals) };
+
+            // Act
+            var result = await repo.GetAllByUserIncludeDisplaySequenceAsync("user1", filters, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result[0].Name, Is.EqualTo("Kaufland"));
+        }
+
+        [Test]
+        public async Task GetAllByUserIncludeDisplaySequenceAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            ctx.Shops.Add(new Shop { Id = ShopGuid(1), Name = "Shop1", UserId = "user2" });
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserIncludeDisplaySequenceAsync("user1", null, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
         }
 
         // ---------- UpdateAsync ----------

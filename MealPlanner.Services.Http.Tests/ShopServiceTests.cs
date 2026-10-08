@@ -445,5 +445,100 @@ namespace MealPlanner.Services.Http.Tests
             Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
             mockHttp.VerifyNoOutstandingExpectation();
         }
+
+        // ---------- ShareAsync ----------
+        [Test]
+        public async Task ShareAsync_PostsModel_AndReturnsCommandResponse()
+        {
+            // Arrange
+            var shopId = Guid.NewGuid();
+            var expectedResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}/share")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var deserialized = JsonSerializer.Deserialize<ShopShareModel>(body, JsonOptions);
+                    return deserialized is not null && deserialized.ShopId == shopId && deserialized.TargetUserId == "user2";
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.ShareAsync(shopId, "user2");
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void ShareAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}/share")
+                .Respond(HttpStatusCode.BadRequest);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAsync(Guid.NewGuid(), "user2"));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        // ---------- ShareAllAsync ----------
+        [Test]
+        public async Task ShareAllAsync_PostsModel_AndReturnsCommandResponse()
+        {
+            // Arrange
+            var expectedResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}/shareAll")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var deserialized = JsonSerializer.Deserialize<ShopShareAllModel>(body, JsonOptions);
+                    return deserialized is not null && deserialized.TargetUserId == "user2";
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            var result = await service.ShareAllAsync("user2");
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public void ShareAllAsync_Throws_OnNonSuccessStatusCode()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{ShopPath}/shareAll")
+                .Respond(HttpStatusCode.BadRequest);
+
+            var service = CreateService(mockHttp);
+
+            // Act & Assert
+            Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAllAsync("user2"));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
     }
 }

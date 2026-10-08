@@ -1,8 +1,10 @@
 using BlazorBootstrap;
+using Blazored.Modal.Services;
 using Common.Models;
 using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Services.Http;
@@ -17,6 +19,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
+
+        [CascadingParameter]
+        private IModalService? ModalService { get; set; }
 
         [Parameter]
         public string? Id { get; set; }
@@ -132,6 +137,35 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
             await ShowInfoAsync(Resources.ShopEdit.DeleteSucceeded);
             NavigateToOverview();
+        }
+
+        private async Task ShareAsync()
+        {
+            if (Shop.Id == Guid.Empty)
+                return;
+
+            var modal = ModalService?.Show<RecipeShareUserSelection>(Resources.ShopEdit.ShareModalTitle);
+            if (modal is null)
+                return;
+
+            var result = await modal.Result;
+            if (!result.Confirmed || result.Data is not string targetUserId || string.IsNullOrWhiteSpace(targetUserId))
+                return;
+
+            var response = await ShopService.ShareAsync(Shop.Id, targetUserId);
+            if (response is null)
+            {
+                await ShowErrorAsync(Resources.ShopEdit.ShareFailedMessage);
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                await ShowErrorAsync(response.Message ?? Resources.ShopEdit.ShareFailed);
+                return;
+            }
+
+            await ShowInfoAsync(Resources.ShopEdit.ShareSucceeded);
         }
 
         private bool CanMoveUp(ShopDisplaySequenceEditModel item)

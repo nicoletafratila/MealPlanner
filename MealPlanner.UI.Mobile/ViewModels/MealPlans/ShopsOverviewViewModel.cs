@@ -2,12 +2,18 @@
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
+using MealPlanner.UI.Mobile.Services;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
-    public partial class ShopsOverviewViewModel(IShopService shopService) : BaseViewModel
+    public partial class ShopsOverviewViewModel(
+        IShopService shopService,
+        IApplicationUserService applicationUserService,
+        ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         private const int PageSize = 100;
 
@@ -85,6 +91,35 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         private FilterItem[]? BuildFilters() =>
             string.IsNullOrWhiteSpace(SearchText) ? null : [new FilterItem("Name", SearchText, FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)];
+
+        public async Task<List<ApplicationUserListModel>> GetShareUsersAsync()
+            => (await applicationUserService.ListAsync())?.ToList() ?? [];
+
+        public async Task ShareAllToUserAsync(string targetUserId)
+        {
+            if (IsBusy || string.IsNullOrWhiteSpace(targetUserId)) return;
+            ClearMessages();
+            IsBusy = true;
+            try
+            {
+                var filters = BuildFilters();
+                var result = await shopService.ShareAllAsync(targetUserId, filters);
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateShops();
+                    SetSuccess(Pages.MealPlans.Resources.ShopsOverviewPage.ShareAllSucceeded);
+                }
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
 
         [RelayCommand]
         private Task AddAsync() => Shell.Current.GoToAsync($"ShopEdit?id={Guid.Empty}");

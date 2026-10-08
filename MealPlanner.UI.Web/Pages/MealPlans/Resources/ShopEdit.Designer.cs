@@ -286,6 +286,51 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Share.
+        /// </summary>
+        internal static string ShareButton {
+            get {
+                return ResourceManager.GetString("ShareButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share failed..
+        /// </summary>
+        internal static string ShareFailed {
+            get {
+                return ResourceManager.GetString("ShareFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share failed. Please try again..
+        /// </summary>
+        internal static string ShareFailedMessage {
+            get {
+                return ResourceManager.GetString("ShareFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select the user to share this shop with.
+        /// </summary>
+        internal static string ShareModalTitle {
+            get {
+                return ResourceManager.GetString("ShareModalTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The shop has been shared successfully.
+        /// </summary>
+        internal static string ShareSucceeded {
+            get {
+                return ResourceManager.GetString("ShareSucceeded", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Categories.
         /// </summary>
         internal static string TableCaptionCategories {

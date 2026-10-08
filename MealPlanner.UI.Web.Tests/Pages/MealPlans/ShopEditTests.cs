@@ -1,4 +1,6 @@
 using System.Reflection;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using Bunit;
 using Common.Models;
 using Common.Pagination;
@@ -6,6 +8,7 @@ using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.MealPlans;
+using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -37,6 +40,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
 
             _ctx.Services.AddBlazorBootstrap();
             _ctx.Services.AddLogging();
+            _ctx.Services.AddBlazoredModal();
         }
 
         [TearDown]
@@ -52,7 +56,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                 .ReturnsAsync(new PagedList<ProductCategoryModel>([], new Metadata()));
         }
 
-        private IRenderedComponent<ShopEdit> RenderComponent(string? id = null)
+        private IRenderedComponent<ShopEdit> RenderComponent(string? id = null, IModalService? modalService = null)
         {
             return _ctx.Render<ShopEdit>(ps =>
             {
@@ -60,6 +64,9 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
                     ps.Add(p => p.Id, id);
 
                 ps.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+
+                if (modalService is not null)
+                    ps.AddCascadingValue(modalService);
             });
         }
 
@@ -662,6 +669,208 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             var newSeq = cut.Instance.Shop.DisplaySequence;
 
             Assert.That(newSeq[1], Is.SameAs(item0));
+        }
+
+        // ---------- ShareAsync ----------
+        [Test]
+        public async Task ShareAsync_ReturnsSilently_WhenShopIdIsEmpty()
+        {
+            // Arrange
+            ArrangeCategories();
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            var cut = RenderComponent("0", modalServiceMock.Object);
+
+            var method = typeof(ShopEdit).GetMethod("ShareAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            modalServiceMock.Verify(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ShareAsync_ReturnsSilently_WhenModalServiceNotAvailable()
+        {
+            // Arrange
+            ArrangeCategories();
+            var shopId = Guid.NewGuid();
+
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
+                .ReturnsAsync(new ShopEditModel([]) { Id = shopId, Name = "Loaded" });
+
+            var cut = RenderComponent(shopId.ToString());
+
+            var method = typeof(ShopEdit).GetMethod("ShareAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            _shopServiceMock.Verify(
+                s => s.ShareAsync(It.IsAny<Guid>(), It.IsAny<string>(), CancellationToken.None),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task ShareAsync_DoesNotCallService_WhenModalNotConfirmed()
+        {
+            // Arrange
+            ArrangeCategories();
+            var shopId = Guid.NewGuid();
+
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
+                .ReturnsAsync(new ShopEditModel([]) { Id = shopId, Name = "Loaded" });
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Cancel()));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            var cut = RenderComponent(shopId.ToString(), modalServiceMock.Object);
+
+            var method = typeof(ShopEdit).GetMethod("ShareAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            _shopServiceMock.Verify(
+                s => s.ShareAsync(It.IsAny<Guid>(), It.IsAny<string>(), CancellationToken.None),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task ShareAsync_CallsShareService_AndShowsSuccess_WhenConfirmed()
+        {
+            // Arrange
+            ArrangeCategories();
+            var shopId = Guid.NewGuid();
+            const string targetUserId = "user2";
+
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
+                .ReturnsAsync(new ShopEditModel([]) { Id = shopId, Name = "Loaded" });
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            _shopServiceMock
+                .Setup(s => s.ShareAsync(shopId, targetUserId, CancellationToken.None))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderComponent(shopId.ToString(), modalServiceMock.Object);
+
+            var method = typeof(ShopEdit).GetMethod("ShareAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            _shopServiceMock.Verify(s => s.ShareAsync(shopId, targetUserId, CancellationToken.None), Times.Once);
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync("The shop has been shared successfully", It.IsAny<string>(), CancellationToken.None),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task ShareAsync_ShowsError_WhenResponseNull()
+        {
+            // Arrange
+            ArrangeCategories();
+            var shopId = Guid.NewGuid();
+            const string targetUserId = "user2";
+
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
+                .ReturnsAsync(new ShopEditModel([]) { Id = shopId, Name = "Loaded" });
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            _shopServiceMock
+                .Setup(s => s.ShareAsync(shopId, targetUserId, CancellationToken.None))
+                .ReturnsAsync((CommandResponse?)null);
+
+            var cut = RenderComponent(shopId.ToString(), modalServiceMock.Object);
+
+            var method = typeof(ShopEdit).GetMethod("ShareAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("Share failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task ShareAsync_ShowsResponseMessage_WhenFailed()
+        {
+            // Arrange
+            ArrangeCategories();
+            var shopId = Guid.NewGuid();
+            const string targetUserId = "user2";
+
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
+                .ReturnsAsync(new ShopEditModel([]) { Id = shopId, Name = "Loaded" });
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            _shopServiceMock
+                .Setup(s => s.ShareAsync(shopId, targetUserId, CancellationToken.None))
+                .ReturnsAsync(CommandResponse.Failed("Name clash could not be resolved"));
+
+            var cut = RenderComponent(shopId.ToString(), modalServiceMock.Object);
+
+            var method = typeof(ShopEdit).GetMethod("ShareAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("Name clash could not be resolved", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                Times.Once);
         }
     }
 }

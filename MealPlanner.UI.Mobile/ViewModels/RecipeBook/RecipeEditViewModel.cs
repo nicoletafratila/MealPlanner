@@ -319,7 +319,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         private void RemoveIngredient(RecipeIngredientEditModel ingredient) =>
             RecipeIngredients.Remove(ingredient);
 
-        public async Task<List<ApplicationUserListModel>> GetShareTargetUsersAsync()
+        public async Task<List<ApplicationUserListModel>> GetShareUsersAsync()
             => (await applicationUserService.ListAsync())?.ToList() ?? [];
 
         public async Task ShareToUserAsync(string targetUserId)

@@ -10,6 +10,15 @@ namespace MealPlanner.Api.Repositories
         Task<Shop?> GetByIdIncludeDisplaySequenceAsync(Guid? id, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Loads every shop owned by the given user with its display sequence (and referenced product categories)
+        /// included, optionally filtered the same way the shops grid is.
+        /// </summary>
+        Task<IReadOnlyList<Shop>> GetAllByUserIncludeDisplaySequenceAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            CancellationToken cancellationToken);
+
+        /// <summary>
         /// Filters, sorts, and pages shops for a user at the database level, returning only the requested page.
         /// </summary>
         Task<PagedQueryResult<Shop>> SearchByUserAsync(

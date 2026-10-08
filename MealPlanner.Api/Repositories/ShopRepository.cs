@@ -54,6 +54,21 @@ namespace MealPlanner.Api.Repositories
                 .FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
         }
 
+        public async Task<IReadOnlyList<Shop>> GetAllByUserIncludeDisplaySequenceAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            CancellationToken cancellationToken)
+        {
+            IQueryable<Shop> query = Context.Shops
+                .Include(x => x.DisplaySequence)!
+                    .ThenInclude(x => x.ProductCategory)
+                .Where(s => s.UserId == userId);
+
+            query = query.ApplyFilters(filters);
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
         public async Task<PagedQueryResult<Shop>> SearchByUserAsync(
             string userId,
             IEnumerable<FilterItem>? filters,

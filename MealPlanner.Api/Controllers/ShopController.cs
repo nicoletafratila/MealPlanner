@@ -1,8 +1,11 @@
-﻿using Common.Models;
+﻿using Common.Http;
+using Common.Models;
 using Common.Pagination;
 using MealPlanner.Api.Controllers.Resources;
 using MealPlanner.Api.Features.Shop.Commands.Add;
 using MealPlanner.Api.Features.Shop.Commands.Delete;
+using MealPlanner.Api.Features.Shop.Commands.Share;
+using MealPlanner.Api.Features.Shop.Commands.ShareAll;
 using MealPlanner.Api.Features.Shop.Commands.Update;
 using MealPlanner.Api.Features.Shop.Queries.GetEdit;
 using MealPlanner.Api.Features.Shop.Queries.Search;
@@ -92,6 +95,38 @@ namespace MealPlanner.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new DeleteCommand { Id = id };
+            var response = await _mediator.Send(command, cancellationToken);
+            return Ok(response);
+        }
+
+        [HttpPost("share")]
+        public async Task<ActionResult<CommandResponse?>> ShareAsync(
+            [FromBody] ShopShareModel model,
+            CancellationToken cancellationToken)
+        {
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            var command = new ShareCommand
+            {
+                ShopId = model.ShopId,
+                TargetUserId = model.TargetUserId,
+                AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
+            };
+            var response = await _mediator.Send(command, cancellationToken);
+            return Ok(response);
+        }
+
+        [HttpPost("shareAll")]
+        public async Task<ActionResult<CommandResponse?>> ShareAllAsync(
+            [FromBody] ShopShareAllModel model,
+            CancellationToken cancellationToken)
+        {
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            var command = new ShareAllCommand
+            {
+                TargetUserId = model.TargetUserId,
+                Filters = model.Filters,
+                AuthToken = HttpClientExtensions.GetCleanToken(authHeader)
+            };
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }

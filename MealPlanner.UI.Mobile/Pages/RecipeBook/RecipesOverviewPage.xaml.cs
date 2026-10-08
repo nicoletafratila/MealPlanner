@@ -37,7 +37,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook
 
         private async void OnShareAllTapped(object sender, EventArgs e)
         {
-            var users = await _vm.GetShareTargetUsersAsync();
+            var users = await _vm.GetShareUsersAsync();
             if (users.Count == 0)
             {
                 await this.DisplayAlertAsync(

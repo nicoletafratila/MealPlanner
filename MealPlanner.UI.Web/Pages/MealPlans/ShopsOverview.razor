@@ -25,6 +25,9 @@
                     <h2>@Resources.ShopsOverview.PageTitle</h2>
                 </td>
                 <td class="text-nowrap">
+                    <button class="btn btn-link p-0" type="button" title="@Resources.ShopsOverview.ShareAllButton" @onclick="async () => await ShareAllAsync()">
+                        <i class="bi bi-share fs-4"></i>
+                    </button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="() => New()">@Resources.ShopsOverview.NewButton</button>
                 </td>
             </tr>

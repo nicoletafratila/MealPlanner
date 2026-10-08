@@ -9,6 +9,7 @@
              Title="{x:Static res:ShopsOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{x:Static res:ShopsOverviewPage.ShareAllButton}" IconImageSource="share.png" Clicked="OnShareAllTapped" />
         <ToolbarItem Text="+" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 

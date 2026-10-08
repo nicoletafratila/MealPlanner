@@ -230,7 +230,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             }
         }
 
-        public async Task<List<ApplicationUserListModel>> GetShareTargetUsersAsync()
+        public async Task<List<ApplicationUserListModel>> GetShareUsersAsync()
             => (await applicationUserService.ListAsync())?.ToList() ?? [];
 
         public async Task ShareAllToUserAsync(string targetUserId)

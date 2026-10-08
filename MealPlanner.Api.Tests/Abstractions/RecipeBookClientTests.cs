@@ -67,7 +67,7 @@ namespace MealPlanner.Api.Tests.Abstractions
                 .Respond("application/json", JsonSerializer.Serialize(categories, JsonOptions));
 
             // Act
-            var result = await client.GetCategoriesAsync("1,2", "tok", CancellationToken.None);
+            var result = await client.GetRecipeCategoriesAsync("1,2", "tok", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -91,7 +91,7 @@ namespace MealPlanner.Api.Tests.Abstractions
                 .Respond("application/json", "[]");
 
             // Act
-            var result = await client.GetCategoriesAsync("1,2", "tok", CancellationToken.None);
+            var result = await client.GetRecipeCategoriesAsync("1,2", "tok", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -146,6 +146,62 @@ namespace MealPlanner.Api.Tests.Abstractions
 
             // Act
             var result = await client.GetProductCategoriesAsync("10,11", "tok", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Empty);
+
+            mockHttp.VerifyNoOutstandingExpectation();
+            mockHttp.VerifyNoOutstandingRequest();
+        }
+
+        // -------- ResolveShareProductCategoriesAsync --------
+        [Test]
+        public async Task ResolveShareProductCategoriesAsync_CallsCorrectUrlAndReturnsMap()
+        {
+            // Arrange
+            var (client, mockHttp) = CreateClient();
+
+            var sourceId1 = Guid.NewGuid();
+            var sourceId2 = Guid.NewGuid();
+            var targetId1 = Guid.NewGuid();
+            var targetId2 = Guid.NewGuid();
+
+            var map = new Dictionary<Guid, Guid> { [sourceId1] = targetId1, [sourceId2] = targetId2 };
+
+            var url = $"{BaseAddress}{ProductCategoryPath}/resolveshare";
+
+            mockHttp.When(HttpMethod.Post, url)
+                .WithHeaders("Authorization", "Bearer tok")
+                .Respond("application/json", JsonSerializer.Serialize(map, JsonOptions));
+
+            // Act
+            var result = await client.ResolveShareProductCategoriesAsync([sourceId1, sourceId2], "user2", "tok", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result![sourceId1], Is.EqualTo(targetId1));
+            Assert.That(result[sourceId2], Is.EqualTo(targetId2));
+
+            mockHttp.VerifyNoOutstandingExpectation();
+            mockHttp.VerifyNoOutstandingRequest();
+        }
+
+        [Test]
+        public async Task ResolveShareProductCategoriesAsync_EmptyResponse_ReturnsEmptyMap()
+        {
+            // Arrange
+            var (client, mockHttp) = CreateClient();
+
+            var url = $"{BaseAddress}{ProductCategoryPath}/resolveshare";
+
+            mockHttp.When(HttpMethod.Post, url)
+                .WithHeaders("Authorization", "Bearer tok")
+                .Respond("application/json", "{}");
+
+            // Act
+            var result = await client.ResolveShareProductCategoriesAsync([Guid.NewGuid()], "user2", "tok", CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);

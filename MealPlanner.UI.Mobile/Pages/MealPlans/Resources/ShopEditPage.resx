@@ -66,4 +66,22 @@
   <data name="EmptyCategories" xml:space="preserve">
     <value>No product categories found.</value>
   </data>
+  <data name="SelectShareUserTitle" xml:space="preserve">
+    <value>Share with user</value>
+  </data>
+  <data name="PlaceholderSearchUsers" xml:space="preserve">
+    <value>Type to search by name...</value>
+  </data>
+  <data name="EmptyUsersLabel" xml:space="preserve">
+    <value>No users found</value>
+  </data>
+  <data name="ShareNoUsersMessage" xml:space="preserve">
+    <value>There are no other users to share this shop with.</value>
+  </data>
+  <data name="OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ShareSucceeded" xml:space="preserve">
+    <value>The shop has been shared successfully</value>
+  </data>
 </root>

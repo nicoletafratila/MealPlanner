@@ -44,7 +44,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             Assert.That(result, Is.Empty);
 
             recipeBookClientMock.Verify(
-                c => c.GetCategoriesAsync(
+                c => c.GetRecipeCategoriesAsync(
                     It.IsAny<string>(),
                     It.IsAny<string?>(),
                     It.IsAny<CancellationToken>()),
@@ -70,7 +70,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             };
 
             recipeBookClientMock
-                .Setup(c => c.GetCategoriesAsync(
+                .Setup(c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()))
@@ -87,7 +87,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 Times.Never);
 
             recipeBookClientMock.Verify(
-                c => c.GetCategoriesAsync(
+                c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()),
@@ -117,7 +117,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             };
 
             recipeBookClientMock
-                .Setup(c => c.GetCategoriesAsync(
+                .Setup(c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()))
@@ -173,7 +173,7 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
             }
 
             recipeBookClientMock.Verify(
-                c => c.GetCategoriesAsync(
+                c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
                     It.IsAny<CancellationToken>()),

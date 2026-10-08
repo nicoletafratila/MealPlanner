@@ -6,6 +6,7 @@ using Moq;
 using RecipeBook.Api.Controllers;
 using RecipeBook.Api.Features.ProductCategory.Commands.Add;
 using RecipeBook.Api.Features.ProductCategory.Commands.Delete;
+using RecipeBook.Api.Features.ProductCategory.Commands.ResolveShare;
 using RecipeBook.Api.Features.ProductCategory.Commands.Update;
 using RecipeBook.Api.Features.ProductCategory.Queries.GetEdit;
 using RecipeBook.Api.Features.ProductCategory.Queries.Search;
@@ -104,6 +105,28 @@ namespace RecipeBook.Api.Tests.Controllers
             Assert.That(ok!.Value, Is.SameAs(models));
 
             _senderMock.Verify(m => m.Send(It.IsAny<SearchByCategoriesQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ResolveShareAsync_SendsResolveShareCommand()
+        {
+            var id1 = Guid.NewGuid();
+            var expectedMap = new Dictionary<Guid, Guid> { [id1] = Guid.NewGuid() };
+            var model = new ProductCategoryResolveShareModel { CategoryIds = [id1], TargetUserId = "user2" };
+
+            _senderMock
+                .Setup(m => m.Send(
+                    It.Is<ResolveShareCommand>(c => c.CategoryIds.SequenceEqual(model.CategoryIds) && c.TargetUserId == model.TargetUserId),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMap);
+
+            var result = await _controller.ResolveShareAsync(model, CancellationToken.None);
+
+            var ok = result.Result as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+            Assert.That(ok!.Value, Is.SameAs(expectedMap));
+
+            _senderMock.Verify(m => m.Send(It.IsAny<ResolveShareCommand>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]

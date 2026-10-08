@@ -690,9 +690,9 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             }
         }
 
-        // ---------- GetShareTargetUsersAsync ----------
+        // ---------- GetShareUsersAsync ----------
         [Test]
-        public async Task GetShareTargetUsersAsync_ReturnsUsersFromService()
+        public async Task GetShareUsersAsync_ReturnsUsersFromService()
         {
             var users = new List<ApplicationUserListModel> { new() { UserId = "2", Username = "bob" } };
 
@@ -700,19 +700,19 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 .Setup(s => s.ListAsync(CancellationToken.None))
                 .ReturnsAsync(users);
 
-            var result = await _viewModel.GetShareTargetUsersAsync();
+            var result = await _viewModel.GetShareUsersAsync();
 
             Assert.That(result, Is.EquivalentTo(users));
         }
 
         [Test]
-        public async Task GetShareTargetUsersAsync_NullFromService_ReturnsEmptyList()
+        public async Task GetShareUsersAsync_NullFromService_ReturnsEmptyList()
         {
             _applicationUserServiceMock
                 .Setup(s => s.ListAsync(CancellationToken.None))
                 .ReturnsAsync((IList<ApplicationUserListModel>?)null);
 
-            var result = await _viewModel.GetShareTargetUsersAsync();
+            var result = await _viewModel.GetShareUsersAsync();
 
             Assert.That(result, Is.Empty);
         }

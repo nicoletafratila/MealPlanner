@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
@@ -9,7 +11,10 @@ using MealPlanner.UI.Mobile.Services;
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
     [QueryProperty(nameof(ShopId), "id")]
-    public partial class ShopEditViewModel(IShopService shopService, ReferenceDataCacheService lookupDataService) : BaseViewModel
+    public partial class ShopEditViewModel(
+        IShopService shopService,
+        IApplicationUserService applicationUserService,
+        ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         [ObservableProperty]
         private string _shopId = string.Empty;
@@ -108,6 +113,35 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 Guid.TryParse(ShopId, out var deleteId);
                 var result = await shopService.DeleteAsync(deleteId);
                 if (result?.Succeeded == true) await Shell.Current.GoToAsync("..");
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public async Task<List<ApplicationUserListModel>> GetShareUsersAsync()
+            => (await applicationUserService.ListAsync())?.ToList() ?? [];
+
+        public async Task ShareToUserAsync(string targetUserId)
+        {
+            if (IsNew || IsBusy || string.IsNullOrWhiteSpace(targetUserId)) return;
+            ClearMessages();
+            IsBusy = true;
+            try
+            {
+                Guid.TryParse(ShopId, out var id);
+                var result = await shopService.ShareAsync(id, targetUserId);
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateShops();
+                    SetSuccess(Pages.MealPlans.Resources.ShopEditPage.ShareSucceeded);
+                }
                 else SetError(result?.Message);
             }
             catch (Exception ex)

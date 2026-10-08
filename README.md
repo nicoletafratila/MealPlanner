@@ -3,7 +3,7 @@ add missing products after recipes share
 
 
 
-share my shops to another user
+
 share one product
 job to share recipes C:\Users\nfratila\.claude\plans\wondrous-nibbling-dusk.md f
 make admin see all

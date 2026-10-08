@@ -37,7 +37,7 @@ namespace MealPlanner.Api.Features.Statistics.Queries.SearchRecipes
             }
 
             var categories = await _recipeBookClient
-                .GetCategoriesAsync(request.CategoryIds!, request.AuthToken, cancellationToken);
+                .GetRecipeCategoriesAsync(request.CategoryIds!, request.AuthToken, cancellationToken);
 
             if (categories is null || !categories.Any())
             {
