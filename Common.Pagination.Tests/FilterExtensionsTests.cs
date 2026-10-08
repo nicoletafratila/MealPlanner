@@ -1,4 +1,5 @@
-﻿using RecipeBook.Shared.Models;
+﻿using System.Text.Json;
+using RecipeBook.Shared.Models;
 
 namespace Common.Pagination.Tests
 {
@@ -414,6 +415,56 @@ namespace Common.Pagination.Tests
 
             Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result[0].CategoryId, Is.EqualTo(matchingId));
+        }
+
+        [Test]
+        public void Equals_Guid_Works_With_JsonElement_StringValue()
+        {
+            // Reproduces a FilterItem.Value deserialized from a [FromBody] request via
+            // System.Text.Json, which boxes an object-typed property as a JsonElement
+            // instead of a plain string.
+            var matchingId = Guid.NewGuid();
+            var data = new[]
+            {
+                new GuidItem(matchingId),
+                new GuidItem(Guid.NewGuid())
+            };
+
+            using var document = JsonDocument.Parse($"\"{matchingId}\"");
+            var filter = new FilterItem(
+                propertyName: nameof(GuidItem.CategoryId),
+                value: document.RootElement,
+                @operator: FilterOperator.Equals,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var predicate = filter.ConvertFilterItemToFunc<GuidItem>();
+            var result = data.Where(predicate).ToArray();
+
+            Assert.That(result, Has.Length.EqualTo(1));
+            Assert.That(result[0].CategoryId, Is.EqualTo(matchingId));
+        }
+
+        [Test]
+        public void GreaterThan_Int_Works_With_JsonElement_NumberValue()
+        {
+            var data = new[]
+            {
+                new RecipeModel { Index = 1 },
+                new RecipeModel { Index = 3 },
+                new RecipeModel { Index = 5 }
+            };
+
+            using var document = JsonDocument.Parse("3");
+            var filter = new FilterItem(
+                propertyName: nameof(RecipeModel.Index),
+                value: document.RootElement,
+                @operator: FilterOperator.GreaterThan,
+                stringComparison: StringComparison.OrdinalIgnoreCase);
+
+            var predicate = filter.ConvertFilterItemToFunc<RecipeModel>();
+            var result = data.Where(predicate).Select(x => x.Index).ToArray();
+
+            Assert.That(result, Is.EquivalentTo([5]));
         }
 
         [Test]

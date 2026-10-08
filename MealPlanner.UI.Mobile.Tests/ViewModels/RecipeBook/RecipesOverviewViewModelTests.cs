@@ -560,7 +560,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         {
             await _viewModel.ShareAllToUserAsync(string.Empty);
 
-            _recipeServiceMock.Verify(s => s.ShareAllAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _recipeServiceMock.Verify(s => s.ShareAllAsync(It.IsAny<string>(), It.IsAny<IEnumerable<FilterItem>?>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -570,14 +570,14 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
 
             await _viewModel.ShareAllToUserAsync("user2");
 
-            _recipeServiceMock.Verify(s => s.ShareAllAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _recipeServiceMock.Verify(s => s.ShareAllAsync(It.IsAny<string>(), It.IsAny<IEnumerable<FilterItem>?>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
         public async Task ShareAllToUserAsync_ServiceSucceeds_SetsSuccessMessage_AndClearsBusy()
         {
             _recipeServiceMock
-                .Setup(s => s.ShareAllAsync("user2", CancellationToken.None))
+                .Setup(s => s.ShareAllAsync("user2", null, CancellationToken.None))
                 .ReturnsAsync(CommandResponse.Success());
 
             await _viewModel.ShareAllToUserAsync("user2");
@@ -591,10 +591,32 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
+        public async Task ShareAllToUserAsync_WithActiveSearchFilter_PassesFilterToService()
+        {
+            _viewModel.SearchText = "Soup";
+
+            IEnumerable<FilterItem>? capturedFilters = null;
+            _recipeServiceMock
+                .Setup(s => s.ShareAllAsync("user2", It.IsAny<IEnumerable<FilterItem>?>(), CancellationToken.None))
+                .Callback<string, IEnumerable<FilterItem>?, CancellationToken>((_, filters, _) => capturedFilters = filters)
+                .ReturnsAsync(CommandResponse.Success());
+
+            await _viewModel.ShareAllToUserAsync("user2");
+
+            Assert.That(capturedFilters, Is.Not.Null);
+            var filter = capturedFilters!.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(filter.PropertyName, Is.EqualTo("Name"));
+                Assert.That(filter.Value, Is.EqualTo("Soup"));
+            }
+        }
+
+        [Test]
         public async Task ShareAllToUserAsync_ServiceReturnsFailure_SetsErrorFromResponseMessage()
         {
             _recipeServiceMock
-                .Setup(s => s.ShareAllAsync("user2", CancellationToken.None))
+                .Setup(s => s.ShareAllAsync("user2", null, CancellationToken.None))
                 .ReturnsAsync(CommandResponse.Failed("share rejected"));
 
             await _viewModel.ShareAllToUserAsync("user2");
@@ -610,7 +632,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         public async Task ShareAllToUserAsync_ServiceThrows_SetsErrorMessage()
         {
             _recipeServiceMock
-                .Setup(s => s.ShareAllAsync("user2", CancellationToken.None))
+                .Setup(s => s.ShareAllAsync("user2", null, CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("boom"));
 
             await _viewModel.ShareAllToUserAsync("user2");

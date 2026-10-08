@@ -1,9 +1,11 @@
 using Common.Data.DataContext;
 using Common.Pagination;
+using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Data.Entities;
+using RecipeBook.Data.TableConfigurations;
 
 namespace RecipeBook.Api.Tests.Repositories
 {
@@ -16,6 +18,11 @@ namespace RecipeBook.Api.Tests.Repositories
         public void SetUp()
         {
             var services = new ServiceCollection();
+
+            services.AddSingleton(new TableConfigurationAssemblies([
+                typeof(RecipeTableConfiguration).Assembly,
+                typeof(MealPlanTableConfiguration).Assembly
+            ]));
 
             services.AddDbContext<MealPlannerDbContext>(options =>
                 options.UseInMemoryDatabase("RecipeRepositoryTests_" + TestContext.CurrentContext.Test.ID));
@@ -206,6 +213,83 @@ namespace RecipeBook.Api.Tests.Repositories
 
             // Assert
             Assert.That(found, Is.Null);
+        }
+
+        // ---------- GetAllByUserIncludeIngredientsAsync ----------
+        [Test]
+        public async Task GetAllByUserIncludeIngredientsAsync_ReturnsOnlyRecipesForThatUser_WithIngredientsAndIncludes()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "R2", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = "user1";
+            r2.UserId = "user2";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserIncludeIngredientsAsync("user1", null, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            var recipe = result.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(recipe.Name, Is.EqualTo("R1"));
+                Assert.That(recipe.RecipeCategory, Is.Not.Null);
+                Assert.That(recipe.RecipeIngredients, Has.Count.EqualTo(1));
+            }
+
+            var ingredient = recipe.RecipeIngredients!.Single();
+            Assert.That(ingredient.Product, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(ingredient.Product!.ProductCategory, Is.Not.Null);
+                Assert.That(ingredient.Product!.BaseUnit, Is.Not.Null);
+                Assert.That(ingredient.Unit, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public async Task GetAllByUserIncludeIngredientsAsync_NoMatches_ReturnsEmptyList()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "R1", RecipeCategoryGuid(10), "Main");
+            r1.UserId = "user2";
+            ctx.Recipes.Add(r1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.GetAllByUserIncludeIngredientsAsync("user1", null, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public async Task GetAllByUserIncludeIngredientsAsync_WithFilters_ReturnsOnlyMatchingRecipes()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var r1 = CreateRecipeGraph(RecipeGuid(1), "My Recipe", RecipeCategoryGuid(10), "Main");
+            var r2 = CreateRecipeGraph(RecipeGuid(2), "Other", RecipeCategoryGuid(20), "Dessert");
+            r1.UserId = r2.UserId = "user1";
+            ctx.Recipes.AddRange(r1, r2);
+            await ctx.SaveChangesAsync();
+
+            var filters = new[] { new FilterItem(nameof(Recipe.Name), "My Recipe", FilterOperator.Contains) };
+
+            // Act
+            var result = await repo.GetAllByUserIncludeIngredientsAsync("user1", filters, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.Single().Name, Is.EqualTo("My Recipe"));
         }
 
         // ---------- SearchAsync by category ----------

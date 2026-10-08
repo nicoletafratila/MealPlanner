@@ -141,7 +141,7 @@ namespace RecipeBook.Api.Controllers
             [FromBody] RecipeShareAllModel model,
             CancellationToken cancellationToken)
         {
-            var command = new ShareAllCommand { TargetUserId = model.TargetUserId };
+            var command = new ShareAllCommand { TargetUserId = model.TargetUserId, Filters = model.Filters };
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }

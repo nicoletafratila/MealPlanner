@@ -527,7 +527,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _recipeServiceMock.Verify(
-                s => s.ShareAllAsync(It.IsAny<string>(), CancellationToken.None),
+                s => s.ShareAllAsync(It.IsAny<string>(), null, CancellationToken.None),
                 Times.Never);
         }
 
@@ -554,7 +554,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             // Assert
             _recipeServiceMock.Verify(
-                s => s.ShareAllAsync(It.IsAny<string>(), CancellationToken.None),
+                s => s.ShareAllAsync(It.IsAny<string>(), null, CancellationToken.None),
                 Times.Never);
         }
 
@@ -571,7 +571,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
 
             _recipeServiceMock
-                .Setup(s => s.ShareAllAsync(targetUserId, CancellationToken.None))
+                .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
                 .ReturnsAsync(new CommandResponse { Succeeded = true });
 
             var cut = RenderWithModalService(modalServiceMock.Object);
@@ -586,10 +586,60 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             });
 
             // Assert
-            _recipeServiceMock.Verify(s => s.ShareAllAsync(targetUserId, CancellationToken.None), Times.Once);
+            _recipeServiceMock.Verify(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync("All recipes have been shared successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task ShareAllAsync_WithStoredGridFilter_PassesFilterToService()
+        {
+            // Arrange
+            const string targetUserId = "user2";
+
+            var storedParameters = new QueryParameters<RecipeModel>
+            {
+                Filters = [new Common.Pagination.FilterItem("Name", "Soup", Common.Pagination.FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)],
+                Sorting = [],
+                PageNumber = 1,
+                PageSize = 20
+            };
+            _sessionStorageMock
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Newtonsoft.Json.JsonConvert.SerializeObject(storedParameters));
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            IEnumerable<Common.Pagination.FilterItem>? capturedFilters = null;
+            _recipeServiceMock
+                .Setup(s => s.ShareAllAsync(targetUserId, It.IsAny<IEnumerable<Common.Pagination.FilterItem>?>(), CancellationToken.None))
+                .Callback<string, IEnumerable<Common.Pagination.FilterItem>?, CancellationToken>((_, filters, _) => capturedFilters = filters)
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderWithModalService(modalServiceMock.Object);
+
+            var method = typeof(RecipesOverview).GetMethod("ShareAllAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(capturedFilters, Is.Not.Null);
+            var filter = capturedFilters!.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(filter.PropertyName, Is.EqualTo("Name"));
+                Assert.That(filter.Value, Is.EqualTo("Soup"));
+            }
         }
 
         [Test]
@@ -605,7 +655,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
 
             _recipeServiceMock
-                .Setup(s => s.ShareAllAsync(targetUserId, CancellationToken.None))
+                .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
                 .ReturnsAsync((CommandResponse?)null);
 
             var cut = RenderWithModalService(modalServiceMock.Object);
@@ -638,7 +688,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
 
             _recipeServiceMock
-                .Setup(s => s.ShareAllAsync(targetUserId, CancellationToken.None))
+                .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
                 .ReturnsAsync(CommandResponse.Failed("Name clash could not be resolved"));
 
             var cut = RenderWithModalService(modalServiceMock.Object);

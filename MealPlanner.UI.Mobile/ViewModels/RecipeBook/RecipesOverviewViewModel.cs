@@ -240,7 +240,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             IsBusy = true;
             try
             {
-                var result = await recipeService.ShareAllAsync(targetUserId);
+                var filters = BuildFilters();
+                var result = await recipeService.ShareAllAsync(targetUserId, filters.Count > 0 ? filters : null);
                 if (result?.Succeeded == true)
                 {
                     lookupDataService.InvalidateRecipes();

@@ -58,7 +58,7 @@ namespace Identity.Api.Tests.Features.Email
             _emailSectionMock.Setup(s => s["Password"]).Returns("smtp-pass");
 
             _configurationMock = new Mock<IConfiguration>(MockBehavior.Loose);
-            _configurationMock.Setup(c => c["IdentityApi:BaseUrl"]).Returns("https://localhost:6001");
+            _configurationMock.Setup(c => c["IdentityApi:BaseUrl"]).Returns("https://localhost:6001/");
             _configurationMock.Setup(c => c.GetSection("Email")).Returns(_emailSectionMock.Object);
 
             _environmentMock = new Mock<IWebHostEnvironment>(MockBehavior.Loose);

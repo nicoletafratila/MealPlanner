@@ -20,6 +20,11 @@ namespace Common.Data.Repository
         Task<T> AddAsync(T entity, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Adds a batch of new entities in a single SaveChanges call and returns the persisted instances.
+        /// </summary>
+        Task<IReadOnlyList<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Updates an existing entity.
         /// </summary>
         Task UpdateAsync(T entity, CancellationToken cancellationToken);

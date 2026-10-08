@@ -233,8 +233,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
                 .ToList() ?? [];
 
-            if (!string.IsNullOrWhiteSpace(RecipeCategoryFilterId))
-                filters.Add(new Common.Pagination.FilterItem("RecipeCategoryId", RecipeCategoryFilterId, Common.Pagination.FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
+            AddCategoryFilter(filters);
 
             var queryParameters = new QueryParameters<RecipeModel>
             {
@@ -338,7 +337,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             if (!result.Confirmed || result.Data is not string targetUserId || string.IsNullOrWhiteSpace(targetUserId))
                 return;
 
-            var response = await RecipeService.ShareAllAsync(targetUserId);
+            var filters = await GetCurrentFiltersAsync();
+
+            var response = await RecipeService.ShareAllAsync(targetUserId, filters);
             if (response is null)
             {
                 await ShowErrorAsync(Resources.RecipesOverview.ShareAllFailedMessage);
@@ -352,6 +353,22 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             await ShowInfoAsync(Resources.RecipesOverview.ShareAllSucceeded);
+        }
+
+        private async Task<List<Common.Pagination.FilterItem>?> GetCurrentFiltersAsync()
+        {
+            var stored = await SessionStorage.GetItemAsync<QueryParameters<RecipeModel>>();
+            var filters = stored?.Filters?.ToList() ?? [];
+
+            AddCategoryFilter(filters);
+
+            return filters.Count > 0 ? filters : null;
+        }
+
+        private void AddCategoryFilter(List<Common.Pagination.FilterItem> filters)
+        {
+            if (!string.IsNullOrWhiteSpace(RecipeCategoryFilterId))
+                filters.Add(new Common.Pagination.FilterItem("RecipeCategoryId", RecipeCategoryFilterId, Common.Pagination.FilterOperator.Equals, StringComparison.OrdinalIgnoreCase));
         }
 
         private async Task ShowErrorAsync(string message)

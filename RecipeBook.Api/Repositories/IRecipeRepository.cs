@@ -17,6 +17,14 @@ namespace RecipeBook.Api.Repositories
         Task<Recipe?> GetByIdIncludeIngredientsAsync(Guid? id, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Gets the recipes for a user, including their ingredients and referenced products, optionally narrowed by filters.
+        /// </summary>
+        Task<IReadOnlyList<Recipe>> GetAllByUserIncludeIngredientsAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            CancellationToken cancellationToken);
+
+        /// <summary>
         /// Gets all recipes in a given category.
         /// </summary>
         Task<IReadOnlyList<Recipe>> SearchAsync(Guid categoryId, CancellationToken cancellationToken);

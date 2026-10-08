@@ -39,7 +39,6 @@ else
             <table class="table logs-table">
                 <thead>
                     <tr>
-                        <th>@nameof(LogModel.Id)</th>
                         <th>@nameof(LogModel.Timestamp)</th>
                         <th>@nameof(LogModel.Level)</th>
                         <th>@nameof(LogModel.Message)</th>
@@ -50,7 +49,6 @@ else
                     @foreach (var log in Logs)
                     {
                         <tr>
-                            <td>@log.Id</td>
                             <td>@log.Timestamp</td>
                             <td>
                                 <span class="text-@LogEventLevelHelper.GetBootstrapUIClass(log.Level)">

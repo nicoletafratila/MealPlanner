@@ -651,6 +651,39 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
+        public async Task ShareAllAsync_WithFilters_IncludesFiltersInPostedModel()
+        {
+            // Arrange
+            const string targetUserId = "user2";
+            var filters = new List<FilterItem> { new("Name", "Soup", FilterOperator.Contains, StringComparison.OrdinalIgnoreCase) };
+            var expectedResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            RecipeShareAllModel? captured = null;
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareAll")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    captured = JsonSerializer.Deserialize<RecipeShareAllModel>(body, JsonOptions);
+                    return captured is not null;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            // Act
+            await service.ShareAllAsync(targetUserId, filters);
+
+            // Assert
+            Assert.That(captured, Is.Not.Null);
+            Assert.That(captured!.Filters, Is.Not.Null);
+            Assert.That(captured.Filters!.Single().PropertyName, Is.EqualTo("Name"));
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
         public void ShareAllAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange

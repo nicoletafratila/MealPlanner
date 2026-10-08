@@ -79,6 +79,25 @@ namespace RecipeBook.Api.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id.Value, cancellationToken);
         }
 
+        public async Task<IReadOnlyList<Recipe>> GetAllByUserIncludeIngredientsAsync(
+            string userId,
+            IEnumerable<FilterItem>? filters,
+            CancellationToken cancellationToken)
+        {
+            IQueryable<Recipe> query = Context.Recipes
+                .Include(x => x.RecipeCategory)
+                .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Product)!.ThenInclude(p => p!.ProductCategory)
+                .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Product)!.ThenInclude(p => p!.BaseUnit)
+                .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Product)
+                .Include(x => x.RecipeIngredients)!.ThenInclude(ri => ri.Unit)
+                .Where(x => x.UserId == userId);
+
+            var remappedFilters = filters.RemapPropertyName("RecipeCategoryName", "RecipeCategory.Name");
+            query = query.ApplyFilters(remappedFilters);
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
         public async Task<IReadOnlyList<Recipe>> SearchAsync(
             Guid categoryId,
             CancellationToken cancellationToken)

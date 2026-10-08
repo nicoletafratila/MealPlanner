@@ -148,6 +148,59 @@ namespace Common.Data.Repository.Tests
         }
 
         [Test]
+        public async Task AddRangeAsync_PersistsAllEntities_InASingleSaveChangesCall()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var entities = new List<TestEntity>
+            {
+                new() { Name = "Entity1" },
+                new() { Name = "Entity2" }
+            };
+
+            // Act
+            var added = await repo.AddRangeAsync(entities, CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(added, Has.Count.EqualTo(2));
+                Assert.That(added.All(e => e.Id != 0), Is.True);
+                Assert.That(ctx.TestEntities.Count(), Is.EqualTo(2));
+                Assert.That(ctx.TestEntities.Select(e => e.Name), Is.EquivalentTo(["Entity1", "Entity2"]));
+            }
+        }
+
+        [Test]
+        public async Task AddRangeAsync_EmptyCollection_DoesNotPersistAnything()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            // Act
+            var added = await repo.AddRangeAsync([], CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(added, Is.Empty);
+                Assert.That(ctx.TestEntities.Count(), Is.Zero);
+            }
+        }
+
+        [Test]
+        public void AddRangeAsync_ThrowsArgumentNullException_WhenEntitiesNull()
+        {
+            var repo = CreateRepository(out _);
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            {
+                await repo.AddRangeAsync(null!, CancellationToken.None);
+            });
+        }
+
+        [Test]
         public void AddAsync_ThrowsArgumentNullException_WhenEntityNull()
         {
             var repo = CreateRepository(out _);

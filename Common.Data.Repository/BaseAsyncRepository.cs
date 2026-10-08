@@ -31,6 +31,19 @@ namespace Common.Data.Repository
             return entity;
         }
 
+        public virtual async Task<IReadOnlyList<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(entities);
+
+            var entityList = entities as IReadOnlyList<T> ?? entities.ToList();
+            if (entityList.Count == 0)
+                return entityList;
+
+            await DbContext.Set<T>().AddRangeAsync(entityList, cancellationToken);
+            await DbContext.SaveChangesAsync(cancellationToken);
+            return entityList;
+        }
+
         public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(entity);

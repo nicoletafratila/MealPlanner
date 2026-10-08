@@ -224,6 +224,27 @@ namespace RecipeBook.Api.Tests.Controllers
         }
 
         [Test]
+        public async Task ShareAllAsync_WithFilters_PassesThemToTheCommand()
+        {
+            var filters = new List<FilterItem> { new("Name", "Soup", FilterOperator.Contains) };
+            var model = new RecipeShareAllModel { TargetUserId = "user2", Filters = filters };
+            var response = CommandResponse.Success();
+
+            _senderMock
+                .Setup(m => m.Send(It.Is<ShareAllCommand>(c => c.TargetUserId == "user2" && c.Filters == filters), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            var result = await _controller.ShareAllAsync(model, CancellationToken.None);
+
+            var ok = result.Result as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+
+            _senderMock.Verify(
+                m => m.Send(It.Is<ShareAllCommand>(c => c.Filters == filters), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
         public async Task DeleteAsync_SendsDeleteCommand_WithToken()
         {
             var response = CommandResponse.Success();

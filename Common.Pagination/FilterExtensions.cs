@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Text.Json;
 
 namespace Common.Pagination
 {
@@ -45,6 +46,19 @@ namespace Common.Pagination
             bool isNullable = underlyingType != propertyType;
 
             object? filterValue = filter.Value;
+            if (filterValue is JsonElement element)
+            {
+                filterValue = element.ValueKind switch
+                {
+                    JsonValueKind.String => element.GetString(),
+                    JsonValueKind.Number => element.TryGetInt64(out var longValue) ? longValue : element.GetDouble(),
+                    JsonValueKind.True => true,
+                    JsonValueKind.False => false,
+                    JsonValueKind.Null => null,
+                    _ => throw new NotSupportedException($"Unsupported filter value kind {element.ValueKind}.")
+                };
+            }
+
             if (filterValue is not null && underlyingType != filterValue.GetType())
             {
                 if (underlyingType.IsEnum && filterValue is string enumString)
