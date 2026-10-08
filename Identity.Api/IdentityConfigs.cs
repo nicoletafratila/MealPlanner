@@ -9,9 +9,8 @@ namespace Identity.Api
         private const string ClientId = "mealplanner_client";
         private const string ApiName = Common.Constants.MealPlanner.ApiScope;
         private const string ApiDisplayName = "MealPlanner API";
-        private static readonly string SigningKey = Common.Constants.MealPlanner.SigningKey;
 
-        public static IEnumerable<Client> GetClients() =>
+        public static IEnumerable<Client> GetClients(string signingKey) =>
             [
                 new Client
                 {
@@ -19,7 +18,7 @@ namespace Identity.Api
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets =
                     {
-                        new Secret(SigningKey.Sha256())
+                        new Secret(signingKey.Sha256())
                     },
                     AllowedScopes =
                     {

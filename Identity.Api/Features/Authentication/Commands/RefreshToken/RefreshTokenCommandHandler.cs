@@ -13,10 +13,12 @@ namespace Identity.Api.Features.Authentication.Commands.RefreshToken
     public class RefreshTokenCommandHandler(
         UserManager<Data.Entities.ApplicationUser> userManager,
         MealPlannerDbContext dbContext,
+        IConfiguration configuration,
         ILogger<RefreshTokenCommandHandler> logger) : IRequestHandler<RefreshTokenCommand, CommandResponse?>
     {
         private readonly UserManager<Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly MealPlannerDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        private readonly IConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         private readonly ILogger<RefreshTokenCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -52,7 +54,7 @@ namespace Identity.Api.Features.Authentication.Commands.RefreshToken
 
                 var roles = await _userManager.GetRolesAsync(user);
                 var claims = JwtTokenFactory.GetClaims(user, roles);
-                var jwt = JwtTokenFactory.GenerateJwtToken(claims);
+                var jwt = JwtTokenFactory.GenerateJwtToken(claims, _configuration["Jwt:SigningKey"]!);
 
                 return new LoginCommandResponse
                 {

@@ -9,10 +9,10 @@ namespace Identity.Api.Features.Authentication
 {
     public static class JwtTokenFactory
     {
-        public static string GenerateJwtToken(IList<Claim> claims)
+        public static string GenerateJwtToken(IList<Claim> claims, string signingKey)
         {
             var expiration = DateTimeOffset.UtcNow.AddHours(1);
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

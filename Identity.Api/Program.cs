@@ -10,7 +10,8 @@ namespace Identity.Api
         {
             var host = CreateHostBuilder(args).Build();
             using var scope = host.Services.CreateScope();
-            await SeedData.EnsureSeedDataAsync(scope);
+            var environment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+            await SeedData.EnsureSeedDataAsync(scope, environment.IsDevelopment());
             host.Run();
         }
 

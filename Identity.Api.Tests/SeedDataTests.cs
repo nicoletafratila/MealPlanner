@@ -59,7 +59,7 @@ namespace Identity.Api.Tests
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             // Act
-            await SeedData.EnsureSeedDataAsync(scope);
+            await SeedData.EnsureSeedDataAsync(scope, seedDemoUsers: true);
 
             using (Assert.EnterMultipleScope())
             {
@@ -122,11 +122,11 @@ namespace Identity.Api.Tests
             var ctx2 = scope2.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
 
             // Act
-            await SeedData.EnsureSeedDataAsync(scope1);
+            await SeedData.EnsureSeedDataAsync(scope1, seedDemoUsers: true);
             var usersCountFirst = ctx1.Users.Count();
             var rolesCountFirst = ctx1.Roles.Count();
 
-            await SeedData.EnsureSeedDataAsync(scope2);
+            await SeedData.EnsureSeedDataAsync(scope2, seedDemoUsers: true);
             var usersCountSecond = ctx2.Users.Count();
             var rolesCountSecond = ctx2.Roles.Count();
 
@@ -135,6 +135,26 @@ namespace Identity.Api.Tests
                 // Assert
                 Assert.That(usersCountSecond, Is.EqualTo(usersCountFirst), "User count should not grow on second run.");
                 Assert.That(rolesCountSecond, Is.EqualTo(rolesCountFirst), "Role count should not grow on second run.");
+            }
+        }
+
+        [Test]
+        public async Task EnsureSeedDataAsync_SeedsRolesButNotDemoUsers_WhenSeedDemoUsersIsFalse()
+        {
+            // Arrange
+            using var scope = _provider.CreateScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            // Act
+            await SeedData.EnsureSeedDataAsync(scope, seedDemoUsers: false);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(await roleManager.RoleExistsAsync("admin"), Is.True, "Admin role should still be seeded.");
+                Assert.That(await roleManager.RoleExistsAsync("member"), Is.True, "Member role should still be seeded.");
+                Assert.That(await userManager.FindByNameAsync("admin"), Is.Null, "Demo admin user should not be seeded outside Development.");
+                Assert.That(await userManager.FindByNameAsync("member"), Is.Null, "Demo member user should not be seeded outside Development.");
             }
         }
     }

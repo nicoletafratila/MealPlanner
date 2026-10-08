@@ -6,6 +6,7 @@ using Identity.Shared.Models;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Data.TableConfigurations;
@@ -17,6 +18,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
     {
         private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
         private Mock<SignInManager<Data.Entities.ApplicationUser>> _signInManagerMock = null!;
+        private IConfiguration _configuration = null!;
         private Mock<ILogger<LoginCommandHandler>> _loggerMock = null!;
         private MealPlannerDbContext _dbContext = null!;
         private LoginCommandHandler _handler = null!;
@@ -36,6 +38,10 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
 
             _loggerMock = new Mock<ILogger<LoginCommandHandler>>(MockBehavior.Loose);
 
+            _configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?> { ["Jwt:SigningKey"] = "test-signing-key-at-least-128-bits-long" })
+                .Build();
+
             var tableConfigurationAssemblies = new TableConfigurationAssemblies([
                 typeof(RecipeTableConfiguration).Assembly,
                 typeof(MealPlanTableConfiguration).Assembly,
@@ -49,6 +55,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.Login
                 _userManagerMock.Object,
                 _signInManagerMock.Object,
                 _dbContext,
+                _configuration,
                 _loggerMock.Object);
         }
 

@@ -7,6 +7,7 @@ using Identity.Shared.Models;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Data.TableConfigurations;
@@ -17,6 +18,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.RefreshToken
     public class RefreshTokenCommandHandlerTests
     {
         private Mock<UserManager<Data.Entities.ApplicationUser>> _userManagerMock = null!;
+        private IConfiguration _configuration = null!;
         private Mock<ILogger<RefreshTokenCommandHandler>> _loggerMock = null!;
         private MealPlannerDbContext _dbContext = null!;
         private RefreshTokenCommandHandler _handler = null!;
@@ -30,6 +32,10 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.RefreshToken
 
             _loggerMock = new Mock<ILogger<RefreshTokenCommandHandler>>(MockBehavior.Loose);
 
+            _configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?> { ["Jwt:SigningKey"] = "test-signing-key-at-least-128-bits-long" })
+                .Build();
+
             var tableConfigurationAssemblies = new TableConfigurationAssemblies([
                 typeof(RecipeTableConfiguration).Assembly,
                 typeof(MealPlanTableConfiguration).Assembly,
@@ -39,7 +45,7 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.RefreshToken
                 new DbContextOptionsBuilder<MealPlannerDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options,
                 tableConfigurationAssemblies);
 
-            _handler = new RefreshTokenCommandHandler(_userManagerMock.Object, _dbContext, _loggerMock.Object);
+            _handler = new RefreshTokenCommandHandler(_userManagerMock.Object, _dbContext, _configuration, _loggerMock.Object);
         }
 
         [TearDown]

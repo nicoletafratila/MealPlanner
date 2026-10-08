@@ -3,6 +3,7 @@ using Common.Models;
 using Identity.Api.Features.Authentication.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace Identity.Api.Features.Authentication.Commands.Login
 {
@@ -13,11 +14,13 @@ namespace Identity.Api.Features.Authentication.Commands.Login
         UserManager<Data.Entities.ApplicationUser> userManager,
         SignInManager<Data.Entities.ApplicationUser> signInManager,
         MealPlannerDbContext dbContext,
+        IConfiguration configuration,
         ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, CommandResponse?>
     {
         private readonly UserManager<Data.Entities.ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         private readonly SignInManager<Data.Entities.ApplicationUser> _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         private readonly MealPlannerDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        private readonly IConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         private readonly ILogger<LoginCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<CommandResponse?> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -50,7 +53,7 @@ namespace Identity.Api.Features.Authentication.Commands.Login
                 if (result.Succeeded)
                 {
                     var claims = JwtTokenFactory.GetClaims(user, roles);
-                    var token = JwtTokenFactory.GenerateJwtToken(claims);
+                    var token = JwtTokenFactory.GenerateJwtToken(claims, _configuration["Jwt:SigningKey"]!);
 
                     string? refreshToken = null;
                     if (request.Model.RememberLogin)

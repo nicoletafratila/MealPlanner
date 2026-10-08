@@ -8,7 +8,7 @@ namespace Identity.Api.Tests
         [Test]
         public void GetClients_ShouldReturnValidClient()
         {
-            var clients = IdentityConfigs.GetClients().ToList();
+            var clients = IdentityConfigs.GetClients("test-signing-key").ToList();
 
             Assert.That(clients, Has.Count.EqualTo(1));
 

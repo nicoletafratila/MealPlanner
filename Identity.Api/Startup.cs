@@ -93,8 +93,10 @@ namespace Identity.Api
                     })
                     .AddEntityFrameworkStores<MealPlannerDbContext>()
                     .AddDefaultTokenProviders();
+            var signingKey = Configuration["Jwt:SigningKey"]!;
+
             services.AddIdentityServer()
-                    .AddInMemoryClients(IdentityConfigs.GetClients())
+                    .AddInMemoryClients(IdentityConfigs.GetClients(signingKey))
                     .AddInMemoryApiResources(IdentityConfigs.GetApiResources())
                     .AddInMemoryApiScopes(IdentityConfigs.GetApiScopes())
                     .AddInMemoryIdentityResources(IdentityConfigs.GetIdentityResources())
@@ -114,7 +116,7 @@ namespace Identity.Api
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Common.Constants.MealPlanner.Issuer,
                         ValidAudience = Common.Constants.MealPlanner.ApiScope,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey)),
                     };
                 });
             services.AddAuthorizationBuilder()

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2ba95303-3512-4afd-bc34-a4b29519d279</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

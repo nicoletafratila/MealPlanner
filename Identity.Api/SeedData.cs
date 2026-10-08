@@ -14,7 +14,7 @@ namespace Identity.Api
         private const string MemberRoleName = "member";
         private const string DefaultPassword = "Test123!";
 
-        public static async Task EnsureSeedDataAsync(IServiceScope scope)
+        public static async Task EnsureSeedDataAsync(IServiceScope scope, bool seedDemoUsers)
         {
             var context = scope.ServiceProvider.GetRequiredService<MealPlannerDbContext>();
             await context.EnsureSqlServerDatabaseCreatedAsync();
@@ -28,7 +28,9 @@ namespace Identity.Api
             await CategorySeedData.SeedProductCategoriesAsync(context);
             await CategorySeedData.SeedRecipeCategoriesAsync(context);
             await SeedRolesAsync(roleManager);
-            await SeedUsersAsync(userManager, productCategoryRepository, recipeCategoryRepository);
+
+            if (seedDemoUsers)
+                await SeedUsersAsync(userManager, productCategoryRepository, recipeCategoryRepository);
         }
 
         private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)

@@ -119,7 +119,7 @@ namespace RecipeBook.Api
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Common.Constants.MealPlanner.Issuer,
                         ValidAudience = Common.Constants.MealPlanner.ApiScope,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Common.Constants.MealPlanner.SigningKey)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SigningKey"]!)),
                     };
                 });
             services.AddAuthorizationBuilder()
