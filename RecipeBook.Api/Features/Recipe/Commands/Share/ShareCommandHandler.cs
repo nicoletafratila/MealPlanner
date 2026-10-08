@@ -31,7 +31,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
                     return CommandResponse.Failed(string.Format(RecipeMessages.NotFoundById, request.RecipeId));
                 }
 
-                var uniqueName = await ResolveUniqueNameAsync(source.Name, request.TargetUserId, cancellationToken);
+                var uniqueName = await ResolveUniqueRecipeNameAsync(source.Name, request.TargetUserId, cancellationToken);
                 var sharedIngredients = await ShareProductsAsync(source.RecipeIngredients, request.TargetUserId, cancellationToken);
 
                 var shared = new Data.Entities.Recipe
@@ -93,6 +93,13 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
         {
             ArgumentNullException.ThrowIfNull(product);
 
+            if (!string.IsNullOrWhiteSpace(product.Name))
+            {
+                var existing = await _productRepository.SearchAsync(product.Name, targetUserId, cancellationToken);
+                if (existing is not null)
+                    return existing.Id;
+            }
+
             var cloned = new Data.Entities.Product
             {
                 Name = product.Name,
@@ -107,7 +114,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
             return added.Id;
         }
 
-        private async Task<string?> ResolveUniqueNameAsync(string? name, string targetUserId, CancellationToken cancellationToken)
+        private async Task<string?> ResolveUniqueRecipeNameAsync(string? name, string targetUserId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return name;

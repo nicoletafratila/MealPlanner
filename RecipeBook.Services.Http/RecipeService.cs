@@ -130,5 +130,20 @@ namespace RecipeBook.Services.Http
                 logger.LogError(ex, "Recipe ShareAsync failed. RecipeId {RecipeId}, TargetUserId {TargetUserId}", recipeId, targetUserId); throw;
             }
         }
+
+        public async Task<CommandResponse?> ShareAllAsync(string targetUserId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var model = new RecipeShareAllModel { TargetUserId = targetUserId };
+                var r = await PostAsync($"{_controller}/{RecipeBookControllers.ShareAllRoute}", model, cancellationToken);
+                InvalidateCache();
+                return r;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Recipe ShareAllAsync failed. TargetUserId {TargetUserId}", targetUserId); throw;
+            }
+        }
     }
 }

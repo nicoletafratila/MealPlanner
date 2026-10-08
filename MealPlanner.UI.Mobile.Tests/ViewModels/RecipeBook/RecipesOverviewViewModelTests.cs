@@ -1,5 +1,7 @@
 using Common.Models;
 using Common.Pagination;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Mobile.Services;
@@ -27,6 +29,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         private Mock<IProductCategoryService> _lookupProductCategoryServiceMock = null!;
         private Mock<IShopService> _lookupShopServiceMock = null!;
         private Mock<IProductService> _lookupProductServiceMock = null!;
+        private Mock<IApplicationUserService> _applicationUserServiceMock = null!;
         private RecipesOverviewViewModel _viewModel = null!;
 
         [SetUp]
@@ -39,6 +42,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _lookupProductCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
             _lookupShopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
             _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
+            _applicationUserServiceMock = new Mock<IApplicationUserService>(MockBehavior.Strict);
 
             var lookupDataService = new ReferenceDataCacheService(
                 _categoryServiceMock.Object,
@@ -48,7 +52,11 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 _lookupShopServiceMock.Object,
                 _recipeServiceMock.Object);
 
-            _viewModel = new RecipesOverviewViewModel(_recipeServiceMock.Object, lookupDataService, _mealPlanServiceMock.Object);
+            _viewModel = new RecipesOverviewViewModel(
+                _recipeServiceMock.Object,
+                lookupDataService,
+                _mealPlanServiceMock.Object,
+                _applicationUserServiceMock.Object);
         }
 
         private void SetupDummyLookups()
@@ -517,6 +525,101 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             await _viewModel.AddToMealPlanCommand.ExecuteAsync(recipe);
 
             _mealPlanServiceMock.Verify(s => s.GetCurrentAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        // ---------- GetShareTargetUsersAsync ----------
+        [Test]
+        public async Task GetShareTargetUsersAsync_ReturnsUsersFromService()
+        {
+            var users = new List<ApplicationUserListModel> { new() { UserId = "2", Username = "bob" } };
+
+            _applicationUserServiceMock
+                .Setup(s => s.ListAsync(CancellationToken.None))
+                .ReturnsAsync(users);
+
+            var result = await _viewModel.GetShareTargetUsersAsync();
+
+            Assert.That(result, Is.EquivalentTo(users));
+        }
+
+        [Test]
+        public async Task GetShareTargetUsersAsync_NullFromService_ReturnsEmptyList()
+        {
+            _applicationUserServiceMock
+                .Setup(s => s.ListAsync(CancellationToken.None))
+                .ReturnsAsync((IList<ApplicationUserListModel>?)null);
+
+            var result = await _viewModel.GetShareTargetUsersAsync();
+
+            Assert.That(result, Is.Empty);
+        }
+
+        // ---------- ShareAllToUserAsync ----------
+        [Test]
+        public async Task ShareAllToUserAsync_EmptyTargetUserId_DoesNotCallService()
+        {
+            await _viewModel.ShareAllToUserAsync(string.Empty);
+
+            _recipeServiceMock.Verify(s => s.ShareAllAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ShareAllToUserAsync_WhenBusy_DoesNotCallService()
+        {
+            _viewModel.IsBusy = true;
+
+            await _viewModel.ShareAllToUserAsync("user2");
+
+            _recipeServiceMock.Verify(s => s.ShareAllAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ShareAllToUserAsync_ServiceSucceeds_SetsSuccessMessage_AndClearsBusy()
+        {
+            _recipeServiceMock
+                .Setup(s => s.ShareAllAsync("user2", CancellationToken.None))
+                .ReturnsAsync(CommandResponse.Success());
+
+            await _viewModel.ShareAllToUserAsync("user2");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.SuccessMessage, Is.Not.Null.And.Not.Empty);
+                Assert.That(_viewModel.ErrorMessage, Is.Null);
+                Assert.That(_viewModel.IsBusy, Is.False);
+            }
+        }
+
+        [Test]
+        public async Task ShareAllToUserAsync_ServiceReturnsFailure_SetsErrorFromResponseMessage()
+        {
+            _recipeServiceMock
+                .Setup(s => s.ShareAllAsync("user2", CancellationToken.None))
+                .ReturnsAsync(CommandResponse.Failed("share rejected"));
+
+            await _viewModel.ShareAllToUserAsync("user2");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.ErrorMessage, Is.EqualTo("share rejected"));
+                Assert.That(_viewModel.IsBusy, Is.False);
+            }
+        }
+
+        [Test]
+        public async Task ShareAllToUserAsync_ServiceThrows_SetsErrorMessage()
+        {
+            _recipeServiceMock
+                .Setup(s => s.ShareAllAsync("user2", CancellationToken.None))
+                .ThrowsAsync(new InvalidOperationException("boom"));
+
+            await _viewModel.ShareAllToUserAsync("user2");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.ErrorMessage, Is.EqualTo("boom"));
+                Assert.That(_viewModel.IsBusy, Is.False);
+            }
         }
     }
 }

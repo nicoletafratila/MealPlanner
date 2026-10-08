@@ -1,4 +1,5 @@
 using BlazorBootstrap;
+using Blazored.Modal.Services;
 using Blazored.SessionStorage;
 using Common.Constants;
 using Common.Models;
@@ -34,6 +35,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [CascadingParameter(Name = "RefreshCurrentMealPlan")]
         private Func<Task>? RefreshCurrentMealPlan { get; set; }
+
+        [CascadingParameter]
+        private IModalService? ModalService { get; set; }
 
         [Inject]
         public IRecipeService RecipeService { get; set; } = default!;
@@ -322,6 +326,32 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             await ShowInfoAsync(Resources.RecipesOverview.RecipeAdded);
+        }
+
+        private async Task ShareAllAsync()
+        {
+            var modal = ModalService?.Show<RecipeShareUserSelection>(Resources.RecipesOverview.ShareAllModalTitle);
+            if (modal is null)
+                return;
+
+            var result = await modal.Result;
+            if (!result.Confirmed || result.Data is not string targetUserId || string.IsNullOrWhiteSpace(targetUserId))
+                return;
+
+            var response = await RecipeService.ShareAllAsync(targetUserId);
+            if (response is null)
+            {
+                await ShowErrorAsync(Resources.RecipesOverview.ShareAllFailedMessage);
+                return;
+            }
+
+            if (!response.Succeeded)
+            {
+                await ShowErrorAsync(response.Message ?? Resources.RecipesOverview.ShareAllFailed);
+                return;
+            }
+
+            await ShowInfoAsync(Resources.RecipesOverview.ShareAllSucceeded);
         }
 
         private async Task ShowErrorAsync(string message)

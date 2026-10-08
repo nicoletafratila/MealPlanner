@@ -107,4 +107,19 @@
 	<data name="MenuName" xml:space="preserve">
     <value>Meniu</value>
   </data>
+	<data name="ShareAllButton" xml:space="preserve">
+		<value>Share all</value>
+	</data>
+	<data name="ShareAllModalTitle" xml:space="preserve">
+		<value>Select the user to share all recipes with</value>
+	</data>
+	<data name="ShareAllSucceeded" xml:space="preserve">
+		<value>All recipes have been shared successfully</value>
+	</data>
+	<data name="ShareAllFailed" xml:space="preserve">
+		<value>Share all failed.</value>
+	</data>
+	<data name="ShareAllFailedMessage" xml:space="preserve">
+		<value>Share all failed. Please try again.</value>
+	</data>
 </root>

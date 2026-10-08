@@ -13,7 +13,7 @@ namespace Identity.Api.Features.Email
             var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:6001";
 
             var encodedToken = Uri.EscapeDataString(token);
-            var confirmUrl = $"{baseUrl}/api/authentication/confirm-email?userId={userId}&token={encodedToken}";
+            var confirmUrl = $"{baseUrl}api/authentication/confirm-email?userId={userId}&token={encodedToken}";
 
             var templatePath = Path.Combine(environment.ContentRootPath, "Features", "Email", "EmailTemplates", "EmailConfirmation.html");
             var body = (await File.ReadAllTextAsync(templatePath, cancellationToken))
@@ -48,7 +48,7 @@ namespace Identity.Api.Features.Email
             var baseUrl = configuration["IdentityApi:BaseUrl"] ?? "https://localhost:6001";
 
             var encodedToken = Uri.EscapeDataString(token);
-            var resetUrl = $"{baseUrl}/api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}";
+            var resetUrl = $"{baseUrl}api/authentication/reset-password-redirect?userId={userId}&token={encodedToken}";
 
             var templatePath = Path.Combine(environment.ContentRootPath, "Features", "Email", "EmailTemplates", "PasswordReset.html");
             var body = (await File.ReadAllTextAsync(templatePath, cancellationToken))

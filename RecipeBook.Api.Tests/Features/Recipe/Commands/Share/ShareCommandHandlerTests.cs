@@ -26,6 +26,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         private void SetUpProductClone(Data.Entities.Product product, Guid clonedProductId)
         {
             _productRepoMock
+                .Setup(r => r.SearchAsync(product.Name!, "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Product?)null);
+
+            _productRepoMock
                 .Setup(r => r.AddAsync(
                     It.Is<Data.Entities.Product>(p =>
                         p.Name == product.Name &&
@@ -390,6 +394,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             _productRepoMock
+                .Setup(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Product?)null);
+
+            _productRepoMock
                 .Setup(r => r.AddAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException("DB error"));
 
@@ -399,6 +407,63 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
             Assert.That(result!.Succeeded, Is.False);
 
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Recipe>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test]
+        public async Task Handle_ExistingProductWithSameName_ReusesExistingProduct_AndDoesNotCloneIt()
+        {
+            var recipeId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var existingProductId = Guid.NewGuid();
+            var command = new ShareCommand { RecipeId = recipeId, TargetUserId = "user2" };
+
+            var product = new Data.Entities.Product
+            {
+                Id = productId,
+                Name = "Flour",
+                BaseUnitId = Guid.NewGuid(),
+                ProductCategoryId = Guid.NewGuid(),
+                UserId = "user1"
+            };
+
+            var source = new Data.Entities.Recipe
+            {
+                Id = recipeId,
+                Name = "My Recipe",
+                RecipeCategoryId = Guid.NewGuid(),
+                UserId = "user1",
+                RecipeIngredients =
+                [
+                    new Data.Entities.RecipeIngredient { ProductId = productId, Product = product, UnitId = Guid.NewGuid(), Quantity = 1 }
+                ]
+            };
+
+            _repoMock
+                .Setup(r => r.GetByIdIncludeIngredientsAsync(recipeId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(source);
+
+            _repoMock
+                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Data.Entities.Recipe?)null);
+
+            _productRepoMock
+                .Setup(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Data.Entities.Product { Id = existingProductId, Name = "Flour", UserId = "user2" });
+
+            Data.Entities.Recipe? added = null;
+            _repoMock
+                .Setup(r => r.AddAsync(It.IsAny<Data.Entities.Recipe>(), It.IsAny<CancellationToken>()))
+                .Callback<Data.Entities.Recipe, CancellationToken>((r, _) => added = r)
+                .ReturnsAsync((Data.Entities.Recipe r, CancellationToken _) => r);
+
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(added!.RecipeIngredients, Has.Count.EqualTo(1));
+            Assert.That(added.RecipeIngredients![0].ProductId, Is.EqualTo(existingProductId));
+
+            _productRepoMock.Verify(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()), Times.Once);
+            _productRepoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }
 }

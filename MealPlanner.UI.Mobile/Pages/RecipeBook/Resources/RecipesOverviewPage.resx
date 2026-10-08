@@ -147,4 +147,22 @@
   <data name="SaveFailedMessage" xml:space="preserve">
     <value>Save failed. Please try again.</value>
   </data>
+  <data name="ShareAllButton" xml:space="preserve">
+    <value>Share all</value>
+  </data>
+  <data name="PlaceholderSearchUsers" xml:space="preserve">
+    <value>Type to search by name...</value>
+  </data>
+  <data name="EmptyUsersLabel" xml:space="preserve">
+    <value>No users found</value>
+  </data>
+  <data name="ShareAllNoUsersMessage" xml:space="preserve">
+    <value>There are no other users to share your recipes with.</value>
+  </data>
+  <data name="OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ShareAllSucceeded" xml:space="preserve">
+    <value>All recipes have been shared successfully</value>
+  </data>
 </root>

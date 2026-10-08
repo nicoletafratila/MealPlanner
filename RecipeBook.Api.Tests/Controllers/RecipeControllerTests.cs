@@ -9,6 +9,7 @@ using RecipeBook.Api.Controllers;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Features.Recipe.Commands.Delete;
 using RecipeBook.Api.Features.Recipe.Commands.Share;
+using RecipeBook.Api.Features.Recipe.Commands.ShareAll;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
 using RecipeBook.Api.Features.Recipe.Queries.GetById;
 using RecipeBook.Api.Features.Recipe.Queries.GetEdit;
@@ -198,6 +199,27 @@ namespace RecipeBook.Api.Tests.Controllers
 
             _senderMock.Verify(
                 m => m.Send(It.Is<ShareCommand>(c => c.RecipeId == recipeId && c.TargetUserId == "user2"), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task ShareAllAsync_SendsShareAllCommand()
+        {
+            var model = new RecipeShareAllModel { TargetUserId = "user2" };
+            var response = CommandResponse.Success();
+
+            _senderMock
+                .Setup(m => m.Send(It.Is<ShareAllCommand>(c => c.TargetUserId == "user2"), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            var result = await _controller.ShareAllAsync(model, CancellationToken.None);
+
+            var ok = result.Result as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+            Assert.That(ok!.Value, Is.SameAs(response));
+
+            _senderMock.Verify(
+                m => m.Send(It.Is<ShareAllCommand>(c => c.TargetUserId == "user2"), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 

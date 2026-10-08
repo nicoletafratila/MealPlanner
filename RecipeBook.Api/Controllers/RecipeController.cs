@@ -10,6 +10,7 @@ using RecipeBook.Api.Controllers.Resources;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Features.Recipe.Commands.Delete;
 using RecipeBook.Api.Features.Recipe.Commands.Share;
+using RecipeBook.Api.Features.Recipe.Commands.ShareAll;
 using RecipeBook.Api.Features.Recipe.Commands.Update;
 using RecipeBook.Api.Features.Recipe.Queries.GetById;
 using RecipeBook.Api.Features.Recipe.Queries.GetEdit;
@@ -131,6 +132,16 @@ namespace RecipeBook.Api.Controllers
             CancellationToken cancellationToken)
         {
             var command = new ShareCommand { RecipeId = model.RecipeId, TargetUserId = model.TargetUserId };
+            var response = await _mediator.Send(command, cancellationToken);
+            return Ok(response);
+        }
+
+        [HttpPost("shareAll")]
+        public async Task<ActionResult<CommandResponse?>> ShareAllAsync(
+            [FromBody] RecipeShareAllModel model,
+            CancellationToken cancellationToken)
+        {
+            var command = new ShareAllCommand { TargetUserId = model.TargetUserId };
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }

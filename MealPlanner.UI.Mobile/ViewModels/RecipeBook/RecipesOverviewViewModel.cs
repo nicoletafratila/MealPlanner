@@ -3,6 +3,8 @@ using Common.Models;
 using Common.Pagination;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Mobile.Extensions;
@@ -13,7 +15,11 @@ using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
-    public partial class RecipesOverviewViewModel(IRecipeService recipeService, ReferenceDataCacheService lookupDataService, IMealPlanService mealPlanService) : BaseViewModel
+    public partial class RecipesOverviewViewModel(
+        IRecipeService recipeService,
+        ReferenceDataCacheService lookupDataService,
+        IMealPlanService mealPlanService,
+        IApplicationUserService applicationUserService) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<RecipeModel> _recipes = [];
@@ -221,6 +227,34 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 foreach (var item in result.Items)
                     Recipes.Add(item);
                 HasNextPage = result.Metadata.HasNextPage;
+            }
+        }
+
+        public async Task<List<ApplicationUserListModel>> GetShareTargetUsersAsync()
+            => (await applicationUserService.ListAsync())?.ToList() ?? [];
+
+        public async Task ShareAllToUserAsync(string targetUserId)
+        {
+            if (IsBusy || string.IsNullOrWhiteSpace(targetUserId)) return;
+            ClearMessages();
+            IsBusy = true;
+            try
+            {
+                var result = await recipeService.ShareAllAsync(targetUserId);
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateRecipes();
+                    SetSuccess(RecipesOverviewPage.ShareAllSucceeded);
+                }
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
