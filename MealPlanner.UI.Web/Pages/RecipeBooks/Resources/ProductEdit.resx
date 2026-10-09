@@ -105,4 +105,19 @@
 	<data name="PlaceholderProductName" xml:space="preserve">
 		<value>Enter product name</value>
 	</data>
+	<data name="ShareButton" xml:space="preserve">
+		<value>Share</value>
+	</data>
+	<data name="ShareModalTitle" xml:space="preserve">
+		<value>Select the user to share this product with</value>
+	</data>
+	<data name="ShareSucceeded" xml:space="preserve">
+		<value>The product has been shared successfully</value>
+	</data>
+	<data name="ShareFailed" xml:space="preserve">
+		<value>Share failed.</value>
+	</data>
+	<data name="ShareFailedMessage" xml:space="preserve">
+		<value>Share failed. Please try again.</value>
+	</data>
 </root>

@@ -1,7 +1,15 @@
 ﻿@page "/recipebooks/productedit"
 @page "/recipebooks/productedit/{id}"
 
-<Breadcrumb Items="_navItems"></Breadcrumb>
+<div class="d-flex justify-content-between align-items-center">
+    <Breadcrumb Items="_navItems"></Breadcrumb>
+    @if (Product.Id != Guid.Empty)
+    {
+        <button class="btn btn-link p-0" type="button" title="@Resources.ProductEdit.ShareButton" @onclick="async () => await ShareAsync()">
+            <i class="bi bi-share fs-4"></i>
+        </button>
+    }
+</div>
 
 <style>
     .img-product {

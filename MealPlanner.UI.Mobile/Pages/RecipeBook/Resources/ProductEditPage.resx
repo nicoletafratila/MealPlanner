@@ -78,4 +78,22 @@
   <data name="UnitTitle" xml:space="preserve">
     <value>Select unit</value>
   </data>
+  <data name="SelectShareUserTitle" xml:space="preserve">
+    <value>Share with user</value>
+  </data>
+  <data name="PlaceholderSearchUsers" xml:space="preserve">
+    <value>Type to search by name...</value>
+  </data>
+  <data name="EmptyUsersLabel" xml:space="preserve">
+    <value>No users found</value>
+  </data>
+  <data name="ShareNoUsersMessage" xml:space="preserve">
+    <value>There are no other users to share this product with.</value>
+  </data>
+  <data name="OkButton" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ShareSucceeded" xml:space="preserve">
+    <value>The product has been shared successfully</value>
+  </data>
 </root>

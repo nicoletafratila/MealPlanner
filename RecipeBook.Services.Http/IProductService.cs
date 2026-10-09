@@ -13,5 +13,6 @@ namespace RecipeBook.Services.Http
         Task<CommandResponse?> AddAsync(ProductEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> UpdateAsync(ProductEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<CommandResponse?> ShareAsync(Guid productId, string targetUserId, CancellationToken cancellationToken = default);
     }
 }

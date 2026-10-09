@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Identity.Services.Http;
+using Identity.Shared.Models;
 using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
@@ -9,7 +11,10 @@ using RecipeBook.Shared.Resources;
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 {
     [QueryProperty(nameof(ProductId), "id")]
-    public partial class ProductEditViewModel(IProductService productService, ReferenceDataCacheService lookupDataService) : BaseViewModel
+    public partial class ProductEditViewModel(
+        IProductService productService,
+        IApplicationUserService applicationUserService,
+        ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
         [ObservableProperty]
         private string _productId = string.Empty;
@@ -160,6 +165,34 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
                 {
                     lookupDataService.InvalidateProducts();
                     await Shell.Current.GoToAsync("..");
+                }
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public async Task<List<ApplicationUserListModel>> GetShareUsersAsync()
+            => (await applicationUserService.ListAsync())?.ToList() ?? [];
+
+        public async Task ShareToUserAsync(string targetUserId)
+        {
+            if (IsBusy || string.IsNullOrWhiteSpace(targetUserId)) return;
+            ClearMessages();
+            IsBusy = true;
+            try
+            {
+                var result = await productService.ShareAsync(Model.Id, targetUserId);
+                if (result?.Succeeded == true)
+                {
+                    lookupDataService.InvalidateProducts();
+                    SetSuccess(Pages.RecipeBook.Resources.ProductEditPage.ShareSucceeded);
                 }
                 else SetError(result?.Message);
             }

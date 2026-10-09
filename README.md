@@ -1,4 +1,3 @@
-share one product
 Bic pentru ras
 Branza Praid
 Carnat subtire
@@ -16,8 +15,8 @@ Vin spumant alb brut Jidvei Scintti
 Fasole alba conserva sau legume Fasole cu costita la cuptor trebuie cu conserva???
 
 
-job to share recipes C:\Users\nfratila\.claude\plans\wondrous-nibbling-dusk.md f
 shops logos
+job to share recipes C:\Users\nfratila\.claude\plans\wondrous-nibbling-dusk.md f
 check the web app on mobile
 translate into other languages
 comaparare web cu mobile screen cu screen
