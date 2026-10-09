@@ -115,7 +115,7 @@ namespace MealPlanner.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("shareAll")]
+        [HttpPost("shareall")]
         public async Task<ActionResult<CommandResponse?>> ShareAllAsync(
             [FromBody] ShopShareAllModel model,
             CancellationToken cancellationToken)

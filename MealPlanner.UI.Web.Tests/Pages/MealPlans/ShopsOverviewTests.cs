@@ -412,6 +412,56 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
         }
 
         [Test]
+        public async Task ShareAllAsync_WithStoredGridFilter_PassesFilterToService()
+        {
+            // Arrange
+            const string targetUserId = "user2";
+
+            var storedParameters = new QueryParameters<ShopModel>
+            {
+                Filters = [new Common.Pagination.FilterItem("Name", "Lidl", Common.Pagination.FilterOperator.Contains, StringComparison.OrdinalIgnoreCase)],
+                Sorting = [],
+                PageNumber = 1,
+                PageSize = 20
+            };
+            _sessionStorageMock
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Newtonsoft.Json.JsonConvert.SerializeObject(storedParameters));
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            IEnumerable<Common.Pagination.FilterItem>? capturedFilters = null;
+            _shopServiceMock
+                .Setup(s => s.ShareAllAsync(targetUserId, It.IsAny<IEnumerable<Common.Pagination.FilterItem>?>(), CancellationToken.None))
+                .Callback<string, IEnumerable<Common.Pagination.FilterItem>?, CancellationToken>((_, filters, _) => capturedFilters = filters)
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderWithModalService(modalServiceMock.Object);
+
+            var method = typeof(ShopsOverview).GetMethod("ShareAllAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(capturedFilters, Is.Not.Null);
+            var filter = capturedFilters!.Single();
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(filter.PropertyName, Is.EqualTo("Name"));
+                Assert.That(filter.Value, Is.EqualTo("Lidl"));
+            }
+        }
+
+        [Test]
         public async Task ShareAllAsync_ShowsError_WhenResponseNull()
         {
             // Arrange

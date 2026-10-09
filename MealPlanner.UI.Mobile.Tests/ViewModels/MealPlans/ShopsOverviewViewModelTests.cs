@@ -365,5 +365,21 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 Assert.That(_viewModel.IsBusy, Is.False);
             }
         }
+
+        [Test]
+        public async Task ShareAllToUserAsync_ServiceThrows_SetsErrorMessage()
+        {
+            _shopServiceMock
+                .Setup(s => s.ShareAllAsync("user2", null, CancellationToken.None))
+                .ThrowsAsync(new InvalidOperationException("boom"));
+
+            await _viewModel.ShareAllToUserAsync("user2");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.ErrorMessage, Is.EqualTo("boom"));
+                Assert.That(_viewModel.IsBusy, Is.False);
+            }
+        }
     }
 }

@@ -626,7 +626,7 @@ namespace RecipeBook.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareAll")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareall")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
@@ -662,7 +662,7 @@ namespace RecipeBook.Services.Http.Tests
 
             RecipeShareAllModel? captured = null;
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareAll")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareall")
                 .With(m =>
                 {
                     var body = m.Content!.ReadAsStringAsync().Result;
@@ -690,7 +690,7 @@ namespace RecipeBook.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
 
             mockHttp
-                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareAll")
+                .Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareall")
                 .Respond(HttpStatusCode.BadRequest);
 
             var service = CreateService(mockHttp);
@@ -709,7 +709,7 @@ namespace RecipeBook.Services.Http.Tests
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));
-            mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareAll")
+            mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{RecipePath}/shareall")
                 .Respond("application/json", JsonSerializer.Serialize(shareAllResponse, JsonOptions));
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
                 .Respond("application/json", JsonSerializer.Serialize(paged, JsonOptions));

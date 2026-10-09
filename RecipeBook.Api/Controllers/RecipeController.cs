@@ -136,7 +136,7 @@ namespace RecipeBook.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("shareAll")]
+        [HttpPost("shareall")]
         public async Task<ActionResult<CommandResponse?>> ShareAllAsync(
             [FromBody] RecipeShareAllModel model,
             CancellationToken cancellationToken)
