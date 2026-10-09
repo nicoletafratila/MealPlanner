@@ -74,6 +74,58 @@ namespace Identity.Api.Tests.Features.Authentication.Commands.ConfirmEmail
         }
 
         [Test]
+        public async Task Handle_ConcurrencyConflictButAlreadyConfirmedByConcurrentRequest_ReturnsSuccess()
+        {
+            var user = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", EmailConfirmed = false };
+            var confirmedUser = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", EmailConfirmed = true };
+
+            _userManagerMock
+                .SetupSequence(m => m.FindByIdAsync("user-id"))
+                .ReturnsAsync(user)
+                .ReturnsAsync(confirmedUser);
+
+            _userManagerMock
+                .Setup(m => m.ConfirmEmailAsync(user, "token"))
+                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Code = "ConcurrencyFailure", Description = "A concurrency failure occurred." }));
+
+            var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "user-id", Token = "token" }, CancellationToken.None);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(result.Message, Is.EqualTo("Your email has been confirmed. You can now log in."));
+            }
+
+            _userManagerMock.Verify(m => m.UpdateAsync(It.IsAny<Data.Entities.ApplicationUser>()), Times.Never);
+        }
+
+        [Test]
+        public async Task Handle_InvalidTokenOnAlreadyConfirmedAccount_StillReturnsFailedResponse()
+        {
+            var user = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", EmailConfirmed = false };
+            var confirmedUser = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", EmailConfirmed = true };
+
+            _userManagerMock
+                .SetupSequence(m => m.FindByIdAsync("user-id"))
+                .ReturnsAsync(user)
+                .ReturnsAsync(confirmedUser);
+
+            _userManagerMock
+                .Setup(m => m.ConfirmEmailAsync(user, "garbage-token"))
+                .ReturnsAsync(IdentityResult.Failed(new IdentityError { Code = "InvalidToken", Description = "Invalid token." }));
+
+            var result = await _handler.Handle(new ConfirmEmailCommand { UserId = "user-id", Token = "garbage-token" }, CancellationToken.None);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Email confirmation failed. The link may be invalid or expired."));
+            }
+        }
+
+        [Test]
         public async Task Handle_Success_ActivatesUserAndReturnsSuccess()
         {
             var user = new Data.Entities.ApplicationUser { Id = "user-id", UserName = "testuser", IsActive = false };

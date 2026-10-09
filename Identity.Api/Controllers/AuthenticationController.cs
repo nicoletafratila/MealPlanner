@@ -96,9 +96,9 @@ namespace Identity.Api.Controllers
             [FromQuery] string userId,
             [FromQuery] string token)
         {
-            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
+            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093/";
             var encodedToken = Uri.EscapeDataString(token);
-            return Redirect($"{uiBaseUrl}/identities/reset-password?userId={userId}&token={encodedToken}");
+            return Redirect($"{uiBaseUrl}identities/reset-password?userId={userId}&token={encodedToken}");
         }
 
         [HttpPost("reset-password")]
@@ -125,13 +125,13 @@ namespace Identity.Api.Controllers
             [FromQuery] string token,
             CancellationToken cancellationToken)
         {
-            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093";
+            var uiBaseUrl = _configuration["MealPlannerWeb:BaseUrl"] ?? "https://localhost:7093/";
             var command = new ConfirmEmailCommand { UserId = userId, Token = token };
             var result = await _mediator.Send(command, cancellationToken);
 
             return result?.Succeeded == true
-                ? Redirect($"{uiBaseUrl}/identities/login?emailConfirmed=true")
-                : Redirect($"{uiBaseUrl}/identities/login?emailConfirmationFailed=true");
+                ? Redirect($"{uiBaseUrl}identities/login?emailConfirmed=true")
+                : Redirect($"{uiBaseUrl}identities/login?emailConfirmationFailed=true");
         }
     }
 }

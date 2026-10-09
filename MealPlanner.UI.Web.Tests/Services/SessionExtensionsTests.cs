@@ -1,6 +1,7 @@
 using Blazored.SessionStorage;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
+using Microsoft.JSInterop;
 using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Services
@@ -120,6 +121,38 @@ namespace MealPlanner.UI.Web.Tests.Services
 
             // Assert
             Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void SetItemAsync_SwallowsJSDisconnectedException()
+        {
+            // Arrange
+            var storageMock = new Mock<ISessionStorageService>();
+            storageMock
+                .Setup(s => s.SetItemAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new JSDisconnectedException("Circuit disconnected."));
+
+            var dto = new ShopModel { Name = "F", Id = Guid.NewGuid() };
+
+            // Act & Assert
+            Assert.That(
+                async () => await storageMock.Object.SetItemAsync(dto),
+                Throws.Nothing);
+        }
+
+        [Test]
+        public void GetItemAsync_ReturnsDefault_WhenJSDisconnectedExceptionThrown()
+        {
+            // Arrange
+            var storageMock = new Mock<ISessionStorageService>();
+            storageMock
+                .Setup(s => s.GetItemAsync<string?>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new JSDisconnectedException("Circuit disconnected."));
+
+            // Act & Assert
+            Assert.That(
+                async () => await SessionExtensions.GetItemAsync<ShopModel>(storageMock.Object),
+                Throws.Nothing);
         }
 
         [Test]

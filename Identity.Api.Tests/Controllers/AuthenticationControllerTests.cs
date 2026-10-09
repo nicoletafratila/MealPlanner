@@ -32,7 +32,7 @@ namespace Identity.Api.Tests.Controllers
         {
             _mediatorMock = new Mock<ISender>(MockBehavior.Strict);
             _configurationMock = new Mock<IConfiguration>(MockBehavior.Loose);
-            _configurationMock.Setup(c => c["MealPlannerWeb:BaseUrl"]).Returns("https://localhost:7093");
+            _configurationMock.Setup(c => c["MealPlannerWeb:BaseUrl"]).Returns("https://localhost:7093/");
 
             _controller = new AuthenticationController(_mediatorMock.Object, _configurationMock.Object);
 

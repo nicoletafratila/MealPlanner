@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using Common.Http;
+using Microsoft.JSInterop;
 
 namespace Common.Core
 {
@@ -40,30 +41,43 @@ namespace Common.Core
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var persistedValue = await _localStorage
-                .GetItemAsync<string?>(key, cancellationToken)
-                .ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(persistedValue))
-                return persistedValue;
+            try
+            {
+                var persistedValue = await _localStorage
+                    .GetItemAsync<string?>(key, cancellationToken)
+                    .ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(persistedValue))
+                    return persistedValue;
 
-            return await _sessionStorage
-                .GetItemAsync<string?>(key, cancellationToken)
-                .ConfigureAwait(false);
+                return await _sessionStorage
+                    .GetItemAsync<string?>(key, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (JSDisconnectedException)
+            {
+                return null;
+            }
         }
 
         private async Task SetAsync(string key, string value, bool persistent, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (persistent)
+            try
             {
-                await _localStorage.SetItemAsync(key, value, cancellationToken).ConfigureAwait(false);
-                await _sessionStorage.RemoveItemAsync(key, cancellationToken).ConfigureAwait(false);
+                if (persistent)
+                {
+                    await _localStorage.SetItemAsync(key, value, cancellationToken).ConfigureAwait(false);
+                    await _sessionStorage.RemoveItemAsync(key, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    await _sessionStorage.SetItemAsync(key, value, cancellationToken).ConfigureAwait(false);
+                    await _localStorage.RemoveItemAsync(key, cancellationToken).ConfigureAwait(false);
+                }
             }
-            else
+            catch (JSDisconnectedException)
             {
-                await _sessionStorage.SetItemAsync(key, value, cancellationToken).ConfigureAwait(false);
-                await _localStorage.RemoveItemAsync(key, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -71,12 +85,18 @@ namespace Common.Core
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            await _sessionStorage
-                .RemoveItemAsync(key, cancellationToken)
-                .ConfigureAwait(false);
-            await _localStorage
-                .RemoveItemAsync(key, cancellationToken)
-                .ConfigureAwait(false);
+            try
+            {
+                await _sessionStorage
+                    .RemoveItemAsync(key, cancellationToken)
+                    .ConfigureAwait(false);
+                await _localStorage
+                    .RemoveItemAsync(key, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (JSDisconnectedException)
+            {
+            }
         }
     }
 }

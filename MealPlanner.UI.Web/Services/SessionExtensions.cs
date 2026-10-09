@@ -1,4 +1,5 @@
 using Blazored.SessionStorage;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 
 namespace MealPlanner.UI.Web.Services
@@ -27,7 +28,13 @@ namespace MealPlanner.UI.Web.Services
             var key = GetKey<TItem>(name);
             var json = JsonConvert.SerializeObject(info, JsonSettings);
 
-            await sessionStorage.SetItemAsync(key, json);
+            try
+            {
+                await sessionStorage.SetItemAsync(key, json);
+            }
+            catch (JSDisconnectedException)
+            {
+            }
         }
 
         public static async Task<TItem?> GetItemAsync<TItem>(
@@ -37,7 +44,16 @@ namespace MealPlanner.UI.Web.Services
             ArgumentNullException.ThrowIfNull(sessionStorage);
 
             var key = GetKey<TItem>(name);
-            var json = await sessionStorage.GetItemAsync<string?>(key);
+
+            string? json;
+            try
+            {
+                json = await sessionStorage.GetItemAsync<string?>(key);
+            }
+            catch (JSDisconnectedException)
+            {
+                return default;
+            }
 
             if (string.IsNullOrWhiteSpace(json))
                 return default;

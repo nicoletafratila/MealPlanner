@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using Microsoft.JSInterop;
 using Moq;
 
 namespace Common.Core.Tests
@@ -75,6 +76,18 @@ namespace Common.Core.Tests
             _sessionStorageMock.Verify(
                 s => s.GetItemAsync<string?>(TokenKey, It.IsAny<CancellationToken>()),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task GetTokenAsync_LocalStorageThrowsJSDisconnectedException_ReturnsNull()
+        {
+            _localStorageMock
+                .Setup(s => s.GetItemAsync<string?>(TokenKey, It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new JSDisconnectedException("Circuit disconnected."));
+
+            var result = await _sut.GetTokenAsync(CancellationToken.None);
+
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -156,6 +169,18 @@ namespace Common.Core.Tests
         }
 
         [Test]
+        public void SetTokenAsync_SessionStorageThrowsJSDisconnectedException_DoesNotThrow()
+        {
+            _sessionStorageMock
+                .Setup(s => s.SetItemAsync(TokenKey, "valid-token", It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new JSDisconnectedException("Circuit disconnected."));
+
+            Assert.That(
+                async () => await _sut.SetTokenAsync("valid-token", persistent: false, cancellationToken: CancellationToken.None),
+                Throws.Nothing);
+        }
+
+        [Test]
         public void SetTokenAsync_CancelledToken_ThrowsOperationCanceledException_AndDoesNotCallStorage()
         {
             using var cts = new CancellationTokenSource();
@@ -187,6 +212,18 @@ namespace Common.Core.Tests
             _localStorageMock.Verify(
                 s => s.RemoveItemAsync(TokenKey, It.IsAny<CancellationToken>()),
                 Times.Once);
+        }
+
+        [Test]
+        public void RemoveTokenAsync_SessionStorageThrowsJSDisconnectedException_DoesNotThrow()
+        {
+            _sessionStorageMock
+                .Setup(s => s.RemoveItemAsync(TokenKey, It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new JSDisconnectedException("Circuit disconnected."));
+
+            Assert.That(
+                async () => await _sut.RemoveTokenAsync(CancellationToken.None),
+                Throws.Nothing);
         }
 
         [Test]
