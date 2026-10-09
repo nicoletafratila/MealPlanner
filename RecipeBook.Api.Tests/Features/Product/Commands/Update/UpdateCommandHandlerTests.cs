@@ -90,6 +90,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var existing = new Data.Entities.Product { Id = id, Name = "OldProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _repoMock.Setup(r => r.SearchAsync(model.Name!, model.ProductCategoryId, existing.UserId!, CancellationToken.None)).ReturnsAsync((Data.Entities.Product?)null);
             _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);
             _repoMock.Setup(r => r.UpdateAsync(existing, CancellationToken.None)).Returns(Task.CompletedTask);
 
@@ -101,6 +102,32 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             _repoMock.Verify(r => r.GetByIdAsync(id, CancellationToken.None), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, CancellationToken.None), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_DuplicateNameAndCategory_ReturnsFailedResponse_AndDoesNotUpdate()
+        {
+            var id = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
+            var model = new ProductEditModel { Id = id, Name = "UpdatedProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = categoryId };
+            var command = new UpdateCommand { Model = model };
+            var existing = new Data.Entities.Product { Id = id, Name = "OldProduct", ProductCategoryId = categoryId, BaseUnitId = Guid.NewGuid(), UserId = "user1" };
+            var duplicate = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "UpdatedProduct", ProductCategoryId = categoryId, UserId = "user1" };
+
+            _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _repoMock.Setup(r => r.SearchAsync(model.Name!, categoryId, "user1", CancellationToken.None)).ReturnsAsync(duplicate);
+
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("This product already exists."));
+            }
+
+            _mapperMock.Verify(m => m.Map(It.IsAny<ProductEditModel>(), It.IsAny<Data.Entities.Product>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -124,6 +151,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _repoMock.Setup(r => r.SearchAsync(model.Name!, model.ProductCategoryId, existing.UserId!, CancellationToken.None)).ReturnsAsync((Data.Entities.Product?)null);
             _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);
             _repoMock.Setup(r => r.UpdateAsync(existing, CancellationToken.None)).Returns(Task.CompletedTask);
 
@@ -141,6 +169,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var existing = new Data.Entities.Product { Id = id, Name = "OldX", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);
+            _repoMock.Setup(r => r.SearchAsync(model.Name!, model.ProductCategoryId, existing.UserId!, CancellationToken.None)).ReturnsAsync((Data.Entities.Product?)null);
             _mapperMock.Setup(m => m.Map(model, existing)).Returns(existing);
             _repoMock.Setup(r => r.UpdateAsync(existing, CancellationToken.None)).ThrowsAsync(new InvalidOperationException("DB error"));
 

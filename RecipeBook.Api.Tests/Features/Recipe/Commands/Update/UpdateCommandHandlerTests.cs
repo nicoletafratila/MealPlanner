@@ -130,6 +130,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
+            _repoMock
+                .Setup(r => r.SearchAsync(model.Name!, categoryId, existing.UserId!, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((RecipeEntity?)null);
+
             _mapperMock
                 .Setup(m => m.Map(model, existing))
                 .Returns(existing);
@@ -150,6 +154,60 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
                 Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_DuplicateNameAndCategory_ReturnsFailedResponse_AndDoesNotUpdate()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var categoryId = Guid.NewGuid();
+            var model = new RecipeEditModel
+            {
+                Id = id,
+                Name = "Updated Recipe",
+                RecipeCategoryId = categoryId
+            };
+
+            var command = new UpdateCommand { Model = model };
+
+            var existing = new RecipeEntity
+            {
+                Id = id,
+                Name = "Old Name",
+                RecipeCategoryId = categoryId,
+                UserId = "user1"
+            };
+
+            var duplicate = new RecipeEntity
+            {
+                Id = Guid.NewGuid(),
+                Name = "Updated Recipe",
+                RecipeCategoryId = categoryId,
+                UserId = "user1"
+            };
+
+            _repoMock
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(existing);
+
+            _repoMock
+                .Setup(r => r.SearchAsync(model.Name!, categoryId, "user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(duplicate);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("This recipe already exists in this category."));
+            }
+
+            _mapperMock.Verify(m => m.Map(It.IsAny<RecipeEditModel>(), It.IsAny<RecipeEntity>()), Times.Never);
+            _repoMock.Verify(r => r.UpdateAsync(It.IsAny<RecipeEntity>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
@@ -182,6 +240,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
+
+            _repoMock
+                .Setup(r => r.SearchAsync(model.Name!, categoryId, existing.UserId!, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((RecipeEntity?)null);
 
             _mapperMock
                 .Setup(m => m.Map(model, existing))
@@ -223,6 +285,10 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Update
             _repoMock
                 .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
+
+            _repoMock
+                .Setup(r => r.SearchAsync(model.Name!, categoryId, existing.UserId!, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((RecipeEntity?)null);
 
             _mapperMock
                 .Setup(m => m.Map(model, existing))

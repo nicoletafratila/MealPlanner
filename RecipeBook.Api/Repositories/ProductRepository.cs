@@ -71,6 +71,23 @@ namespace RecipeBook.Api.Repositories
                     cancellationToken);
         }
 
+        public async Task<Product?> SearchAsync(
+            string name,
+            Guid categoryId,
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            return await Context.Products
+                .Include(x => x.ProductCategory)
+                .Include(x => x.BaseUnit)
+                .FirstOrDefaultAsync(
+                    x => x.UserId == userId && x.ProductCategoryId == categoryId && x.Name != null && x.Name.ToLower() == name.ToLower(),
+                    cancellationToken);
+        }
+
         public async Task<PagedQueryResult<Product>> SearchByUserAsync(
             string userId,
             Guid? categoryId,

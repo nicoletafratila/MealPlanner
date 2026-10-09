@@ -256,6 +256,62 @@ namespace RecipeBook.Api.Tests.Repositories
             Assert.That(result, Is.Null);
         }
 
+        // ---------- SearchAsync by name and category ----------
+        [Test]
+        public async Task SearchAsync_ByNameAndCategory_ReturnsMatchingProduct()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("Milk", ProductCategoryGuid(10), "Cat1", "l");
+            p1.UserId = "user1";
+            ctx.Products.Add(p1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.SearchAsync("milk", ProductCategoryGuid(10), "user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Name, Is.EqualTo("Milk"));
+        }
+
+        [Test]
+        public async Task SearchAsync_ByNameAndCategory_SameNameDifferentCategory_ReturnsNull()
+        {
+            // Arrange
+            var repo = CreateRepository(out var ctx);
+
+            var p1 = CreateProductGraph("Milk", ProductCategoryGuid(10), "Cat1", "l");
+            p1.UserId = "user1";
+            ctx.Products.Add(p1);
+            await ctx.SaveChangesAsync();
+
+            // Act
+            var result = await repo.SearchAsync("Milk", ProductCategoryGuid(20), "user1", CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task SearchAsync_ByNameAndCategory_NullOrWhitespace_ReturnsNull()
+        {
+            // Arrange
+            var repo = CreateRepository(out _);
+
+            // Act
+            var r1 = await repo.SearchAsync((string)null!, ProductCategoryGuid(10), "user1", CancellationToken.None);
+            var r2 = await repo.SearchAsync("   ", ProductCategoryGuid(10), "user1", CancellationToken.None);
+
+            using (Assert.EnterMultipleScope())
+            {
+                // Assert
+                Assert.That(r1, Is.Null);
+                Assert.That(r2, Is.Null);
+            }
+        }
+
         // ---------- SearchByUserAsync ----------
         [Test]
         public async Task SearchByUserAsync_ScopesToUser_WithCategoryAndBaseUnit()

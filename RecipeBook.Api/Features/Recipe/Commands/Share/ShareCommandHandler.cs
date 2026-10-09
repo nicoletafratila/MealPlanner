@@ -46,7 +46,8 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
                     request.TargetUserId,
                     cancellationToken);
 
-                var uniqueName = await ResolveUniqueRecipeNameAsync(source.Name, request.TargetUserId, cancellationToken);
+                var targetRecipeCategoryId = recipeCategoryMap[source.RecipeCategoryId];
+                var uniqueName = await ResolveUniqueRecipeNameAsync(source.Name, targetRecipeCategoryId, request.TargetUserId, cancellationToken);
                 var sharedIngredients = await ShareProductsAsync(source.RecipeIngredients, productCategoryMap, request.TargetUserId, cancellationToken);
 
                 var shared = new Data.Entities.Recipe
@@ -55,7 +56,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
                     Source = source.Source,
                     ImageContent = source.ImageContent,
                     ImageThumbnail = source.ImageThumbnail,
-                    RecipeCategoryId = recipeCategoryMap[source.RecipeCategoryId],
+                    RecipeCategoryId = targetRecipeCategoryId,
                     UserId = request.TargetUserId,
                     RecipeIngredients = sharedIngredients
                 };
@@ -110,9 +111,11 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
         {
             ArgumentNullException.ThrowIfNull(product);
 
+            var targetCategoryId = productCategoryMap[product.ProductCategoryId];
+
             if (!string.IsNullOrWhiteSpace(product.Name))
             {
-                var existing = await _productRepository.SearchAsync(product.Name, targetUserId, cancellationToken);
+                var existing = await _productRepository.SearchAsync(product.Name, targetCategoryId, targetUserId, cancellationToken);
                 if (existing is not null)
                     return existing.Id;
             }
@@ -123,7 +126,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
                 ImageContent = product.ImageContent,
                 ImageThumbnail = product.ImageThumbnail,
                 BaseUnitId = product.BaseUnitId,
-                ProductCategoryId = productCategoryMap[product.ProductCategoryId],
+                ProductCategoryId = targetCategoryId,
                 UserId = targetUserId
             };
 
@@ -131,7 +134,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
             return added.Id;
         }
 
-        private async Task<string?> ResolveUniqueRecipeNameAsync(string? name, string targetUserId, CancellationToken cancellationToken)
+        private async Task<string?> ResolveUniqueRecipeNameAsync(string? name, Guid categoryId, string targetUserId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return name;
@@ -139,7 +142,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Share
             var candidate = name;
             for (var attempt = 1; attempt <= MaxNameAttempts; attempt++)
             {
-                var existing = await _repository.SearchAsync(candidate, targetUserId, cancellationToken);
+                var existing = await _repository.SearchAsync(candidate, categoryId, targetUserId, cancellationToken);
                 if (existing is null)
                     return candidate;
 

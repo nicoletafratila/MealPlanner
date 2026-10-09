@@ -22,6 +22,11 @@ namespace RecipeBook.Api.Repositories
         Task<Product?> SearchAsync(string name, string userId, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Finds a product by name (case-insensitive) scoped to a user and category, or null if not found.
+        /// </summary>
+        Task<Product?> SearchAsync(string name, Guid categoryId, string userId, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Filters, sorts, and pages products for a user at the database level, returning only the requested page.
         /// </summary>
         Task<PagedQueryResult<Product>> SearchByUserAsync(

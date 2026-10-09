@@ -76,7 +76,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var command = new AddCommand { Model = model };
             var existing = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "Milk", ProductCategoryId = Guid.NewGuid() };
 
-            _repoMock.Setup(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>())).ReturnsAsync(existing);
+            _repoMock.Setup(r => r.SearchAsync("Milk", model.ProductCategoryId, "user1", It.IsAny<CancellationToken>())).ReturnsAsync(existing);
 
             var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -87,7 +87,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This product already exists."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("Milk", "user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("Milk", model.ProductCategoryId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Product>(It.IsAny<ProductEditModel>()), Times.Never);
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -98,7 +98,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var model = new ProductEditModel { Id = Guid.Empty, Name = "Bread", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new AddCommand { Model = model };
 
-            _repoMock.Setup(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.SearchAsync("Bread", model.ProductCategoryId, "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
 
             var mappedEntity = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "Bread", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 
@@ -110,7 +110,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.SearchAsync("Bread", "user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("Bread", model.ProductCategoryId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Product>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -121,7 +121,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var model = new ProductEditModel { Id = Guid.Empty, Name = "ImageProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new AddCommand { Model = model };
 
-            _repoMock.Setup(r => r.SearchAsync("ImageProduct", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.SearchAsync("ImageProduct", model.ProductCategoryId, "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
 
             using var image = new Image<Rgba32>(4, 4);
             using var ms = new MemoryStream();
@@ -150,7 +150,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Add
             var model = new ProductEditModel { Id = Guid.Empty, Name = "ErrorProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new AddCommand { Model = model };
 
-            _repoMock.Setup(r => r.SearchAsync("ErrorProduct", "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
+            _repoMock.Setup(r => r.SearchAsync("ErrorProduct", model.ProductCategoryId, "user1", It.IsAny<CancellationToken>())).ReturnsAsync((Data.Entities.Product?)null);
 
             var mappedEntity = new Data.Entities.Product { Id = Guid.NewGuid(), Name = "ErrorProduct", ProductCategoryId = Guid.NewGuid(), BaseUnitId = Guid.NewGuid() };
 

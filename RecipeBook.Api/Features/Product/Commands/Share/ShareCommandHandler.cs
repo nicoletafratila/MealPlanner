@@ -37,7 +37,8 @@ namespace RecipeBook.Api.Features.Product.Commands.Share
                     request.TargetUserId,
                     cancellationToken);
 
-                var uniqueName = await ResolveUniqueProductNameAsync(source.Name, request.TargetUserId, cancellationToken);
+                var targetCategoryId = categoryMap[source.ProductCategoryId];
+                var uniqueName = await ResolveUniqueProductNameAsync(source.Name, targetCategoryId, request.TargetUserId, cancellationToken);
 
                 var shared = new Data.Entities.Product
                 {
@@ -45,7 +46,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Share
                     ImageContent = source.ImageContent,
                     ImageThumbnail = source.ImageThumbnail,
                     BaseUnitId = source.BaseUnitId,
-                    ProductCategoryId = categoryMap[source.ProductCategoryId],
+                    ProductCategoryId = targetCategoryId,
                     UserId = request.TargetUserId
                 };
 
@@ -60,7 +61,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Share
             }
         }
 
-        private async Task<string?> ResolveUniqueProductNameAsync(string? name, string targetUserId, CancellationToken cancellationToken)
+        private async Task<string?> ResolveUniqueProductNameAsync(string? name, Guid categoryId, string targetUserId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return name;
@@ -68,7 +69,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Share
             var candidate = name;
             for (var attempt = 1; attempt <= MaxNameAttempts; attempt++)
             {
-                var existing = await _repository.SearchAsync(candidate, targetUserId, cancellationToken);
+                var existing = await _repository.SearchAsync(candidate, categoryId, targetUserId, cancellationToken);
                 if (existing is null)
                     return candidate;
 

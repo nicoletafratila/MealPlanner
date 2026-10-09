@@ -57,16 +57,16 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
                     categories.Where(c => c is not null).Select(c => c!.Id).Distinct().ToDictionary(id => id, id => id));
         }
 
-        private static Data.Entities.Product CreateProduct(Guid id, string name, string userId = "user1")
+        private static Data.Entities.Product CreateProduct(Guid id, string name, string userId = "user1", Guid? categoryId = null)
         {
-            var categoryId = Guid.NewGuid();
+            var catId = categoryId ?? Guid.NewGuid();
             return new()
             {
                 Id = id,
                 Name = name,
                 BaseUnitId = Guid.NewGuid(),
-                ProductCategoryId = categoryId,
-                ProductCategory = new Data.Entities.ProductCategory { Id = categoryId, Name = "Category", UserId = userId },
+                ProductCategoryId = catId,
+                ProductCategory = new Data.Entities.ProductCategory { Id = catId, Name = "Category", UserId = userId },
                 UserId = userId
             };
         }
@@ -74,15 +74,16 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
         private static Data.Entities.Recipe CreateRecipe(
             Guid id,
             string name,
-            IList<Data.Entities.RecipeIngredient>? ingredients = null)
+            IList<Data.Entities.RecipeIngredient>? ingredients = null,
+            Guid? categoryId = null)
         {
-            var categoryId = Guid.NewGuid();
+            var catId = categoryId ?? Guid.NewGuid();
             return new()
             {
                 Id = id,
                 Name = name,
-                RecipeCategoryId = categoryId,
-                RecipeCategory = new Data.Entities.RecipeCategory { Id = categoryId, Name = "Category", UserId = "user1" },
+                RecipeCategoryId = catId,
+                RecipeCategory = new Data.Entities.RecipeCategory { Id = catId, Name = "Category", UserId = "user1" },
                 UserId = "user1",
                 RecipeIngredients = ingredients ?? []
             };
@@ -353,7 +354,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
 
             _productRepoMock
                 .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<Data.Entities.Product> { CreateProduct(existingProductId, "Flour", "user2") });
+                .ReturnsAsync(new List<Data.Entities.Product> { CreateProduct(existingProductId, "Flour", "user2", product.ProductCategoryId) });
 
             _repoMock
                 .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
@@ -374,7 +375,46 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
         }
 
         [Test]
-        public async Task Handle_NameCollisionWithExistingTargetRecipe_AppendsCopySuffix()
+        public async Task Handle_SameProductNameDifferentCategory_ClonesSeparately_DoesNotReuseExisting()
+        {
+            var command = new ShareAllCommand { TargetUserId = "user2" };
+
+            var productId = Guid.NewGuid();
+            var product = CreateProduct(productId, "Flour");
+
+            var recipe = CreateRecipe(Guid.NewGuid(), "R1",
+                [new Data.Entities.RecipeIngredient { ProductId = productId, Product = product, UnitId = Guid.NewGuid(), Quantity = 1 }]);
+
+            _repoMock
+                .Setup(r => r.GetAllByUserIncludeIngredientsAsync("user1", It.IsAny<IEnumerable<FilterItem>?>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Data.Entities.Recipe> { recipe });
+
+            // Existing target product has the same name but a different category, so it must not be reused.
+            _productRepoMock
+                .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Data.Entities.Product> { CreateProduct(Guid.NewGuid(), "Flour", "user2") });
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Data.Entities.Recipe>());
+
+            List<Data.Entities.Product>? addedProducts = null;
+            SetUpAddRangeProducts(list => addedProducts = list.ToList());
+
+            _repoMock
+                .Setup(r => r.AddRangeAsync(It.IsAny<IEnumerable<Data.Entities.Recipe>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((IEnumerable<Data.Entities.Recipe> recipes, CancellationToken _) => recipes.ToList());
+
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(addedProducts, Has.Count.EqualTo(1));
+
+            _productRepoMock.Verify(r => r.AddRangeAsync(It.IsAny<IEnumerable<Data.Entities.Product>>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_SameRecipeNameDifferentCategory_DoesNotAppendCopySuffix()
         {
             var command = new ShareAllCommand { TargetUserId = "user2" };
 
@@ -388,9 +428,42 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
                 .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<Data.Entities.Product>());
 
+            // Existing target recipe has the same name but a different category, so it must not force a suffix.
             _repoMock
                 .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<Data.Entities.Recipe> { CreateRecipe(Guid.NewGuid(), "My Recipe") });
+
+            List<Data.Entities.Recipe>? addedRecipes = null;
+            _repoMock
+                .Setup(r => r.AddRangeAsync(It.IsAny<IEnumerable<Data.Entities.Recipe>>(), It.IsAny<CancellationToken>()))
+                .Callback<IEnumerable<Data.Entities.Recipe>, CancellationToken>((recipes, _) => addedRecipes = recipes.ToList())
+                .ReturnsAsync((IEnumerable<Data.Entities.Recipe> recipes, CancellationToken _) => recipes.ToList());
+
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(addedRecipes![0].Name, Is.EqualTo("My Recipe"));
+        }
+
+        [Test]
+        public async Task Handle_NameCollisionWithExistingTargetRecipe_AppendsCopySuffix()
+        {
+            var command = new ShareAllCommand { TargetUserId = "user2" };
+
+            var categoryId = Guid.NewGuid();
+            var recipe = CreateRecipe(Guid.NewGuid(), "My Recipe", categoryId: categoryId);
+
+            _repoMock
+                .Setup(r => r.GetAllByUserIncludeIngredientsAsync("user1", It.IsAny<IEnumerable<FilterItem>?>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Data.Entities.Recipe> { recipe });
+
+            _productRepoMock
+                .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Data.Entities.Product>());
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<Data.Entities.Recipe> { CreateRecipe(Guid.NewGuid(), "My Recipe", categoryId: categoryId) });
 
             List<Data.Entities.Recipe>? addedRecipes = null;
             _repoMock
@@ -409,8 +482,9 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
         {
             var command = new ShareAllCommand { TargetUserId = "user2" };
 
-            var recipe1 = CreateRecipe(Guid.NewGuid(), "My Recipe");
-            var recipe2 = CreateRecipe(Guid.NewGuid(), "My Recipe");
+            var categoryId = Guid.NewGuid();
+            var recipe1 = CreateRecipe(Guid.NewGuid(), "My Recipe", categoryId: categoryId);
+            var recipe2 = CreateRecipe(Guid.NewGuid(), "My Recipe", categoryId: categoryId);
 
             _repoMock
                 .Setup(r => r.GetAllByUserIncludeIngredientsAsync("user1", It.IsAny<IEnumerable<FilterItem>?>(), It.IsAny<CancellationToken>()))
@@ -445,7 +519,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
         {
             var command = new ShareAllCommand { TargetUserId = "user2" };
 
-            var recipe = CreateRecipe(Guid.NewGuid(), "My Recipe");
+            var categoryId = Guid.NewGuid();
+            var recipe = CreateRecipe(Guid.NewGuid(), "My Recipe", categoryId: categoryId);
 
             _repoMock
                 .Setup(r => r.GetAllByUserIncludeIngredientsAsync("user1", It.IsAny<IEnumerable<FilterItem>?>(), It.IsAny<CancellationToken>()))
@@ -459,8 +534,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
                 .Setup(r => r.GetAllByUserAsync("user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<Data.Entities.Recipe>
                 {
-                    CreateRecipe(Guid.NewGuid(), "My Recipe"),
-                    CreateRecipe(Guid.NewGuid(), "My Recipe (Copy)")
+                    CreateRecipe(Guid.NewGuid(), "My Recipe", categoryId: categoryId),
+                    CreateRecipe(Guid.NewGuid(), "My Recipe (Copy)", categoryId: categoryId)
                 });
 
             List<Data.Entities.Recipe>? addedRecipes = null;

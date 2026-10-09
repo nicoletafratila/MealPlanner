@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Features.Product.Commands.Add
                 if (string.IsNullOrEmpty(userId))
                     return CommandResponse.Failed(ProductMessages.UserIdRequired);
 
-                var existingItem = await _repository.SearchAsync(request.Model.Name!, userId, cancellationToken);
+                var existingItem = await _repository.SearchAsync(request.Model.Name!, request.Model.ProductCategoryId, userId, cancellationToken);
                 if (existingItem is not null)
                     return CommandResponse.Failed(ProductMessages.ProductAlreadyExists);
 

@@ -34,6 +34,12 @@ namespace RecipeBook.Api.Features.Product.Commands.Update
                     return CommandResponse.Failed(string.Format(ProductMessages.NotFoundById, request.Model.Id));
                 }
 
+                var duplicate = await _repository.SearchAsync(request.Model.Name!, request.Model.ProductCategoryId, existingItem.UserId!, cancellationToken);
+                if (duplicate is not null && duplicate.Id != existingItem.Id)
+                {
+                    return CommandResponse.Failed(ProductMessages.ProductAlreadyExists);
+                }
+
                 _mapper.Map(request.Model, existingItem);
                 existingItem.ImageThumbnail = ImageThumbnailGenerator.CreateThumbnail(existingItem.ImageContent);
                 await _repository.UpdateAsync(existingItem, cancellationToken);

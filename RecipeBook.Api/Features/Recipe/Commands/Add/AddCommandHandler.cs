@@ -35,7 +35,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.Add
                 if (string.IsNullOrEmpty(userId))
                     return CommandResponse.Failed(RecipeMessages.UserIdRequired);
 
-                var existingItem = await _repository.SearchAsync(request.Model.Name!, userId, cancellationToken);
+                var existingItem = await _repository.SearchAsync(request.Model.Name!, request.Model.RecipeCategoryId, userId, cancellationToken);
                 if (existingItem is not null)
                 {
                     return CommandResponse.Failed(RecipeMessages.RecipeAlreadyExists);

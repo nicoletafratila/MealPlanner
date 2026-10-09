@@ -95,7 +95,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var existing = new Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe", RecipeCategoryId = Guid.NewGuid() };
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user1", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existing);
 
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -107,7 +107,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("This recipe already exists in this category."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("My Recipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("My Recipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(It.IsAny<RecipeEditModel>()), Times.Never);
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Recipe>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -125,7 +125,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("New Recipe", "user1", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("New Recipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             var mappedEntity = new Data.Entities.Recipe
@@ -148,7 +148,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Succeeded, Is.True);
 
-            _repoMock.Verify(r => r.SearchAsync("New Recipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("New Recipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -166,7 +166,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("ImageRecipe", "user1", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("ImageRecipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             using var image = new Image<Rgba32>(4, 4);
@@ -207,7 +207,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
             var command = new AddCommand { Model = model };
 
             _repoMock
-                .Setup(r => r.SearchAsync("ErrorRecipe", "user1", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("ErrorRecipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             var mappedEntity = new Data.Entities.Recipe
@@ -234,7 +234,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 Assert.That(result.Message, Is.EqualTo("An error occurred when saving the recipe."));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("ErrorRecipe", "user1", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("ErrorRecipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Recipe>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
 

@@ -123,6 +123,22 @@ namespace RecipeBook.Api.Repositories
                     cancellationToken);
         }
 
+        public async Task<Recipe?> SearchAsync(
+            string name,
+            Guid categoryId,
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            return await Context.Recipes
+                .Include(x => x.RecipeCategory)
+                .FirstOrDefaultAsync(
+                    x => x.UserId == userId && x.RecipeCategoryId == categoryId && x.Name != null && x.Name.ToLower() == name.ToLower(),
+                    cancellationToken);
+        }
+
         public async Task<PagedQueryResult<Recipe>> SearchByUserAsync(
             string userId,
             Guid? categoryId,

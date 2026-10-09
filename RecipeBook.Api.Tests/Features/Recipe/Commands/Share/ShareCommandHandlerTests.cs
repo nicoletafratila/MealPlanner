@@ -53,7 +53,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
         private void SetUpProductClone(Data.Entities.Product product, Guid clonedProductId)
         {
             _productRepoMock
-                .Setup(r => r.SearchAsync(product.Name!, "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync(product.Name!, product.ProductCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Product?)null);
 
             _productRepoMock
@@ -180,7 +180,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", categoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             SetUpProductClone(product, clonedProductId);
@@ -209,7 +209,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 Assert.That(added.RecipeIngredients![0].Quantity, Is.EqualTo(2));
             }
 
-            _repoMock.Verify(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("My Recipe", categoryId, "user2", It.IsAny<CancellationToken>()), Times.Once);
             _repoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Recipe>(), It.IsAny<CancellationToken>()), Times.Once);
             _productRepoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -253,7 +253,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             SetUpProductClone(product, clonedProductId);
@@ -295,11 +295,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe" });
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe (Copy)", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe (Copy)", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             Data.Entities.Recipe? added = null;
@@ -313,8 +313,8 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
             Assert.That(result!.Succeeded, Is.True);
             Assert.That(added!.Name, Is.EqualTo("My Recipe (Copy)"));
 
-            _repoMock.Verify(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()), Times.Once);
-            _repoMock.Verify(r => r.SearchAsync("My Recipe (Copy)", "user2", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(r => r.SearchAsync("My Recipe (Copy)", recipeCategoryId, "user2", It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -339,15 +339,15 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe" });
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe (Copy)", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe (Copy)", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Data.Entities.Recipe { Id = Guid.NewGuid(), Name = "My Recipe (Copy)" });
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe (Copy 2)", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe (Copy 2)", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             Data.Entities.Recipe? added = null;
@@ -384,7 +384,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             _repoMock
@@ -447,11 +447,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             _productRepoMock
-                .Setup(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Flour", productCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Product?)null);
 
             _productRepoMock
@@ -516,11 +516,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", resolvedRecipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             _productRepoMock
-                .Setup(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Flour", resolvedProductCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Product?)null);
 
             _productRepoMock
@@ -589,11 +589,11 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
                 .ReturnsAsync(source);
 
             _repoMock
-                .Setup(r => r.SearchAsync("My Recipe", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("My Recipe", recipeCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
             _productRepoMock
-                .Setup(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()))
+                .Setup(r => r.SearchAsync("Flour", productCategoryId, "user2", It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Data.Entities.Product { Id = existingProductId, Name = "Flour", UserId = "user2" });
 
             Data.Entities.Recipe? added = null;
@@ -608,7 +608,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Share
             Assert.That(added!.RecipeIngredients, Has.Count.EqualTo(1));
             Assert.That(added.RecipeIngredients![0].ProductId, Is.EqualTo(existingProductId));
 
-            _productRepoMock.Verify(r => r.SearchAsync("Flour", "user2", It.IsAny<CancellationToken>()), Times.Once);
+            _productRepoMock.Verify(r => r.SearchAsync("Flour", productCategoryId, "user2", It.IsAny<CancellationToken>()), Times.Once);
             _productRepoMock.Verify(r => r.AddAsync(It.IsAny<Data.Entities.Product>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }

@@ -73,13 +73,13 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
             CancellationToken cancellationToken)
         {
             var existingTargetProducts = await _productRepository.GetAllByUserAsync(targetUserId, cancellationToken);
-            var existingTargetProductsByName = existingTargetProducts
+            var existingTargetProductsByNameAndCategory = existingTargetProducts
                 .Where(p => !string.IsNullOrWhiteSpace(p.Name))
-                .GroupBy(p => p.Name!, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+                .GroupBy(p => (p.ProductCategoryId, Name: p.Name!.ToLowerInvariant()))
+                .ToDictionary(g => g.Key, g => g.First());
 
             var targetProductBySourceProductId = new Dictionary<Guid, Data.Entities.Product>();
-            var stagedProductsByName = new Dictionary<string, Data.Entities.Product>(StringComparer.OrdinalIgnoreCase);
+            var stagedProductsByNameAndCategory = new Dictionary<(Guid ProductCategoryId, string Name), Data.Entities.Product>();
             var newProducts = new List<Data.Entities.Product>();
 
             foreach (var ingredient in sourceRecipes.SelectMany(r => r.RecipeIngredients ?? []))
@@ -90,13 +90,17 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                 var product = ingredient.Product;
                 ArgumentNullException.ThrowIfNull(product);
 
-                if (!string.IsNullOrWhiteSpace(product.Name) && existingTargetProductsByName.TryGetValue(product.Name, out var existing))
+                var targetCategoryId = productCategoryMap[product.ProductCategoryId];
+                var hasName = !string.IsNullOrWhiteSpace(product.Name);
+                var key = (targetCategoryId, Name: product.Name?.ToLowerInvariant() ?? string.Empty);
+
+                if (hasName && existingTargetProductsByNameAndCategory.TryGetValue(key, out var existing))
                 {
                     targetProductBySourceProductId[ingredient.ProductId] = existing;
                     continue;
                 }
 
-                if (!string.IsNullOrWhiteSpace(product.Name) && stagedProductsByName.TryGetValue(product.Name, out var staged))
+                if (hasName && stagedProductsByNameAndCategory.TryGetValue(key, out var staged))
                 {
                     targetProductBySourceProductId[ingredient.ProductId] = staged;
                     continue;
@@ -108,15 +112,15 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     ImageContent = product.ImageContent,
                     ImageThumbnail = product.ImageThumbnail,
                     BaseUnitId = product.BaseUnitId,
-                    ProductCategoryId = productCategoryMap[product.ProductCategoryId],
+                    ProductCategoryId = targetCategoryId,
                     UserId = targetUserId
                 };
 
                 newProducts.Add(cloned);
                 targetProductBySourceProductId[ingredient.ProductId] = cloned;
 
-                if (!string.IsNullOrWhiteSpace(product.Name))
-                    stagedProductsByName[product.Name] = cloned;
+                if (hasName)
+                    stagedProductsByNameAndCategory[key] = cloned;
             }
 
             if (newProducts.Count > 0)
@@ -133,14 +137,24 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
             CancellationToken cancellationToken)
         {
             var existingTargetRecipes = await _repository.GetAllByUserAsync(targetUserId, cancellationToken);
-            var usedNames = new HashSet<string>(
-                existingTargetRecipes.Where(r => r.Name is not null).Select(r => r.Name!),
-                StringComparer.OrdinalIgnoreCase);
+            var usedNamesByCategory = existingTargetRecipes
+                .Where(r => r.Name is not null)
+                .GroupBy(r => r.RecipeCategoryId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => new HashSet<string>(g.Select(r => r.Name!), StringComparer.OrdinalIgnoreCase));
 
             var sharedRecipes = new List<Data.Entities.Recipe>();
 
             foreach (var source in sourceRecipes)
             {
+                var targetCategoryId = recipeCategoryMap[source.RecipeCategoryId];
+                if (!usedNamesByCategory.TryGetValue(targetCategoryId, out var usedNames))
+                {
+                    usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    usedNamesByCategory[targetCategoryId] = usedNames;
+                }
+
                 var uniqueName = ResolveUniqueRecipeName(source.Name, usedNames);
 
                 var sharedIngredients = source.RecipeIngredients?
@@ -158,7 +172,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     Source = source.Source,
                     ImageContent = source.ImageContent,
                     ImageThumbnail = source.ImageThumbnail,
-                    RecipeCategoryId = recipeCategoryMap[source.RecipeCategoryId],
+                    RecipeCategoryId = targetCategoryId,
                     UserId = targetUserId,
                     RecipeIngredients = sharedIngredients
                 });
