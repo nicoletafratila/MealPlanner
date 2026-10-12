@@ -38,6 +38,8 @@ dotnet ef database update --project MealPlanner.Api
 - `RecipeBook.Api` — recipes, products, categories, units (port 7201)
 - `MealPlanner.Api` — meal plans, shopping lists, shops; calls RecipeBook.Api internally (port 7249)
 
+APIs call each other bidirectionally: `MealPlanner.Api` calls `RecipeBook.Api` for recipe/product data, and `RecipeBook.Api` calls back into `MealPlanner.Api` (via `IMealPlannerClient` in `RecipeBook.Api/Abstractions`) to check shop/meal-plan references before deleting a recipe or resolving shopping-list products. These cross-API clients are typed `HttpClient` wrappers forwarding the caller's auth token, distinct from the `*.Services.Http` libraries used by the frontends.
+
 **Frontend clients:**
 - `MealPlanner.UI.Web` — Blazor Server app (MudBlazor); calls all three APIs (port 7093)
 - `MealPlanner.UI.Mobile` — .NET MAUI app (Android/Windows) with Page + ViewModel MVVM structure
@@ -93,6 +95,8 @@ Error messages are in `.resx` resource files under `Features/<Domain>/Resources/
 **Logging:** Serilog, minimum level Error. Writes to console, rolling hourly file (`Logs/logs.log`), and SQL Server `dbo.Logs` table. Configured identically in `Program.cs` of each service.
 
 **Seed data:** `MealPlanner.Api` runs `SeedData.EnsureSeedDataAsync` on startup.
+
+**Sharing:** Recipes, products, product categories, and shops can be shared to another user. A `Share` command copies the entity to the target user; for recipes/products this also needs their category copied/matched on the target user's account, which is handled by `I<Entity>CategoryShareResolver` services in `RecipeBook.Api/Services` (find-or-create a same-named category owned by the target user).
 
 ### UI service layer (Blazor and MAUI)
 

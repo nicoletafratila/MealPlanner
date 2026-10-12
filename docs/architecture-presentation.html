@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MealPlanner — Architecture Overview</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/white.css" id="theme">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+<style>
+  :root{
+    --ink:#1f2937; --sub:#4b5563; --accent:#2563eb; --accent2:#16a34a; --accent3:#9333ea;
+    --card:#f8fafc; --border:#e2e8f0;
+  }
+  .reveal { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--ink); }
+  .reveal h1, .reveal h2, .reveal h3 { font-weight: 700; text-transform: none; letter-spacing: 0; }
+  .reveal h1 { color: var(--accent); font-size: 2.1em; }
+  .reveal h2 { color: var(--accent); font-size: 1.5em; margin-bottom: 0.4em; }
+  .reveal h3 { color: var(--sub); font-size: 1.0em; font-weight: 600; }
+  .reveal p, .reveal li { color: var(--ink); }
+  .subtitle { color: var(--sub); font-size: 0.6em; font-weight: 400; margin-top: 0.3em; }
+  .tagline { color: var(--sub); font-size: 0.55em; font-weight: 400; margin-top: 1.2em; }
+
+  .cards { display: flex; gap: 20px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; width: 250px; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .card h3 { margin: 0 0 8px 0; font-size: 0.85em; color: var(--accent); }
+  .card p { font-size: 0.6em; margin: 0; color: var(--sub); line-height: 1.4; }
+
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; text-align: left; }
+  .feature-grid .item { font-size: 0.65em; background: var(--card); border-left: 4px solid var(--accent); border-radius: 6px; padding: 10px 16px; }
+  .feature-grid .item b { color: var(--ink); }
+
+  .pipeline { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 50px; flex-wrap: wrap; }
+  .pipeline .step {
+    background: var(--card); border: 2px solid var(--accent); border-radius: 10px;
+    padding: 14px 16px; font-size: 0.55em; font-weight: 600; min-width: 120px;
+  }
+  .pipeline .arrow { font-size: 1.3em; color: var(--sub); }
+
+  table.stack { font-size: 0.55em; border-collapse: collapse; margin-top: 20px; width: 100%; }
+  table.stack td, table.stack th { border-bottom: 1px solid var(--border); padding: 8px 14px; text-align: left; }
+  table.stack th { color: var(--accent); }
+
+  .footnote { font-size: 0.4em; color: var(--sub); margin-top: 40px; }
+
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+  <!-- 1: Title -->
+  <section>
+    <h1>MealPlanner</h1>
+    <div class="subtitle">Plan meals. Share recipes. Shop smarter.</div>
+    <div class="tagline">A multi-service .NET application &mdash; Blazor Server web app + .NET MAUI mobile app,<br>backed by three independent APIs and a shared SQL Server database.</div>
+  </section>
+
+  <!-- 2: Elevator pitch -->
+  <section>
+    <h2>What it does</h2>
+    <div class="cards">
+      <div class="card"><h3>📖 Recipe Book</h3><p>Recipes, ingredients, units, categories, and per-recipe statistics.</p></div>
+      <div class="card"><h3>🗓️ Meal Planning</h3><p>Assign recipes to days/meals to build out a weekly plan.</p></div>
+      <div class="card"><h3>🛒 Shopping Lists</h3><p>Auto-generated from a meal plan, grouped by shop.</p></div>
+      <div class="card"><h3>🤝 Sharing</h3><p>Share a recipe, product, or shop with another user, categories included.</p></div>
+    </div>
+  </section>
+
+  <!-- 3: Platforms -->
+  <section>
+    <h2>One account, every device</h2>
+    <div class="feature-grid">
+      <div class="item">🌐 <b>Web app</b> &mdash; Blazor Server + MudBlazor, responsive, port 7093</div>
+      <div class="item">📱 <b>Mobile app</b> &mdash; .NET MAUI, Android &amp; Windows, Page+ViewModel MVVM</div>
+      <div class="item">🔐 <b>Identity</b> &mdash; Duende IdentityServer, JWT + cookie auth</div>
+      <div class="item">📝 <b>Audit trail</b> &mdash; account activity logged and reviewable</div>
+    </div>
+  </section>
+
+  <!-- 4: Architecture diagram -->
+  <section>
+    <h2>System architecture</h2>
+    <svg viewBox="0 0 980 560" width="100%" height="520">
+      <!-- Clients -->
+      <rect x="110" y="20" width="220" height="60" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="220" y="45" text-anchor="middle" font-size="16" font-weight="700" fill="#2563eb">MealPlanner.UI.Web</text>
+      <text x="220" y="64" text-anchor="middle" font-size="11" fill="#4b5563">Blazor Server · :7093</text>
+
+      <rect x="650" y="20" width="220" height="60" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="760" y="45" text-anchor="middle" font-size="16" font-weight="700" fill="#2563eb">MealPlanner.UI.Mobile</text>
+      <text x="760" y="64" text-anchor="middle" font-size="11" fill="#4b5563">.NET MAUI (Android/Windows)</text>
+
+      <!-- APIs -->
+      <rect x="40" y="200" width="220" height="80" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+      <text x="150" y="235" text-anchor="middle" font-size="16" font-weight="700" fill="#16a34a">Identity.Api</text>
+      <text x="150" y="255" text-anchor="middle" font-size="11" fill="#4b5563">Auth, users · :5001</text>
+
+      <rect x="380" y="200" width="220" height="80" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+      <text x="490" y="230" text-anchor="middle" font-size="16" font-weight="700" fill="#9333ea">RecipeBook.Api</text>
+      <text x="490" y="250" text-anchor="middle" font-size="11" fill="#4b5563">Recipes, products,</text>
+      <text x="490" y="265" text-anchor="middle" font-size="11" fill="#4b5563">categories, units · :7201</text>
+
+      <rect x="720" y="200" width="220" height="80" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+      <text x="830" y="230" text-anchor="middle" font-size="16" font-weight="700" fill="#ea580c">MealPlanner.Api</text>
+      <text x="830" y="250" text-anchor="middle" font-size="11" fill="#4b5563">Meal plans, shopping</text>
+      <text x="830" y="265" text-anchor="middle" font-size="11" fill="#4b5563">lists, shops · :7249</text>
+
+      <!-- Shared DB -->
+      <rect x="330" y="440" width="320" height="70" rx="10" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+      <text x="490" y="470" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">SQL Server</text>
+      <text x="490" y="490" text-anchor="middle" font-size="11" fill="#4b5563">MealPlannerDbContext (shared, NoTracking)</text>
+
+      <!-- Arrows: clients -> all APIs -->
+      <g stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+        <path d="M200,80 L160,200"/>
+        <path d="M250,80 L470,200"/>
+        <path d="M300,80 L790,200"/>
+        <path d="M720,80 L170,200"/>
+        <path d="M740,80 L500,200"/>
+        <path d="M800,80 L830,200"/>
+      </g>
+
+      <!-- RecipeBook <-> MealPlanner bidirectional -->
+      <path d="M600,230 L718,230" stroke="#ea580c" stroke-width="2" fill="none" marker-end="url(#arrow-orange)"/>
+      <path d="M718,255 L600,255" stroke="#9333ea" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+      <text x="660" y="220" text-anchor="middle" font-size="10" fill="#ea580c">shopping-list lookup</text>
+      <text x="660" y="272" text-anchor="middle" font-size="10" fill="#9333ea">shop/meal-plan check</text>
+
+      <!-- APIs -> DB -->
+      <g stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+        <path d="M160,280 L420,440"/>
+        <path d="M490,280 L490,440"/>
+        <path d="M830,280 L560,440"/>
+      </g>
+
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#94a3b8"/></marker>
+        <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker>
+        <marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9333ea"/></marker>
+      </defs>
+    </svg>
+    <p class="footnote">All three APIs authenticate via Identity.Api and share one EF Core DbContext. RecipeBook.Api and MealPlanner.Api call each other directly over HTTP for cross-domain lookups.</p>
+  </section>
+
+  <!-- 5: Per-domain library structure -->
+  <section>
+    <h2>Per-domain library structure</h2>
+    <p class="subtitle" style="text-align:left">Identity, RecipeBook, and MealPlanner each follow the same layering:</p>
+    <table class="stack">
+      <tr><th>Suffix</th><th>Purpose</th></tr>
+      <tr><td><code>*.Data.Entities</code></td><td>EF Core entity classes</td></tr>
+      <tr><td><code>*.Data.Profiles</code></td><td>AutoMapper profiles</td></tr>
+      <tr><td><code>*.Data.TableConfigurations</code></td><td><code>IEntityTypeConfiguration&lt;T&gt;</code> classes</td></tr>
+      <tr><td><code>*.Services.Http</code></td><td>Typed HttpClient wrappers used by the frontends</td></tr>
+      <tr><td><code>*.Shared</code></td><td>DTOs and route constants shared between API and consumers</td></tr>
+    </table>
+    <p class="footnote">Plus cross-cutting <code>Common.*</code> libraries: Core (DI/Startup), DataContext, Repository, Models, Pagination, Http, Services, Validators, Constants, UI.</p>
+  </section>
+
+  <!-- 6: Request pipeline -->
+  <section>
+    <h2>Request pipeline (inside each API)</h2>
+    <div class="pipeline">
+      <div class="step">Controller</div><div class="arrow">→</div>
+      <div class="step">MediatR<br>ISender.Send()</div><div class="arrow">→</div>
+      <div class="step">FluentValidation<br>pipeline behavior</div><div class="arrow">→</div>
+      <div class="step">Handler</div><div class="arrow">→</div>
+      <div class="step">Repository</div><div class="arrow">→</div>
+      <div class="step">DbContext</div>
+    </div>
+    <p class="footnote" style="text-align:center; margin-top:50px;">Handlers never throw outward &mdash; they return <code>CommandResponse.Success()</code> / <code>Failed(message)</code>.<br>Controllers always reply <code>200 OK</code>; callers check <code>.Succeeded</code>. Each feature = Command/Query + Validator + Handler, 3 files, one folder.</p>
+  </section>
+
+  <!-- 7: Quality -->
+  <section>
+    <h2>Built for maintainability</h2>
+    <div class="feature-grid">
+      <div class="item">✅ <b>Mirror test projects</b> &mdash; every project has a matching <code>.Tests</code> project, NUnit + Moq</div>
+      <div class="item">🗄️ <b>Centralized logging</b> &mdash; Serilog to console, rolling file, and SQL Server, consistent across all 3 APIs</div>
+      <div class="item">🌍 <b>Localization-ready</b> &mdash; all user-facing strings in <code>.resx</code> resources, not hardcoded</div>
+      <div class="item">🔒 <b>Policy-based auth</b> &mdash; every endpoint requires an explicit authorization policy + role</div>
+    </div>
+  </section>
+
+  <!-- 8: Closing -->
+  <section>
+    <h1>Thank you</h1>
+    <div class="tagline">MealPlanner — a clean-architecture reference app for personal meal &amp; grocery planning.</div>
+  </section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({ hash: true, width: 1100, height: 700, margin: 0.06, transition: 'slide' });
+</script>
+</body>
+</html>
