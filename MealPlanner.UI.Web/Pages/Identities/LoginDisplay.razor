@@ -2,8 +2,6 @@
     .profile-actions {
         display: flex;
         align-items: center;
-        text-align: end;
-        align-items: flex-end;
     }
 
         .profile-actions a {
@@ -22,11 +20,19 @@
         }
 
     .profile-icon {
-        width: 24px; 
+        width: 24px;
         height: 24px;
         border-radius: 50%;
         object-fit: cover;
     }
+
+    .auth-links a {
+        margin-right: 0.75rem;
+    }
+
+        .auth-links a:last-child {
+            margin-right: 0;
+        }
 </style>
 
 <AuthorizeView>
@@ -44,8 +50,10 @@
         </div>
     </Authorized>
         <NotAuthorized>
-            <a href="identities/register">@Resources.LoginDisplay.RegisterLink</a>
-            <a href="identities/login">@Resources.LoginDisplay.LogInLink</a>
+            <div class="auth-links">
+                <a href="identities/register">@Resources.LoginDisplay.RegisterLink</a>
+                <a href="identities/login">@Resources.LoginDisplay.LogInLink</a>
+            </div>
         </NotAuthorized>
         <Authorizing>
             @Resources.LoginDisplay.AuthorizingMessage

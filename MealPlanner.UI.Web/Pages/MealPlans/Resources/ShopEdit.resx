@@ -52,12 +52,6 @@
   <data name="BackToOverviewButton" xml:space="preserve">
     <value>Back to overview</value>
   </data>
-  <data name="BreadcrumbShops" xml:space="preserve">
-    <value>Shops</value>
-  </data>
-  <data name="BreadcrumbShop" xml:space="preserve">
-    <value>Shop</value>
-  </data>
   <data name="DeleteDialogTitle" xml:space="preserve">
     <value>Are you sure you want to delete this?</value>
   </data>

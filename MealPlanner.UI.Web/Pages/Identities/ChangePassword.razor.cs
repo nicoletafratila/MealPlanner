@@ -1,4 +1,3 @@
-using BlazorBootstrap;
 using Common.UI;
 using Identity.Services.Http;
 using Identity.Shared.Models;
@@ -10,7 +9,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
     [Authorize]
     public partial class ChangePassword
     {
-        private List<BreadcrumbItem> _navItems = default!;
         private bool _invalidLink;
 
         [CascadingParameter(Name = "MessageComponent")]
@@ -32,11 +30,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
         protected override void OnInitialized()
         {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.ChangePassword.PageTitle }
-            ];
-
             if (string.IsNullOrWhiteSpace(UserId))
             {
                 _invalidLink = true;

@@ -1,5 +1,22 @@
+.nav-toggle-row {
+    display: none;
+}
+
 .navbar-toggler {
     background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.25rem 0.75rem;
+}
+
+.home-link {
+    display: none;
+}
+
+.collapse {
+    display: none;
 }
 
 .nav-menu {
@@ -9,8 +26,6 @@
 
 .nav-item {
     font-size: 0.9rem;
-    background-color: beige;
-    max-width: 200px;
 }
 
     .nav-item:first-of-type {
@@ -32,15 +47,19 @@
     }
 
         .nav-item ::deep a.active {
-            background-color: rgba(255,255,255,0.5);
+            background-color: rgba(46, 139, 87, 0.12);
             color: darkorange;
-            background-color: beige;
         }
 
         .nav-item ::deep a:hover {
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(46, 139, 87, 0.08);
             color: darkorange;
         }
+
+    .home-nav-item ::deep a.active {
+        background-color: transparent;
+        color: seagreen;
+    }
 
 @media (min-width: 641px) {
     .navbar-toggler {
@@ -49,5 +68,68 @@
 
     .collapse {
         display: block;
+    }
+}
+
+@media (max-width: 640.98px) {
+    .nav-toggle-row {
+        display: flex;
+        align-items: center;
+        column-gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .home-link {
+        display: flex;
+        align-items: center;
+        color: seagreen;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+        .home-link.active {
+            color: seagreen;
+        }
+
+    .home-nav-item {
+        display: none;
+    }
+
+    .nav-menu {
+        padding-left: 0 !important;
+        width: 100%;
+    }
+
+    .nav-item {
+        max-width: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+        .nav-item:first-of-type {
+            padding-top: 0;
+        }
+
+        .nav-item:last-of-type {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .nav-item ::deep a {
+            height: auto;
+            line-height: normal;
+            padding: 0.85rem 0;
+            border-radius: 0;
+        }
+
+    .nav-menu:not(.collapse) {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        max-height: 70vh;
+        overflow-y: auto;
     }
 }

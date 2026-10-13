@@ -8,7 +8,15 @@
       "PowerShell(dotnet build *)",
       "Bash(xargs ls)",
       "Bash(dotnet sln *)",
-      "Read(//c/Users/nfratila/.claude/**)"
+      "Read(//c/Users/nfratila/.claude/**)",
+      "Skill(playwright-cli)",
+      "Bash(playwright-cli screenshot *)",
+      "Bash(playwright-cli press *)",
+      "Bash(playwright-cli close *)",
+      "Bash(playwright-cli requests *)",
+      "Bash(playwright-cli eval *)",
+      "Bash(playwright-cli click *)",
+      "PowerShell(Get-Process *)"
     ]
   }
 }

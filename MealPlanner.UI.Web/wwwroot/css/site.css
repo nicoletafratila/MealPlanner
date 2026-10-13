@@ -13,6 +13,13 @@
     overflow: visible !important;
 }
 
+/* Blazor.Bootstrap's Grid sets HeaderRowCssClass="bg-primary ..." on the header <tr>, but
+   <th> cells size to content while the <tr>/<table> stretch to the container's full width,
+   leaving the tr's own blue background visible in the slack space past the last header cell. */
+.bb-table thead tr {
+    background-color: #fff !important;
+}
+
 .card-gridTemplate {
     width: max-content;
     min-width: stretch;

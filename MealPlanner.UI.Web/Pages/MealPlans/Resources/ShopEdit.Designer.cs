@@ -70,24 +70,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shop.
-        /// </summary>
-        internal static string BreadcrumbShop {
-            get {
-                return ResourceManager.GetString("BreadcrumbShop", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shops.
-        /// </summary>
-        internal static string BreadcrumbShops {
-            get {
-                return ResourceManager.GetString("BreadcrumbShops", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string ColumnName {

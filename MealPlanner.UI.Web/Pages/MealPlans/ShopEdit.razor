@@ -3,7 +3,6 @@
 @using MealPlanner.Shared.Models
 
 <div class="d-flex justify-content-between align-items-center">
-    <Breadcrumb Items="_navItems"></Breadcrumb>
     @if (Shop != null && Shop.Id != Guid.Empty)
     {
         <button class="btn btn-link p-0" type="button" title="@Resources.ShopEdit.ShareButton" @onclick="async () => await ShareAsync()">

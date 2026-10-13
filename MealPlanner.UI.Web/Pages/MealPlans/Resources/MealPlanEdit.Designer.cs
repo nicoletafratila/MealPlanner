@@ -97,24 +97,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Meal plan.
-        /// </summary>
-        internal static string BreadcrumbMealPlan {
-            get {
-                return ResourceManager.GetString("BreadcrumbMealPlan", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Meal plans.
-        /// </summary>
-        internal static string BreadcrumbMealPlans {
-            get {
-                return ResourceManager.GetString("BreadcrumbMealPlans", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Choose....
         /// </summary>
         internal static string ChooseOption {

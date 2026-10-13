@@ -61,15 +61,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Home.
-        /// </summary>
-        internal static string BreadcrumbHome {
-            get {
-                return ResourceManager.GetString("BreadcrumbHome", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to #.
         /// </summary>
         internal static string ColumnIndex {

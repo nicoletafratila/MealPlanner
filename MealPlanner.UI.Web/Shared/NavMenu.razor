@@ -1,8 +1,17 @@
 @using MudBlazor
 
-<div @onclick="ToggleNavMenu" class="nav-menu">
-    <div class="nav-item px-3">
-        <MudNavLink class="nav-link" href="/">
+<div class="nav-toggle-row">
+    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <i class="bi bi-list"></i>
+    </button>
+    <MudNavLink class="home-link" href="/" Match="NavLinkMatch.All">
+        <i class="bi bi-house me-1"></i> @Resources.NavMenu.Home
+    </MudNavLink>
+</div>
+
+<div @onclick="ToggleNavMenu" class="nav-menu @NavMenuCssClass">
+    <div class="nav-item px-3 home-nav-item">
+        <MudNavLink class="nav-link" href="/" Match="NavLinkMatch.All">
             <i class="bi bi-house me-1"></i> @Resources.NavMenu.Home
         </MudNavLink>
     </div>

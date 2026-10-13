@@ -1,4 +1,3 @@
-using BlazorBootstrap;
 using Common.UI;
 using Identity.Services.Http;
 using Identity.Shared.Models;
@@ -12,7 +11,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
     [Authorize]
     public partial class UserProfile
     {
-        private List<BreadcrumbItem> _navItems = default!;
         private readonly long _maxFileSize = 1024L * 1024L * 1024L * 3L;
 
         [CascadingParameter(Name = "MessageComponent")]
@@ -33,11 +31,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems = new List<BreadcrumbItem>
-            {
-                new BreadcrumbItem{ Text = Resources.UserProfile.BreadcrumbHome, Href ="recipebooks/recipesoverview" }
-            };
-
             if (string.IsNullOrWhiteSpace(Name))
             {
                 ApplicationUser = new ApplicationUserEditModel();

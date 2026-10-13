@@ -70,24 +70,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unit.
-        /// </summary>
-        internal static string BreadcrumbUnit {
-            get {
-                return ResourceManager.GetString("BreadcrumbUnit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Units.
-        /// </summary>
-        internal static string BreadcrumbUnits {
-            get {
-                return ResourceManager.GetString("BreadcrumbUnits", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         internal static string DeleteButton {

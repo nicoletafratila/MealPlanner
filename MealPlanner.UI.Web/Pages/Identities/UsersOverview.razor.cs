@@ -13,7 +13,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
     [Authorize(Roles = "admin")]
     public partial class UsersOverview
     {
-        private List<BreadcrumbItem> _navItems = [];
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
         private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
@@ -27,14 +26,6 @@ namespace MealPlanner.UI.Web.Pages.Identities
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
-
-        protected override void OnInitialized()
-        {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.UsersOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
-            ];
-        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

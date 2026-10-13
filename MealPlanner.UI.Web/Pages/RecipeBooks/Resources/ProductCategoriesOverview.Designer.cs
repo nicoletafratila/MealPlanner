@@ -61,15 +61,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Home.
-        /// </summary>
-        internal static string BreadcrumbHome {
-            get {
-                return ResourceManager.GetString("BreadcrumbHome", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to This will delete the record. Once deleted it cannot be rolled back..
         /// </summary>
         internal static string DeleteDialogMessage1 {

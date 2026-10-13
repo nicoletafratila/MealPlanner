@@ -18,7 +18,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class ShopsOverview
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ShopModel>? _shopsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
         private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
@@ -39,14 +38,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
-
-        protected override void OnInitialized()
-        {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.ShopsOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
-            ];
-        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

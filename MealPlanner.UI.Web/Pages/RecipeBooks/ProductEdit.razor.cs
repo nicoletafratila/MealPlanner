@@ -14,7 +14,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     public partial class ProductEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = [];
 
         // 3 MB max file size
         private readonly long _maxFileSize = 1024L * 1024L * 3L;
@@ -47,12 +46,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.ProductEdit.BreadcrumbProducts, Href = "recipebooks/productsoverview" },
-                new BreadcrumbItem { Text = Resources.ProductEdit.BreadcrumbProduct, IsCurrentPage = true },
-            ];
-
             Units = await UnitService.SearchAsync();
 
             var queryParameters = new QueryParameters<ProductCategoryModel>

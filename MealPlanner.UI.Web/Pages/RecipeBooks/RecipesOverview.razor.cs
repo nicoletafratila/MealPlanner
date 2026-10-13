@@ -20,7 +20,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     public partial class RecipesOverview
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<RecipeModel>? _recipesGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
         private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
@@ -60,11 +59,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.RecipesOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
-            ];
-
             var queryParameters = new QueryParameters<RecipeCategoryModel>
             {
                 Filters = [],

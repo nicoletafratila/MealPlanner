@@ -63,9 +63,6 @@
   <data name="BackToOverviewButton" xml:space="preserve">
     <value>Back to overview</value>
   </data>
-  <data name="BreadcrumbHome" xml:space="preserve">
-    <value>Home</value>
-  </data>
   <data name="SaveSucceeded" xml:space="preserve">
     <value>Data has been saved successfully</value>
   </data>

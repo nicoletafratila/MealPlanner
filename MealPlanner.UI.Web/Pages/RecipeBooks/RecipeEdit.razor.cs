@@ -17,7 +17,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     public partial class RecipeEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = default!;
         private readonly long _maxFileSize = 1024L * 1024L * 3L;
 
         [CascadingParameter(Name = "MessageComponent")]
@@ -72,12 +71,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new() { Text = Resources.RecipeEdit.BreadcrumbRecipes, Href = "recipebooks/recipesoverview" },
-                new() { Text = Resources.RecipeEdit.BreadcrumbRecipe, IsCurrentPage = true },
-            ];
-
             var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>
             {
                 Filters = [],

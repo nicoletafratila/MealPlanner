@@ -45,17 +45,17 @@
     color: #333;
     font-weight: bold;
     text-align: left;
-    margin: 20px 0;
+    margin: 10px 0 0 6px;
 }
 
 .motto-text {
     display: flex;
     align-items: flex-start;
     justify-content: left;
-    padding: 10px 0px 0px 10px;
+    padding: 0px 0px 0px 10px;
     font-size: 14px;
     color: #333;
-    margin-top: 10px;
+    margin-top: 0;
     width: 475px;
 }
 
@@ -129,5 +129,46 @@
     .top-row, article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
+    }
+}
+
+@media (max-width: 640.98px) {
+    .banner-container {
+        min-width: 0;
+        padding: 8px 0.5rem 0;
+    }
+
+    .logo-image {
+        max-width: 56px;
+        max-height: 56px;
+    }
+
+    .logo-text {
+        font-size: 15px;
+        margin: 8px 0;
+    }
+
+    .logo-title-cell,
+    .motto-text {
+        width: auto;
+    }
+
+    .motto-text {
+        font-size: 12px;
+        padding-left: 0;
+    }
+
+    .image-column {
+        width: auto;
+        padding-right: 0;
+    }
+
+    .main-content-cell {
+        padding-right: 0;
+    }
+
+    .layout-table td.nav-cell {
+        position: relative;
+        margin: 0;
     }
 }

@@ -88,24 +88,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recipe.
-        /// </summary>
-        internal static string BreadcrumbRecipe {
-            get {
-                return ResourceManager.GetString("BreadcrumbRecipe", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Recipes.
-        /// </summary>
-        internal static string BreadcrumbRecipes {
-            get {
-                return ResourceManager.GetString("BreadcrumbRecipes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Choose....
         /// </summary>
         internal static string ChooseOption {

@@ -20,7 +20,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class ShoppingListEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = default!;
         private ShopEditModel? _shop;
         private bool showCopiedMessage;
 
@@ -82,12 +81,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new() { Text = Resources.ShoppingListEdit.BreadcrumbShoppingLists, Href = "mealplans/shoppinglistsoverview" },
-                new() { Text = Resources.ShoppingListEdit.BreadcrumbShoppingList, IsCurrentPage = true },
-            ];
-
             var queryParametersProduct = new QueryParameters<ProductCategoryModel>
             {
                 Filters = [],

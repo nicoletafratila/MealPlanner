@@ -17,7 +17,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class ShoppingListsOverview
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = [];
         private GridTemplate<ShoppingListModel>? _shoppingListsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
         private BlazorBootstrap.SortDirection _createdAtSortDirection = BlazorBootstrap.SortDirection.Descending;
@@ -39,14 +38,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
-
-        protected override void OnInitialized()
-        {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.ShoppingListsOverview.BreadcrumbHome, Href = "recipebooks/recipesoverview" }
-            ];
-        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

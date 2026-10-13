@@ -15,7 +15,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class ShopEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = [];
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -39,12 +38,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new BreadcrumbItem { Text = Resources.ShopEdit.BreadcrumbShops, Href = "mealplans/shopsoverview" },
-                new BreadcrumbItem { Text = Resources.ShopEdit.BreadcrumbShop, IsCurrentPage = true },
-            ];
-
             _ = Guid.TryParse(Id, out var id);
             if (id == Guid.Empty)
             {

@@ -11,7 +11,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     public partial class RecipeCategoryEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = [];
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -29,12 +28,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new() { Text = Resources.RecipeCategoryEdit.BreadcrumbRecipeCategories, Href = "recipebooks/recipecategoriesoverview" },
-                new() { Text = Resources.RecipeCategoryEdit.BreadcrumbRecipeCategory, IsCurrentPage = true },
-            ];
-
             if (!Guid.TryParse(Id, out var id) || id == Guid.Empty)
             {
                 RecipeCategory = new RecipeCategoryEditModel();

@@ -39,12 +39,6 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="BreadcrumbUnits" xml:space="preserve">
-		<value>Units</value>
-	</data>
-	<data name="BreadcrumbUnit" xml:space="preserve">
-		<value>Unit</value>
-	</data>
 	<data name="LabelUnitName" xml:space="preserve">
 		<value>Unit name</value>
 	</data>

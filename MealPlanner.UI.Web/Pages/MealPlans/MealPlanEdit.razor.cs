@@ -18,7 +18,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class MealPlanEdit
     {
         private ConfirmDialog _dialog = default!;
-        private List<BreadcrumbItem> _navItems = default!;
         private Offcanvas _offCanvas = default!;
         private Shared.GridTemplate<RecipeModel>? _selectedRecipeGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
@@ -63,12 +62,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         protected override async Task OnInitializedAsync()
         {
-            _navItems =
-            [
-                new() { Text = Resources.MealPlanEdit.BreadcrumbMealPlans, Href = "mealplans/mealplansoverview" },
-                new() { Text = Resources.MealPlanEdit.BreadcrumbMealPlan, IsCurrentPage = true },
-            ];
-
             var queryParameters = new QueryParameters<RecipeCategoryModel>
             {
                 Filters = [],

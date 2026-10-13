@@ -51,9 +51,6 @@
 	<data name="HeaderName" xml:space="preserve">
 		<value>Name</value>
 	</data>
-	<data name="BreadcrumbHome" xml:space="preserve">
-		<value>Home</value>
-	</data>
 	<data name="DeleteDialogTitle" xml:space="preserve">
 		<value>Are you sure you want to delete this?</value>
 	</data>

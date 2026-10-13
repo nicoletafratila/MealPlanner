@@ -5,24 +5,35 @@
 @inherits LayoutComponentBase
 
 <style>
-    .login-cell,
-    .contact-cell,
-    .privacy-cell,
-    .about-cell {
-        width: 1%;
-        white-space: nowrap;
-        padding: 0;
-        text-align: end;
-        vertical-align: middle;
-        align-content: flex-end;
+    .header-table {
+        width: 100%;
     }
 
-        .contact-cell a,
-        .privacy-cell a,
-        .about-cell a {
-            display: inline-block;
-            padding-left: 0.5em;
-        }
+    .header-bottom-cell {
+        padding: 0;
+    }
+
+    .header-bottom-flex {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        column-gap: 1rem;
+    }
+
+    .login-cell {
+        white-space: nowrap;
+    }
+
+    .header-links-cell {
+        padding: 0.5rem 0 0;
+        text-align: right;
+    }
+
+    .header-links {
+        display: flex;
+        justify-content: flex-end;
+        column-gap: 1em;
+    }
 
     .motto-text {
         font-size: 1.1rem;
@@ -32,8 +43,8 @@
     }
 
     .current-menu-cell {
+        flex: 1 1 auto;
         text-align: center;
-        vertical-align: bottom;
         white-space: nowrap;
     }
 
@@ -41,6 +52,65 @@
         font-size: 0.95rem;
         font-weight: 500;
         margin: 0;
+    }
+
+    @@media (max-width: 640.98px) {
+        .header-table,
+        .layout-table {
+            display: block;
+            width: 100%;
+        }
+
+        .layout-table tr,
+        .layout-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .header-row-top {
+            display: flex;
+            align-items: center;
+            column-gap: 0.5rem;
+        }
+
+            .header-row-top td {
+                display: block;
+                width: auto;
+            }
+
+            .header-row-top td:empty {
+                display: none;
+            }
+
+        .header-bottom-flex {
+            flex-direction: column;
+            align-items: flex-start;
+            row-gap: 0.25rem;
+        }
+
+        .header-links-cell {
+            text-align: left;
+            padding-top: 0;
+        }
+
+        .header-links {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            column-gap: 0.75rem;
+            row-gap: 0.25rem;
+        }
+
+        .motto-text {
+            width: auto;
+        }
+
+        .login-cell,
+        .header-links a,
+        .current-menu-cell {
+            text-align: left;
+            white-space: normal;
+            font-size: 0.85rem;
+        }
     }
 </style>
 
@@ -52,8 +122,8 @@
     </MudPaper>
 
     <div class="banner-container">
-        <table>
-            <tr>
+        <table class="header-table">
+            <tr class="header-row-top">
                 <td class="image-column">
                    <img src="Images\logo2.png" alt="Logo Image" class="logo-image" />
                 </td>
@@ -69,44 +139,46 @@
                 <td>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2">
-                    <p class="motto-text">@Resources.MainLayout.Motto</p>
+            <tr class="header-row-bottom">
+                <td colspan="6" class="header-bottom-cell">
+                    <div class="header-bottom-flex">
+                        <p class="motto-text">@Resources.MainLayout.Motto</p>
+                        <div class="current-menu-cell">
+                            @if (_currentMealPlan is not null)
+                            {
+                                <p class="current-menu-link">
+                                    @Resources.MainLayout.CurrentMenuLabel <a href="mealplans/mealplanedit/@_currentMealPlan.Id">@_currentMealPlan.Name</a>
+                                </p>
+                            }
+                            else if (_isAuthenticated && !_loadFailed)
+                            {
+                                <p class="current-menu-link">
+                                    @Resources.MainLayout.NoMenuYetPrefix<a href="mealplans/mealplanedit/">@Resources.MainLayout.NoMenuYetLinkText</a>@Resources.MainLayout.NoMenuYetSuffix
+                                </p>
+                            }
+                        </div>
+                        <div class="login-cell">
+                            <LoginDisplay />
+                        </div>
+                    </div>
                 </td>
-                <td class="current-menu-cell">
-                    @if (_currentMealPlan is not null)
-                    {
-                        <p class="current-menu-link">
-                            @Resources.MainLayout.CurrentMenuLabel <a href="mealplans/mealplanedit/@_currentMealPlan.Id">@_currentMealPlan.Name</a>
-                        </p>
-                    }
-                    else if (_isAuthenticated && !_loadFailed)
-                    {
-                        <p class="current-menu-link">
-                            @Resources.MainLayout.NoMenuYetPrefix<a href="mealplans/mealplanedit/">@Resources.MainLayout.NoMenuYetLinkText</a>@Resources.MainLayout.NoMenuYetSuffix
-                        </p>
-                    }
-                </td>
-                <td class="login-cell">
-                    <LoginDisplay />
-                </td>
-                <td class="contact-cell">
-                    <a href="contactus/">@Resources.MainLayout.ContactUs</a>
-                </td>
-                <td class="privacy-cell">
-                    <a href="privacypolicy/">@Resources.MainLayout.PrivacyPolicy</a>
-                </td>
-                <td class="about-cell">
-                    <a href="https://linkedin.com/in/claudia-nicoleta-fratila" target="_blank">@Resources.MainLayout.AboutMe</a>
+            </tr>
+            <tr class="header-row-links">
+                <td colspan="6" class="header-links-cell">
+                    <div class="header-links">
+                        <a href="contactus/">@Resources.MainLayout.ContactUs</a>
+                        <a href="privacypolicy/">@Resources.MainLayout.PrivacyPolicy</a>
+                        <a href="https://linkedin.com/in/claudia-nicoleta-fratila" target="_blank">@Resources.MainLayout.AboutMe</a>
+                    </div>
                 </td>
             </tr>
         </table>
         <hr class="custom-line">
     </div>
 
-    <table class="w-100 h-100">
+    <table class="w-100 h-100 layout-table">
         <tr>
-            <td class="row">
+            <td class="row nav-cell">
                 <NavMenu />
             </td>
             <td class="main-content-cell">
