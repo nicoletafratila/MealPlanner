@@ -59,10 +59,18 @@
         .layout-table {
             display: block;
             width: 100%;
+            position: relative;
         }
 
-        .layout-table tr,
-        .layout-table td {
+        .page-share-toolbar {
+            position: absolute;
+            top: 0;
+            right: 0.5rem;
+            z-index: 2;
+        }
+
+        .layout-table > tr,
+        .layout-table > tr > td {
             display: block;
             width: 100%;
         }

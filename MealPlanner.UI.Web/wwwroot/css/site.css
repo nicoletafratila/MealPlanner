@@ -25,6 +25,11 @@
     min-width: stretch;
 }
 
+.table-grid td:empty {
+    padding: 0 !important;
+    width: 0 !important;
+}
+
 .card-template {
     display: flex;
     flex-direction: column;
@@ -32,6 +37,12 @@
     height: 200px !important;
     border: 1px solid #D3D3D3;
     border-radius: 5px;
+}
+
+@media (max-width: 640.98px) {
+    .card-template {
+        width: 160px !important;
+    }
 }
 
     .card-template .card-header {
@@ -82,7 +93,7 @@
 }
 
 .chart-row {
-    height: 400px;
+    min-height: 400px;
 }
 
 .card-cover-img {
@@ -109,6 +120,18 @@
 @media (max-width: 576px) {
     .col-sm-8 {
         margin-left: 10px !important;
+    }
+}
+
+@media (max-width: 640.98px) {
+    .bb-table input[type="date"],
+    .bb-table input[type="datetime-local"] {
+        width: 20px;
+        min-width: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        direction: rtl;
     }
 }
 

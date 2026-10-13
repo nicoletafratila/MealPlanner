@@ -16,7 +16,15 @@
       "Bash(playwright-cli requests *)",
       "Bash(playwright-cli eval *)",
       "Bash(playwright-cli click *)",
-      "PowerShell(Get-Process *)"
+      "PowerShell(Get-Process *)",
+      "Bash(playwright-cli goto *)",
+      "Bash(playwright-cli resize *)",
+      "Bash(playwright-cli fill *)",
+      "Bash(playwright-cli console *)",
+      "Bash(playwright-cli snapshot *)",
+      "Bash(playwright-cli open *)",
+      "Bash(playwright-cli reload *)",
+      "PowerShell(Get-NetTCPConnection *)"
     ]
   }
 }

@@ -1,7 +1,7 @@
 ﻿@page "/recipebooks/productedit"
 @page "/recipebooks/productedit/{id}"
 
-<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-end align-items-center page-share-toolbar">
     @if (Product.Id != Guid.Empty)
     {
         <button class="btn btn-link p-0" type="button" title="@Resources.ProductEdit.ShareButton" @onclick="async () => await ShareAsync()">
