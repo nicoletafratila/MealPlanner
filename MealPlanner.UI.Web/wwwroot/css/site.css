@@ -3,6 +3,23 @@
     width: inherit;
 }
 
+/* On phones the card must not grow past the viewport to fit the grid's natural
+   width — cap it and let the table columns compress/wrap instead. Compact filter
+   buttons give the name column the room that saves. */
+@media (max-width: 640.98px) {
+    .card {
+        min-width: 0;
+    }
+
+    .bb-table thead .btn {
+        padding: 0.25rem 0.35rem;
+    }
+
+    .bb-table thead .me-2 {
+        margin-right: 0.15rem !important;
+    }
+}
+
 /* GridTemplate's Grid renders its own .table-responsive div with an inline
    style="overflow-x:auto;" (from Responsive="true"), which implicitly clips vertical
    overflow too, cutting off an open category filter dropdown when the grid is short
@@ -30,19 +47,15 @@
     width: 0 !important;
 }
 
+/* The card fills its grid track — the track sizing (desktop auto-fill columns,
+   single column on phones) lives in GridTemplate.razor's .table-grid rules. */
 .card-template {
     display: flex;
     flex-direction: column;
-    width: 178px !important;
+    width: 100% !important;
     height: 200px !important;
     border: 1px solid #D3D3D3;
     border-radius: 5px;
-}
-
-@media (max-width: 640.98px) {
-    .card-template {
-        width: 160px !important;
-    }
 }
 
     .card-template .card-header {
@@ -63,7 +76,26 @@
         text-align: left;
         font-size: 14px;
         position: relative;
+        overflow: hidden;
     }
+
+        .card-template .card-body table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        /* Under table-layout:fixed the global .fill-space width:100% would swallow the whole
+           table, collapsing the icon columns to ~0 and overlapping the icons. */
+        .card-template .card-body .fill-space {
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-template .card-body .min-space {
+            width: 30px;
+        }
 
 .small-icon {
     width: 25px;
@@ -123,16 +155,23 @@
     }
 }
 
+/* On phones, collapse the date filter to just its calendar-picker icon: hiding
+   ::-webkit-datetime-edit removes the mm/dd/yyyy text, and the borderless 24px
+   box leaves only the indicator visible. */
 @media (max-width: 640.98px) {
     .bb-table input[type="date"],
     .bb-table input[type="datetime-local"] {
-        width: 20px;
+        width: 24px;
         min-width: 0;
         padding: 0;
         border: none;
         background: transparent;
-        direction: rtl;
     }
+
+        .bb-table input[type="date"]::-webkit-datetime-edit,
+        .bb-table input[type="datetime-local"]::-webkit-datetime-edit {
+            display: none;
+        }
 }
 
 .bb-grid-pagination-text {
