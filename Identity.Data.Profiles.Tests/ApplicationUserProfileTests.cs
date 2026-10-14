@@ -34,7 +34,8 @@ namespace Identity.Data.Profiles.Tests
                 ProfilePicture = [1, 2, 3],
                 PhoneNumber = "123456",
                 Email = "test@example.com",
-                IsActive = true
+                IsActive = true,
+                EmailConfirmed = true
             };
 
             var result = _mapper.Map<ApplicationUserEditModel>(entity);
@@ -48,6 +49,7 @@ namespace Identity.Data.Profiles.Tests
                 Assert.That(result.PhoneNumber, Is.EqualTo("123456"));
                 Assert.That(result.Email, Is.EqualTo("test@example.com"));
                 Assert.That(result.IsActive, Is.True);
+                Assert.That(result.EmailConfirmed, Is.True);
 
                 Assert.That(result.ProfilePictureUrl, Does.StartWith("data:image/jpg;base64,"));
 
@@ -57,7 +59,22 @@ namespace Identity.Data.Profiles.Tests
         }
 
         [Test]
-        public void ApplicationUser_To_ApplicationUserEditModel_Null_Picture_Generates_Empty_Base64()
+        public void ApplicationUser_To_ApplicationUserEditModel_EmailNotConfirmed_MapsFalse()
+        {
+            var entity = new ApplicationUser
+            {
+                Id = "u1",
+                UserName = "unconfirmed",
+                EmailConfirmed = false
+            };
+
+            var result = _mapper.Map<ApplicationUserEditModel>(entity);
+
+            Assert.That(result.EmailConfirmed, Is.False);
+        }
+
+        [Test]
+        public void ApplicationUser_To_ApplicationUserEditModel_Null_Picture_MapsToNull()
         {
             var entity = new ApplicationUser
             {
@@ -69,7 +86,7 @@ namespace Identity.Data.Profiles.Tests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.ProfilePictureUrl, Is.EqualTo("data:image/jpg;base64,"));
+                Assert.That(result.ProfilePictureUrl, Is.Null);
             }
         }
 

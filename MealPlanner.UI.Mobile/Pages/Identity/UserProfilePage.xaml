@@ -57,6 +57,10 @@
                 <Button Text="{x:Static res:UserProfilePage.UnlockButton}" Style="{StaticResource OutlineButton}"
                         Command="{Binding UnlockCommand}" HorizontalOptions="Start"
                         IsVisible="{Binding IsLockedOut}" />
+
+                <Button Text="{x:Static res:UserProfilePage.ResendConfirmationEmailButton}" Style="{StaticResource OutlineButton}"
+                        Command="{Binding ResendConfirmationEmailCommand}" HorizontalOptions="Start"
+                        IsVisible="{Binding EmailConfirmed, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
             </VerticalStackLayout>
 
             <Button Text="{x:Static res:UserProfilePage.ChangePasswordButton}" Style="{StaticResource OutlineButton}"

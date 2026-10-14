@@ -49,6 +49,61 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
             });
         }
 
+        private IRenderedComponent<Login> RenderComponentWithQuery(string query)
+        {
+            _ctx.Services.GetRequiredService<NavigationManager>()
+                .NavigateTo($"http://localhost/identities/login{query}");
+
+            return _ctx.Render<Login>(ps =>
+            {
+                ps.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+            });
+        }
+
+        // ---------- OnInitializedAsync ----------
+
+        [Test]
+        public void OnInitializedAsync_EmailConfirmedTrue_ShowsInfo()
+        {
+            var cut = RenderComponentWithQuery("?emailConfirmed=true");
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public void OnInitializedAsync_EmailConfirmationFailedTrue_ShowsError()
+        {
+            var cut = RenderComponentWithQuery("?emailConfirmationFailed=true");
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public void OnInitializedAsync_NoQueryParams_ShowsNoMessage()
+        {
+            var cut = RenderComponent();
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
         // ---------- OnLoginAsync ----------
         [Test]
         public async Task OnLoginAsync_Success_NavigatesToRoot()

@@ -46,6 +46,7 @@ namespace Identity.Data.Profiles
                 .ForMember(m => m.IsActive, o => o.MapFrom(s => s.IsActive))
                 .ForMember(m => m.IsLockedOut, o => o.MapFrom(s =>
                     s.LockoutEnd.HasValue && s.LockoutEnd > DateTimeOffset.UtcNow))
+                .ForMember(m => m.EmailConfirmed, o => o.MapFrom(s => s.EmailConfirmed))
                 .ReverseMap()
                 .ForSourceMember(s => s.IsLockedOut, o => o.DoNotValidate())
                 .ForSourceMember(s => s.ProfilePictureUrl, o => o.DoNotValidate());

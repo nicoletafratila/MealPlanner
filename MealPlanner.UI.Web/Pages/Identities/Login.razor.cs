@@ -25,6 +25,24 @@ namespace MealPlanner.UI.Web.Pages.Identities
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
 
+        [SupplyParameterFromQuery]
+        private bool? EmailConfirmed { get; set; }
+
+        [SupplyParameterFromQuery]
+        private bool? EmailConfirmationFailed { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            if (EmailConfirmed == true)
+            {
+                await MessageComponent!.ShowInfoAsync(Resources.Login.EmailConfirmedMessage);
+            }
+            else if (EmailConfirmationFailed == true)
+            {
+                await MessageComponent!.ShowErrorAsync(Resources.Login.EmailConfirmationFailedMessage);
+            }
+        }
+
         private async Task OnLoginAsync()
         {
             if (AuthenticationService is null)

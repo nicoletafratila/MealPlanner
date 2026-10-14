@@ -66,6 +66,12 @@
   <data name="PickPictureButton" xml:space="preserve">
     <value>Change picture</value>
   </data>
+  <data name="ResendConfirmationEmailButton" xml:space="preserve">
+    <value>Resend confirmation email</value>
+  </data>
+  <data name="ResendConfirmationEmailSucceeded" xml:space="preserve">
+    <value>Confirmation email has been resent successfully</value>
+  </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
   </data>

@@ -142,6 +142,24 @@ namespace MealPlanner.UI.Mobile.Pages.Identity.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resend confirmation email.
+        /// </summary>
+        internal static string ResendConfirmationEmailButton {
+            get {
+                return ResourceManager.GetString("ResendConfirmationEmailButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation email has been resent successfully.
+        /// </summary>
+        internal static string ResendConfirmationEmailSucceeded {
+            get {
+                return ResourceManager.GetString("ResendConfirmationEmailSucceeded", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string SaveButton {

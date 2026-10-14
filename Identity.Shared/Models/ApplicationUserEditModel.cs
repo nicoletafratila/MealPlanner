@@ -49,5 +49,7 @@ namespace Identity.Shared.Models
         public bool IsActive { get; set; }
 
         public bool IsLockedOut { get; set; }
+
+        public bool EmailConfirmed { get; set; }
     }
 }

@@ -68,6 +68,15 @@ namespace Identity.Api.Features.ApplicationUser.Resources {
                 return ResourceManager.GetString("EmailAddressRequired", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This user's email address is already confirmed..
+        /// </summary>
+        internal static string EmailAlreadyConfirmed {
+            get {
+                return ResourceManager.GetString("EmailAlreadyConfirmed", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Model is required..
@@ -96,6 +105,15 @@ namespace Identity.Api.Features.ApplicationUser.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while resending the confirmation email..
+        /// </summary>
+        internal static string ResendConfirmationEmailError {
+            get {
+                return ResourceManager.GetString("ResendConfirmationEmailError", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while updating the user..
         /// </summary>

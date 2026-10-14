@@ -70,6 +70,24 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email confirmation failed. The link may be invalid or expired..
+        /// </summary>
+        internal static string EmailConfirmationFailedMessage {
+            get {
+                return ResourceManager.GetString("EmailConfirmationFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your email has been confirmed. You can now log in..
+        /// </summary>
+        internal static string EmailConfirmedMessage {
+            get {
+                return ResourceManager.GetString("EmailConfirmedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Forgot password?.
         /// </summary>
         internal static string ForgotPasswordButton {

@@ -1,6 +1,7 @@
 ﻿using Common.Models;
 using Common.Pagination;
 using Identity.Api.Controllers;
+using Identity.Api.Features.ApplicationUser.Commands.ResendConfirmationEmail;
 using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Identity.Api.Features.ApplicationUser.Commands.Update;
 using Identity.Api.Features.ApplicationUser.Queries.GetEdit;
@@ -292,6 +293,88 @@ namespace Identity.Api.Tests.Controllers
                 .ReturnsAsync(success);
 
             var result = await _controller.UnlockAsync(command, CancellationToken.None);
+
+            var okResult = result.Result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(okResult!.Value, Is.SameAs(success));
+
+            _mediatorMock.Verify(m => m.Send(command, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        #endregion
+
+        #region ResendConfirmationEmailAsync
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_NullCommand_ReturnsBadRequest()
+        {
+            var result = await _controller.ResendConfirmationEmailAsync(null!, CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<ResendConfirmationEmailCommand>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_EmptyUserId_ReturnsBadRequest()
+        {
+            var result = await _controller.ResendConfirmationEmailAsync(new ResendConfirmationEmailCommand { UserId = "" }, CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+
+            _mediatorMock.Verify(
+                m => m.Send(It.IsAny<ResendConfirmationEmailCommand>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_ResponseNull_Returns500()
+        {
+            var command = new ResendConfirmationEmailCommand { UserId = "user-1" };
+
+            _mediatorMock
+                .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                .ReturnsAsync((CommandResponse?)null);
+
+            var result = await _controller.ResendConfirmationEmailAsync(command, CancellationToken.None);
+
+            var objResult = result.Result as ObjectResult;
+            Assert.That(objResult, Is.Not.Null);
+            Assert.That(objResult!.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_ResponseFailed_ReturnsBadRequest()
+        {
+            var command = new ResendConfirmationEmailCommand { UserId = "user-1" };
+            var failed = CommandResponse.Failed("Resend failed");
+
+            _mediatorMock
+                .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(failed);
+
+            var result = await _controller.ResendConfirmationEmailAsync(command, CancellationToken.None);
+
+            var badRequest = result.Result as BadRequestObjectResult;
+            Assert.That(badRequest, Is.Not.Null);
+            Assert.That(badRequest!.Value, Is.SameAs(failed));
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_ResponseSucceeded_ReturnsOk()
+        {
+            var command = new ResendConfirmationEmailCommand { UserId = "user-1" };
+            var success = CommandResponse.Success();
+
+            _mediatorMock
+                .Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(success);
+
+            var result = await _controller.ResendConfirmationEmailAsync(command, CancellationToken.None);
 
             var okResult = result.Result as OkObjectResult;
             Assert.That(okResult, Is.Not.Null);

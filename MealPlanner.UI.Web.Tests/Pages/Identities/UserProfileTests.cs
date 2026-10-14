@@ -329,5 +329,77 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
                 m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
+
+        // ---------- ResendConfirmationEmailAsync ----------
+
+        private IRenderedComponent<UserProfile> RenderUnconfirmedUser(string name = "testuser", string userId = "user-id")
+        {
+            _appUserServiceMock
+                .Setup(s => s.GetEditAsync(name, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ApplicationUserEditModel
+                {
+                    UserId = userId,
+                    Username = name,
+                    FirstName = "Test",
+                    LastName = "User",
+                    EmailConfirmed = false
+                });
+
+            return _ctx.Render<UserProfile>(ps =>
+            {
+                ps.AddCascadingValue("MessageComponent", _messageComponentMock.Object);
+                ps.Add(p => p.Name, name);
+            });
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_Success_ShowsInfo()
+        {
+            _appUserServiceMock
+                .Setup(s => s.ResendConfirmationEmailAsync("user-id", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = true });
+
+            var cut = RenderUnconfirmedUser(userId: "user-id");
+            var method = GetMethod("ResendConfirmationEmailAsync");
+
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_Failure_ShowsError()
+        {
+            _appUserServiceMock
+                .Setup(s => s.ResendConfirmationEmailAsync("user-id", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CommandResponse { Succeeded = false, Message = "Resend failed." });
+
+            var cut = RenderUnconfirmedUser(userId: "user-id");
+            var method = GetMethod("ResendConfirmationEmailAsync");
+
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("Resend failed.", It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            _messageComponentMock.Verify(
+                m => m.ShowInfoAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
     }
 }

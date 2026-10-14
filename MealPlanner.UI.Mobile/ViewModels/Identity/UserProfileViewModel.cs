@@ -30,6 +30,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
         [ObservableProperty]
         private bool _isLockedOut;
 
+        [ObservableProperty]
+        private bool _emailConfirmed;
+
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
         {
@@ -50,6 +53,7 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                 {
                     Model = await userService.GetEditAsync(targetUsername);
                     IsLockedOut = Model?.IsLockedOut ?? false;
+                    EmailConfirmed = Model?.EmailConfirmed ?? false;
                     ProfileImage = string.IsNullOrWhiteSpace(Model?.ProfilePictureUrl)
                         ? null
                         : ImageSource.FromUri(new Uri(Model.ProfilePictureUrl));
@@ -143,6 +147,31 @@ namespace MealPlanner.UI.Mobile.ViewModels.Identity
                     Model.IsLockedOut = false;
                     IsLockedOut = false;
                     SetSuccess(UserProfilePage.UnlockSucceeded);
+                }
+                else SetError(result?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task ResendConfirmationEmailAsync()
+        {
+            if (IsBusy || Model is null || string.IsNullOrWhiteSpace(Model.UserId)) return;
+            IsBusy = true;
+            ClearMessages();
+            try
+            {
+                var result = await userService.ResendConfirmationEmailAsync(Model.UserId);
+                if (result?.Succeeded == true)
+                {
+                    SetSuccess(UserProfilePage.ResendConfirmationEmailSucceeded);
                 }
                 else SetError(result?.Message);
             }

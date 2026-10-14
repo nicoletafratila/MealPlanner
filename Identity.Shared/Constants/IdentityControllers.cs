@@ -23,6 +23,7 @@ namespace Identity.Shared.Constants
         public const string EditRoute = "edit";
         public const string UnlockRoute = "unlock";
         public const string ListRoute = "list";
+        public const string ResendConfirmationEmailRoute = "resend-confirmation-email";
 
         // ContactUs sub-routes
         public const string SendRoute = "send";

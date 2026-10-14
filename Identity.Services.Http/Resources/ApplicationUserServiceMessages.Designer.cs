@@ -70,6 +70,15 @@ namespace Identity.Services.Http.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resend confirmation email failed..
+        /// </summary>
+        public static string ResendConfirmationEmailFailed {
+            get {
+                return ResourceManager.GetString("ResendConfirmationEmailFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Unlock user failed..
         /// </summary>
         public static string UnlockUserFailed {

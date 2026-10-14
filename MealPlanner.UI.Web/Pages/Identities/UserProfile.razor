@@ -96,6 +96,12 @@
                             <button class="btn btn-warning btn-sm" type="button" @onclick="UnlockUserAsync">@Resources.UserProfile.UnlockButton</button>
                         }
                     </AuthorizeView>
+                    <AuthorizeView Roles="admin" Context="resendConfirmationEmailAuthContext">
+                        @if (!ApplicationUser.EmailConfirmed)
+                        {
+                            <button class="btn btn-secondary btn-sm" type="button" @onclick="ResendConfirmationEmailAsync">@Resources.UserProfile.ResendConfirmationEmailButton</button>
+                        }
+                    </AuthorizeView>
                 </div>
             </EditForm>
         </div>

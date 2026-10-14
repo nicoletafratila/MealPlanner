@@ -66,4 +66,10 @@
   <data name="RememberMeLabel" xml:space="preserve">
     <value>Remember me</value>
   </data>
+  <data name="EmailConfirmedMessage" xml:space="preserve">
+    <value>Your email has been confirmed. You can now log in.</value>
+  </data>
+  <data name="EmailConfirmationFailedMessage" xml:space="preserve">
+    <value>Email confirmation failed. The link may be invalid or expired.</value>
+  </data>
 </root>

@@ -63,4 +63,10 @@
 	<data name="UnlockUserError" xml:space="preserve">
     <value>An error occurred while unlocking the user.</value>
   </data>
+	<data name="EmailAlreadyConfirmed" xml:space="preserve">
+    <value>This user's email address is already confirmed.</value>
+  </data>
+	<data name="ResendConfirmationEmailError" xml:space="preserve">
+    <value>An error occurred while resending the confirmation email.</value>
+  </data>
 </root>

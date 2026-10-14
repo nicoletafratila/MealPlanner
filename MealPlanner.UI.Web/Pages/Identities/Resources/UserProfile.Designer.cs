@@ -212,6 +212,24 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("UnlockButton", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Resend confirmation email.
+        /// </summary>
+        internal static string ResendConfirmationEmailButton {
+            get {
+                return ResourceManager.GetString("ResendConfirmationEmailButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation email has been resent successfully.
+        /// </summary>
+        internal static string ResendConfirmationEmailSucceeded {
+            get {
+                return ResourceManager.GetString("ResendConfirmationEmailSucceeded", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to User has been unlocked successfully.

@@ -48,4 +48,7 @@
   <data name="UnlockUserFailed" xml:space="preserve">
     <value>Unlock user failed.</value>
   </data>
+  <data name="ResendConfirmationEmailFailed" xml:space="preserve">
+    <value>Resend confirmation email failed.</value>
+  </data>
 </root>

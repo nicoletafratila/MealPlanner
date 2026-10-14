@@ -64,6 +64,28 @@ namespace Identity.Services.Http
             }
         }
 
+        public async Task<CommandResponse?> ResendConfirmationEmailAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentException("UserId must not be empty.", nameof(userId));
+            }
+            try
+            {
+                return await PostAsync($"{_controller}/{IdentityControllers.ResendConfirmationEmailRoute}", new { UserId = userId }, cancellationToken);
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogWarning(ex, "ResendConfirmationEmailAsync failed.");
+                return CommandResponse.Failed(ex.Message ?? Resources.ApplicationUserServiceMessages.ResendConfirmationEmailFailed);
+            }
+            catch (JsonException ex)
+            {
+                logger.LogError(ex, "Failed to deserialize CommandResponse for ResendConfirmationEmailAsync. UserId {UserId}", userId);
+                return CommandResponse.Failed(Resources.ApplicationUserServiceMessages.ResendConfirmationEmailFailed);
+            }
+        }
+
         public async Task<CommandResponse?> UpdateAsync(ApplicationUserEditModel model, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(model);

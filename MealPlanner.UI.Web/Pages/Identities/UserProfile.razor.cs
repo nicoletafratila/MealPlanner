@@ -80,6 +80,19 @@ namespace MealPlanner.UI.Web.Pages.Identities
             }
         }
 
+        private async Task ResendConfirmationEmailAsync()
+        {
+            var response = await ApplicationUserService!.ResendConfirmationEmailAsync(ApplicationUser!.UserId!);
+            if (response != null && !response.Succeeded)
+            {
+                await MessageComponent!.ShowErrorAsync(response.Message!);
+            }
+            else
+            {
+                await MessageComponent!.ShowInfoAsync(Resources.UserProfile.ResendConfirmationEmailSucceeded);
+            }
+        }
+
         private void NavigateToChangePassword()
         {
             NavigationManager?.NavigateTo($"identities/change-password?userId={ApplicationUser?.UserId}&name={ApplicationUser?.Username}");

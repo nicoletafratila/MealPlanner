@@ -21,6 +21,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
         // so it isn't visible from this test assembly. The literal value below is copied verbatim
         // from MealPlanner.UI.Mobile/Pages/Identity/Resources/UserProfilePage.resx.
         private const string UnlockSucceededMessage = "User has been unlocked successfully";
+        private const string ResendConfirmationEmailSucceededMessage = "Confirmation email has been resent successfully";
 
         private Mock<IApplicationUserService> _userServiceMock = null!;
         private Mock<IAuthenticationService> _authServiceMock = null!;
@@ -257,6 +258,64 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.Identity
                 Assert.That(_viewModel.ErrorMessage, Is.EqualTo("Unlock failed"));
                 Assert.That(_viewModel.IsLockedOut, Is.True);
             }
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_ModelUserIdEmpty_DoesNotCallService()
+        {
+            _viewModel.Model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", UserId = string.Empty };
+
+            await _viewModel.ResendConfirmationEmailCommand.ExecuteAsync(null);
+
+            _userServiceMock.Verify(x => x.ResendConfirmationEmailAsync(It.IsAny<string>(), CancellationToken.None), Times.Never);
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_Success_SetsSuccessMessage()
+        {
+            var model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", UserId = "user-1", EmailConfirmed = false };
+            _viewModel.Model = model;
+
+            _userServiceMock.Setup(x => x.ResendConfirmationEmailAsync("user-1", CancellationToken.None)).ReturnsAsync(CommandResponse.Success());
+
+            await _viewModel.ResendConfirmationEmailCommand.ExecuteAsync(null);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_viewModel.SuccessMessage, Is.EqualTo(ResendConfirmationEmailSucceededMessage));
+                Assert.That(_viewModel.ErrorMessage, Is.Null);
+            }
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_Failure_SetsErrorMessage()
+        {
+            var model = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", UserId = "user-1", EmailConfirmed = false };
+            _viewModel.Model = model;
+
+            _userServiceMock.Setup(x => x.ResendConfirmationEmailAsync("user-1", CancellationToken.None)).ReturnsAsync(CommandResponse.Failed("Resend failed"));
+
+            await _viewModel.ResendConfirmationEmailCommand.ExecuteAsync(null);
+
+            Assert.That(_viewModel.ErrorMessage, Is.EqualTo("Resend failed"));
+        }
+
+        [Test]
+        public async Task LoadAsync_ModelHasEmailConfirmedFalse_SetsEmailConfirmedFalse()
+        {
+            var jwt = BuildJwt(new Dictionary<string, object>
+            {
+                ["sub"] = "user-1",
+                ["name"] = "alice"
+            });
+            _tokenProviderMock.Setup(x => x.GetTokenAsync(CancellationToken.None)).ReturnsAsync(jwt);
+
+            var editModel = new ApplicationUserEditModel { Username = "alice", Email = "alice@test.com", EmailConfirmed = false };
+            _userServiceMock.Setup(x => x.GetEditAsync("alice", CancellationToken.None)).ReturnsAsync(editModel);
+
+            await _viewModel.LoadCommand.ExecuteAsync(null);
+
+            Assert.That(_viewModel.EmailConfirmed, Is.False);
         }
 
         // PickProfilePictureAsync uses MediaPicker.Default, which is not available/unit-testable

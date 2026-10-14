@@ -392,5 +392,94 @@ namespace Identity.Services.Http.Tests
             }
             mockHttp.VerifyNoOutstandingExpectation();
         }
+
+        // ---------- ResendConfirmationEmailAsync ----------
+
+        [Test]
+        public void ResendConfirmationEmailAsync_EmptyUserId_ThrowsArgumentException()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+            var service = CreateService(mockHttp);
+
+            Assert.ThrowsAsync<ArgumentException>(async () =>
+                await service.ResendConfirmationEmailAsync(""));
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_Success_ReturnsCommandResponse()
+        {
+            const string userId = "user-1";
+            var expectedResponse = new CommandResponse { Succeeded = true };
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{UserPath}/resend-confirmation-email")
+                .With(m =>
+                {
+                    var body = m.Content!.ReadAsStringAsync().Result;
+                    var doc = JsonDocument.Parse(body);
+                    return doc.RootElement.TryGetProperty("userId", out var val)
+                           && val.GetString() == userId;
+                })
+                .Respond("application/json", JsonSerializer.Serialize(expectedResponse, JsonOptions));
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.ResendConfirmationEmailAsync(userId);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_NonSuccessStatusCode_ReturnsFailedResponse()
+        {
+            const string userId = "user-1";
+            const string errorBody = "Resend error";
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{UserPath}/resend-confirmation-email")
+                .Respond(HttpStatusCode.BadRequest, "text/plain", errorBody);
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.ResendConfirmationEmailAsync(userId);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo(errorBody));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
+
+        [Test]
+        public async Task ResendConfirmationEmailAsync_OnInvalidJson_ReturnsFailedResponse()
+        {
+            const string userId = "user-1";
+
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp
+                .Expect(HttpMethod.Post, $"{BaseAddress}{UserPath}/resend-confirmation-email")
+                .Respond("application/json", "{ invalid json ");
+
+            var service = CreateService(mockHttp);
+
+            var result = await service.ResendConfirmationEmailAsync(userId);
+
+            Assert.That(result, Is.Not.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("Resend confirmation email failed."));
+            }
+            mockHttp.VerifyNoOutstandingExpectation();
+        }
     }
 }
