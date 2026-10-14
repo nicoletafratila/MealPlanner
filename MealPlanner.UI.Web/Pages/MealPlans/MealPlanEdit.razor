@@ -47,7 +47,7 @@
                             <RecipePicker Id="recipe" Recipes="Recipes?.Items" @bind-Value="RecipeId" Placeholder="@Resources.MealPlanEdit.ChooseOption" />
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-primary" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.MealPlanEdit.AddButton</button>
+                            <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.MealPlanEdit.AddButton</button>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                     <button class="btn btn-primary btn-sm" type="submit">@Resources.MealPlanEdit.SaveButton</button>
                     <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.MealPlanEdit.DeleteButton</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await SaveShoppingListAsync()">@Resources.MealPlanEdit.MakeShoppingListButton</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="@NavigateToOverview">@Resources.MealPlanEdit.BackToOverviewButton</button>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="@NavigateToOverview">@Resources.MealPlanEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

@@ -98,7 +98,7 @@
                             <ValidationMessage For="@(() => UnitId)" />
                         </div>
                         <div class="col-auto">
-                            <button id="addButton" class="btn btn-primary" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">@Resources.RecipeEdit.AddButton</button>
+                            <button id="addButton" class="btn btn-primary btn-sm" type="button" @onclick="@AddIngredientAsync" disabled="@(!CanAddIngredient)">@Resources.RecipeEdit.AddButton</button>
                         </div>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
 
                 <button type="submit" class="btn btn-primary btn-sm">@Resources.RecipeEdit.SaveButton</button>
                 <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.RecipeEdit.DeleteButton</button>
-                <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.RecipeEdit.BackToOverviewButton</button>
+                <button class="btn btn-secondary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.RecipeEdit.BackToOverviewButton</button>
             </EditForm>
         </div>
     </div>

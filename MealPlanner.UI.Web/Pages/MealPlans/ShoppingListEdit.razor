@@ -66,7 +66,7 @@
                             <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.ShoppingListEdit.PlaceholderQuantity"></InputText>
                         </div>
                         <div class="col-auto">
-                            <button id="addButton" class="btn btn-primary" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
+                            <button id="addButton" class="btn btn-primary btn-sm" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
                         </div>
                     </div>
                     <ValidationMessage For="@(() => Quantity)" />
@@ -114,7 +114,7 @@
 
                     <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">@Resources.ShoppingListEdit.AddMealPlanButton</button>
                     <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.ShoppingListEdit.AddRecipeButton</button>
-                    <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="NavigateToOverview">@Resources.ShoppingListEdit.BackToOverviewButton</button>
+                    <button class="btn btn-secondary btn-sm footer-btn" type="button" @onclick="NavigateToOverview">@Resources.ShoppingListEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>
         </div>

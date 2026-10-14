@@ -88,8 +88,8 @@
 
                 <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary btn-sm">@Resources.UserProfile.SaveButton</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToChangePassword">@Resources.UserProfile.ChangePasswordButton</button>
-                    <button class="btn btn-primary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.UserProfile.BackToOverviewButton</button>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="NavigateToChangePassword">@Resources.UserProfile.ChangePasswordButton</button>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.UserProfile.BackToOverviewButton</button>
                     <AuthorizeView Roles="admin" Context="unlockAuthContext">
                         @if (ApplicationUser.IsLockedOut)
                         {

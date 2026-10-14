@@ -183,14 +183,137 @@ h1:focus {
     outline: none;
 }
 
-a, .btn-link {
+a {
     color: #0071c1;
+}
+
+/* Brand button system — ties interactive controls to the app's own leafy
+   green/orange mark instead of generic Bootstrap blue. Rest state is seagreen
+   (matching NavMenu.razor.css's nav links); hover warms toward darkorange,
+   the same shift NavMenu already uses, so the whole app warms up consistently
+   on interaction. */
+:root {
+    --brand-primary: #2e8b57;
+    --brand-primary-hover: #25714a;
+    --brand-primary-active: #1f5c3b;
+    --brand-secondary: #8a6d5b;
+    --brand-secondary-hover-bg: rgba(138, 109, 91, 0.08);
+    --brand-danger: #c1432e;
+    --brand-danger-hover: #a73926;
+    --brand-warning: #e08a2c;
+    --brand-warning-hover: #c87620;
+    --brand-link-hover: darkorange;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.btn:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+.btn:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: none !important;
+}
+
+.btn:disabled {
+    transform: none;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+    .btn-primary:not(:disabled):hover {
+        background-color: var(--brand-primary-hover);
+        border-color: var(--brand-primary-hover);
+        box-shadow: 0 4px 10px rgba(46, 139, 87, 0.25);
+    }
+
+    .btn-primary:not(:disabled):active {
+        background-color: var(--brand-primary-active) !important;
+        border-color: var(--brand-primary-active) !important;
+    }
+
+.btn-secondary,
+.btn-outline-secondary {
+    color: var(--brand-secondary);
+    background-color: #fff;
+    border-color: var(--brand-secondary);
+}
+
+    .btn-secondary:not(:disabled):hover,
+    .btn-outline-secondary:not(:disabled):hover {
+        color: var(--brand-secondary);
+        background-color: var(--brand-secondary-hover-bg);
+        border-color: var(--brand-secondary);
+        box-shadow: 0 4px 10px rgba(138, 109, 91, 0.15);
+    }
+
+.btn-danger {
+    color: #fff;
+    background-color: var(--brand-danger);
+    border-color: var(--brand-danger);
+}
+
+    .btn-danger:not(:disabled):hover {
+        background-color: var(--brand-danger-hover);
+        border-color: var(--brand-danger-hover);
+        box-shadow: 0 4px 10px rgba(193, 67, 46, 0.25);
+    }
+
+.btn-warning {
+    color: #fff;
+    background-color: var(--brand-warning);
+    border-color: var(--brand-warning);
+}
+
+    .btn-warning:not(:disabled):hover {
+        background-color: var(--brand-warning-hover);
+        border-color: var(--brand-warning-hover);
+        box-shadow: 0 4px 10px rgba(224, 138, 44, 0.25);
+    }
+
+.btn-link {
+    color: var(--brand-primary);
+    text-decoration: none;
+}
+
+    .btn-link:not(:disabled):hover {
+        color: var(--brand-link-hover);
+        text-decoration: underline;
+    }
+
+    .btn-link.text-danger:not(:disabled):hover {
+        color: var(--brand-danger-hover) !important;
+    }
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--brand-secondary-hover-bg);
+    color: var(--brand-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+
+        .btn:not(:disabled):hover,
+        .btn:not(:disabled):active {
+            transform: none;
+        }
 }
 
 .content {
