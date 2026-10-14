@@ -17,12 +17,19 @@
     font-weight: normal;
 }
 
-.card-header img.add-icon {
+.card-header i.add-icon {
     position: absolute;
     top: 4px;
     left: 4px;
     width: 24px;
     height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--brand-primary);
+    color: #fff;
+    font-size: 1rem;
     cursor: pointer;
     z-index: 2;
 }

@@ -10,7 +10,7 @@
              Title="{x:Static res:MealPlansOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+" Command="{Binding AddCommand}" />
+        <ToolbarItem IconImageSource="add_circle.svg" Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,*">

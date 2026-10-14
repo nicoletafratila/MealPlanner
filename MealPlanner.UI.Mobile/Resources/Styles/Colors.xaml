@@ -2,8 +2,10 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#3E1F9E</Color>
+    <!-- Brand palette — matches MealPlanner.UI.Web's site.css brand tokens (the app's
+         own seagreen/orange leafy logo), not the stock MAUI template purple. -->
+    <Color x:Key="Primary">#2E8B57</Color>
+    <Color x:Key="PrimaryDark">#25714A</Color>
     <Color x:Key="PrimaryLight">#7B5DD4</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="SecondaryDark">#9880E5</Color>
@@ -20,7 +22,10 @@
 
     <Color x:Key="PageBackgroundColor">White</Color>
     <Color x:Key="CardBackgroundColor">#F9F9F9</Color>
-    <Color x:Key="ErrorColor">#B00020</Color>
+    <Color x:Key="ErrorColor">#C1432E</Color>
+    <Color x:Key="ErrorColorDark">#A73926</Color>
+    <Color x:Key="WarningColor">#E08A2C</Color>
+    <Color x:Key="WarningColorDark">#C87620</Color>
     <Color x:Key="SuccessColor">#388E3C</Color>
 
 </ResourceDictionary>

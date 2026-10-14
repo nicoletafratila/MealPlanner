@@ -11,7 +11,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:RecipeEditPage.SaveButton}" Command="{Binding SaveCommand}" />
-        <ToolbarItem Text="{x:Static res:RecipeEditPage.SelectShareUserTitle}" IconImageSource="share.png" Clicked="OnShareTapped"
+        <ToolbarItem Text="{x:Static res:RecipeEditPage.SelectShareUserTitle}" IconImageSource="share.svg" Clicked="OnShareTapped"
                      IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
     </ContentPage.ToolbarItems>
 

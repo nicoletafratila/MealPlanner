@@ -10,8 +10,8 @@
              Title="{x:Static res:RecipesOverviewPage.PageTitle}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{x:Static res:RecipesOverviewPage.ShareAllButton}" IconImageSource="share.png" Clicked="OnShareAllTapped" />
-        <ToolbarItem Text="+" Command="{Binding AddRecipeCommand}" />
+        <ToolbarItem Text="{x:Static res:RecipesOverviewPage.ShareAllButton}" IconImageSource="share.svg" Clicked="OnShareAllTapped" />
+        <ToolbarItem IconImageSource="add_circle.svg" Command="{Binding AddRecipeCommand}" />
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">

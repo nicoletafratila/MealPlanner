@@ -10,7 +10,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:ProductEditPage.SaveButton}" Command="{Binding SaveCommand}" />
-        <ToolbarItem Text="{x:Static res:ProductEditPage.SelectShareUserTitle}" IconImageSource="share.png" Clicked="OnShareTapped"
+        <ToolbarItem Text="{x:Static res:ProductEditPage.SelectShareUserTitle}" IconImageSource="share.svg" Clicked="OnShareTapped"
                      IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />
         <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
                      IsDestructive="True"
