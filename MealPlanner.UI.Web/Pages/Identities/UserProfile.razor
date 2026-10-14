@@ -31,7 +31,7 @@
                                     <Icon Name="IconName.UnlockFill" />
                                 }
                             </AuthorizeView>
-                            <img class="img-profile" src="@ApplicationUser.ProfilePictureUrl" />
+                            <img class="img-profile" src="@(ApplicationUser.ProfilePictureUrl ?? "/Images/user.jpg")" />
                         </div>
                     </td>
                 </tr>

@@ -37,7 +37,9 @@ namespace Identity.Data.Profiles
                 .ForMember(
                     m => m.ProfilePictureUrl,
                     o => o.MapFrom(s =>
-                        $"data:image/jpg;base64,{Convert.ToBase64String(s.ProfilePicture ?? Array.Empty<byte>())}"
+                        s.ProfilePicture != null && s.ProfilePicture.Length > 0
+                            ? $"data:image/jpg;base64,{Convert.ToBase64String(s.ProfilePicture)}"
+                            : null
                     ))
                 .ForMember(m => m.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber))
                 .ForMember(m => m.Email, o => o.MapFrom(s => s.Email))

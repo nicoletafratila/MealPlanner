@@ -42,7 +42,7 @@
                 @Resources.LoginDisplay.Hello
                 @if (ApplicationUser != null)
                 {
-                    <img class="profile-icon me-2" src="@ApplicationUser!.ProfilePictureUrl" />
+                    <img class="profile-icon me-2" src="@(ApplicationUser!.ProfilePictureUrl ?? "/Images/user.jpg")" />
                 }
                 @context.User!.Identity!.Name!
             </a>
