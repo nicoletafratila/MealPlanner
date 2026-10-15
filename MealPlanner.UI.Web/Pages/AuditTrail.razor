@@ -4,6 +4,10 @@
 @using Common.Services
 
 <style>
+    .audit-columns {
+        table-layout: fixed;
+    }
+
     .audit-columns th:nth-child(1),
     .audit-columns td:nth-child(1) {
         width: 180px !important;
@@ -14,6 +18,28 @@
     .audit-columns td:nth-child(2) {
         width: 150px !important;
         max-width: 150px !important;
+    }
+
+    /* width:% on a table cell is relative to the whole table, not to what's left
+       after the two fixed-px columns — calc() against (100% - 180px - 150px) splits
+       the actual remaining space 25/75 instead of 25/75 of the full table width. */
+    .audit-columns th:nth-child(3),
+    .audit-columns td:nth-child(3) {
+        width: calc((100% - 330px) * 0.25) !important;
+    }
+
+    .audit-columns th:nth-child(4),
+    .audit-columns td:nth-child(4) {
+        width: calc((100% - 330px) * 0.75) !important;
+    }
+
+    /* Timestamp's date-range control is absolutely positioned (see .filter-control in
+       AuditTrail.razor.css) so it drops down to align with the filters row, where
+       Message/Exception's own filter controls live. That row's height is otherwise
+       driven only by those single-line controls, so without extra room here the
+       two stacked date inputs would spill past the row into the data area below. */
+    .audit-columns tr.bg-primary.bg-opacity-25 th:nth-child(1) {
+        padding-bottom: 2.25rem !important;
     }
 </style>
 
@@ -34,7 +60,7 @@
     <div class="card-body">
         <GridTemplate TItem="LogModel" @key="@_gridKey" @ref="_logsGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
             <Columns>
-                <GridColumn TItem="LogModel" PropertyName="Timestamp" SortString="Timestamp" SortKeySelector="item => item.Timestamp" IsDefaultSortColumn="true" SortDirection="@_timestampSortDirection" Filterable="false">
+                <GridColumn TItem="LogModel" PropertyName="Timestamp" SortString="Timestamp" SortKeySelector="item => item.Timestamp" SortDirection="@_timestampSortDirection" Filterable="false">
                     <HeaderContent>
                         <div class="filter-header">
                             <span>@Resources.AuditTrail.HeaderTimestamp</span>

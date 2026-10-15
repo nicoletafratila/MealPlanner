@@ -1,12 +1,13 @@
-/* The filter control used to render position:absolute below the label, floating
-   independently of the header row's actual height — so the row never grew to fit it,
-   and a taller control (e.g. two stacked date inputs) just spilled past the row's
-   bottom border. Stacking label-over-control in normal flow instead means the row
-   always sizes to fit, however tall the control ends up being. */
+/* Timestamp/Level don't use the Grid's built-in filters row (they're Filterable="false"
+   and render custom controls instead), so to make those controls line up with
+   Message/Exception's filter row, they're floated out of the header row and down
+   into that row's band via position:absolute — label stays in the header row,
+   control visually drops to match. See the filters-row padding rule in AuditTrail.razor
+   for how the row is made tall enough to contain the dropped-down control. */
 .filter-header {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    align-items: center;
 }
 
 .filter-header span {
@@ -14,6 +15,11 @@
 }
 
 .filter-control {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 5;
     font-weight: normal;
 }
 
