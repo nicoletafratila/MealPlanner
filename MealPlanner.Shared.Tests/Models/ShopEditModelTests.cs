@@ -26,6 +26,8 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
+                Assert.That(model.ImageContent, Is.Null);
+                Assert.That(model.ImageUrl, Is.Null);
                 Assert.That(model.DisplaySequence, Is.Not.Null);
                 Assert.That(model.DisplaySequence, Is.Empty);
                 Assert.That(isValid, Is.False);
@@ -130,6 +132,83 @@ namespace MealPlanner.Shared.Tests.Models
 
             isValid = TryValidate(model, out results);
             Assert.That(isValid, Is.True);
+        }
+
+        [Test]
+        public void ImageContent_Null_IsValid_BecauseImageIsOptional()
+        {
+            // Arrange
+            var model = new ShopEditModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "My Shop",
+                ImageContent = null,
+                DisplaySequence =
+                [
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat1" } }
+                ]
+            };
+
+            // Act
+            var isValid = TryValidate(model, out var results);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.True);
+                Assert.That(results, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void ImageContent_WithinMaxLength_IsValid()
+        {
+            // Arrange
+            var model = new ShopEditModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "My Shop",
+                ImageContent = new byte[512000],
+                DisplaySequence =
+                [
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat1" } }
+                ]
+            };
+
+            // Act
+            var isValid = TryValidate(model, out var results);
+
+            // Assert
+            Assert.That(isValid, Is.True);
+            Assert.That(results, Is.Empty);
+        }
+
+        [Test]
+        public void ImageContent_ExceedingMaxLength_IsInvalid_WithImageTooLargeMessage()
+        {
+            // Arrange
+            var model = new ShopEditModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "My Shop",
+                ImageContent = new byte[512001],
+                DisplaySequence =
+                [
+                    new() { ShopId = Guid.NewGuid(), Value = 1, ProductCategory = new ProductCategoryModel { Id = Guid.NewGuid(), Name = "Cat1" } }
+                ]
+            };
+
+            // Act
+            var isValid = TryValidate(model, out var results);
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(isValid, Is.False);
+                Assert.That(results.Any(r => r.MemberNames.Contains(nameof(ShopEditModel.ImageContent))), Is.True);
+                Assert.That(results.Single(r => r.MemberNames.Contains(nameof(ShopEditModel.ImageContent))).ErrorMessage,
+                    Is.EqualTo(RecipeBook.Shared.Resources.RecipeBookSharedMessages.ImageTooLarge));
+            }
         }
 
         [Test]

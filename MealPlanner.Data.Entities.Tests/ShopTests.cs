@@ -14,8 +14,32 @@ namespace MealPlanner.Data.Entities.Tests
             {
                 Assert.That(shop.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(shop.Name, Is.Null);
+                Assert.That(shop.ImageContent, Is.Null);
+                Assert.That(shop.ImageThumbnail, Is.Null);
                 Assert.That(shop.DisplaySequence, Is.Not.Null);
                 Assert.That(shop.DisplaySequence, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void ImageContent_And_ImageThumbnail_CanBeSet()
+        {
+            // Arrange
+            var content = new byte[] { 1, 2, 3 };
+            var thumbnail = new byte[] { 4, 5 };
+
+            // Act
+            var shop = new Shop
+            {
+                ImageContent = content,
+                ImageThumbnail = thumbnail
+            };
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(shop.ImageContent, Is.SameAs(content));
+                Assert.That(shop.ImageThumbnail, Is.SameAs(thumbnail));
             }
         }
 

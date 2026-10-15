@@ -134,6 +134,59 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         }
 
         [Test]
+        public void OnShopIdChanged_ExistingShopWithImage_SetsShopImageUrlFromModel()
+        {
+            var id = Guid.NewGuid();
+            var existing = new ShopEditModel
+            {
+                Id = id,
+                Name = "Lidl",
+                ImageUrl = "data:image/jpg;base64,AAA",
+                DisplaySequence = []
+            };
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(id, CancellationToken.None))
+                .ReturnsAsync(existing);
+
+            _viewModel.ShopId = id.ToString();
+
+            Assert.That(_viewModel.ShopImageUrl, Is.EqualTo("data:image/jpg;base64,AAA"));
+        }
+
+        [Test]
+        public void OnShopIdChanged_ExistingShopWithoutImage_LeavesShopImageUrlNull()
+        {
+            var id = Guid.NewGuid();
+            var existing = new ShopEditModel
+            {
+                Id = id,
+                Name = "Lidl",
+                ImageUrl = null,
+                DisplaySequence = []
+            };
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(id, CancellationToken.None))
+                .ReturnsAsync(existing);
+
+            _viewModel.ShopId = id.ToString();
+
+            Assert.That(_viewModel.ShopImageUrl, Is.Null);
+        }
+
+        [Test]
+        public void OnShopIdChanged_NewShop_LeavesShopImageUrlNull()
+        {
+            SetupDummyLookups();
+            _categoryServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ProductCategoryModel>>(), CancellationToken.None))
+                .ReturnsAsync(new PagedList<ProductCategoryModel>([], Metadata.Create(1, 200, 0)));
+
+            _viewModel.ShopId = Guid.Empty.ToString();
+
+            Assert.That(_viewModel.ShopImageUrl, Is.Null);
+        }
+
+        [Test]
         public void MoveUp_MovesItemUpAndResequencesValues()
         {
             var categoryA = new ProductCategoryModel(Guid.NewGuid(), "Dairy");

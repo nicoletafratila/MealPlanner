@@ -28,6 +28,10 @@
             <Label Text="{x:Static res:ShopEditPage.NameLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <Entry Text="{Binding Model.Name}" Placeholder="{x:Static res:ShopEditPage.PlaceholderName}" />
 
+            <Label Text="{x:Static res:ShopEditPage.ImageLabel}" Style="{StaticResource SectionHeaderLabel}" />
+            <Button Text="{x:Static res:ShopEditPage.PickImageButton}" Command="{Binding PickImageCommand}" HorizontalOptions="Start" />
+            <Image Source="{Binding ShopImageUrl, Converter={x:Static converters:StringOrDefaultConverter.Instance}, ConverterParameter=shopplaceholder.jpg}" HeightRequest="150" Aspect="AspectFit" />
+
             <Label Text="{x:Static res:ShopEditPage.DisplayOrderLabel}" Style="{StaticResource SectionHeaderLabel}" />
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding DisplaySequence}">
                 <BindableLayout.ItemTemplate>

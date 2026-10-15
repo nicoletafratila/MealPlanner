@@ -2,6 +2,7 @@ using AutoMapper;
 using Common.Models;
 using Common.Services;
 using MealPlanner.Api.Repositories;
+using MealPlanner.Api.Services;
 using MediatR;
 
 namespace MealPlanner.Api.Features.Shop.Commands.Add
@@ -47,6 +48,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Add
                 var mapped = _mapper.Map<Data.Entities.Shop>(request.Model);
                 mapped.Id = Guid.NewGuid();
                 mapped.UserId = userId;
+                mapped.ImageThumbnail = ImageThumbnailGenerator.CreateThumbnail(mapped.ImageContent);
                 await _repository.AddAsync(mapped, cancellationToken);
 
                 return CommandResponse.Success();

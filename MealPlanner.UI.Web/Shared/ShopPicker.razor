@@ -1,0 +1,33 @@
+@using MealPlanner.Shared.Models
+
+<div class="dropdown shop-picker">
+    <button id="@Id" type="button" class="form-select text-start d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        @if (SelectedShop != null)
+        {
+            <img src="@(SelectedShop.ThumbnailUrl ?? "/Images/shop.jpg")" class="shop-picker-thumb" alt="" />
+            <span>@SelectedShop.Name</span>
+        }
+        else
+        {
+            <span>@Placeholder</span>
+        }
+    </button>
+    <ul class="dropdown-menu w-100 combo-box-menu">
+        <li class="px-2 pb-1">
+            <input type="text" class="form-control form-control-sm combo-box-filter" placeholder="@Resources.Messages.SearchPlaceholder" value="@FilterText" @oninput="OnFilterInput" @onclick:stopPropagation="true" />
+        </li>
+        <li><a class="dropdown-item" href="javascript:void(0)" @onclick="() => SelectAsync(null)">@Placeholder</a></li>
+        @if (FilteredShops != null)
+        {
+            @foreach (var item in FilteredShops)
+            {
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="javascript:void(0)" @onclick="() => SelectAsync(item)">
+                        <img src="@(item.ThumbnailUrl ?? "/Images/shop.jpg")" class="shop-picker-thumb" alt="" />
+                        <span>@item.Name</span>
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</div>

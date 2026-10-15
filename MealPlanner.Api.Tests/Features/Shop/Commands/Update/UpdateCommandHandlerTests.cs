@@ -4,6 +4,8 @@ using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
 {
@@ -136,6 +138,75 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Update
             _repoMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map(model, existing), Times.Once);
             _repoMock.Verify(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_SuccessfulUpdateWithImage_RegeneratesThumbnail()
+        {
+            // Arrange
+            using var image = new Image<Rgba32>(800, 800);
+            using var ms = new MemoryStream();
+            image.SaveAsPng(ms);
+            var imageContent = ms.ToArray();
+
+            var id = Guid.NewGuid();
+            var model = new ShopEditModel { Id = id, Name = "UpdatedShop", ImageContent = imageContent };
+            var command = new UpdateCommand { Model = model };
+
+            // Mapper is mocked, so pre-seed ImageContent to represent the post-map state.
+            var existing = new Data.Entities.Shop { Id = id, Name = "OldName", ImageContent = imageContent };
+
+            _repoMock
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(existing);
+
+            _mapperMock
+                .Setup(m => m.Map(model, existing))
+                .Returns(existing);
+
+            _repoMock
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(existing.ImageThumbnail, Is.Not.Null);
+            Assert.That(existing.ImageThumbnail!.Length, Is.LessThan(imageContent.Length));
+        }
+
+        [Test]
+        public async Task Handle_SuccessfulUpdateWithoutImage_LeavesThumbnailNull()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var model = new ShopEditModel { Id = id, Name = "UpdatedShop" };
+            var command = new UpdateCommand { Model = model };
+
+            var existing = new Data.Entities.Shop { Id = id, Name = "OldName" };
+
+            _repoMock
+                .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(existing);
+
+            _mapperMock
+                .Setup(m => m.Map(model, existing))
+                .Returns(existing);
+
+            _repoMock
+                .Setup(r => r.UpdateAsync(existing, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(existing.ImageThumbnail, Is.Null);
         }
 
         [Test]

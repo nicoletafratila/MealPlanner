@@ -169,6 +169,24 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Select image.
+        /// </summary>
+        internal static string LabelSelectImage {
+            get {
+                return ResourceManager.GetString("LabelSelectImage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;..
+        /// </summary>
+        internal static string FileSizeExceeded {
+            get {
+                return ResourceManager.GetString("FileSizeExceeded", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Shop name.
         /// </summary>
         internal static string LabelShopName {

@@ -15,6 +15,8 @@ dotnet test
 dotnet test MealPlanner.Api.Tests/MealPlanner.Api.Tests.csproj  # single test project
 ```
 
+`MealPlanner.UI.Mobile.Tests` always runs via direct invocation (`dotnet test MealPlanner.UI.Mobile.Tests/MealPlanner.UI.Mobile.Tests.csproj`), never as part of a solution-wide `dotnet test`/`dotnet build MealPlanner.sln` — see the comments in its `.csproj`. If a prior normal build of `MealPlanner.UI.Mobile` (e.g. `dotnet build MealPlanner.sln`, F5 in VS) ran first, its `bin`/`obj` carry the MSIX-packaged WindowsAppSDK initializer, which the test project's `ProjectReference` override then inherits — causing `COMException: Class not registered (REGDB_E_CLASSNOTREG)` from `AutoInitialize.InitializeWindowsAppSDK`. Fix by deleting `MealPlanner.UI.Mobile/bin` and `MealPlanner.UI.Mobile/obj` before re-running the mobile test project directly.
+
 **Run services (all must be running for full functionality):**
 ```
 dotnet run --project Identity.Api/Identity.Api.csproj          # https://localhost:5001

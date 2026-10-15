@@ -73,6 +73,17 @@ namespace MealPlanner.UI.Mobile.Converters
             throw new NotImplementedException();
     }
 
+    public class StringOrDefaultConverter : IValueConverter
+    {
+        public static readonly StringOrDefaultConverter Instance = new();
+
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+            value is string s && !string.IsNullOrWhiteSpace(s) ? s : parameter?.ToString() ?? string.Empty;
+
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+            throw new NotImplementedException();
+    }
+
     public class FractionToStarConverter : IValueConverter
     {
         public static readonly FractionToStarConverter Instance = new();

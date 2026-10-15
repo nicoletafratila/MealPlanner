@@ -5,6 +5,8 @@ using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
 {
@@ -138,6 +140,75 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Shop>(model), Times.Once);
             _repoMock.Verify(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_NewShopWithImage_GeneratesThumbnail_BeforeAdding()
+        {
+            // Arrange
+            using var image = new Image<Rgba32>(800, 800);
+            using var ms = new MemoryStream();
+            image.SaveAsPng(ms);
+            var imageContent = ms.ToArray();
+
+            var model = new ShopEditModel { Id = Guid.Empty, Name = "ImageShop", ImageContent = imageContent };
+            var command = new AddCommand { Model = model };
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync([]);
+
+            var mappedEntity = new Data.Entities.Shop { Id = Guid.NewGuid(), Name = "ImageShop", ImageContent = imageContent };
+
+            _mapperMock
+                .Setup(m => m.Map<Data.Entities.Shop>(model))
+                .Returns(mappedEntity);
+
+            Data.Entities.Shop? addedEntity = null;
+            _repoMock
+                .Setup(r => r.AddAsync(It.IsAny<Data.Entities.Shop>(), It.IsAny<CancellationToken>()))
+                .Callback<Data.Entities.Shop, CancellationToken>((e, _) => addedEntity = e)
+                .ReturnsAsync(mappedEntity);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(addedEntity, Is.Not.Null);
+            Assert.That(addedEntity!.ImageThumbnail, Is.Not.Null);
+            Assert.That(addedEntity.ImageThumbnail!.Length, Is.LessThan(imageContent.Length));
+        }
+
+        [Test]
+        public async Task Handle_NewShopWithoutImage_LeavesThumbnailNull()
+        {
+            // Arrange
+            var model = new ShopEditModel { Id = Guid.Empty, Name = "NoImageShop" };
+            var command = new AddCommand { Model = model };
+
+            _repoMock
+                .Setup(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()))
+                .ReturnsAsync([]);
+
+            var mappedEntity = new Data.Entities.Shop { Id = Guid.NewGuid(), Name = "NoImageShop" };
+
+            _mapperMock
+                .Setup(m => m.Map<Data.Entities.Shop>(model))
+                .Returns(mappedEntity);
+
+            _repoMock
+                .Setup(r => r.AddAsync(mappedEntity, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mappedEntity);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.Succeeded, Is.True);
+            Assert.That(mappedEntity.ImageThumbnail, Is.Null);
         }
 
         [Test]

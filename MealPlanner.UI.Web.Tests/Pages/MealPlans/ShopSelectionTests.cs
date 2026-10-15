@@ -4,9 +4,10 @@ using Bunit;
 using Common.Pagination; 
 using MealPlanner.Services.Http; 
 using MealPlanner.Shared.Models; 
-using MealPlanner.UI.Web.Pages; 
-using MealPlanner.UI.Web.Pages.MealPlans; 
-using Microsoft.Extensions.DependencyInjection; 
+using MealPlanner.UI.Web.Pages;
+using MealPlanner.UI.Web.Pages.MealPlans;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
@@ -72,6 +73,49 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _shopServiceMock.Verify(
                 s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>()),
                 Times.Once);
+        }
+
+        // ---------- OnShopChanged ----------
+        [Test]
+        public void OnShopChanged_SetsShopId_FromChangeEventArgsValue()
+        {
+            // Arrange
+            _shopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>()))
+                .ReturnsAsync(new PagedList<ShopModel>([], new Metadata()));
+
+            var cut = RenderComponent();
+            var shopId = Guid.NewGuid();
+
+            var method = typeof(ShopSelection).GetMethod("OnShopChanged", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [new ChangeEventArgs { Value = shopId.ToString() }]));
+
+            // Assert
+            Assert.That(cut.Instance.ShopId, Is.EqualTo(shopId.ToString()));
+        }
+
+        [Test]
+        public void OnShopChanged_NullValue_SetsShopIdToNull()
+        {
+            // Arrange
+            _shopServiceMock
+                .Setup(s => s.SearchAsync(It.IsAny<QueryParameters<ShopModel>>()))
+                .ReturnsAsync(new PagedList<ShopModel>([], new Metadata()));
+
+            var cut = RenderComponent();
+            cut.Instance.ShopId = "existing";
+
+            var method = typeof(ShopSelection).GetMethod("OnShopChanged", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            cut.InvokeAsync(() => method!.Invoke(cut.Instance, [new ChangeEventArgs { Value = null }]));
+
+            // Assert
+            Assert.That(cut.Instance.ShopId, Is.Null);
         }
 
         // ---------- SaveAsync / CancelAsync using IModalController mock ----------

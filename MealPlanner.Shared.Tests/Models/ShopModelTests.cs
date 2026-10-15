@@ -16,6 +16,8 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 Assert.That(model.Id, Is.EqualTo(Guid.Empty));
                 Assert.That(model.Name, Is.EqualTo(string.Empty));
+                Assert.That(model.ImageUrl, Is.Null);
+                Assert.That(model.ThumbnailUrl, Is.Null);
 
                 // BaseModel defaults
                 Assert.That(model.Index, Is.Zero);
@@ -48,6 +50,26 @@ namespace MealPlanner.Shared.Tests.Models
             {
                 _ = new ShopModel(Guid.NewGuid(), null!);
             });
+        }
+
+        [Test]
+        public void ImageUrl_And_ThumbnailUrl_CanBeSet()
+        {
+            // Arrange
+            var model = new ShopModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "Shop",
+                ImageUrl = "data:image/jpg;base64,AAA",
+                ThumbnailUrl = "data:image/jpg;base64,BBB"
+            };
+
+            // Assert
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(model.ImageUrl, Is.EqualTo("data:image/jpg;base64,AAA"));
+                Assert.That(model.ThumbnailUrl, Is.EqualTo("data:image/jpg;base64,BBB"));
+            }
         }
 
         [Test]

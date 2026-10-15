@@ -38,6 +38,11 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
         }
 
+        private void OnShopChanged(ChangeEventArgs e)
+        {
+            ShopId = e.Value?.ToString();
+        }
+
         private async Task SaveAsync()
         {
             await ModalController!.CloseAsync(ShopId);

@@ -550,6 +550,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             StateHasChanged();
         }
 
+        private async Task OnShopPickerChangedAsync(ChangeEventArgs e)
+        {
+            if (ShoppingList is null)
+                return;
+
+            ShoppingList.ShopId = Guid.TryParse(e.Value?.ToString(), out var shopId) ? shopId : Guid.Empty;
+            await OnShopChangedAsync();
+        }
+
         private async Task OnShopChangedAsync()
         {
             if (ShoppingList is null)

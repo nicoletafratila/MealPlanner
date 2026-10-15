@@ -84,4 +84,10 @@
   <data name="ShareSucceeded" xml:space="preserve">
     <value>The shop has been shared successfully</value>
   </data>
+  <data name="ImageLabel" xml:space="preserve">
+    <value>Select image</value>
+  </data>
+  <data name="PickImageButton" xml:space="preserve">
+    <value>Pick image</value>
+  </data>
 </root>

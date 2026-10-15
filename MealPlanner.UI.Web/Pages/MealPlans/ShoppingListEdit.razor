@@ -39,7 +39,7 @@
 
                 <div class="form-group mt-3">
                     <label for="Shop" class="col-sm-3">@Resources.ShoppingListEdit.LabelShop</label>
-                    <ComboBox Id="Shop" Items="Shops?.Items" IdSelector="c => c.Id" TextSelector="c => c.Name" @bind-Value="ShoppingList.ShopId" @bind-Value:after="OnShopChangedAsync" For="@(() => ShoppingList.ShopId)" />
+                    <ShopPicker Id="Shop" Shops="Shops?.Items" SelectedShopId="@ShoppingList.ShopId.ToString()" Placeholder="@Resources.ShoppingListEdit.ChooseOption" OnChanged="OnShopPickerChangedAsync" />
                     <ValidationMessage For="@(() => ShoppingList.ShopId)" />
                 </div>
 

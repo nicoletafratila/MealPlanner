@@ -42,9 +42,33 @@
 
                 <!-- Shop -->
                 <Label Text="{x:Static res:ShoppingListEditPage.ShopLabel}" Style="{StaticResource SectionHeaderLabel}" />
-                <Picker ItemsSource="{Binding Shops}" ItemDisplayBinding="{Binding Name}"
-                        SelectedItem="{Binding SelectedShop}"
-                        Title="{x:Static res:ShoppingListEditPage.SelectShopTitle}" />
+                <Border Stroke="{StaticResource MidGray}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10,0"
+                        MinimumHeightRequest="44"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightGray}, Dark=#2A2A2A}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSelectShopTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                        <Image Grid.Column="0"
+                               Source="{Binding SelectedShop.ThumbnailUrl, Converter={x:Static converters:StringOrDefaultConverter.Instance}, ConverterParameter=shopplaceholder.jpg}"
+                               WidthRequest="26" HeightRequest="26"
+                               Aspect="AspectFill" VerticalOptions="Center" />
+                        <Label Grid.Column="1" VerticalOptions="Center"
+                               LineBreakMode="TailTruncation"
+                               Text="{Binding SelectedShop.Name, TargetNullValue={x:Static res:ShoppingListEditPage.SelectShopTitle}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedShop}" Value="{x:Null}">
+                                    <Setter Property="TextColor" Value="{StaticResource DarkGray}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label Grid.Column="2" Text="&#x25BE;" VerticalOptions="Center"
+                               FontSize="14" TextColor="{StaticResource DarkGray}" />
+                    </Grid>
+                </Border>
 
                 <!-- Add product section -->
                 <Label Text="{x:Static res:ShoppingListEditPage.AddProductLabel}" Style="{StaticResource SectionHeaderLabel}" />

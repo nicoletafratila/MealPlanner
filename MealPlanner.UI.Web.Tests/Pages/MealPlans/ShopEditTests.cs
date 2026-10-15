@@ -9,7 +9,9 @@ using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.MealPlans;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
+using MealPlanner.UI.Web.Tests.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using RecipeBook.Services.Http;
@@ -460,6 +462,64 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             _shopServiceMock.Verify(s => s.GetEditAsync(id, CancellationToken.None), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowErrorAsync("Delete failed because of dependency", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                Times.Once);
+        }
+
+        // ---------- OnInputFileChangeAsync ----------
+        [Test]
+        public async Task OnInputFileChangeAsync_SetsImageContent_WhenWithinLimit()
+        {
+            // Arrange
+            ArrangeCategories();
+            var cut = RenderComponent("0");
+            cut.Instance.Shop = new ShopEditModel { Id = Guid.NewGuid() };
+
+            var bytes = new byte[] { 1, 2, 3, 4 };
+            var file = new FakeBrowserFile(bytes, "img.png", "image/png");
+            var args = new InputFileChangeEventArgs([file]);
+
+            var method = typeof(ShopEdit).GetMethod("OnInputFileChangeAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [args])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(cut.Instance.Shop.ImageContent, Is.Not.Null);
+            Assert.That(cut.Instance.Shop.ImageContent!.SequenceEqual(bytes), Is.True);
+        }
+
+        [Test]
+        public async Task OnInputFileChangeAsync_ShowsError_WhenFileTooLarge()
+        {
+            // Arrange
+            ArrangeCategories();
+            var cut = RenderComponent("0");
+            cut.Instance.Shop = new ShopEditModel { Id = Guid.NewGuid() };
+
+            var bigBytes = new byte[1024 * 1024 * 5];
+            var file = new FakeBrowserFile(bigBytes, "big.bin", "application/octet-stream", throwOnOpen: true);
+            var args = new InputFileChangeEventArgs([file]);
+
+            var method = typeof(ShopEdit).GetMethod("OnInputFileChangeAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method!.Invoke(cut.Instance, [args])!;
+                await task;
+            });
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync(
+                    "File size exceeds the limit. Maximum allowed size is <strong>3 MB</strong>.",
+                    It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 

@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:MealPlanner.UI.Mobile.ViewModels.MealPlans"
              xmlns:model="clr-namespace:MealPlanner.Shared.Models;assembly=MealPlanner.Shared"
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
+             xmlns:converters="clr-namespace:MealPlanner.UI.Mobile.Converters"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.ShopsOverviewPage"
              x:DataType="vm:ShopsOverviewViewModel"
              Title="{x:Static res:ShopsOverviewPage.PageTitle}">
@@ -43,7 +44,13 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShopsOverviewViewModel}}, Path=EditCommand}"
                                         CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
-                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Image Grid.Column="0"
+                                           Source="{Binding ThumbnailUrl, Converter={x:Static converters:StringOrDefaultConverter.Instance}, ConverterParameter=shopplaceholder.jpg}"
+                                           WidthRequest="32" HeightRequest="32"
+                                           Aspect="AspectFill" />
+                                    <Label Grid.Column="1" Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Center" />
+                                </Grid>
                             </Border>
                         </SwipeView>
                     </DataTemplate>

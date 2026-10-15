@@ -16,6 +16,19 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
             BindingContext = _vm = viewModel;
         }
 
+        private async void OnSelectShopTapped(object sender, TappedEventArgs e)
+        {
+            var items = _vm.Shops.Select(s => new SelectorItem(s, s.Name, imageUrl: s.ThumbnailUrl ?? "shopplaceholder.jpg")).ToList();
+            var popup = new SelectorPopup(
+                items,
+                MealPlans.Resources.ShoppingListEditPage.SelectShopTitle,
+                MealPlans.Resources.ShoppingListEditPage.PlaceholderSearchShops,
+                MealPlans.Resources.ShoppingListEditPage.EmptyShopsLabel);
+            var result = await this.ShowPopupAsync<object>(popup);
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is ShopModel shop)
+                _vm.SelectedShop = shop;
+        }
+
         private async void OnSelectProductTapped(object sender, TappedEventArgs e)
         {
             var items = _vm.ProductsByCategory.Select(p => new SelectorItem(p, p.Name, p.ProductCategoryName, p.ThumbnailUrl)).ToList();

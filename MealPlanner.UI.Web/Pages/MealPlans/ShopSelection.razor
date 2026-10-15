@@ -17,7 +17,7 @@
             <ValidationSummary />
 
             <div class="form-group mt-3">
-                <ComboBox Id="Shop" Items="Shops?.Items" IdSelector="c => c.Id.ToString()" TextSelector="c => c.Name" @bind-Value="ShopId" For="@(() => ShopId)" />
+                <ShopPicker Id="Shop" Shops="Shops?.Items" SelectedShopId="@ShopId" Placeholder="@Resources.ShopSelection.ChooseOption" OnChanged="OnShopChanged" />
                 <ValidationMessage For="@(() => ShopId)" />
             </div>
 

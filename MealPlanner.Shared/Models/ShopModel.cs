@@ -17,6 +17,16 @@ namespace MealPlanner.Shared.Models
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Full-size shop image URL (data URI), or null when no image is set.
+        /// </summary>
+        public string? ImageUrl { get; set; }
+
+        /// <summary>
+        /// Thumbnail shop image URL (data URI), or null when no image is set.
+        /// </summary>
+        public string? ThumbnailUrl { get; set; }
+
         public ShopModel()
         {
         }

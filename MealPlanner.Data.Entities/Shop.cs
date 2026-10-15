@@ -6,6 +6,10 @@ namespace MealPlanner.Data.Entities
 
         public string? Name { get; set; }
 
+        public byte[]? ImageContent { get; set; }
+
+        public byte[]? ImageThumbnail { get; set; }
+
         public IList<ShopDisplaySequence>? DisplaySequence { get; set; } = [];
 
         public ShopDisplaySequence? GetDisplaySequence(Guid? categoryId)

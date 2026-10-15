@@ -7,6 +7,7 @@ using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
 using MealPlanner.UI.Mobile.Services;
+using Microsoft.Maui.Graphics.Platform;
 
 namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 {
@@ -16,6 +17,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         IApplicationUserService applicationUserService,
         ReferenceDataCacheService lookupDataService) : BaseViewModel
     {
+        private const float MaxImageDimension = 1024;
+        private const float ImageQuality = 0.8f;
+
         [ObservableProperty]
         private string _shopId = string.Empty;
 
@@ -27,6 +31,11 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
 
         [ObservableProperty]
         private ObservableCollection<ShopDisplaySequenceEditModel> _displaySequence = [];
+
+        // Plain string (not ImageSource) so this stays constructible/testable outside a running
+        // MAUI app; the XAML binding resolves the "no image" fallback to a bundled asset.
+        [ObservableProperty]
+        private string? _shopImageUrl;
 
         partial void OnShopIdChanged(string value)
         {
@@ -53,6 +62,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                     Model = await shopService.GetEditAsync(id) ?? new();
                 }
 
+                ShopImageUrl = Model.ImageUrl;
+
                 DisplaySequence = new ObservableCollection<ShopDisplaySequenceEditModel>(Model.DisplaySequence ?? []);
             }
             catch (Exception ex)
@@ -64,6 +75,33 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
                 IsBusy = false;
             }
         }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task PickImageAsync()
+        {
+            try
+            {
+                var results = await MediaPicker.Default.PickPhotosAsync();
+                var result = results?.FirstOrDefault();
+                if (result is null) return;
+                await using var stream = await result.OpenReadAsync();
+                Model.ImageContent = await ResizeImageAsync(stream);
+                ShopImageUrl = $"data:image/jpg;base64,{Convert.ToBase64String(Model.ImageContent)}";
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+        }
+
+        private static Task<byte[]> ResizeImageAsync(Stream stream) => Task.Run(() =>
+        {
+            using var image = PlatformImage.FromStream(stream);
+            using var resized = image.Downsize(MaxImageDimension, disposeOriginal: false);
+            using var output = new MemoryStream();
+            resized.Save(output, ImageFormat.Jpeg, ImageQuality);
+            return output.ToArray();
+        });
 
         [RelayCommand]
         private void MoveUp(ShopDisplaySequenceEditModel item)

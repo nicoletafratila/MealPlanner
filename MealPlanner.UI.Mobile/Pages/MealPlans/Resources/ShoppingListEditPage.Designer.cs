@@ -284,5 +284,23 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("UnitTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
+        internal static string PlaceholderSearchShops {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchShops", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No shops found.
+        /// </summary>
+        internal static string EmptyShopsLabel {
+            get {
+                return ResourceManager.GetString("EmptyShopsLabel", resourceCulture);
+            }
+        }
     }
 }

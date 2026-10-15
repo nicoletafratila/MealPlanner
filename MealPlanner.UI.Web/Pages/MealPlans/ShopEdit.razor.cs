@@ -7,6 +7,7 @@ using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using RecipeBook.Services.Http;
 
 namespace MealPlanner.UI.Web.Pages.MealPlans
@@ -15,6 +16,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     public partial class ShopEdit
     {
         private ConfirmDialog _dialog = default!;
+        private readonly long _maxFileSize = 1024L * 1024L * 3L;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -54,6 +56,26 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task SaveAsync()
         {
             await SaveCoreAsync(Shop);
+        }
+
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                if (e.File != null)
+                {
+                    await using var stream = e.File.OpenReadStream(maxAllowedSize: _maxFileSize);
+                    await using var ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    Shop.ImageContent = ms.ToArray();
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception)
+            {
+                await ShowErrorAsync(string.Format(Resources.ShopEdit.FileSizeExceeded, _maxFileSize / (1024 * 1024)));
+            }
         }
 
         private async Task SaveCoreAsync(ShopEditModel shop)

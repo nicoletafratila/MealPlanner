@@ -1307,6 +1307,83 @@ namespace MealPlanner.UI.Web.Tests.Pages.MealPlans
             }
         }
 
+        // ---------- OnShopPickerChangedAsync ----------
+        [Test]
+        public async Task OnShopPickerChangedAsync_ReturnsEarly_WhenShoppingListIsNull()
+        {
+            // Arrange
+            ArrangeLookups();
+            var cut = RenderComponent("0");
+            cut.Instance.ShoppingList = null;
+
+            var method = typeof(ShoppingListEdit).GetMethod("OnShopPickerChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [new ChangeEventArgs { Value = Guid.NewGuid().ToString() }])!;
+                await task;
+            });
+
+            // Assert
+            _shopServiceMock.Verify(s => s.GetEditAsync(It.IsAny<Guid>(), CancellationToken.None), Times.Never);
+        }
+
+        [Test]
+        public async Task OnShopPickerChangedAsync_ParsesValue_SetsShopId_AndCallsOnShopChangedAsync()
+        {
+            // Arrange
+            ArrangeLookups();
+            var cut = RenderComponent("0");
+
+            var shopId = Guid.NewGuid();
+            var existingShop = new ShopEditModel { Id = shopId, DisplaySequence = [] };
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(shopId, CancellationToken.None))
+                .ReturnsAsync(existingShop);
+
+            cut.Instance.ShoppingList = new ShoppingListEditModel { ShopId = Guid.Empty, Products = [] };
+
+            var method = typeof(ShoppingListEdit).GetMethod("OnShopPickerChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [new ChangeEventArgs { Value = shopId.ToString() }])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(cut.Instance.ShoppingList.ShopId, Is.EqualTo(shopId));
+            _shopServiceMock.Verify(s => s.GetEditAsync(shopId, CancellationToken.None), Times.Once);
+        }
+
+        [Test]
+        public async Task OnShopPickerChangedAsync_UnparsableValue_SetsShopIdToEmpty()
+        {
+            // Arrange
+            ArrangeLookups();
+            var cut = RenderComponent("0");
+            cut.Instance.ShoppingList = new ShoppingListEditModel { ShopId = Guid.NewGuid(), Products = [] };
+
+            _shopServiceMock
+                .Setup(s => s.GetEditAsync(Guid.Empty, CancellationToken.None))
+                .ReturnsAsync((ShopEditModel?)null);
+
+            var method = typeof(ShoppingListEdit).GetMethod("OnShopPickerChangedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [new ChangeEventArgs { Value = string.Empty }])!;
+                await task;
+            });
+
+            // Assert
+            Assert.That(cut.Instance.ShoppingList.ShopId, Is.EqualTo(Guid.Empty));
+            _shopServiceMock.Verify(s => s.GetEditAsync(Guid.Empty, CancellationToken.None), Times.Once);
+        }
+
         // ---------- OnShopChangedAsync ----------
         [Test]
         public async Task OnShopChangedAsync_ReturnsEarly_WhenShoppingListIsNull()

@@ -118,4 +118,10 @@
   <data name="ShareFailedMessage" xml:space="preserve">
     <value>Share failed. Please try again.</value>
   </data>
+  <data name="LabelSelectImage" xml:space="preserve">
+    <value>Select image</value>
+  </data>
+  <data name="FileSizeExceeded" xml:space="preserve">
+    <value>File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;.</value>
+  </data>
 </root>

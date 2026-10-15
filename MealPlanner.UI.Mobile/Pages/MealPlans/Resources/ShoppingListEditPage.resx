@@ -114,4 +114,10 @@
   <data name="UnitTitle" xml:space="preserve">
     <value>Unit</value>
   </data>
+  <data name="PlaceholderSearchShops" xml:space="preserve">
+    <value>Type to search by name...</value>
+  </data>
+  <data name="EmptyShopsLabel" xml:space="preserve">
+    <value>No shops found</value>
+  </data>
 </root>

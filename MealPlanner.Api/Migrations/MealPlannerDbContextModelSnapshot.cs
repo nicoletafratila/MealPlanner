@@ -217,6 +217,12 @@ namespace MealPlanner.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<byte[]>("ImageContent")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("ImageThumbnail")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 

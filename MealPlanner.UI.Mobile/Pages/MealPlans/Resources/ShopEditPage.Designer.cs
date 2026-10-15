@@ -194,5 +194,23 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select image.
+        /// </summary>
+        internal static string ImageLabel {
+            get {
+                return ResourceManager.GetString("ImageLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pick image.
+        /// </summary>
+        internal static string PickImageButton {
+            get {
+                return ResourceManager.GetString("PickImageButton", resourceCulture);
+            }
+        }
     }
 }

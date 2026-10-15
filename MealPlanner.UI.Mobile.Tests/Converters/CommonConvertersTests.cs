@@ -324,6 +324,67 @@ namespace MealPlanner.UI.Mobile.Tests.Converters
     }
 
     [TestFixture]
+    public class StringOrDefaultConverterTests
+    {
+        private readonly StringOrDefaultConverter _converter = new();
+
+        [Test]
+        public void Convert_NonEmptyString_ReturnsValue()
+        {
+            var result = _converter.Convert("data:image/jpg;base64,AAA", typeof(string), "placeholder.jpg", CultureInfo.InvariantCulture);
+
+            Assert.That(result, Is.EqualTo("data:image/jpg;base64,AAA"));
+        }
+
+        [Test]
+        public void Convert_Null_ReturnsParameter()
+        {
+            var result = _converter.Convert(null, typeof(string), "placeholder.jpg", CultureInfo.InvariantCulture);
+
+            Assert.That(result, Is.EqualTo("placeholder.jpg"));
+        }
+
+        [Test]
+        public void Convert_EmptyString_ReturnsParameter()
+        {
+            var result = _converter.Convert(string.Empty, typeof(string), "placeholder.jpg", CultureInfo.InvariantCulture);
+
+            Assert.That(result, Is.EqualTo("placeholder.jpg"));
+        }
+
+        [Test]
+        public void Convert_WhitespaceString_ReturnsParameter()
+        {
+            var result = _converter.Convert("   ", typeof(string), "placeholder.jpg", CultureInfo.InvariantCulture);
+
+            Assert.That(result, Is.EqualTo("placeholder.jpg"));
+        }
+
+        [Test]
+        public void Convert_NullValue_NullParameter_ReturnsEmptyString()
+        {
+            var result = _converter.Convert(null, typeof(string), null, CultureInfo.InvariantCulture);
+
+            Assert.That(result, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void Convert_NonStringValue_ReturnsParameter()
+        {
+            var result = _converter.Convert(42, typeof(string), "placeholder.jpg", CultureInfo.InvariantCulture);
+
+            Assert.That(result, Is.EqualTo("placeholder.jpg"));
+        }
+
+        [Test]
+        public void ConvertBack_Always_ThrowsNotImplementedException()
+        {
+            Assert.Throws<NotImplementedException>(() =>
+                _converter.ConvertBack("value", typeof(string), null, CultureInfo.InvariantCulture));
+        }
+    }
+
+    [TestFixture]
     public class FractionToStarConverterTests
     {
         private readonly FractionToStarConverter _converter = new();

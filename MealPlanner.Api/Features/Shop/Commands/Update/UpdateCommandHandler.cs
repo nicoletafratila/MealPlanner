@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Models;
 using MealPlanner.Api.Repositories;
+using MealPlanner.Api.Services;
 using MediatR;
 
 namespace MealPlanner.Api.Features.Shop.Commands.Update
@@ -33,6 +34,7 @@ namespace MealPlanner.Api.Features.Shop.Commands.Update
                 }
 
                 _mapper.Map(request.Model, existingItem);
+                existingItem.ImageThumbnail = ImageThumbnailGenerator.CreateThumbnail(existingItem.ImageContent);
                 await _repository.UpdateAsync(existingItem, cancellationToken);
 
                 return CommandResponse.Success();

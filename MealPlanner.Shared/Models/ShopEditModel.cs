@@ -3,6 +3,7 @@ using Common.Models;
 using Common.Validators;
 using MealPlanner.Shared.Resources;
 using RecipeBook.Shared.Models;
+using RecipeBook.Shared.Resources;
 
 namespace MealPlanner.Shared.Models
 {
@@ -22,6 +23,17 @@ namespace MealPlanner.Shared.Models
         [Required(ErrorMessageResourceName = nameof(MealPlannerSharedMessages.ShopNameRequired), ErrorMessageResourceType = typeof(MealPlannerSharedMessages))]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Shop image (optional). When not set, the UI falls back to a default image.
+        /// </summary>
+        [MaxLength(512000, ErrorMessageResourceName = nameof(RecipeBookSharedMessages.ImageTooLarge), ErrorMessageResourceType = typeof(RecipeBookSharedMessages))]
+        public byte[]? ImageContent { get; set; }
+
+        /// <summary>
+        /// Full-size shop image URL (data URI), computed from <see cref="ImageContent"/>; null when no image is set.
+        /// </summary>
+        public string? ImageUrl { get; set; }
 
         /// <summary>
         /// Product category display sequence for this shop.
