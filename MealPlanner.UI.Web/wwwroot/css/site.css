@@ -177,7 +177,59 @@
 .bb-grid-pagination-text {
     align-content: flex-start;
     margin-left: 5px;
+    color: #6c757d;
+    font-size: 0.875rem;
 }
+
+/* Grid's pagination footer (nav + page-size selector + "showing x of y" text) is an
+   unnamed flex div BlazorBootstrap renders as the sibling right after its own
+   .table-responsive container, so there's no class to hook — target it positionally. */
+.table-responsive + div.d-flex {
+    align-items: center;
+    row-gap: 0.75rem;
+    column-gap: 1.5rem;
+}
+
+/* The page-size selector sits in its own nested flex row (select + "Items per page"
+   text) that the outer align-items:center above doesn't reach — it only centers its
+   own direct children, not this grandchild row — so the text defaults to stretch/top
+   alignment against the taller <select>. */
+.table-responsive + div.d-flex .d-flex {
+    align-items: center;
+}
+
+/* Bootstrap's default pagination renders flush, square-edged items that clash with
+   the rounded, brand-colored buttons used everywhere else in the app (see .btn above). */
+.pagination {
+    gap: 4px;
+}
+
+    .pagination .page-link {
+        border-radius: 6px;
+        color: var(--brand-primary);
+        transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+        .pagination .page-link:hover {
+            background-color: var(--brand-secondary-hover-bg);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary-hover);
+        }
+
+        .pagination .page-link:focus {
+            box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.25);
+        }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--brand-primary);
+        border-color: var(--brand-primary);
+        color: #fff;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        border-color: #dee2e6;
+    }
 
 h1:focus {
     outline: none;

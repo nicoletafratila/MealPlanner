@@ -1,7 +1,12 @@
+/* The filter control used to render position:absolute below the label, floating
+   independently of the header row's actual height — so the row never grew to fit it,
+   and a taller control (e.g. two stacked date inputs) just spilled past the row's
+   bottom border. Stacking label-over-control in normal flow instead means the row
+   always sizes to fit, however tall the control ends up being. */
 .filter-header {
-    position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
 .filter-header span {
@@ -9,15 +14,11 @@
 }
 
 .filter-control {
-    position: absolute;
-    top: calc(100% + 0.6rem);
-    left: 0;
-    right: 0;
-    z-index: 5;
     font-weight: normal;
 }
 
 .date-filter-control {
     display: flex;
+    flex-direction: column;
     gap: 0.35rem;
 }
