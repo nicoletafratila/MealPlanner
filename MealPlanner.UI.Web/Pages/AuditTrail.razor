@@ -1,66 +1,83 @@
-﻿@page "/AuditTrail"
-@using Common.Services
-@using Common.Models
+@page "/AuditTrail"
 
+@using Common.Models
+@using Common.Services
 
 <style>
-    .logs-table {
-        width: 100%;
-        table-layout: fixed;
+    .audit-columns th:nth-child(1),
+    .audit-columns td:nth-child(1) {
+        width: 180px !important;
+        max-width: 180px !important;
     }
 
-        .logs-table th:nth-child(1),
-        .logs-table td:nth-child(1) {
-            width: 3%;
-        }
-
-        .logs-table th:nth-child(2),
-        .logs-table td:nth-child(2) {
-            width: 10%;
-        }
-
-        .logs-table th:nth-child(3),
-        .logs-table td:nth-child(3) {
-            width: 5%;
-        }
+    .audit-columns th:nth-child(2),
+    .audit-columns td:nth-child(2) {
+        width: 150px !important;
+        max-width: 150px !important;
+    }
 </style>
 
-<p>
-    <button class="btn btn-danger btn-sm" @onclick="async () => await DeleteAllLogsAsync()">@Resources.AuditTrail.DeleteAllLogsButton</button>
-</p>
-@if (Logs == null)
-{
-    <p><em>@Resources.AuditTrail.Loading</em></p>
-}
-else
-{
-    <div class="card">
-        <div class="card-body">
-            <table class="table logs-table">
-                <thead>
-                    <tr>
-                        <th>@nameof(LogModel.Timestamp)</th>
-                        <th>@nameof(LogModel.Level)</th>
-                        <th>@nameof(LogModel.Message)</th>
-                        <th>@nameof(LogModel.Exception)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var log in Logs)
-                    {
-                        <tr>
-                            <td>@log.Timestamp</td>
-                            <td>
-                                <span class="text-@LogEventLevelHelper.GetBootstrapUIClass(log.Level)">
-                                    @log.Level
-                                </span>
-                            </td>
-                            <td>@log.Message</td>
-                            <td>@log.Exception</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <table class="w-100">
+            <tr>
+                <td class="w-100">
+                    <h2>@Resources.AuditTrail.PageTitle</h2>
+                </td>
+                <td class="text-nowrap">
+                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAllLogsAsync()">@Resources.AuditTrail.DeleteAllLogsButton</button>
+                </td>
+            </tr>
+        </table>
     </div>
-}
+
+    <div class="card-body">
+        <GridTemplate TItem="LogModel" @key="@_gridKey" @ref="_logsGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
+            <Columns>
+                <GridColumn TItem="LogModel" PropertyName="Timestamp" SortString="Timestamp" SortKeySelector="item => item.Timestamp" IsDefaultSortColumn="true" SortDirection="@_timestampSortDirection" Filterable="false">
+                    <HeaderContent>
+                        <div class="filter-header">
+                            <span>@Resources.AuditTrail.HeaderTimestamp</span>
+                            <div class="filter-control date-filter-control">
+                                <input type="date" class="form-control form-control-sm" title="@Resources.AuditTrail.DateFromPlaceholder"
+                                       value="@TimestampFromFilter?.ToString("yyyy-MM-dd")" @onchange="OnFromDateChangedAsync" />
+                                <input type="date" class="form-control form-control-sm" title="@Resources.AuditTrail.DateToPlaceholder"
+                                       value="@TimestampToFilter?.ToString("yyyy-MM-dd")" @onchange="OnToDateChangedAsync" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        @context.Timestamp
+                    </ChildContent>
+                </GridColumn>
+                <GridColumn TItem="LogModel" PropertyName="Level" Sortable="false" Filterable="false">
+                    <HeaderContent>
+                        <div class="filter-header">
+                            <span>@Resources.AuditTrail.HeaderLevel</span>
+                            <div class="filter-control">
+                                <ComboBox Id="logLevelFilter" Items="LevelOptions" IdSelector="c => c" TextSelector="c => c"
+                                          @bind-Value="LevelFilter"
+                                          @bind-Value:after="OnCustomFilterChangedAsync"
+                                          Placeholder="@Resources.AuditTrail.AllLevelsOption"
+                                          ShowClearButton="true" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        <span class="text-@LogEventLevelHelper.GetBootstrapUIClass(context.Level)">
+                            @context.Level
+                        </span>
+                    </ChildContent>
+                </GridColumn>
+                <GridColumn TItem="LogModel" HeaderText="@Resources.AuditTrail.HeaderMessage" PropertyName="Message" SortString="Message" SortKeySelector="item => item.Message" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    @context.Message
+                </GridColumn>
+                <GridColumn TItem="LogModel" HeaderText="@Resources.AuditTrail.HeaderException" PropertyName="Exception" SortString="Exception" SortKeySelector="item => item.Exception" StringComparison="StringComparison.OrdinalIgnoreCase">
+                    @context.Exception
+                </GridColumn>
+            </Columns>
+        </GridTemplate>
+    </div>
+</div>
+
+<ConfirmDialog @ref="_dialog" />

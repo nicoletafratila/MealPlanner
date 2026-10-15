@@ -77,5 +77,149 @@ namespace MealPlanner.UI.Web.Pages.Resources {
                 return ResourceManager.GetString("Loading", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Audit trail.
+        /// </summary>
+        internal static string PageTitle {
+            get {
+                return ResourceManager.GetString("PageTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Timestamp.
+        /// </summary>
+        internal static string HeaderTimestamp {
+            get {
+                return ResourceManager.GetString("HeaderTimestamp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Level.
+        /// </summary>
+        internal static string HeaderLevel {
+            get {
+                return ResourceManager.GetString("HeaderLevel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        internal static string HeaderMessage {
+            get {
+                return ResourceManager.GetString("HeaderMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Exception.
+        /// </summary>
+        internal static string HeaderException {
+            get {
+                return ResourceManager.GetString("HeaderException", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All levels.
+        /// </summary>
+        internal static string AllLevelsOption {
+            get {
+                return ResourceManager.GetString("AllLevelsOption", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to From.
+        /// </summary>
+        internal static string DateFromPlaceholder {
+            get {
+                return ResourceManager.GetString("DateFromPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to To.
+        /// </summary>
+        internal static string DateToPlaceholder {
+            get {
+                return ResourceManager.GetString("DateToPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete all logs?.
+        /// </summary>
+        internal static string DeleteDialogTitle {
+            get {
+                return ResourceManager.GetString("DeleteDialogTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This will permanently delete the entire audit trail. Once deleted it cannot be rolled back..
+        /// </summary>
+        internal static string DeleteDialogMessage1 {
+            get {
+                return ResourceManager.GetString("DeleteDialogMessage1", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to proceed?.
+        /// </summary>
+        internal static string DeleteDialogMessage2 {
+            get {
+                return ResourceManager.GetString("DeleteDialogMessage2", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        internal static string DialogYesButton {
+            get {
+                return ResourceManager.GetString("DialogYesButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string DialogNoButton {
+            get {
+                return ResourceManager.GetString("DialogNoButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete failed. Please try again..
+        /// </summary>
+        internal static string DeleteFailedMessage {
+            get {
+                return ResourceManager.GetString("DeleteFailedMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete failed..
+        /// </summary>
+        internal static string DeleteFailed {
+            get {
+                return ResourceManager.GetString("DeleteFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Data has been deleted successfully.
+        /// </summary>
+        internal static string DeleteSucceeded {
+            get {
+                return ResourceManager.GetString("DeleteSucceeded", resourceCulture);
+            }
+        }
     }
 }

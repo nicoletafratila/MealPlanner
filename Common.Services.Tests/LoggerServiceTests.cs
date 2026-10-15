@@ -2,6 +2,7 @@
 using Common.Data.Entities;
 using Common.Data.Repository;
 using Common.Models;
+using Common.Pagination;
 using Moq;
 
 namespace Common.Services.Tests
@@ -138,6 +139,110 @@ namespace Common.Services.Tests
 
             _repositoryMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<LogModel>(It.IsAny<object>()), Times.Never);
+        }
+
+        [Test]
+        public async Task SearchAsync_Throws_When_QueryParameters_Is_Null()
+        {
+            Assert.That(
+                () => _service.SearchAsync(null!),
+                Throws.TypeOf<ArgumentNullException>()
+                      .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("queryParameters"));
+        }
+
+        [Test]
+        public async Task SearchAsync_Returns_Empty_When_Repository_Returns_Null()
+        {
+            _repositoryMock
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))!
+                .ReturnsAsync((IReadOnlyList<Log>?)null);
+
+            var result = await _service.SearchAsync(new QueryParameters<LogModel>());
+
+            Assert.That(result.Items, Is.Empty);
+        }
+
+        [Test]
+        public async Task SearchAsync_Filters_By_Level()
+        {
+            var entity1 = new Log();
+            var entity2 = new Log();
+            var logs = new[] { entity1, entity2 };
+
+            _repositoryMock
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(logs);
+
+            var model1 = new LogModel { Level = "Error", Timestamp = new DateTime(2025, 1, 1) };
+            var model2 = new LogModel { Level = "Information", Timestamp = new DateTime(2025, 1, 2) };
+
+            _mapperMock.Setup(m => m.Map<LogModel>(entity1)).Returns(model1);
+            _mapperMock.Setup(m => m.Map<LogModel>(entity2)).Returns(model2);
+
+            var queryParameters = new QueryParameters<LogModel>
+            {
+                Filters = [new FilterItem("Level", "Error", FilterOperator.Equals, StringComparison.OrdinalIgnoreCase)]
+            };
+
+            var result = await _service.SearchAsync(queryParameters);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Has.Count.EqualTo(1));
+                Assert.That(result.Items[0], Is.EqualTo(model1));
+            }
+        }
+
+        [Test]
+        public async Task SearchAsync_Sorts_By_Timestamp_Descending_When_No_Sorting_Provided()
+        {
+            var entity1 = new Log();
+            var entity2 = new Log();
+            var logs = new[] { entity1, entity2 };
+
+            _repositoryMock
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(logs);
+
+            var model1 = new LogModel { Timestamp = new DateTime(2025, 1, 1) };
+            var model2 = new LogModel { Timestamp = new DateTime(2025, 1, 2) };
+
+            _mapperMock.Setup(m => m.Map<LogModel>(entity1)).Returns(model1);
+            _mapperMock.Setup(m => m.Map<LogModel>(entity2)).Returns(model2);
+
+            var result = await _service.SearchAsync(new QueryParameters<LogModel>());
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items[0], Is.EqualTo(model2));
+                Assert.That(result.Items[1], Is.EqualTo(model1));
+            }
+        }
+
+        [Test]
+        public async Task SearchAsync_Applies_Paging()
+        {
+            var entity1 = new Log();
+            var entity2 = new Log();
+            var logs = new[] { entity1, entity2 };
+
+            _repositoryMock
+                .Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(logs);
+
+            var model1 = new LogModel { Timestamp = new DateTime(2025, 1, 1) };
+            var model2 = new LogModel { Timestamp = new DateTime(2025, 1, 2) };
+
+            _mapperMock.Setup(m => m.Map<LogModel>(entity1)).Returns(model1);
+            _mapperMock.Setup(m => m.Map<LogModel>(entity2)).Returns(model2);
+
+            var result = await _service.SearchAsync(new QueryParameters<LogModel> { PageNumber = 1, PageSize = 1 });
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.Items, Has.Count.EqualTo(1));
+                Assert.That(result.Metadata.TotalCount, Is.EqualTo(2));
+            }
         }
 
         [Test]

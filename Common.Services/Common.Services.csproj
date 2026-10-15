@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Common.Data.Repository\Common.Data.Repository.csproj" />
     <ProjectReference Include="..\Common.Http\Common.Http.csproj" />
     <ProjectReference Include="..\Common.Models\Common.Models.csproj" />
+    <ProjectReference Include="..\Common.Pagination\Common.Pagination.csproj" />
     <ProjectReference Include="..\MealPlanner.Data.Entities\MealPlanner.Data.Entities.csproj" />
     <ProjectReference Include="..\RecipeBook.Data.Entities\RecipeBook.Data.Entities.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />

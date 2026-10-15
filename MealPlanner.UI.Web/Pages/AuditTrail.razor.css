@@ -1,0 +1,23 @@
+.filter-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.filter-header span {
+    white-space: nowrap;
+}
+
+.filter-control {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: 0;
+    right: 0;
+    z-index: 5;
+    font-weight: normal;
+}
+
+.date-filter-control {
+    display: flex;
+    gap: 0.35rem;
+}
