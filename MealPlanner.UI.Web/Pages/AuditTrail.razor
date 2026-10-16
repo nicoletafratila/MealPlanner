@@ -8,39 +8,33 @@
         table-layout: fixed;
     }
 
-    .audit-columns th:nth-child(1),
-    .audit-columns td:nth-child(1) {
-        width: 180px !important;
-        max-width: 180px !important;
-    }
+        .audit-columns th:nth-child(1),
+        .audit-columns td:nth-child(1) {
+            width: 300px !important;
+            max-width: 300px !important;
+        }
 
-    .audit-columns th:nth-child(2),
-    .audit-columns td:nth-child(2) {
-        width: 150px !important;
-        max-width: 150px !important;
-    }
+        .audit-columns th:nth-child(2),
+        .audit-columns td:nth-child(2) {
+            width: 150px !important;
+            max-width: 150px !important;
+        }
 
-    /* width:% on a table cell is relative to the whole table, not to what's left
-       after the two fixed-px columns — calc() against (100% - 180px - 150px) splits
-       the actual remaining space 25/75 instead of 25/75 of the full table width. */
-    .audit-columns th:nth-child(3),
-    .audit-columns td:nth-child(3) {
-        width: calc((100% - 330px) * 0.25) !important;
-    }
+        .audit-columns th:nth-child(3),
+        .audit-columns td:nth-child(3) {
+            width: 15% !important;
+            vertical-align: top;
+        }
 
-    .audit-columns th:nth-child(4),
-    .audit-columns td:nth-child(4) {
-        width: calc((100% - 330px) * 0.75) !important;
-    }
+        .audit-columns th:nth-child(4),
+        .audit-columns td:nth-child(4) {
+            width: 85% !important;
+            vertical-align: top;
+        }
 
-    /* Timestamp's date-range control is absolutely positioned (see .filter-control in
-       AuditTrail.razor.css) so it drops down to align with the filters row, where
-       Message/Exception's own filter controls live. That row's height is otherwise
-       driven only by those single-line controls, so without extra room here the
-       two stacked date inputs would spill past the row into the data area below. */
-    .audit-columns tr.bg-primary.bg-opacity-25 th:nth-child(1) {
-        padding-bottom: 2.25rem !important;
-    }
+        .audit-columns tr.bg-primary th:nth-child(1) {
+            padding-bottom: 4rem !important;
+        }
 </style>
 
 <div class="card">

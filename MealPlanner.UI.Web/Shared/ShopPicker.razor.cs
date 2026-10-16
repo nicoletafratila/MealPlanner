@@ -29,9 +29,9 @@ namespace MealPlanner.UI.Web.Shared
             Shops?.FirstOrDefault(s => s.Id.ToString() == SelectedShopId);
 
         private IEnumerable<ShopModel>? FilteredShops =>
-            Shops is null || string.IsNullOrWhiteSpace(_filterText)
-                ? Shops
-                : Shops.Where(s => s.Name.Contains(_filterText, StringComparison.OrdinalIgnoreCase));
+            Shops
+                ?.Where(s => string.IsNullOrWhiteSpace(_filterText) || s.Name.Contains(_filterText, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase);
 
         private void OnFilterInput(ChangeEventArgs e)
         {

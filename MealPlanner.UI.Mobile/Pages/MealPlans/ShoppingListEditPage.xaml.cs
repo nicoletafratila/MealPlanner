@@ -18,7 +18,10 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans
 
         private async void OnSelectShopTapped(object sender, TappedEventArgs e)
         {
-            var items = _vm.Shops.Select(s => new SelectorItem(s, s.Name, imageUrl: s.ThumbnailUrl ?? "shopplaceholder.jpg")).ToList();
+            var items = _vm.Shops
+                .OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(s => new SelectorItem(s, s.Name, imageUrl: s.ThumbnailUrl ?? "shopplaceholder.jpg"))
+                .ToList();
             var popup = new SelectorPopup(
                 items,
                 MealPlans.Resources.ShoppingListEditPage.SelectShopTitle,

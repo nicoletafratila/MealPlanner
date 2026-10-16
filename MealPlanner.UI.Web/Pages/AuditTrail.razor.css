@@ -1,9 +1,3 @@
-/* Timestamp/Level don't use the Grid's built-in filters row (they're Filterable="false"
-   and render custom controls instead), so to make those controls line up with
-   Message/Exception's filter row, they're floated out of the header row and down
-   into that row's band via position:absolute — label stays in the header row,
-   control visually drops to match. See the filters-row padding rule in AuditTrail.razor
-   for how the row is made tall enough to contain the dropped-down control. */
 .filter-header {
     position: relative;
     display: flex;
@@ -17,6 +11,7 @@
 .filter-control {
     position: absolute;
     top: 100%;
+    margin-top: 1rem;
     left: 0;
     right: 0;
     z-index: 5;
@@ -25,6 +20,12 @@
 
 .date-filter-control {
     display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.5rem;
 }
+
+.date-filter-control input {
+    height: 38px;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
