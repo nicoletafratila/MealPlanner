@@ -137,11 +137,11 @@ namespace RecipeBook.Api.Controllers
         }
 
         [HttpPost("shareall")]
-        public async Task<ActionResult<CommandResponse?>> ShareAllAsync(
+        public async Task<ActionResult<JobStartedModel?>> ShareAllAsync(
             [FromBody] RecipeShareAllModel model,
             CancellationToken cancellationToken)
         {
-            var command = new ShareAllCommand { TargetUserId = model.TargetUserId, Filters = model.Filters };
+            var command = new StartShareAllCommand { TargetUserId = model.TargetUserId, Filters = model.Filters };
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }

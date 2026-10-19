@@ -165,4 +165,7 @@
   <data name="ShareAllSucceeded" xml:space="preserve">
     <value>All recipes have been shared successfully</value>
   </data>
+  <data name="ShareAllFailedMessage" xml:space="preserve">
+    <value>Share all failed. Please try again.</value>
+  </data>
 </root>

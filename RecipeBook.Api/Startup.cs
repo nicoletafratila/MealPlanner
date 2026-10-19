@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecipeBook.Api.Abstractions;
+using RecipeBook.Api.Hubs;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Api.Services;
 using RecipeBook.Data.Profiles;
@@ -42,6 +43,7 @@ namespace RecipeBook.Api
             cfg.AddProfile<ShopProfile>();
             cfg.AddProfile<ShopDisplaySequenceProfile>();
             cfg.AddProfile<ShoppingListProductProfile>();
+            cfg.AddProfile<JobProfile>();
         }
 
         protected override void RegisterServices(IServiceCollection services)
@@ -50,6 +52,12 @@ namespace RecipeBook.Api
 
             services.AddScoped<IRecipeCategoryShareResolver, RecipeCategoryShareResolver>();
             services.AddScoped<IProductCategoryShareResolver, ProductCategoryShareResolver>();
+
+            services.AddSignalR();
+            services.AddSingleton<IJobQueue, JobQueue>();
+            services.AddScoped<IRecipeShareProgressNotifier, RecipeShareProgressNotifier>();
+            services.AddScoped<IRecipeJobProcessor, RecipeJobProcessor>();
+            services.AddHostedService<JobDispatcherService>();
 
             services.AddHttpClient<IMealPlannerClient, MealPlannerClient>()
                 .ConfigureHttpClient(ConfigureMealPlannerClient); ;
@@ -100,6 +108,7 @@ namespace RecipeBook.Api
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<IUnitRepository, UnitRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
 
             services.AddAuthentication(options =>
                 {
@@ -124,6 +133,19 @@ namespace RecipeBook.Api
                         ValidIssuer = Common.Constants.MealPlanner.Issuer,
                         ValidAudience = Common.Constants.MealPlanner.ApiScope,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SigningKey"]!)),
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             services.AddAuthorizationBuilder()
@@ -163,6 +185,7 @@ namespace RecipeBook.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<RecipeShareProgressHub>("/hubs/recipe-share-progress");
             });
         }
 

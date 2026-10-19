@@ -18,6 +18,13 @@
                 </td>
             </tr>
         </table>
+        @if (_isSharingAll)
+        {
+            <Progress>
+                <ProgressBar Color="ProgressColor.Success" Width="@_shareAllPercent" Label="@($"{_shareAllPercent}%")" />
+            </Progress>
+            <div class="text-muted small">@Resources.RecipesOverview.ShareAllInProgressMessage</div>
+        }
     </div>
 
     <div class="card-body">

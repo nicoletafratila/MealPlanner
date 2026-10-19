@@ -8,6 +8,7 @@ using MealPlanner.UI.Mobile.Services;
 using MealPlanner.UI.Mobile.ViewModels.RecipeBook;
 using Moq;
 using RecipeBook.Services.Http;
+using RecipeBook.Shared.Enums;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
@@ -30,6 +31,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         private Mock<IShopService> _lookupShopServiceMock = null!;
         private Mock<IProductService> _lookupProductServiceMock = null!;
         private Mock<IApplicationUserService> _applicationUserServiceMock = null!;
+        private Mock<IRecipeShareProgressClient> _shareProgressClientMock = null!;
+        private Mock<IServiceProvider> _serviceProviderMock = null!;
         private RecipesOverviewViewModel _viewModel = null!;
 
         [SetUp]
@@ -43,6 +46,12 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _lookupShopServiceMock = new Mock<IShopService>(MockBehavior.Strict);
             _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
             _applicationUserServiceMock = new Mock<IApplicationUserService>(MockBehavior.Strict);
+            _shareProgressClientMock = new Mock<IRecipeShareProgressClient>(MockBehavior.Strict);
+            _serviceProviderMock = new Mock<IServiceProvider>(MockBehavior.Strict);
+
+            _shareProgressClientMock.Setup(c => c.ConnectAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _shareProgressClientMock.Setup(c => c.DisposeAsync()).Returns(ValueTask.CompletedTask);
+            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IRecipeShareProgressClient))).Returns(_shareProgressClientMock.Object);
 
             var lookupDataService = new ReferenceDataCacheService(
                 _categoryServiceMock.Object,
@@ -56,7 +65,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 _recipeServiceMock.Object,
                 lookupDataService,
                 _mealPlanServiceMock.Object,
-                _applicationUserServiceMock.Object);
+                _applicationUserServiceMock.Object,
+                _serviceProviderMock.Object);
         }
 
         private void SetupDummyLookups()
@@ -574,20 +584,21 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         }
 
         [Test]
-        public async Task ShareAllToUserAsync_ServiceSucceeds_SetsSuccessMessage_AndClearsBusy()
+        public async Task ShareAllToUserAsync_ServiceSucceeds_ConnectsProgressClient_AndClearsBusy()
         {
+            var jobId = Guid.NewGuid();
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync("user2", null, CancellationToken.None))
-                .ReturnsAsync(CommandResponse.Success());
+                .ReturnsAsync(new JobStartedModel { Succeeded = true, JobId = jobId });
 
             await _viewModel.ShareAllToUserAsync("user2");
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(_viewModel.SuccessMessage, Is.Not.Null.And.Not.Empty);
-                Assert.That(_viewModel.ErrorMessage, Is.Null);
+                Assert.That(_viewModel.IsSharingAll, Is.True);
                 Assert.That(_viewModel.IsBusy, Is.False);
             }
+            _shareProgressClientMock.Verify(c => c.ConnectAsync(jobId, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -599,7 +610,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync("user2", It.IsAny<IEnumerable<FilterItem>?>(), CancellationToken.None))
                 .Callback<string, IEnumerable<FilterItem>?, CancellationToken>((_, filters, _) => capturedFilters = filters)
-                .ReturnsAsync(CommandResponse.Success());
+                .ReturnsAsync(new JobStartedModel { Succeeded = true, JobId = Guid.NewGuid() });
 
             await _viewModel.ShareAllToUserAsync("user2");
 
@@ -617,7 +628,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
         {
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync("user2", null, CancellationToken.None))
-                .ReturnsAsync(CommandResponse.Failed("share rejected"));
+                .ReturnsAsync(new JobStartedModel { Succeeded = false, Message = "share rejected" });
 
             await _viewModel.ShareAllToUserAsync("user2");
 
@@ -625,6 +636,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             {
                 Assert.That(_viewModel.ErrorMessage, Is.EqualTo("share rejected"));
                 Assert.That(_viewModel.IsBusy, Is.False);
+                Assert.That(_viewModel.IsSharingAll, Is.False);
             }
         }
 

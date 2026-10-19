@@ -67,4 +67,7 @@
   <data name="UserIdRequired" xml:space="preserve">
     <value>User id is required.</value>
   </data>
+  <data name="JobInterruptedByRestart" xml:space="preserve">
+    <value>Sharing was interrupted by a server restart. Please try again.</value>
+  </data>
 </root>

@@ -1,8 +1,7 @@
-using MealPlanner.Api.Services;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace MealPlanner.Api.Tests.Services
+namespace Common.Core.Tests
 {
     [TestFixture]
     public class ImageThumbnailGeneratorTests

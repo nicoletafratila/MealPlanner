@@ -1,73 +1,95 @@
-using Common.Models;
-using Common.Services;
-using MediatR;
+using Common.Pagination;
+using Newtonsoft.Json;
 using RecipeBook.Api.Features.Recipe.Resources;
 using RecipeBook.Api.Repositories;
-using RecipeBook.Api.Services;
+using RecipeBook.Data.Entities;
+using RecipeBook.Data.Entities.Enums;
 
-namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
+namespace RecipeBook.Api.Services
 {
-    /// <summary>
-    /// Handles sharing all of the current user's recipes with another user by cloning them, and the products they reference,
-    /// in a small number of batched database round trips instead of one per recipe.
-    /// </summary>
-    public class ShareAllCommandHandler(
-        IRecipeRepository repository,
+    public class RecipeJobProcessor(
+        IJobRepository jobRepository,
+        IRecipeRepository recipeRepository,
         IProductRepository productRepository,
         IRecipeCategoryShareResolver recipeCategoryResolver,
         IProductCategoryShareResolver productCategoryResolver,
-        ICurrentUserService currentUserService,
-        ILogger<ShareAllCommandHandler> logger) : IRequestHandler<ShareAllCommand, CommandResponse?>
+        IRecipeShareProgressNotifier notifier,
+        ILogger<RecipeJobProcessor> logger) : IRecipeJobProcessor
     {
         private const int MaxNameAttempts = 50;
 
-        private readonly IRecipeRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly IJobRepository _jobRepository = jobRepository ?? throw new ArgumentNullException(nameof(jobRepository));
+        private readonly IRecipeRepository _recipeRepository = recipeRepository ?? throw new ArgumentNullException(nameof(recipeRepository));
         private readonly IProductRepository _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
         private readonly IRecipeCategoryShareResolver _recipeCategoryResolver = recipeCategoryResolver ?? throw new ArgumentNullException(nameof(recipeCategoryResolver));
         private readonly IProductCategoryShareResolver _productCategoryResolver = productCategoryResolver ?? throw new ArgumentNullException(nameof(productCategoryResolver));
-        private readonly ICurrentUserService _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
-        private readonly ILogger<ShareAllCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IRecipeShareProgressNotifier _notifier = notifier ?? throw new ArgumentNullException(nameof(notifier));
+        private readonly ILogger<RecipeJobProcessor> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        public async Task<CommandResponse?> Handle(ShareAllCommand request, CancellationToken cancellationToken)
+        public async Task ProcessAsync(Guid jobId, CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(request);
+            var job = await _jobRepository.GetByIdAsync(jobId, cancellationToken);
+            if (job is null)
+                return;
 
             try
             {
-                var userId = _currentUserService.UserId;
-                if (string.IsNullOrEmpty(userId))
-                    return CommandResponse.Failed(RecipeMessages.UserIdRequired);
+                job.Status = JobStatus.Running;
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+                await _notifier.NotifyAsync(job, cancellationToken);
 
-                var sourceRecipes = await _repository.GetAllByUserIncludeIngredientsAsync(userId, request.Filters, cancellationToken);
-                if (sourceRecipes.Count == 0)
-                    return CommandResponse.Success();
+                var filters = string.IsNullOrWhiteSpace(job.FiltersJson)
+                    ? null
+                    : JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(job.FiltersJson);
 
-                var recipeCategoryMap = await _recipeCategoryResolver.ResolveAsync(
-                    sourceRecipes.Select(r => r.RecipeCategory),
-                    request.TargetUserId,
-                    cancellationToken);
+                var sourceRecipes = await _recipeRepository.GetAllByUserIncludeIngredientsAsync(job.OwnerUserId!, filters, cancellationToken);
 
-                var productCategoryMap = await _productCategoryResolver.ResolveAsync(
-                    sourceRecipes.SelectMany(r => r.RecipeIngredients ?? []).Select(ri => ri.Product?.ProductCategory),
-                    request.TargetUserId,
-                    cancellationToken);
+                job.TotalCount = sourceRecipes.Count;
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+                await _notifier.NotifyAsync(job, cancellationToken);
 
-                var targetProductIdsBySourceProductId = await CloneProductsAsync(sourceRecipes, productCategoryMap, request.TargetUserId, cancellationToken);
-                var sharedRecipes = await BuildSharedRecipesAsync(sourceRecipes, targetProductIdsBySourceProductId, recipeCategoryMap, request.TargetUserId, cancellationToken);
+                if (sourceRecipes.Count > 0)
+                {
+                    var recipeCategoryMap = await _recipeCategoryResolver.ResolveAsync(
+                        sourceRecipes.Select(r => r.RecipeCategory),
+                        job.TargetUserId!,
+                        cancellationToken);
 
-                await _repository.AddRangeAsync(sharedRecipes, cancellationToken);
+                    var productCategoryMap = await _productCategoryResolver.ResolveAsync(
+                        sourceRecipes.SelectMany(r => r.RecipeIngredients ?? []).Select(ri => ri.Product?.ProductCategory),
+                        job.TargetUserId!,
+                        cancellationToken);
 
-                return CommandResponse.Success();
+                    var targetProductIdsBySourceProductId = await CloneProductsAsync(sourceRecipes, productCategoryMap, job.TargetUserId!, cancellationToken);
+                    var sharedRecipes = await BuildSharedRecipesAsync(
+                        job,
+                        sourceRecipes,
+                        targetProductIdsBySourceProductId,
+                        recipeCategoryMap,
+                        cancellationToken);
+
+                    await _recipeRepository.AddRangeAsync(sharedRecipes, cancellationToken);
+                }
+
+                job.Status = JobStatus.Completed;
+                job.CompletedAt = DateTime.UtcNow;
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+                await _notifier.NotifyAsync(job, cancellationToken);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred when sharing all recipes to user {TargetUserId}.", request.TargetUserId);
-                return CommandResponse.Failed(RecipeMessages.SaveFailed);
+                _logger.LogError(ex, "An error occurred when processing share job {JobId}.", jobId);
+
+                job.Status = JobStatus.Failed;
+                job.ErrorMessage = RecipeMessages.SaveFailed;
+                job.CompletedAt = DateTime.UtcNow;
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+                await _notifier.NotifyAsync(job, cancellationToken);
             }
         }
 
         private async Task<Dictionary<Guid, Guid>> CloneProductsAsync(
-            IReadOnlyList<Data.Entities.Recipe> sourceRecipes,
+            IReadOnlyList<Recipe> sourceRecipes,
             Dictionary<Guid, Guid> productCategoryMap,
             string targetUserId,
             CancellationToken cancellationToken)
@@ -78,9 +100,9 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                 .GroupBy(p => (p.ProductCategoryId, Name: p.Name!.ToLowerInvariant()))
                 .ToDictionary(g => g.Key, g => g.First());
 
-            var targetProductBySourceProductId = new Dictionary<Guid, Data.Entities.Product>();
-            var stagedProductsByNameAndCategory = new Dictionary<(Guid ProductCategoryId, string Name), Data.Entities.Product>();
-            var newProducts = new List<Data.Entities.Product>();
+            var targetProductBySourceProductId = new Dictionary<Guid, Product>();
+            var stagedProductsByNameAndCategory = new Dictionary<(Guid ProductCategoryId, string Name), Product>();
+            var newProducts = new List<Product>();
 
             foreach (var ingredient in sourceRecipes.SelectMany(r => r.RecipeIngredients ?? []))
             {
@@ -106,7 +128,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     continue;
                 }
 
-                var cloned = new Data.Entities.Product
+                var cloned = new Product
                 {
                     Name = product.Name,
                     ImageContent = product.ImageContent,
@@ -129,14 +151,14 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
             return targetProductBySourceProductId.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Id);
         }
 
-        private async Task<List<Data.Entities.Recipe>> BuildSharedRecipesAsync(
-            IReadOnlyList<Data.Entities.Recipe> sourceRecipes,
+        private async Task<List<Recipe>> BuildSharedRecipesAsync(
+            Job job,
+            IReadOnlyList<Recipe> sourceRecipes,
             Dictionary<Guid, Guid> targetProductIdsBySourceProductId,
             Dictionary<Guid, Guid> recipeCategoryMap,
-            string targetUserId,
             CancellationToken cancellationToken)
         {
-            var existingTargetRecipes = await _repository.GetAllByUserAsync(targetUserId, cancellationToken);
+            var existingTargetRecipes = await _recipeRepository.GetAllByUserAsync(job.TargetUserId!, cancellationToken);
             var usedNamesByCategory = existingTargetRecipes
                 .Where(r => r.Name is not null)
                 .GroupBy(r => r.RecipeCategoryId)
@@ -144,7 +166,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     g => g.Key,
                     g => new HashSet<string>(g.Select(r => r.Name!), StringComparer.OrdinalIgnoreCase));
 
-            var sharedRecipes = new List<Data.Entities.Recipe>();
+            var sharedRecipes = new List<Recipe>();
 
             foreach (var source in sourceRecipes)
             {
@@ -158,7 +180,7 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                 var uniqueName = ResolveUniqueRecipeName(source.Name, usedNames);
 
                 var sharedIngredients = source.RecipeIngredients?
-                    .Select(ri => new Data.Entities.RecipeIngredient
+                    .Select(ri => new RecipeIngredient
                     {
                         ProductId = targetProductIdsBySourceProductId[ri.ProductId],
                         UnitId = ri.UnitId,
@@ -166,16 +188,20 @@ namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
                     })
                     .ToList();
 
-                sharedRecipes.Add(new Data.Entities.Recipe
+                sharedRecipes.Add(new Recipe
                 {
                     Name = uniqueName,
                     Source = source.Source,
                     ImageContent = source.ImageContent,
                     ImageThumbnail = source.ImageThumbnail,
                     RecipeCategoryId = targetCategoryId,
-                    UserId = targetUserId,
+                    UserId = job.TargetUserId,
                     RecipeIngredients = sharedIngredients
                 });
+
+                job.ProcessedCount++;
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+                await _notifier.NotifyAsync(job, cancellationToken);
             }
 
             return sharedRecipes;

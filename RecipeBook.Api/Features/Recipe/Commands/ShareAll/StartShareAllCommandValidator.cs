@@ -4,11 +4,11 @@ using RecipeBook.Api.Features.Recipe.Resources;
 namespace RecipeBook.Api.Features.Recipe.Commands.ShareAll
 {
     /// <summary>
-    /// Validates share-all-recipes commands.
+    /// Validates start-share-all-recipes commands.
     /// </summary>
-    public class ShareAllCommandValidator : AbstractValidator<ShareAllCommand>
+    public class StartShareAllCommandValidator : AbstractValidator<StartShareAllCommand>
     {
-        public ShareAllCommandValidator()
+        public StartShareAllCommandValidator()
         {
             RuleFor(x => x.TargetUserId)
                 .NotEmpty()

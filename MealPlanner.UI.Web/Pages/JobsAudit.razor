@@ -1,0 +1,65 @@
+@page "/JobsAudit"
+
+@using Common.Models
+@using RecipeBook.Shared.Models
+
+<div class="card">
+    <div class="card-header">
+        <h2>@Resources.JobsAudit.PageTitle</h2>
+    </div>
+
+    <div class="card-body">
+        <GridTemplate TItem="JobModel" @key="@_gridKey" @ref="_jobsGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass">
+            <Columns>
+                <GridColumn TItem="JobModel" PropertyName="CreatedAt" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt" SortDirection="@_createdAtSortDirection" Filterable="false">
+                    <HeaderContent>
+                        <div class="filter-header">
+                            <span>@Resources.JobsAudit.HeaderCreatedAt</span>
+                            <div class="filter-control date-filter-control">
+                                <input type="date" class="form-control form-control-sm" title="@Resources.JobsAudit.DateFromPlaceholder"
+                                       value="@CreatedFromFilter?.ToString("yyyy-MM-dd")" @onchange="OnFromDateChangedAsync" />
+                                <input type="date" class="form-control form-control-sm" title="@Resources.JobsAudit.DateToPlaceholder"
+                                       value="@CreatedToFilter?.ToString("yyyy-MM-dd")" @onchange="OnToDateChangedAsync" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        @context.CreatedAt
+                    </ChildContent>
+                </GridColumn>
+                <GridColumn TItem="JobModel" PropertyName="Status" Sortable="false" Filterable="false">
+                    <HeaderContent>
+                        <div class="filter-header">
+                            <span>@Resources.JobsAudit.HeaderStatus</span>
+                            <div class="filter-control">
+                                <ComboBox Id="jobStatusFilter" Items="StatusOptions" IdSelector="c => c" TextSelector="c => c"
+                                          @bind-Value="StatusFilter"
+                                          @bind-Value:after="OnCustomFilterChangedAsync"
+                                          Placeholder="@Resources.JobsAudit.AllStatusesOption"
+                                          ShowClearButton="true" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        @context.Status
+                    </ChildContent>
+                </GridColumn>
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderOwnerUserId" PropertyName="OwnerUserId" Sortable="false" Filterable="false">
+                    @context.OwnerUserId
+                </GridColumn>
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderTargetUserId" PropertyName="TargetUserId" Sortable="false" Filterable="false">
+                    @context.TargetUserId
+                </GridColumn>
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderProgress" Sortable="false" Filterable="false">
+                    @context.ProcessedCount / @context.TotalCount
+                </GridColumn>
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderErrorMessage" Sortable="false" Filterable="false">
+                    @context.ErrorMessage
+                </GridColumn>
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderCompletedAt" Sortable="false" Filterable="false">
+                    @context.CompletedAt
+                </GridColumn>
+            </Columns>
+        </GridTemplate>
+    </div>
+</div>

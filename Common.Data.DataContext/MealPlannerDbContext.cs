@@ -26,6 +26,7 @@ namespace Common.Data.DataContext
         public DbSet<ShopDisplaySequence> ShopDisplaySequences => Set<ShopDisplaySequence>();
         public DbSet<Log> Logs => Set<Log>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+        public DbSet<Job> Jobs => Set<Job>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

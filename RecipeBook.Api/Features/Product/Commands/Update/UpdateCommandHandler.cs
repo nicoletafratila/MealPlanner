@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Common.Core;
 using Common.Models;
 using MediatR;
 using RecipeBook.Api.Features.Product.Resources;
 using RecipeBook.Api.Repositories;
-using RecipeBook.Api.Services;
 
 namespace RecipeBook.Api.Features.Product.Commands.Update
 {

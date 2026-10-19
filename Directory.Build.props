@@ -32,9 +32,11 @@
     <MicrosoftAspNetCoreDiagnosticsEntityFrameworkCore>10.0.8</MicrosoftAspNetCoreDiagnosticsEntityFrameworkCore>
     <MicrosoftAspNetCoreIdentityEntityFrameworkCore>10.0.8</MicrosoftAspNetCoreIdentityEntityFrameworkCore>
     <MicrosoftAspNetCoreIdentityUI>10.0.8</MicrosoftAspNetCoreIdentityUI>
+    <MicrosoftAspNetCoreSignalRClient>10.0.8</MicrosoftAspNetCoreSignalRClient>
     <MicrosoftAspNetCoreWebUtilities>10.0.8</MicrosoftAspNetCoreWebUtilities>
     <MicrosoftDataSqlClient>7.0.1</MicrosoftDataSqlClient>
     <MicrosoftDataSqlite>10.0.8</MicrosoftDataSqlite>
+    <MicrosoftExtensionsConfigurationAbstractions>10.0.8</MicrosoftExtensionsConfigurationAbstractions>
     <MicrosoftExtensionsDependencyInjection>10.0.8</MicrosoftExtensionsDependencyInjection>
     <MicrosoftExtensionsHttp>10.0.8</MicrosoftExtensionsHttp>
     <MicrosoftExtensionsLoggingAbstractions>10.0.8</MicrosoftExtensionsLoggingAbstractions>

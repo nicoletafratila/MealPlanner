@@ -1,14 +1,9 @@
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 
-namespace MealPlanner.Api.Services
+namespace Common.Core
 {
-    /// <summary>
-    /// Generates small JPEG thumbnails from stored shop images, so list and
-    /// search endpoints can return a lightweight image instead of re-encoding the full
-    /// upload (which can be several MB) for every row.
-    /// </summary>
     public static class ImageThumbnailGenerator
     {
         public static byte[]? CreateThumbnail(byte[]? source, int maxDimension = 200, int quality = 75)

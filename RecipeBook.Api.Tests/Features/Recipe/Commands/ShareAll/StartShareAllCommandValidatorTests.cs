@@ -4,20 +4,20 @@ using RecipeBook.Api.Features.Recipe.Commands.ShareAll;
 namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
 {
     [TestFixture]
-    public class ShareAllCommandValidatorTests
+    public class StartShareAllCommandValidatorTests
     {
-        private ShareAllCommandValidator _validator = null!;
+        private StartShareAllCommandValidator _validator = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new ShareAllCommandValidator();
+            _validator = new StartShareAllCommandValidator();
         }
 
         [Test]
         public void TargetUserId_Empty_HasValidationError()
         {
-            var command = new ShareAllCommand { TargetUserId = string.Empty };
+            var command = new StartShareAllCommand { TargetUserId = string.Empty };
 
             var result = _validator.TestValidate(command);
 
@@ -27,7 +27,7 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.ShareAll
         [Test]
         public void ValidCommand_HasNoValidationErrors()
         {
-            var command = new ShareAllCommand { TargetUserId = "user1" };
+            var command = new StartShareAllCommand { TargetUserId = "user1" };
 
             var result = _validator.TestValidate(command);
 

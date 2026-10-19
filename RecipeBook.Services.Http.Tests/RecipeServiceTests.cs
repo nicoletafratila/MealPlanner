@@ -617,11 +617,12 @@ namespace RecipeBook.Services.Http.Tests
 
         // ---------- ShareAllAsync ----------
         [Test]
-        public async Task ShareAllAsync_PostsModel_AndReturnsCommandResponse()
+        public async Task ShareAllAsync_PostsModel_AndReturnsJobStartedModel()
         {
             // Arrange
             const string targetUserId = "user2";
-            var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
+            var jobId = Guid.NewGuid();
+            var expectedResponse = new JobStartedModel { Succeeded = true, JobId = jobId };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -645,7 +646,7 @@ namespace RecipeBook.Services.Http.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
-                Assert.That(result.Message, Is.EqualTo("ok"));
+                Assert.That(result.JobId, Is.EqualTo(jobId));
             }
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -704,7 +705,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task ShareAllAsync_InvalidatesCache_NextSearchHitsHttp()
         {
             var paged = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
-            var shareAllResponse = new CommandResponse { Succeeded = true };
+            var shareAllResponse = new JobStartedModel { Succeeded = true, JobId = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")

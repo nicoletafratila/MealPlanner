@@ -56,6 +56,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ControllerMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="Hubs\Resources\RecipeShareProgressHubMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeShareProgressHubMessages.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -82,6 +87,10 @@
     <EmbeddedResource Update="Controllers\Resources\ControllerMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ControllerMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Hubs\Resources\RecipeShareProgressHubMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeShareProgressHubMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

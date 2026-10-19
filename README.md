@@ -1,7 +1,36 @@
-job to share recipes C:\Users\nfratila\.claude\plans\wondrous-nibbling-dusk.md f
+muta LoggerService in prorpiul controller
 translate into other languages
-comaparare web cu mobile screen cu screen
-
-
-
+comaparare cu mobile screen cu screen
 add product to a shopping list de pe shop list edit?????
+
+
+vulnerabilitati
+split this
+public class RecipeBookControllers
+    {
+        public const string Recipe = "Recipe";
+        public const string RecipeCategory = "RecipeCategory";
+        public const string Product = "Product";
+        public const string ProductCategory = "ProductCategory";
+        public const string Unit = "Unit";
+
+        public const string RecipeUrl = "api/recipe";
+        public const string RecipeCategoryUrl = "api/recipecategory";
+        public const string ProductUrl = "api/product";
+        public const string ProductCategoryUrl = "api/productcategory";
+        public const string UnitUrl = "api/unit";
+
+        // Sub-routes shared by all RecipeBook controllers
+        public const string EditRoute = "edit";
+        public const string SearchRoute = "search";
+        public const string UpdateAllRoute = "updateAll";
+        public const string ShoppingListProductsRoute = "products";
+        public const string ShareRoute = "share";
+        public const string ShareAllRoute = "shareall";
+    }
+        public class JobControllers
+    {
+        public const string JobUrl = "api/job";
+        public const string StatusRouteFormat = "{0}/status";
+        public const string SearchRoute = "search";
+    }

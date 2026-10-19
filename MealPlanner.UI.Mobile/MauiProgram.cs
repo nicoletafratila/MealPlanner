@@ -93,6 +93,9 @@ namespace MealPlanner.UI.Mobile
             services.AddHttpClient<IRecipeService, RecipeService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IJobService, JobService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
+                .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
@@ -105,6 +108,7 @@ namespace MealPlanner.UI.Mobile
             services.AddHttpClient<IUnitService, UnitService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddTransient<IRecipeShareProgressClient, RecipeShareProgressClient>();
             services.AddHttpClient<IMealPlanService, MealPlanService>(c => ConfigureClient(c, mealPlannerBase, "MealPlannerApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();

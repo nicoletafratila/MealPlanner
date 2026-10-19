@@ -131,7 +131,7 @@ namespace RecipeBook.Services.Http
             }
         }
 
-        public async Task<CommandResponse?> ShareAllAsync(
+        public async Task<JobStartedModel?> ShareAllAsync(
             string targetUserId,
             IEnumerable<FilterItem>? filters = null,
             CancellationToken cancellationToken = default)
@@ -139,7 +139,7 @@ namespace RecipeBook.Services.Http
             try
             {
                 var model = new RecipeShareAllModel { TargetUserId = targetUserId, Filters = filters };
-                var r = await PostAsync($"{_controller}/{RecipeBookControllers.ShareAllRoute}", model, cancellationToken);
+                var r = await PostAsync<RecipeShareAllModel, JobStartedModel>($"{_controller}/{RecipeBookControllers.ShareAllRoute}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }

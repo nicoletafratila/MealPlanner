@@ -45,11 +45,16 @@ namespace MealPlanner.UI.Web
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
+            services.AddHttpClient<IJobService, JobService>()
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
+
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             services.AddHttpClient<IUnitService, UnitService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
+
+            services.AddTransient<IRecipeShareProgressClient, RecipeShareProgressClient>();
 
             // MealPlanner API clients
             services.AddHttpClient<IMealPlanService, MealPlanService>()

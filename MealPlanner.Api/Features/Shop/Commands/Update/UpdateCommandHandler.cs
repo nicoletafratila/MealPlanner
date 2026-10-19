@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Common.Core;
 using Common.Models;
 using MealPlanner.Api.Repositories;
-using MealPlanner.Api.Services;
 using MediatR;
 
 namespace MealPlanner.Api.Features.Shop.Commands.Update

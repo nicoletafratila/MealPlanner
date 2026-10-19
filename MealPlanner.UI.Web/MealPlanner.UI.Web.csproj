@@ -368,6 +368,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AuditTrail.resx</DependentUpon>
     </Compile>
+    <Compile Update="Pages\Resources\JobsAudit.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>JobsAudit.resx</DependentUpon>
+    </Compile>
     <Compile Update="Pages\Resources\ContactUs.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -531,6 +536,10 @@
     <EmbeddedResource Update="Pages\Resources\AuditTrail.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AuditTrail.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Resources\JobsAudit.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>JobsAudit.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Shared\Resources\NavMenu.resx">
       <Generator>ResXFileCodeGenerator</Generator>

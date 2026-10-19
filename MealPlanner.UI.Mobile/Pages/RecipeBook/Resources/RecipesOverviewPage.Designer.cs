@@ -203,5 +203,14 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("ShareAllSucceeded", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share all failed. Please try again..
+        /// </summary>
+        internal static string ShareAllFailedMessage {
+            get {
+                return ResourceManager.GetString("ShareAllFailedMessage", resourceCulture);
+            }
+        }
     }
 }

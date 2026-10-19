@@ -20,7 +20,7 @@ namespace RecipeBook.Services.Http
         Task<CommandResponse?> UpdateAsync(RecipeEditModel model, CancellationToken cancellationToken = default);
         Task<CommandResponse?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
         Task<CommandResponse?> ShareAsync(Guid recipeId, string targetUserId, CancellationToken cancellationToken = default);
-        Task<CommandResponse?> ShareAllAsync(
+        Task<JobStartedModel?> ShareAllAsync(
             string targetUserId,
             IEnumerable<FilterItem>? filters = null,
             CancellationToken cancellationToken = default);

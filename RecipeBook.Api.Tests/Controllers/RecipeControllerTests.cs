@@ -203,13 +203,13 @@ namespace RecipeBook.Api.Tests.Controllers
         }
 
         [Test]
-        public async Task ShareAllAsync_SendsShareAllCommand()
+        public async Task ShareAllAsync_SendsStartShareAllCommand()
         {
             var model = new RecipeShareAllModel { TargetUserId = "user2" };
-            var response = CommandResponse.Success();
+            var response = new JobStartedModel { Succeeded = true, JobId = Guid.NewGuid() };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<ShareAllCommand>(c => c.TargetUserId == "user2"), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<StartShareAllCommand>(c => c.TargetUserId == "user2"), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             var result = await _controller.ShareAllAsync(model, CancellationToken.None);
@@ -219,7 +219,7 @@ namespace RecipeBook.Api.Tests.Controllers
             Assert.That(ok!.Value, Is.SameAs(response));
 
             _senderMock.Verify(
-                m => m.Send(It.Is<ShareAllCommand>(c => c.TargetUserId == "user2"), It.IsAny<CancellationToken>()),
+                m => m.Send(It.Is<StartShareAllCommand>(c => c.TargetUserId == "user2"), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -228,10 +228,10 @@ namespace RecipeBook.Api.Tests.Controllers
         {
             var filters = new List<FilterItem> { new("Name", "Soup", FilterOperator.Contains) };
             var model = new RecipeShareAllModel { TargetUserId = "user2", Filters = filters };
-            var response = CommandResponse.Success();
+            var response = new JobStartedModel { Succeeded = true, JobId = Guid.NewGuid() };
 
             _senderMock
-                .Setup(m => m.Send(It.Is<ShareAllCommand>(c => c.TargetUserId == "user2" && c.Filters == filters), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<StartShareAllCommand>(c => c.TargetUserId == "user2" && c.Filters == filters), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
             var result = await _controller.ShareAllAsync(model, CancellationToken.None);
@@ -240,7 +240,7 @@ namespace RecipeBook.Api.Tests.Controllers
             Assert.That(ok, Is.Not.Null);
 
             _senderMock.Verify(
-                m => m.Send(It.Is<ShareAllCommand>(c => c.Filters == filters), It.IsAny<CancellationToken>()),
+                m => m.Send(It.Is<StartShareAllCommand>(c => c.Filters == filters), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 

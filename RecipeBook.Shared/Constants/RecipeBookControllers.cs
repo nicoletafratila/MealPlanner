@@ -14,7 +14,6 @@ namespace RecipeBook.Shared.Constants
         public const string ProductCategoryUrl = "api/productcategory";
         public const string UnitUrl = "api/unit";
 
-        // Sub-routes shared by all RecipeBook controllers
         public const string EditRoute = "edit";
         public const string SearchRoute = "search";
         public const string UpdateAllRoute = "updateAll";
