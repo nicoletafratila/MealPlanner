@@ -14,7 +14,7 @@ namespace RecipeBook.Services.Http
     public class RecipeCategoryService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<RecipeCategoryService> logger)
         : ServiceBase(httpClient, tokenProvider), IRecipeCategoryService
     {
-        private readonly string _controller = RecipeBookControllers.RecipeCategoryUrl;
+        private readonly string _controller = RecipeCategoryRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -26,7 +26,7 @@ namespace RecipeBook.Services.Http
 
         public async Task<RecipeCategoryEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<RecipeCategoryEditModel>(url, cancellationToken);
         }
 
@@ -86,7 +86,7 @@ namespace RecipeBook.Services.Http
         {
             try
             {
-                var r = await PutAsync($"{_controller}/{RecipeBookControllers.UpdateAllRoute}", models, cancellationToken);
+                var r = await PutAsync($"{_controller}/{ApiRouteSegments.UpdateAll}", models, cancellationToken);
                 InvalidateCache();
                 return r;
             }

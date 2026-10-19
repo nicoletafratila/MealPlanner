@@ -13,14 +13,14 @@ namespace Identity.Services.Http
     public class ApplicationUserService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<ApplicationUserService> logger)
         : ServiceBase(httpClient, tokenProvider), IApplicationUserService
     {
-        private readonly string _controller = IdentityControllers.ApplicationUserUrl;
+        private readonly string _controller = ApplicationUserRoutes.Url;
 
         public Task<PagedList<ApplicationUserModel>?> SearchAsync(QueryParameters<ApplicationUserModel>? queryParameters = null, CancellationToken cancellationToken = default)
             => SearchAsync(_controller, queryParameters, cancellationToken);
 
         public async Task<IList<ApplicationUserListModel>?> ListAsync(CancellationToken cancellationToken = default)
         {
-            var url = $"{_controller}/{IdentityControllers.ListRoute}";
+            var url = $"{_controller}/{ApplicationUserRoutes.List}";
             try
             {
                 return await GetAsync<IList<ApplicationUserListModel>>(url, cancellationToken);
@@ -38,7 +38,7 @@ namespace Identity.Services.Http
             {
                 throw new ArgumentException("Username must not be empty.", nameof(name));
             }
-            var url = BuildUrl($"{_controller}/{IdentityControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Username] = name });
+            var url = BuildUrl($"{_controller}/{ApplicationUserRoutes.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Username] = name });
             return await GetAsync<ApplicationUserEditModel>(url, cancellationToken);
         }
 
@@ -50,7 +50,7 @@ namespace Identity.Services.Http
             }
             try
             {
-                return await PostAsync($"{_controller}/{IdentityControllers.UnlockRoute}", new { UserId = userId }, cancellationToken);
+                return await PostAsync($"{_controller}/{ApplicationUserRoutes.Unlock}", new { UserId = userId }, cancellationToken);
             }
             catch (HttpRequestException ex)
             {
@@ -72,7 +72,7 @@ namespace Identity.Services.Http
             }
             try
             {
-                return await PostAsync($"{_controller}/{IdentityControllers.ResendConfirmationEmailRoute}", new { UserId = userId }, cancellationToken);
+                return await PostAsync($"{_controller}/{ApplicationUserRoutes.ResendConfirmationEmail}", new { UserId = userId }, cancellationToken);
             }
             catch (HttpRequestException ex)
             {

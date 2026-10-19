@@ -11,11 +11,11 @@ namespace MealPlanner.Services.Http
     public class StatisticsService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<StatisticsService> logger)
         : ServiceBase(httpClient, tokenProvider), IStatisticsService
     {
-        private readonly string _controller = MealPlannerControllers.StatisticsUrl;
+        private readonly string _controller = StatisticsRoutes.Url;
 
         public async Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{MealPlannerControllers.FavoriteRecipesRoute}",
+            var url = BuildUrl($"{_controller}/{StatisticsRoutes.FavoriteRecipes}",
                 new Dictionary<string, string?> { [ApiQueryParams.CategoryIds] = string.Join(",", categories.Select(c => c.Id)) });
             try
             {
@@ -30,7 +30,7 @@ namespace MealPlanner.Services.Http
 
         public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{MealPlannerControllers.FavoriteProductsRoute}",
+            var url = BuildUrl($"{_controller}/{StatisticsRoutes.FavoriteProducts}",
                 new Dictionary<string, string?> { [ApiQueryParams.CategoryIds] = string.Join(",", categories.Select(c => c.Id)) });
             try
             {

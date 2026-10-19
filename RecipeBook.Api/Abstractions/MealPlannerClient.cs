@@ -17,7 +17,7 @@ namespace RecipeBook.Api.Abstractions
 
             ConfigureClient(authToken);
 
-            var controllerPath = _apiConfig.Controllers![MealPlannerControllers.Shop];
+            var controllerPath = _apiConfig.Controllers![ShopRoutes.ControllerName];
             var url = $"{controllerPath}/edit?id={shopId}";
 
             return await _httpClient.GetFromJsonAsync<ShopEditModel>(url, cancellationToken);
@@ -33,7 +33,7 @@ namespace RecipeBook.Api.Abstractions
 
             ConfigureClient(authToken);
 
-            var controllerPath = _apiConfig.Controllers![MealPlannerControllers.MealPlan];
+            var controllerPath = _apiConfig.Controllers![MealPlanRoutes.ControllerName];
             var url = $"{controllerPath}/searchbyid?id={recipeId}";
 
             return await _httpClient.GetFromJsonAsync<IList<MealPlanModel>>(url, cancellationToken);

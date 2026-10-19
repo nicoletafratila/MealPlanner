@@ -11,8 +11,8 @@ namespace RecipeBook.Api.Abstractions
         {
             Controllers = new Dictionary<string, string>
             {
-                [MealPlannerControllers.Shop] = "api/shop",
-                [MealPlannerControllers.MealPlan] = "api/mealplan"
+                [ShopRoutes.ControllerName] = "api/shop",
+                [MealPlanRoutes.ControllerName] = "api/mealplan"
             };
         }
     }

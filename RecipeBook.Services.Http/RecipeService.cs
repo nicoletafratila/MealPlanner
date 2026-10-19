@@ -15,7 +15,7 @@ namespace RecipeBook.Services.Http
     public class RecipeService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<RecipeService> logger)
         : ServiceBase(httpClient, tokenProvider), IRecipeService
     {
-        private readonly string _controller = RecipeBookControllers.RecipeUrl;
+        private readonly string _controller = RecipeRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -40,13 +40,13 @@ namespace RecipeBook.Services.Http
 
         public async Task<RecipeEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<RecipeEditModel>(url, cancellationToken);
         }
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid recipeId, Guid shopId, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{RecipeBookControllers.ShoppingListProductsRoute}",
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.ShoppingListProducts}",
                 new Dictionary<string, string?> { [ApiQueryParams.RecipeId] = recipeId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });
             return await GetAsync<IList<ShoppingListProductEditModel>>(url, cancellationToken);
         }
@@ -121,7 +121,7 @@ namespace RecipeBook.Services.Http
             try
             {
                 var model = new RecipeShareModel { RecipeId = recipeId, TargetUserId = targetUserId };
-                var r = await PostAsync($"{_controller}/{RecipeBookControllers.ShareRoute}", model, cancellationToken);
+                var r = await PostAsync($"{_controller}/{ApiRouteSegments.Share}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }
@@ -139,7 +139,7 @@ namespace RecipeBook.Services.Http
             try
             {
                 var model = new RecipeShareAllModel { TargetUserId = targetUserId, Filters = filters };
-                var r = await PostAsync<RecipeShareAllModel, JobStartedModel>($"{_controller}/{RecipeBookControllers.ShareAllRoute}", model, cancellationToken);
+                var r = await PostAsync<RecipeShareAllModel, JobStartedModel>($"{_controller}/{ApiRouteSegments.ShareAll}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }

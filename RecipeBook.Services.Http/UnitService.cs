@@ -14,7 +14,7 @@ namespace RecipeBook.Services.Http
     public class UnitService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<UnitService> logger)
         : ServiceBase(httpClient, tokenProvider), IUnitService
     {
-        private readonly string _controller = RecipeBookControllers.UnitUrl;
+        private readonly string _controller = UnitRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -26,7 +26,7 @@ namespace RecipeBook.Services.Http
 
         public async Task<UnitEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<UnitEditModel>(url, cancellationToken);
         }
 

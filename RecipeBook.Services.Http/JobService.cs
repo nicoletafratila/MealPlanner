@@ -10,11 +10,11 @@ namespace RecipeBook.Services.Http
     public class JobService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<JobService> logger)
         : ServiceBase(httpClient, tokenProvider), IJobService
     {
-        private readonly string _controller = JobControllers.JobUrl;
+        private readonly string _controller = JobRoutes.Url;
 
         public async Task<JobStatusModel?> GetStatusAsync(Guid jobId, CancellationToken cancellationToken = default)
         {
-            var url = string.Format($"{_controller}/{JobControllers.StatusRouteFormat}", jobId);
+            var url = string.Format($"{_controller}/{ApiRouteSegments.StatusFormat}", jobId);
             try
             {
                 return await GetAsync<JobStatusModel>(url, cancellationToken);

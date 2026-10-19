@@ -14,7 +14,7 @@ namespace Identity.Services.Http.Tests
     public class AuthenticationServiceTests
     {
         private const string BaseAddress = "https://api.test/";
-        private const string AuthPath = IdentityControllers.AuthenticationUrl;
+        private const string AuthPath = AuthenticationRoutes.Url;
 
         private static JsonSerializerOptions JsonOptions => new(JsonSerializerDefaults.Web);
 

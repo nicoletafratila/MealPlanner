@@ -24,8 +24,8 @@ namespace MealPlanner.Api.Tests.Abstractions
                 BaseUrl = new Uri(BaseAddress),
                 Controllers = new Dictionary<string, string>
                 {
-                    [RecipeBookControllers.RecipeCategory] = RecipeCategoryPath,
-                    [RecipeBookControllers.ProductCategory] = ProductCategoryPath
+                    [RecipeCategoryRoutes.ControllerName] = RecipeCategoryPath,
+                    [ProductCategoryRoutes.ControllerName] = ProductCategoryPath
                 }
             };
 

@@ -11,7 +11,7 @@ namespace Identity.Services.Http
     public class ContactUsService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<ContactUsService> logger)
         : ServiceBase(httpClient, tokenProvider), IContactUsService
     {
-        private readonly string _controller = IdentityControllers.ContactUsUrl;
+        private readonly string _controller = ContactUsRoutes.Url;
 
         public async Task<CommandResponse?> SendAsync(ContactUsModel model, CancellationToken cancellationToken = default)
         {
@@ -19,7 +19,7 @@ namespace Identity.Services.Http
             {
                 // Contact form does not require authentication
                 using var response = await HttpClient.PostAsJsonAsync(
-                    $"{_controller}/{IdentityControllers.SendRoute}", model, JsonOptions, cancellationToken);
+                    $"{_controller}/{ContactUsRoutes.Send}", model, JsonOptions, cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {

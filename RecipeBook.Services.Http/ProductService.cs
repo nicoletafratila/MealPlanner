@@ -14,7 +14,7 @@ namespace RecipeBook.Services.Http
     public class ProductService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<ProductService> logger)
         : ServiceBase(httpClient, tokenProvider), IProductService
     {
-        private readonly string _controller = RecipeBookControllers.ProductUrl;
+        private readonly string _controller = ProductRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -26,7 +26,7 @@ namespace RecipeBook.Services.Http
 
         public async Task<ProductEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{RecipeBookControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<ProductEditModel>(url, cancellationToken);
         }
 
@@ -100,7 +100,7 @@ namespace RecipeBook.Services.Http
             try
             {
                 var model = new ProductShareModel { ProductId = productId, TargetUserId = targetUserId };
-                var r = await PostAsync($"{_controller}/{RecipeBookControllers.ShareRoute}", model, cancellationToken);
+                var r = await PostAsync($"{_controller}/{ApiRouteSegments.Share}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }

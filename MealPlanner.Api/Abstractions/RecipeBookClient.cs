@@ -22,7 +22,7 @@ namespace MealPlanner.Api.Abstractions
                 ["categoryIds"] = categoryIds
             };
 
-            var controller = _config.Controllers![RecipeBookControllers.RecipeCategory];
+            var controller = _config.Controllers![RecipeCategoryRoutes.ControllerName];
             var url = QueryHelpers.AddQueryString($"{controller}/searchbycategories", query);
 
             return await _httpClient.GetFromJsonAsync<IList<RecipeCategoryModel>>(url, cancellationToken);
@@ -40,7 +40,7 @@ namespace MealPlanner.Api.Abstractions
                 ["categoryIds"] = categoryIds
             };
 
-            var controller = _config.Controllers![RecipeBookControllers.ProductCategory];
+            var controller = _config.Controllers![ProductCategoryRoutes.ControllerName];
             var url = QueryHelpers.AddQueryString($"{controller}/searchbycategories", query);
 
             return await _httpClient.GetFromJsonAsync<IList<ProductCategoryModel>>(url, cancellationToken);
@@ -60,7 +60,7 @@ namespace MealPlanner.Api.Abstractions
                 TargetUserId = targetUserId
             };
 
-            var controller = _config.Controllers![RecipeBookControllers.ProductCategory];
+            var controller = _config.Controllers![ProductCategoryRoutes.ControllerName];
             var response = await _httpClient.PostAsJsonAsync($"{controller}/resolveshare", model, cancellationToken);
             response.EnsureSuccessStatusCode();
 

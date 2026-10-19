@@ -104,7 +104,7 @@ namespace MealPlanner.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPatch(MealPlannerControllers.UpdateProductCollectedRoute)]
+        [HttpPatch(ShoppingListRoutes.UpdateProductCollected)]
         public async Task<ActionResult<CommandResponse?>> UpdateProductCollectedAsync(
             [FromBody] ShoppingListProductCollectedModel model,
             CancellationToken cancellationToken)
