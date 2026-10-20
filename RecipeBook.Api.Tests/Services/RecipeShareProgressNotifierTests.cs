@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Moq;
 using RecipeBook.Api.Hubs;
 using RecipeBook.Api.Services;
@@ -34,9 +34,9 @@ namespace RecipeBook.Api.Tests.Services
         }
 
         [Test]
-        public void NotifyAsync_NullJob_ThrowsArgumentNullException()
+        public async Task NotifyAsync_NullJob_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _notifier.NotifyAsync(null!, CancellationToken.None));
         }
 

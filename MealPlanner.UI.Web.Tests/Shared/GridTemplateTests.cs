@@ -29,13 +29,13 @@ namespace MealPlanner.UI.Web.Tests.Shared
         }
 
         [Test]
-        public void RefreshDataAsync_DoesNothing_WhenGridReferenceIsNull()
+        public async Task RefreshDataAsync_DoesNothing_WhenGridReferenceIsNull()
         {
             // Arrange: plain instance, never rendered, so gridTemplateReference stays null
             var component = new GridTemplate<TestItem>();
 
             // Act & Assert: calling RefreshDataAsync should not throw
-            Assert.DoesNotThrowAsync(async () => await component.RefreshDataAsync());
+            await Assert.DoesNotThrowAsync(async () => await component.RefreshDataAsync());
         }
 
         [Test]

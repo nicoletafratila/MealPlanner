@@ -1,4 +1,4 @@
-using Common.Data.DataContext;
+﻿using Common.Data.DataContext;
 using Common.Pagination;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -440,7 +440,7 @@ namespace RecipeBook.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act / Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.UpdateAsync(null!, CancellationToken.None));
         }
 

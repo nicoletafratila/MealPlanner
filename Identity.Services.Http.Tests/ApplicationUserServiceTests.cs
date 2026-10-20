@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Common.Http;
 using Common.Models;
@@ -90,7 +90,7 @@ namespace Identity.Services.Http.Tests
         }
 
         [Test]
-        public void SearchAsync_OnNonSuccessStatusCode_Throws()
+        public async Task SearchAsync_OnNonSuccessStatusCode_Throws()
         {
             var mockHttp = new MockHttpMessageHandler();
 
@@ -100,7 +100,7 @@ namespace Identity.Services.Http.Tests
 
             var service = CreateService(mockHttp);
 
-            Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await Assert.ThrowsAsync<HttpRequestException>(async () =>
                 await service.SearchAsync(new QueryParameters<ApplicationUserModel>
                 {
                     PageNumber = 1,
@@ -195,7 +195,7 @@ namespace Identity.Services.Http.Tests
         }
 
         [Test]
-        public void GetEditAsync_Throws_OnNonSuccessStatusCode()
+        public async Task GetEditAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             const string userName = "john.doe@example.com";
@@ -209,7 +209,7 @@ namespace Identity.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetEditAsync(userName));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetEditAsync(userName));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -307,12 +307,12 @@ namespace Identity.Services.Http.Tests
         // ---------- UnlockAsync ----------
 
         [Test]
-        public void UnlockAsync_EmptyUserId_ThrowsArgumentException()
+        public async Task UnlockAsync_EmptyUserId_ThrowsArgumentException()
         {
             var mockHttp = new MockHttpMessageHandler();
             var service = CreateService(mockHttp);
 
-            Assert.ThrowsAsync<ArgumentException>(async () =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await service.UnlockAsync(""));
         }
 
@@ -396,12 +396,12 @@ namespace Identity.Services.Http.Tests
         // ---------- ResendConfirmationEmailAsync ----------
 
         [Test]
-        public void ResendConfirmationEmailAsync_EmptyUserId_ThrowsArgumentException()
+        public async Task ResendConfirmationEmailAsync_EmptyUserId_ThrowsArgumentException()
         {
             var mockHttp = new MockHttpMessageHandler();
             var service = CreateService(mockHttp);
 
-            Assert.ThrowsAsync<ArgumentException>(async () =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await service.ResendConfirmationEmailAsync(""));
         }
 

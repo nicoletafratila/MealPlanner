@@ -149,8 +149,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) =>
-                        v.ToString()!.Contains("Failed to load ApplicationUser")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Failed to load ApplicationUser")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
@@ -219,8 +218,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
                 x => x.Log(
                     LogLevel.Warning,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) =>
-                        v.ToString()!.Contains("Logout failed.")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Logout failed.")),
                     null,
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
@@ -283,8 +281,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) =>
-                        v.ToString()!.Contains("Unexpected error during logout")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Unexpected error during logout")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);

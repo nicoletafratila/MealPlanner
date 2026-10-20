@@ -1,12 +1,11 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Common.Services;
 using MealPlanner.Api.Features.Shop.Commands.Add;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 
 namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
 {
@@ -65,18 +64,18 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
-        public void Handle_NullModel_ThrowsArgumentNullException()
+        public async Task Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new AddCommand { Model = null! };
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(command, CancellationToken.None));
         }
 
@@ -101,8 +100,11 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("This shop already exists."));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("This shop already exists."));
+            }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Shop>(It.IsAny<ShopEditModel>()), Times.Never);
@@ -146,10 +148,10 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
         public async Task Handle_NewShopWithImage_GeneratesThumbnail_BeforeAdding()
         {
             // Arrange
-            using var image = new Image<Rgba32>(800, 800);
-            using var ms = new MemoryStream();
-            image.SaveAsPng(ms);
-            var imageContent = ms.ToArray();
+            using var bitmap = new SKBitmap(800, 800);
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            var imageContent = data.ToArray();
 
             var model = new ShopEditModel { Id = Guid.Empty, Name = "ImageShop", ImageContent = imageContent };
             var command = new AddCommand { Model = model };
@@ -175,10 +177,17 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.True);
-            Assert.That(addedEntity, Is.Not.Null);
-            Assert.That(addedEntity!.ImageThumbnail, Is.Not.Null);
-            Assert.That(addedEntity.ImageThumbnail!.Length, Is.LessThan(imageContent.Length));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(addedEntity, Is.Not.Null);
+            }
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(addedEntity!.ImageThumbnail, Is.Not.Null);
+                Assert.That(addedEntity.ImageThumbnail!.Length, Is.LessThan(imageContent.Length));
+            }
         }
 
         [Test]
@@ -207,8 +216,11 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.True);
-            Assert.That(mappedEntity.ImageThumbnail, Is.Null);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.True);
+                Assert.That(mappedEntity.ImageThumbnail, Is.Null);
+            }
         }
 
         [Test]
@@ -237,8 +249,11 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.Add
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Succeeded, Is.False);
-            Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shop."));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result!.Succeeded, Is.False);
+                Assert.That(result.Message, Is.EqualTo("An error occurred when saving the shop."));
+            }
 
             _repoMock.Verify(r => r.GetAllByUserAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(m => m.Map<Data.Entities.Shop>(model), Times.Once);

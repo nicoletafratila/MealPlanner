@@ -101,31 +101,31 @@ namespace Common.Http.Tests
         }
 
         [Test]
-        public void EnsureAuthorizationHeaderAsync_Throws_WhenHttpClientIsNull()
+        public async Task EnsureAuthorizationHeaderAsync_Throws_WhenHttpClientIsNull()
         {
             HttpClient? client = null;
             var provider = new Mock<ITokenProvider>();
-            Assert.ThrowsAsync<ArgumentNullException>(
+            await Assert.ThrowsAsync<ArgumentNullException>(
                 async () => await client!.EnsureAuthorizationHeaderAsync(provider.Object, CancellationToken.None));
         }
 
         [Test]
-        public void EnsureAuthorizationHeaderAsync_Throws_WhenTokenProviderIsNull()
+        public async Task EnsureAuthorizationHeaderAsync_Throws_WhenTokenProviderIsNull()
         {
             var client = new HttpClient();
-            Assert.ThrowsAsync<ArgumentNullException>(
+            await Assert.ThrowsAsync<ArgumentNullException>(
                 async () => await client.EnsureAuthorizationHeaderAsync(null!, CancellationToken.None));
         }
 
         [Test]
-        public void EnsureAuthorizationHeaderAsync_Throws_WhenCancellationAlreadyRequested()
+        public async Task EnsureAuthorizationHeaderAsync_Throws_WhenCancellationAlreadyRequested()
         {
             var provider = new Mock<ITokenProvider>();
             var client = new HttpClient();
             var cts = new CancellationTokenSource();
             cts.Cancel();
 
-            Assert.ThrowsAsync<OperationCanceledException>(
+            await Assert.ThrowsAsync<OperationCanceledException>(
                 async () => await client.EnsureAuthorizationHeaderAsync(provider.Object, cts.Token));
         }
 

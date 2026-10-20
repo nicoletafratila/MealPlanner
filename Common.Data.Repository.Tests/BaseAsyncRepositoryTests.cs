@@ -190,44 +190,44 @@ namespace Common.Data.Repository.Tests
         }
 
         [Test]
-        public void AddRangeAsync_ThrowsArgumentNullException_WhenEntitiesNull()
+        public async Task AddRangeAsync_ThrowsArgumentNullException_WhenEntitiesNull()
         {
             var repo = CreateRepository(out _);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 await repo.AddRangeAsync(null!, CancellationToken.None);
             });
         }
 
         [Test]
-        public void AddAsync_ThrowsArgumentNullException_WhenEntityNull()
+        public async Task AddAsync_ThrowsArgumentNullException_WhenEntityNull()
         {
             var repo = CreateRepository(out _);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 await repo.AddAsync(null!, CancellationToken.None);
             });
         }
 
         [Test]
-        public void UpdateAsync_ThrowsArgumentNullException_WhenEntityNull()
+        public async Task UpdateAsync_ThrowsArgumentNullException_WhenEntityNull()
         {
             var repo = CreateRepository(out _);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 await repo.UpdateAsync(null!, CancellationToken.None);
             });
         }
 
         [Test]
-        public void DeleteAsync_ThrowsArgumentNullException_WhenEntityNull()
+        public async Task DeleteAsync_ThrowsArgumentNullException_WhenEntityNull()
         {
             var repo = CreateRepository(out _);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 await repo.DeleteAsync(null!, CancellationToken.None);
             });

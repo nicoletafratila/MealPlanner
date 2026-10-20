@@ -1,4 +1,4 @@
-using Common.Data.DataContext;
+﻿using Common.Data.DataContext;
 using Common.Pagination;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
@@ -173,13 +173,13 @@ namespace MealPlanner.Api.Tests.Repositories
         }
 
         [Test]
-        public void GetByIdIncludeDisplaySequenceAsync_NullId_Throws()
+        public async Task GetByIdIncludeDisplaySequenceAsync_NullId_Throws()
         {
             // Arrange
             var repo = CreateRepository(out _);
 
             // Act / Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.GetByIdIncludeDisplaySequenceAsync(null, CancellationToken.None));
         }
 
@@ -331,7 +331,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act / Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.UpdateAsync(null!, CancellationToken.None));
         }
     }

@@ -39,9 +39,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);
             _ctx.Services.AddSingleton(_preloadService);
 
-            // JS interop used by BlazorBootstrap charts
-            _ctx.JSInterop.SetupVoid("window.blazorBootstrap.chart.initialize", _ => true).SetVoidResult();
-            _ctx.JSInterop.SetupVoid("window.blazorChart.doughnut.initialize", _ => true).SetVoidResult();
+            // JS interop used by BlazorExpress.ChartJS charts
+            _ctx.JSInterop.SetupVoid("window.blazorexpress.chartjs.doughnut.initialize", _ => true).SetVoidResult();
         }
 
         [TearDown]

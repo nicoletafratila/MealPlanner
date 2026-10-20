@@ -420,11 +420,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MicrosoftMaui)" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MicrosoftMaui)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="14.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(MicrosoftExtensionsLoggingDebug)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="$(MicrosoftExtensionsHttp)" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsConfigurationJson)" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="$(CommunityToolkitMvvm)" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="$(CommunityToolkitMaui)" />
   </ItemGroup>
 
   <ItemGroup>

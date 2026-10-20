@@ -1,4 +1,4 @@
-using Identity.Api.Features.ContactUs.Commands.Send;
+﻿using Identity.Api.Features.ContactUs.Commands.Send;
 using Identity.Api.Features.Email;
 using Identity.Shared.Models;
 using Microsoft.Extensions.Logging;
@@ -22,18 +22,18 @@ namespace Identity.Api.Tests.Features.ContactUs.Commands.Send
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
-        public void Handle_NullModel_ThrowsArgumentNullException()
+        public async Task Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new SendContactUsCommand { Model = null };
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(command, CancellationToken.None));
         }
 

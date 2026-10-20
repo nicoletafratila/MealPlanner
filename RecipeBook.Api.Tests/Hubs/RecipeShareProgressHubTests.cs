@@ -1,4 +1,4 @@
-using Common.Services;
+﻿using Common.Services;
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using RecipeBook.Api.Hubs;
@@ -38,23 +38,23 @@ namespace RecipeBook.Api.Tests.Hubs
         public void TearDown() => _hub.Dispose();
 
         [Test]
-        public void JoinJobAsync_JobNotFound_ThrowsHubException()
+        public async Task JoinJobAsync_JobNotFound_ThrowsHubException()
         {
             var jobId = Guid.NewGuid();
             _jobRepoMock.Setup(r => r.GetByIdAsync(jobId, It.IsAny<CancellationToken>())).ReturnsAsync((Job?)null);
 
-            Assert.ThrowsAsync<HubException>(async () => await _hub.JoinJobAsync(jobId));
+            await Assert.ThrowsAsync<HubException>(async () => await _hub.JoinJobAsync(jobId));
         }
 
         [Test]
-        public void JoinJobAsync_JobOwnedByDifferentUser_ThrowsHubException()
+        public async Task JoinJobAsync_JobOwnedByDifferentUser_ThrowsHubException()
         {
             var jobId = Guid.NewGuid();
             var job = new Job { Id = jobId, OwnerUserId = "someoneElse" };
             _jobRepoMock.Setup(r => r.GetByIdAsync(jobId, It.IsAny<CancellationToken>())).ReturnsAsync(job);
             _currentUserMock.Setup(c => c.UserId).Returns("user1");
 
-            Assert.ThrowsAsync<HubException>(async () => await _hub.JoinJobAsync(jobId));
+            await Assert.ThrowsAsync<HubException>(async () => await _hub.JoinJobAsync(jobId));
         }
 
         [Test]

@@ -19,7 +19,7 @@ namespace RecipeBook.Services.Http.Tests
         {
             var client = CreateClient();
 
-            Assert.DoesNotThrowAsync(async () => await client.DisposeAsync());
+            await Assert.DoesNotThrowAsync(async () => await client.DisposeAsync());
         }
 
         [Test]

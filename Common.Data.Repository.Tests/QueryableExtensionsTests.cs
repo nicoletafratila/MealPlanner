@@ -116,20 +116,20 @@ namespace Common.Data.Repository.Tests
         }
 
         [Test]
-        public void ToPagedResultAsync_PageNumberAndSizeOverflow_ThrowsOverflowException()
+        public async Task ToPagedResultAsync_PageNumberAndSizeOverflow_ThrowsOverflowException()
         {
             var context = CreateContext();
 
-            Assert.ThrowsAsync<OverflowException>(async () =>
+            await Assert.ThrowsAsync<OverflowException>(async () =>
                 await context.TestEntities.ToPagedResultAsync(int.MaxValue, int.MaxValue, CancellationToken.None));
         }
 
         [Test]
-        public void ToPagedResultAsync_NullSource_Throws()
+        public async Task ToPagedResultAsync_NullSource_Throws()
         {
             IQueryable<TestEntity>? source = null;
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await source!.ToPagedResultAsync(1, 10, CancellationToken.None));
         }
     }

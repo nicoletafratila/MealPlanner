@@ -21,7 +21,7 @@
     <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="$(DuendeIdentityServerAspNetIdentity)" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(MicrosoftAspNetCoreDiagnosticsEntityFrameworkCore)" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="$(MicrosoftAspNetCoreIdentityUI)" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="$(SixLaborsImageSharp)" />
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharp)" />
   </ItemGroup>
 
   <ItemGroup>

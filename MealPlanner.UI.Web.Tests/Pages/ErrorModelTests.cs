@@ -71,8 +71,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
                     x => x.Log(
                         LogLevel.Error,
                         It.IsAny<EventId>(),
-                        It.Is<It.IsAnyType>((v, _) =>
-                            v.ToString()!.Contains("Unhandled error occurred")),
+                        It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Unhandled error occurred")),
                         It.IsAny<Exception?>(),
                         It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                     Times.Once);
@@ -106,8 +105,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) =>
-                        v.ToString()!.Contains("Unhandled error occurred")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Unhandled error occurred")),
                     It.IsAny<Exception?>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);

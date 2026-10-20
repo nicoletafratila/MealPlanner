@@ -1,4 +1,4 @@
-using Common.Services;
+﻿using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Shop.Commands.ShareAll;
 using MealPlanner.Api.Repositories;
@@ -62,9 +62,9 @@ namespace MealPlanner.Api.Tests.Features.Shop.Commands.ShareAll
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 

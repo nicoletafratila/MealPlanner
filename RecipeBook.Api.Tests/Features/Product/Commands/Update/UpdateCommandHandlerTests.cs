@@ -1,11 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Product.Commands.Update;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 
 namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
 {
@@ -46,16 +45,16 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(null!, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
-        public void Handle_NullModel_ThrowsArgumentNullException()
+        public async Task Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new UpdateCommand { Model = null! };
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(command, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _handler.Handle(command, CancellationToken.None));
         }
 
         [Test]
@@ -137,9 +136,9 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
             var model = new ProductEditModel { Id = id, Name = "UpdatedProduct", BaseUnitId = Guid.NewGuid(), ProductCategoryId = Guid.NewGuid() };
             var command = new UpdateCommand { Model = model };
 
-            using var image = new Image<Rgba32>(4, 4);
-            using var ms = new MemoryStream();
-            image.SaveAsPng(ms);
+            using var bitmap = new SKBitmap(4, 4);
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
 
             var existing = new Data.Entities.Product
             {
@@ -147,7 +146,7 @@ namespace RecipeBook.Api.Tests.Features.Product.Commands.Update
                 Name = "OldProduct",
                 ProductCategoryId = Guid.NewGuid(),
                 BaseUnitId = Guid.NewGuid(),
-                ImageContent = ms.ToArray()
+                ImageContent = data.ToArray()
             };
 
             _repoMock.Setup(r => r.GetByIdAsync(id, CancellationToken.None)).ReturnsAsync(existing);

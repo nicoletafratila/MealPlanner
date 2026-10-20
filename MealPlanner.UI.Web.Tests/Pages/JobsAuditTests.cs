@@ -144,13 +144,13 @@ namespace MealPlanner.UI.Web.Tests.Pages
                 return await task;
             });
 
-            Assert.That(result.TotalCount, Is.EqualTo(0));
+            Assert.That(result.TotalCount, Is.Zero);
 
             _loggerMock.Verify(
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("Failed to load job history.")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Failed to load job history.")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.AtLeastOnce);

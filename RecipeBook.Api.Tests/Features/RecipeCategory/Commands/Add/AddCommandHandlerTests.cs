@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Common.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -63,18 +63,18 @@ namespace RecipeBook.Api.Tests.Features.RecipeCategory.Commands.Add
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
-        public void Handle_NullModel_ThrowsArgumentNullException()
+        public async Task Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new AddCommand { Model = null! };
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(command, CancellationToken.None));
         }
 

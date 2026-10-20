@@ -1,4 +1,4 @@
-using Blazored.SessionStorage;
+﻿using Blazored.SessionStorage;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.JSInterop;
@@ -156,24 +156,24 @@ namespace MealPlanner.UI.Web.Tests.Services
         }
 
         [Test]
-        public void SetItemAsync_ThrowsArgumentNullException_WhenSessionStorageIsNull()
+        public async Task SetItemAsync_ThrowsArgumentNullException_WhenSessionStorageIsNull()
         {
             // Arrange
             ISessionStorageService? storage = null;
             var dto = new ShopModel { Name = "E", Id = Guid.NewGuid() };
 
             // Act & Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.SetItemAsync(storage!, dto));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.SetItemAsync(storage!, dto));
         }
 
         [Test]
-        public void GetItemAsync_ThrowsArgumentNullException_WhenSessionStorageIsNull()
+        public async Task GetItemAsync_ThrowsArgumentNullException_WhenSessionStorageIsNull()
         {
             // Arrange
             ISessionStorageService? storage = null;
 
             // Act & Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.GetItemAsync<ShopModel>(storage!));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await SessionExtensions.GetItemAsync<ShopModel>(storage!));
         }
     }
 }

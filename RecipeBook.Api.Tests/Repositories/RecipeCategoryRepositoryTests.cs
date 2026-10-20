@@ -1,4 +1,4 @@
-using Common.Data.DataContext;
+﻿using Common.Data.DataContext;
 using Common.Pagination;
 using MealPlanner.Data.TableConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -152,11 +152,11 @@ namespace RecipeBook.Api.Tests.Repositories
         }
 
         [Test]
-        public void UpdateAllAsync_NullEntities_ThrowsArgumentNullException()
+        public async Task UpdateAllAsync_NullEntities_ThrowsArgumentNullException()
         {
             var repo = CreateRepository(out _);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 await repo.UpdateAllAsync(null!, CancellationToken.None);
             });
@@ -218,11 +218,11 @@ namespace RecipeBook.Api.Tests.Repositories
         }
 
         [Test]
-        public void GetByIdsAsync_NullIds_ThrowsArgumentNullException()
+        public async Task GetByIdsAsync_NullIds_ThrowsArgumentNullException()
         {
             var repo = CreateRepository(out _);
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.GetByIdsAsync(null!, CancellationToken.None));
         }
 

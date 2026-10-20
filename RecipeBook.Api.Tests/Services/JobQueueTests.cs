@@ -44,12 +44,12 @@ namespace RecipeBook.Api.Tests.Services
         }
 
         [Test]
-        public void ReadAllAsync_CancelledToken_StopsEnumeration()
+        public async Task ReadAllAsync_CancelledToken_StopsEnumeration()
         {
             using var cts = new CancellationTokenSource();
             cts.Cancel();
 
-var ex = Assert.CatchAsync(async () =>
+            var ex = await Assert.CatchAsync(async () =>
             {
                 await foreach (var _ in _queue.ReadAllAsync(cts.Token))
                 {

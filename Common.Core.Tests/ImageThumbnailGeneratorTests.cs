@@ -1,5 +1,4 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+﻿using SkiaSharp;
 
 namespace Common.Core.Tests
 {
@@ -21,15 +20,15 @@ namespace Common.Core.Tests
         [Test]
         public void CreateThumbnail_ValidImage_ReturnsSmallerImage()
         {
-            using var image = new Image<Rgba32>(800, 800);
-            using var ms = new MemoryStream();
-            image.SaveAsPng(ms);
-            var source = ms.ToArray();
+            using var bitmap = new SKBitmap(800, 800);
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            var source = data.ToArray();
 
             var thumbnail = ImageThumbnailGenerator.CreateThumbnail(source, maxDimension: 200, quality: 75);
 
             Assert.That(thumbnail, Is.Not.Null);
-            using var thumbnailImage = Image.Load(thumbnail);
+            using var thumbnailImage = SKBitmap.Decode(thumbnail);
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(thumbnailImage.Width, Is.LessThanOrEqualTo(200));

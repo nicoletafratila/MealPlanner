@@ -1,4 +1,4 @@
-using Common.Services;
+﻿using Common.Services;
 using Moq;
 using RecipeBook.Api.Features.Job.Queries.GetStatus;
 using RecipeBook.Api.Repositories;
@@ -39,9 +39,9 @@ namespace RecipeBook.Api.Tests.Features.Job.Queries.GetStatus
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 

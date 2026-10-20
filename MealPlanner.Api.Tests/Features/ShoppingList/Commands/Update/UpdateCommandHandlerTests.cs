@@ -50,18 +50,18 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.Update
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
-        public void Handle_NullModel_ThrowsArgumentNullException()
+        public async Task Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new UpdateCommand { Model = null! };
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(command, CancellationToken.None));
         }
 
