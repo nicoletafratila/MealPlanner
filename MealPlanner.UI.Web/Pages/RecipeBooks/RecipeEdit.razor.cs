@@ -66,9 +66,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
 
-        [Inject]
-        public IJSRuntime JS { get; set; } = default!;
-
         protected override async Task OnInitializedAsync()
         {
             var queryParametersRecipe = new QueryParameters<RecipeCategoryModel>
@@ -266,6 +263,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             double.TryParse(Quantity, out var quantityValue) &&
             quantityValue > 0;
 
+        private void OnQuantityInput(ChangeEventArgs e)
+        {
+            Quantity = e.Value?.ToString();
+        }
+
         private async Task AddIngredientAsync()
         {
             if (Recipe is null || string.IsNullOrWhiteSpace(ProductId) || ProductId == "0")
@@ -442,11 +444,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 await ShowErrorAsync(string.Format(Resources.RecipeEdit.FileSizeExceeded, _maxFileSize / (1024 * 1024)));
             }
-        }
-
-        private async Task CheckQuantityAsync(ChangeEventArgs _)
-        {
-            await JS.InvokeVoidAsync("checkQuantity");
         }
 
         private async Task ShowErrorAsync(string message)

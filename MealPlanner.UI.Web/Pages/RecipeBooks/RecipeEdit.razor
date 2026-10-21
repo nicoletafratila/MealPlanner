@@ -89,7 +89,7 @@
                     <div class="row g-2 align-items-end">
                         <div class="col">
                             <label for="quantity">@Resources.RecipeEdit.LabelQuantity</label>
-                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.RecipeEdit.PlaceholderQuantity"></InputText>
+                            <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="OnQuantityInput" placeholder="@Resources.RecipeEdit.PlaceholderQuantity"></InputText>
                             <ValidationMessage For="@(() => Quantity)" />
                         </div>
                         <div class="col">
@@ -152,17 +152,6 @@
 <ConfirmDialog @ref="_dialog" />
 
 <script>
-    function checkQuantity() {
-        var quantity = document.getElementById("quantity").value;
-        var unit = document.getElementById("unit").value;
-        var addButton = document.getElementById("addButton");
-        if (quantity > 0 && unit != "") {
-            addButton.disabled = false;
-        } else {
-            addButton.disabled = true;
-        }
-    }
-
     function updateHeader() {
         var input = document.getElementById("name").value;
         document.getElementById("headerName").innerText = input;

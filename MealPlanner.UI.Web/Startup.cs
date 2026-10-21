@@ -76,7 +76,14 @@ namespace MealPlanner.UI.Web
 
             builder.Services.AddMemoryCache();
             builder.Services.AddRazorPages();
-            builder.Services.AddServerSideBlazor();
+            builder.Services.AddServerSideBlazor(options =>
+            {
+                options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(10);
+            }).AddHubOptions(options =>
+            {
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+                options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+            });
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazorBootstrap();
             builder.Services.AddAuthorizationCore();
