@@ -11,4 +11,5 @@ This won't eliminate disconnects caused by an actual server restart/deploy or an
 
 Mobile
 add contact us, about me, privacy policy in the login view
-register missing first, last name, phone no
+register is missing first, last name, phone no
+in all overview pages add sorting by name

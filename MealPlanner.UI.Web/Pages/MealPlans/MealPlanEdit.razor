@@ -95,7 +95,7 @@
                     </GridTemplate>
 
                     <button class="btn btn-primary btn-sm" type="submit">@Resources.MealPlanEdit.SaveButton</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.MealPlanEdit.DeleteButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" style="display: @(MealPlan.Id != Guid.Empty ? "visible" : "none")" @onclick="async () => await DeleteAsync()">@Resources.MealPlanEdit.DeleteButton</button>
                     <button class="btn btn-primary btn-sm" type="button" @onclick="async () => await SaveShoppingListAsync()">@Resources.MealPlanEdit.MakeShoppingListButton</button>
                     <button class="btn btn-secondary btn-sm" type="button" @onclick="@NavigateToOverview">@Resources.MealPlanEdit.BackToOverviewButton</button>
                 </div>

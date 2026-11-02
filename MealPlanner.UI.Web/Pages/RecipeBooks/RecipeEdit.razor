@@ -142,7 +142,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-sm">@Resources.RecipeEdit.SaveButton</button>
-                <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.RecipeEdit.DeleteButton</button>
+                <button class="btn btn-danger btn-sm" type="button" style="display: @(Recipe.Id != Guid.Empty ? "visible" : "none")" @onclick="async () => await DeleteAsync()">@Resources.RecipeEdit.DeleteButton</button>
                 <button class="btn btn-secondary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.RecipeEdit.BackToOverviewButton</button>
             </EditForm>
         </div>
