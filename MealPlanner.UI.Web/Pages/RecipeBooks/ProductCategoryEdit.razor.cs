@@ -70,7 +70,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             await ShowInfoAsync(Resources.ProductCategoryEdit.SaveSucceeded);
-            NavigateToOverview();
         }
 
         private async Task DeleteAsync()

@@ -154,7 +154,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             }
 
             await ShowInfoAsync(Resources.ShoppingListEdit.SaveSucceeded);
-            NavigateToOverview();
         }
 
         private async Task DeleteAsync()

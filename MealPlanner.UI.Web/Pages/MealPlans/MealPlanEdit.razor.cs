@@ -135,7 +135,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (RefreshCurrentMealPlan is not null)
                 await RefreshCurrentMealPlan();
             await ShowInfoAsync(Resources.MealPlanEdit.SaveSucceeded);
-            NavigateToOverview();
         }
 
         private async Task DeleteAsync()

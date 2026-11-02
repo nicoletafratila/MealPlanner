@@ -106,7 +106,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             await ShowInfoAsync(Resources.ProductEdit.SaveSucceeded);
-            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
