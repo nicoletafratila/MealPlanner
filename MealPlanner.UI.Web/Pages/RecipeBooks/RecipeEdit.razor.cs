@@ -7,7 +7,6 @@ using Common.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
