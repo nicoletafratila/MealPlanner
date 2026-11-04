@@ -1,6 +1,8 @@
+using System.Text.Json;
 using Common.Constants;
 using Common.Http;
 using Common.Models;
+using Common.Pagination;
 using Common.Services;
 using MealPlanner.Shared.Constants;
 using Microsoft.Extensions.Logging;
@@ -13,10 +15,13 @@ namespace MealPlanner.Services.Http
     {
         private readonly string _controller = StatisticsRoutes.Url;
 
-        public async Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(IList<RecipeCategoryModel> categories, CancellationToken cancellationToken = default)
+        public async Task<IList<StatisticModel>?> GetFavoriteRecipesAsync(
+            IList<RecipeCategoryModel> categories,
+            QueryParameters<RecipeCategoryModel>? queryParameters = null,
+            CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{StatisticsRoutes.FavoriteRecipes}",
-                new Dictionary<string, string?> { [ApiQueryParams.CategoryIds] = string.Join(",", categories.Select(c => c.Id)) });
+                BuildQuery(string.Join(",", categories.Select(c => c.Id)), queryParameters));
             try
             {
                 return await GetAsync<IList<StatisticModel>>(url, cancellationToken);
@@ -28,10 +33,13 @@ namespace MealPlanner.Services.Http
             }
         }
 
-        public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(IList<ProductCategoryModel> categories, CancellationToken cancellationToken = default)
+        public async Task<IList<StatisticModel>?> GetFavoriteProductsAsync(
+            IList<ProductCategoryModel> categories,
+            QueryParameters<ProductCategoryModel>? queryParameters = null,
+            CancellationToken cancellationToken = default)
         {
             var url = BuildUrl($"{_controller}/{StatisticsRoutes.FavoriteProducts}",
-                new Dictionary<string, string?> { [ApiQueryParams.CategoryIds] = string.Join(",", categories.Select(c => c.Id)) });
+                BuildQuery(string.Join(",", categories.Select(c => c.Id)), queryParameters));
             try
             {
                 return await GetAsync<IList<StatisticModel>>(url, cancellationToken);
@@ -42,5 +50,12 @@ namespace MealPlanner.Services.Http
                 throw;
             }
         }
+
+        private static Dictionary<string, string?> BuildQuery<T>(string categoryIds, QueryParameters<T>? queryParameters) => new()
+        {
+            [ApiQueryParams.CategoryIds] = categoryIds,
+            [ApiQueryParams.Filters] = queryParameters?.Filters is null ? null : JsonSerializer.Serialize(queryParameters.Filters, JsonOptions),
+            [ApiQueryParams.Sorting] = queryParameters?.Sorting is null || !queryParameters.Sorting.Any() ? null : JsonSerializer.Serialize(queryParameters.Sorting, JsonOptions)
+        };
     }
 }

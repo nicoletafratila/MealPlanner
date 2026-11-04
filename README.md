@@ -16,30 +16,7 @@ in all overview pages add sorting by name
 
 
  Generalize Job infrastructure for reuse beyond Recipe (Product first)                                                                                                                                                                                                                ↑
-
-   Context
-                                                                                                                                                                                                                                                                                        ↑
-   RecipeController has share (synchronous clone) and shareall (async, job-based clone with
-   progress/audit) actions. ProductController already has share, but not shareall. The
-   background-job machinery backing Recipe's shareall — Job entity, IJobQueue, JobDispatcherService,                                                                                                                                                                                    ↑
-   the SignalR progress hub, JobController (status/search) — is fully generic in behavior already
-   (it only operates on Job/Guid/JobStatusModel), but it's wired up as if only Recipe will ever
-   use it: the dispatcher resolves a hardcoded IRecipeJobProcessor, and the notifier/hub are named                                                                                                                                                                                      ↑
-   and DI-registered as Recipe-only singletons.
-
-   Goal: generalize that plumbing so any entity's "share all" can plug in its own processor and reuse                                                                                                                                                                                   ↑
-   the same Job table, queue, dispatcher, and SignalR hub — then use it to add Product's shareall.
-   share and shareall actions stay on their own entity controllers (RecipeController,                                                                                                                                                                                                   ↑
-   ProductController) as today — JobController keeps owning only status/search, unchanged.
-                                                                                                                                                                                                                                                                                        ↑
-   Shop is out of scope for this change. Shop lives in MealPlanner.Api, a separate process/DB
-   context from RecipeBook.Api where all Job infra lives, so it can't reuse the same in-process
-   queue/hub without a cross-API bridge (and a token-expiry question for the background dispatcher
-   calling back into MealPlanner.Api). That's a separate design decision to pick up later — Shop's
-   existing synchronous share/shareall on ShopController is untouched here.                                                                                                                                                                                                             ↑
-
-   Changes
-                                                                                                                                                                                                                                                                                        ↑
+                                                                                                                                                                                                                                                                                      ↑
    1. Add a JobType discriminator
                                                                                                                                                                                                                                                                                         ↑
    - RecipeBook.Data.Entities/Enums/JobType.cs — new enum, Recipe, Product (mirrors the existing

@@ -98,7 +98,7 @@ namespace RecipeBook.Api.Tests.Controllers
                 .Setup(m => m.Send(It.Is<SearchByCategoriesQuery>(q => q.CategoryIds == "1,2"), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(list);
 
-            var result = await _controller.SearchByCategoriesAsync("1,2", CancellationToken.None);
+            var result = await _controller.SearchByCategoriesAsync("1,2", null, null, CancellationToken.None);
 
             var ok = result.Result as OkObjectResult;
             Assert.That(ok, Is.Not.Null);

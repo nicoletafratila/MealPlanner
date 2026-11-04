@@ -23,6 +23,26 @@ namespace RecipeBook.Api.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<IReadOnlyList<ProductCategory>> SearchByIdsAsync(
+            IList<Guid> ids,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(ids);
+
+            IQueryable<ProductCategory> query = Context.ProductCategories;
+
+            if (ids.Count > 0)
+            {
+                query = query.Where(c => ids.Contains(c.Id));
+            }
+
+            query = query.ApplyFilters(filters).ApplySorting(sorting);
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
         public async Task<PagedQueryResult<ProductCategory>> SearchByUserAsync(
             string userId,
             IEnumerable<FilterItem>? filters,

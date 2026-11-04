@@ -71,7 +71,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(It.IsAny<IList<ProductCategoryModel>>()))
+                .Setup(s => s.GetFavoriteProductsAsync(It.IsAny<IList<ProductCategoryModel>>(), It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync([]);
 
             // Act
@@ -116,7 +116,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(categoryItems))
+                .Setup(s => s.GetFavoriteProductsAsync(categoryItems, It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync(stats);
 
             // Act
@@ -151,7 +151,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories); // second for OnPageChangedAsync
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(categoryItems))
+                .Setup(s => s.GetFavoriteProductsAsync(categoryItems, It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync([]);
 
             var cut = RenderComponent();
@@ -191,7 +191,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(categoryItems))
+                .Setup(s => s.GetFavoriteProductsAsync(categoryItems, It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync([stat]);
 
             var cut = RenderComponent();

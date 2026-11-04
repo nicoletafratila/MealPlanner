@@ -21,12 +21,7 @@ namespace RecipeBook.Api.Features.ProductCategory.Queries.SearchByCategories
 
             var categoryIds = ParseCategoryIds(request.CategoryIds);
 
-            var data = await _repository.GetAllAsync(cancellationToken) ?? [];
-
-            if (categoryIds.Count > 0)
-            {
-                data = data.Where(item => categoryIds.Contains(item.Id)).ToList();
-            }
+            var data = await _repository.SearchByIdsAsync(categoryIds, request.Filters, request.Sorting, cancellationToken) ?? [];
 
             return _mapper.Map<IList<ProductCategoryModel>>(data);
         }

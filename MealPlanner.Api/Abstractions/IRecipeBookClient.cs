@@ -1,4 +1,5 @@
-﻿using RecipeBook.Shared.Models;
+﻿using Common.Pagination;
+using RecipeBook.Shared.Models;
 
 namespace MealPlanner.Api.Abstractions
 {
@@ -7,12 +8,16 @@ namespace MealPlanner.Api.Abstractions
         Task<IList<RecipeCategoryModel>?> GetRecipeCategoriesAsync(
             string categoryIds,
             string? authToken,
-            CancellationToken cancellationToken);
+            IEnumerable<FilterItem>? filters = null,
+            IEnumerable<SortingModel>? sorting = null,
+            CancellationToken cancellationToken = default);
 
         Task<IList<ProductCategoryModel>?> GetProductCategoriesAsync(
             string categoryIds,
             string? authToken,
-            CancellationToken cancellationToken);
+            IEnumerable<FilterItem>? filters = null,
+            IEnumerable<SortingModel>? sorting = null,
+            CancellationToken cancellationToken = default);
 
         Task<Dictionary<Guid, Guid>?> ResolveShareProductCategoriesAsync(
             IEnumerable<Guid> categoryIds,

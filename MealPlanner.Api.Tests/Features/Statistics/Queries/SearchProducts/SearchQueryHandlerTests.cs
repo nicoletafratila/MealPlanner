@@ -1,4 +1,5 @@
 ﻿using Common.Data.Entities;
+using Common.Pagination;
 using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchProducts;
@@ -47,6 +48,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                     c.GetProductCategoriesAsync(
                         It.IsAny<string>(),
                         It.IsAny<string>(),
+                        It.IsAny<IEnumerable<FilterItem>>(),
+                        It.IsAny<IEnumerable<SortingModel>>(),
                         It.IsAny<CancellationToken>()),
                 Times.Never);
 
@@ -76,6 +79,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                 .Setup(c => c.GetProductCategoriesAsync(
                     categoryIdsCsv,
                     "test-token",
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
@@ -96,6 +101,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                     c.GetProductCategoriesAsync(
                         categoryIdsCsv,
                         "test-token",
+                        It.IsAny<IEnumerable<FilterItem>>(),
+                        It.IsAny<IEnumerable<SortingModel>>(),
                         It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -126,6 +133,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                 .Setup(c => c.GetProductCategoriesAsync(
                     categoryIdsCsv,
                     "tok",
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(categories);
 
@@ -184,6 +193,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchProducts
                     c.GetProductCategoriesAsync(
                         categoryIdsCsv,
                         "tok",
+                        It.IsAny<IEnumerable<FilterItem>>(),
+                        It.IsAny<IEnumerable<SortingModel>>(),
                         It.IsAny<CancellationToken>()),
                 Times.Once);
 
