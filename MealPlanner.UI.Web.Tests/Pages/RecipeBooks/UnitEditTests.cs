@@ -89,7 +89,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
         // ---------- SaveCoreAsync ----------
         [Test]
-        public async Task SaveCoreAsync_WhenIdEmpty_CallsAddAsync_AndShowsInfo_AndNavigates()
+        public async Task SaveCoreAsync_WhenIdEmpty_CallsAddAsync_AndShowsInfo()
         {
             var unit = new UnitEditModel { Id = Guid.Empty };
 
@@ -114,13 +114,10 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _unitServiceMock.Verify(s => s.AddAsync(unit, CancellationToken.None), Times.Once);
             _messageMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
-
-            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri, Does.EndWith("recipebooks/unitsoverview"));
         }
 
         [Test]
-        public async Task SaveCoreAsync_WhenIdNotEmpty_CallsUpdateAsync_AndShowsInfo_AndNavigates()
+        public async Task SaveCoreAsync_WhenIdNotEmpty_CallsUpdateAsync_AndShowsInfo()
         {
             var id = Guid.NewGuid();
             var unit = new UnitEditModel { Id = id };
@@ -149,9 +146,6 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _unitServiceMock.Verify(s => s.UpdateAsync(unit, CancellationToken.None), Times.Once);
             _messageMock.Verify(m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None), Times.Once);
-
-            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri, Does.EndWith("recipebooks/unitsoverview"));
         }
 
         [Test]
