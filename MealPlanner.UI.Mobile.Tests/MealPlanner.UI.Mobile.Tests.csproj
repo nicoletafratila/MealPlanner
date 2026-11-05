@@ -39,19 +39,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- MealPlanner.UI.Mobile builds as WindowsPackageType=MSIX (needed for real deployment),
-         which bakes in a WindowsAppSDK deployment-manager module initializer that crashes with
-         "Class not registered" outside a packaged/installed app context. Override it to None
-         only for this dependency build so the test host can load the assembly without crashing;
-         the app's own standalone build is unaffected.
-         NOTE: because this override reuses the app's normal bin/obj folders (NuGet restore does
-         not key its graph on arbitrary AdditionalProperties like BaseOutputPath, so isolating
-         output paths breaks restore), always run this test project via its own direct invocation
-         (`dotnet test MealPlanner.UI.Mobile.Tests\MealPlanner.UI.Mobile.Tests.csproj`), matching
-         the repo's existing single-project test convention. A default-parallel `dotnet build
-         MealPlanner.sln` can build MealPlanner.UI.Mobile twice concurrently (once normally, once
-         via this override) and race on those shared bin/obj files — use `dotnet build
-         MealPlanner.sln -m:1` (single-threaded) for a reliable solution-wide build instead. -->
+    <!-- MealPlanner.UI.Mobile builds as WindowsPackageType=MSIX (needed for real deployment), which
+         bakes in a WindowsAppSDK DeploymentManager module initializer that FailFasts with COMException
+         "Class not registered" when the assembly is loaded into this unpackaged test host.
+         The primary fix lives in the app project: it disables that initializer in Debug (see the
+         WindowsAppSdkDeploymentManagerInitialize=false note in MealPlanner.UI.Mobile.csproj), which
+         is what makes Visual Studio Test Explorer work — VS builds the app as its own step and does
+         not apply the override below, so it consumes the app's Debug DLL directly.
+         The override below additionally neutralizes the initializer when this test project rebuilds
+         the app in-process (plain `dotnet test` on the CLI, where BuildProjectReferences defaults to
+         true). It reuses the app's normal bin/obj — isolating output paths via AdditionalProperties
+         breaks restore (NuGet writes project.assets.json to the default obj; the build then can't
+         find it → NETSDK1004), so keep running this project via its own direct invocation rather
+         than a default-parallel `dotnet build MealPlanner.sln` (use -m:1 for a solution-wide build). -->
     <ProjectReference Include="..\MealPlanner.UI.Mobile\MealPlanner.UI.Mobile.csproj">
       <AdditionalProperties>WindowsPackageType=None;WindowsAppSdkAutoInitialize=false;WindowsAppSdkDeploymentManagerInitialize=false;WindowsAppSdkBootstrapInitialize=false</AdditionalProperties>
     </ProjectReference>

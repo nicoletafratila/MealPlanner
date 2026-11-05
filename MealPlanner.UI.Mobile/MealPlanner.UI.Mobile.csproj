@@ -23,6 +23,18 @@
     <AllowUnsafeBlocks Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <!-- MealPlanner.UI.Mobile.Tests references this project on Windows and loads the built assembly
+       into an unpackaged test host. The WindowsAppSDK DeploymentManager module initializer runs at
+       assembly load and FailFasts with COMException "Class not registered" there, because it can
+       only initialize inside a packaged/registered app context. Disabling the DeploymentManager
+       auto-initializer in Debug (the configuration Visual Studio Test Explorer builds) stops that
+       crash. Scoped to Debug only, so the shipped Release build is unchanged; the initializer just
+       registers optional WindowsAppRuntime singleton/main packages (push notifications, etc.) this
+       app does not use, so skipping it in Debug does not affect normal F5 runs. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
+  </PropertyGroup>
+
   <!-- Android release signing: real keystore + passwords live in the gitignored android-signing.local.props
        (see android-signing.local.props.example for the template each dev/CI must fill in). -->
   <Import Project="android-signing.local.props" Condition="Exists('android-signing.local.props')" />

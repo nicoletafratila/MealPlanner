@@ -57,7 +57,8 @@
       "Bash(curl -s \"https://api.nuget.org/v3-flatcontainer/blazorexpress.chartjs/1.2.4/blazorexpress.chartjs.nuspec\")",
       "Bash(curl -s \"https://api.nuget.org/v3/registration5-gz-semver2/blazorexpress.chartjs/index.json\" -o be.json.gz)",
       "Bash(gunzip -f be.json.gz)",
-      "Read(//d//**)"
+      "Read(//d//**)",
+      "PowerShell(dotnet build-server shutdown *)"
     ]
   }
 }
