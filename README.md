@@ -8,6 +8,8 @@ This won't eliminate disconnects caused by an actual server restart/deploy or an
 date and time format to all views
 product web -> category, unit, picture order
 recipe category edit -> remove edit button because now they can be moved. edit on click
+job history filter arrage like audit trail
+
 
 
 
@@ -21,9 +23,12 @@ shoppinglist overview -> export button
 edit shopping list -> product region similar as recipe ingredient
 Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New shop|Edit shop'}"> -> move those into resx
 product mobile -> picker for category
+product - > filter by category
 shop edit->add dots to move the cateogry (context menu)
 recipe category -> add dots to move them (context menu)
-
+unit -> filter by type
+user -> show default imange
+user edit-> email below phone number, show default image
 
 
  Generalize Job infrastructure for reuse beyond Recipe (Product first)                                                                                                                                                                                                                ↑
