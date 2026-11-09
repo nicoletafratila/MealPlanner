@@ -70,7 +70,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add product.
+        ///   Looks up a localized string similar to Product.
         /// </summary>
         internal static string AddProductLabel {
             get {
@@ -124,7 +124,16 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to From meal plan.
+        ///   Looks up a localized string similar to No shops found.
+        /// </summary>
+        internal static string EmptyShopsLabel {
+            get {
+                return ResourceManager.GetString("EmptyShopsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add meal plan.
         /// </summary>
         internal static string FromMealPlanButton {
             get {
@@ -133,7 +142,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to From recipe.
+        ///   Looks up a localized string similar to Add recipe.
         /// </summary>
         internal static string FromRecipeButton {
             get {
@@ -151,7 +160,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name.
+        ///   Looks up a localized string similar to Shopping list name.
         /// </summary>
         internal static string NameLabel {
             get {
@@ -160,7 +169,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shopping list name.
+        ///   Looks up a localized string similar to Enter shopping list name.
         /// </summary>
         internal static string PlaceholderName {
             get {
@@ -201,6 +210,15 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         internal static string PlaceholderSearchRecipes {
             get {
                 return ResourceManager.GetString("PlaceholderSearchRecipes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
+        internal static string PlaceholderSearchShops {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchShops", resourceCulture);
             }
         }
         
@@ -282,24 +300,6 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         internal static string UnitTitle {
             get {
                 return ResourceManager.GetString("UnitTitle", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Type to search by name....
-        /// </summary>
-        internal static string PlaceholderSearchShops {
-            get {
-                return ResourceManager.GetString("PlaceholderSearchShops", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to No shops found.
-        /// </summary>
-        internal static string EmptyShopsLabel {
-            get {
-                return ResourceManager.GetString("EmptyShopsLabel", resourceCulture);
             }
         }
     }
