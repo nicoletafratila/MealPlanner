@@ -16,7 +16,7 @@ in all overview pages add sorting by name or date created
 meal plan -> make shopping list -> select shop picker with search and with images
 shoppinglist overview -> export button
 edit shopping list -> product region similar as recipe ingredient
-
+Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New shop|Edit shop'}"> -> move those into resx
 
 
 

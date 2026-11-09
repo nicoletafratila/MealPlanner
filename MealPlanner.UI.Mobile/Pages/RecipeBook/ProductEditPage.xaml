@@ -6,7 +6,7 @@
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.RecipeBook.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.RecipeBook.ProductEditPage"
              x:DataType="vm:ProductEditViewModel"
-             Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Product|Edit Product'}">
+             Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New product|Edit product'}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:ProductEditPage.SaveButton}" Command="{Binding SaveCommand}" />
