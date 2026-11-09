@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("CancelButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("DeleteButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete this product category?.
         /// </summary>
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("DeleteConfirmMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -95,9 +95,9 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("DeleteConfirmTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Name.
+        ///   Looks up a localized string similar to Product category name.
         /// </summary>
         internal static string NameLabel {
             get {
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Category name.
+        ///   Looks up a localized string similar to Enter product category name.
         /// </summary>
         internal static string PlaceholderName {
             get {
