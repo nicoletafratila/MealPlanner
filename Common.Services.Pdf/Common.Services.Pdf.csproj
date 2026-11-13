@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="QuestPDF" Version="$(QuestPDF)" />
     <PackageReference Include="SkiaSharp" Version="$(SkiaSharp)" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
   </ItemGroup>
 
   <ItemGroup>
