@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Common.Http;
 using Common.Models;
@@ -186,7 +186,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void SearchAsync_Throws_OnNonSuccessStatusCode()
+        public async Task SearchAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var mockHttp = new MockHttpMessageHandler();
@@ -198,7 +198,7 @@ namespace RecipeBook.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -444,7 +444,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void AddAsync_Throws_OnNonSuccessStatusCode()
+        public async Task AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var model = new RecipeEditModel { Id = Guid.NewGuid() };
@@ -458,7 +458,7 @@ namespace RecipeBook.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -494,7 +494,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void UpdateAsync_Throws_OnNonSuccessStatusCode()
+        public async Task UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var model = new RecipeEditModel { Id = Guid.NewGuid() };
@@ -508,7 +508,7 @@ namespace RecipeBook.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -575,7 +575,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void ShareAsync_Throws_OnNonSuccessStatusCode()
+        public async Task ShareAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var mockHttp = new MockHttpMessageHandler();
@@ -587,7 +587,7 @@ namespace RecipeBook.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAsync(Guid.NewGuid(), "user2"));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAsync(Guid.NewGuid(), "user2"));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -617,11 +617,12 @@ namespace RecipeBook.Services.Http.Tests
 
         // ---------- ShareAllAsync ----------
         [Test]
-        public async Task ShareAllAsync_PostsModel_AndReturnsCommandResponse()
+        public async Task ShareAllAsync_PostsModel_AndReturnsJobStartedModel()
         {
             // Arrange
             const string targetUserId = "user2";
-            var expectedResponse = new CommandResponse { Succeeded = true, Message = "ok" };
+            var jobId = Guid.NewGuid();
+            var expectedResponse = new JobStartedModel { Succeeded = true, JobId = jobId };
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -645,7 +646,7 @@ namespace RecipeBook.Services.Http.Tests
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result!.Succeeded, Is.True);
-                Assert.That(result.Message, Is.EqualTo("ok"));
+                Assert.That(result.JobId, Is.EqualTo(jobId));
             }
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -684,7 +685,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void ShareAllAsync_Throws_OnNonSuccessStatusCode()
+        public async Task ShareAllAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var mockHttp = new MockHttpMessageHandler();
@@ -696,7 +697,7 @@ namespace RecipeBook.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAllAsync("user2"));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAllAsync("user2"));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -704,7 +705,7 @@ namespace RecipeBook.Services.Http.Tests
         public async Task ShareAllAsync_InvalidatesCache_NextSearchHitsHttp()
         {
             var paged = new PagedList<RecipeModel>([new RecipeModel()], new Metadata { PageNumber = 1, PageSize = 10, TotalCount = 1 });
-            var shareAllResponse = new CommandResponse { Succeeded = true };
+            var shareAllResponse = new JobStartedModel { Succeeded = true, JobId = Guid.NewGuid() };
 
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{RecipePath}/search*")
@@ -725,7 +726,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void DeleteAsync_Throws_OnNonSuccessStatusCode()
+        public async Task DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var id = Guid.NewGuid();
@@ -740,7 +741,7 @@ namespace RecipeBook.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
             mockHttp.VerifyNoOutstandingExpectation();
         }
     }

@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Common.Http;
 using Common.Models;
@@ -84,7 +84,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void GetFavoriteRecipesAsync_Throws_OnNonSuccessStatusCode()
+        public async Task GetFavoriteRecipesAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var categories = new List<RecipeCategoryModel> { new() { Id = Guid.NewGuid() } };
@@ -98,7 +98,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetFavoriteRecipesAsync(categories));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetFavoriteRecipesAsync(categories));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -151,7 +151,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void GetFavoriteProductsAsync_Throws_OnNonSuccessStatusCode()
+        public async Task GetFavoriteProductsAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var categories = new List<ProductCategoryModel> { new() { Id = Guid.NewGuid() } };
@@ -165,7 +165,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetFavoriteProductsAsync(categories));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetFavoriteProductsAsync(categories));
             mockHttp.VerifyNoOutstandingExpectation();
         }
     }

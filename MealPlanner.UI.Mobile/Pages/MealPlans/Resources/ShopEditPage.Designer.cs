@@ -68,7 +68,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("CancelButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("DeleteButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete this shop?.
         /// </summary>
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("DeleteConfirmMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -95,9 +95,45 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("DeleteConfirmTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Shop Name.
+        ///   Looks up a localized string similar to Category order.
+        /// </summary>
+        internal static string DisplayOrderLabel {
+            get {
+                return ResourceManager.GetString("DisplayOrderLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No product categories found..
+        /// </summary>
+        internal static string EmptyCategories {
+            get {
+                return ResourceManager.GetString("EmptyCategories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No users found.
+        /// </summary>
+        internal static string EmptyUsersLabel {
+            get {
+                return ResourceManager.GetString("EmptyUsersLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select image.
+        /// </summary>
+        internal static string ImageLabel {
+            get {
+                return ResourceManager.GetString("ImageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shop name.
         /// </summary>
         internal static string NameLabel {
             get {
@@ -106,11 +142,38 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to e.g. Kaufland.
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        internal static string OkButton {
+            get {
+                return ResourceManager.GetString("OkButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick image.
+        /// </summary>
+        internal static string PickImageButton {
+            get {
+                return ResourceManager.GetString("PickImageButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter shop name (e.g. Kaufland).
         /// </summary>
         internal static string PlaceholderName {
             get {
                 return ResourceManager.GetString("PlaceholderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
+        internal static string PlaceholderSearchUsers {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchUsers", resourceCulture);
             }
         }
         
@@ -122,25 +185,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SaveButton", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Category Order.
-        /// </summary>
-        internal static string DisplayOrderLabel {
-            get {
-                return ResourceManager.GetString("DisplayOrderLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to No product categories found..
-        /// </summary>
-        internal static string EmptyCategories {
-            get {
-                return ResourceManager.GetString("EmptyCategories", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Share with user.
         /// </summary>
@@ -149,25 +194,7 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SelectShareUserTitle", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Type to search by name....
-        /// </summary>
-        internal static string PlaceholderSearchUsers {
-            get {
-                return ResourceManager.GetString("PlaceholderSearchUsers", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to No users found.
-        /// </summary>
-        internal static string EmptyUsersLabel {
-            get {
-                return ResourceManager.GetString("EmptyUsersLabel", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to There are no other users to share this shop with..
         /// </summary>
@@ -176,40 +203,13 @@ namespace MealPlanner.UI.Mobile.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareNoUsersMessage", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to OK.
-        /// </summary>
-        internal static string OkButton {
-            get {
-                return ResourceManager.GetString("OkButton", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The shop has been shared successfully.
         /// </summary>
         internal static string ShareSucceeded {
             get {
                 return ResourceManager.GetString("ShareSucceeded", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Select image.
-        /// </summary>
-        internal static string ImageLabel {
-            get {
-                return ResourceManager.GetString("ImageLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Pick image.
-        /// </summary>
-        internal static string PickImageButton {
-            get {
-                return ResourceManager.GetString("PickImageButton", resourceCulture);
             }
         }
     }

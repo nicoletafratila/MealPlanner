@@ -195,7 +195,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.Identities
 
             // Assert
             _messageComponentMock.Verify(
-                m => m.ShowErrorAsync("Login failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                m => m.ShowErrorAsync("Sign-in failed. Please try again.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
         }
 

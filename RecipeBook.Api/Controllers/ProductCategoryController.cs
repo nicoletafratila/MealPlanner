@@ -75,11 +75,23 @@ namespace RecipeBook.Api.Controllers
         [HttpGet("searchbycategories")]
         public async Task<ActionResult<IList<ProductCategoryModel>>> SearchByCategoriesAsync(
             [FromQuery] string categoryIds,
+            [FromQuery] string? filters,
+            [FromQuery] string? sorting,
             CancellationToken cancellationToken)
         {
+            var filterItems = !string.IsNullOrWhiteSpace(filters)
+                ? JsonConvert.DeserializeObject<IEnumerable<FilterItem>>(filters)
+                : null;
+
+            var sortingItems = !string.IsNullOrWhiteSpace(sorting)
+                ? JsonConvert.DeserializeObject<IEnumerable<SortingModel>>(sorting)
+                : null;
+
             var query = new SearchByCategoriesQuery
             {
-                CategoryIds = categoryIds
+                CategoryIds = categoryIds,
+                Filters = filterItems,
+                Sorting = sortingItems
             };
 
             var result = await _mediator.Send(query, cancellationToken);

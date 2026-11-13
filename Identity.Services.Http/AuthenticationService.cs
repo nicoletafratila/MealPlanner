@@ -12,7 +12,7 @@ namespace Identity.Services.Http
     public class AuthenticationService(HttpClient httpClient, ITokenProvider tokenProvider, ILogger<AuthenticationService> logger)
         : ServiceBase(httpClient, tokenProvider), IAuthenticationService
     {
-        private readonly string _controller = IdentityControllers.AuthenticationUrl;
+        private readonly string _controller = AuthenticationRoutes.Url;
         private readonly SemaphoreSlim _refreshLock = new(1, 1);
 
         public async Task<CommandResponse?> LoginAsync(LoginModel model, CancellationToken cancellationToken = default)
@@ -20,7 +20,7 @@ namespace Identity.Services.Http
             try
             {
                 var loginResponse = await PostAsync<LoginModel, LoginCommandResponse>(
-                    $"{_controller}/{IdentityControllers.LoginRoute}", model, cancellationToken);
+                    $"{_controller}/{AuthenticationRoutes.Login}", model, cancellationToken);
                 if (loginResponse is null) return CommandResponse.Failed(Resources.AuthenticationServiceMessages.AuthenticationFailed);
                 if (loginResponse.Succeeded && !string.IsNullOrWhiteSpace(loginResponse.JwtBearer))
                 {
@@ -56,7 +56,7 @@ namespace Identity.Services.Http
             {
                 var refreshToken = await TokenProvider.GetRefreshTokenAsync(cancellationToken);
                 var model = new LogoutModel { RefreshToken = refreshToken };
-                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{IdentityControllers.LogoutRoute}", model, JsonOptions, cancellationToken);
+                using var response = await HttpClient.PostAsJsonAsync($"{_controller}/{AuthenticationRoutes.Logout}", model, JsonOptions, cancellationToken);
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await ReadErrorMessageAsync(response, cancellationToken);
@@ -88,7 +88,7 @@ namespace Identity.Services.Http
                     return false;
 
                 var response = await PostAsync<RefreshTokenModel, LoginCommandResponse>(
-                    $"{_controller}/{IdentityControllers.RefreshTokenRoute}",
+                    $"{_controller}/{AuthenticationRoutes.RefreshToken}",
                     new RefreshTokenModel { RefreshToken = storedRefreshToken },
                     cancellationToken);
 
@@ -121,7 +121,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                return await PostAsync($"{_controller}/{IdentityControllers.RegisterRoute}", model, cancellationToken);
+                return await PostAsync($"{_controller}/{AuthenticationRoutes.Register}", model, cancellationToken);
             }
             catch (HttpRequestException ex)
             {
@@ -134,7 +134,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                return await PostAsync($"{_controller}/{IdentityControllers.ForgotPasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
+                return await PostAsync($"{_controller}/{AuthenticationRoutes.ForgotPassword}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ForgotPasswordFailed);
             }
             catch (HttpRequestException ex)
             {
@@ -147,7 +147,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                return await PostAsync($"{_controller}/{IdentityControllers.ResetPasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
+                return await PostAsync($"{_controller}/{AuthenticationRoutes.ResetPassword}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ResetPasswordFailed);
             }
             catch (HttpRequestException ex)
             {
@@ -160,7 +160,7 @@ namespace Identity.Services.Http
         {
             try
             {
-                return await PostAsync($"{_controller}/{IdentityControllers.ChangePasswordRoute}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed);
+                return await PostAsync($"{_controller}/{AuthenticationRoutes.ChangePassword}", model, cancellationToken) ?? CommandResponse.Failed(Resources.AuthenticationServiceMessages.ChangePasswordFailed);
             }
             catch (HttpRequestException ex)
             {

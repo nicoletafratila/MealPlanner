@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Common.Http;
 using Common.Models;
@@ -83,12 +83,12 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void SearchAsync_Throws_OnNonSuccessStatusCode()
+        public async Task SearchAsync_Throws_OnNonSuccessStatusCode()
         {
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Get, $"{BaseAddress}{ProductPath}/search*").Respond(HttpStatusCode.InternalServerError);
             var service = CreateService(mockHttp);
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -362,13 +362,13 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void AddAsync_Throws_OnNonSuccessStatusCode()
+        public async Task AddAsync_Throws_OnNonSuccessStatusCode()
         {
             var model = new ProductEditModel { Id = Guid.NewGuid() };
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Post, $"{BaseAddress}{ProductPath}").Respond(HttpStatusCode.BadRequest);
             var service = CreateService(mockHttp);
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -398,13 +398,13 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void UpdateAsync_Throws_OnNonSuccessStatusCode()
+        public async Task UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             var model = new ProductEditModel { Id = Guid.NewGuid() };
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.Expect(HttpMethod.Put, $"{BaseAddress}{ProductPath}").Respond(HttpStatusCode.BadRequest);
             var service = CreateService(mockHttp);
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -430,7 +430,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void DeleteAsync_Throws_OnNonSuccessStatusCode()
+        public async Task DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
             var id = Guid.NewGuid();
             var mockHttp = new MockHttpMessageHandler();
@@ -439,7 +439,7 @@ namespace RecipeBook.Services.Http.Tests
                 .With(m => m.RequestUri!.Query.Contains($"id={id}"))
                 .Respond(HttpStatusCode.NotFound);
             var service = CreateService(mockHttp);
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -477,7 +477,7 @@ namespace RecipeBook.Services.Http.Tests
         }
 
         [Test]
-        public void ShareAsync_Throws_OnNonSuccessStatusCode()
+        public async Task ShareAsync_Throws_OnNonSuccessStatusCode()
         {
             var mockHttp = new MockHttpMessageHandler();
 
@@ -487,7 +487,7 @@ namespace RecipeBook.Services.Http.Tests
 
             var service = CreateService(mockHttp);
 
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAsync(Guid.NewGuid(), "user2"));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.ShareAsync(Guid.NewGuid(), "user2"));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 

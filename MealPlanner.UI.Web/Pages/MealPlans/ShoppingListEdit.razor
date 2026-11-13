@@ -110,7 +110,7 @@
                     </TableTemplate>
 
                     <button type="submit" class="btn btn-primary btn-sm">@Resources.ShoppingListEdit.SaveButton</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.ShoppingListEdit.DeleteButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" style="display: @(ShoppingList.Id != Guid.Empty ? "visible" : "none")" @onclick="async () => await DeleteAsync()">@Resources.ShoppingListEdit.DeleteButton</button>
 
                     <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="async () => await AddMealPlanAsync()" disabled="@(!CanAddMealPlan)">@Resources.ShoppingListEdit.AddMealPlanButton</button>
                     <button class="btn btn-primary btn-sm footer-btn" type="button" @onclick="async () => await AddRecipeAsync()" disabled="@(!CanAddRecipe)">@Resources.ShoppingListEdit.AddRecipeButton</button>

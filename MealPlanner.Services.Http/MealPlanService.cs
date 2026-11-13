@@ -15,7 +15,7 @@ namespace MealPlanner.Services.Http
     public class MealPlanService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<MealPlanService> logger)
         : ServiceBase(httpClient, tokenProvider), IMealPlanService
     {
-        private readonly string _controller = MealPlannerControllers.MealPlanUrl;
+        private readonly string _controller = MealPlanRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -27,7 +27,7 @@ namespace MealPlanner.Services.Http
 
         public async Task<MealPlanEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{MealPlannerControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<MealPlanEditModel>(url, cancellationToken);
         }
 
@@ -46,7 +46,7 @@ namespace MealPlanner.Services.Http
 
         public async Task<IList<ShoppingListProductEditModel>?> GetShoppingListProductsAsync(Guid mealPlanId, Guid shopId, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{MealPlannerControllers.ShoppingListProductsRoute}",
+            var url = BuildUrl($"{_controller}/{MealPlanRoutes.ShoppingListProducts}",
                 new Dictionary<string, string?> { [ApiQueryParams.MealPlanId] = mealPlanId.ToString(), [ApiQueryParams.ShopId] = shopId.ToString() });
             return await GetAsync<IList<ShoppingListProductEditModel>>(url, cancellationToken);
         }

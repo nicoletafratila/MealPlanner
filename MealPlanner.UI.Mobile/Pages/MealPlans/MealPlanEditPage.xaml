@@ -7,10 +7,11 @@
              xmlns:res="clr-namespace:MealPlanner.UI.Mobile.Pages.MealPlans.Resources"
              x:Class="MealPlanner.UI.Mobile.Pages.MealPlans.MealPlanEditPage"
              x:DataType="vm:MealPlanEditViewModel"
-             Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New Meal Plan|Edit Meal Plan'}">
+             Title="{Binding IsNew, Converter={x:Static converters:BoolToStringConverter.Instance}, ConverterParameter='New meal plan|Edit meal plan'}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:MealPlanEditPage.SaveButton}" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:MealPlanEditPage.PrintButton}" Command="{Binding PrintCommand}" />
         <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
                      IsDestructive="True"
                      IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />

@@ -52,7 +52,7 @@ namespace Common.Constants.Tests
             var result = Colors.GetBackgroundColors(5, Color.SteelBlue);
 
             Assert.That(result, Has.All.Matches<string>(hex =>
-                hex.StartsWith("#") && hex.Length == 7));
+                hex != null && hex.StartsWith('#') && hex.Length == 7));
         }
 
         [Test]

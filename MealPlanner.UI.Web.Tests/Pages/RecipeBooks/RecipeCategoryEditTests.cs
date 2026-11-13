@@ -146,9 +146,6 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
-
-            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri, Does.EndWith("recipebooks/recipecategoriesoverview"));
         }
 
         [Test]

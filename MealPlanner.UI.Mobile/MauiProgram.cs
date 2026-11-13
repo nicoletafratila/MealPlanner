@@ -1,7 +1,10 @@
 using Common.Http;
+using Common.Services.Pdf;
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 using Identity.Services.Http;
 using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Mobile.Pages;
 using MealPlanner.UI.Mobile.Pages.Identity;
 using MealPlanner.UI.Mobile.Pages.MealPlans;
@@ -68,6 +71,8 @@ namespace MealPlanner.UI.Mobile
             services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<SecureStorageTokenProvider>());
             services.AddSingleton<AuthenticationStateService>();
             services.AddSingleton<ReferenceDataCacheService>();
+            services.AddSingleton<IPdfBuilder<MealPlanEditModel>, MealPlanPdfBuilder>();
+            services.AddSingleton(FileSaver.Default);
             services.AddTransient<AuthRefreshHandler>();
             services.AddTransient<TimingHandler>();
 
@@ -93,6 +98,9 @@ namespace MealPlanner.UI.Mobile
             services.AddHttpClient<IRecipeService, RecipeService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddHttpClient<IJobService, JobService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
+                .AddHttpMessageHandler<TimingHandler>()
+                .AddHttpMessageHandler<AuthRefreshHandler>();
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
@@ -105,6 +113,7 @@ namespace MealPlanner.UI.Mobile
             services.AddHttpClient<IUnitService, UnitService>(c => ConfigureClient(c, recipeBase, "RecipeBookApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();
+            services.AddTransient<IRecipeShareProgressClient, RecipeShareProgressClient>();
             services.AddHttpClient<IMealPlanService, MealPlanService>(c => ConfigureClient(c, mealPlannerBase, "MealPlannerApi"))
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddHttpMessageHandler<AuthRefreshHandler>();

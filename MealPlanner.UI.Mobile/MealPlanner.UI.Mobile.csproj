@@ -23,6 +23,18 @@
     <AllowUnsafeBlocks Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <!-- MealPlanner.UI.Mobile.Tests references this project on Windows and loads the built assembly
+       into an unpackaged test host. The WindowsAppSDK DeploymentManager module initializer runs at
+       assembly load and FailFasts with COMException "Class not registered" there, because it can
+       only initialize inside a packaged/registered app context. Disabling the DeploymentManager
+       auto-initializer in Debug (the configuration Visual Studio Test Explorer builds) stops that
+       crash. Scoped to Debug only, so the shipped Release build is unchanged; the initializer just
+       registers optional WindowsAppRuntime singleton/main packages (push notifications, etc.) this
+       app does not use, so skipping it in Debug does not affect normal F5 runs. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
+  </PropertyGroup>
+
   <!-- Android release signing: real keystore + passwords live in the gitignored android-signing.local.props
        (see android-signing.local.props.example for the template each dev/CI must fill in). -->
   <Import Project="android-signing.local.props" Condition="Exists('android-signing.local.props')" />
@@ -420,11 +432,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MicrosoftMaui)" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MicrosoftMaui)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="14.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(MicrosoftExtensionsLoggingDebug)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="$(MicrosoftExtensionsHttp)" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsConfigurationJson)" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="$(CommunityToolkitMvvm)" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="$(CommunityToolkitMaui)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -436,6 +448,7 @@
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Services.Http\MealPlanner.Services.Http.csproj" />
+    <ProjectReference Include="..\Common.Services.Pdf\Common.Services.Pdf.csproj" />
   </ItemGroup>
 
 </Project>

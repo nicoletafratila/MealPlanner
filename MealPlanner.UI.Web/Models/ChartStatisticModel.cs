@@ -1,4 +1,4 @@
-using BlazorBootstrap;
+using BlazorExpress.ChartJS;
 using Common.Constants;
 using Common.Models;
 

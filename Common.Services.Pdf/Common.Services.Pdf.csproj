@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="$(QuestPDF)" />
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharp)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

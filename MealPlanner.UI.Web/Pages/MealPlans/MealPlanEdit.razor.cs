@@ -3,12 +3,14 @@ using Blazored.Modal.Services;
 using Common.Constants;
 using Common.Models;
 using Common.Pagination;
+using Common.Services.Pdf;
 using Common.UI;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Pages.RecipeBooks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -58,7 +60,13 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         public IShoppingListService ShoppingListService { get; set; } = default!;
 
         [Inject]
+        public IPdfBuilder<MealPlanEditModel> MealPlanPdfBuilder { get; set; } = default!;
+
+        [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
+
+        [Inject]
+        public IJSRuntime JS { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -135,7 +143,6 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             if (RefreshCurrentMealPlan is not null)
                 await RefreshCurrentMealPlan();
             await ShowInfoAsync(Resources.MealPlanEdit.SaveSucceeded);
-            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
@@ -316,6 +323,24 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private void NavigateToOverview()
         {
             NavigationManager.NavigateTo("mealplans/mealplansoverview");
+        }
+
+        private async Task PrintAsync()
+        {
+            if (MealPlan is null)
+                return;
+
+            var pdfBytes = MealPlanPdfBuilder.Build(MealPlan);
+            var fileName = $"{SanitizeFileName(MealPlan.Name)}.pdf";
+
+            await JS.InvokeVoidAsync("downloadFileFromBase64", fileName, Convert.ToBase64String(pdfBytes));
+        }
+
+        private static string SanitizeFileName(string name)
+        {
+            var invalid = Path.GetInvalidFileNameChars();
+            var sanitized = new string(name.Select(c => invalid.Contains(c) ? '_' : c).ToArray()).Trim();
+            return string.IsNullOrWhiteSpace(sanitized) ? "MealPlan" : sanitized;
         }
 
         private async Task OnRecipeCategoryChangedAsync(ChangeEventArgs e)

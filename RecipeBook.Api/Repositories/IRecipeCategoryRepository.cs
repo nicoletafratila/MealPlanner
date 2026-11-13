@@ -19,6 +19,16 @@ namespace RecipeBook.Api.Repositories
         Task UpdateAllAsync(IList<RecipeCategory> entities, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Filters and sorts recipe categories at the database level, optionally restricted to the given ids.
+        /// An empty <paramref name="ids"/> list matches all categories.
+        /// </summary>
+        Task<IReadOnlyList<RecipeCategory>> SearchByIdsAsync(
+            IList<Guid> ids,
+            IEnumerable<FilterItem>? filters,
+            IEnumerable<SortingModel>? sorting,
+            CancellationToken cancellationToken);
+
+        /// <summary>
         /// Filters, sorts, and pages recipe categories for a user at the database level, returning only the requested
         /// page. Defaults to DisplaySequence order when no explicit sorting is requested.
         /// </summary>

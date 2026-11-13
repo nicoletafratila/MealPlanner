@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="$(MicrosoftDataSqlClient)" />
+    <!-- Microsoft.Data.SqlClient has no net10.0 asset group; NuGet falls back to its net9.0 group, which pins a vulnerable System.Security.Cryptography.Pkcs -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="$(SystemSecurityCryptographyPkcs)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -39,9 +39,8 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);
             _ctx.Services.AddSingleton(_preloadService);
 
-            // JS interop used by BlazorBootstrap charts
-            _ctx.JSInterop.SetupVoid("window.blazorBootstrap.chart.initialize", _ => true).SetVoidResult();
-            _ctx.JSInterop.SetupVoid("window.blazorChart.doughnut.initialize", _ => true).SetVoidResult();
+            // JS interop used by BlazorExpress.ChartJS charts
+            _ctx.JSInterop.SetupVoid("window.blazorexpress.chartjs.doughnut.initialize", _ => true).SetVoidResult();
         }
 
         [TearDown]
@@ -72,7 +71,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(It.IsAny<IList<ProductCategoryModel>>()))
+                .Setup(s => s.GetFavoriteProductsAsync(It.IsAny<IList<ProductCategoryModel>>(), It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync([]);
 
             // Act
@@ -117,7 +116,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(categoryItems))
+                .Setup(s => s.GetFavoriteProductsAsync(categoryItems, It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync(stats);
 
             // Act
@@ -152,7 +151,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories); // second for OnPageChangedAsync
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(categoryItems))
+                .Setup(s => s.GetFavoriteProductsAsync(categoryItems, It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync([]);
 
             var cut = RenderComponent();
@@ -192,7 +191,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 .ReturnsAsync(categories);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteProductsAsync(categoryItems))
+                .Setup(s => s.GetFavoriteProductsAsync(categoryItems, It.IsAny<QueryParameters<ProductCategoryModel>>()))
                 .ReturnsAsync([stat]);
 
             var cut = RenderComponent();

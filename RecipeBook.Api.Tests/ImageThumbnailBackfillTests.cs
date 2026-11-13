@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Data.Entities;
 using RecipeBook.Data.TableConfigurations;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 
 namespace RecipeBook.Api.Tests
 {
@@ -40,10 +39,10 @@ namespace RecipeBook.Api.Tests
 
         private static byte[] CreateValidImageBytes()
         {
-            using var image = new Image<Rgba32>(4, 4);
-            using var ms = new MemoryStream();
-            image.SaveAsPng(ms);
-            return ms.ToArray();
+            using var bitmap = new SKBitmap(4, 4);
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            return data.ToArray();
         }
 
         [Test]

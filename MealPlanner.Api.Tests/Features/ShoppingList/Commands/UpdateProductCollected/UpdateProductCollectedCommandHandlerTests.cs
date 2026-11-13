@@ -1,4 +1,4 @@
-using MealPlanner.Api.Features.ShoppingList.Commands.UpdateProductCollected;
+﻿using MealPlanner.Api.Features.ShoppingList.Commands.UpdateProductCollected;
 using MealPlanner.Api.Repositories;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -36,9 +36,9 @@ namespace MealPlanner.Api.Tests.Features.ShoppingList.Commands.UpdateProductColl
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 

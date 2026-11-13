@@ -41,7 +41,19 @@ namespace MealPlanner.UI.Web.Shared
         [Parameter]
         public GridSettingsProviderDelegate? SettingsProvider { get; set; }
 
+        [Parameter]
+        public bool ShowLoadingPlaceholder { get; set; } = true;
+
         private Grid<TItem>? gridTemplateReference;
+
+        private string GridClass
+        {
+            get
+            {
+                var cssClass = !string.IsNullOrEmpty(TableGridClass) ? TableGridClass : "";
+                return ShowLoadingPlaceholder ? cssClass : $"{cssClass} hide-loading-placeholder".Trim();
+            }
+        }
 
         private async Task<GridDataProviderResult<TItem>> DataProviderWrapperAsync(GridDataProviderRequest<TItem> request)
         {

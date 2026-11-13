@@ -1,4 +1,4 @@
-using Moq;
+﻿using Moq;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Api.Services;
 using RecipeBook.Data.Entities;
@@ -25,9 +25,9 @@ namespace RecipeBook.Api.Tests.Services
         }
 
         [Test]
-        public void ResolveAsync_NullSourceCategories_Throws()
+        public async Task ResolveAsync_NullSourceCategories_Throws()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _resolver.ResolveAsync(null!, "user2", CancellationToken.None));
         }
 

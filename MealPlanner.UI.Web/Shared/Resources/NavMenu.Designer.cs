@@ -79,6 +79,15 @@ namespace MealPlanner.UI.Web.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Job history.
+        /// </summary>
+        internal static string JobsAudit {
+            get {
+                return ResourceManager.GetString("JobsAudit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Meal plans.
         /// </summary>
         internal static string MealPlans {

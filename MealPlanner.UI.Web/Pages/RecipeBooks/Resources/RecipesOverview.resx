@@ -119,4 +119,7 @@
 	<data name="ShareAllFailedMessage" xml:space="preserve">
 		<value>Share all failed. Please try again.</value>
 	</data>
+	<data name="ShareAllInProgressMessage" xml:space="preserve">
+		<value>Sharing your recipes...</value>
+	</data>
 </root>

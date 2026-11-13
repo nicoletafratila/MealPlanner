@@ -11,8 +11,8 @@ namespace MealPlanner.Api.Abstractions
         {
             Controllers = new Dictionary<string, string>
             {
-                [RecipeBookControllers.RecipeCategory] = "api/recipecategory",
-                [RecipeBookControllers.ProductCategory] = "api/productcategory"
+                [RecipeCategoryRoutes.ControllerName] = "api/recipecategory",
+                [ProductCategoryRoutes.ControllerName] = "api/productcategory"
             };
         }
     }

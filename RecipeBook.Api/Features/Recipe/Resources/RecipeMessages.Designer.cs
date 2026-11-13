@@ -158,6 +158,15 @@ namespace RecipeBook.Api.Features.Recipe.Resources {
                 return ResourceManager.GetString("ShopIdGreaterThanZero", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sharing was interrupted by a server restart. Please try again..
+        /// </summary>
+        internal static string JobInterruptedByRestart {
+            get {
+                return ResourceManager.GetString("JobInterruptedByRestart", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to User id is required..

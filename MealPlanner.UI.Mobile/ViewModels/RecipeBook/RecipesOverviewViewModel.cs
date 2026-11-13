@@ -11,6 +11,7 @@ using MealPlanner.UI.Mobile.Extensions;
 using MealPlanner.UI.Mobile.Pages.RecipeBook.Resources;
 using MealPlanner.UI.Mobile.Services;
 using RecipeBook.Services.Http;
+using RecipeBook.Shared.Enums;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
@@ -19,7 +20,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
         IRecipeService recipeService,
         ReferenceDataCacheService lookupDataService,
         IMealPlanService mealPlanService,
-        IApplicationUserService applicationUserService) : BaseViewModel
+        IApplicationUserService applicationUserService,
+        IServiceProvider serviceProvider) : BaseViewModel
     {
         [ObservableProperty]
         private ObservableCollection<RecipeModel> _recipes = [];
@@ -41,6 +43,14 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
 
         [ObservableProperty]
         private bool _isLoadingMore;
+
+        [ObservableProperty]
+        private bool _isSharingAll;
+
+        [ObservableProperty]
+        private int _shareAllPercent;
+
+        private IRecipeShareProgressClient? _shareProgressClient;
 
         [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task LoadAsync()
@@ -242,10 +252,9 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             {
                 var filters = BuildFilters();
                 var result = await recipeService.ShareAllAsync(targetUserId, filters.Count > 0 ? filters : null);
-                if (result?.Succeeded == true)
+                if (result?.Succeeded == true && result.JobId is { } jobId)
                 {
-                    lookupDataService.InvalidateRecipes();
-                    SetSuccess(RecipesOverviewPage.ShareAllSucceeded);
+                    await StartTrackingJobAsync(jobId);
                 }
                 else SetError(result?.Message);
             }
@@ -256,6 +265,50 @@ namespace MealPlanner.UI.Mobile.ViewModels.RecipeBook
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        private async Task StartTrackingJobAsync(Guid jobId)
+        {
+            IsSharingAll = true;
+            ShareAllPercent = 0;
+
+            _shareProgressClient = serviceProvider.GetRequiredService<IRecipeShareProgressClient>();
+            _shareProgressClient.ProgressReceived += OnShareProgressReceived;
+
+            await _shareProgressClient.ConnectAsync(jobId);
+        }
+
+        private void OnShareProgressReceived(JobStatusModel status)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                ShareAllPercent = status.PercentComplete;
+
+                if (status.Status is JobStatus.Completed or JobStatus.Failed)
+                    await StopTrackingJobAsync(status);
+            });
+        }
+
+        private async Task StopTrackingJobAsync(JobStatusModel status)
+        {
+            IsSharingAll = false;
+
+            if (_shareProgressClient is not null)
+            {
+                _shareProgressClient.ProgressReceived -= OnShareProgressReceived;
+                await _shareProgressClient.DisposeAsync();
+                _shareProgressClient = null;
+            }
+
+            if (status.Status == JobStatus.Completed)
+            {
+                lookupDataService.InvalidateRecipes();
+                SetSuccess(RecipesOverviewPage.ShareAllSucceeded);
+            }
+            else
+            {
+                SetError(status.ErrorMessage ?? RecipesOverviewPage.ShareAllFailedMessage);
             }
         }
 

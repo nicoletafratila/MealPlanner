@@ -1,4 +1,4 @@
-using BlazorBootstrap;
+using BlazorExpress.ChartJS;
 using Common.Models;
 using MealPlanner.UI.Web.Models;
 

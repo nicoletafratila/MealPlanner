@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class ShopEdit {
@@ -160,6 +160,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;..
+        /// </summary>
+        internal static string FileSizeExceeded {
+            get {
+                return ResourceManager.GetString("FileSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display order.
         /// </summary>
         internal static string LabelDisplayOrder {
@@ -167,7 +176,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("LabelDisplayOrder", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select image.
         /// </summary>
@@ -176,16 +185,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("LabelSelectImage", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to File size exceeds the limit. Maximum allowed size is &lt;strong&gt;{0} MB&lt;/strong&gt;..
-        /// </summary>
-        internal static string FileSizeExceeded {
-            get {
-                return ResourceManager.GetString("FileSizeExceeded", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Shop name.
         /// </summary>
@@ -194,7 +194,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("LabelShopName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Move down.
         /// </summary>
@@ -203,7 +203,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("MoveDownAction", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Move to bottom.
         /// </summary>
@@ -212,7 +212,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("MoveToBottomAction", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Move to top.
         /// </summary>
@@ -221,7 +221,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("MoveToTopAction", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Move up.
         /// </summary>
@@ -230,16 +230,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("MoveUpAction", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Enter shop name.
+        ///   Looks up a localized string similar to Enter shop name (e.g. Kaufland).
         /// </summary>
         internal static string PlaceholderShopName {
             get {
                 return ResourceManager.GetString("PlaceholderShopName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reorder.
         /// </summary>
@@ -248,7 +248,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ReorderMenuLabel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
@@ -284,7 +284,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("SaveSucceeded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Share.
         /// </summary>
@@ -293,7 +293,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Share failed..
         /// </summary>
@@ -302,7 +302,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareFailed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Share failed. Please try again..
         /// </summary>
@@ -311,7 +311,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareFailedMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select the user to share this shop with.
         /// </summary>
@@ -320,7 +320,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareModalTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The shop has been shared successfully.
         /// </summary>
@@ -329,9 +329,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
                 return ResourceManager.GetString("ShareSucceeded", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Categories.
+        ///   Looks up a localized string similar to Category order.
         /// </summary>
         internal static string TableCaptionCategories {
             get {

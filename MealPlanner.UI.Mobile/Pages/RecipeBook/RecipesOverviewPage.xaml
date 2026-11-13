@@ -14,7 +14,7 @@
         <ToolbarItem IconImageSource="add_circle.svg" Command="{Binding AddRecipeCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
         <Label Grid.Row="0" Text="{Binding ErrorMessage}" Style="{StaticResource ErrorLabel}"
                IsVisible="{Binding ErrorMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}"
                Margin="12,4" />
@@ -22,14 +22,21 @@
                IsVisible="{Binding SuccessMessage, Converter={x:Static converters:StringNotNullConverter.Instance}}"
                Margin="12,4" />
 
+        <!-- Share-all progress -->
+        <VerticalStackLayout Grid.Row="2" IsVisible="{Binding IsSharingAll}" Margin="12,4" Spacing="2">
+            <ProgressBar Progress="{Binding ShareAllPercent, Converter={x:Static converters:PercentToProgressConverter.Instance}}"
+                         ProgressColor="{StaticResource Primary}" />
+            <Label Text="{Binding ShareAllPercent, StringFormat='{0}%'}" FontSize="12" TextColor="{StaticResource DarkGray}" />
+        </VerticalStackLayout>
+
         <!-- Search -->
-        <SearchBar Grid.Row="2" Placeholder="{x:Static res:RecipesOverviewPage.PlaceholderSearch}"
+        <SearchBar Grid.Row="3" Placeholder="{x:Static res:RecipesOverviewPage.PlaceholderSearch}"
                    Text="{Binding SearchText}"
                    SearchCommand="{Binding SearchCommand}"
                    Margin="12,8" />
 
         <!-- Category filter -->
-        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="12,0,12,8">
+        <Grid Grid.Row="4" ColumnDefinitions="*,Auto" Margin="12,0,12,8">
             <Border Grid.Column="0"
                     Stroke="{StaticResource MidGray}"
                     StrokeThickness="1"
@@ -59,7 +66,7 @@
         </Grid>
 
         <!-- Recipe list -->
-        <RefreshView Grid.Row="4" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <RefreshView Grid.Row="5" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None"
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding NextPageCommand}">

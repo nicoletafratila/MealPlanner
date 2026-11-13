@@ -154,13 +154,13 @@ namespace MealPlanner.UI.Web.Tests.Pages
                 return await task;
             });
 
-            Assert.That(result.TotalCount, Is.EqualTo(0));
+            Assert.That(result.TotalCount, Is.Zero);
 
             _loggerMock.Verify(
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("Failed to load audit trail logs.")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Failed to load audit trail logs.")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.AtLeastOnce);
@@ -260,7 +260,7 @@ namespace MealPlanner.UI.Web.Tests.Pages
                 x => x.Log(
                     LogLevel.Error,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("Failed to delete audit trail logs.")),
+                    It.Is<It.IsAnyType>((v, _) => v != null && v.ToString()!.Contains("Failed to delete audit trail logs.")),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);

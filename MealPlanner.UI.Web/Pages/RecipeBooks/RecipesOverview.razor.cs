@@ -12,12 +12,13 @@ using MealPlanner.UI.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using RecipeBook.Services.Http;
+using RecipeBook.Shared.Enums;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Pages.RecipeBooks
 {
     [Authorize]
-    public partial class RecipesOverview
+    public partial class RecipesOverview : IAsyncDisposable
     {
         private ConfirmDialog _dialog = default!;
         private GridTemplate<RecipeModel>? _recipesGrid;
@@ -28,6 +29,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private int _pageBeforeFilter = 1;
         private string _lastFiltersKey = "";
         private int _pageSize = 20;
+        private bool _isSharingAll;
+        private int _shareAllPercent;
+        private IRecipeShareProgressClient? _shareProgressClient;
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -52,6 +56,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
+
+        [Inject]
+        public IServiceProvider ServiceProvider { get; set; } = default!;
 
         public PagedList<RecipeCategoryModel>? RecipeCategories { get; set; }
 
@@ -340,13 +347,76 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
                 return;
             }
 
-            if (!response.Succeeded)
+            if (!response.Succeeded || response.JobId is null)
             {
                 await ShowErrorAsync(response.Message ?? Resources.RecipesOverview.ShareAllFailed);
                 return;
             }
 
-            await ShowInfoAsync(Resources.RecipesOverview.ShareAllSucceeded);
+            await StartTrackingJobAsync(response.JobId.Value);
+        }
+
+        private async Task StartTrackingJobAsync(Guid jobId)
+        {
+            _isSharingAll = true;
+            _shareAllPercent = 0;
+            StateHasChanged();
+
+            _shareProgressClient = ServiceProvider.GetRequiredService<IRecipeShareProgressClient>();
+            _shareProgressClient.ProgressReceived += OnShareProgressReceived;
+
+            await _shareProgressClient.ConnectAsync(jobId);
+        }
+
+        private void OnShareProgressReceived(JobStatusModel status)
+        {
+            _ = InvokeAsync(async () =>
+            {
+                _shareAllPercent = status.PercentComplete;
+
+                if (status.Status is JobStatus.Completed or JobStatus.Failed)
+                {
+                    await StopTrackingJobAsync(status);
+                    return;
+                }
+
+                StateHasChanged();
+            });
+        }
+
+        private async Task StopTrackingJobAsync(JobStatusModel status)
+        {
+            _isSharingAll = false;
+
+            if (_shareProgressClient is not null)
+            {
+                _shareProgressClient.ProgressReceived -= OnShareProgressReceived;
+                await _shareProgressClient.DisposeAsync();
+                _shareProgressClient = null;
+            }
+
+            if (status.Status == JobStatus.Completed)
+            {
+                await ShowInfoAsync(Resources.RecipesOverview.ShareAllSucceeded);
+            }
+            else
+            {
+                await ShowErrorAsync(status.ErrorMessage ?? Resources.RecipesOverview.ShareAllFailed);
+            }
+
+            if (_recipesGrid is not null)
+                await _recipesGrid.RefreshDataAsync();
+
+            StateHasChanged();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_shareProgressClient is not null)
+            {
+                _shareProgressClient.ProgressReceived -= OnShareProgressReceived;
+                await _shareProgressClient.DisposeAsync();
+            }
         }
 
         private async Task<List<Common.Pagination.FilterItem>?> GetCurrentFiltersAsync()

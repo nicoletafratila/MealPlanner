@@ -13,7 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using RecipeBook.Data.Profiles;
 using RecipeBook.Data.TableConfigurations;
 using Serilog;
@@ -54,7 +54,7 @@ namespace MealPlanner.Api
             services.AddHttpClient<IRecipeBookClient, RecipeBookClient>()
                 .ConfigureHttpClient(ConfigureRecipeBookClient); 
 
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Common.Core.ValidationBehavior<,>));
 
             services.AddEndpointsApiExplorer();
@@ -66,28 +66,19 @@ namespace MealPlanner.Api
                     Version = "v1"
                 });
 
-                var securityScheme = new OpenApiSecurityScheme
+                c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
                     Description = "Enter 'Bearer {token}'",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
                     Scheme = JwtBearerDefaults.AuthenticationScheme,
-                    BearerFormat = "JWT",
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = JwtBearerDefaults.AuthenticationScheme
-                    }
-                };
+                    BearerFormat = "JWT"
+                });
 
-                c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
                 {
-                    {
-                        securityScheme,
-                        new[] { Common.Constants.MealPlanner.ApiScope }
-                    }
+                    [new OpenApiSecuritySchemeReference(JwtBearerDefaults.AuthenticationScheme, document)] = [Common.Constants.MealPlanner.ApiScope]
                 });
             });
         }

@@ -1,12 +1,11 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Common.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RecipeBook.Api.Features.Recipe.Commands.Add;
 using RecipeBook.Api.Repositories;
 using RecipeBook.Shared.Models;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 
 namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
 {
@@ -65,18 +64,18 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 
         [Test]
-        public void Handle_NullModel_ThrowsArgumentNullException()
+        public async Task Handle_NullModel_ThrowsArgumentNullException()
         {
             var command = new AddCommand { Model = null! };
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(command, CancellationToken.None));
         }
 
@@ -169,16 +168,16 @@ namespace RecipeBook.Api.Tests.Features.Recipe.Commands.Add
                 .Setup(r => r.SearchAsync("ImageRecipe", model.RecipeCategoryId, "user1", It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Data.Entities.Recipe?)null);
 
-            using var image = new Image<Rgba32>(4, 4);
-            using var ms = new MemoryStream();
-            image.SaveAsPng(ms);
+            using var bitmap = new SKBitmap(4, 4);
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
 
             var mappedEntity = new Data.Entities.Recipe
             {
                 Id = Guid.NewGuid(),
                 Name = "ImageRecipe",
                 RecipeCategoryId = Guid.NewGuid(),
-                ImageContent = ms.ToArray()
+                ImageContent = data.ToArray()
             };
 
             _mapperMock

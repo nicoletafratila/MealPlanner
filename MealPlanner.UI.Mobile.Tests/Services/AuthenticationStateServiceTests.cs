@@ -123,7 +123,7 @@ namespace MealPlanner.UI.Mobile.Tests.Services
             SetupToken("aaa.!!!not-base64!!!.bbb");
 
             ClaimsPrincipal? user = null;
-            Assert.DoesNotThrowAsync(async () => user = await _service.GetCurrentUserAsync());
+            await Assert.DoesNotThrowAsync(async () => user = await _service.GetCurrentUserAsync());
 
             Assert.That(user?.Identity?.IsAuthenticated, Is.False);
         }

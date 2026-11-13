@@ -24,8 +24,8 @@ namespace MealPlanner.Api.Tests.Abstractions
                 BaseUrl = new Uri(BaseAddress),
                 Controllers = new Dictionary<string, string>
                 {
-                    [RecipeBookControllers.RecipeCategory] = RecipeCategoryPath,
-                    [RecipeBookControllers.ProductCategory] = ProductCategoryPath
+                    [RecipeCategoryRoutes.ControllerName] = RecipeCategoryPath,
+                    [ProductCategoryRoutes.ControllerName] = ProductCategoryPath
                 }
             };
 
@@ -67,7 +67,7 @@ namespace MealPlanner.Api.Tests.Abstractions
                 .Respond("application/json", JsonSerializer.Serialize(categories, JsonOptions));
 
             // Act
-            var result = await client.GetRecipeCategoriesAsync("1,2", "tok", CancellationToken.None);
+            var result = await client.GetRecipeCategoriesAsync("1,2", "tok", cancellationToken: CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -91,7 +91,7 @@ namespace MealPlanner.Api.Tests.Abstractions
                 .Respond("application/json", "[]");
 
             // Act
-            var result = await client.GetRecipeCategoriesAsync("1,2", "tok", CancellationToken.None);
+            var result = await client.GetRecipeCategoriesAsync("1,2", "tok", cancellationToken: CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -121,7 +121,7 @@ namespace MealPlanner.Api.Tests.Abstractions
                 .Respond("application/json", JsonSerializer.Serialize(categories, JsonOptions));
 
             // Act
-            var result = await client.GetProductCategoriesAsync("10,11", "tok", CancellationToken.None);
+            var result = await client.GetProductCategoriesAsync("10,11", "tok", cancellationToken: CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -145,7 +145,7 @@ namespace MealPlanner.Api.Tests.Abstractions
                 .Respond("application/json", "[]");
 
             // Act
-            var result = await client.GetProductCategoriesAsync("10,11", "tok", CancellationToken.None);
+            var result = await client.GetProductCategoriesAsync("10,11", "tok", cancellationToken: CancellationToken.None);
 
             // Assert
             Assert.That(result, Is.Not.Null);

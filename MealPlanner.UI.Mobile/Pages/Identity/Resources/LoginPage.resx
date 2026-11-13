@@ -46,13 +46,13 @@
     <value>Forgot password?</value>
   </data>
   <data name="LoginButton" xml:space="preserve">
-    <value>Sign in</value>
+    <value>Log in</value>
   </data>
   <data name="NoAccountLabel" xml:space="preserve">
     <value>Don't have an account?</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>Sign in</value>
+    <value>Log in</value>
   </data>
   <data name="PasswordLabel" xml:space="preserve">
     <value>Password</value>
@@ -70,7 +70,7 @@
     <value>Remember me</value>
   </data>
   <data name="Subtitle" xml:space="preserve">
-    <value>Sign in to continue</value>
+    <value>Log in to continue</value>
   </data>
   <data name="UsernameLabel" xml:space="preserve">
     <value>Username</value>

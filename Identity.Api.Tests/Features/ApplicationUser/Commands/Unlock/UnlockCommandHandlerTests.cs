@@ -1,4 +1,4 @@
-using Identity.Api.Features.ApplicationUser.Commands.Unlock;
+﻿using Identity.Api.Features.ApplicationUser.Commands.Unlock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -39,9 +39,9 @@ namespace Identity.Api.Tests.Features.ApplicationUser.Commands.Unlock
         }
 
         [Test]
-        public void Handle_NullRequest_ThrowsArgumentNullException()
+        public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await _handler.Handle(null!, CancellationToken.None));
         }
 

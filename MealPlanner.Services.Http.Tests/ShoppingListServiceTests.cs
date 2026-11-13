@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Common.Http;
 using Common.Models;
@@ -114,7 +114,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void SearchAsync_Throws_OnNonSuccessStatusCode()
+        public async Task SearchAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var mockHttp = new MockHttpMessageHandler();
@@ -126,7 +126,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.SearchAsync());
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -298,7 +298,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void MakeShoppingListAsync_Throws_OnNonSuccessStatusCode()
+        public async Task MakeShoppingListAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var createModel = new ShoppingListCreateModel();
@@ -312,7 +312,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.MakeShoppingListAsync(createModel));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.MakeShoppingListAsync(createModel));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -352,7 +352,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void AddAsync_Throws_OnNonSuccessStatusCode()
+        public async Task AddAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var model = new ShoppingListEditModel { Id = Guid.NewGuid() };
@@ -366,7 +366,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.AddAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -402,7 +402,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void UpdateAsync_Throws_OnNonSuccessStatusCode()
+        public async Task UpdateAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var model = new ShoppingListEditModel { Id = Guid.NewGuid() };
@@ -416,7 +416,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.UpdateAsync(model));
             mockHttp.VerifyNoOutstandingExpectation();
         }
 
@@ -456,7 +456,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void UpdateProductCollectedAsync_Throws_OnNonSuccessStatusCode()
+        public async Task UpdateProductCollectedAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var mockHttp = new MockHttpMessageHandler();
@@ -468,7 +468,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await Assert.ThrowsAsync<HttpRequestException>(async () =>
                 await service.UpdateProductCollectedAsync(Guid.NewGuid(), Guid.NewGuid(), true));
             mockHttp.VerifyNoOutstandingExpectation();
         }
@@ -500,7 +500,7 @@ namespace MealPlanner.Services.Http.Tests
         }
 
         [Test]
-        public void DeleteAsync_Throws_OnNonSuccessStatusCode()
+        public async Task DeleteAsync_Throws_OnNonSuccessStatusCode()
         {
             // Arrange
             var id = Guid.NewGuid();
@@ -515,7 +515,7 @@ namespace MealPlanner.Services.Http.Tests
             var service = CreateService(mockHttp);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.DeleteAsync(id));
             mockHttp.VerifyNoOutstandingExpectation();
         }
     }

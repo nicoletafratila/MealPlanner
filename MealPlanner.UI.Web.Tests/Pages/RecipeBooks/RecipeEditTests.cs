@@ -226,9 +226,6 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync("Data has been saved successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
-
-            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri, Does.EndWith("recipebooks/recipesoverview"));
         }
 
         [Test]
@@ -1306,24 +1303,19 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 Times.Once);
         }
 
-        // ---------- CheckQuantityAsync ----------
+        // ---------- OnQuantityInput ----------
         [Test]
-        public async Task CheckQuantityAsync_InvokesJavaScript()
+        public void OnQuantityInput_SetsQuantity()
         {
             ArrangeLookups();
-            _ctx.JSInterop.SetupVoid("checkQuantity", _ => true).SetVoidResult();
             var cut = RenderComponent("0");
 
-            var method = typeof(RecipeEdit).GetMethod("CheckQuantityAsync", BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = typeof(RecipeEdit).GetMethod("OnQuantityInput", BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(method, Is.Not.Null);
 
-            await cut.InvokeAsync(async () =>
-            {
-                var task = (Task)method!.Invoke(cut.Instance, [new ChangeEventArgs()])!;
-                await task;
-            });
+            method!.Invoke(cut.Instance, [new ChangeEventArgs { Value = "3" }]);
 
-            Assert.That(_ctx.JSInterop.Invocations.Any(i => i.Identifier == "checkQuantity"), Is.True);
+            Assert.That(cut.Instance.Quantity, Is.EqualTo("3"));
         }
 
         // ---------- SaveAsync ----------
@@ -1372,9 +1364,6 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _recipeServiceMock.Verify(
                 s => s.AddAsync(It.Is<RecipeEditModel>(r => r.Name == "New Recipe"), CancellationToken.None),
                 Times.Once);
-
-            var nav = _ctx.Services.GetRequiredService<NavigationManager>();
-            Assert.That(nav.Uri, Does.EndWith("recipebooks/recipesoverview"));
         }
 
         // ---------- DeleteAsync (dialog confirmation) ----------

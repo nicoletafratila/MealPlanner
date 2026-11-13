@@ -1,4 +1,4 @@
-using Common.Data.DataContext;
+﻿using Common.Data.DataContext;
 using Common.Data.Entities;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
@@ -641,7 +641,7 @@ namespace MealPlanner.Api.Tests.Repositories
             Assert.That(entity, Is.Not.Null);
 
             // Act & Assert — must not throw
-            Assert.DoesNotThrowAsync(async () =>
+            await Assert.DoesNotThrowAsync(async () =>
                 await repo.DeleteAsync(entity!, CancellationToken.None));
 
             using (Assert.EnterMultipleScope())
@@ -707,7 +707,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act / Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.UpdateAsync(null!, CancellationToken.None));
         }
     }

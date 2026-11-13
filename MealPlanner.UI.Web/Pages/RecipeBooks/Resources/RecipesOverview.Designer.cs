@@ -250,6 +250,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Sharing your recipes....
+        /// </summary>
+        internal static string ShareAllInProgressMessage {
+            get {
+                return ResourceManager.GetString("ShareAllInProgressMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Select the user to share all recipes with.
         /// </summary>
         internal static string ShareAllModalTitle {

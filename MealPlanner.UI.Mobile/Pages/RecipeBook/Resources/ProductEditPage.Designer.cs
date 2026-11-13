@@ -68,16 +68,16 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("CancelButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Category.
+        ///   Looks up a localized string similar to Product category.
         /// </summary>
         internal static string CategoryLabel {
             get {
                 return ResourceManager.GetString("CategoryLabel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("DeleteButton", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete this product?.
         /// </summary>
@@ -95,7 +95,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("DeleteConfirmMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -104,79 +104,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("DeleteConfirmTitle", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Image.
-        /// </summary>
-        internal static string ImageLabel {
-            get {
-                return ResourceManager.GetString("ImageLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        internal static string NameLabel {
-            get {
-                return ResourceManager.GetString("NameLabel", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Pick Image.
-        /// </summary>
-        internal static string PickImageButton {
-            get {
-                return ResourceManager.GetString("PickImageButton", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Product name.
-        /// </summary>
-        internal static string PlaceholderName {
-            get {
-                return ResourceManager.GetString("PlaceholderName", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Save.
-        /// </summary>
-        internal static string SaveButton {
-            get {
-                return ResourceManager.GetString("SaveButton", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Select category.
-        /// </summary>
-        internal static string SelectCategoryTitle {
-            get {
-                return ResourceManager.GetString("SelectCategoryTitle", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Share with user.
-        /// </summary>
-        internal static string SelectShareUserTitle {
-            get {
-                return ResourceManager.GetString("SelectShareUserTitle", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Type to search by name....
-        /// </summary>
-        internal static string PlaceholderSearchUsers {
-            get {
-                return ResourceManager.GetString("PlaceholderSearchUsers", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to No users found.
         /// </summary>
@@ -185,16 +113,25 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("EmptyUsersLabel", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to There are no other users to share this product with..
+        ///   Looks up a localized string similar to Select image.
         /// </summary>
-        internal static string ShareNoUsersMessage {
+        internal static string ImageLabel {
             get {
-                return ResourceManager.GetString("ShareNoUsersMessage", resourceCulture);
+                return ResourceManager.GetString("ImageLabel", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product name.
+        /// </summary>
+        internal static string NameLabel {
+            get {
+                return ResourceManager.GetString("NameLabel", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
@@ -203,7 +140,70 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("OkButton", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick image.
+        /// </summary>
+        internal static string PickImageButton {
+            get {
+                return ResourceManager.GetString("PickImageButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter product name.
+        /// </summary>
+        internal static string PlaceholderName {
+            get {
+                return ResourceManager.GetString("PlaceholderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search by name....
+        /// </summary>
+        internal static string PlaceholderSearchUsers {
+            get {
+                return ResourceManager.GetString("PlaceholderSearchUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string SaveButton {
+            get {
+                return ResourceManager.GetString("SaveButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select category.
+        /// </summary>
+        internal static string SelectCategoryTitle {
+            get {
+                return ResourceManager.GetString("SelectCategoryTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Share with user.
+        /// </summary>
+        internal static string SelectShareUserTitle {
+            get {
+                return ResourceManager.GetString("SelectShareUserTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no other users to share this product with..
+        /// </summary>
+        internal static string ShareNoUsersMessage {
+            get {
+                return ResourceManager.GetString("ShareNoUsersMessage", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to The product has been shared successfully.
         /// </summary>
@@ -212,7 +212,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("ShareSucceeded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Unit.
         /// </summary>
@@ -221,7 +221,7 @@ namespace MealPlanner.UI.Mobile.Pages.RecipeBook.Resources {
                 return ResourceManager.GetString("UnitLabel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select unit.
         /// </summary>

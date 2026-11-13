@@ -86,6 +86,9 @@
 	<data name="AuditTrail" xml:space="preserve">
 		<value>Audit trail</value>
 	</data>
+	<data name="JobsAudit" xml:space="preserve">
+		<value>Job history</value>
+	</data>
 	<data name="Users" xml:space="preserve">
 		<value>Users</value>
 	</data>

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using MealPlanner.Shared.Constants;
 using MealPlanner.Shared.Models;
 using Microsoft.Extensions.Configuration;
@@ -66,11 +66,11 @@ namespace RecipeBook.Api.Tests.Abstractions
         }
 
         [Test]
-        public void GetShopAsync_InvalidShopId_Throws()
+        public async Task GetShopAsync_InvalidShopId_Throws()
         {
             var (client, _, _) = CreateClient();
 
-            Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
                 await client.GetShopAsync(Guid.Empty, "token", CancellationToken.None));
         }
 
@@ -109,11 +109,11 @@ namespace RecipeBook.Api.Tests.Abstractions
         }
 
         [Test]
-        public void GetMealPlansByRecipeIdAsync_InvalidRecipeId_Throws()
+        public async Task GetMealPlansByRecipeIdAsync_InvalidRecipeId_Throws()
         {
             var (client, _, _) = CreateClient();
 
-            Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
                 await client.GetMealPlansByRecipeIdAsync(Guid.Empty, "token", CancellationToken.None));
         }
 

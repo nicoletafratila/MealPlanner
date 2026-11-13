@@ -7,7 +7,6 @@ using Common.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 using RecipeBook.Services.Http;
 using RecipeBook.Shared.Models;
 
@@ -65,9 +64,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
-
-        [Inject]
-        public IJSRuntime JS { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -179,7 +175,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             await ShowInfoAsync(Resources.RecipeEdit.SaveSucceeded);
-            NavigateToOverview();
         }
 
         private async Task DeleteAsync()
@@ -265,6 +260,11 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             !string.IsNullOrWhiteSpace(Quantity) &&
             double.TryParse(Quantity, out var quantityValue) &&
             quantityValue > 0;
+
+        private void OnQuantityInput(ChangeEventArgs e)
+        {
+            Quantity = e.Value?.ToString();
+        }
 
         private async Task AddIngredientAsync()
         {
@@ -442,11 +442,6 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             {
                 await ShowErrorAsync(string.Format(Resources.RecipeEdit.FileSizeExceeded, _maxFileSize / (1024 * 1024)));
             }
-        }
-
-        private async Task CheckQuantityAsync(ChangeEventArgs _)
-        {
-            await JS.InvokeVoidAsync("checkQuantity");
         }
 
         private async Task ShowErrorAsync(string message)

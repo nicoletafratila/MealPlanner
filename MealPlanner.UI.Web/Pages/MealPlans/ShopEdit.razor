@@ -76,7 +76,7 @@
                     </TableTemplate>
 
                     <button class="btn btn-primary btn-sm" type="submit">@Resources.ShopEdit.SaveButton</button>
-                    <button class="btn btn-danger btn-sm" type="button" @onclick="async () => await DeleteAsync()">@Resources.ShopEdit.DeleteButton</button>
+                    <button class="btn btn-danger btn-sm" type="button" style="display: @(Shop.Id != Guid.Empty ? "visible" : "none")" @onclick="async () => await DeleteAsync()">@Resources.ShopEdit.DeleteButton</button>
                     <button class="btn btn-secondary btn-sm" type="button" @onclick="NavigateToOverview">@Resources.ShopEdit.BackToOverviewButton</button>
                 </div>
             </EditForm>

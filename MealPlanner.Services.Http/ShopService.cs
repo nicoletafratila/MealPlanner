@@ -14,7 +14,7 @@ namespace MealPlanner.Services.Http
     public class ShopService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<ShopService> logger)
         : ServiceBase(httpClient, tokenProvider), IShopService
     {
-        private readonly string _controller = MealPlannerControllers.ShopUrl;
+        private readonly string _controller = ShopRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -26,7 +26,7 @@ namespace MealPlanner.Services.Http
 
         public async Task<ShopEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{MealPlannerControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<ShopEditModel>(url, cancellationToken);
         }
 
@@ -103,7 +103,7 @@ namespace MealPlanner.Services.Http
             try
             {
                 var model = new ShopShareModel { ShopId = shopId, TargetUserId = targetUserId };
-                var r = await PostAsync($"{_controller}/{MealPlannerControllers.ShareRoute}", model, cancellationToken);
+                var r = await PostAsync($"{_controller}/{ShopRoutes.Share}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }
@@ -122,7 +122,7 @@ namespace MealPlanner.Services.Http
             try
             {
                 var model = new ShopShareAllModel { TargetUserId = targetUserId, Filters = filters };
-                var r = await PostAsync($"{_controller}/{MealPlannerControllers.ShareAllRoute}", model, cancellationToken);
+                var r = await PostAsync($"{_controller}/{ShopRoutes.ShareAll}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }

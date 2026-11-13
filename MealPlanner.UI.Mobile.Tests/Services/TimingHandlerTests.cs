@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using MealPlanner.UI.Mobile.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -57,13 +57,13 @@ namespace MealPlanner.UI.Mobile.Tests.Services
         }
 
         [Test]
-        public void SendAsync_InnerHandlerThrows_LogsElapsedTime_AndPropagatesException()
+        public async Task SendAsync_InnerHandlerThrows_LogsElapsedTime_AndPropagatesException()
         {
             var stub = new ThrowingStubHandler();
             var handler = new TimingHandler(_loggerMock.Object) { InnerHandler = stub };
             var client = new HttpClient(handler);
 
-            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "https://api.test/foo")));
 
             _loggerMock.Verify(

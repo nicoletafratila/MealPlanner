@@ -1,4 +1,4 @@
-using Common.Data.DataContext;
+﻿using Common.Data.DataContext;
 using MealPlanner.Api.Repositories;
 using MealPlanner.Data.Entities;
 using MealPlanner.Data.TableConfigurations;
@@ -277,14 +277,14 @@ namespace MealPlanner.Api.Tests.Repositories
         }
 
         [Test]
-        public void SearchAsync_EmptyOrWhitespaceName_Throws()
+        public async Task SearchAsync_EmptyOrWhitespaceName_Throws()
         {
             var repo = CreateRepository(out _);
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("", "user1", CancellationToken.None));
-                Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   ", "user1", CancellationToken.None));
+                await Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("", "user1", CancellationToken.None));
+                await Assert.ThrowsAsync<ArgumentException>(async () => await repo.SearchAsync("   ", "user1", CancellationToken.None));
             }
         }
 
@@ -401,7 +401,7 @@ namespace MealPlanner.Api.Tests.Repositories
             var repo = CreateRepository(out _);
 
             // Act / Assert
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await repo.UpdateAsync(null!, CancellationToken.None));
         }
 

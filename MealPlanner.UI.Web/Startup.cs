@@ -1,9 +1,11 @@
 using Blazored.Modal;
 using Common.Data.DataContext;
+using Common.Services.Pdf;
 using Identity.Data.TableConfigurations;
 using Identity.Services.Http;
 using MealPlanner.Data.TableConfigurations;
 using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using RecipeBook.Data.TableConfigurations;
@@ -45,11 +47,16 @@ namespace MealPlanner.UI.Web
             services.AddHttpClient<IRecipeService, RecipeService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
+            services.AddHttpClient<IJobService, JobService>()
+                .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
+
             services.AddHttpClient<IRecipeCategoryService, RecipeCategoryService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
 
             services.AddHttpClient<IUnitService, UnitService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "RecipeBookApi"));
+
+            services.AddTransient<IRecipeShareProgressClient, RecipeShareProgressClient>();
 
             // MealPlanner API clients
             services.AddHttpClient<IMealPlanService, MealPlanService>()
@@ -63,6 +70,8 @@ namespace MealPlanner.UI.Web
 
             services.AddHttpClient<IStatisticsService, StatisticsService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "MealPlannerApi"));
+
+            services.AddScoped<IPdfBuilder<MealPlanEditModel>, MealPlanPdfBuilder>();
         }
 
         public void ConfigureServices(WebApplicationBuilder builder)
@@ -71,7 +80,14 @@ namespace MealPlanner.UI.Web
 
             builder.Services.AddMemoryCache();
             builder.Services.AddRazorPages();
-            builder.Services.AddServerSideBlazor();
+            builder.Services.AddServerSideBlazor(options =>
+            {
+                options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(10);
+            }).AddHubOptions(options =>
+            {
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+                options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+            });
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazorBootstrap();
             builder.Services.AddAuthorizationCore();

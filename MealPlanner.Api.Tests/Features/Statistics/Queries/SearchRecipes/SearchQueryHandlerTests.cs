@@ -1,4 +1,5 @@
 ﻿using Common.Data.Entities;
+using Common.Pagination;
 using Common.Services;
 using MealPlanner.Api.Abstractions;
 using MealPlanner.Api.Features.Statistics.Queries.SearchRecipes;
@@ -47,6 +48,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 c => c.GetRecipeCategoriesAsync(
                     It.IsAny<string>(),
                     It.IsAny<string?>(),
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()),
                 Times.Never);
 
@@ -73,6 +76,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 .Setup(c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync([]);
 
@@ -90,6 +95,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -120,6 +127,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 .Setup(c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(categories);
 
@@ -176,6 +185,8 @@ namespace MealPlanner.Api.Tests.Features.Statistics.Queries.SearchRecipes
                 c => c.GetRecipeCategoriesAsync(
                     categoryIds,
                     "test-token",
+                    It.IsAny<IEnumerable<FilterItem>>(),
+                    It.IsAny<IEnumerable<SortingModel>>(),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
 

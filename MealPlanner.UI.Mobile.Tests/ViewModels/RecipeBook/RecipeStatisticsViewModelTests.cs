@@ -71,7 +71,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
                 s => s.SearchAsync(It.IsAny<QueryParameters<RecipeCategoryModel>>(), It.IsAny<CancellationToken>()),
                 Times.Never);
             _statisticsServiceMock.Verify(
-                s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), It.IsAny<CancellationToken>()),
+                s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), It.IsAny<QueryParameters<RecipeCategoryModel>>(), It.IsAny<CancellationToken>()),
                 Times.Never);
             Assert.That(_viewModel.IsBusy, Is.True);
         }
@@ -105,7 +105,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             };
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), CancellationToken.None))
+                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync((IList<StatisticModel>?)statistics);
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -168,7 +168,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             SetupCategorySearch([]);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), CancellationToken.None))
+                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync((IList<StatisticModel>?)null);
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -186,7 +186,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             SetupCategorySearch([]);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), CancellationToken.None))
+                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ReturnsAsync((IList<StatisticModel>?)new List<StatisticModel>());
 
             await _viewModel.LoadCommand.ExecuteAsync(null);
@@ -204,7 +204,7 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.RecipeBook
             SetupCategorySearch([]);
 
             _statisticsServiceMock
-                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), CancellationToken.None))
+                .Setup(s => s.GetFavoriteRecipesAsync(It.IsAny<IList<RecipeCategoryModel>>(), It.IsAny<QueryParameters<RecipeCategoryModel>>(), CancellationToken.None))
                 .ThrowsAsync(new InvalidOperationException("boom"));
 
             await _viewModel.LoadCommand.ExecuteAsync(null);

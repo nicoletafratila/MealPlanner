@@ -80,7 +80,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             }
 
             var items = Categories.Items ?? [];
-            var data = await StatisticsService.GetFavoriteRecipesAsync(items) ?? [];
+            var data = await StatisticsService.GetFavoriteRecipesAsync(items, QueryParameters) ?? [];
 
             var chartItems = new List<ChartStatisticModel>(data.Count);
             foreach (var item in data)

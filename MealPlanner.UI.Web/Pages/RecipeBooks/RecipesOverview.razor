@@ -18,10 +18,17 @@
                 </td>
             </tr>
         </table>
+        @if (_isSharingAll)
+        {
+            <Progress>
+                <ProgressBar Color="ProgressColor.Success" Width="@_shareAllPercent" Label="@($"{_shareAllPercent}%")" />
+            </Progress>
+            <div class="text-muted small">@Resources.RecipesOverview.ShareAllInProgressMessage</div>
+        }
     </div>
 
     <div class="card-body">
-        <GridTemplate TItem="RecipeModel" @key="@_gridKey" @ref="_recipesGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass" PageSize="@_pageSize" PageSizeSelectorItems="@(new int[] { 20, 40, 60, 80, 100 })">
+        <GridTemplate TItem="RecipeModel" @key="@_gridKey" @ref="_recipesGrid" DataProvider="DataProviderAsync" SettingsProvider="SettingsProviderAsync" TableGridClass="@_tableGridClass" PageSize="@_pageSize" PageSizeSelectorItems="@(new int[] { 20, 40, 60, 80, 100 })" ShowLoadingPlaceholder="false">
             <Columns>
                 <GridColumn TItem="RecipeModel" HeaderText="@Resources.RecipesOverview.HeaderName" PropertyName="Name" SortString="Name" SortKeySelector="item => item.Name" IsDefaultSortColumn="true" SortDirection="@_nameSortDirection" StringComparison="StringComparison.OrdinalIgnoreCase">
                     <div class="card-template">
@@ -73,6 +80,7 @@
                             </div>
                         </div>
                     </HeaderContent>
+                    <ChildContent></ChildContent>
                 </GridColumn>
             </Columns>
         </GridTemplate>

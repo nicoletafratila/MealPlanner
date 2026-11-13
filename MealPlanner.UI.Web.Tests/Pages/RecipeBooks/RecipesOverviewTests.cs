@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using RecipeBook.Services.Http;
+using RecipeBook.Shared.Enums;
 using RecipeBook.Shared.Models;
 
 namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
@@ -29,6 +30,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         private Mock<IMealPlanService> _mealPlanServiceMock = null!;
         private Mock<ISessionStorageService> _sessionStorageMock = null!;
         private Mock<IMessageComponent> _messageComponentMock = null!;
+        private Mock<IRecipeShareProgressClient> _shareProgressClientMock = null!;
 
         [SetUp]
         public void SetUp()
@@ -40,11 +42,16 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _mealPlanServiceMock = new Mock<IMealPlanService>(MockBehavior.Loose);
             _sessionStorageMock = new Mock<ISessionStorageService>(MockBehavior.Strict);
             _messageComponentMock = new Mock<IMessageComponent>(MockBehavior.Loose);
+            _shareProgressClientMock = new Mock<IRecipeShareProgressClient>(MockBehavior.Strict);
+
+            _shareProgressClientMock.Setup(c => c.ConnectAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            _shareProgressClientMock.Setup(c => c.DisposeAsync()).Returns(ValueTask.CompletedTask);
 
             _ctx.Services.AddSingleton(_recipeServiceMock.Object);
             _ctx.Services.AddSingleton(_recipeCategoryServiceMock.Object);
             _ctx.Services.AddSingleton(_mealPlanServiceMock.Object);
             _ctx.Services.AddSingleton(_sessionStorageMock.Object);
+            _ctx.Services.AddTransient(_ => _shareProgressClientMock.Object);
 
             _ctx.Services.AddScoped<BreadcrumbService>();
             _ctx.Services.AddScoped<BlazorBootstrap.ModalService>();
@@ -71,14 +78,15 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         }
 
         [TearDown]
-        public void TearDown()
+        public async Task TearDown()
         {
-            _ctx.Dispose();
+            await _ctx.DisposeAsync();
             _recipeServiceMock.Reset();
             _recipeCategoryServiceMock.Reset();
             _mealPlanServiceMock.Reset();
             _sessionStorageMock.Reset();
             _messageComponentMock.Reset();
+            _shareProgressClientMock.Reset();
         }
 
         private IRenderedComponent<RecipesOverview> RenderWithMessageComponent()
@@ -559,10 +567,11 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         }
 
         [Test]
-        public async Task ShareAllAsync_CallsShareAllService_AndShowsSuccess_WhenConfirmed()
+        public async Task ShareAllAsync_CallsShareAllService_ConnectsProgressClient_AndShowsSuccess_OnCompletion()
         {
             // Arrange
             const string targetUserId = "user2";
+            var jobId = Guid.NewGuid();
 
             var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
             modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
@@ -572,7 +581,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
-                .ReturnsAsync(new CommandResponse { Succeeded = true });
+                .ReturnsAsync(new JobStartedModel { Succeeded = true, JobId = jobId });
 
             var cut = RenderWithModalService(modalServiceMock.Object);
 
@@ -584,9 +593,12 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
                 var task = (Task)method.Invoke(cut.Instance, [])!;
                 await task;
             });
+            await cut.InvokeAsync(() =>
+                _shareProgressClientMock.Raise(c => c.ProgressReceived += null, new JobStatusModel { JobId = jobId, Status = JobStatus.Completed, PercentComplete = 100 }));
 
             // Assert
             _recipeServiceMock.Verify(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None), Times.Once);
+            _shareProgressClientMock.Verify(c => c.ConnectAsync(jobId, It.IsAny<CancellationToken>()), Times.Once);
             _messageComponentMock.Verify(
                 m => m.ShowInfoAsync("All recipes have been shared successfully", It.IsAny<string>(), CancellationToken.None),
                 Times.Once);
@@ -619,7 +631,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync(targetUserId, It.IsAny<IEnumerable<Common.Pagination.FilterItem>?>(), CancellationToken.None))
                 .Callback<string, IEnumerable<Common.Pagination.FilterItem>?, CancellationToken>((_, filters, _) => capturedFilters = filters)
-                .ReturnsAsync(new CommandResponse { Succeeded = true });
+                .ReturnsAsync(new JobStartedModel { Succeeded = true, JobId = Guid.NewGuid() });
 
             var cut = RenderWithModalService(modalServiceMock.Object);
 
@@ -656,7 +668,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
-                .ReturnsAsync((CommandResponse?)null);
+                .ReturnsAsync((JobStartedModel?)null);
 
             var cut = RenderWithModalService(modalServiceMock.Object);
 
@@ -676,7 +688,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
         }
 
         [Test]
-        public async Task ShareAllAsync_ShowsResponseMessage_WhenFailed()
+        public async Task ShareAllAsync_ShowsResponseMessage_WhenStartFailed()
         {
             // Arrange
             const string targetUserId = "user2";
@@ -689,7 +701,7 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
 
             _recipeServiceMock
                 .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
-                .ReturnsAsync(CommandResponse.Failed("Name clash could not be resolved"));
+                .ReturnsAsync(new JobStartedModel { Succeeded = false, Message = "Name clash could not be resolved" });
 
             var cut = RenderWithModalService(modalServiceMock.Object);
 
@@ -706,6 +718,43 @@ namespace MealPlanner.UI.Web.Tests.Pages.RecipeBooks
             _messageComponentMock.Verify(
                 m => m.ShowErrorAsync("Name clash could not be resolved", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task ShareAllAsync_ProgressReportsFailure_ShowsJobErrorMessage()
+        {
+            // Arrange
+            const string targetUserId = "user2";
+            var jobId = Guid.NewGuid();
+
+            var modalReferenceMock = new Mock<IModalReference>(MockBehavior.Strict);
+            modalReferenceMock.Setup(m => m.Result).Returns(Task.FromResult(ModalResult.Ok<object>(targetUserId)));
+
+            var modalServiceMock = new Mock<IModalService>(MockBehavior.Strict);
+            modalServiceMock.Setup(m => m.Show<RecipeShareUserSelection>(It.IsAny<string>())).Returns(modalReferenceMock.Object);
+
+            _recipeServiceMock
+                .Setup(s => s.ShareAllAsync(targetUserId, null, CancellationToken.None))
+                .ReturnsAsync(new JobStartedModel { Succeeded = true, JobId = jobId });
+
+            var cut = RenderWithModalService(modalServiceMock.Object);
+
+            var method = typeof(RecipesOverview).GetMethod("ShareAllAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            // Act
+            await cut.InvokeAsync(async () =>
+            {
+                var task = (Task)method.Invoke(cut.Instance, [])!;
+                await task;
+            });
+            await cut.InvokeAsync(() =>
+                _shareProgressClientMock.Raise(c => c.ProgressReceived += null, new JobStatusModel { JobId = jobId, Status = JobStatus.Failed, ErrorMessage = "Sharing was interrupted." }));
+
+            // Assert
+            _messageComponentMock.Verify(
+                m => m.ShowErrorAsync("Sharing was interrupted.", It.IsAny<string>(), It.IsAny<Exception>(), CancellationToken.None),
+                Times.Once);
+            _shareProgressClientMock.Verify(c => c.DisposeAsync(), Times.Once);
         }
     }
 }

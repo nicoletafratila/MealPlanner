@@ -14,7 +14,7 @@ namespace MealPlanner.Services.Http
     public class ShoppingListService(HttpClient httpClient, ITokenProvider tokenProvider, IMemoryCache cache, ILogger<ShoppingListService> logger)
         : ServiceBase(httpClient, tokenProvider), IShoppingListService
     {
-        private readonly string _controller = MealPlannerControllers.ShoppingListUrl;
+        private readonly string _controller = ShoppingListRoutes.Url;
         private static CancellationTokenSource _cacheToken = new();
 
         private static void InvalidateCache()
@@ -26,7 +26,7 @@ namespace MealPlanner.Services.Http
 
         public async Task<ShoppingListEditModel?> GetEditAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var url = BuildUrl($"{_controller}/{MealPlannerControllers.EditRoute}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
+            var url = BuildUrl($"{_controller}/{ApiRouteSegments.Edit}", new Dictionary<string, string?> { [ApiQueryParams.Id] = id.ToString() });
             return await GetAsync<ShoppingListEditModel>(url, cancellationToken);
         }
 
@@ -56,7 +56,7 @@ namespace MealPlanner.Services.Http
         {
             try
             {
-                var r = await PostAsync<ShoppingListCreateModel, ShoppingListEditModel>($"{_controller}/{MealPlannerControllers.MakeShoppingListRoute}", model, cancellationToken);
+                var r = await PostAsync<ShoppingListCreateModel, ShoppingListEditModel>($"{_controller}/{ShoppingListRoutes.Make}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }
@@ -106,7 +106,7 @@ namespace MealPlanner.Services.Http
             var model = new ShoppingListProductCollectedModel(shoppingListId, productId, collected);
             try
             {
-                var r = await PatchAsync($"{_controller}/{MealPlannerControllers.UpdateProductCollectedRoute}", model, cancellationToken);
+                var r = await PatchAsync($"{_controller}/{ShoppingListRoutes.UpdateProductCollected}", model, cancellationToken);
                 InvalidateCache();
                 return r;
             }

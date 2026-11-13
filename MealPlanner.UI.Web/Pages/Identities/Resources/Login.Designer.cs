@@ -19,7 +19,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Login {
@@ -77,7 +77,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("EmailConfirmationFailedMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your email has been confirmed. You can now log in..
         /// </summary>
@@ -86,7 +86,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("EmailConfirmedMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Forgot password?.
         /// </summary>
@@ -97,7 +97,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login.
+        ///   Looks up a localized string similar to Log in.
         /// </summary>
         internal static string LoginButton {
             get {
@@ -106,7 +106,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login failed. Please try again..
+        ///   Looks up a localized string similar to Sign-in failed. Please try again..
         /// </summary>
         internal static string LoginFailed {
             get {
@@ -124,7 +124,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password.
+        ///   Looks up a localized string similar to Enter password.
         /// </summary>
         internal static string PlaceholderPassword {
             get {
@@ -133,7 +133,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username.
+        ///   Looks up a localized string similar to Enter username.
         /// </summary>
         internal static string PlaceholderUsername {
             get {
@@ -149,7 +149,7 @@ namespace MealPlanner.UI.Web.Pages.Identities.Resources {
                 return ResourceManager.GetString("RememberMeLabel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
