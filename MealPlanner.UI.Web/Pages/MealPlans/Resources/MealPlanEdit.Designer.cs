@@ -241,6 +241,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Print.
+        /// </summary>
+        internal static string PrintButton {
+            get {
+                return ResourceManager.GetString("PrintButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Recipe details.
         /// </summary>
         internal static string RecipeDetailsOffcanvasTitle {

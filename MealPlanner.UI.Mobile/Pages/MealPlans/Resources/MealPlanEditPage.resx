@@ -75,6 +75,9 @@
   <data name="PlaceholderName" xml:space="preserve">
     <value>Enter meal plan name</value>
   </data>
+  <data name="PrintButton" xml:space="preserve">
+    <value>Print</value>
+  </data>
   <data name="RecipesInPlanLabel" xml:space="preserve">
     <value>Recipes</value>
   </data>

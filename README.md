@@ -30,56 +30,6 @@ user -> show default imange
 user edit-> email below phone number, show default image
 
 
-Plan: "Print" button on MealPlanEdit → A4 landscape PDF of the menu
-
-Key facts from the code
-
-- RecipeModel.ImageUrl is already a base64 data:image/jpg;base64,... URI (RecipeProfile.cs), and MealPlan.Recipes (the list already bound to the grid on MealPlanEdit.razor) already contains it. No extra HTTP calls needed to get images for the PDF.
-- No PDF library exists in the repo yet. I'll add QuestPDF (pure .NET, native A4/landscape page-size support, image support) — MIT-style Community license is fine for this app's scale; need QuestPDF.Settings.License = LicenseType.Community set once at startup.
-- Per [[feedback_mirror_web_mobile_features]], this goes into both MealPlanner.UI.Web and MealPlanner.UI.Mobile. Mobile already has CommunityToolkit.Maui, which provides IFileSaver for a native "save to..." dialog — a good mobile equivalent of the browser download prompt.
-
-1. New shared project: MealPlanner.Services.Pdf
-
-Avoids duplicating the PDF-layout code between Web and Mobile.
-- IMealPlanPdfBuilder.cs — byte[] Build(MealPlanEditModel mealPlan)
-- MealPlanPdfBuilder.cs — QuestPDF Document:
-  - Page size A4, PageOrientation.Landscape
-  - Header: meal plan name
-  - Content: a grid of recipe cards (image decoded from the base64 data: URI, name, category name) — multiple per row, auto-paginating via QuestPDF's Column/Row/Table wrapping
-  - Footer: page numbers
-- References MealPlanner.Shared (for MealPlanEditModel/RecipeModel) and the QuestPDF package.
-- MealPlanner.Services.Pdf.Tests mirror project (NUnit), asserting the builder produces a non-empty, valid PDF byte array for 0/1/many recipes and recipes without an image.
-
-2. Web: MealPlanner.UI.Web
-
-- MealPlanner.UI.Web.csproj: add QuestPDF package ref, ProjectReference to MealPlanner.Services.Pdf, register QuestPDF.Settings.License in Program.cs.
-- Program.cs: DI registration services.AddScoped<IMealPlanPdfBuilder, MealPlanPdfBuilder>();
-- MealPlanEdit.razor: add a Print button in the header row (same spot/style as ShoppingListEdit's Export button), bound to PrintAsync().
-- MealPlanEdit.razor.cs: inject IMealPlanPdfBuilder and IJSRuntime; PrintAsync() builds the PDF bytes, then calls a small JS interop helper to trigger a browser download (Blob + temporary <a download> click) — this gives the browser's native "Save As" prompt if the user's browser is set to ask, otherwise saves straight to Downloads (a browser-level setting, not something the app can force).
-- New JS function in a wwwroot/js file (or inline <script> block like the existing updateHeader), e.g. downloadFileFromBase64(fileName, base64Data).
-- Resources\MealPlanEdit.resx (+ .Designer.cs): add PrintButton key.
-
-3. Mobile: MealPlanner.UI.Mobile
-
-- MealPlanner.UI.Mobile.csproj: add QuestPDF package ref, ProjectReference to MealPlanner.Services.Pdf.
-- MauiProgram.cs: register IMealPlanPdfBuilder in DI, set QuestPDF.Settings.License.
-- MealPlanEditPage.xaml: add a Print button mirroring the Web header button.
-- MealPlanEditViewModel.cs: add PrintCommand — builds PDF bytes via IMealPlanPdfBuilder, then uses CommunityToolkit.Maui.Storage.IFileSaver.SaveAsync(...) to show the native OS "save file" picker.
-- Resources\MealPlanEditPage.resx (+ .Designer.cs): add PrintButton key.
-
-4. Filename
-
-Something like {MealPlan.Name}.pdf (sanitized for invalid filesystem characters) on both platforms.
-
-Not in scope (per your answers)
-
-- No ingredient lists in the PDF — just name/image/category per recipe, matching the current on-screen cards.
-- One shared layout (grid, multi-recipe-per-page) for both platforms.
-
-
-
-
-
 
 
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Common.Pagination;
+using Common.Services.Pdf;
+using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MealPlanner.Services.Http;
@@ -16,6 +18,8 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
         IMealPlanService mealPlanService,
         IRecipeCategoryService recipeCategoryService,
         IShoppingListService shoppingListService,
+        IPdfBuilder<MealPlanEditModel> mealPlanPdfBuilder,
+        IFileSaver fileSaver,
         ReferenceDataCacheService lookupDataService) : BaseViewModel, IQueryAttributable
     {
         private static readonly List<SortingModel> DisplaySequenceSorting =
@@ -204,6 +208,40 @@ namespace MealPlanner.UI.Mobile.ViewModels.MealPlans
             {
                 IsBusy = false;
             }
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+        private async Task PrintAsync()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            ClearMessages();
+            try
+            {
+                Model.Recipes = PlanRecipes.ToList();
+                var pdfBytes = mealPlanPdfBuilder.Build(Model);
+                var fileName = $"{SanitizeFileName(Model.Name)}.pdf";
+
+                using var stream = new MemoryStream(pdfBytes);
+                var result = await fileSaver.SaveAsync(fileName, stream, CancellationToken.None);
+                if (!result.IsSuccessful)
+                    SetError(result.Exception?.Message);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private static string SanitizeFileName(string name)
+        {
+            var invalid = Path.GetInvalidFileNameChars();
+            var sanitized = new string(name.Select(c => invalid.Contains(c) ? '_' : c).ToArray()).Trim();
+            return string.IsNullOrWhiteSpace(sanitized) ? "MealPlan" : sanitized;
         }
 
         [RelayCommand(AllowConcurrentExecutions = true)]

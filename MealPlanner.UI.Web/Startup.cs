@@ -1,9 +1,11 @@
 using Blazored.Modal;
 using Common.Data.DataContext;
+using Common.Services.Pdf;
 using Identity.Data.TableConfigurations;
 using Identity.Services.Http;
 using MealPlanner.Data.TableConfigurations;
 using MealPlanner.Services.Http;
+using MealPlanner.Shared.Models;
 using MealPlanner.UI.Web.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using RecipeBook.Data.TableConfigurations;
@@ -68,6 +70,8 @@ namespace MealPlanner.UI.Web
 
             services.AddHttpClient<IStatisticsService, StatisticsService>()
                 .ConfigureHttpClient(c => ConfigureClient(c, "MealPlannerApi"));
+
+            services.AddScoped<IPdfBuilder<MealPlanEditModel>, MealPlanPdfBuilder>();
         }
 
         public void ConfigureServices(WebApplicationBuilder builder)

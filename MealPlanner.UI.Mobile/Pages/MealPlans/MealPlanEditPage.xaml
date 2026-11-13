@@ -11,6 +11,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{x:Static res:MealPlanEditPage.SaveButton}" Command="{Binding SaveCommand}" />
+        <ToolbarItem Text="{x:Static res:MealPlanEditPage.PrintButton}" Command="{Binding PrintCommand}" />
         <ToolbarItem Text="🗑" Command="{Binding DeleteCommand}"
                      IsDestructive="True"
                      IsEnabled="{Binding IsNew, Converter={x:Static converters:InvertBoolConverter.Instance}}" />

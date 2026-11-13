@@ -65,6 +65,7 @@
 <ProjectReference Include="..\RecipeBook.Services.Http\RecipeBook.Services.Http.csproj" />
     <ProjectReference Include="..\MealPlanner.Shared\MealPlanner.Shared.csproj" />
     <ProjectReference Include="..\RecipeBook.Shared\RecipeBook.Shared.csproj" />
+    <ProjectReference Include="..\Common.Services.Pdf\Common.Services.Pdf.csproj" />
   </ItemGroup>
 
   <ItemGroup>

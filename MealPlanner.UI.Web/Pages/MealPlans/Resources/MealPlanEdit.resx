@@ -115,4 +115,7 @@
 	<data name="MenuName" xml:space="preserve">
     <value>Meniu</value>
   </data>
+  <data name="PrintButton" xml:space="preserve">
+    <value>Print</value>
+  </data>
 </root>

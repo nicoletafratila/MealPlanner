@@ -69,6 +69,7 @@
     <Moq>4.21.0</Moq>
     <MudBlazor>9.11.0</MudBlazor>
     <NewtonsoftJson>13.0.4</NewtonsoftJson>
+    <QuestPDF>2026.9.1</QuestPDF>
     <RichardSzalayMockHttp>7.1.0</RichardSzalayMockHttp>
     <Serilog>4.4.0</Serilog>
     <SerilogAspNetCore>10.0.0</SerilogAspNetCore>

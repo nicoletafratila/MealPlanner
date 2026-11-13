@@ -58,7 +58,9 @@
       "Bash(curl -s \"https://api.nuget.org/v3/registration5-gz-semver2/blazorexpress.chartjs/index.json\" -o be.json.gz)",
       "Bash(gunzip -f be.json.gz)",
       "Read(//d//**)",
-      "PowerShell(dotnet build-server shutdown *)"
+      "PowerShell(dotnet build-server shutdown *)",
+      "Bash(git mv *)",
+      "Bash(tasklist)"
     ]
   }
 }

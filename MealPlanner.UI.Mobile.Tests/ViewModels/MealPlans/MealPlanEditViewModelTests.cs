@@ -1,5 +1,7 @@
 using Common.Models;
 using Common.Pagination;
+using Common.Services.Pdf;
+using CommunityToolkit.Maui.Storage;
 using MealPlanner.Services.Http;
 using MealPlanner.Shared.Models;
 using MealPlanner.Shared.Resources;
@@ -23,6 +25,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
         private Mock<IUnitService> _lookupUnitServiceMock = null!;
         private Mock<IProductService> _lookupProductServiceMock = null!;
         private Mock<IProductCategoryService> _lookupProductCategoryServiceMock = null!;
+        private Mock<IPdfBuilder<MealPlanEditModel>> _pdfBuilderMock = null!;
+        private Mock<IFileSaver> _fileSaverMock = null!;
         private MealPlanEditViewModel _viewModel = null!;
 
         [SetUp]
@@ -37,6 +41,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
             _lookupUnitServiceMock = new Mock<IUnitService>(MockBehavior.Strict);
             _lookupProductServiceMock = new Mock<IProductService>(MockBehavior.Strict);
             _lookupProductCategoryServiceMock = new Mock<IProductCategoryService>(MockBehavior.Strict);
+            _pdfBuilderMock = new Mock<IPdfBuilder<MealPlanEditModel>>(MockBehavior.Strict);
+            _fileSaverMock = new Mock<IFileSaver>(MockBehavior.Strict);
 
             var lookupDataService = new ReferenceDataCacheService(
                 _lookupRecipeCategoryServiceMock.Object,
@@ -50,6 +56,8 @@ namespace MealPlanner.UI.Mobile.Tests.ViewModels.MealPlans
                 _mealPlanServiceMock.Object,
                 _recipeCategoryServiceMock.Object,
                 _shoppingListServiceMock.Object,
+                _pdfBuilderMock.Object,
+                _fileSaverMock.Object,
                 lookupDataService);
         }
 
