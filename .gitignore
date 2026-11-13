@@ -409,3 +409,7 @@ android-signing.local.props
 MealPlanner.UI.Mobile/android-signing/
 *.keystore
 *.jks
+/MealPlanner_20260604_2.bak
+/MealPlanner_20260725.bak
+/MealPlanner_20260928.bak
+/MealPlanner_20261006.bak
