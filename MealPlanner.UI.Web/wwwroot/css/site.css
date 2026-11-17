@@ -47,6 +47,14 @@
     width: 0 !important;
 }
 
+/* ShowLoadingPlaceholder="false" adds this class to Grid's root table so GridTemplate
+   can suppress Blazor.Bootstrap's built-in skeleton row. Grid is a child component, so
+   the scope attribute never reaches the td.placeholder-glow it renders internally -
+   this rule has to live unscoped, same reasoning as .table-responsive above. */
+.hide-loading-placeholder td.placeholder-glow {
+    display: none;
+}
+
 /* The card fills its grid track — the track sizing (desktop auto-fill columns,
    single column on phones) lives in GridTemplate.razor's .table-grid rules. */
 .card-template {

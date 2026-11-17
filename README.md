@@ -1,14 +1,13 @@
 shoppinglistedit unit si quantity align similar to recipe edit view
 keep filtering after recipe edit
-translate into other languages
 add product to a shopping list de pe shop list edit?????
-This won't eliminate disconnects caused by an actual server restart/deploy or an IIS app-pool recycle — that's infra, not app code. Since your other project notes mention these services run under IIS, it's worth separately confirming the site has the WebSockets Windows feature enabled and that nothing in front of it (ARR/reverse proxy) has an idle timeout shorter than the circuit's keep-alive — that's the other common cause of this overlay showing up a lot.
 date and time format to all views
 product web -> category, unit, picture order
 recipe category edit -> remove edit button because now they can be moved. edit on click
 job history filter arrage like audit trail
 button on shooping list do not overlap like those in recipe when window is small
 product data from shopping list overlap when window is smalll
+translate into other languages
 
 
 
