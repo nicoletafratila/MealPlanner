@@ -15,12 +15,15 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     [Authorize]
     public partial class ProductsOverview
     {
+        private const string ProductCategoryFilterIdStorageKey = "ProductCategoryFilterId";
+
         private ConfirmDialog _dialog = default!;
         private GridTemplate<ProductModel>? _productsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyHorizontalClass;
         private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+        private bool _categoryFilterCorrectionApplied;
         private int _pageBeforeFilter = 1;
         private string _lastFiltersKey = "";
         private int _pageSize = 20;
@@ -62,19 +65,29 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             };
 
             ProductCategories = await ProductCategoryService.SearchAsync(queryParameters);
+
+            ProductCategoryFilterId = await SessionStorage.GetItemAsync<string>(name: ProductCategoryFilterIdStorageKey);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (!firstRender) return;
-
-            var stored = await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
-            var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
-            var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
-
-            if (direction != _nameSortDirection)
+            if (firstRender)
             {
-                _nameSortDirection = direction;
+                var stored = await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
+                var nameSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Name");
+                var direction = (BlazorBootstrap.SortDirection)(int)(nameSort?.Direction ?? Common.Pagination.SortDirection.Ascending);
+
+                if (direction != _nameSortDirection)
+                {
+                    _nameSortDirection = direction;
+                    _gridKey++;
+                    StateHasChanged();
+                }
+            }
+
+            if (!_categoryFilterCorrectionApplied && !string.IsNullOrWhiteSpace(ProductCategoryFilterId))
+            {
+                _categoryFilterCorrectionApplied = true;
                 _gridKey++;
                 StateHasChanged();
             }
@@ -83,7 +96,17 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
         private async Task<GridSettings?> SettingsProviderAsync()
         {
             var qp = await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
-            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+            if (qp is null)
+                return null;
+
+            return new GridSettings
+            {
+                PageNumber = qp.PageNumber,
+                PageSize = qp.PageSize,
+                Filters = qp.Filters?
+                    .Select(f => new BlazorBootstrap.FilterItem(f.PropertyName, f.Value?.ToString() ?? string.Empty, (BlazorBootstrap.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList()
+            };
         }
 
         private void New()
@@ -147,6 +170,8 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
 
         private async Task OnProductCategoryChangedAsync(ChangeEventArgs e)
         {
+            await SessionStorage.SetItemAsync(ProductCategoryFilterId, name: ProductCategoryFilterIdStorageKey);
+
             var stored = await SessionStorage.GetItemAsync<QueryParameters<ProductModel>>();
             var resetParameters = new QueryParameters<ProductModel>
             {

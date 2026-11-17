@@ -112,7 +112,17 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task<GridSettings?> SettingsProviderAsync()
         {
             var qp = await SessionStorage.GetItemAsync<QueryParameters<MealPlanModel>>();
-            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+            if (qp is null)
+                return null;
+
+            return new GridSettings
+            {
+                PageNumber = qp.PageNumber,
+                PageSize = qp.PageSize,
+                Filters = qp.Filters?
+                    .Select(f => new BlazorBootstrap.FilterItem(f.PropertyName, f.Value?.ToString() ?? string.Empty, (BlazorBootstrap.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList()
+            };
         }
 
         private async Task<GridDataProviderResult<MealPlanModel>> DataProviderAsync(

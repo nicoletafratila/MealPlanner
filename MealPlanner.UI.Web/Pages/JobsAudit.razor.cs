@@ -17,11 +17,16 @@ namespace MealPlanner.UI.Web.Pages
     {
         private static readonly string[] StatusOptions = ["Pending", "Running", "Completed", "Failed"];
 
+        private const string StatusFilterStorageKey = "JobsAuditStatusFilter";
+        private const string CreatedFromFilterStorageKey = "JobsAuditCreatedFromFilter";
+        private const string CreatedToFilterStorageKey = "JobsAuditCreatedToFilter";
+
         private GridTemplate<JobModel>? _jobsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
         private BlazorBootstrap.SortDirection _createdAtSortDirection = BlazorBootstrap.SortDirection.Descending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+        private bool _customFilterCorrectionApplied;
 
         private string? StatusFilter { get; set; }
 
@@ -38,17 +43,33 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
 
+        protected override async Task OnInitializedAsync()
+        {
+            StatusFilter = await SessionStorage.GetItemAsync<string>(name: StatusFilterStorageKey);
+            CreatedFromFilter = await SessionStorage.GetItemAsync<DateTime?>(name: CreatedFromFilterStorageKey);
+            CreatedToFilter = await SessionStorage.GetItemAsync<DateTime?>(name: CreatedToFilterStorageKey);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (!firstRender) return;
-
-            var stored = await SessionStorage.GetItemAsync<QueryParameters<JobModel>>();
-            var createdAtSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "CreatedAt");
-            var direction = (BlazorBootstrap.SortDirection)(int)(createdAtSort?.Direction ?? Common.Pagination.SortDirection.Descending);
-
-            if (direction != _createdAtSortDirection)
+            if (firstRender)
             {
-                _createdAtSortDirection = direction;
+                var stored = await SessionStorage.GetItemAsync<QueryParameters<JobModel>>();
+                var createdAtSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "CreatedAt");
+                var direction = (BlazorBootstrap.SortDirection)(int)(createdAtSort?.Direction ?? Common.Pagination.SortDirection.Descending);
+
+                if (direction != _createdAtSortDirection)
+                {
+                    _createdAtSortDirection = direction;
+                    _gridKey++;
+                    StateHasChanged();
+                }
+            }
+
+            var hasCustomFilter = !string.IsNullOrWhiteSpace(StatusFilter) || CreatedFromFilter.HasValue || CreatedToFilter.HasValue;
+            if (!_customFilterCorrectionApplied && hasCustomFilter)
+            {
+                _customFilterCorrectionApplied = true;
                 _gridKey++;
                 StateHasChanged();
             }
@@ -74,6 +95,10 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task OnCustomFilterChangedAsync()
         {
+            await SessionStorage.SetItemAsync(StatusFilter, name: StatusFilterStorageKey);
+            await SessionStorage.SetItemAsync(CreatedFromFilter, CreatedFromFilterStorageKey);
+            await SessionStorage.SetItemAsync(CreatedToFilter, CreatedToFilterStorageKey);
+
             var stored = await SessionStorage.GetItemAsync<QueryParameters<JobModel>>();
             var resetParameters = new QueryParameters<JobModel>
             {

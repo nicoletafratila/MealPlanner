@@ -1,12 +1,13 @@
-shoppinglistedit unit si quantity align similar to recipe edit view
-keep filtering after recipe edit
-add product to a shopping list de pe shop list edit?????
+verifica filtrele dupa date, mai mari decat, nu ne intereseaza ora
 date and time format to all views
+shoppinglistedit unit si quantity align similar to recipe edit view
+add product to a shopping list de pe shop list edit?????
 product web -> category, unit, picture order
 recipe category edit -> remove edit button because now they can be moved. edit on click
 job history filter arrage like audit trail
 button on shooping list do not overlap like those in recipe when window is small
 product data from shopping list overlap when window is smalll
+pagination goes outside the window when is small
 translate into other languages
 
 

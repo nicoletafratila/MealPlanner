@@ -17,12 +17,17 @@ namespace MealPlanner.UI.Web.Pages
     {
         private static readonly string[] LevelOptions = ["Verbose", "Debug", "Information", "Warning", "Error", "Fatal"];
 
+        private const string LevelFilterStorageKey = "AuditTrailLevelFilter";
+        private const string TimestampFromFilterStorageKey = "AuditTrailTimestampFromFilter";
+        private const string TimestampToFilterStorageKey = "AuditTrailTimestampToFilter";
+
         private ConfirmDialog _dialog = default!;
         private GridTemplate<LogModel>? _logsGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass + " audit-columns";
         private BlazorBootstrap.SortDirection _timestampSortDirection = BlazorBootstrap.SortDirection.Descending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+        private bool _customFilterCorrectionApplied;
 
         private string? LevelFilter { get; set; }
 
@@ -42,17 +47,33 @@ namespace MealPlanner.UI.Web.Pages
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
 
+        protected override async Task OnInitializedAsync()
+        {
+            LevelFilter = await SessionStorage.GetItemAsync<string>(name: LevelFilterStorageKey);
+            TimestampFromFilter = await SessionStorage.GetItemAsync<DateTime?>(name: TimestampFromFilterStorageKey);
+            TimestampToFilter = await SessionStorage.GetItemAsync<DateTime?>(name: TimestampToFilterStorageKey);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (!firstRender) return;
-
-            var stored = await SessionStorage.GetItemAsync<QueryParameters<LogModel>>();
-            var timestampSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Timestamp");
-            var direction = (BlazorBootstrap.SortDirection)(int)(timestampSort?.Direction ?? Common.Pagination.SortDirection.Descending);
-
-            if (direction != _timestampSortDirection)
+            if (firstRender)
             {
-                _timestampSortDirection = direction;
+                var stored = await SessionStorage.GetItemAsync<QueryParameters<LogModel>>();
+                var timestampSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "Timestamp");
+                var direction = (BlazorBootstrap.SortDirection)(int)(timestampSort?.Direction ?? Common.Pagination.SortDirection.Descending);
+
+                if (direction != _timestampSortDirection)
+                {
+                    _timestampSortDirection = direction;
+                    _gridKey++;
+                    StateHasChanged();
+                }
+            }
+
+            var hasCustomFilter = !string.IsNullOrWhiteSpace(LevelFilter) || TimestampFromFilter.HasValue || TimestampToFilter.HasValue;
+            if (!_customFilterCorrectionApplied && hasCustomFilter)
+            {
+                _customFilterCorrectionApplied = true;
                 _gridKey++;
                 StateHasChanged();
             }
@@ -61,7 +82,17 @@ namespace MealPlanner.UI.Web.Pages
         private async Task<GridSettings?> SettingsProviderAsync()
         {
             var qp = await SessionStorage.GetItemAsync<QueryParameters<LogModel>>();
-            return qp is null ? null : new GridSettings { PageNumber = qp.PageNumber, PageSize = qp.PageSize };
+            if (qp is null)
+                return null;
+
+            return new GridSettings
+            {
+                PageNumber = qp.PageNumber,
+                PageSize = qp.PageSize,
+                Filters = qp.Filters?
+                    .Select(f => new BlazorBootstrap.FilterItem(f.PropertyName, f.Value?.ToString() ?? string.Empty, (BlazorBootstrap.FilterOperator)(int)f.Operator, f.StringComparison))
+                    .ToList()
+            };
         }
 
         private async Task OnFromDateChangedAsync(ChangeEventArgs e)
@@ -78,6 +109,10 @@ namespace MealPlanner.UI.Web.Pages
 
         private async Task OnCustomFilterChangedAsync()
         {
+            await SessionStorage.SetItemAsync(LevelFilter, name: LevelFilterStorageKey);
+            await SessionStorage.SetItemAsync(TimestampFromFilter, TimestampFromFilterStorageKey);
+            await SessionStorage.SetItemAsync(TimestampToFilter, TimestampToFilterStorageKey);
+
             var stored = await SessionStorage.GetItemAsync<QueryParameters<LogModel>>();
             var resetParameters = new QueryParameters<LogModel>
             {
