@@ -140,4 +140,7 @@
 	<data name="ColumnCreatedAt" xml:space="preserve">
 		<value>Created</value>
 	</data>
+	<data name="CreatedAfterPlaceholder" xml:space="preserve">
+		<value>Created after</value>
+	</data>
 </root>

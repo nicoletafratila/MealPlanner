@@ -1,5 +1,3 @@
-verifica filtrele dupa date, mai mari decat, nu ne intereseaza ora
-date and time format to all views
 shoppinglistedit unit si quantity align similar to recipe edit view
 add product to a shopping list de pe shop list edit?????
 product web -> category, unit, picture order

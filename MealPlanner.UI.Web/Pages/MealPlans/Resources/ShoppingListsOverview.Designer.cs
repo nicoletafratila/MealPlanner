@@ -88,6 +88,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Created after.
+        /// </summary>
+        internal static string CreatedAfterPlaceholder {
+            get {
+                return ResourceManager.GetString("CreatedAfterPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Copied to clipboard.
         /// </summary>
         internal static string CopiedToClipboard {

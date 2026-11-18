@@ -15,12 +15,16 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
     [Authorize]
     public partial class MealPlansOverview
     {
+        private const string CreatedAfterFilterStorageKey = "MealPlansOverviewCreatedAfterFilter";
+
         private ConfirmDialog _dialog = default!;
         private GridTemplate<MealPlanModel>? _mealPlansGrid;
         private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
         private BlazorBootstrap.SortDirection _createdAtSortDirection = BlazorBootstrap.SortDirection.Descending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
+
+        private DateTime? CreatedAfterFilter { get; set; }
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -34,6 +38,11 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         [Inject]
         public ISessionStorageService SessionStorage { get; set; } = default!;
 
+        protected override async Task OnInitializedAsync()
+        {
+            CreatedAfterFilter = await SessionStorage.GetItemAsync<DateTime?>(name: CreatedAfterFilterStorageKey);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (!firstRender) return;
@@ -42,12 +51,39 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var createdAtSort = stored?.Sorting?.FirstOrDefault(s => s.PropertyName == "CreatedAt");
             var direction = (BlazorBootstrap.SortDirection)(int)(createdAtSort?.Direction ?? Common.Pagination.SortDirection.Descending);
 
-            if (direction != _createdAtSortDirection)
-            {
+            var sortChanged = direction != _createdAtSortDirection;
+            if (sortChanged)
                 _createdAtSortDirection = direction;
+
+            if (sortChanged || CreatedAfterFilter.HasValue)
+            {
                 _gridKey++;
                 StateHasChanged();
             }
+        }
+
+        private async Task OnCreatedAfterDateChangedAsync(ChangeEventArgs e)
+        {
+            CreatedAfterFilter = DateTime.TryParse(e.Value?.ToString(), out var date) ? date : null;
+            await OnCreatedAfterFilterChangedAsync();
+        }
+
+        private async Task OnCreatedAfterFilterChangedAsync()
+        {
+            await SessionStorage.SetItemAsync(CreatedAfterFilter, CreatedAfterFilterStorageKey);
+
+            var stored = await SessionStorage.GetItemAsync<QueryParameters<MealPlanModel>>();
+            var resetParameters = new QueryParameters<MealPlanModel>
+            {
+                Filters = stored?.Filters,
+                Sorting = stored?.Sorting ?? [],
+                PageNumber = 1,
+                PageSize = stored?.PageSize ?? new QueryParameters<MealPlanModel>().PageSize
+            };
+            await SessionStorage.SetItemAsync(resetParameters);
+
+            _gridKey++;
+            StateHasChanged();
         }
 
         private void New()
@@ -128,11 +164,15 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private async Task<GridDataProviderResult<MealPlanModel>> DataProviderAsync(
             GridDataProviderRequest<MealPlanModel> request)
         {
+            var filters = request.Filters?
+                .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                .ToList() ?? [];
+
+            AddCustomFilters(filters);
+
             var queryParameters = new QueryParameters<MealPlanModel>
             {
-                Filters = request.Filters?
-                    .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
-                    .ToList(),
+                Filters = filters,
                 Sorting = request.Sorting?
                     .Select(s => new SortingModel { PropertyName = s.SortString, Direction = (Common.Pagination.SortDirection)(int)s.SortDirection })
                     .ToList() ?? [],
@@ -149,7 +189,18 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
             var items = result.Items ?? [];
 
             if (!isFirstLoad)
-                await SessionStorage.SetItemAsync(queryParameters);
+            {
+                var sessionParameters = new QueryParameters<MealPlanModel>
+                {
+                    Filters = request.Filters?
+                        .Select(f => new Common.Pagination.FilterItem(f.PropertyName, f.Value, (Common.Pagination.FilterOperator)(int)f.Operator, f.StringComparison))
+                        .ToList(),
+                    Sorting = queryParameters.Sorting,
+                    PageNumber = request.PageNumber,
+                    PageSize = request.PageSize
+                };
+                await SessionStorage.SetItemAsync(sessionParameters);
+            }
 
             _tableGridClass = items.Count == 0
                 ? CssClasses.GridTemplateEmptyClass
@@ -162,6 +213,12 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 Data = items,
                 TotalCount = result.Metadata?.TotalCount ?? 0
             };
+        }
+
+        private void AddCustomFilters(List<Common.Pagination.FilterItem> filters)
+        {
+            if (CreatedAfterFilter.HasValue)
+                filters.Add(new Common.Pagination.FilterItem("CreatedAt", CreatedAfterFilter.Value.Date, Common.Pagination.FilterOperator.GreaterThan));
         }
 
         private async Task ShowErrorAsync(string message)

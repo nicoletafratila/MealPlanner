@@ -8,10 +8,46 @@
         max-width: 40px;
     }
 
+    .grid-additional-columns th:nth-child(2),
+    .grid-additional-columns td:nth-child(2) {
+        width: fit-content;
+    }
+
+    .grid-additional-columns th:nth-child(3),
+    .grid-additional-columns td:nth-child(3) {
+        width: 150px;
+        max-width: 150px;
+    }
+
     .grid-additional-columns th:nth-child(4),
     .grid-additional-columns td:nth-child(4) {
         width: 40px;
         max-width: 40px;
+    }
+
+    .filter-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-header span {
+        white-space: nowrap;
+    }
+
+    .filter-control {
+        position: absolute;
+        top: 100%;
+        margin-top: 1rem;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        font-weight: normal;
+    }
+
+    .date-filter-control input {
+        height: 38px;
+        width: 100%;
     }
 </style>
 
@@ -40,8 +76,19 @@
                         @context.Name
                     </div>
                 </GridColumn>
-                <GridColumn TItem="MealPlanModel" HeaderText="@Resources.MealPlansOverview.ColumnCreatedAt" PropertyName="CreatedAt" IsDefaultSortColumn="true" SortDirection="@_createdAtSortDirection" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt">
-                    @context.CreatedAt?.ToString("d")
+                <GridColumn TItem="MealPlanModel" PropertyName="CreatedAt" IsDefaultSortColumn="true" SortDirection="@_createdAtSortDirection" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt" Filterable="false">
+                    <HeaderContent>
+                        <div class="filter-header">
+                            <span>@Resources.MealPlansOverview.CreatedAfterPlaceholder</span>
+                            <div class="filter-control date-filter-control">
+                                <input type="date" class="form-control form-control-sm" title="@Resources.MealPlansOverview.CreatedAfterPlaceholder"
+                                       value="@CreatedAfterFilter?.ToString("yyyy-MM-dd")" @onchange="OnCreatedAfterDateChangedAsync" />
+                            </div>
+                        </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        @context.CreatedAt?.ToString("d")
+                    </ChildContent>
                 </GridColumn>
                 <GridColumn TItem="MealPlanModel" Filterable="false">
                     <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteAsync(context)">
