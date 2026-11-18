@@ -20,13 +20,20 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
 
         private ConfirmDialog _dialog = default!;
         private GridTemplate<ShoppingListModel>? _shoppingListsGrid;
-        private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyClass + " grid-additional-columns";
         private BlazorBootstrap.SortDirection _createdAtSortDirection = BlazorBootstrap.SortDirection.Descending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
         private bool showCopiedMessage;
 
         private DateTime? CreatedAfterFilter { get; set; }
+
+        private string CreatedAtSortIconClass => _createdAtSortDirection switch
+        {
+            BlazorBootstrap.SortDirection.Ascending => "bi bi-sort-alpha-down",
+            BlazorBootstrap.SortDirection.Descending => "bi bi-sort-alpha-down-alt",
+            _ => "bi bi-arrow-down-up"
+        };
 
         [CascadingParameter(Name = "MessageComponent")]
         private IMessageComponent? MessageComponent { get; set; }
@@ -65,6 +72,29 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 _gridKey++;
                 StateHasChanged();
             }
+        }
+
+        private async Task OnCreatedAtSortClickedAsync()
+        {
+            _createdAtSortDirection = _createdAtSortDirection switch
+            {
+                BlazorBootstrap.SortDirection.Ascending => BlazorBootstrap.SortDirection.Descending,
+                BlazorBootstrap.SortDirection.Descending => BlazorBootstrap.SortDirection.None,
+                _ => BlazorBootstrap.SortDirection.Ascending
+            };
+
+            var stored = await SessionStorage.GetItemAsync<QueryParameters<ShoppingListModel>>();
+            var resetParameters = new QueryParameters<ShoppingListModel>
+            {
+                Filters = stored?.Filters,
+                Sorting = [new SortingModel { PropertyName = "CreatedAt", Direction = (Common.Pagination.SortDirection)(int)_createdAtSortDirection }],
+                PageNumber = 1,
+                PageSize = stored?.PageSize ?? new QueryParameters<ShoppingListModel>().PageSize
+            };
+            await SessionStorage.SetItemAsync(resetParameters);
+
+            _gridKey++;
+            StateHasChanged();
         }
 
         private async Task OnCreatedAfterDateChangedAsync(ChangeEventArgs e)
@@ -207,9 +237,9 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
                 await SessionStorage.SetItemAsync(sessionParameters);
             }
 
-            _tableGridClass = items.Count == 0
+            _tableGridClass = (items.Count == 0
                 ? CssClasses.GridTemplateEmptyClass
-                : CssClasses.GridTemplateWithItemsClass + " grid-additional-columns";
+                : CssClasses.GridTemplateWithItemsClass) + " grid-additional-columns";
 
             StateHasChanged();
 
@@ -223,7 +253,7 @@ namespace MealPlanner.UI.Web.Pages.MealPlans
         private void AddCustomFilters(List<Common.Pagination.FilterItem> filters)
         {
             if (CreatedAfterFilter.HasValue)
-                filters.Add(new Common.Pagination.FilterItem("CreatedAt", CreatedAfterFilter.Value.Date, Common.Pagination.FilterOperator.GreaterThan));
+                filters.Add(new Common.Pagination.FilterItem("CreatedAt", CreatedAfterFilter.Value.Date, Common.Pagination.FilterOperator.GreaterThanOrEquals));
         }
 
         private async Task Export(ShoppingListModel model)

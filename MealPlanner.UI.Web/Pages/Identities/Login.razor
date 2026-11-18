@@ -1,43 +1,5 @@
 ﻿@page "/identities/login"
 
-<style>
-    .login-background {
-        background-image: url('Images/loginBackground.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 800px;
-        text-align: center;
-    }
-
-    .login-form {
-        background: rgba(255, 255, 255, 0.85);
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        align-content: center;
-        text-align: left;
-        max-width: 400px;
-        margin: 3rem auto;
-    }
-
-    @@media (max-width: 640.98px) {
-        .login-background {
-            height: auto;
-            min-height: 100vh;
-            padding: 1.5rem 0;
-        }
-
-        .login-form {
-            max-width: 90%;
-            margin: 0 auto;
-        }
-    }
-</style>
-
 <script>
     window.focusElement = (id) => {
         const el = document.getElementById(id);

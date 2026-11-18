@@ -1,35 +1,5 @@
 @page "/identities/register"
 
-<style>
-    .register-background {
-        background-image: url('Images/loginBackground.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 800px;
-        text-align: center;
-    }
-
-    .register-form {
-        background: rgba(255, 255, 255, 0.85);
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        align-content: center;
-        text-align: left;
-        max-width: 450px;
-        width: 100%;
-        margin: 3rem auto;
-    }
-
-    .col-sm-3 {
-        width: auto;
-    }
-</style>
-
 <div class="register-background">
     <EditForm Model="RegistrationModel" OnValidSubmit="OnRegisterAsync" class="register-form">
         <DataAnnotationsValidator />

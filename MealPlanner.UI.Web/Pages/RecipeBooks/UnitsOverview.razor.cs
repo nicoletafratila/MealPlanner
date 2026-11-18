@@ -17,7 +17,7 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
     {
         private ConfirmDialog _dialog = default!;
         private GridTemplate<UnitModel>? _unitsGrid;
-        private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyClass + " grid-additional-columns";
         private BlazorBootstrap.SortDirection _nameSortDirection = BlazorBootstrap.SortDirection.Ascending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
@@ -148,9 +148,9 @@ namespace MealPlanner.UI.Web.Pages.RecipeBooks
             if (!isFirstLoad)
                 await SessionStorage.SetItemAsync(queryParameters);
 
-            _tableGridClass = items.Count == 0
+            _tableGridClass = (items.Count == 0
                 ? CssClasses.GridTemplateEmptyClass
-                : CssClasses.GridTemplateWithItemsClass + " grid-additional-columns";
+                : CssClasses.GridTemplateWithItemsClass) + " grid-additional-columns";
 
             StateHasChanged();
             return new GridDataProviderResult<UnitModel>

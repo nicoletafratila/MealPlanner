@@ -24,31 +24,6 @@
         width: 40px;
         max-width: 40px;
     }
-
-    .filter-header {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .filter-header span {
-        white-space: nowrap;
-    }
-
-    .filter-control {
-        position: absolute;
-        top: 100%;
-        margin-top: 1rem;
-        left: 0;
-        right: 0;
-        z-index: 5;
-        font-weight: normal;
-    }
-
-    .date-filter-control input {
-        height: 38px;
-        width: 100%;
-    }
 </style>
 
 <div class="card">
@@ -79,7 +54,10 @@
                 <GridColumn TItem="MealPlanModel" PropertyName="CreatedAt" IsDefaultSortColumn="true" SortDirection="@_createdAtSortDirection" SortString="CreatedAt" SortKeySelector="item => item.CreatedAt" Filterable="false">
                     <HeaderContent>
                         <div class="filter-header">
-                            <span>@Resources.MealPlansOverview.CreatedAfterPlaceholder</span>
+                            <span class="cursor-pointer" role="button" @onclick="OnCreatedAtSortClickedAsync">
+                                @Resources.MealPlansOverview.CreatedAfterPlaceholder
+                                <i class="@CreatedAtSortIconClass"></i>
+                            </span>
                             <div class="filter-control date-filter-control">
                                 <input type="date" class="form-control form-control-sm" title="@Resources.MealPlansOverview.CreatedAfterPlaceholder"
                                        value="@CreatedAfterFilter?.ToString("yyyy-MM-dd")" @onchange="OnCreatedAfterDateChangedAsync" />
@@ -87,7 +65,7 @@
                         </div>
                     </HeaderContent>
                     <ChildContent>
-                        @context.CreatedAt?.ToString("d")
+                        @context.CreatedAt?.ToString("yyyy-MM-dd")
                     </ChildContent>
                 </GridColumn>
                 <GridColumn TItem="MealPlanModel" Filterable="false">

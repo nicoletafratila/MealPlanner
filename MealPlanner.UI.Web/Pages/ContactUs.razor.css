@@ -1,0 +1,21 @@
+.contact-background {
+    background-image: url('Images/loginBackground.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 800px;
+    text-align: center;
+}
+
+::deep .contact-form {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: left;
+    width: 480px;
+    margin: 3rem auto;
+}
