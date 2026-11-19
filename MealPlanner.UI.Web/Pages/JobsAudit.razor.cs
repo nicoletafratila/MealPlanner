@@ -22,7 +22,7 @@ namespace MealPlanner.UI.Web.Pages
         private const string CreatedToFilterStorageKey = "JobsAuditCreatedToFilter";
 
         private GridTemplate<JobModel>? _jobsGrid;
-        private string _tableGridClass = CssClasses.GridTemplateEmptyClass;
+        private string _tableGridClass = CssClasses.GridTemplateEmptyClass + " jobs-columns";
         private BlazorBootstrap.SortDirection _createdAtSortDirection = BlazorBootstrap.SortDirection.Descending;
         private int _gridKey = 0;
         private bool _firstLoad = true;
@@ -161,9 +161,9 @@ namespace MealPlanner.UI.Web.Pages
                 await SessionStorage.SetItemAsync(sessionParameters);
             }
 
-            _tableGridClass = items.Count == 0
+            _tableGridClass = (items.Count == 0
                 ? CssClasses.GridTemplateEmptyClass
-                : CssClasses.GridTemplateWithItemsClass;
+                : CssClasses.GridTemplateWithItemsClass) + " jobs-columns";
 
             StateHasChanged();
             return new GridDataProviderResult<JobModel>

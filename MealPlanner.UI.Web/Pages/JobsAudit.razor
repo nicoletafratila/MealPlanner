@@ -3,6 +3,44 @@
 @using Common.Models
 @using RecipeBook.Shared.Models
 
+<style>
+    .jobs-columns {
+        table-layout: fixed;
+    }
+
+        .jobs-columns th:nth-child(1),
+        .jobs-columns td:nth-child(1) {
+            width: 300px !important;
+            max-width: 300px !important;
+           /*  vertical-align: top; */
+        }
+
+        .jobs-columns th:nth-child(2),
+        .jobs-columns td:nth-child(2) {
+            /* height: 55px; */
+            width: 150px !important;
+            max-width: 150px !important;
+            /* vertical-align: top; */
+        }
+
+        .jobs-columns th:nth-child(3),
+        .jobs-columns td:nth-child(3),
+        .jobs-columns th:nth-child(4),
+        .jobs-columns td:nth-child(4),
+        .jobs-columns th:nth-child(5),
+        .jobs-columns td:nth-child(5),
+        .jobs-columns th:nth-child(6),
+        .jobs-columns td:nth-child(6),
+        .jobs-columns th:nth-child(7),
+        .jobs-columns td:nth-child(7) {
+            /* vertical-align: top; */
+        }
+
+    .bb-table thead tr {
+        height: 55px;
+    }
+</style>
+
 <div class="card">
     <div class="card-header">
         <h2>@Resources.JobsAudit.PageTitle</h2>

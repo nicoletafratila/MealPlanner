@@ -1,10 +1,7 @@
-add product to a shopping list de pe shop list edit?????
-product web -> category, unit, picture order
-job history filter arrage like audit trail
 button on shooping list do not overlap like those in recipe when window is small
 product data from shopping list overlap when window is smalll
 pagination goes outside the window when is small
-translate into other languages
+
 
 
 
@@ -25,7 +22,7 @@ unit -> filter by type
 user -> show default imange
 user edit-> email below phone number, show default image
 check if the resources match in all places in both apps
-
+translate into other languages
 
 
 
