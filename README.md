@@ -1,7 +1,5 @@
-shoppinglistedit unit si quantity align similar to recipe edit view
 add product to a shopping list de pe shop list edit?????
 product web -> category, unit, picture order
-recipe category edit -> remove edit button because now they can be moved. edit on click
 job history filter arrage like audit trail
 button on shooping list do not overlap like those in recipe when window is small
 product data from shopping list overlap when window is smalll
@@ -26,7 +24,7 @@ recipe category -> add dots to move them (context menu)
 unit -> filter by type
 user -> show default imange
 user edit-> email below phone number, show default image
-
+check if the resources match in all places in both apps
 
 
 

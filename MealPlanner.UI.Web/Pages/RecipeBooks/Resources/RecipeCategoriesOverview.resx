@@ -87,9 +87,6 @@
 	<data name="ColumnName" xml:space="preserve">
 		<value>Name</value>
 	</data>
-	<data name="EditButton" xml:space="preserve">
-		<value>Edit</value>
-	</data>
 	<data name="ReorderMenuLabel" xml:space="preserve">
 		<value>Reorder</value>
 	</data>

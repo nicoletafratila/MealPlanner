@@ -19,20 +19,21 @@
         <div class="card-body">
             @if (Categories != null)
             {
-                <TableTemplate TItem="RecipeCategoryModel" Data="@Categories" ShowIndex="true" ColumnCount="4" EnableDragReorder="true" OnReorder="OnReorderAsync">
+                <TableTemplate TItem="RecipeCategoryModel" Data="@Categories" ShowIndex="true" ColumnCount="3" EnableDragReorder="true" OnReorder="OnReorderAsync">
                     <TableHeader>
                         <th>@Resources.RecipeCategoriesOverview.ColumnName</th>
-                        <th class="action-col"></th>
                         <th class="action-col"></th>
                         <th class="action-col"></th>
                     </TableHeader>
                     <RowTemplate Context="category">
                         <td>
-                            @category.Name
+                            <div class="cursor-pointer" @onclick="() => Update(category)">
+                                @category.Name
+                            </div>
                         </td>
-                        <td>
+                        <td @onclick:stopPropagation="true">
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="@Resources.RecipeCategoriesOverview.ReorderMenuLabel" @onclick:stopPropagation="true">
+                                <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="@Resources.RecipeCategoriesOverview.ReorderMenuLabel">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu">
@@ -44,8 +45,7 @@
                                 </ul>
                             </div>
                         </td>
-                        <td><button class="btn btn-primary btn-sm" type="button" @onclick="() => Update(category)">@Resources.RecipeCategoriesOverview.EditButton</button></td>
-                        <td>
+                        <td @onclick:stopPropagation="true">
                             <button class="btn btn-link btn-sm p-0 text-danger" type="button" @onclick="() => DeleteAsync(category)">
                                 <i class="bi bi-trash fs-5"></i>
                             </button>

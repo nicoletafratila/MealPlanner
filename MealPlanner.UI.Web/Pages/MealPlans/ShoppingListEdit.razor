@@ -54,22 +54,21 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <label for="unit" class="col-sm-3">@Resources.ShoppingListEdit.LabelUnitOfMeasurement</label>
-                    <ComboBox Id="unit" Items="Units" IdSelector="u => u.Id.ToString()" TextSelector="u => u.Name" @bind-Value="UnitId" For="@(() => UnitId)" />
-                    <ValidationMessage For="@(() => UnitId)" />
-                </div>
-
-                <div class="form-group mt-3">
-                    <label for="quantity" class="col-sm-3">@Resources.ShoppingListEdit.LabelQuantity</label>
                     <div class="row g-2 align-items-end">
                         <div class="col">
+                            <label for="quantity">@Resources.ShoppingListEdit.LabelQuantity</label>
                             <InputText id="quantity" class="form-control" @bind-Value="@Quantity" @oninput="CheckQuantityAsync" placeholder="@Resources.ShoppingListEdit.PlaceholderQuantity"></InputText>
+                            <ValidationMessage For="@(() => Quantity)" />
+                        </div>
+                        <div class="col">
+                            <label for="unit">@Resources.ShoppingListEdit.LabelUnitOfMeasurement</label>
+                            <ComboBox Id="unit" Items="Units" IdSelector="u => u.Id.ToString()" TextSelector="u => u.Name" @bind-Value="UnitId" For="@(() => UnitId)" />
+                            <ValidationMessage For="@(() => UnitId)" />
                         </div>
                         <div class="col-auto">
                             <button id="addButton" class="btn btn-primary btn-sm" type="button" @onclick="AddProductAsync" disabled="@(!CanAddProduct)">@Resources.ShoppingListEdit.AddButton</button>
                         </div>
                     </div>
-                    <ValidationMessage For="@(() => Quantity)" />
                 </div>
 
                 <br />
