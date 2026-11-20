@@ -1,6 +1,5 @@
 @page "/JobsAudit"
 
-@using Common.Models
 @using RecipeBook.Shared.Models
 
 <style>
@@ -12,15 +11,12 @@
         .jobs-columns td:nth-child(1) {
             width: 300px !important;
             max-width: 300px !important;
-           /*  vertical-align: top; */
         }
 
         .jobs-columns th:nth-child(2),
         .jobs-columns td:nth-child(2) {
-            /* height: 55px; */
             width: 150px !important;
             max-width: 150px !important;
-            /* vertical-align: top; */
         }
 
         .jobs-columns th:nth-child(3),
@@ -33,12 +29,41 @@
         .jobs-columns td:nth-child(6),
         .jobs-columns th:nth-child(7),
         .jobs-columns td:nth-child(7) {
-            /* vertical-align: top; */
+            vertical-align: top;
         }
 
-    .bb-table thead tr {
-        height: 55px;
-    }
+        .jobs-columns thead th {
+            background-image: linear-gradient(var(--bs-border-color, #dee2e6), var(--bs-border-color, #dee2e6));
+            background-repeat: no-repeat;
+            background-size: 100% 1px;
+            background-position: left 2.5rem;
+        }
+
+        .jobs-columns .filter-header {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .jobs-columns .filter-header span {
+                white-space: nowrap;
+            }
+
+        .jobs-columns .filter-control {
+            margin-top: 1rem;
+            font-weight: normal;
+        }
+
+        .jobs-columns .date-filter-control {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+            .jobs-columns .date-filter-control input {
+                height: 38px;
+                flex: 1 1 0;
+                min-width: 0;
+            }
 </style>
 
 <div class="card">

@@ -6,7 +6,6 @@ pagination goes outside the window when is small
 
 
 Mobile
-one one one screen check: Units
 add contact us, about me, privacy policy in the login view
 register is missing first, last name, phone no
 in all overview pages add sorting by name or date created
