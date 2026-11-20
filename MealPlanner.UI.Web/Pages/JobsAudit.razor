@@ -40,9 +40,7 @@
         }
 
         .jobs-columns .filter-header {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
+            position: relative;
         }
 
             .jobs-columns .filter-header span {
@@ -50,7 +48,12 @@
             }
 
         .jobs-columns .filter-control {
+            position: absolute;
+            top: 100%;
             margin-top: 1rem;
+            left: 0;
+            right: 0;
+            z-index: 5;
             font-weight: normal;
         }
 
@@ -107,16 +110,16 @@
                         @context.Status
                     </ChildContent>
                 </GridColumn>
-                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderOwnerUserId" PropertyName="OwnerUserId" Sortable="false" Filterable="false">
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderOwnerUserId" PropertyName="OwnerUserId" SortString="OwnerUserId" SortKeySelector="item => item.OwnerUserId" StringComparison="StringComparison.OrdinalIgnoreCase">
                     @context.OwnerUserId
                 </GridColumn>
-                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderTargetUserId" PropertyName="TargetUserId" Sortable="false" Filterable="false">
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderTargetUserId" PropertyName="TargetUserId" SortString="TargetUserId" SortKeySelector="item => item.TargetUserId" StringComparison="StringComparison.OrdinalIgnoreCase">
                     @context.TargetUserId
                 </GridColumn>
                 <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderProgress" Sortable="false" Filterable="false">
                     @context.ProcessedCount / @context.TotalCount
                 </GridColumn>
-                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderErrorMessage" Sortable="false" Filterable="false">
+                <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderErrorMessage" PropertyName="ErrorMessage" SortString="ErrorMessage" SortKeySelector="item => item.ErrorMessage" StringComparison="StringComparison.OrdinalIgnoreCase">
                     @context.ErrorMessage
                 </GridColumn>
                 <GridColumn TItem="JobModel" HeaderText="@Resources.JobsAudit.HeaderCompletedAt" Sortable="false" Filterable="false">
